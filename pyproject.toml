@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlx-one"
+version = "0.1.0a1"
+description = "Model-size-agnostic lifecycle tooling for MLX on Apple Silicon."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "S Susant Achary" }
+]
+keywords = [
+    "mlx",
+    "apple-silicon",
+    "llm",
+    "vlm",
+    "audio",
+    "training",
+    "conversion",
+    "evaluation",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: MacOS X",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "mlx>=0.29",
+    "mlx-lm>=0.25",
+    "click>=8.0",
+    "tqdm",
+    "safetensors",
+    "pyyaml",
+]
+
+[project.urls]
+Homepage = "https://github.com/SSusantAchary/mlx-one"
+Repository = "https://github.com/SSusantAchary/mlx-one"
+Issues = "https://github.com/SSusantAchary/mlx-one/issues"
+Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+tracking = ["mlflow"]
+wandb = ["wandb"]
+viz = ["matplotlib"]
+export = ["huggingface-hub"]
+vlm = ["mlx-vlm"]
+audio = ["mlx-audio"]
+embeddings = ["mlx-embeddings"]
+multimodal = [
+    "mlx-vlm",
+    "mlx-audio",
+    "mlx-embeddings",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[project.scripts]
+mlx-one = "mlx_one.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=mlx_one --cov-report=term-missing"
