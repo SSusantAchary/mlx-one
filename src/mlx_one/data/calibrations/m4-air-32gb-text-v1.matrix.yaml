@@ -1,0 +1,57 @@
+schema_version: "1.0"
+matrix_id: m4-air-32gb-text-v1
+hardware_profile: m4-air-32gb
+seed: 42
+contexts: [512, 1024, 2048, 4096]
+inference:
+  precisions: [bf16, int4]
+  generation_length: 32
+  warm_repetitions: 3
+training:
+  methods: [lora, qlora]
+  measured_steps: 5
+  warmup_steps: 1
+  batch_size: 1
+  lora_rank: 8
+  lora_scale: 20.0
+  lora_dropout: 0.0
+  lora_layers: 16
+  optimizer: adamw
+  gradient_checkpointing: false
+models:
+  - model_id: Qwen/Qwen2.5-0.5B
+    revision: 060db6499f32faf8b98477b0a26969ef7d8b9987
+    model_type: qwen2
+    parameter_count: 494032768
+    dimensions:
+      hidden_size: 896
+      layer_count: 24
+      attention_heads: 14
+      key_value_heads: 2
+      head_dimension: 64
+      intermediate_size: 4864
+      vocabulary_size: 151936
+  - model_id: Qwen/Qwen2.5-1.5B
+    revision: 8faed761d45a263340a0528343f099c05c9a4323
+    model_type: qwen2
+    parameter_count: 1543714304
+    dimensions:
+      hidden_size: 1536
+      layer_count: 28
+      attention_heads: 12
+      key_value_heads: 2
+      head_dimension: 128
+      intermediate_size: 8960
+      vocabulary_size: 151936
+  - model_id: Qwen/Qwen2.5-3B
+    revision: 3aab1f1954e9cc14eb9509a215f9e5ca08227a9b
+    model_type: qwen2
+    parameter_count: 3085938688
+    dimensions:
+      hidden_size: 2048
+      layer_count: 36
+      attention_heads: 16
+      key_value_heads: 2
+      head_dimension: 128
+      intermediate_size: 11008
+      vocabulary_size: 151936

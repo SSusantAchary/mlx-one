@@ -1,0 +1,21 @@
+schema_version: "1.0"
+profile_id: m4-air-32gb
+profile_version: "1"
+platform: macOS
+architecture: arm64
+chip: Apple M4
+memory_bytes: 34359738368
+accelerator: Metal
+accelerator_count: 1
+accelerator_memory_bytes: 34359738368
+process_memory_budget_bytes: 25769803776
+system_reserve_bytes: 8589934592
+form_factor: fanless-laptop
+cpu_core_count: 10
+gpu_core_count: 10
+unified_memory: true
+reference_device: true
+provenance: mlx-one-maintainer-profile
+metadata:
+  thermal_note: Fanless systems may throttle during sustained workloads.
+  sizing_policy: Leave at least 8 GiB for macOS and foreground applications.

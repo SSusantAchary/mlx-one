@@ -1,0 +1,114 @@
+{
+  "cell_id": "qwen2.5-0.5b-qlora-c512",
+  "ended_at": "2026-09-07T02:40:04.152223+00:00",
+  "environment": {
+    "thermal_state": "unknown"
+  },
+  "failure": null,
+  "hardware": {
+    "accelerator": "Metal",
+    "accelerator_count": 1,
+    "accelerator_memory_bytes": 34359738368,
+    "architecture": "arm64",
+    "chip": "Apple M4",
+    "cpu_core_count": 10,
+    "form_factor": "fanless-laptop",
+    "gpu_core_count": 10,
+    "memory_bytes": 34359738368,
+    "metadata": {
+      "sizing_policy": "Leave at least 8 GiB for macOS and foreground applications.",
+      "thermal_note": "Fanless systems may throttle during sustained workloads."
+    },
+    "os_version": null,
+    "platform": "macOS",
+    "process_memory_budget_bytes": 25769803776,
+    "profile_id": "m4-air-32gb",
+    "profile_version": "1",
+    "provenance": "mlx-one-maintainer-profile",
+    "reference_device": true,
+    "schema_version": "1.0",
+    "system_reserve_bytes": 8589934592,
+    "unified_memory": true
+  },
+  "matrix_id": "m4-air-32gb-text-v1",
+  "memory": {
+    "analytic_peak_bytes": 1047810360,
+    "load_peak_metal_bytes": 281161480,
+    "peak_metal_bytes": 1867454053,
+    "peak_process_rss_bytes": 649117696,
+    "swap_delta_bytes": 0
+  },
+  "metrics": {
+    "load_seconds": 0.40005062497220933,
+    "measured_steps": 5,
+    "training_wall_seconds": 3.6014506249921396,
+    "warm_iterations_per_second_mean": 1.8854294629694575,
+    "warm_tokens_per_second_mean": 963.4544555773928,
+    "warmup_steps": 1
+  },
+  "model": {
+    "architectures": [
+      "Qwen2ForCausalLM"
+    ],
+    "base_models": [],
+    "dimensions": {
+      "attention_heads": 14,
+      "head_dimension": 64,
+      "hidden_size": 896,
+      "intermediate_size": 4864,
+      "key_value_heads": 2,
+      "layer_count": 24,
+      "vocabulary_size": 151936
+    },
+    "disabled": false,
+    "dtype": null,
+    "gated": false,
+    "library_name": null,
+    "license": null,
+    "metadata": {},
+    "modality": "text",
+    "model_id": "Qwen/Qwen2.5-0.5B",
+    "model_type": "qwen2",
+    "parameter_count": 494032768,
+    "parameter_count_source": "calibration-matrix",
+    "pipeline_tag": null,
+    "private": false,
+    "processor_id": null,
+    "quantization": {},
+    "requires_remote_code": false,
+    "revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+    "schema_version": "1.0",
+    "tokenizer_id": null,
+    "weight_bytes": null,
+    "weight_format": null
+  },
+  "schema_version": "1.0",
+  "software": {
+    "git_commit": null,
+    "metadata": {},
+    "os_version": "15.7.9",
+    "packages": {
+      "huggingface-hub": "1.30.0",
+      "mlx": "0.32.2",
+      "mlx-lm": "0.31.3",
+      "mlx-one": "0.1.0a1",
+      "transformers": "5.16.1"
+    },
+    "python_version": "3.12.11"
+  },
+  "started_at": "2026-09-07T02:39:58.997342+00:00",
+  "status": "completed",
+  "workload": {
+    "batch_size": 1,
+    "context_length": 512,
+    "generation_length": 32,
+    "gradient_checkpointing": false,
+    "kind": "train",
+    "lora_layers": 16,
+    "lora_rank": 8,
+    "method": "qlora",
+    "optimizer": "adamw",
+    "precision": "int4",
+    "schema_version": "1.0"
+  }
+}

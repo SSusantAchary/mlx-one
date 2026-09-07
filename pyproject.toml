@@ -42,6 +42,7 @@ dependencies = [
     "tqdm",
     "safetensors",
     "pyyaml",
+    "huggingface-hub>=1.5,<2",
 ]
 
 [project.urls]
@@ -54,7 +55,6 @@ Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"
 tracking = ["mlflow"]
 wandb = ["wandb"]
 viz = ["matplotlib"]
-export = ["huggingface-hub"]
 vlm = ["mlx-vlm"]
 audio = ["mlx-audio"]
 embeddings = ["mlx-embeddings"]
@@ -74,6 +74,9 @@ mlx-one = "mlx_one.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+mlx_one = ["data/hardware/*.yaml", "data/calibrations/*.yaml", "data/calibrations/*.json"]
 
 [tool.ruff]
 line-length = 100
