@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from datetime import UTC, datetime
@@ -86,6 +87,44 @@ class CompatibilityStatus(str, Enum):
     EXPERIMENTAL = "experimental"
     UNSUPPORTED = "unsupported"
     UNKNOWN = "unknown"
+
+
+class CapabilityStatus(str, Enum):
+    """Operation-level support state used by the capability registry."""
+
+    CANDIDATE = "candidate"
+    UPSTREAM_DOCUMENTED = "upstream-documented"
+    INTEGRATION_TESTED = "integration-tested"
+    HARDWARE_VERIFIED = "hardware-verified"
+    QUALITY_VERIFIED = "quality-verified"
+    UNSUPPORTED = "unsupported"
+    DEPRECATED = "deprecated"
+
+
+class MetricProvenance(str, Enum):
+    """How a reported metric value was obtained."""
+
+    MEASURED = "measured"
+    ESTIMATED = "estimated"
+    NOT_AVAILABLE = "not-available"
+
+
+class DatasetFormat(str, Enum):
+    """Supported local text dataset representation."""
+
+    AUTO = "auto"
+    JSON = "json"
+    JSONL = "jsonl"
+
+
+class DatasetLayout(str, Enum):
+    """Logical record layout used for supervised text data."""
+
+    AUTO = "auto"
+    INSTRUCTION = "instruction"
+    MESSAGES = "messages"
+    PROMPT_COMPLETION = "prompt-completion"
+    TEXT = "text"
 
 
 class Confidence(str, Enum):
@@ -205,9 +244,7 @@ def _enum(enum_type: type[Enum], value: object, field_name: str) -> Enum:
 def _version(data: Mapping[str, Any]) -> str:
     version = data.get("schema_version")
     if version != SCHEMA_VERSION:
-        raise ValueError(
-            f"unsupported schema_version {version!r}; expected {SCHEMA_VERSION!r}"
-        )
+        raise ValueError(f"unsupported schema_version {version!r}; expected {SCHEMA_VERSION!r}")
     return version
 
 
@@ -568,6 +605,8 @@ class RunSpec(SchemaMixin):
     seed: int = 0
     limits: Mapping[str, JSONValue] = field(default_factory=dict)
     cache_policy: CachePolicy = CachePolicy.USE
+    parent_run_ids: tuple[str, ...] = ()
+    metadata: Mapping[str, JSONValue] = field(default_factory=dict)
     created_at: str = ""
 
     def __post_init__(self) -> None:
@@ -588,6 +627,13 @@ class RunSpec(SchemaMixin):
         )
         object.__setattr__(self, "generation", _json_mapping(self.generation or {}, "generation"))
         object.__setattr__(self, "limits", _json_mapping(self.limits or {}, "limits"))
+        parents = tuple(self.parent_run_ids)
+        if any(not isinstance(item, str) or not item.strip() for item in parents):
+            raise ValueError("parent_run_ids must contain non-empty strings")
+        if self.run_id in parents:
+            raise ValueError("a run cannot be its own parent")
+        object.__setattr__(self, "parent_run_ids", parents)
+        object.__setattr__(self, "metadata", _json_mapping(self.metadata or {}, "metadata"))
         timestamp = self.created_at or _utc_now()
         _validate_timestamp(timestamp, "created_at")
         object.__setattr__(self, "created_at", timestamp)
@@ -601,6 +647,7 @@ class RunSpec(SchemaMixin):
             payload["model"] = ModelSpec.from_dict(payload["model"])
         if isinstance(payload.get("hardware"), Mapping):
             payload["hardware"] = HardwareSpec.from_dict(payload["hardware"])
+        payload["parent_run_ids"] = tuple(payload.get("parent_run_ids", ()))
         return cls(**payload)
 
     @classmethod
@@ -687,6 +734,241 @@ class ArtifactRef(SchemaMixin):
 
 
 @dataclass(frozen=True, kw_only=True)
+class MetricValue(SchemaMixin):
+    """A metric whose value cannot be confused with its provenance."""
+
+    value: JSONScalar = None
+    provenance: MetricProvenance
+    unit: str | None = None
+    protocol: str | None = None
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "provenance", _enum(MetricProvenance, self.provenance, "provenance")
+        )
+        if self.provenance is MetricProvenance.NOT_AVAILABLE and self.value is not None:
+            raise ValueError("not-available metrics cannot contain a value")
+        if self.provenance is not MetricProvenance.NOT_AVAILABLE and self.value is None:
+            raise ValueError("measured and estimated metrics require a value")
+        if isinstance(self.value, float) and not math.isfinite(self.value):
+            raise ValueError("metric value must be finite")
+        for name in ("unit", "protocol"):
+            value = getattr(self, name)
+            if value is not None:
+                _require_text(value, name)
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> MetricValue:
+        return cls(**dict(data))
+
+
+@dataclass(frozen=True, kw_only=True)
+class DatasetSpec(SchemaMixin):
+    """Immutable description of local supervised or evaluation data."""
+
+    schema_version: str = SCHEMA_VERSION
+    dataset_id: str
+    source: str
+    revision: str
+    split: str = "train"
+    format: DatasetFormat = DatasetFormat.AUTO
+    layout: DatasetLayout = DatasetLayout.AUTO
+    columns: Mapping[str, str] = field(default_factory=dict)
+    response_only: bool = True
+    private: bool = True
+    sha256: str | None = None
+    metadata: Mapping[str, JSONValue] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        _version({"schema_version": self.schema_version})
+        for name in ("dataset_id", "source", "revision", "split"):
+            _require_text(getattr(self, name), name)
+        object.__setattr__(self, "format", _enum(DatasetFormat, self.format, "format"))
+        object.__setattr__(self, "layout", _enum(DatasetLayout, self.layout, "layout"))
+        object.__setattr__(self, "columns", _string_mapping(self.columns or {}, "columns"))
+        if self.sha256 is not None:
+            digest = self.sha256.lower()
+            if not re.fullmatch(r"[0-9a-f]{64}", digest):
+                raise ValueError("sha256 must be a 64-character hexadecimal digest")
+            object.__setattr__(self, "sha256", digest)
+        object.__setattr__(self, "metadata", _json_mapping(self.metadata or {}, "metadata"))
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> DatasetSpec:
+        payload = dict(data)
+        _version(payload)
+        return cls(**payload)
+
+    @classmethod
+    def from_json(cls, value: str) -> DatasetSpec:
+        return cls.from_dict(json.loads(value))
+
+
+@dataclass(frozen=True, kw_only=True)
+class TrainConfig(SchemaMixin):
+    """Backend-neutral configuration for the supported text SFT subset."""
+
+    schema_version: str = SCHEMA_VERSION
+    output_dir: str
+    method: TrainingMethod = TrainingMethod.LORA
+    max_seq_length: int = 2048
+    batch_size: int = 1
+    gradient_accumulation_steps: int = 1
+    max_steps: int = 100
+    learning_rate: float = 2e-4
+    optimizer: str = "adamw"
+    seed: int = 42
+    lora_rank: int = 8
+    lora_alpha: float = 16.0
+    lora_dropout: float = 0.0
+    lora_layers: int = 16
+    target_modules: tuple[str, ...] = ()
+    gradient_checkpointing: bool = False
+    save_steps: int = 100
+    eval_steps: int = 0
+    metadata: Mapping[str, JSONValue] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        _version({"schema_version": self.schema_version})
+        _require_text(self.output_dir, "output_dir")
+        _require_text(self.optimizer, "optimizer")
+        object.__setattr__(self, "method", _enum(TrainingMethod, self.method, "method"))
+        if self.method not in {TrainingMethod.LORA, TrainingMethod.QLORA}:
+            raise ValueError("text SFT currently supports only lora and qlora")
+        for name in (
+            "max_seq_length",
+            "batch_size",
+            "gradient_accumulation_steps",
+            "max_steps",
+            "lora_rank",
+            "lora_layers",
+            "save_steps",
+        ):
+            if getattr(self, name) < 1:
+                raise ValueError(f"{name} must be at least 1")
+        if self.eval_steps < 0:
+            raise ValueError("eval_steps cannot be negative")
+        if not math.isfinite(self.learning_rate) or self.learning_rate <= 0:
+            raise ValueError("learning_rate must be a positive finite number")
+        if not math.isfinite(self.lora_alpha) or self.lora_alpha <= 0:
+            raise ValueError("lora_alpha must be a positive finite number")
+        if not math.isfinite(self.lora_dropout) or not 0 <= self.lora_dropout < 1:
+            raise ValueError("lora_dropout must be in [0, 1)")
+        modules = tuple(self.target_modules)
+        if any(not isinstance(item, str) or not item.strip() for item in modules):
+            raise ValueError("target_modules must contain non-empty strings")
+        object.__setattr__(self, "target_modules", modules)
+        object.__setattr__(self, "metadata", _json_mapping(self.metadata or {}, "metadata"))
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> TrainConfig:
+        payload = dict(data)
+        _version(payload)
+        payload["target_modules"] = tuple(payload.get("target_modules", ()))
+        return cls(**payload)
+
+    @classmethod
+    def from_json(cls, value: str) -> TrainConfig:
+        return cls.from_dict(json.loads(value))
+
+
+@dataclass(frozen=True, kw_only=True)
+class CheckpointMetadata(SchemaMixin):
+    """Lineage and resumability metadata stored beside adapter weights."""
+
+    schema_version: str = SCHEMA_VERSION
+    run_id: str
+    base_model_id: str
+    base_revision: str
+    method: TrainingMethod
+    step: int
+    adapter: ArtifactRef
+    config_sha256: str
+    resumable_state: tuple[str, ...] = ()
+    created_at: str = ""
+
+    def __post_init__(self) -> None:
+        _version({"schema_version": self.schema_version})
+        for name in ("run_id", "base_model_id", "base_revision"):
+            _require_text(getattr(self, name), name)
+        object.__setattr__(self, "method", _enum(TrainingMethod, self.method, "method"))
+        if self.step < 0:
+            raise ValueError("step cannot be negative")
+        if not isinstance(self.adapter, ArtifactRef):
+            raise TypeError("adapter must be an ArtifactRef")
+        if not re.fullmatch(r"[0-9a-fA-F]{64}", self.config_sha256):
+            raise ValueError("config_sha256 must be a 64-character hexadecimal digest")
+        object.__setattr__(self, "config_sha256", self.config_sha256.lower())
+        states = tuple(self.resumable_state)
+        if any(not isinstance(item, str) or not item.strip() for item in states):
+            raise ValueError("resumable_state must contain non-empty strings")
+        object.__setattr__(self, "resumable_state", states)
+        timestamp = self.created_at or _utc_now()
+        _validate_timestamp(timestamp, "created_at")
+        object.__setattr__(self, "created_at", timestamp)
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> CheckpointMetadata:
+        payload = dict(data)
+        _version(payload)
+        if isinstance(payload.get("adapter"), Mapping):
+            payload["adapter"] = ArtifactRef.from_dict(payload["adapter"])
+        payload["resumable_state"] = tuple(payload.get("resumable_state", ()))
+        return cls(**payload)
+
+
+@dataclass(frozen=True, kw_only=True)
+class CapabilitySpec(SchemaMixin):
+    """Evidence-scoped support declaration for one model operation."""
+
+    schema_version: str = SCHEMA_VERSION
+    model: ModelSpec
+    backend: str
+    operation: Operation
+    status: CapabilityStatus
+    constraints: Mapping[str, JSONValue] = field(default_factory=dict)
+    hardware_profile_ids: tuple[str, ...] = ()
+    evidence: tuple[ArtifactRef, ...] = ()
+    notes: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        _version({"schema_version": self.schema_version})
+        if not isinstance(self.model, ModelSpec):
+            raise TypeError("model must be a ModelSpec")
+        _require_text(self.backend, "backend")
+        object.__setattr__(self, "operation", _enum(Operation, self.operation, "operation"))
+        object.__setattr__(self, "status", _enum(CapabilityStatus, self.status, "status"))
+        object.__setattr__(
+            self, "constraints", _json_mapping(self.constraints or {}, "constraints")
+        )
+        profiles = tuple(self.hardware_profile_ids)
+        notes = tuple(self.notes)
+        if any(not isinstance(item, str) or not item.strip() for item in profiles):
+            raise ValueError("hardware_profile_ids must contain non-empty strings")
+        if any(not isinstance(item, str) or not item.strip() for item in notes):
+            raise ValueError("notes must contain non-empty strings")
+        if any(not isinstance(item, ArtifactRef) for item in self.evidence):
+            raise TypeError("evidence must contain ArtifactRef records")
+        object.__setattr__(self, "hardware_profile_ids", profiles)
+        object.__setattr__(self, "evidence", tuple(self.evidence))
+        object.__setattr__(self, "notes", notes)
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> CapabilitySpec:
+        payload = dict(data)
+        _version(payload)
+        if isinstance(payload.get("model"), Mapping):
+            payload["model"] = ModelSpec.from_dict(payload["model"])
+        payload["hardware_profile_ids"] = tuple(payload.get("hardware_profile_ids", ()))
+        payload["evidence"] = tuple(
+            item if isinstance(item, ArtifactRef) else ArtifactRef.from_dict(item)
+            for item in payload.get("evidence", ())
+        )
+        payload["notes"] = tuple(payload.get("notes", ()))
+        return cls(**payload)
+
+
+@dataclass(frozen=True, kw_only=True)
 class SoftwareProvenance(SchemaMixin):
     """Software environment needed to interpret or reproduce a run."""
 
@@ -730,9 +1012,7 @@ class CalibrationRecord(SchemaMixin):
         _version({"schema_version": self.schema_version})
         _require_text(self.matrix_id, "matrix_id")
         _require_text(self.cell_id, "cell_id")
-        object.__setattr__(
-            self, "status", _enum(CalibrationStatus, self.status, "status")
-        )
+        object.__setattr__(self, "status", _enum(CalibrationStatus, self.status, "status"))
         if not isinstance(self.model, ModelSpec):
             raise TypeError("model must be a ModelSpec")
         if not isinstance(self.hardware, HardwareSpec):
@@ -942,6 +1222,7 @@ class CompatibilityResult(SchemaMixin):
     backend: str
     status: CompatibilityStatus
     confidence: Confidence
+    workload: WorkloadSpec | None = None
     estimated_peak_memory_bytes: int | None = None
     reasons: tuple[str, ...] = ()
     recommendations: tuple[str, ...] = ()
@@ -954,6 +1235,8 @@ class CompatibilityResult(SchemaMixin):
             raise TypeError("model must be a ModelSpec")
         if not isinstance(self.hardware, HardwareSpec):
             raise TypeError("hardware must be a HardwareSpec")
+        if self.workload is not None and not isinstance(self.workload, WorkloadSpec):
+            raise TypeError("workload must be a WorkloadSpec")
         _require_text(self.backend, "backend")
         _require_non_negative(self.estimated_peak_memory_bytes, "estimated_peak_memory_bytes")
         if any(not isinstance(item, str) or not item.strip() for item in self.reasons):
@@ -963,9 +1246,7 @@ class CompatibilityResult(SchemaMixin):
         if any(not isinstance(item, ArtifactRef) for item in self.evidence):
             raise TypeError("evidence must contain ArtifactRef records")
         object.__setattr__(self, "operation", _enum(Operation, self.operation, "operation"))
-        object.__setattr__(
-            self, "status", _enum(CompatibilityStatus, self.status, "status")
-        )
+        object.__setattr__(self, "status", _enum(CompatibilityStatus, self.status, "status"))
         object.__setattr__(self, "confidence", _enum(Confidence, self.confidence, "confidence"))
         object.__setattr__(self, "reasons", tuple(self.reasons))
         object.__setattr__(self, "recommendations", tuple(self.recommendations))
@@ -981,6 +1262,8 @@ class CompatibilityResult(SchemaMixin):
             payload["model"] = ModelSpec.from_dict(payload["model"])
         if isinstance(payload.get("hardware"), Mapping):
             payload["hardware"] = HardwareSpec.from_dict(payload["hardware"])
+        if isinstance(payload.get("workload"), Mapping):
+            payload["workload"] = WorkloadSpec.from_dict(payload["workload"])
         payload["evidence"] = tuple(
             item if isinstance(item, ArtifactRef) else ArtifactRef.from_dict(item)
             for item in payload.get("evidence", ())

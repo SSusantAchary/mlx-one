@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "Qwen/Qwen2.5-0.5B", "revision": "060db6499f32faf8b98477b0a26969ef7d8b9987", "modality": "text", "parameter_count": 494032768},
+      "backend": "mlx-lm",
+      "operation": "benchmark",
+      "status": "hardware-verified",
+      "constraints": {"context_length": 2048, "batch_size": 1, "workloads": ["inference-bf16", "inference-int4", "lora", "qlora"]},
+      "hardware_profile_ids": ["m4-air-32gb"],
+      "evidence": [
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-0.5b-inference-bf16-c2048.json", "kind": "calibration", "sha256": "1be993979577ad8e43337985c4ae7712a7702aff0a233ca9bbba3ebdd34d30e8"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-0.5b-inference-int4-c2048.json", "kind": "calibration", "sha256": "8f27e4c72e544c3f3db9af1c69f2c1abed95189d0ea322303b3e006236a29e04"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-0.5b-lora-c2048.json", "kind": "calibration", "sha256": "2567b56f3e9c4fb6520b9e67fe9a2cb9e396181a70dbf69901f8f1ecdd875576"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-0.5b-qlora-c2048.json", "kind": "calibration", "sha256": "0721ed1a4e6b8dd58dd700e5614c8afa51df04405c8a324bbf2bd6dd000692d7"}
+      ],
+      "notes": ["Device performance evidence only; no quality claim."]
+    },
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "Qwen/Qwen2.5-1.5B", "revision": "8faed761d45a263340a0528343f099c05c9a4323", "modality": "text", "parameter_count": 1543714304},
+      "backend": "mlx-lm",
+      "operation": "benchmark",
+      "status": "hardware-verified",
+      "constraints": {"context_length": 2048, "batch_size": 1, "workloads": ["inference-bf16", "inference-int4", "lora", "qlora"]},
+      "hardware_profile_ids": ["m4-air-32gb"],
+      "evidence": [
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-1.5b-inference-bf16-c2048.json", "kind": "calibration", "sha256": "b9dec104688425e42e04644a668d5f1074b51ccc2795a8444b0f66ec24c73fbe"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-1.5b-inference-int4-c2048.json", "kind": "calibration", "sha256": "0461dbb9bf4c5f7c5e91dbf6b87205e2b1d429beae84d8d0b8d662106a5a87eb"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-1.5b-lora-c2048.json", "kind": "calibration", "sha256": "be284abc97dee27c201d5f1d598b7c639b52b7bffebfc16e1c16dd9d4ebe5369"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-1.5b-qlora-c2048.json", "kind": "calibration", "sha256": "76bc53ed734cb387bdfc16848c344c01c873b28cf29d67d2ff3db3afa8948cb5"}
+      ],
+      "notes": ["Device performance evidence only; no quality claim."]
+    },
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "Qwen/Qwen2.5-3B", "revision": "3aab1f1954e9cc14eb9509a215f9e5ca08227a9b", "modality": "text", "parameter_count": 3085938688},
+      "backend": "mlx-lm",
+      "operation": "benchmark",
+      "status": "hardware-verified",
+      "constraints": {"context_length": 2048, "batch_size": 1, "workloads": ["inference-bf16", "inference-int4", "lora", "qlora"]},
+      "hardware_profile_ids": ["m4-air-32gb"],
+      "evidence": [
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-3b-inference-bf16-c2048.json", "kind": "calibration", "sha256": "6420226ce89c35d751b9b962add9cee43a55f3dbb30ee7ef6d7cb44e02954d1b"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-3b-inference-int4-c2048.json", "kind": "calibration", "sha256": "8ca353528bb164ffb4d0493107ee98dbe6ae919659d6aa3a2302860dea13260c"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-3b-lora-c2048.json", "kind": "calibration", "sha256": "dd89b07312b96157f2fd34dfeb5080fc3f74da34f65f1856bbf25d79332ccdaf"},
+        {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-3b-qlora-c2048.json", "kind": "calibration", "sha256": "d2d3143e1f5dce0b1bc3ea0e1cfea9609c06b8a0c6116833f6320a0e951dc6ea"}
+      ],
+      "notes": ["Device performance evidence only; no quality claim."]
+    }
+  ]
+}

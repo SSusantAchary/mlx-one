@@ -76,7 +76,12 @@ mlx-one = "mlx_one.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-mlx_one = ["data/hardware/*.yaml", "data/calibrations/*.yaml", "data/calibrations/*.json"]
+mlx_one = [
+    "data/*.json",
+    "data/hardware/*.yaml",
+    "data/calibrations/*.yaml",
+    "data/calibrations/*.json",
+]
 
 [tool.ruff]
 line-length = 100
