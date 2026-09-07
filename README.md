@@ -1,6 +1,8 @@
-# mlx-one
+<p align="center">
+  <img src="mlx-one.png" alt="mlx-one" width="1000">
+</p>
 
-Train anywhere. Prove it on Apple Silicon.
+<p align="center"><strong>Train anywhere. Prove it on Apple Silicon.</strong></p>
 
 `mlx-one` is building an open, model-size-agnostic lifecycle for training through
 pluggable backends, converting models to MLX, evaluating text, vision-language,
