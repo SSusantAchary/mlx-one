@@ -6,6 +6,21 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+- Added strict compatibility-evidence validation and an operation-level capability
+  registry seeded from checksummed Qwen2.5 M4 calibration records. Failed and
+  invalid calibration cells cannot become verified evidence.
+- Added atomic local run storage with parent lineage and explicit measured,
+  estimated, and unavailable metric provenance.
+- Added the experimental `text-exact-match-v1` evaluator, `mlx-one evaluate`, and
+  protocol-safe `mlx-one compare` with JSON/Markdown output and YAML gates.
+- Added versioned dataset, training, checkpoint, and capability contracts; local
+  JSON/JSONL validation; response-only token masks; and privacy-safe previews.
+- Added experimental native MLX LoRA/verified-base QLoRA orchestration, atomic
+  adapter lineage, export verification, and limited FastLanguageModel/TRL-shaped
+  compatibility facades. Hardware verification remains required before release.
+- Reconciled the public roadmap around vertical text-training and evaluation
+  slices while retaining the `v0.1.0a1` release history.
+
 - Added extensible hardware profiles and privacy-safe local hardware detection,
   including the reference `m4-air-32gb` profile with a 24 GiB process budget.
 - Added metadata-only text inference and training planning with uncertainty ranges,

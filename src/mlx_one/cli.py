@@ -1,13 +1,25 @@
 """Command line interface for mlx-one."""
 
+import hashlib
 import json
+import uuid
 from pathlib import Path
 
 import click
 
 from mlx_one import __version__
+from mlx_one.benchmark import BenchmarkError, benchmark_inference, load_prompts
 from mlx_one.calibration import CalibrationError, run_calibration
+from mlx_one.comparison import ComparisonError, compare_results, load_gates, load_result
+from mlx_one.datasets import DatasetError, dataset_spec_from_path, load_records, preview_dataset
 from mlx_one.diagnostics import collect_doctor_report, doctor_report_json, format_doctor_report
+from mlx_one.evaluation import (
+    TEXT_EXACT_MATCH_PROFILE,
+    EvaluationError,
+    evaluate_text,
+    load_evaluation_records,
+)
+from mlx_one.generation import GenerationError, generate_predictions
 from mlx_one.hardware import (
     HardwareProfileError,
     detect_hardware,
@@ -28,7 +40,10 @@ from mlx_one.planning import (
     plan_training,
     write_plan_result,
 )
-from mlx_one.schemas import Precision, TrainingMethod
+from mlx_one.registry import CapabilityRegistry, RegistryError
+from mlx_one.run_store import RunStore
+from mlx_one.schemas import Modality, ModelSpec, Operation, Precision, RunSpec, TrainingMethod
+from mlx_one.training import SFTTrainer, TrainingError, export_adapter, load_train_config
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -275,16 +290,249 @@ def calibrate_text_command(
         click.echo(json.dumps(summary, indent=2, sort_keys=True))
 
 
-@main.command("eval", help="Run standard model benchmarks.")
-def eval_command() -> None:
-    """Placeholder for the evaluation harness."""
-    click.echo("Unified evaluation — planned for v0.2.0")
+@main.command("eval", help="Run pinned text quality evaluation.")
+@click.option("--model")
+@click.option("--revision")
+@click.option("--dataset", type=click.Path(exists=True, dir_okay=False, path_type=str))
+@click.option("--predictions", type=click.Path(exists=True, dir_okay=False, path_type=str))
+@click.option("--adapter", type=click.Path(exists=True, path_type=str))
+@click.option("--max-tokens", type=click.IntRange(min=1), default=128)
+@click.option("--runs-dir", type=click.Path(file_okay=False, path_type=str), default="runs")
+@click.option("--run-id")
+@click.option("--json-output", "as_json", is_flag=True)
+def eval_command(
+    model: str | None,
+    revision: str | None,
+    dataset: str | None,
+    predictions: str | None,
+    adapter: str | None,
+    max_tokens: int,
+    runs_dir: str,
+    run_id: str | None,
+    as_json: bool,
+) -> None:
+    """Evaluate precomputed text outputs under a pinned exact-match protocol."""
+    if model is None and revision is None and dataset is None and predictions is None:
+        raise click.UsageError("--model, --revision, and --dataset are required")
+    if not all((model, revision, dataset)):
+        raise click.UsageError("--model, --revision, and --dataset are required")
+    try:
+        dataset_hash = hashlib.sha256(Path(dataset).read_bytes()).hexdigest()
+        spec = RunSpec(
+            run_id=run_id or f"eval-{uuid.uuid4().hex[:12]}",
+            operation=Operation.EVALUATE,
+            model=ModelSpec(model_id=model, revision=revision, modality=Modality.TEXT),
+            profile=TEXT_EXACT_MATCH_PROFILE,
+            dataset_revisions={Path(dataset).stem: dataset_hash},
+            generation={
+                "source": "precomputed" if predictions else "mlx-lm",
+                "deterministic": True,
+                "max_tokens": max_tokens,
+                "adapter": bool(adapter),
+            },
+        )
+        generated = None
+        if predictions is None:
+            records = load_evaluation_records(dataset)
+            generated = generate_predictions(
+                model,
+                revision,
+                [item["prompt"] for item in records],
+                max_tokens=max_tokens,
+                adapter_path=adapter,
+            )
+        result = evaluate_text(
+            spec,
+            dataset,
+            predictions=predictions,
+            generated_predictions=generated,
+            store=RunStore(runs_dir),
+        )
+    except (EvaluationError, GenerationError, OSError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    score = result.metrics["quality.exact_match"]["value"]
+    click.echo(result.to_json() if as_json else f"Run: {result.run_id}\nExact match: {score:.4f}")
+
+
+main.add_command(eval_command, "evaluate")
 
 
 @main.command(help="Compare result files and apply quality gates.")
-def compare() -> None:
-    """Placeholder for result comparison and quality gates."""
-    click.echo("Comparison and quality gates — planned for v0.2.0")
+@click.argument("baseline", required=False, type=click.Path(exists=True, dir_okay=False))
+@click.argument("candidate", required=False, type=click.Path(exists=True, dir_okay=False))
+@click.option("--gate", type=click.Path(exists=True, dir_okay=False, path_type=str))
+@click.option("--allow-incompatible", is_flag=True)
+@click.option("--format", "output_format", type=click.Choice(["json", "markdown"]), default="json")
+@click.option("--output", type=click.Path(dir_okay=False, path_type=str))
+def compare(
+    baseline: str | None,
+    candidate: str | None,
+    gate: str | None,
+    allow_incompatible: bool,
+    output_format: str,
+    output: str | None,
+) -> None:
+    """Compare compatible result files and apply optional quality gates."""
+    if baseline is None and candidate is None:
+        click.echo("Comparison and quality gates — planned for v0.2.0")
+        return
+    if baseline is None or candidate is None:
+        raise click.UsageError("BASELINE and CANDIDATE are both required")
+    try:
+        report = compare_results(
+            load_result(baseline),
+            load_result(candidate),
+            gates=load_gates(gate),
+            allow_incompatible=allow_incompatible,
+        )
+    except ComparisonError as exc:
+        raise click.ClickException(str(exc)) from exc
+    rendered = report.to_json() if output_format == "json" else report.to_markdown()
+    if output:
+        target = Path(output)
+        temporary = target.with_suffix(target.suffix + ".tmp")
+        temporary.write_text(rendered + ("" if rendered.endswith("\n") else "\n"), encoding="utf-8")
+        temporary.replace(target)
+    click.echo(rendered)
+    if not report.passed:
+        raise click.exceptions.Exit(1)
+
+
+@main.group(help="Validate local training datasets without starting MLX.")
+def data() -> None:
+    """Inspect local dataset structure and optional token masks."""
+
+
+@data.command("validate")
+@click.option(
+    "--dataset", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option(
+    "--layout",
+    default="auto",
+    type=click.Choice(["auto", "instruction", "messages", "prompt-completion", "text"]),
+)
+@click.option("--tokenizer", "tokenizer_ref")
+@click.option("--max-seq-length", type=click.IntRange(min=2), default=2048)
+def data_validate(
+    dataset: str, layout: str, tokenizer_ref: str | None, max_seq_length: int
+) -> None:
+    try:
+        spec = dataset_spec_from_path(dataset, layout=layout)
+        records = load_records(spec)
+        result: dict[str, object] = {
+            "dataset": spec.to_dict(),
+            "record_count": len(records),
+            "structurally_valid": True,
+        }
+        if tokenizer_ref:
+            from mlx_lm.utils import load_tokenizer
+
+            tokenizer = load_tokenizer(tokenizer_ref)
+            result["tokenization"] = preview_dataset(spec, tokenizer, max_length=max_seq_length)
+    except (DatasetError, OSError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(json.dumps(result, indent=2, sort_keys=True))
+
+
+@main.command("train", help="Run native MLX LoRA/QLoRA SFT from a strict configuration.")
+@click.option("--model", required=True)
+@click.option("--revision", required=True)
+@click.option(
+    "--dataset", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option(
+    "--config",
+    "config_path",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=str),
+)
+@click.option("--resume-from", type=click.Path(exists=True, dir_okay=False, path_type=str))
+def train_command(
+    model: str, revision: str, dataset: str, config_path: str, resume_from: str | None
+) -> None:
+    try:
+        trainer = SFTTrainer(
+            model=model,
+            revision=revision,
+            train_dataset=dataset,
+            args=load_train_config(config_path),
+        )
+        result = trainer.train(resume_from_checkpoint=resume_from)
+    except TrainingError as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json())
+
+
+@main.command("export", help="Verify and export an adapter checkpoint bundle.")
+@click.option(
+    "--checkpoint", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option("--output", required=True, type=click.Path(file_okay=False, path_type=str))
+def export_command(checkpoint: str, output: str) -> None:
+    try:
+        exported = export_adapter(checkpoint, output)
+    except TrainingError as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Exported adapter bundle: {exported}")
+
+
+@main.group(help="Inspect the evidence-backed model capability registry.")
+def registry() -> None:
+    """Query built-in exact-revision support evidence."""
+
+
+@registry.command("list")
+@click.option("--model")
+@click.option("--operation", type=click.Choice([item.value for item in Operation]))
+def registry_list(model: str | None, operation: str | None) -> None:
+    try:
+        catalog = CapabilityRegistry.builtin()
+        entries = catalog.entries if model is None else catalog.find(model, operation=operation)
+    except RegistryError as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(json.dumps([entry.to_dict() for entry in entries], indent=2, sort_keys=True))
+
+
+@main.group(help="Measure model performance in isolated MLX workers.")
+def benchmark() -> None:
+    """Run reproducible hardware performance workloads."""
+
+
+@benchmark.command("inference")
+@click.option("--model", required=True)
+@click.option("--revision", required=True)
+@click.option(
+    "--prompts",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=str),
+)
+@click.option("--runs-dir", default="runs", type=click.Path(file_okay=False, path_type=str))
+@click.option("--max-tokens", type=click.IntRange(min=1), default=32)
+@click.option("--repeats", type=click.IntRange(min=1), default=3)
+@click.option("--run-id")
+def benchmark_inference_command(
+    model: str,
+    revision: str,
+    prompts: str,
+    runs_dir: str,
+    max_tokens: int,
+    repeats: int,
+    run_id: str | None,
+) -> None:
+    try:
+        result = benchmark_inference(
+            model,
+            revision,
+            load_prompts(prompts),
+            store=RunStore(runs_dir),
+            max_tokens=max_tokens,
+            repeats=repeats,
+            run_id=run_id,
+        )
+    except BenchmarkError as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json())
 
 
 @main.command(help="Merge model weights.")

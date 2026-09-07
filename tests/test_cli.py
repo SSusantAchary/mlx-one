@@ -23,21 +23,31 @@ def test_help_lists_commands() -> None:
         "hardware",
         "plan",
         "calibrate",
+        "benchmark",
         "eval",
         "compare",
         "merge",
         "ship",
     ):
         assert command in result.output
-    for deferred_command in ("data", "export", "pipeline"):
+    for implemented_command in (
+        "benchmark",
+        "data",
+        "export",
+        "evaluate",
+        "registry",
+        "train",
+    ):
+        assert f"\n  {implemented_command} " in result.output
+    for deferred_command in ("pipeline",):
         assert f"\n  {deferred_command} " not in result.output
 
 
-def test_eval_placeholder() -> None:
+def test_eval_requires_evaluation_inputs() -> None:
     result = CliRunner().invoke(main, ["eval"])
 
-    assert result.exit_code == 0
-    assert result.output.strip() == "Unified evaluation — planned for v0.2.0"
+    assert result.exit_code == 2
+    assert "--model, --revision, and --dataset are required" in result.output
 
 
 def test_all_placeholder_commands() -> None:
