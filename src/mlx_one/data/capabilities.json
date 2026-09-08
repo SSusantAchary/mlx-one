@@ -48,6 +48,50 @@
         {"uri": "calibration/results/m4-air-32gb-text-v1/qwen2.5-3b-qlora-c2048.json", "kind": "calibration", "sha256": "d2d3143e1f5dce0b1bc3ea0e1cfea9609c06b8a0c6116833f6320a0e951dc6ea"}
       ],
       "notes": ["Device performance evidence only; no quality claim."]
+    },
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct", "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a", "modality": "text", "parameter_count": 1543714304, "architectures": ["Qwen2ForCausalLM"]},
+      "backend": "mlx-lm",
+      "operation": "train",
+      "status": "hardware-verified",
+      "constraints": {"method": "lora", "reference_hardware": "m4-air-32gb", "evidence_run_id": "train-0c82e1d6f134", "backend_version": "0.31.3"},
+      "hardware_profile_ids": ["m4-air-32gb"],
+      "evidence": [
+        {"schema_version": "1.0", "uri": "qualification/results/qwen2.5-coder-1.5b-lora-m4-air-32gb.json", "kind": "run-result", "sha256": "eb56b062e5449b3e0787db6352c3e62ef29660a19bb4831449a7a77a9e9be4e2", "media_type": "application/json", "metadata": {"run_id": "train-0c82e1d6f134"}}
+      ],
+      "notes": ["M4 32 GiB LoRA training verified; quality evidence is not yet verified."]
+    },
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct", "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a", "modality": "text", "parameter_count": 1543714304, "architectures": ["Qwen2ForCausalLM"]},
+      "backend": "mlx-lm",
+      "operation": "evaluate",
+      "status": "candidate",
+      "constraints": {"profiles": ["text-coding-v1", "text-instruction-v1", "text-reasoning-v1"]},
+      "notes": ["Quality evidence pending."]
+    },
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "HuggingFaceTB/SmolLM2-1.7B-Instruct", "revision": "31b70e2e869a7173562077fd711b654946d38674", "modality": "text", "parameter_count": 1711376384, "architectures": ["LlamaForCausalLM"]},
+      "backend": "mlx-lm",
+      "operation": "train",
+      "status": "hardware-verified",
+      "constraints": {"method": "lora", "reference_hardware": "m4-air-32gb", "evidence_run_id": "train-ead7f8615a34", "backend_version": "0.31.3"},
+      "hardware_profile_ids": ["m4-air-32gb"],
+      "evidence": [
+        {"schema_version": "1.0", "uri": "qualification/results/smollm2-1.7b-lora-m4-air-32gb.json", "kind": "run-result", "sha256": "22d09eda88e96d657d8d25a2b70184435444eed60204c55265dbaa6c00bbdbb4", "media_type": "application/json", "metadata": {"run_id": "train-ead7f8615a34"}}
+      ],
+      "notes": ["M4 32 GiB LoRA training verified; quality evidence is not yet verified."]
+    },
+    {
+      "schema_version": "1.0",
+      "model": {"schema_version": "1.0", "model_id": "HuggingFaceTB/SmolLM2-1.7B-Instruct", "revision": "31b70e2e869a7173562077fd711b654946d38674", "modality": "text", "parameter_count": 1711376384, "architectures": ["LlamaForCausalLM"]},
+      "backend": "mlx-lm",
+      "operation": "evaluate",
+      "status": "candidate",
+      "constraints": {"profiles": ["text-coding-v1", "text-instruction-v1", "text-reasoning-v1"]},
+      "notes": ["Quality evidence pending."]
     }
   ]
 }

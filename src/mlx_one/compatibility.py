@@ -15,6 +15,9 @@ from mlx_one.schemas import (
     CapabilityStatus,
     CompatibilityResult,
     CompatibilityStatus,
+    MetricProvenance,
+    RunResult,
+    RunStatus,
 )
 
 _IMMUTABLE_REVISION = re.compile(r"[0-9a-fA-F]{40,64}")
@@ -129,6 +132,37 @@ def validate_capability(spec: CapabilitySpec) -> EvidenceValidationReport:
         if artifact.sha256 is None:
             issues.append(ValidationIssue("missing-checksum", "registry evidence requires sha256"))
     _scan_private(spec.to_dict(), issues)
+    return EvidenceValidationReport(not issues, tuple(issues))
+
+
+def validate_run_evidence(result: RunResult) -> EvidenceValidationReport:
+    """Validate a sanitized completed run before it becomes public evidence."""
+    issues: list[ValidationIssue] = []
+    if result.status is not RunStatus.COMPLETED:
+        issues.append(ValidationIssue("non-success-status", "only completed runs are publishable"))
+    if not _IMMUTABLE_REVISION.fullmatch(result.spec.model.revision):
+        issues.append(
+            ValidationIssue("mutable-revision", "published runs require an exact revision")
+        )
+    if result.spec.hardware is None:
+        issues.append(ValidationIssue("missing-hardware", "published runs require hardware"))
+    if result.software is None or not result.software.packages:
+        issues.append(
+            ValidationIssue("missing-software", "published runs require software versions")
+        )
+    for name, metric in result.metrics.items():
+        if isinstance(metric, Mapping):
+            provenance = metric.get("provenance")
+            if provenance not in {item.value for item in MetricProvenance}:
+                issues.append(
+                    ValidationIssue("missing-provenance", f"metric {name!r} requires provenance")
+                )
+    for artifact in result.artifacts:
+        if artifact.sha256 is None:
+            issues.append(
+                ValidationIssue("missing-checksum", f"artifact {artifact.kind!r} requires sha256")
+            )
+    _scan_private(result.to_dict(), issues)
     return EvidenceValidationReport(not issues, tuple(issues))
 
 

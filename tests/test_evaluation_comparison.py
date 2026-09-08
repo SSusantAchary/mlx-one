@@ -76,6 +76,25 @@ def test_comparison_rejects_incompatible_protocols(tmp_path: Path) -> None:
     assert not compare_results(baseline, candidate, allow_incompatible=True).passed
 
 
+def test_comparison_allows_base_and_adapter_identity_to_differ(tmp_path: Path) -> None:
+    dataset = tmp_path / "eval.json"
+    dataset.write_text('[{"prompt":"x","reference":"x"}]', encoding="utf-8")
+    predictions = tmp_path / "predictions.json"
+    predictions.write_text('["x"]', encoding="utf-8")
+    store = RunStore(tmp_path / "runs")
+    baseline_spec = _spec("base")
+    adapter_spec = RunSpec.from_dict(
+        {
+            **_spec("adapter").to_dict(),
+            "generation": {"temperature": 0.0, "adapter": True},
+        }
+    )
+    baseline = evaluate_text(baseline_spec, dataset, store=store, predictions=predictions)
+    adapter = evaluate_text(adapter_spec, dataset, store=store, predictions=predictions)
+
+    assert compare_results(baseline, adapter).compatible
+
+
 def test_evaluate_cli_writes_machine_readable_result(tmp_path: Path) -> None:
     dataset = tmp_path / "eval.json"
     dataset.write_text('[{"prompt":"x","reference":"x"}]', encoding="utf-8")

@@ -1,0 +1,48 @@
+name: Apple Silicon qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Qualification target
+        required: true
+        type: choice
+        options:
+          - qwen2.5-coder-1.5b
+          - smollm2-1.7b
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: [self-hosted, macOS, ARM64, mlx-one-hardware]
+    timeout-minutes: 180
+    concurrency:
+      group: mlx-one-m4-qualification
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install qualification environment
+        run: python -m pip install -e ".[dev]"
+      - name: Verify reference hardware
+        run: mlx-one doctor --json-output
+      - name: Run selected resumable workflow
+        env:
+          TARGET: ${{ inputs.target }}
+        run: mlx-one workflow text-sft --config "examples/text-sft/${TARGET}.workflow.yaml" --resume
+      - name: Upload sanitized qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.target }}-qualification
+          path: |
+            runs/qualification/${{ inputs.target }}/workflow.json
+            runs/qualification/${{ inputs.target }}/report.md
+            runs/qualification/${{ inputs.target }}/runs/*/result.json
+            runs/qualification/${{ inputs.target }}/training/runs/*/result.json
+            runs/qualification/${{ inputs.target }}/exported-adapter/smoke-test.json
+          if-no-files-found: warn

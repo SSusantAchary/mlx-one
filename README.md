@@ -37,6 +37,7 @@ Discover → Inspect → Plan → Train → Convert → Verify → Benchmark →
 ## Table of contents
 
 - [Why mlx-one](#why-mlx-one)
+- [Architecture](#architecture)
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [Model inspection](#model-inspection)
@@ -66,6 +67,17 @@ Discover → Inspect → Plan → Train → Convert → Verify → Benchmark →
   with preflight memory estimates and preserved failure evidence.
 - **Two training surfaces, one implementation.** The native API is authoritative;
   the Unsloth/TRL-shaped facade is an explicitly supported subset.
+
+## Architecture
+
+<p align="center">
+  <img src="mlx-one-stack.png" alt="mlx-one current and target architecture" width="1600">
+</p>
+
+The diagram separates the current native MLX path from the planned CUDA adapter
+and future accelerator candidates. Status labels describe the repository today;
+displayed future paths are product direction, not compatibility claims. The
+capability registry and project-status table below remain authoritative.
 
 ## Installation
 
@@ -198,6 +210,18 @@ Supported states are:
 Failed, interrupted, skipped, and safety-invalidated calibration records cannot
 be promoted to verified capability entries.
 
+Validate, import, or promote local registry evidence explicitly:
+
+```bash
+mlx-one registry validate registry.json
+mlx-one registry import --entry candidate.json --registry registry.json
+mlx-one registry promote --entry candidate.json --result runs/id/result.json \
+  --status hardware-verified --registry registry.json
+```
+
+See the [candidate model catalog](docs/model-catalog.md) for the targets selected
+from `model_list.txt`.
+
 ## Dataset validation
 
 The text pipeline supports local JSON and JSONL records in four layouts:
@@ -300,7 +324,21 @@ model = FastLanguageModel.get_peft_model(
 
 Unsupported compatibility arguments raise an error instead of being ignored.
 
+Run the complete reference lifecycle as a resumable workflow:
+
+```bash
+mlx-one workflow text-sft \
+  --config examples/text-sft/qwen2.5-coder-1.5b.workflow.yaml \
+  --resume
+```
+
+Completed stages are recorded in `workflow.json` and are not repeated on resume.
+
 ## Evaluation and comparison
+
+Pinned profiles include `text-exact-match-v1`, `text-coding-v1`,
+`text-instruction-v1`, and `text-reasoning-v1`. Results retain sample IDs,
+inputs, predictions, exclusions, and a 95% Wilson confidence interval.
 
 ### Evaluate precomputed predictions
 
@@ -333,9 +371,9 @@ mlx-one evaluate \
   --runs-dir runs
 ```
 
-The first evaluation profile, `text-exact-match-v1`, pins Unicode normalization,
-case folding, whitespace handling, dataset revision, and generation settings.
-Published general-purpose quality benchmark scores are not available yet.
+Each profile pins its scoring behavior, dataset revision, and generation
+settings. Published general-purpose quality benchmark scores are not available
+until real model runs pass the declared gates.
 
 ### Compare runs and apply gates
 
@@ -493,13 +531,33 @@ See the [calibration methodology](docs/calibration.md) and
 weights, caches, prompts, generated text, verbose logs, and private machine
 identifiers are not part of the evidence bundle.
 
+### Measured LoRA workflow qualification
+
+The first end-to-end LoRA qualification runs used the same M4 MacBook Air with
+32 GiB unified memory, Python 3.12.11, MLX 0.32.2, and MLX-LM 0.31.3. Each run
+used a pinned model revision, a 512-token maximum sequence length, and 10
+training steps. These measurements use the `text-sft-v1` protocol and are not
+comparable to the calibration matrix's warm optimizer-step throughput.
+
+| Model | Immutable revision | Training loss | Throughput | Peak memory | Adapter update | Support state |
+| --- | --- | ---: | ---: | ---: | --- | --- |
+| Qwen2.5-Coder 1.5B Instruct | [`2e1fd397`](qualification/results/qwen2.5-coder-1.5b-lora-m4-air-32gb.json) | 6.522 → 0.004 | 25.18 tok/s | 3.51 GiB | ✅ verified | Hardware-verified |
+| SmolLM2 1.7B Instruct | [`31b70e2e`](qualification/results/smollm2-1.7b-lora-m4-air-32gb.json) | 6.771 → 0.005 | 22.85 tok/s | 3.82 GiB | ✅ verified | Hardware-verified |
+
+Both adapter bundles passed reload and deterministic inference smoke tests. The
+first two-sample held-out coding comparison did **not** pass its quality gate:
+Qwen scored 0.0 before and after adaptation, while SmolLM2 moved from 1.0 to
+0.0. These tiny comparisons validate workflow behavior and failure preservation;
+they do not establish model-quality improvement. Neither model is
+quality-verified.
+
 ## Project status
 
 | Milestone | Outcome | Status |
 | --- | --- | --- |
 | M0 / `v0.1.0a1` | Diagnostics, inspection, schemas, planning, calibration | ✅ released |
 | M1 | Evidence registry, local runs, text evaluation, comparison | 🚧 experimental on `main` |
-| M2 | Owned MLX SFT, LoRA, QLoRA, checkpoints, export | 🚧 hardware qualification pending |
+| M2 | Owned MLX SFT, LoRA, QLoRA, checkpoints, export | 🚧 LoRA training/export hardware-verified; held-out quality gate pending |
 | M3 | CUDA source portability and conversion parity | 📋 planned |
 | M4 | Embeddings and retrieval | 📋 planned |
 | M5 | Vision-language and OCR | 📋 planned |
@@ -509,6 +567,11 @@ identifiers are not part of the evidence bundle.
 The project is not restricted to models below 3B. That range reflects the
 maintainer's current M4 32 GiB validation boundary, not an API limit. See the
 [full roadmap](docs/roadmap.md).
+
+The current M4 LoRA evidence verifies training and adapter reload for
+Qwen2.5-Coder 1.5B and SmolLM2 1.7B. Their first tiny held-out quality comparisons
+did not pass, so evaluation support remains candidate-only; see the
+[checksummed qualification records](qualification/results).
 
 ## Development
 

@@ -1,0 +1,14 @@
+schema_version: "1.0"
+model: HuggingFaceTB/SmolLM2-1.7B-Instruct
+revision: 31b70e2e869a7173562077fd711b654946d38674
+hardware: m4-air-32gb
+dataset: examples/text-sft/train.jsonl
+dataset_layout: prompt-completion
+train_config: examples/text-sft/train.yaml
+evaluation_dataset: examples/text-sft/eval.jsonl
+evaluation_profile: text-coding-v1
+prompts: examples/text-sft/prompts.json
+gate: examples/text-sft/quality-gate-coding.yaml
+smoke_prompt: "Reply with only the word OK."
+max_tokens: 32
+output_dir: runs/qualification/smollm2-1.7b
