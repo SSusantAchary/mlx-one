@@ -115,11 +115,14 @@ def load_gates(path: str | Path | None) -> dict[str, Any]:
 
 
 def _protocol(result: RunResult) -> str:
+    generation = {
+        key: value for key, value in result.spec.generation.items() if key != "adapter"
+    }
     return json.dumps(
         {
             "profile": result.spec.profile,
             "datasets": result.spec.dataset_revisions,
-            "generation": result.spec.generation,
+            "generation": generation,
         },
         sort_keys=True,
         separators=(",", ":"),

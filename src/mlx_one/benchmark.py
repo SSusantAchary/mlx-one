@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from mlx_one.hardware import detect_hardware
+from mlx_one.provenance import collect_software_provenance
 from mlx_one.run_store import RunStore
 from mlx_one.schemas import (
     Failure,
@@ -107,6 +108,7 @@ def benchmark_inference(
         run_id=identifier,
         status=RunStatus.COMPLETED,
         spec=spec,
+        software=collect_software_provenance(),
         metrics=metrics,
         timings={
             "load_seconds": _measured(measured["load_seconds"], "seconds"),

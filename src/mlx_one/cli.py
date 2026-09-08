@@ -15,10 +15,12 @@ from mlx_one.datasets import DatasetError, dataset_spec_from_path, load_records,
 from mlx_one.diagnostics import collect_doctor_report, doctor_report_json, format_doctor_report
 from mlx_one.evaluation import (
     TEXT_EXACT_MATCH_PROFILE,
+    TEXT_PROFILES,
     EvaluationError,
     evaluate_text,
     load_evaluation_records,
 )
+from mlx_one.evidence import EvidenceError, publish_run_evidence
 from mlx_one.generation import GenerationError, generate_predictions
 from mlx_one.hardware import (
     HardwareProfileError,
@@ -42,8 +44,19 @@ from mlx_one.planning import (
 )
 from mlx_one.registry import CapabilityRegistry, RegistryError
 from mlx_one.run_store import RunStore
-from mlx_one.schemas import Modality, ModelSpec, Operation, Precision, RunSpec, TrainingMethod
+from mlx_one.schemas import (
+    CapabilitySpec,
+    CapabilityStatus,
+    Modality,
+    ModelSpec,
+    Operation,
+    Precision,
+    RunResult,
+    RunSpec,
+    TrainingMethod,
+)
 from mlx_one.training import SFTTrainer, TrainingError, export_adapter, load_train_config
+from mlx_one.workflow import WorkflowError, run_text_workflow
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -296,6 +309,12 @@ def calibrate_text_command(
 @click.option("--dataset", type=click.Path(exists=True, dir_okay=False, path_type=str))
 @click.option("--predictions", type=click.Path(exists=True, dir_okay=False, path_type=str))
 @click.option("--adapter", type=click.Path(exists=True, path_type=str))
+@click.option(
+    "--profile",
+    type=click.Choice(TEXT_PROFILES),
+    default=TEXT_EXACT_MATCH_PROFILE,
+    show_default=True,
+)
 @click.option("--max-tokens", type=click.IntRange(min=1), default=128)
 @click.option("--runs-dir", type=click.Path(file_okay=False, path_type=str), default="runs")
 @click.option("--run-id")
@@ -306,6 +325,7 @@ def eval_command(
     dataset: str | None,
     predictions: str | None,
     adapter: str | None,
+    profile: str,
     max_tokens: int,
     runs_dir: str,
     run_id: str | None,
@@ -322,7 +342,8 @@ def eval_command(
             run_id=run_id or f"eval-{uuid.uuid4().hex[:12]}",
             operation=Operation.EVALUATE,
             model=ModelSpec(model_id=model, revision=revision, modality=Modality.TEXT),
-            profile=TEXT_EXACT_MATCH_PROFILE,
+            hardware=detect_hardware(),
+            profile=profile,
             dataset_revisions={Path(dataset).stem: dataset_hash},
             generation={
                 "source": "precomputed" if predictions else "mlx-lm",
@@ -350,8 +371,9 @@ def eval_command(
         )
     except (EvaluationError, GenerationError, OSError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
-    score = result.metrics["quality.exact_match"]["value"]
-    click.echo(result.to_json() if as_json else f"Run: {result.run_id}\nExact match: {score:.4f}")
+    metric_name = next(name for name in result.metrics if name.startswith("quality."))
+    score = result.metrics[metric_name]["value"]
+    click.echo(result.to_json() if as_json else f"Run: {result.run_id}\n{metric_name}: {score:.4f}")
 
 
 main.add_command(eval_command, "evaluate")
@@ -469,9 +491,13 @@ def train_command(
     "--checkpoint", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
 )
 @click.option("--output", required=True, type=click.Path(file_okay=False, path_type=str))
-def export_command(checkpoint: str, output: str) -> None:
+@click.option("--smoke-prompt")
+@click.option("--max-tokens", type=click.IntRange(min=1), default=16, show_default=True)
+def export_command(checkpoint: str, output: str, smoke_prompt: str | None, max_tokens: int) -> None:
     try:
-        exported = export_adapter(checkpoint, output)
+        exported = export_adapter(
+            checkpoint, output, smoke_prompt=smoke_prompt, max_tokens=max_tokens
+        )
     except TrainingError as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(f"Exported adapter bundle: {exported}")
@@ -492,6 +518,87 @@ def registry_list(model: str | None, operation: str | None) -> None:
     except RegistryError as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(json.dumps([entry.to_dict() for entry in entries], indent=2, sort_keys=True))
+
+
+@registry.command("validate")
+@click.argument("registry_path", type=click.Path(exists=True, dir_okay=False, path_type=str))
+def registry_validate(registry_path: str) -> None:
+    """Validate every capability in a registry file."""
+    try:
+        catalog = CapabilityRegistry.from_file(registry_path)
+    except (RegistryError, OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Valid registry: {len(catalog.entries)} entries")
+
+
+@registry.command("import")
+@click.option(
+    "--entry", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option("--registry", "registry_path", required=True, type=click.Path(dir_okay=False))
+def registry_import(entry: str, registry_path: str) -> None:
+    """Validate and import one candidate capability entry."""
+    try:
+        target = Path(registry_path)
+        catalog = CapabilityRegistry.from_file(target) if target.exists() else CapabilityRegistry()
+        payload = json.loads(Path(entry).read_text(encoding="utf-8"))
+        catalog.add(CapabilitySpec.from_dict(payload))
+        catalog.write(target)
+    except (RegistryError, OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Imported capability into {registry_path}")
+
+
+@registry.command("promote")
+@click.option(
+    "--entry", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option(
+    "--result", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option("--registry", "registry_path", required=True, type=click.Path(dir_okay=False))
+@click.option(
+    "--status",
+    required=True,
+    type=click.Choice(
+        [
+            CapabilityStatus.INTEGRATION_TESTED.value,
+            CapabilityStatus.HARDWARE_VERIFIED.value,
+            CapabilityStatus.QUALITY_VERIFIED.value,
+        ]
+    ),
+)
+def registry_promote(entry: str, result: str, registry_path: str, status: str) -> None:
+    """Promote a capability using a matching completed run result."""
+    try:
+        target = Path(registry_path)
+        catalog = CapabilityRegistry.from_file(target) if target.exists() else CapabilityRegistry()
+        capability = CapabilitySpec.from_dict(json.loads(Path(entry).read_text(encoding="utf-8")))
+        run = RunResult.from_json(Path(result).read_text(encoding="utf-8"))
+        promoted = catalog.promote_from_result(capability, run, result, status)
+        catalog.write(target)
+    except (RegistryError, OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(promoted.to_json())
+
+
+@main.group(help="Validate and publish privacy-safe run evidence.")
+def evidence() -> None:
+    """Work with publishable lifecycle evidence."""
+
+
+@evidence.command("publish")
+@click.option(
+    "--result", required=True, type=click.Path(exists=True, dir_okay=False, path_type=str)
+)
+@click.option("--output", required=True, type=click.Path(dir_okay=False, path_type=str))
+def evidence_publish(result: str, output: str) -> None:
+    """Sanitize, validate, and checksum one completed run result."""
+    try:
+        path, digest = publish_run_evidence(result, output)
+    except EvidenceError as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Published evidence: {path}\nSHA-256: {digest}")
 
 
 @main.group(help="Measure model performance in isolated MLX workers.")
@@ -533,6 +640,25 @@ def benchmark_inference_command(
     except BenchmarkError as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(result.to_json())
+
+
+@main.group(help="Run resumable end-to-end reference workflows.")
+def workflow() -> None:
+    """Orchestrate complete model lifecycle workflows."""
+
+
+@workflow.command("text-sft")
+@click.option(
+    "--config", "config_path", required=True, type=click.Path(exists=True, dir_okay=False)
+)
+@click.option("--resume", is_flag=True, help="Skip stages already recorded as completed.")
+def workflow_text_sft(config_path: str, resume: bool) -> None:
+    """Run inspect, plan, SFT, evaluation, export, benchmark, and comparison."""
+    try:
+        report = run_text_workflow(config_path, resume=resume)
+    except WorkflowError as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Workflow completed: {report}")
 
 
 @main.command(help="Merge model weights.")

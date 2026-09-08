@@ -1,0 +1,14 @@
+schema_version: "1.0"
+model: Qwen/Qwen2.5-Coder-1.5B-Instruct
+revision: 2e1fd397ee46e1388853d2af2c993145b0f1098a
+hardware: m4-air-32gb
+dataset: examples/text-sft/train.jsonl
+dataset_layout: prompt-completion
+train_config: examples/text-sft/train.yaml
+evaluation_dataset: examples/text-sft/eval.jsonl
+evaluation_profile: text-coding-v1
+prompts: examples/text-sft/prompts.json
+gate: examples/text-sft/quality-gate-coding.yaml
+smoke_prompt: "Reply with only the word OK."
+max_tokens: 32
+output_dir: runs/qualification/qwen2.5-coder-1.5b

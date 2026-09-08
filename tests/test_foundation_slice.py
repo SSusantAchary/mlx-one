@@ -103,10 +103,19 @@ def test_verified_capability_requires_evidence_checksum() -> None:
 def test_builtin_registry_contains_exact_qwen_calibration_entries() -> None:
     entries = CapabilityRegistry.builtin().entries
 
-    assert len(entries) == 3
-    assert all(entry.status is CapabilityStatus.HARDWARE_VERIFIED for entry in entries)
+    measured = [entry for entry in entries if entry.status is CapabilityStatus.HARDWARE_VERIFIED]
+    candidates = [entry for entry in entries if entry.status is CapabilityStatus.CANDIDATE]
+
+    assert len(measured) == 5
+    assert len(candidates) == 2
     assert all(len(entry.model.revision) == 40 for entry in entries)
-    assert all(entry.operation is Operation.BENCHMARK for entry in entries)
+    assert sum(entry.operation is Operation.BENCHMARK for entry in measured) == 3
+    assert sum(entry.operation is Operation.TRAIN for entry in measured) == 2
+    assert {entry.model.model_id for entry in candidates} == {
+        "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    }
+    assert {entry.operation for entry in candidates} == {Operation.EVALUATE}
 
 
 def test_run_store_is_atomic_and_preserves_lineage(tmp_path: Path) -> None:

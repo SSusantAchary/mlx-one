@@ -1,0 +1,4 @@
+metrics:
+  quality.code_exact_match:
+    minimum: 0.5
+    max_regression: 0.0

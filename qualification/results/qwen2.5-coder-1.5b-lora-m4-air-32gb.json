@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "run_id": "train-0c82e1d6f134",
+  "status": "completed",
+  "spec": {
+    "schema_version": "1.0",
+    "run_id": "train-0c82e1d6f134",
+    "operation": "train",
+    "model": {
+      "schema_version": "1.0",
+      "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "modality": "text"
+    },
+    "profile": "text-sft-v1",
+    "hardware": {
+      "schema_version": "1.0",
+      "profile_id": "m4-air-32gb",
+      "platform": "macOS",
+      "architecture": "arm64",
+      "chip": "Apple M4",
+      "memory_bytes": 34359738368,
+      "accelerator": "Metal",
+      "accelerator_memory_bytes": 34359738368,
+      "process_memory_budget_bytes": 25769803776,
+      "system_reserve_bytes": 8589934592,
+      "unified_memory": true,
+      "reference_device": true,
+      "provenance": "detected-from-doctor-and-built-in-profile"
+    },
+    "dataset_revisions": {
+      "train": "f99a8d8be09222705df4c3b1daf5eb688a369353642a7fa35f73e044a2399645"
+    },
+    "seed": 42,
+    "metadata": {
+      "method": "lora",
+      "max_steps": 10,
+      "max_seq_length": 512,
+      "resume_semantics": "fresh",
+      "workflow_config_sha256": "37738be8654fc41f26132d68e940e0ae1b64e424e8b22fcd47b75e75f0d39ebb"
+    },
+    "created_at": "2026-09-07T16:13:17.610126+00:00"
+  },
+  "software": {
+    "python_version": "3.12.11",
+    "packages": {
+      "mlx": "0.32.2",
+      "mlx-lm": "0.31.3",
+      "mlx-one": "0.1.0a1"
+    },
+    "os_version": "macOS-15.7.9"
+  },
+  "metrics": {
+    "memory.peak_bytes": {"value": 3768833802.0, "provenance": "measured", "unit": "bytes", "protocol": "text-sft-v1"},
+    "train.adapter_nonzero_fraction": {"value": 1.0, "provenance": "measured", "unit": "ratio", "protocol": "text-sft-v1"},
+    "train.initial_loss": {"value": 6.522, "provenance": "measured", "unit": "loss", "protocol": "text-sft-v1"},
+    "train.loss": {"value": 0.004, "provenance": "measured", "unit": "loss", "protocol": "text-sft-v1"},
+    "train.loss_decreased": {"value": 1.0, "provenance": "measured", "unit": "boolean", "protocol": "text-sft-v1"},
+    "train.tokens_per_second": {"value": 25.18, "provenance": "measured", "unit": "tokens/second", "protocol": "text-sft-v1"},
+    "train.update_verified": {"value": 1.0, "provenance": "measured", "unit": "boolean", "protocol": "text-sft-v1"}
+  },
+  "timings": {
+    "wall_seconds": {"value": 2.881363541004248, "provenance": "measured", "unit": "seconds", "protocol": "text-sft-v1"}
+  },
+  "artifacts": [
+    {"schema_version": "1.0", "uri": "artifact://train-0c82e1d6f134/lora-adapter", "kind": "lora-adapter", "sha256": "7ca72f313260bb65cd31e20401b102b99e33165f29894fa65f68935af74f04e2"},
+    {"schema_version": "1.0", "uri": "artifact://train-0c82e1d6f134/checkpoint-metadata", "kind": "checkpoint-metadata", "sha256": "7377d97c88590ec026769f5aa53f01c302f33378f6f05eea9cacc54cca29fa4b"},
+    {"schema_version": "1.0", "uri": "artifact://train-0c82e1d6f134/adapter-config", "kind": "adapter-config", "sha256": "30c3d6e046e10873edb2c0c75114eaf1fadf5d1bf69e32b85c0bc478f5d156d1"}
+  ],
+  "started_at": "2026-09-07T16:13:17.610859+00:00",
+  "ended_at": "2026-09-07T16:13:20.529962+00:00"
+}

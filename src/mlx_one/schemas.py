@@ -11,6 +11,8 @@ from datetime import UTC, datetime
 from enum import Enum
 from typing import Any, TypeAlias
 
+from mlx_one.schema_migrations import migrate_record
+
 SCHEMA_VERSION = "1.0"
 
 JSONScalar: TypeAlias = str | int | float | bool | None
@@ -150,6 +152,13 @@ class TrainingMethod(str, Enum):
     LORA = "lora"
     QLORA = "qlora"
     SCRATCH = "scratch"
+
+
+class ResumeSemantics(str, Enum):
+    """State guarantee offered by a training checkpoint."""
+
+    ADAPTER_ONLY = "adapter-only"
+    EXACT = "exact"
 
 
 class Precision(str, Enum):
@@ -641,7 +650,7 @@ class RunSpec(SchemaMixin):
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> RunSpec:
         """Validate and construct a run specification."""
-        payload = dict(data)
+        payload = migrate_record("run", data)
         _version(payload)
         if isinstance(payload.get("model"), Mapping):
             payload["model"] = ModelSpec.from_dict(payload["model"])
@@ -711,6 +720,7 @@ class TaskResult(SchemaMixin):
 class ArtifactRef(SchemaMixin):
     """Reference to a local or remote artifact produced by a run."""
 
+    schema_version: str = SCHEMA_VERSION
     uri: str
     kind: str
     sha256: str | None = None
@@ -718,6 +728,7 @@ class ArtifactRef(SchemaMixin):
     metadata: Mapping[str, JSONValue] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        _version({"schema_version": self.schema_version})
         _require_text(self.uri, "uri")
         _require_text(self.kind, "kind")
         if self.sha256 is not None:
@@ -730,7 +741,7 @@ class ArtifactRef(SchemaMixin):
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> ArtifactRef:
         """Construct an artifact reference."""
-        return cls(**dict(data))
+        return cls(**migrate_record("artifact", data))
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -795,7 +806,7 @@ class DatasetSpec(SchemaMixin):
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> DatasetSpec:
-        payload = dict(data)
+        payload = migrate_record("dataset", data)
         _version(payload)
         return cls(**payload)
 
@@ -885,6 +896,8 @@ class CheckpointMetadata(SchemaMixin):
     adapter: ArtifactRef
     config_sha256: str
     resumable_state: tuple[str, ...] = ()
+    resume_semantics: ResumeSemantics = ResumeSemantics.ADAPTER_ONLY
+    state_artifacts: tuple[ArtifactRef, ...] = ()
     created_at: str = ""
 
     def __post_init__(self) -> None:
@@ -899,21 +912,39 @@ class CheckpointMetadata(SchemaMixin):
         if not re.fullmatch(r"[0-9a-fA-F]{64}", self.config_sha256):
             raise ValueError("config_sha256 must be a 64-character hexadecimal digest")
         object.__setattr__(self, "config_sha256", self.config_sha256.lower())
+        object.__setattr__(
+            self,
+            "resume_semantics",
+            _enum(ResumeSemantics, self.resume_semantics, "resume_semantics"),
+        )
         states = tuple(self.resumable_state)
         if any(not isinstance(item, str) or not item.strip() for item in states):
             raise ValueError("resumable_state must contain non-empty strings")
         object.__setattr__(self, "resumable_state", states)
+        if any(not isinstance(item, ArtifactRef) for item in self.state_artifacts):
+            raise TypeError("state_artifacts must contain ArtifactRef records")
+        state_artifacts = tuple(self.state_artifacts)
+        object.__setattr__(self, "state_artifacts", state_artifacts)
+        exact_state = {"adapter-weights", "optimizer", "scheduler", "rng", "step"}
+        if self.resume_semantics is ResumeSemantics.EXACT and not exact_state.issubset(states):
+            raise ValueError(
+                "exact resume requires adapter, optimizer, scheduler, RNG, and step state"
+            )
         timestamp = self.created_at or _utc_now()
         _validate_timestamp(timestamp, "created_at")
         object.__setattr__(self, "created_at", timestamp)
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> CheckpointMetadata:
-        payload = dict(data)
+        payload = migrate_record("checkpoint", data)
         _version(payload)
         if isinstance(payload.get("adapter"), Mapping):
             payload["adapter"] = ArtifactRef.from_dict(payload["adapter"])
         payload["resumable_state"] = tuple(payload.get("resumable_state", ()))
+        payload["state_artifacts"] = tuple(
+            item if isinstance(item, ArtifactRef) else ArtifactRef.from_dict(item)
+            for item in payload.get("state_artifacts", ())
+        )
         return cls(**payload)
 
 
@@ -955,7 +986,7 @@ class CapabilitySpec(SchemaMixin):
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> CapabilitySpec:
-        payload = dict(data)
+        payload = migrate_record("capability", data)
         _version(payload)
         if isinstance(payload.get("model"), Mapping):
             payload["model"] = ModelSpec.from_dict(payload["model"])
@@ -1106,7 +1137,7 @@ class RunResult(SchemaMixin):
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> RunResult:
         """Validate and construct a run result."""
-        payload = dict(data)
+        payload = migrate_record("run_result", data)
         _version(payload)
         if isinstance(payload.get("spec"), Mapping):
             payload["spec"] = RunSpec.from_dict(payload["spec"])

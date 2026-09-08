@@ -1,5 +1,9 @@
 # mlx-one Product and Engineering Roadmap
 
+This is the authoritative public roadmap. The local `mlxone_roadmap.md` and
+`mlx_one_LTS.md` files are historical planning notes and are intentionally not
+published or used for release claims.
+
 > Proposed sequence for work after the released `v0.1.0a1` foundation. A feature
 > is shipped only after its exit gate passes; code on `main` may be experimental.
 
@@ -28,11 +32,14 @@ authoritative; compatibility facades expose only documented, tested subsets.
 
 ## Current `main` boundary
 
-M1's backend-free contracts and exact-match workflow are implemented and tested.
-M2 has strict data/config contracts, an isolated `mlx-lm` LoRA adapter, adapter
-continuation/export lineage, and limited compatibility facades. It is not complete
-until real Qwen2.5-Coder training, post-training evaluation, adapter load/export
-smoke tests, and a second architecture pass on Apple Silicon.
+M1's backend-free contracts, multi-profile text evaluation, confidence intervals,
+evidence promotion, and comparison workflow are implemented and tested. M2 has
+strict data/config contracts, an isolated `mlx-lm` LoRA adapter, explicitly
+adapter-only continuation, transactional export, and limited compatibility
+facades. Qwen2.5-Coder and SmolLM2 are pinned candidates from the maintained
+model catalog. Both now have M4 LoRA-training and adapter-reload evidence; their
+quality gates failed and remain candidates for evaluation. M2 is not complete
+until a meaningful held-out task improves, then passes a pinned quality gate.
 
 CUDA, embeddings, VLM, audio, preference training, distributed execution,
 optimization search, serving qualification, merging, and release bundles remain

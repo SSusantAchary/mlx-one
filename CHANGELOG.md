@@ -6,6 +6,17 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+- Added coding, instruction-following, and reasoning evaluation profiles with
+  per-sample records, explicit exclusions, and 95% Wilson confidence intervals.
+- Added schema migrations, evidence-driven capability import/promotion, backend
+  version revalidation, and exact-revision Qwen2.5-Coder and SmolLM2 candidates
+  selected from the maintainer model catalog.
+- Added explicit adapter-only checkpoint continuation, loss-history and peak-memory
+  metrics, transactional exports, optional adapter reload smoke tests, and parent
+  run lineage.
+- Added a resumable inspect-to-compare workflow plus separate backend-free,
+  clean-wheel, and self-hosted Apple Silicon CI lanes.
+
 - Added strict compatibility-evidence validation and an operation-level capability
   registry seeded from checksummed Qwen2.5 M4 calibration records. Failed and
   invalid calibration cells cannot become verified evidence.
@@ -17,7 +28,8 @@ alpha releases may refine planned interfaces.
   JSON/JSONL validation; response-only token masks; and privacy-safe previews.
 - Added experimental native MLX LoRA/verified-base QLoRA orchestration, atomic
   adapter lineage, export verification, and limited FastLanguageModel/TRL-shaped
-  compatibility facades. Hardware verification remains required before release.
+  compatibility facades. Held-out quality qualification remains required before
+  this is released as a supported training workflow.
 - Reconciled the public roadmap around vertical text-training and evaluation
   slices while retaining the `v0.1.0a1` release history.
 
