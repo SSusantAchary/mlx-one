@@ -4,7 +4,7 @@
 
 <h1 align="center">mlx-one</h1>
 
-<p align="center"><strong>Train anywhere. Prove it on Apple Silicon.</strong></p>
+<p align="center"><strong>Train locally. Prove it on Apple Silicon. Scale when needed.</strong></p>
 
 <p align="center">
   Inspect, plan, train, evaluate, benchmark, and preserve reproducible model evidence
