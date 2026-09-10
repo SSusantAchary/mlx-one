@@ -40,9 +40,7 @@ class SparseMoeBlock(nn.Module):
         self.experts = StackedExperts(
             config.hidden_size, config.moe_intermediate_size, config.num_experts
         )
-        self.shared_expert = SwiGLU(
-            config.hidden_size, config.shared_expert_intermediate_size
-        )
+        self.shared_expert = SwiGLU(config.hidden_size, config.shared_expert_intermediate_size)
         self.shared_expert_gate = nn.Linear(config.hidden_size, 1, bias=False)
 
     def __call__(self, value: Any) -> tuple[Any, Any, Any]:
@@ -66,11 +64,10 @@ def router_auxiliary_loss(router_logits: tuple[Any, ...], num_experts: int, top_
     for logits in router_logits:
         probabilities = mx.softmax(logits.reshape(-1, num_experts), axis=-1, precise=True)
         indices = mx.argpartition(-probabilities, kth=top_k - 1, axis=-1)[:, :top_k]
-        assignment = mx.sum(
-            indices[..., None] == mx.arange(num_experts)[None, None, :], axis=1
-        ) / top_k
+        assignment = (
+            mx.sum(indices[..., None] == mx.arange(num_experts)[None, None, :], axis=1) / top_k
+        )
         losses.append(
-            num_experts
-            * mx.sum(mx.mean(probabilities, axis=0) * mx.mean(assignment, axis=0))
+            num_experts * mx.sum(mx.mean(probabilities, axis=0) * mx.mean(assignment, axis=0))
         )
     return mx.mean(mx.stack(losses))

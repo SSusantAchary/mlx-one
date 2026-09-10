@@ -28,9 +28,7 @@ class Qwen2MoeDecoderLayer(nn.Module):
         )
         self.mlp = SparseMoeBlock(config)
         self.input_layernorm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
-        self.post_attention_layernorm = nn.RMSNorm(
-            config.hidden_size, eps=config.rms_norm_eps
-        )
+        self.post_attention_layernorm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def __call__(
         self,
@@ -56,9 +54,7 @@ class Qwen2MoeModel(nn.Module):
         super().__init__()
         self.config = config
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
-        self.layers = [
-            Qwen2MoeDecoderLayer(config) for _ in range(config.num_hidden_layers)
-        ]
+        self.layers = [Qwen2MoeDecoderLayer(config) for _ in range(config.num_hidden_layers)]
         self.norm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def __call__(
@@ -116,9 +112,7 @@ class Qwen2MoeForCausalLM(nn.Module):
         )
         exposed = routers if self.config.output_router_logits else None
         auxiliary = (
-            router_auxiliary_loss(
-                routers, self.config.num_experts, self.config.num_experts_per_tok
-            )
+            router_auxiliary_loss(routers, self.config.num_experts, self.config.num_experts_per_tok)
             * self.config.router_aux_loss_coef
             if self.config.output_router_logits
             else None

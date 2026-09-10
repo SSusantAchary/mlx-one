@@ -55,9 +55,10 @@ class Qwen3Config:
         require_positive("rms_norm_eps", self.rms_norm_eps)
         require_positive("rope_theta", self.rope_theta)
         object.__setattr__(self, "rope_scaling", validate_rope_scaling(self.rope_scaling))
-        if self.rope_scaling and self.rope_scaling.get(
-            "rope_type", self.rope_scaling.get("type")
-        ) == "mrope":
+        if (
+            self.rope_scaling
+            and self.rope_scaling.get("rope_type", self.rope_scaling.get("type")) == "mrope"
+        ):
             raise ConfigError("mrope is not supported by the Qwen3 text architecture")
 
     @property

@@ -7,46 +7,68 @@
 <p align="center"><strong>Train locally. Prove it on Apple Silicon. Scale when needed.</strong></p>
 
 <p align="center">
-  A local-first CLI and Python package for inspecting, planning, training,
-  evaluating, benchmarking, and qualifying MLX model workflows.
+  A unified, native MLX stack for language, vision-language, embeddings,
+  audio-language, and speech models on Apple Silicon.
 </p>
 
 <p align="center">
   <a href="https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml"><img src="https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
+  <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
 
 > [!IMPORTANT]
-> The released package is `v0.1.0a1`. Current `main` contains experimental
-> evaluation, benchmarking, MLX SFT workflows, and native architecture work.
-> An architecture checkmark means synthetic structure tests pass; it does not
-> mean that a real checkpoint, training run, or hardware profile is qualified.
+> mlx-one is under active development. Native architecture support and model
+> qualification are tracked separately. A family marked Architecture ✅ has a
+> validated config, MLX model structure, registry entry, strict weight contract,
+> and synthetic execution tests. It does not automatically mean every checkpoint,
+> task, precision, or device has been qualified.
 
-## Table of contents
+## Why mlx-one?
 
-- [Installation](#installation)
-- [Quick start](#quick-start)
-- [Usage](#usage)
-  - [Inspect a model](#inspect-a-model)
-  - [Plan for Apple Silicon](#plan-for-apple-silicon)
-  - [Validate a dataset](#validate-a-dataset)
-  - [Fine-tune](#fine-tune)
-  - [Evaluate and compare](#evaluate-and-compare)
-  - [Benchmark](#benchmark)
-- [Python API](#python-api)
-- [Native architectures](#native-architectures)
-- [Optional backends](#optional-backends)
-- [Evidence and qualification](#evidence-and-qualification)
-- [Reference M4 results](#reference-m4-results)
-- [Project status](#project-status)
-- [Development](#development)
+MLX is an excellent foundation for machine learning on Apple Silicon, but model
+workflows are often split across separate packages and incompatible task APIs.
+mlx-one is building those pieces as one coherent stack:
+
+```text
+Python API + CLI
+       ↓
+Tasks: generation · embeddings · VLM · ASR · training
+       ↓
+Native model families + shared processors + safe loading
+       ↓
+Evaluation · benchmarking · evidence · qualification
+       ↓
+MLX on Apple Silicon
+```
+
+The project owns its supported model math directly. Hugging Face is used as the
+artifact ecosystem for configuration, tokenizer/processor assets, and safe
+`safetensors` checkpoints—not as a remote-code execution runtime.
+
+## What is implemented
+
+- Native MLX architectures across language, vision-language, embeddings,
+  audio-language, and ASR.
+- Shared attention, GQA, RoPE, normalization, feed-forward, MoE, vision, hybrid
+  convolution, masking, and KV-cache primitives.
+- Lazy metadata-driven model registration without initializing Metal during
+  lightweight package imports.
+- Strict configuration validation and deterministic weight contracts that reject
+  unknown or shape-incompatible tensors.
+- Safe local and pinned Hugging Face artifact inspection.
+- Native Whisper loading, audio preprocessing, tokenization, decoding, language
+  detection, segment timestamps, word timestamps, and WER/CER evaluation.
+- Dataset validation, memory planning, LoRA/QLoRA SFT workflows, adapter export,
+  evaluation, comparison, benchmarking, and evidence records.
+- Backend-free tests plus opt-in Metal and real-checkpoint integration gates.
 
 ## Installation
 
-mlx-one requires Python 3.10 or newer. Install the current development version
-from source:
+mlx-one requires Python 3.10 or newer and an Apple Silicon Mac for model
+execution.
 
 ```bash
 git clone https://github.com/SSusantAchary/mlx-one.git
@@ -56,67 +78,26 @@ source .venv/bin/activate
 python -m pip install -e .
 ```
 
-For development tools and tests:
+Install development tools with:
 
 ```bash
 python -m pip install -e ".[dev]"
 ```
 
+FFmpeg is required only when the Whisper API receives an audio file. Already
+decoded mono 16-kHz waveforms can be passed directly from Python.
+
 ## Quick start
 
-Check the host, inspect a model without loading its weights, and create a
-metadata-only memory plan:
+Check the machine and inspect a model without loading its weights:
 
 ```bash
 mlx-one doctor
 
-mlx-one inspect Qwen/Qwen2.5-1.5B \
-  --revision 8faed761d45a263340a0528343f099c05c9a4323
-
-mlx-one plan inference \
-  --model Qwen/Qwen2.5-1.5B \
-  --revision 8faed761d45a263340a0528343f099c05c9a4323 \
-  --hardware m4-air-32gb \
-  --context-length 2048 \
-  --batch-size 1
+mlx-one inspect Qwen/Qwen2.5-1.5B
 ```
 
-These commands do not initialize MLX or materialize model weights.
-
-```text
-Discover → Inspect → Plan → Train → Convert → Verify → Benchmark → Gate → Ship
-```
-
-## Usage
-
-### Inspect a model
-
-Inspect a Hugging Face repository or local model directory without executing
-remote code or opening pickle-based weights:
-
-```bash
-mlx-one inspect mlx-community/Qwen3-0.6B-4bit
-mlx-one inspect mlx-community/Qwen3-0.6B-4bit --revision main --json-output
-mlx-one inspect ./local-model --output inspection.json
-mlx-one inspect organization/cached-model --offline
-```
-
-Inspection reports model identity, transformer dimensions, formats, dtypes,
-quantization, tokenizer or processor metadata, license information, access
-restrictions, and cautious backend hints. Backend hints are candidates, not
-compatibility claims.
-
-### Plan for Apple Silicon
-
-List bundled hardware profiles or detect the local machine:
-
-```bash
-mlx-one hardware list
-mlx-one hardware show m4-air-32gb
-mlx-one hardware detect --json-output
-```
-
-Estimate an inference or training workload without loading the model:
+Build a workload-aware memory plan:
 
 ```bash
 mlx-one plan inference \
@@ -124,29 +105,95 @@ mlx-one plan inference \
   --hardware m4-air-32gb \
   --precision bf16 \
   --context-length 2048
-
-mlx-one plan train \
-  --model Qwen/Qwen2.5-3B \
-  --hardware m4-air-32gb \
-  --method auto \
-  --context-length 2048 \
-  --output plan.json
 ```
 
-Plans include lower, central, and upper memory estimates, fit status,
-confidence, assumptions, warnings, and calibration references. Estimates are
-guidance, not proof that a workload will fit.
+Transcribe audio through the native Whisper stack:
 
-### Validate a dataset
+```bash
+mlx-one transcribe openai/whisper-tiny recording.m4a \
+  --language en \
+  --word-timestamps \
+  --json-output
+```
 
-The text pipeline accepts local JSON and JSONL records:
+Omit `--language` for automatic detection. Add `--task translate` for
+speech-to-English translation or `--offline` to require local/cached assets.
 
-| Layout | Required fields |
+For reproducible evaluation and qualification, add `--revision` with an exact
+model commit. Raw commit hashes are kept in integration tests and evidence
+records rather than introductory examples.
+
+## Native model coverage
+
+### Language models
+
+| Registry type | Family | Native components | Architecture | Qualification |
+| --- | --- | --- | :---: | --- |
+| `qwen2` | Qwen2, Qwen2.5, Qwen2.5-Coder | Dense Transformer, GQA, RoPE, cache | ✅ | Per checkpoint |
+| `qwen3` | Qwen3 dense | Bias-free attention, Q/K norm, explicit head dimensions | ✅ | Candidate |
+| `qwen2_moe` | Qwen2-MoE | Top-k experts, shared expert, router outputs | ✅ | Architecture only |
+| `openelm` | OpenELM 270M–3B | Layer-wise heads/FFN widths, fused QKV, GQA | ✅ | Verify release |
+| `lfm2` | LFM2 and LFM2.5 | Hybrid convolution/attention decoder | ✅ | Per checkpoint |
+| `lfm2_moe` | LFM2 MoE | Hybrid decoder and sparse expert routing | ✅ | Excluded from ≤3B qualification |
+
+### Vision-language models
+
+| Registry type | Family | Native components | Architecture | Qualification |
+| --- | --- | --- | :---: | --- |
+| `qwen2_vl` | Qwen2-VL | Vision Transformer, 3D patches, merger, multimodal RoPE, image/video token insertion | ✅ | Verify exact checkpoint and processor |
+| `lfm2_vl` | LFM2.5-VL | Vision tower, pixel unshuffle/projector, hybrid language model | ✅ | Verify exact checkpoint and processor |
+
+### Embeddings and retrieval
+
+| Registry type | Family | Native components | Architecture | Qualification |
+| --- | --- | --- | :---: | --- |
+| `bert` | all-MiniLM-L6-v2 | BERT encoder, mean pooling, normalization, cosine | ✅ | Candidate |
+| `mpnet` | all-mpnet-base-v2 | MPNet relative positions, mean pooling, normalization, cosine | ✅ | Candidate |
+| `lfm2_colbert` | LFM2/LFM2.5 ColBERT | Token embeddings, masks, late-interaction MaxSim | ✅ | Candidate |
+
+### Audio and speech
+
+| Registry type | Family | Native components | Architecture | Qualification |
+| --- | --- | --- | :---: | --- |
+| `whisper` | tiny, base, small, medium, large-v3, turbo | Encoder-decoder, safe loading, log-Mel, BPE, decoding, language, timestamps, WER/CER | ✅ | Candidate; pinned tiny/turbo smoke gates pass |
+| `lfm2_audio` | LFM2.5-Audio | Audio encoder, Conformer, Depthformer, detokenizer, feature insertion | ✅ | Verify processor and codec weights |
+
+The detailed family backlog and exact status are maintained in
+[model_list.txt](model_list.txt). Package ownership and dependency boundaries
+are defined in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+
+## Capability levels
+
+mlx-one deliberately avoids turning one successful test into a broad support
+claim.
+
+| Level | Meaning |
 | --- | --- |
-| `instruction` | `instruction`, optional `input`, and `output` or `response` |
-| `messages` | OpenAI-style `messages`, ending with an assistant response |
-| `prompt-completion` | `prompt` and `completion` |
-| `text` | `text` |
+| Architecture ✅ | Config, model math, registry, weight contract, and synthetic tests pass |
+| Candidate | The family or checkpoint still needs full integration evidence |
+| Integration-tested | An exact checkpoint revision passes its task contract |
+| Hardware-verified | A checksummed workload passes on a recorded Apple Silicon profile |
+| Quality-verified | A pinned evaluation protocol passes its quality threshold |
+
+Every evidence claim is scoped to a model revision, operation, precision,
+workload, software environment, and hardware profile.
+
+## CLI
+
+### Inspect and plan
+
+```bash
+mlx-one inspect MODEL [--revision REVISION] [--offline] [--json-output]
+mlx-one hardware list
+mlx-one hardware detect --json-output
+mlx-one plan inference --model MODEL --hardware PROFILE
+mlx-one plan train --model MODEL --hardware PROFILE --method auto
+```
+
+Inspection is metadata-only: it does not execute remote model code or open
+pickle checkpoints.
+
+### Validate training data
 
 ```bash
 mlx-one data validate \
@@ -154,104 +201,59 @@ mlx-one data validate \
   --layout prompt-completion
 ```
 
-Add `--tokenizer MODEL` to preview token counts, truncation, and response-only
-loss masks. Private record content is not printed.
+Supported layouts are `instruction`, `messages`, `prompt-completion`, and
+`text`. A tokenizer can be supplied for truncation and loss-mask previews.
 
-### Fine-tune
-
-> [!WARNING]
-> Training on `main` is experimental. Run it locally on Apple Silicon, begin
-> with the planner, and use a pinned model revision.
-
-Run LoRA SFT with the included example configuration:
+### Train and export
 
 ```bash
 mlx-one train \
   --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
-  --revision 2e1fd397ee46e1388853d2af2c993145b0f1098a \
+  --revision PINNED_REVISION \
   --dataset examples/text-sft/train.jsonl \
   --config examples/text-sft/train.yaml
-```
 
-The worker preserves an atomic run result, adapter checksum, base-model
-ancestry, and checkpoint manifest. Export a validated adapter bundle with:
-
-```bash
 mlx-one export \
   --checkpoint runs/qwen-coder-sft/adapters/mlx-one-checkpoint.json \
   --output artifacts/qwen-coder-sft
 ```
 
-Run the complete reference lifecycle as a resumable workflow:
+Training is experimental. Start with the planner and pin the model revision.
 
-```bash
-mlx-one workflow text-sft \
-  --config examples/text-sft/qwen2.5-coder-1.5b.workflow.yaml \
-  --resume
-```
-
-See the [text SFT example](examples/text-sft/README.md) for configuration,
-evaluation, and quality-gate files.
-
-### Evaluate and compare
-
-Evaluate precomputed predictions without loading a model:
+### Evaluate, compare, and benchmark
 
 ```bash
 mlx-one evaluate \
   --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
-  --revision 2e1fd397ee46e1388853d2af2c993145b0f1098a \
+  --revision PINNED_REVISION \
   --dataset examples/text-sft/eval.jsonl \
   --predictions examples/text-sft/predictions-smoke.json \
   --runs-dir runs \
-  --run-id scoring-smoke \
   --json-output
-```
 
-Omit `--predictions` to generate with the isolated MLX worker. Add `--adapter`
-to evaluate a fine-tuned adapter.
-
-```bash
-mlx-one compare \
-  runs/base/result.json \
-  runs/candidate/result.json \
+mlx-one compare runs/base/result.json runs/candidate/result.json \
   --gate examples/text-sft/quality-gate.yaml \
-  --format markdown \
-  --output comparison.md
-```
+  --format markdown
 
-Comparisons require matching profiles, dataset revisions, and generation
-settings. Incompatible runs can be inspected but cannot pass qualification.
-
-### Benchmark
-
-Measure load time, prompt throughput, decode throughput, wall time, and peak
-Metal memory in an isolated process:
-
-```bash
 mlx-one benchmark inference \
   --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
-  --revision 2e1fd397ee46e1388853d2af2c993145b0f1098a \
-  --prompts examples/text-sft/prompts.json \
-  --max-tokens 32 \
-  --repeats 3 \
-  --runs-dir runs
+  --revision PINNED_REVISION \
+  --prompts examples/text-sft/prompts.json
 ```
 
-Create a calibration plan without running its workloads:
+ASR evaluation uses the pinned `whisper-wer-v1` and `whisper-cer-v1` profiles.
+
+### Evidence and registry
 
 ```bash
-mlx-one calibrate text \
-  --matrix m4-air-32gb-text-v1 \
-  --output calibration-results \
-  --dry-run
+mlx-one registry list
+mlx-one registry validate registry.json
+mlx-one evidence publish --result runs/example/result.json --output evidence.json
 ```
-
-Remove `--dry-run` only on matching reference hardware.
 
 ## Python API
 
-Inspect a model and estimate memory:
+Inspect and plan without initializing Metal:
 
 ```python
 from mlx_one import (
@@ -263,10 +265,7 @@ from mlx_one import (
     load_hardware_profile,
 )
 
-model = inspect_model(
-    "Qwen/Qwen2.5-1.5B",
-    revision="8faed761d45a263340a0528343f099c05c9a4323",
-).model
+model = inspect_model("Qwen/Qwen2.5-1.5B").model
 hardware = load_hardware_profile("m4-air-32gb")
 workload = WorkloadSpec(
     kind=WorkloadKind.INFERENCE,
@@ -278,15 +277,32 @@ estimate = estimate_memory(model, hardware, workload)
 print(estimate.to_json())
 ```
 
-Use the native training contract:
+Transcribe a file or mono 16-kHz waveform:
 
 ```python
-from mlx_one import TrainConfig
-from mlx_one.training import SFTTrainer
+from mlx_one import WhisperDecodeOptions, transcribe
+
+result = transcribe(
+    "openai/whisper-tiny",
+    "recording.wav",
+    language="en",
+    word_timestamps=True,
+    options=WhisperDecodeOptions(seed=0),
+)
+
+print(result.text)
+for segment in result.segments:
+    print(segment.start, segment.end, segment.text)
+```
+
+Train through the typed SFT contract:
+
+```python
+from mlx_one import SFTTrainer, TrainConfig
 
 trainer = SFTTrainer(
     model="Qwen/Qwen2.5-Coder-1.5B-Instruct",
-    revision="2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    revision="PINNED_REVISION",
     train_dataset="examples/text-sft/train.jsonl",
     args=TrainConfig(
         output_dir="runs/qwen-coder-sft",
@@ -300,137 +316,36 @@ result = trainer.train()
 print(result.to_json())
 ```
 
-The supported Unsloth-shaped compatibility facade maps to the same MLX
-primitives. Unsupported arguments fail instead of being silently ignored.
+## Architecture principles
 
-```python
-from mlx_one import FastLanguageModel
+- Configuration determines architecture; model-name conditionals do not.
+- Shared operations are implemented once and reused across families.
+- Family-specific classes stay inside their model packages.
+- Weight mapping and sanitization are explicit and deterministic.
+- Unsupported settings and unknown tensors fail visibly.
+- Forward execution, generation, processing, and training remain separate layers.
+- Training and inference converge on the same native model implementation.
+- Lightweight inspection and registry imports do not initialize Metal.
+- Qualification is based on reproducible evidence, never inference from a model
+  name or parameter count.
 
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name="Qwen/Qwen2.5-Coder-1.5B-Instruct",
-    revision="2e1fd397ee46e1388853d2af2c993145b0f1098a",
-    max_seq_length=512,
-)
+## Validation
 
-model = FastLanguageModel.get_peft_model(
-    model,
-    r=8,
-    lora_alpha=16,
-    target_modules=["q_proj", "v_proj"],
-)
-```
+The current repository gates include:
 
-## Native architectures
+- 226 backend-free tests covering schemas, configs, registries, weight contracts,
+  tokenization, processing, evaluation, and CLI behavior.
+- 251 Apple Silicon/Metal tests covering native model execution, shapes, caches,
+  multimodal feature insertion, embeddings, MoE routing, and ASR components.
+- Pinned real-checkpoint smoke gates for `openai/whisper-tiny` and
+  `openai/whisper-large-v3-turbo`.
+- Whisper log-Mel comparison within `1e-5` against the pinned reference path.
+- Ruff, source/wheel builds, and package metadata checks.
 
-Current `main` contains internal, architecture-first MLX implementations for:
+These counts describe the current development tree and will change as coverage
+expands.
 
-| Registry type | Family coverage | Architecture | Checkpoint qualification |
-| --- | --- | :---: | --- |
-| `qwen2` | Qwen2, Qwen2.5, Qwen2.5-Coder | ✅ | Separate per model and revision |
-| `qwen3` | Qwen3 dense | ✅ | Candidate |
-| `qwen2_moe` | Qwen2-MoE | ✅ | Unqualified |
-| `qwen2_vl` | Qwen2-VL text and vision stack | ✅ | Verify exact revision and processor |
-| `openelm` | OpenELM 270M, 450M, 1.1B, and 3B | ✅ | Verify exact release |
-
-These implementations are validated with tiny random configurations, cache and
-shape tests, registry tests, and strict synthetic weight contracts. They remain
-internal in this phase: real checkpoint loading, tokenizer and processor wiring,
-generation routing, parity testing, quantization, and training integration are
-separate qualification work.
-
-See [model_list.txt](model_list.txt) for the complete architecture tracker and
-[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for package ownership and the
-target native layout.
-
-## Optional backends
-
-MLX-LM is the default text runtime. Install only the additional modality
-integrations you need:
-
-```bash
-python -m pip install -e ".[vlm]"         # mlx-vlm
-python -m pip install -e ".[audio]"       # mlx-audio
-python -m pip install -e ".[embeddings]"  # mlx-embeddings
-python -m pip install -e ".[multimodal]"  # all modality backends
-python -m pip install -e ".[tracking]"    # optional MLflow integration
-```
-
-Quote extras in `zsh` so square brackets are not expanded as a glob.
-
-## Evidence and qualification
-
-mlx-one records support for an exact model revision, operation, precision,
-workload, runtime, and hardware profile—not for a model name alone.
-
-| State | Meaning |
-| --- | --- |
-| `candidate` | Metadata suggests a possible integration; not tested |
-| `upstream-documented` | The execution backend documents support |
-| `integration-tested` | The mlx-one adapter contract passed |
-| `hardware-verified` | A checksummed device run passed its safety policy |
-| `quality-verified` | A pinned evaluation protocol passed |
-| `unsupported` | The exact operation is known not to work |
-| `deprecated` | Previously supported evidence is no longer current |
-
-```bash
-mlx-one registry list
-mlx-one registry list --model Qwen/Qwen2.5-1.5B --operation benchmark
-mlx-one registry validate registry.json
-```
-
-Measured and estimated metrics remain distinct. Failed, interrupted, skipped,
-or safety-invalidated runs cannot be promoted to verified capability entries.
-See the [candidate model catalog](docs/model-catalog.md).
-
-## Reference M4 results
-
-The first public calibration matrix used an M4 MacBook Air with 32 GiB unified
-memory and a 24 GiB MLX process budget. The table below reports measured
-2048-token device performance at batch size 1; it is not a model-quality score.
-
-| Model | BF16 inference | 4-bit inference | BF16 LoRA | 4-bit QLoRA |
-| --- | ---: | ---: | ---: | ---: |
-| Qwen2.5 0.5B | 88.7 tok/s · 1.49 GiB | 233.2 tok/s · 1.02 GiB | 894.3 tok/s · 7.54 GiB | 798.5 tok/s · 6.89 GiB |
-| Qwen2.5 1.5B | 30.5 tok/s · 3.38 GiB | 93.0 tok/s · 1.51 GiB | 393.4 tok/s · 11.17 GiB | 333.9 tok/s · 9.11 GiB |
-| Qwen2.5 3B | 15.3 tok/s · 6.20 GiB | 50.3 tok/s · 2.26 GiB | 176.5 tok/s · 15.62 GiB | 157.8 tok/s · 11.49 GiB |
-
-Training and inference throughput measure different work and must not be
-compared with each other. All 2048-token matrix workloads completed. At 4096
-tokens, 0.5B and 1.5B BF16 LoRA runs were invalidated by swap safety, and both
-3B training workers failed.
-
-See the [calibration methodology](docs/calibration.md) and
-[published result records](calibration/results/m4-air-32gb-text-v1).
-
-The first end-to-end LoRA qualifications also verified adapter reload and a
-deterministic inference smoke test:
-
-| Model | Training loss | Throughput | Peak memory | Support state |
-| --- | ---: | ---: | ---: | --- |
-| [Qwen2.5-Coder 1.5B Instruct](qualification/results/qwen2.5-coder-1.5b-lora-m4-air-32gb.json) | 6.522 → 0.004 | 25.18 tok/s | 3.51 GiB | Hardware-verified |
-| [SmolLM2 1.7B Instruct](qualification/results/smollm2-1.7b-lora-m4-air-32gb.json) | 6.771 → 0.005 | 22.85 tok/s | 3.82 GiB | Hardware-verified |
-
-Their two-sample held-out coding comparisons did not pass the quality gate, so
-neither model is quality-verified.
-
-## Project status
-
-| Milestone | Outcome | Status |
-| --- | --- | --- |
-| M0 / `v0.1.0a1` | Diagnostics, inspection, schemas, planning, calibration | ✅ released |
-| M1 | Evidence registry, local runs, text evaluation, comparison | 🚧 experimental on `main` |
-| M2 | Owned MLX SFT, LoRA, QLoRA, checkpoints, export | 🚧 LoRA path hardware-verified; quality gate pending |
-| Native models | Qwen2, Qwen3, Qwen2-MoE, Qwen2-VL, OpenELM structures | 🚧 architecture-only |
-| M3 | CUDA source portability and conversion parity | 📋 planned |
-| M4–M6 | Embeddings, retrieval, VLM, OCR, ASR, and TTS workflows | 📋 planned |
-| M7+ | Optimization, advanced training, release qualification | 📋 planned |
-
-The current 3B boundary reflects the maintainer's M4 32 GiB validation target,
-not a package API limit. See the [full roadmap](docs/roadmap.md).
-
-## Development
-
-Run the backend-free quality gates:
+Run backend-free checks:
 
 ```bash
 ruff check .
@@ -439,12 +354,45 @@ python -m build --no-isolation
 python -m twine check dist/*
 ```
 
-Model execution and hardware tests are opt-in and require Apple Silicon with
-Metal access. Ordinary package imports and backend-free tests do not initialize
-Metal or access the network.
+Run native MLX execution tests on an Apple Silicon host:
 
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before
-opening a pull request. Report vulnerabilities through
-[SECURITY.md](SECURITY.md), not a public issue.
+```bash
+MLX_ONE_RUN_MLX_TESTS=1 pytest -q
+```
+
+Run pinned Whisper integration gates:
+
+```bash
+MLX_ONE_RUN_WHISPER_INTEGRATION=1 pytest -q \
+  tests/test_native_whisper_integration.py
+```
+
+Ordinary tests are network-free. Integration tests may download only the pinned
+assets needed by their explicit gate.
+
+## Roadmap
+
+The implementation proceeds by evidence-backed vertical slices:
+
+1. Complete checkpoint loading, generation, and parity qualification for native
+   language families.
+2. Promote embedding architectures into public batch encoding, retrieval, and
+   reranking APIs.
+3. Add complete image processing, generation, OCR/VQA evaluation, and training
+   paths for native VLMs.
+4. Qualify Whisper revisions and expand native ASR, alignment, audio-language,
+   and TTS coverage.
+5. Add native quantization, advanced training, export, and community evidence
+   workflows.
+
+See [mlxone_roadmap.md](mlxone_roadmap.md) for milestone exit criteria and
+[mlx_one_full.md](mlx_one_full.md) for the complete product plan.
+
+## Contributing
+
+Contributions should include the smallest relevant config, synthetic execution,
+weight-contract, integration, and documentation updates. Read
+[CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report security
+issues through [SECURITY.md](SECURITY.md), not a public issue.
 
 Released under the [MIT License](LICENSE).

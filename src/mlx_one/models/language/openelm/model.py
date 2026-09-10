@@ -21,9 +21,7 @@ class OpenELMAttention(nn.Module):
         self.scale = config.head_dim**-0.5
         self.rope_theta = config.rope_freq_constant
         projection_heads = self.num_query_heads + 2 * self.num_kv_heads
-        self.qkv_proj = nn.Linear(
-            config.model_dim, projection_heads * config.head_dim, bias=False
-        )
+        self.qkv_proj = nn.Linear(config.model_dim, projection_heads * config.head_dim, bias=False)
         self.out_proj = nn.Linear(
             self.num_query_heads * config.head_dim, config.model_dim, bias=False
         )
@@ -138,8 +136,7 @@ class OpenELMModel(nn.Module):
         self.config = config
         self.token_embeddings = nn.Embedding(config.vocab_size, config.model_dim)
         self.layers = [
-            OpenELMDecoderLayer(config, index)
-            for index in range(config.num_transformer_layers)
+            OpenELMDecoderLayer(config, index) for index in range(config.num_transformer_layers)
         ]
         self.norm = nn.RMSNorm(config.model_dim, eps=config.rms_norm_eps)
 
@@ -154,11 +151,7 @@ class OpenELMModel(nn.Module):
     ) -> tuple[Any, tuple[Any, ...] | None, tuple[Any, ...] | None]:
         if (input_ids is None) == (input_embeddings is None):
             raise ValueError("provide exactly one of input_ids or input_embeddings")
-        hidden = (
-            self.token_embeddings(input_ids)
-            if input_embeddings is None
-            else input_embeddings
-        )
+        hidden = self.token_embeddings(input_ids) if input_embeddings is None else input_embeddings
         if cache is not None and len(cache) != len(self.layers):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset

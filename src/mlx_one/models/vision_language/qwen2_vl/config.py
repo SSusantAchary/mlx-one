@@ -132,9 +132,7 @@ class Qwen2VLConfig:
 
     def __post_init__(self) -> None:
         if self.model_type != "qwen2_vl":
-            raise ConfigError(
-                f"Qwen2VLConfig cannot represent model_type={self.model_type!r}"
-            )
+            raise ConfigError(f"Qwen2VLConfig cannot represent model_type={self.model_type!r}")
         if self.vision_config.hidden_size != self.text_config.hidden_size:
             raise ConfigError("vision hidden_size must equal text hidden_size")
         token_ids = (
@@ -144,8 +142,7 @@ class Qwen2VLConfig:
             self.vision_end_token_id,
         )
         if any(
-            isinstance(item, bool) or not isinstance(item, int) or item < 0
-            for item in token_ids
+            isinstance(item, bool) or not isinstance(item, int) or item < 0 for item in token_ids
         ):
             raise ConfigError("multimodal token ids must be non-negative integers")
         if len(set(token_ids)) != len(token_ids):

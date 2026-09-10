@@ -42,6 +42,7 @@ dependencies = [
     "tqdm",
     "safetensors",
     "pyyaml",
+    "regex",
     "huggingface-hub>=1.5,<2",
 ]
 

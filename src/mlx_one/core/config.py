@@ -38,8 +38,7 @@ def validate_rope_scaling(value: Mapping[str, Any] | None) -> dict[str, Any] | N
         if not isinstance(sections, (list, tuple)) or len(sections) != 3:
             raise ConfigError("mrope requires three mrope_section values")
         if any(
-            isinstance(item, bool) or not isinstance(item, int) or item <= 0
-            for item in sections
+            isinstance(item, bool) or not isinstance(item, int) or item <= 0 for item in sections
         ):
             raise ConfigError("mrope_section values must be positive integers")
     return result

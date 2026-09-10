@@ -6,11 +6,60 @@ from mlx_one.core.registry import ModelRegistration, register_model
 def register_builtin_models() -> None:
     registrations = (
         ModelRegistration(
+            "bert",
+            "mlx_one.models.embeddings.bert.config:BertEmbeddingConfig",
+            "mlx_one.models.embeddings.bert.model:BertForSentenceEmbedding",
+            "embedding",
+            frozenset({"forward", "mean-pooling", "normalize", "cosine"}),
+        ),
+        ModelRegistration(
+            "lfm2",
+            "mlx_one.models.language.lfm2.config:Lfm2Config",
+            "mlx_one.models.language.lfm2.model:Lfm2ForCausalLM",
+            "text",
+            frozenset({"forward", "cache"}),
+        ),
+        ModelRegistration(
+            "lfm2_moe",
+            "mlx_one.models.language.lfm2_moe.config:Lfm2MoeConfig",
+            "mlx_one.models.language.lfm2_moe.model:Lfm2MoeForCausalLM",
+            "text",
+            frozenset({"forward", "cache", "router-outputs"}),
+        ),
+        ModelRegistration(
+            "lfm2_vl",
+            "mlx_one.models.vision_language.lfm2_vl.config:Lfm2VLConfig",
+            "mlx_one.models.vision_language.lfm2_vl.model:Lfm2VLForConditionalGeneration",
+            "vision-language",
+            frozenset({"forward", "cache", "image"}),
+        ),
+        ModelRegistration(
+            "lfm2_colbert",
+            "mlx_one.models.embeddings.lfm2_colbert.config:Lfm2ColBERTConfig",
+            "mlx_one.models.embeddings.lfm2_colbert.model:Lfm2ColBERTModel",
+            "embedding",
+            frozenset({"forward", "late-interaction"}),
+        ),
+        ModelRegistration(
+            "lfm2_audio",
+            "mlx_one.models.audio.lfm2_audio.config:Lfm2AudioConfig",
+            "mlx_one.models.audio.lfm2_audio.model:Lfm2AudioForConditionalGeneration",
+            "audio-language",
+            frozenset({"forward", "cache", "audio-encode", "audio-decode"}),
+        ),
+        ModelRegistration(
             "openelm",
             "mlx_one.models.language.openelm.config:OpenELMConfig",
             "mlx_one.models.language.openelm.model:OpenELMForCausalLM",
             "text",
             frozenset({"forward", "cache"}),
+        ),
+        ModelRegistration(
+            "mpnet",
+            "mlx_one.models.embeddings.mpnet.config:MPNetEmbeddingConfig",
+            "mlx_one.models.embeddings.mpnet.model:MPNetForSentenceEmbedding",
+            "embedding",
+            frozenset({"forward", "mean-pooling", "normalize", "cosine"}),
         ),
         ModelRegistration(
             "qwen2",
@@ -39,6 +88,22 @@ def register_builtin_models() -> None:
             "mlx_one.models.vision_language.qwen2_vl.model:Qwen2VLForConditionalGeneration",
             "vision-language",
             frozenset({"forward", "cache", "image", "video"}),
+        ),
+        ModelRegistration(
+            "whisper",
+            "mlx_one.models.audio.whisper.config:WhisperConfig",
+            "mlx_one.models.audio.whisper.model:WhisperForConditionalGeneration",
+            "asr",
+            frozenset(
+                {
+                    "forward",
+                    "cache",
+                    "transcribe",
+                    "language-detection",
+                    "segment-timestamps",
+                    "word-timestamps",
+                }
+            ),
         ),
     )
     for registration in registrations:

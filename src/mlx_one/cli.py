@@ -8,6 +8,13 @@ from pathlib import Path
 import click
 
 from mlx_one import __version__
+from mlx_one.audio import WhisperDecodeOptions, transcribe
+from mlx_one.audio.evaluation import (
+    ASR_PROFILES,
+    ASREvaluationError,
+    evaluate_asr,
+    load_asr_records,
+)
 from mlx_one.benchmark import BenchmarkError, benchmark_inference, load_prompts
 from mlx_one.calibration import CalibrationError, run_calibration
 from mlx_one.comparison import ComparisonError, compare_results, load_gates, load_result
@@ -140,6 +147,61 @@ def hardware_show(profile: str, as_json: bool) -> None:
 def hardware_detect(as_json: bool) -> None:
     result = detect_hardware()
     click.echo(result.to_json() if as_json else format_hardware_profile(result))
+
+
+@main.command("transcribe", help="Transcribe audio with native Whisper.")
+@click.argument("model")
+@click.argument("audio", type=click.Path(exists=True, dir_okay=False, path_type=str))
+@click.option("--revision", help="Hugging Face branch, tag, or commit.")
+@click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+@click.option("--language", help="Language code; omit for automatic detection.")
+@click.option("--task", type=click.Choice(["transcribe", "translate"]), default="transcribe")
+@click.option("--word-timestamps", is_flag=True)
+@click.option("--beam-size", type=click.IntRange(min=1), default=5, show_default=True)
+@click.option("--best-of", type=click.IntRange(min=1), default=5, show_default=True)
+@click.option("--temperature", "temperatures", multiple=True, type=click.FloatRange(min=0))
+@click.option("--seed", type=int, default=0, show_default=True)
+@click.option("--initial-prompt")
+@click.option("--json-output", "as_json", is_flag=True)
+def transcribe_command(
+    model: str,
+    audio: str,
+    revision: str | None,
+    offline: bool,
+    cache_dir: str | None,
+    language: str | None,
+    task: str,
+    word_timestamps: bool,
+    beam_size: int,
+    best_of: int,
+    temperatures: tuple[float, ...],
+    seed: int,
+    initial_prompt: str | None,
+    as_json: bool,
+) -> None:
+    options = WhisperDecodeOptions(
+        temperatures=temperatures or WhisperDecodeOptions().temperatures,
+        beam_size=beam_size,
+        best_of=best_of,
+        seed=seed,
+        initial_prompt=initial_prompt,
+    )
+    try:
+        result = transcribe(
+            model,
+            audio,
+            revision=revision,
+            language=language,
+            task=task,  # type: ignore[arg-type]
+            word_timestamps=word_timestamps,
+            options=options,
+            offline=offline,
+            cache_dir=cache_dir,
+        )
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json() if as_json else result.text)
 
 
 @main.group(help="Estimate text workload memory without loading model weights.")
@@ -311,7 +373,7 @@ def calibrate_text_command(
 @click.option("--adapter", type=click.Path(exists=True, path_type=str))
 @click.option(
     "--profile",
-    type=click.Choice(TEXT_PROFILES),
+    type=click.Choice(TEXT_PROFILES + ASR_PROFILES),
     default=TEXT_EXACT_MATCH_PROFILE,
     show_default=True,
 )
@@ -338,22 +400,42 @@ def eval_command(
         raise click.UsageError("--model, --revision, and --dataset are required")
     try:
         dataset_hash = hashlib.sha256(Path(dataset).read_bytes()).hexdigest()
+        asr_profile = profile in ASR_PROFILES
         spec = RunSpec(
             run_id=run_id or f"eval-{uuid.uuid4().hex[:12]}",
             operation=Operation.EVALUATE,
-            model=ModelSpec(model_id=model, revision=revision, modality=Modality.TEXT),
+            model=ModelSpec(
+                model_id=model,
+                revision=revision,
+                modality=Modality.ASR if asr_profile else Modality.TEXT,
+            ),
             hardware=detect_hardware(),
             profile=profile,
             dataset_revisions={Path(dataset).stem: dataset_hash},
             generation={
-                "source": "precomputed" if predictions else "mlx-lm",
+                "source": (
+                    "precomputed"
+                    if predictions
+                    else ("native-whisper" if asr_profile else "mlx-lm")
+                ),
                 "deterministic": True,
                 "max_tokens": max_tokens,
                 "adapter": bool(adapter),
             },
         )
         generated = None
-        if predictions is None:
+        if predictions is None and asr_profile:
+            records = load_asr_records(dataset)
+            generated = [
+                transcribe(
+                    model,
+                    record["audio"],
+                    revision=revision,
+                    language=record.get("language"),
+                ).text
+                for record in records
+            ]
+        elif predictions is None:
             records = load_evaluation_records(dataset)
             generated = generate_predictions(
                 model,
@@ -362,14 +444,15 @@ def eval_command(
                 max_tokens=max_tokens,
                 adapter_path=adapter,
             )
-        result = evaluate_text(
+        evaluator = evaluate_asr if asr_profile else evaluate_text
+        result = evaluator(
             spec,
             dataset,
             predictions=predictions,
             generated_predictions=generated,
             store=RunStore(runs_dir),
         )
-    except (EvaluationError, GenerationError, OSError, ValueError) as exc:
+    except (ASREvaluationError, EvaluationError, GenerationError, OSError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     metric_name = next(name for name in result.metrics if name.startswith("quality."))
     score = result.metrics[metric_name]["value"]

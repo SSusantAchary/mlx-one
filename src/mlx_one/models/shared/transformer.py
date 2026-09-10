@@ -38,9 +38,7 @@ def apply_rope(
         positions = mx.broadcast_to(positions[None, :], (batch, length))
         frequencies = (positions[..., None] / scaling_factor) * inv_freq
     elif position_ids.ndim == 2:
-        frequencies = (
-            position_ids.astype(mx.float32)[..., None] / scaling_factor
-        ) * inv_freq
+        frequencies = (position_ids.astype(mx.float32)[..., None] / scaling_factor) * inv_freq
     elif position_ids.ndim == 3:
         if position_ids.shape[0] != 3 or mrope_section is None:
             raise ValueError("3D position ids require three mrope_section values")
@@ -103,15 +101,9 @@ class GroupedQueryAttention(nn.Module):
         position_ids: Any | None = None,
     ) -> Any:
         batch, length, _ = hidden_states.shape
-        queries = self.q_proj(hidden_states).reshape(
-            batch, length, self.num_heads, self.head_dim
-        )
-        keys = self.k_proj(hidden_states).reshape(
-            batch, length, self.num_kv_heads, self.head_dim
-        )
-        values = self.v_proj(hidden_states).reshape(
-            batch, length, self.num_kv_heads, self.head_dim
-        )
+        queries = self.q_proj(hidden_states).reshape(batch, length, self.num_heads, self.head_dim)
+        keys = self.k_proj(hidden_states).reshape(batch, length, self.num_kv_heads, self.head_dim)
+        values = self.v_proj(hidden_states).reshape(batch, length, self.num_kv_heads, self.head_dim)
         if self.q_norm is not None:
             queries = self.q_norm(queries)
             keys = self.k_norm(keys)
@@ -178,9 +170,7 @@ class DecoderLayer(nn.Module):
         )
         self.mlp = SwiGLU(config.hidden_size, config.intermediate_size)
         self.input_layernorm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
-        self.post_attention_layernorm = nn.RMSNorm(
-            config.hidden_size, eps=config.rms_norm_eps
-        )
+        self.post_attention_layernorm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def __call__(
         self,

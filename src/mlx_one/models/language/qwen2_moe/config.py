@@ -42,9 +42,7 @@ class Qwen2MoeConfig:
 
     def __post_init__(self) -> None:
         if self.model_type != "qwen2_moe":
-            raise ConfigError(
-                f"Qwen2MoeConfig cannot represent model_type={self.model_type!r}"
-            )
+            raise ConfigError(f"Qwen2MoeConfig cannot represent model_type={self.model_type!r}")
         for name in (
             "hidden_size",
             "num_hidden_layers",
@@ -75,9 +73,10 @@ class Qwen2MoeConfig:
         if self.use_sliding_window:
             raise ConfigError("Qwen2-MoE sliding-window attention is not implemented")
         object.__setattr__(self, "rope_scaling", validate_rope_scaling(self.rope_scaling))
-        if self.rope_scaling and self.rope_scaling.get(
-            "rope_type", self.rope_scaling.get("type")
-        ) == "mrope":
+        if (
+            self.rope_scaling
+            and self.rope_scaling.get("rope_type", self.rope_scaling.get("type")) == "mrope"
+        ):
             raise ConfigError("mrope is not supported by Qwen2-MoE")
 
     @property
