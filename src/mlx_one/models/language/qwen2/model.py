@@ -16,9 +16,7 @@ class Qwen2Model(nn.Module):
         super().__init__()
         self.config = config
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
-        self.layers = [
-            DecoderLayer(config, qkv_bias=True) for _ in range(config.num_hidden_layers)
-        ]
+        self.layers = [DecoderLayer(config, qkv_bias=True) for _ in range(config.num_hidden_layers)]
         self.norm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def __call__(

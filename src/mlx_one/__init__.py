@@ -1,5 +1,12 @@
 """Public package surface for mlx-one."""
 
+from mlx_one.audio import (
+    TranscriptionResult,
+    TranscriptionSegment,
+    TranscriptionWord,
+    WhisperDecodeOptions,
+    transcribe,
+)
 from mlx_one.compat.unsloth import FastLanguageModel
 from mlx_one.hardware import (
     HardwareProfileError,
@@ -96,11 +103,15 @@ __all__ = [
     "SoftwareProvenance",
     "TaskResult",
     "TrainingMethod",
+    "TranscriptionResult",
+    "TranscriptionSegment",
+    "TranscriptionWord",
     "TrainConfig",
     "FastLanguageModel",
     "SFTTrainer",
     "WorkloadKind",
     "WorkloadSpec",
+    "WhisperDecodeOptions",
     "__version__",
     "inspect_model",
     "detect_hardware",
@@ -109,4 +120,5 @@ __all__ = [
     "load_hardware_profile",
     "plan_inference",
     "plan_training",
+    "transcribe",
 ]

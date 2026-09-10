@@ -119,13 +119,14 @@ def shaped_contract(contract: object) -> dict[str, Shaped]:
 
 
 def test_registry_is_lazy_and_contains_all_qwen_families() -> None:
-    assert registered_model_types() == (
+    qwen_types = {
         "openelm",
         "qwen2",
         "qwen2_moe",
         "qwen2_vl",
         "qwen3",
-    )
+    }
+    assert qwen_types <= set(registered_model_types())
     assert get_registration("qwen2_vl").modality == "vision-language"
     assert get_registration("qwen2_moe").capabilities >= {"forward", "router-outputs"}
     assert all(

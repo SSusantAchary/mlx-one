@@ -32,13 +32,9 @@ class Qwen2VisionTransformer(nn.Module):
             embed_dim=config.embed_dim,
         )
         self.blocks = [VisionBlock(config) for _ in range(config.depth)]
-        self.merger = PatchMerger(
-            config.hidden_size, config.embed_dim, config.spatial_merge_size
-        )
+        self.merger = PatchMerger(config.hidden_size, config.embed_dim, config.spatial_merge_size)
 
-    def __call__(
-        self, pixel_patches: Any, grid_thw: Sequence[Sequence[int]]
-    ) -> tuple[Any, Any]:
+    def __call__(self, pixel_patches: Any, grid_thw: Sequence[Sequence[int]]) -> tuple[Any, Any]:
         hidden = self.patch_embed(pixel_patches)
         positions, lengths = vision_position_ids(grid_thw, self.spatial_merge_size)
         if sum(lengths) != hidden.shape[0]:
@@ -142,9 +138,7 @@ class Qwen2VLForConditionalGeneration(nn.Module):
             hidden,
             cache=cache,
             hidden_states=states,
-            vision_hidden_states=mx.concatenate(vision_states, axis=0)
-            if vision_states
-            else None,
+            vision_hidden_states=mx.concatenate(vision_states, axis=0) if vision_states else None,
             position_ids=position_ids,
             rope_deltas=rope_deltas,
         )

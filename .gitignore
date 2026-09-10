@@ -1,0 +1,16 @@
+.gitignore
+mlx_one_LTS.md
+mlxone_roadmap.md
+mlx_one_development.md
+PROJECT_STRUCTURE.md
+model_list.txt
+.venv/
+.coverage
+build/
+dist/
+runs/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+__pycache__/
+*.py[cod]

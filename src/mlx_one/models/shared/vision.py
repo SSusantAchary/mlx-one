@@ -26,9 +26,7 @@ class VisionRotaryEmbedding(nn.Module):
 
     def __call__(self, value: Any, position_ids: Any) -> Any:
         quarter = self.head_dim // 4
-        inv_freq = mx.power(
-            self.theta, -mx.arange(quarter, dtype=mx.float32) / quarter
-        )
+        inv_freq = mx.power(self.theta, -mx.arange(quarter, dtype=mx.float32) / quarter)
         height = position_ids[:, 0].astype(mx.float32)[:, None] * inv_freq
         width = position_ids[:, 1].astype(mx.float32)[:, None] * inv_freq
         frequencies = mx.concatenate((height, width), axis=-1)
@@ -53,9 +51,7 @@ class PatchEmbed(nn.Module):
 
     def __call__(self, patches: Any) -> Any:
         if patches.ndim != 2 or patches.shape[-1] != self.patch_dim:
-            raise ValueError(
-                f"pixel patches must have shape [patches, {self.patch_dim}]"
-            )
+            raise ValueError(f"pixel patches must have shape [patches, {self.patch_dim}]")
         return self.proj(patches)
 
 

@@ -10,9 +10,7 @@ from typing import Any
 from mlx_one.core.config import ConfigError, extras
 
 
-def make_divisible(
-    value: int | float, divisor: int = 8, minimum: int | float | None = None
-) -> int:
+def make_divisible(value: int | float, divisor: int = 8, minimum: int | float | None = None) -> int:
     """Round a channel count using OpenELM's MobileNet-compatible rule."""
 
     if not _is_number(value) or value <= 0:
@@ -47,29 +45,22 @@ def _expand_multipliers(
             else:
                 step = (float(stop) - float(start)) / (layer_count - 1)
                 values = tuple(
-                    round(float(start) + step * index, 2)
-                    for index in range(layer_count)
+                    round(float(start) + step * index, 2) for index in range(layer_count)
                 )
         elif len(value) == layer_count:
             if any(not _is_number(item) for item in value):
                 raise ConfigError(f"{name} values must be numbers")
             values = tuple(float(item) for item in value)
         else:
-            raise ConfigError(
-                f"{name} must be a number, two endpoints, or one value per layer"
-            )
+            raise ConfigError(f"{name} must be a number, two endpoints, or one value per layer")
     else:
-        raise ConfigError(
-            f"{name} must be a number, two endpoints, or one value per layer"
-        )
+        raise ConfigError(f"{name} must be a number, two endpoints, or one value per layer")
     if any(item <= 0 for item in values):
         raise ConfigError(f"{name} values must be positive")
     return values
 
 
-def _expand_heads(
-    name: str, value: int | Sequence[int], layer_count: int
-) -> tuple[int, ...]:
+def _expand_heads(name: str, value: int | Sequence[int], layer_count: int) -> tuple[int, ...]:
     if isinstance(value, int) and not isinstance(value, bool):
         values = (value,) * layer_count
     elif isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
@@ -113,9 +104,7 @@ class OpenELMConfig:
 
     def __post_init__(self) -> None:
         if self.model_type != "openelm":
-            raise ConfigError(
-                f"OpenELMConfig cannot represent model_type={self.model_type!r}"
-            )
+            raise ConfigError(f"OpenELMConfig cannot represent model_type={self.model_type!r}")
         for name in (
             "vocab_size",
             "max_context_length",
@@ -142,13 +131,9 @@ class OpenELMConfig:
         if self.max_context_length > self.rope_max_length:
             raise ConfigError("max_context_length cannot exceed rope_max_length")
         if self.activation_fn_name not in {"swish", "silu"}:
-            raise ConfigError(
-                f"unsupported OpenELM activation: {self.activation_fn_name}"
-            )
+            raise ConfigError(f"unsupported OpenELM activation: {self.activation_fn_name}")
         if self.normalization_layer_name != "rms_norm":
-            raise ConfigError(
-                f"unsupported OpenELM normalization: {self.normalization_layer_name}"
-            )
+            raise ConfigError(f"unsupported OpenELM normalization: {self.normalization_layer_name}")
         for name in (
             "ffn_with_glu",
             "normalize_qk_projections",
@@ -185,16 +170,12 @@ class OpenELMConfig:
                 raise ConfigError("query heads must be divisible by num_gqa_groups")
             kv_heads = tuple(heads // self.num_gqa_groups for heads in query_heads)
         else:
-            kv_heads = _expand_heads(
-                "num_kv_heads", self.num_kv_heads, self.num_transformer_layers
-            )
+            kv_heads = _expand_heads("num_kv_heads", self.num_kv_heads, self.num_transformer_layers)
         for query, key_value in zip(query_heads, kv_heads, strict=True):
             if query % key_value:
                 raise ConfigError("query heads must be divisible by key/value heads")
             if query // key_value != self.num_gqa_groups:
-                raise ConfigError(
-                    "per-layer query/key-value heads must match num_gqa_groups"
-                )
+                raise ConfigError("per-layer query/key-value heads must match num_gqa_groups")
 
         object.__setattr__(self, "qkv_multipliers", qkv)
         object.__setattr__(self, "ffn_multipliers", ffn)

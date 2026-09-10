@@ -52,10 +52,7 @@ def weight_contract(config: Qwen2VLConfig) -> WeightContract:
     }
     expected["visual.patch_embed.proj.weight"] = (
         vision.embed_dim,
-        vision.in_channels
-        * vision.temporal_patch_size
-        * vision.patch_size
-        * vision.patch_size,
+        vision.in_channels * vision.temporal_patch_size * vision.patch_size * vision.patch_size,
     )
     merged_dim = vision.embed_dim * vision.spatial_merge_size**2
     expected.update(
