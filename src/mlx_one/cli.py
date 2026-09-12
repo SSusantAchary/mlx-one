@@ -318,7 +318,12 @@ def generate_command(
 @click.option("--cache-reuse", type=click.IntRange(min=0), default=256)
 @click.option("--cache-idle-slots/--no-cache-idle-slots", default=False)
 @click.option("--context-shift/--no-context-shift", default=False)
-@click.option("--kv-cache-bits", type=click.Choice(["4", "8", "16"]), default="16")
+@click.option(
+    "--kv-cache-bits",
+    type=click.Choice(["4", "8", "16"]),
+    default=None,
+    show_default="16",
+)
 @click.option(
     "--cache-type-k",
     "cache_type_k",
@@ -356,7 +361,7 @@ def serve_command(
     cache_reuse: int,
     cache_idle_slots: bool,
     context_shift: bool,
-    kv_cache_bits: str,
+    kv_cache_bits: str | None,
     cache_type_k: str | None,
     cache_type_v: str | None,
     spec_type: str,
@@ -376,10 +381,18 @@ def serve_command(
         )
         from mlx_one.server.config import cache_type_from_bits
 
-        default_cache_type = cache_type_from_bits(int(kv_cache_bits))
-        if cache_type_k is not None and cache_type_k != default_cache_type:
+        default_cache_type = cache_type_from_bits(int(kv_cache_bits or "16"))
+        if (
+            kv_cache_bits is not None
+            and cache_type_k is not None
+            and cache_type_k != default_cache_type
+        ):
             raise ValueError("--kv-cache-bits conflicts with -ctk/--cache-type-k")
-        if cache_type_v is not None and cache_type_v != default_cache_type:
+        if (
+            kv_cache_bits is not None
+            and cache_type_v is not None
+            and cache_type_v != default_cache_type
+        ):
             raise ValueError("--kv-cache-bits conflicts with -ctv/--cache-type-v")
         config = ServerConfig(
             alias=alias,
