@@ -312,28 +312,40 @@ def serve_command(
     try:
         import uvicorn
 
-        from mlx_one.server import ModelManager, create_app
+        from mlx_one.server import GenerationScheduler, ModelManager, create_app
 
         manager = ModelManager()
-        bundle = manager.load(
-            model,
-            revision=revision,
-            offline=offline,
-            cache_dir=cache_dir,
-            tokenizer_source=tokenizer_source,
-        )
-        quantization = (
-            f"{bundle.quantization.get('bits')}-bit" if bundle.quantization else "none"
-        )
-        click.echo("mlx-one\n")
-        click.echo(f"Model        {bundle.model_id}")
-        click.echo("Backend      MLX")
-        click.echo("Device       Apple Silicon")
-        click.echo(f"Architecture {bundle.architecture}")
-        click.echo(f"Quantization {quantization}\n")
-        click.echo(f"API          http://{host}:{port}/v1")
-        click.echo(f"UI           http://{host}:{port}")
-        uvicorn.run(create_app(model_manager=manager), host=host, port=port)
+        scheduler = GenerationScheduler(max_pending=8)
+        try:
+            bundle = scheduler.execute(
+                lambda: manager.load(
+                    model,
+                    revision=revision,
+                    offline=offline,
+                    cache_dir=cache_dir,
+                    tokenizer_source=tokenizer_source,
+                )
+            )
+            quantization = (
+                f"{bundle.quantization.get('bits')}-bit"
+                if bundle.quantization
+                else "none"
+            )
+            click.echo("mlx-one\n")
+            click.echo(f"Model        {bundle.model_id}")
+            click.echo("Backend      MLX")
+            click.echo("Device       Apple Silicon")
+            click.echo(f"Architecture {bundle.architecture}")
+            click.echo(f"Quantization {quantization}\n")
+            click.echo(f"API          http://{host}:{port}/v1")
+            click.echo(f"UI           http://{host}:{port}")
+            uvicorn.run(
+                create_app(model_manager=manager, scheduler=scheduler),
+                host=host,
+                port=port,
+            )
+        finally:
+            scheduler.close(finalizer=manager.unload)
     except (ImportError, OSError, RuntimeError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
 

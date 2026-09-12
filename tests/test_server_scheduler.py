@@ -28,6 +28,27 @@ def test_scheduler_streams_items_and_cancels_consumer() -> None:
         scheduler.close()
 
 
+def test_scheduler_runs_lifecycle_and_generation_on_one_thread() -> None:
+    scheduler = GenerationScheduler()
+    lifecycle_thread = scheduler.execute(threading.get_ident)
+    generation_threads: list[int] = []
+    finalized_threads: list[int] = []
+
+    def generate(cancel: threading.Event):
+        del cancel
+        generation_threads.append(threading.get_ident())
+        yield "ok"
+
+    async def run() -> None:
+        assert [item async for item in scheduler.schedule(generate)] == ["ok"]
+
+    asyncio.run(run())
+    scheduler.close(finalizer=lambda: finalized_threads.append(threading.get_ident()))
+
+    assert generation_threads == [lifecycle_thread]
+    assert finalized_threads == [lifecycle_thread]
+
+
 def test_scheduler_executes_jobs_in_fifo_order() -> None:
     scheduler = GenerationScheduler()
     active = threading.Event()

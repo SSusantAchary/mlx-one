@@ -76,8 +76,7 @@ def create_app(
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         yield
-        jobs.close()
-        manager.unload()
+        jobs.close(finalizer=manager.unload)
 
     app = FastAPI(title="mlx-one", version="0.1.0", lifespan=lifespan)
     app.add_middleware(BodyLimitMiddleware, limit=1024 * 1024)
