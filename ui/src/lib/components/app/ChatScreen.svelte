@@ -25,13 +25,22 @@
     dark = matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.classList.toggle('dark', dark);
     try {
-      $models = await fetchModels();
-      $selectedModel = $models[0]?.id ?? '';
-      $runtime = await fetchRuntime();
+      await connect();
     } catch (reason) {
       $error = reason instanceof Error ? reason.message : String(reason);
     }
   });
+
+  async function connect() {
+    $error = null;
+    try {
+      $models = await fetchModels($settings.api_key);
+      $selectedModel = $models[0]?.id ?? '';
+      $runtime = await fetchRuntime($settings.api_key);
+    } catch (reason) {
+      $error = reason instanceof Error ? reason.message : String(reason);
+    }
+  }
 
   const id = () => crypto.randomUUID();
   async function generate(history: Message[]) {
@@ -42,9 +51,11 @@
     const assistantId = id();
     $messages = [...history, { id: assistantId, role: 'assistant', content: '' }];
     try {
-      const result = await streamChat($selectedModel, history, $settings, controller.signal, (text) => {
+      const result = await streamChat($selectedModel, history, $settings, controller.signal, (text, thought) => {
         $messages = $messages.map((item) =>
-          item.id === assistantId ? { ...item, content: item.content + text } : item
+          item.id === assistantId
+            ? { ...item, content: item.content + text, reasoning_content: (item.reasoning_content ?? '') + thought }
+            : item
         );
       });
       $runtime = { ...($runtime ?? { backend: 'mlx', device: 'gpu' }), ...result.metrics };
@@ -80,7 +91,7 @@
     <div class="brand"><i></i><strong>mlx-one</strong></div>
     <button class="new" onclick={clear}><Plus size={17} /> New chat</button>
     <div class="local"><span>LOCAL SESSION</span><p>{$messages.length ? 'Current conversation' : 'No conversations yet'}</p></div>
-    <GenerationSettings bind:settings={$settings} />
+    <GenerationSettings bind:settings={$settings} onconnect={connect} />
     <p class="privacy">Nothing leaves this Mac except model downloads you request.</p>
   </aside>
   <main>

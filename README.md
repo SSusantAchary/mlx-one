@@ -103,6 +103,11 @@ Load one supported text model and start the bundled local UI:
 mlx-one serve mlx-community/Qwen3.5-0.8B-4bit
 ```
 
+The native server also supports model aliases, optional Bearer authentication, effective context
+limits, request deadlines, cooperative parallel slots, prompt/context caching, context shifting,
+reasoning output, quantized KV caches, and Qwen3.5 MTP speculative decoding. Run
+`mlx-one serve --help` for the complete flag list.
+
 Then open `http://127.0.0.1:8080`. The same process exposes an OpenAI-compatible API at
 `http://127.0.0.1:8080/v1`, including streaming chat completions. Model execution remains inside
 mlx-one's native model, tokenizer, sampling, generation, and MLX runtime. See

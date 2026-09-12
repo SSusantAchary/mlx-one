@@ -12,7 +12,7 @@ describe('streamChat', () => {
     let text = '';
     const result = await streamChat(
       'model', [{ id: '1', role: 'user', content: 'hello' }],
-      { temperature: 0.7, top_p: 0.9, max_tokens: 8 }, new AbortController().signal,
+      { temperature: 0.7, top_p: 0.9, max_tokens: 8, api_key: '', reasoning: 'auto', reasoning_budget: -1 }, new AbortController().signal,
       (piece) => text += piece
     );
     expect(text).toBe('Hi');
@@ -26,7 +26,7 @@ describe('streamChat', () => {
     )));
     const invoke = () => streamChat(
       'model', [{ id: '1', role: 'user', content: 'hello' }],
-      { temperature: 0.7, top_p: 0.9, max_tokens: 8 }, new AbortController().signal,
+      { temperature: 0.7, top_p: 0.9, max_tokens: 8, api_key: '', reasoning: 'auto', reasoning_budget: -1 }, new AbortController().signal,
       () => undefined
     );
     await expect(invoke()).rejects.toThrow('queue full');

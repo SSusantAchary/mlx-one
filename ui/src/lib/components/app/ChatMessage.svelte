@@ -13,6 +13,7 @@
 <article class:assistant={message.role === 'assistant'} aria-label={`${message.role} message`}>
   <div class="role">{message.role === 'assistant' ? 'mlx-one' : message.role}</div>
   <div class="bubble">
+    {#if message.reasoning_content}<details><summary>Reasoning</summary><pre>{message.reasoning_content}</pre></details>{/if}
     {#if message.role === 'assistant'}<div class="markdown">{@html html}</div>{:else}<p>{message.content}</p>{/if}
     {#if message.content}<button class="copy" onclick={copy} aria-label="Copy message">{#if copied}<Check size={15} />{:else}<Copy size={15} />{/if}</button>{/if}
   </div>
@@ -25,4 +26,5 @@
   article:not(.assistant) .bubble { background:var(--accent2); border-color:transparent; }
   p { white-space:pre-wrap; margin:0; line-height:1.6; }
   .copy { position:absolute; right:.65rem; top:.65rem; border:0; background:transparent; color:var(--muted); padding:.25rem; }
+  details{margin:0 0 .8rem;color:var(--muted)}pre{white-space:pre-wrap;font:inherit;font-size:.85rem}
 </style>

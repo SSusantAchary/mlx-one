@@ -20,6 +20,33 @@ The default API base is `http://127.0.0.1:8080/v1` and the UI is at
 accepts the same `--revision`, `--offline`, and `--cache-dir` controls as other model commands.
 For a checkpoint without tokenizer assets, pass `--tokenizer REPOSITORY_OR_DIRECTORY`.
 
+Common native serving controls:
+
+```bash
+mlx-one serve MODEL \
+  --alias local-model \
+  --api-key local-secret \
+  -c 32768 \
+  -np 2 \
+  --queue-size 8 \
+  --timeout 600 \
+  --warmup \
+  --cache-prompt \
+  --cache-reuse 256 \
+  --context-shift \
+  --kv-cache-bits 4
+```
+
+`MLX_ONE_API_KEY` is an alternative to `--api-key`, and the option can be repeated. API keys
+protect `/v1/*`; health and the UI shell remain public. Enter the key in the UI's settings and
+press Connect. The browser keeps it in memory only.
+
+The server defaults to one cooperative generation slot, eight queued requests, a 600-second
+whole-request deadline, startup warmup, prompt caching, native-precision KV state, and no
+context shifting. `-ctk` and `-ctv` independently accept `f16`, `bf16`, `q4_0`, or `q8_0`.
+Quantization applies only to attention KV tensors; convolution and recurrent state keep their
+required native precision.
+
 V1 loads one model per process. It supports GPT-2, Qwen2, Qwen2-MoE, Qwen3, LFM2, LFM2-MoE,
 OpenELM, and Qwen3.5 in text-only mode. A registered architecture is not automatically a claim
 that every checkpoint has completed qualification.
@@ -34,16 +61,33 @@ that every checkpoint has completed qualification.
 
 Streaming responses are SSE records followed by `data: [DONE]`. Stop in the UI aborts the HTTP
 request, which cooperatively cancels native generation. Requests execute through one MLX worker
-and a bounded FIFO queue.
+and a bounded FIFO queue. `-np/--parallel` interleaves token steps fairly on that worker; it does
+not create additional MLX inference threads.
 
 ```bash
 curl http://127.0.0.1:8080/v1/chat/completions \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer local-secret' \
   -d '{"model":"mlx-community/Qwen3.5-0.8B-4bit","messages":[{"role":"user","content":"Hello"}],"stream":false}'
 ```
 
+Reasoning-capable templates can be controlled with `--reasoning auto|on|off`,
+`--reasoning-format`, `--reasoning-budget`, and `--reasoning-preserve`. The default `deepseek`
+format streams reasoning through `delta.reasoning_content`. Request bodies may override
+`reasoning` and `reasoning_budget`.
+
+`deepseek-legacy` keeps `<think>` tags in normal content while also filling
+`reasoning_content`. `--reasoning-preserve` passes preservation controls to compatible chat
+templates and accepts prior assistant `reasoning_content` on subsequent requests; the browser
+keeps that history in memory only.
+
+Qwen3.5 checkpoints containing the complete native `mtp.*` tensor group can use
+`--spec-type draft-mtp --spec-draft-n-max 3`. Greedy requests use MTP drafting and verification;
+sampled requests safely fall back to ordinary decoding. Missing or partial MTP weights are an
+explicit startup error when speculation is requested.
+
 This is a deliberately limited compatibility target. Tools, multimodal message content, agents,
-authentication, and remote model routing are rejected or unavailable in V1.
+and remote model routing are rejected or unavailable in V1.
 
 ## Development
 

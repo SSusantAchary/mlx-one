@@ -5,11 +5,26 @@ export async function streamChat(
   messages: Message[],
   settings: Settings,
   signal: AbortSignal,
-  onText: (text: string) => void
+  onText: (text: string, reasoning: string) => void
 ): Promise<StreamResult> {
+  const { api_key, ...generation } = settings;
   const response = await fetch('/v1/chat/completions', {
-    method: 'POST', headers: { 'content-type': 'application/json' }, signal,
-    body: JSON.stringify({ model, messages: messages.map(({ role, content }) => ({ role, content })), ...settings, stream: true })
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      ...(api_key ? { authorization: `Bearer ${api_key}` } : {})
+    },
+    signal,
+    body: JSON.stringify({
+      model,
+      messages: messages.map(({ role, content, reasoning_content }) => ({
+        role,
+        content,
+        ...(reasoning_content ? { reasoning_content } : {})
+      })),
+      ...generation,
+      stream: true
+    })
   });
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
@@ -29,7 +44,9 @@ export async function streamChat(
       const chunk = JSON.parse(data);
       if (chunk.error?.message) throw new Error(chunk.error.message);
       const choice = chunk.choices?.[0];
-      if (choice?.delta?.content) onText(choice.delta.content);
+      if (choice?.delta?.content || choice?.delta?.reasoning_content) {
+        onText(choice.delta.content ?? '', choice.delta.reasoning_content ?? '');
+      }
       if (choice?.finish_reason) finishReason = choice.finish_reason;
       if (chunk.mlx) metrics = chunk.mlx;
     }
