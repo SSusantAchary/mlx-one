@@ -12,7 +12,7 @@ def sanitize_weights(weights: dict[str, Any], config: Qwen3Config) -> dict[str, 
     sanitized = {
         name: value
         for name, value in weights.items()
-        if not name.endswith("self_attn.rotary_emb.inv_freq")
+        if not name.endswith("rotary_emb.inv_freq")
     }
     if config.tie_word_embeddings:
         sanitized.pop("lm_head.weight", None)

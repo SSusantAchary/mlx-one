@@ -61,6 +61,11 @@ artifact ecosystem for configuration, tokenizer/processor assets, and safe
 - Safe local and pinned Hugging Face artifact inspection.
 - Native Whisper loading, audio preprocessing, tokenization, decoding, language
   detection, segment timestamps, word timestamps, and WER/CER evaluation.
+- Native GPT-2 loading, byte-level BPE, cached greedy and seeded sampling,
+  batched generation, stop sequences, and token streaming.
+- Native Qwen3 embedding and reranking with byte-level BPE, safe loading,
+  padding-aware batching, Matryoshka dimensions, normalization, cosine similarity,
+  yes/no pair scoring, and stable ranking.
 - Dataset validation, memory planning, LoRA/QLoRA SFT workflows, adapter export,
   evaluation, comparison, benchmarking, and evidence records.
 - Backend-free tests plus opt-in Metal and real-checkpoint integration gates.
@@ -107,6 +112,20 @@ mlx-one plan inference \
   --context-length 2048
 ```
 
+Generate text through the native GPT-2 stack:
+
+```bash
+mlx-one generate openai-community/gpt2 "The future of local AI is" \
+  --max-tokens 64 \
+  --temperature 0.8 \
+  --top-p 0.95 \
+  --seed 0
+```
+
+Use `--stream` for incremental text, `--json-output` for a structured result,
+or `--offline` with an existing local/cache copy. Model downloads occur only
+when a user explicitly supplies an online repository without `--offline`.
+
 Transcribe audio through the native Whisper stack:
 
 ```bash
@@ -119,6 +138,28 @@ mlx-one transcribe openai/whisper-tiny recording.m4a \
 Omit `--language` for automatic detection. Add `--task translate` for
 speech-to-English translation or `--offline` to require local/cached assets.
 
+Create document or instructed query embeddings:
+
+```bash
+mlx-one embed Qwen/Qwen3-Embedding-0.6B "A document to index" \
+  --dimensions 512 \
+  --json-output
+
+mlx-one embed Qwen/Qwen3-Embedding-0.6B "local Apple Silicon training" \
+  --input-type query
+```
+
+Rerank candidate documents while preserving their original indexes:
+
+```bash
+mlx-one rerank Qwen/Qwen3-Reranker-0.6B \
+  "Which Macs support MLX?" \
+  "MLX is designed for Apple silicon." \
+  "CUDA targets NVIDIA GPUs." \
+  --top-k 1 \
+  --json-output
+```
+
 For reproducible evaluation and qualification, add `--revision` with an exact
 model commit. Raw commit hashes are kept in integration tests and evidence
 records rather than introductory examples.
@@ -129,6 +170,7 @@ records rather than introductory examples.
 
 | Registry type | Family | Native components | Architecture | Qualification |
 | --- | --- | --- | :---: | --- |
+| `gpt2` | GPT-2 124M, 355M, 774M, 1.5B | Learned positions, fused QKV, byte BPE, safe loading, cache, generation and streaming | ✅ | Candidate; synthetic validation only |
 | `qwen2` | Qwen2, Qwen2.5, Qwen2.5-Coder | Dense Transformer, GQA, RoPE, cache | ✅ | Per checkpoint |
 | `qwen3` | Qwen3 dense | Bias-free attention, Q/K norm, explicit head dimensions | ✅ | Candidate |
 | `qwen2_moe` | Qwen2-MoE | Top-k experts, shared expert, router outputs | ✅ | Architecture only |
@@ -141,6 +183,8 @@ records rather than introductory examples.
 | Registry type | Family | Native components | Architecture | Qualification |
 | --- | --- | --- | :---: | --- |
 | `qwen2_vl` | Qwen2-VL | Vision Transformer, 3D patches, merger, multimodal RoPE, image/video token insertion | ✅ | Verify exact checkpoint and processor |
+| `qwen2_5_vl` | Qwen2.5-VL-3B | Window/full vision attention, biased SwiGLU vision tower, merger, multimodal RoPE | ✅ | Architecture only; verify checkpoint and processor |
+| `qwen3_5` | Qwen3.5 0.8B/2B | Hybrid gated-delta/full-attention text tower, learned/interpolated vision positions, multimodal RoPE | ✅ | Architecture only; synthetic validation |
 | `lfm2_vl` | LFM2.5-VL | Vision tower, pixel unshuffle/projector, hybrid language model | ✅ | Verify exact checkpoint and processor |
 
 ### Embeddings and retrieval
@@ -149,6 +193,8 @@ records rather than introductory examples.
 | --- | --- | --- | :---: | --- |
 | `bert` | all-MiniLM-L6-v2 | BERT encoder, mean pooling, normalization, cosine | ✅ | Candidate |
 | `mpnet` | all-mpnet-base-v2 | MPNet relative positions, mean pooling, normalization, cosine | ✅ | Candidate |
+| `qwen3_embedding` | Qwen3-Embedding-0.6B | Final-token pooling, instructed queries, Matryoshka dimensions, normalization, cosine | ✅ | Candidate; synthetic validation only |
+| `qwen3_reranker` | Qwen3-Reranker-0.6B | Official pair prompt, yes/no logit scoring, probabilities, stable ranking | ✅ | Candidate; synthetic validation only |
 | `lfm2_colbert` | LFM2/LFM2.5 ColBERT | Token embeddings, masks, late-interaction MaxSim | ✅ | Candidate |
 
 ### Audio and speech
@@ -192,6 +238,36 @@ mlx-one plan train --model MODEL --hardware PROFILE --method auto
 
 Inspection is metadata-only: it does not execute remote model code or open
 pickle checkpoints.
+
+### Generate text
+
+```bash
+mlx-one generate MODEL PROMPT \
+  [--revision REVISION] [--offline] [--cache-dir DIRECTORY] \
+  [--max-tokens N] [--temperature T] [--top-k K] [--top-p P] \
+  [--seed N] [--stop TEXT] [--stream] [--json-output]
+```
+
+GPT-2 uses the native path for direct generation, evaluation, and inference
+benchmarking. Native GPT-2 training and adapters are intentionally rejected
+until their own implementation and validation gates are complete.
+
+### Embed and rerank
+
+```bash
+mlx-one embed MODEL TEXT... \
+  [--input-type query|document] [--instruction TEXT] [--dimensions N] \
+  [--max-length N] [--batch-size N] [--offline] [--json-output]
+
+mlx-one rerank MODEL QUERY DOCUMENT... \
+  [--instruction TEXT] [--top-k N] [--max-length N] [--batch-size N] \
+  [--offline] [--json-output]
+```
+
+Both commands use the native Qwen3 tokenizer and strict safetensors loader.
+Document embeddings are unprefixed; query embeddings use the documented Qwen3
+instruction format. Reranking returns the original document index, raw yes/no
+logit difference, and two-class probability.
 
 ### Validate training data
 
@@ -295,6 +371,29 @@ for segment in result.segments:
     print(segment.start, segment.end, segment.text)
 ```
 
+Embed and rerank through typed native retrieval results:
+
+```python
+from mlx_one import embed, rerank
+
+query = embed(
+    "Qwen/Qwen3-Embedding-0.6B",
+    "How does MLX use unified memory?",
+    input_type="query",
+    dimensions=512,
+)
+
+ranking = rerank(
+    "Qwen/Qwen3-Reranker-0.6B",
+    "How does MLX use unified memory?",
+    ["MLX arrays share CPU and GPU memory.", "A recipe for sourdough."],
+    top_k=1,
+)
+
+print(query.embeddings[0])
+print(ranking.items[0].index, ranking.items[0].score)
+```
+
 Train through the typed SFT contract:
 
 ```python
@@ -333,10 +432,11 @@ print(result.to_json())
 
 The current repository gates include:
 
-- 226 backend-free tests covering schemas, configs, registries, weight contracts,
-  tokenization, processing, evaluation, and CLI behavior.
-- 251 Apple Silicon/Metal tests covering native model execution, shapes, caches,
-  multimodal feature insertion, embeddings, MoE routing, and ASR components.
+- Backend-free tests covering schemas, configs, registries, weight contracts,
+  tokenization, processing, evaluation, loading policy, and CLI behavior.
+- Opt-in Apple Silicon/Metal tests covering native model execution, shapes, caches,
+  masks, multimodal feature insertion, embeddings, reranking, MoE routing, and ASR
+  components.
 - Pinned real-checkpoint smoke gates for `openai/whisper-tiny` and
   `openai/whisper-large-v3-turbo`.
 - Whisper log-Mel comparison within `1e-5` against the pinned reference path.
@@ -376,8 +476,8 @@ The implementation proceeds by evidence-backed vertical slices:
 
 1. Complete checkpoint loading, generation, and parity qualification for native
    language families.
-2. Promote embedding architectures into public batch encoding, retrieval, and
-   reranking APIs.
+2. Expand the native retrieval APIs beyond the initial Qwen3 embedding and
+   reranking vertical slice and qualify exact checkpoint revisions.
 3. Add complete image processing, generation, OCR/VQA evaluation, and training
    paths for native VLMs.
 4. Qualify Whisper revisions and expand native ASR, alignment, audio-language,
