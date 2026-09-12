@@ -18,6 +18,7 @@ from mlx_one.models.language.gpt2.weights import sanitize_weights, weight_contra
 from mlx_one.text.loading import (
     TextModelLoadError,
     _checkpoint_files,
+    _read_safetensors,
     resolve_text_model_type,
 )
 from mlx_one.text.schemas import GenerationResult, TextGenerationOptions
@@ -217,6 +218,22 @@ def test_loader_checkpoint_policy_rejects_pickle_and_unsafe_indexes(tmp_path: Pa
     )
     with pytest.raises(TextModelLoadError, match="unsafe shard"):
         _checkpoint_files(tmp_path)
+
+
+def test_loader_materializes_safetensors_without_numpy(monkeypatch, tmp_path: Path) -> None:
+    checkpoint = tmp_path / "model.safetensors"
+    checkpoint.touch()
+    bfloat16_tensor = object()
+    calls: list[Path] = []
+
+    def fake_load(path: Path) -> dict[str, object]:
+        calls.append(path)
+        return {"weight": bfloat16_tensor}
+
+    monkeypatch.setattr("mlx_one.text.loading._load_safetensor_file", fake_load)
+
+    assert _read_safetensors(tmp_path) == {"weight": bfloat16_tensor}
+    assert calls == [checkpoint]
 
 
 def test_loader_remote_resolution_is_mocked_and_honors_offline(monkeypatch, tmp_path: Path) -> None:

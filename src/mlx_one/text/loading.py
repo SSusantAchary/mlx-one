@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any
 
 from huggingface_hub import hf_hub_download, snapshot_download
-from safetensors import SafetensorError, safe_open
 
 from mlx_one.core.registry import get_registration
 from mlx_one.text.chat import ChatTemplate
@@ -308,23 +307,35 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _read_safetensors(root: Path) -> dict[str, Any]:
     files, expected_map = _checkpoint_files(root)
-    import mlx.core as mx
 
     result: dict[str, Any] = {}
     try:
         for path in files:
-            with safe_open(path, framework="numpy") as handle:
-                for name in handle.keys():
-                    if name in result:
-                        raise TextModelLoadError(f"duplicate text tensor: {name}")
-                    if expected_map is not None and expected_map.get(name) != path.name:
-                        raise TextModelLoadError(f"safetensors index mismatch for tensor: {name}")
-                    result[name] = mx.array(handle.get_tensor(name))
-    except (OSError, SafetensorError) as exc:
+            tensors = _load_safetensor_file(path)
+            for name, tensor in tensors.items():
+                if name in result:
+                    raise TextModelLoadError(f"duplicate text tensor: {name}")
+                if expected_map is not None and expected_map.get(name) != path.name:
+                    raise TextModelLoadError(f"safetensors index mismatch for tensor: {name}")
+                result[name] = tensor
+    except (OSError, RuntimeError, ValueError) as exc:
+        if isinstance(exc, TextModelLoadError):
+            raise
         raise TextModelLoadError(f"cannot read text safetensors: {exc}") from exc
     if expected_map is not None and set(result) != set(expected_map):
         raise TextModelLoadError("safetensors index and shard tensors do not match")
     return result
+
+
+def _load_safetensor_file(path: Path) -> dict[str, Any]:
+    """Load safetensors directly with MLX so BF16 never passes through NumPy."""
+
+    import mlx.core as mx
+
+    tensors = mx.load(str(path))
+    if not isinstance(tensors, dict):
+        raise ValueError(f"{path.name} did not contain a tensor mapping")
+    return tensors
 
 
 def _checkpoint_files(root: Path) -> tuple[tuple[Path, ...], dict[str, str] | None]:
