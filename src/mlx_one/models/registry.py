@@ -151,6 +151,8 @@ def register_builtin_models() -> None:
                     "sample",
                     "stream",
                     "text-only",
+                    "mtp",
+                    "speculative-decoding",
                 }
             ),
             "mlx_one.models.vision_language.qwen3_5.weights:sanitize_weights",

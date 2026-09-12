@@ -99,6 +99,16 @@ def load_text_model(
         chat_template = ChatTemplate.from_directory(tokenizer_root, model_type, tokenizer)
         tensors = registration.sanitizer()(_read_safetensors(root), config)
         native = registration.model_class()(config)
+        if model_type == "qwen3_5" and any(name.startswith("mtp.") for name in tensors):
+            required_mtp = {
+                name
+                for name in registration.weight_contract()(config).optional
+                if name.startswith("mtp.")
+            }
+            missing_mtp = sorted(required_mtp - set(tensors))
+            if missing_mtp:
+                raise ValueError(f"incomplete Qwen3.5 MTP tensors: {', '.join(missing_mtp)}")
+            native.enable_mtp()
         quantization = _quantization_config(config_data)
         if quantization:
             _prepare_quantized_model(native, tensors, quantization)

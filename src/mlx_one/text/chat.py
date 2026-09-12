@@ -47,7 +47,7 @@ class ChatTemplate:
                 raise ValueError(f"cannot read chat_template.jinja: {exc}") from exc
         return cls(model_type, template, tokenizer)
 
-    def render(self, messages: Sequence[ChatMessage]) -> str:
+    def render(self, messages: Sequence[ChatMessage], **template_options: Any) -> str:
         _validate_messages(messages)
         if not self.template:
             return _fallback(self.model_type, messages)
@@ -65,6 +65,7 @@ class ChatTemplate:
                     "tools": None,
                 }
             )
+            token_values.update(template_options)
             return str(compiled.render(**token_values))
         except Exception as exc:
             raise ValueError(f"chat template rendering failed: {exc}") from exc

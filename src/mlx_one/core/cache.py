@@ -37,6 +37,105 @@ class KVCache:
         self.keys = None
         self.values = None
 
+    def clone(self) -> KVCache:
+        result = KVCache()
+        result.keys, result.values = self.keys, self.values
+        return result
+
+
+class QuantizedKVCache:
+    """Append-only affine-quantized attention cache."""
+
+    def __init__(
+        self,
+        key_bits: int | None,
+        value_bits: int | None,
+        group_size: int = 64,
+        *,
+        key_dtype: str = "f16",
+        value_dtype: str = "f16",
+    ) -> None:
+        if key_bits not in {None, 4, 8} or value_bits not in {None, 4, 8}:
+            raise ValueError("quantized KV cache bits must be native, 4, or 8")
+        self.key_bits = key_bits
+        self.value_bits = value_bits
+        self.group_size = group_size
+        self.key_dtype = key_dtype
+        self.value_dtype = value_dtype
+        self._keys: Any | None = None
+        self._values: Any | None = None
+        self._offset = 0
+
+    @property
+    def offset(self) -> int:
+        return self._offset
+
+    def update(self, keys: Any, values: Any) -> tuple[Any, Any]:
+        if keys.shape != values.shape:
+            raise ValueError("cache keys and values must have identical shapes")
+        if (self.key_bits is not None or self.value_bits is not None) and (
+            keys.shape[-1] % self.group_size
+        ):
+            raise ValueError(
+                f"KV head dimension must be divisible by quantization group {self.group_size}"
+            )
+        self._keys = self._append_component(
+            self._keys, keys, self.key_bits, self.key_dtype
+        )
+        self._values = self._append_component(
+            self._values, values, self.value_bits, self.value_dtype
+        )
+        self._offset += int(keys.shape[2])
+        return self._materialize(self._keys, self.key_bits), self._materialize(
+            self._values, self.value_bits
+        )
+
+    def _append_component(
+        self, current: Any | None, values: Any, bits: int | None, dtype: str
+    ) -> Any:
+        import mlx.core as mx
+
+        if bits is None:
+            values = values.astype(mx.bfloat16 if dtype == "bf16" else mx.float16)
+            return values if current is None else mx.concatenate((current, values), axis=2)
+        new = mx.quantize(values, group_size=self.group_size, bits=bits)
+        normalized = (new[0], new[1], new[2] if len(new) > 2 else None)
+        if current is None:
+            return normalized
+        return tuple(
+            None if right is None else mx.concatenate((left, right), axis=2)
+            for left, right in zip(current, normalized, strict=True)
+        )
+
+    def _materialize(self, state: Any, bits: int | None) -> Any:
+        import mlx.core as mx
+
+        if bits is None:
+            return state
+        return mx.dequantize(
+            state[0],
+            state[1],
+            state[2],
+            group_size=self.group_size,
+            bits=bits,
+        )
+
+    def reset(self) -> None:
+        self._keys = None
+        self._values = None
+        self._offset = 0
+
+    def clone(self) -> QuantizedKVCache:
+        result = QuantizedKVCache(
+            self.key_bits,
+            self.value_bits,
+            self.group_size,
+            key_dtype=self.key_dtype,
+            value_dtype=self.value_dtype,
+        )
+        result._keys, result._values, result._offset = self._keys, self._values, self._offset
+        return result
+
 
 def make_kv_caches(layer_count: int) -> tuple[KVCache, ...]:
     if layer_count < 1:
@@ -72,6 +171,12 @@ class EncoderDecoderKVCache:
         self.self_attention.reset()
         self.cross_keys = None
         self.cross_values = None
+
+    def clone(self) -> EncoderDecoderKVCache:
+        result = EncoderDecoderKVCache()
+        result.self_attention = self.self_attention.clone()
+        result.cross_keys, result.cross_values = self.cross_keys, self.cross_values
+        return result
 
 
 def make_encoder_decoder_caches(layer_count: int) -> tuple[EncoderDecoderKVCache, ...]:
@@ -114,6 +219,35 @@ class ConvCache:
     def reset(self) -> None:
         self.values = None
         self._offset = 0
+
+    def clone(self) -> ConvCache:
+        result = ConvCache(self.kernel_size)
+        result.values, result._offset = self.values, self._offset
+        return result
+
+
+def clone_caches(caches: tuple[Any, ...]) -> tuple[Any, ...]:
+    return tuple(cache.clone() for cache in caches)
+
+
+def configure_kv_caches(
+    caches: tuple[Any, ...], key_type: str, value_type: str
+) -> tuple[Any, ...]:
+    """Replace attention cache entries with requested native or quantized storage."""
+
+    key_bits = {"q4_0": 4, "q8_0": 8}.get(key_type)
+    value_bits = {"q4_0": 4, "q8_0": 8}.get(value_type)
+    return tuple(
+        QuantizedKVCache(
+            key_bits,
+            value_bits,
+            key_dtype=key_type,
+            value_dtype=value_type,
+        )
+        if isinstance(cache, KVCache)
+        else cache
+        for cache in caches
+    )
 
 
 def make_hybrid_caches(
