@@ -6,6 +6,7 @@ from typing import Any
 
 import mlx.nn as nn
 
+from mlx_one.core.cache import make_hybrid_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.lfm2.config import Lfm2Config
 from mlx_one.models.shared.hybrid import HybridDecoderLayer, sliding_causal_mask
@@ -67,6 +68,9 @@ class Lfm2ForCausalLM(nn.Module):
         self.model = Lfm2Model(config)
         if not config.tie_embedding:
             self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+    def make_cache(self) -> tuple[Any, ...]:
+        return make_hybrid_caches(tuple(self.config.layer_types), self.config.conv_L_cache)
 
     def __call__(
         self,

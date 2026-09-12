@@ -6,6 +6,7 @@ from typing import Any
 
 import mlx.nn as nn
 
+from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.qwen2_moe.config import Qwen2MoeConfig
 from mlx_one.models.shared.moe import SparseMoeBlock, router_auxiliary_loss
@@ -102,6 +103,9 @@ class Qwen2MoeForCausalLM(nn.Module):
         self.model = Qwen2MoeModel(config)
         if not config.tie_word_embeddings:
             self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+    def make_cache(self) -> tuple[Any, ...]:
+        return make_kv_caches(self.config.num_hidden_layers)
 
     def __call__(self, input_ids: Any, **kwargs: Any) -> ModelOutput:
         hidden, cache, states, routers = self.model(input_ids, **kwargs)

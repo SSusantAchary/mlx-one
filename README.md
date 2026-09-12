@@ -61,8 +61,9 @@ artifact ecosystem for configuration, tokenizer/processor assets, and safe
 - Safe local and pinned Hugging Face artifact inspection.
 - Native Whisper loading, audio preprocessing, tokenization, decoding, language
   detection, segment timestamps, word timestamps, and WER/CER evaluation.
-- Native GPT-2 loading, byte-level BPE, cached greedy and seeded sampling,
-  batched generation, stop sequences, and token streaming.
+- Unified native text loading, tokenizer/chat templates, MLX 4-bit checkpoints,
+  cached greedy and seeded sampling, stop sequences, token streaming, and serving
+  for GPT-2, Qwen2/Qwen3, LFM2, OpenELM, and text-only Qwen3.5 families.
 - Native Qwen3 embedding and reranking with byte-level BPE, safe loading,
   padding-aware batching, Matryoshka dimensions, normalization, cosine similarity,
   yes/no pair scoring, and stable ranking.
@@ -93,6 +94,61 @@ FFmpeg is required only when the Whisper API receives an audio file. Already
 decoded mono 16-kHz waveforms can be passed directly from Python.
 
 ## Quick start
+
+### Native server and Web UI
+
+Load one supported text model and start the bundled local UI:
+
+```bash
+mlx-one serve mlx-community/Qwen3.5-0.8B-4bit
+```
+
+<p align="center">
+  <a href="mlx_One_chat_ui.png">
+    <img src="mlx_One_chat_ui.png" alt="mlx-one native chat Web UI" width="900">
+  </a>
+</p>
+
+Click the thumbnail to open the full-size UI screenshot.
+
+To expose a shorter model name and protect `/v1/*` with a Bearer key:
+
+```bash
+mlx-one serve mlx-community/LFM2-350M-4bit \
+  --host 127.0.0.1 \
+  --port 8181 \
+  --alias lfm2-local \
+  --api-key local-secret
+```
+
+Enter `local-secret` in the UI's **API key** field and select **Connect**. Terminal clients must
+send the same key and use the alias as the request model:
+
+```bash
+curl http://127.0.0.1:8181/v1/models \
+  -H 'Authorization: Bearer local-secret'
+
+curl -N http://127.0.0.1:8181/v1/chat/completions \
+  -H 'Authorization: Bearer local-secret' \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"lfm2-local","messages":[{"role":"user","content":"Explain MLX in one sentence."}],"stream":true}'
+```
+
+Authentication is disabled when neither `--api-key` nor `MLX_ONE_API_KEY` is configured. A
+`401 Unauthorized` response from `/v1/*` means the Bearer key is missing or invalid; `/health`
+and the static UI remain public.
+
+The native server also supports model aliases, optional Bearer authentication, effective context
+limits, request deadlines, cooperative parallel slots, prompt/context caching, context shifting,
+reasoning output, quantized KV caches, and Qwen3.5 MTP speculative decoding. Run
+`mlx-one serve --help` for the complete flag list.
+
+Then open `http://127.0.0.1:8080`. The same process exposes an OpenAI-compatible API at
+`http://127.0.0.1:8080/v1`, including streaming chat completions. Model execution remains inside
+mlx-one's native model, tokenizer, sampling, generation, and MLX runtime. See
+[the Web UI and server guide](docs/ui.md) for API and development details.
+
+### Inspect, plan, and run tasks
 
 Check the machine and inspect a model without loading its weights:
 

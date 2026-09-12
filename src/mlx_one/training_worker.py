@@ -18,7 +18,12 @@ def main() -> None:
 
         model_ref = snapshot_download(model_ref, revision=request["revision"])
 
-    from mlx_lm.lora import CONFIG_DEFAULTS, run
+    try:
+        from mlx_lm.lora import CONFIG_DEFAULTS, run
+    except ModuleNotFoundError as exc:
+        from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+        raise legacy_mlx_lm_error("Legacy LoRA training") from exc
 
     values = dict(CONFIG_DEFAULTS)
     values.update(request["mlx_lm_config"])

@@ -47,7 +47,12 @@ class FastLanguageModel:
             raise TypeError(f"unsupported PEFT arguments: {names}")
         if r < 1 or lora_alpha <= 0 or not 0 <= lora_dropout < 1:
             raise ValueError("invalid LoRA rank, alpha, or dropout")
-        from mlx_lm.tuner.utils import linear_to_lora_layers
+        try:
+            from mlx_lm.tuner.utils import linear_to_lora_layers
+        except ModuleNotFoundError as exc:
+            raise RuntimeError(
+                "LoRA compatibility requires: pip install 'mlx-one[legacy-mlx-lm]'"
+            ) from exc
 
         keys = list(target_modules or ())
         layer_count = len(getattr(model, "layers", ()))

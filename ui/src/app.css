@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; color-scheme: light; --bg:#f4f5f2; --panel:#fff; --ink:#17201b; --muted:#657069; --line:#dce1dc; --accent:#22a06b; --accent2:#dff6eb; }
+:root.dark { color-scheme: dark; --bg:#0b0e0c; --panel:#121713; --ink:#edf4ef; --muted:#94a29a; --line:#26302a; --accent:#55d69a; --accent2:#173a29; }
+* { box-sizing: border-box; }
+html, body { margin:0; min-height:100%; background:var(--bg); color:var(--ink); }
+button, textarea, input, select { font:inherit; }
+button { cursor:pointer; }
+.icon-button { display:grid; place-items:center; width:2.25rem; height:2.25rem; border:1px solid var(--line); border-radius:.7rem; color:var(--muted); background:var(--panel); }
+.icon-button:hover { color:var(--ink); border-color:var(--accent); }
+.markdown { line-height:1.65; overflow-wrap:anywhere; }
+.markdown p { margin:.35rem 0 .8rem; }
+.markdown pre { overflow:auto; background:#090c0a; color:#e5f0e9; padding:1rem; border-radius:.75rem; border:1px solid var(--line); }
+.markdown code:not(pre code) { background:var(--accent2); padding:.12rem .35rem; border-radius:.3rem; }
+.markdown a { color:var(--accent); text-decoration:underline; }
+@media (max-width: 760px) { .sidebar { display:none !important; } }

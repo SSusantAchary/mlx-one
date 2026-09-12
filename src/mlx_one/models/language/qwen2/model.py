@@ -7,6 +7,7 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.qwen2.config import Qwen2Config
 from mlx_one.models.shared.transformer import DecoderLayer, causal_mask
@@ -67,6 +68,9 @@ class Qwen2ForCausalLM(nn.Module):
         self.model = Qwen2Model(config)
         if not config.tie_word_embeddings:
             self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+    def make_cache(self) -> tuple[Any, ...]:
+        return make_kv_caches(self.config.num_hidden_layers)
 
     def __call__(
         self,

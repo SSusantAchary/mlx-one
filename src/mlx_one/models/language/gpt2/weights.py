@@ -10,11 +10,18 @@ from mlx_one.models.language.gpt2.config import GPT2Config
 
 def sanitize_weights(weights: dict[str, Any], config: GPT2Config) -> dict[str, Any]:
     ignored_suffixes = (".attn.bias", ".attn.masked_bias")
-    result = {
-        name: value
-        for name, value in weights.items()
-        if not name.endswith(ignored_suffixes) and name != "lm_head.weight"
-    }
+    result: dict[str, Any] = {}
+    for original, value in weights.items():
+        if original.endswith(ignored_suffixes) or original == "lm_head.weight":
+            continue
+        name = original
+        if not name.startswith("transformer.") and name.startswith(
+            ("wte.", "wpe.", "ln_f.", "h.")
+        ):
+            name = f"transformer.{name}"
+        if name in result:
+            raise ValueError(f"duplicate GPT-2 tensor after normalization: {name}")
+        result[name] = value
     for index in range(config.n_layer):
         prefix = f"transformer.h.{index}"
         for suffix in (

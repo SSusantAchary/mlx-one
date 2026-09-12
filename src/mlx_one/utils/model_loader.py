@@ -124,7 +124,7 @@ def _resolve_modality(modality: str) -> ModelModality:
 
 def _get_loader(modality: ModelModality) -> ModelLoader:
     if modality == "llm":
-        return _import_loader("mlx_lm", "load", "mlx-lm", "mlx-one")
+        return _import_loader("mlx_lm", "load", "mlx-lm", "mlx-one[legacy-mlx-lm]")
     if modality == "vlm":
         return _import_loader("mlx_vlm", "load", "mlx-vlm", "mlx-one[vlm]")
     if modality == "audio-tts":

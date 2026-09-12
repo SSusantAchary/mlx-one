@@ -7,6 +7,7 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.core.cache import make_hybrid_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.lfm2.model import Lfm2Model
 from mlx_one.models.language.lfm2_moe.config import Lfm2MoeConfig
@@ -68,6 +69,9 @@ class Lfm2MoeForCausalLM(nn.Module):
         self.model = Lfm2MoeModel(config)
         if not config.tie_embedding:
             self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+
+    def make_cache(self) -> tuple[Any, ...]:
+        return make_hybrid_caches(tuple(self.config.layer_types), self.config.conv_L_cache)
 
     def __call__(self, input_ids: Any, *, cache: tuple[Any, ...] | None = None) -> ModelOutput:
         hidden, cache, _ = self.model(input_ids, cache=cache)

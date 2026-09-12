@@ -20,13 +20,31 @@ def main() -> None:
 
     mx.reset_peak_memory()
     loaded_at = time.perf_counter()
-    native = resolve_text_model_type(request["model_id"], revision=request["revision"]) == "gpt2"
+    native_types = {
+        "gpt2",
+        "lfm2",
+        "lfm2_moe",
+        "openelm",
+        "qwen2",
+        "qwen2_moe",
+        "qwen3",
+        "qwen3_5",
+    }
+    native = (
+        resolve_text_model_type(request["model_id"], revision=request["revision"])
+        in native_types
+    )
     if native:
         from mlx_one.text import load_text_model
 
         bundle = load_text_model(request["model_id"], revision=request["revision"])
     else:
-        from mlx_lm import load
+        try:
+            from mlx_lm import load
+        except ModuleNotFoundError as exc:
+            from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+            raise legacy_mlx_lm_error("Legacy text benchmarking") from exc
 
         model, tokenizer = load(request["model_id"], revision=request["revision"])
     load_seconds = time.perf_counter() - loaded_at
@@ -49,7 +67,12 @@ def main() -> None:
             prompt_tps = prompt_tokens / wall_seconds
             generation_tps = generation_tokens / wall_seconds
         else:
-            from mlx_lm.generate import stream_generate
+            try:
+                from mlx_lm.generate import stream_generate
+            except ModuleNotFoundError as exc:
+                from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+                raise legacy_mlx_lm_error("Legacy text benchmarking") from exc
 
             responses = list(
                 stream_generate(

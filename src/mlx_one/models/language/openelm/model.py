@@ -7,6 +7,7 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.openelm.config import OpenELMConfig
 from mlx_one.models.shared.transformer import apply_rope, causal_mask
@@ -181,6 +182,9 @@ class OpenELMForCausalLM(nn.Module):
         self.transformer = OpenELMModel(config)
         if not config.share_input_output_layers:
             self.lm_head = nn.Linear(config.model_dim, config.vocab_size, bias=False)
+
+    def make_cache(self) -> tuple[Any, ...]:
+        return make_kv_caches(self.config.num_transformer_layers)
 
     def __call__(self, input_ids: Any, **kwargs: Any) -> ModelOutput:
         hidden, cache, states = self.transformer(input_ids, **kwargs)

@@ -11,6 +11,8 @@ def register_builtin_models() -> None:
             "mlx_one.models.language.gpt2.model:GPT2LMHeadModel",
             "text",
             frozenset({"forward", "cache", "generate", "sample", "stream"}),
+            "mlx_one.models.language.gpt2.weights:sanitize_weights",
+            "mlx_one.models.language.gpt2.weights:weight_contract",
         ),
         ModelRegistration(
             "bert",
@@ -24,14 +26,20 @@ def register_builtin_models() -> None:
             "mlx_one.models.language.lfm2.config:Lfm2Config",
             "mlx_one.models.language.lfm2.model:Lfm2ForCausalLM",
             "text",
-            frozenset({"forward", "cache"}),
+            frozenset({"forward", "cache", "generate", "sample", "stream"}),
+            "mlx_one.models.language.lfm2.weights:sanitize_weights",
+            "mlx_one.models.language.lfm2.weights:weight_contract",
         ),
         ModelRegistration(
             "lfm2_moe",
             "mlx_one.models.language.lfm2_moe.config:Lfm2MoeConfig",
             "mlx_one.models.language.lfm2_moe.model:Lfm2MoeForCausalLM",
             "text",
-            frozenset({"forward", "cache", "router-outputs"}),
+            frozenset(
+                {"forward", "cache", "router-outputs", "generate", "sample", "stream"}
+            ),
+            "mlx_one.models.language.lfm2_moe.weights:sanitize_weights",
+            "mlx_one.models.language.lfm2_moe.weights:weight_contract",
         ),
         ModelRegistration(
             "lfm2_vl",
@@ -59,7 +67,9 @@ def register_builtin_models() -> None:
             "mlx_one.models.language.openelm.config:OpenELMConfig",
             "mlx_one.models.language.openelm.model:OpenELMForCausalLM",
             "text",
-            frozenset({"forward", "cache"}),
+            frozenset({"forward", "cache", "generate", "sample", "stream"}),
+            "mlx_one.models.language.openelm.weights:sanitize_weights",
+            "mlx_one.models.language.openelm.weights:weight_contract",
         ),
         ModelRegistration(
             "mpnet",
@@ -73,14 +83,18 @@ def register_builtin_models() -> None:
             "mlx_one.models.language.qwen2.config:Qwen2Config",
             "mlx_one.models.language.qwen2.model:Qwen2ForCausalLM",
             "text",
-            frozenset({"forward", "cache"}),
+            frozenset({"forward", "cache", "generate", "sample", "stream"}),
+            "mlx_one.models.language.qwen2.weights:sanitize_weights",
+            "mlx_one.models.language.qwen2.weights:weight_contract",
         ),
         ModelRegistration(
             "qwen3",
             "mlx_one.models.language.qwen3.config:Qwen3Config",
             "mlx_one.models.language.qwen3.model:Qwen3ForCausalLM",
             "text",
-            frozenset({"forward", "cache"}),
+            frozenset({"forward", "cache", "generate", "sample", "stream"}),
+            "mlx_one.models.language.qwen3.weights:sanitize_weights",
+            "mlx_one.models.language.qwen3.weights:weight_contract",
         ),
         ModelRegistration(
             "qwen3_embedding",
@@ -101,7 +115,11 @@ def register_builtin_models() -> None:
             "mlx_one.models.language.qwen2_moe.config:Qwen2MoeConfig",
             "mlx_one.models.language.qwen2_moe.model:Qwen2MoeForCausalLM",
             "text",
-            frozenset({"forward", "cache", "router-outputs"}),
+            frozenset(
+                {"forward", "cache", "router-outputs", "generate", "sample", "stream"}
+            ),
+            "mlx_one.models.language.qwen2_moe.weights:sanitize_weights",
+            "mlx_one.models.language.qwen2_moe.weights:weight_contract",
         ),
         ModelRegistration(
             "qwen2_vl",
@@ -122,7 +140,23 @@ def register_builtin_models() -> None:
             "mlx_one.models.vision_language.qwen3_5.config:Qwen3_5Config",
             "mlx_one.models.vision_language.qwen3_5.model:Qwen3_5ForConditionalGeneration",
             "vision-language",
-            frozenset({"forward", "cache", "image", "video", "linear-attention"}),
+            frozenset(
+                {
+                    "forward",
+                    "cache",
+                    "image",
+                    "video",
+                    "linear-attention",
+                    "generate",
+                    "sample",
+                    "stream",
+                    "text-only",
+                    "mtp",
+                    "speculative-decoding",
+                }
+            ),
+            "mlx_one.models.vision_language.qwen3_5.weights:sanitize_weights",
+            "mlx_one.models.vision_language.qwen3_5.weights:weight_contract",
         ),
         ModelRegistration(
             "whisper",

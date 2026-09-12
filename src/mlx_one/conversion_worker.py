@@ -13,7 +13,13 @@ def main() -> None:
         raise SystemExit("usage: python -m mlx_one.conversion_worker REQUEST.json")
     request = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     from huggingface_hub import snapshot_download
-    from mlx_lm.convert import convert
+
+    try:
+        from mlx_lm.convert import convert
+    except ModuleNotFoundError as exc:
+        from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+        raise legacy_mlx_lm_error("Legacy model conversion") from exc
 
     snapshot = snapshot_download(request["model_id"], revision=request["revision"])
     convert(

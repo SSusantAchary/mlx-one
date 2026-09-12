@@ -18,6 +18,7 @@ from mlx_one.models.language.gpt2.weights import sanitize_weights, weight_contra
 from mlx_one.text.loading import (
     TextModelLoadError,
     _checkpoint_files,
+    _read_safetensors,
     resolve_text_model_type,
 )
 from mlx_one.text.schemas import GenerationResult, TextGenerationOptions
@@ -134,6 +135,27 @@ def test_gpt2_weight_contract_transposes_conv1d_and_cleans_buffers() -> None:
         contract.validate(mismatched)
 
 
+def test_gpt2_sanitizer_accepts_official_unprefixed_safetensor_names() -> None:
+    config = tiny_config()
+    contract = weight_contract(config)
+    transposed_suffixes = (
+        "attn.c_attn.weight",
+        "attn.c_proj.weight",
+        "mlp.c_fc.weight",
+        "mlp.c_proj.weight",
+    )
+    source = {
+        name.removeprefix("transformer."): Shaped(
+            tuple(reversed(shape)) if name.endswith(transposed_suffixes) else shape
+        )
+        for name, shape in contract.expected.items()
+    }
+    source["lm_head.weight"] = Shaped((config.vocab_size, config.n_embd))
+    source["h.0.attn.bias"] = Shaped((1, 1, 16, 16))
+    source["h.0.attn.masked_bias"] = Shaped(())
+    contract.validate(sanitize_weights(source, config))
+
+
 def _write_tokenizer(root: Path, *, token_objects: bool = False) -> GPT2Tokenizer:
     encoder = bytes_to_unicode()
     vocabulary = {character: index for index, character in enumerate(encoder.values())}
@@ -196,6 +218,22 @@ def test_loader_checkpoint_policy_rejects_pickle_and_unsafe_indexes(tmp_path: Pa
     )
     with pytest.raises(TextModelLoadError, match="unsafe shard"):
         _checkpoint_files(tmp_path)
+
+
+def test_loader_materializes_safetensors_without_numpy(monkeypatch, tmp_path: Path) -> None:
+    checkpoint = tmp_path / "model.safetensors"
+    checkpoint.touch()
+    bfloat16_tensor = object()
+    calls: list[Path] = []
+
+    def fake_load(path: Path) -> dict[str, object]:
+        calls.append(path)
+        return {"weight": bfloat16_tensor}
+
+    monkeypatch.setattr("mlx_one.text.loading._load_safetensor_file", fake_load)
+
+    assert _read_safetensors(tmp_path) == {"weight": bfloat16_tensor}
+    assert calls == [checkpoint]
 
 
 def test_loader_remote_resolution_is_mocked_and_honors_offline(monkeypatch, tmp_path: Path) -> None:

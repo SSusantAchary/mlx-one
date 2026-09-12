@@ -1,5 +1,6 @@
 import pytest
 
+from mlx_one.utils import memory
 from mlx_one.utils.memory import MemorySnapshot, estimate_model_fit, format_bytes, format_memory
 
 
@@ -35,3 +36,29 @@ def test_estimate_model_fit() -> None:
 def test_estimate_model_fit_validates_inputs() -> None:
     with pytest.raises(ValueError, match="non-negative"):
         estimate_model_fit(-1, snapshot=MemorySnapshot(0, 0, None))
+
+
+def test_memory_queries_use_current_top_level_mlx_api(monkeypatch) -> None:
+    class FakeMLX:
+        @staticmethod
+        def get_active_memory() -> int:
+            return 12
+
+        @staticmethod
+        def get_peak_memory() -> int:
+            return 34
+
+    class FakeMetal:
+        @staticmethod
+        def is_available() -> bool:
+            return True
+
+        @staticmethod
+        def device_info() -> dict[str, object]:
+            return {"memory": 56, "name": "Fake GPU"}
+
+    monkeypatch.setattr(memory, "_load_metal_modules", lambda: (FakeMLX(), FakeMetal()))
+
+    assert memory.get_active_memory() == 12
+    assert memory.get_peak_memory() == 34
+    assert memory.get_memory_snapshot() == MemorySnapshot(12, 34, 56, "Fake GPU")

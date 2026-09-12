@@ -134,4 +134,47 @@ def weight_contract(config: Qwen3_5Config) -> WeightContract:
     )
     if not config.tie_word_embeddings:
         expected["lm_head.weight"] = (text.vocab_size, text.hidden_size)
-    return WeightContract(expected)
+    mtp: set[str] = {
+        "mtp.fc.weight",
+        "mtp.norm.weight",
+        "mtp.pre_fc_norm_embedding.weight",
+        "mtp.pre_fc_norm_hidden.weight",
+    }
+    expected.update(
+        {
+            "mtp.fc.weight": (text.hidden_size, text.hidden_size * 2),
+            "mtp.norm.weight": (text.hidden_size,),
+            "mtp.pre_fc_norm_embedding.weight": (text.hidden_size,),
+            "mtp.pre_fc_norm_hidden.weight": (text.hidden_size,),
+        }
+    )
+    for index in range(text.mtp_num_hidden_layers):
+        prefix = f"mtp.layers.{index}"
+        layer = {
+            f"{prefix}.input_layernorm.weight": (text.hidden_size,),
+            f"{prefix}.post_attention_layernorm.weight": (text.hidden_size,),
+            f"{prefix}.mlp.gate_proj.weight": (text.intermediate_size, text.hidden_size),
+            f"{prefix}.mlp.up_proj.weight": (text.intermediate_size, text.hidden_size),
+            f"{prefix}.mlp.down_proj.weight": (text.hidden_size, text.intermediate_size),
+            f"{prefix}.self_attn.q_proj.weight": (
+                text.num_attention_heads * text.head_dim * 2,
+                text.hidden_size,
+            ),
+            f"{prefix}.self_attn.k_proj.weight": (
+                text.num_key_value_heads * text.head_dim,
+                text.hidden_size,
+            ),
+            f"{prefix}.self_attn.v_proj.weight": (
+                text.num_key_value_heads * text.head_dim,
+                text.hidden_size,
+            ),
+            f"{prefix}.self_attn.o_proj.weight": (
+                text.hidden_size,
+                text.num_attention_heads * text.head_dim,
+            ),
+            f"{prefix}.self_attn.q_norm.weight": (text.head_dim,),
+            f"{prefix}.self_attn.k_norm.weight": (text.head_dim,),
+        }
+        expected.update(layer)
+        mtp.update(layer)
+    return WeightContract(expected, optional=frozenset(mtp))

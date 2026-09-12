@@ -75,7 +75,7 @@ def test_lfm_registry_entries_are_lazy_and_backend_free() -> None:
     moe = get_registration("lfm2_moe")
     assert dense.config_class() is Lfm2Config
     assert moe.config_class() is Lfm2MoeConfig
-    assert dense.capabilities == {"forward", "cache"}
+    assert dense.capabilities >= {"forward", "cache", "generate", "sample", "stream"}
     assert "router-outputs" in moe.capabilities
     assert get_registration("lfm2_vl").config_class() is Lfm2VLConfig
     assert get_registration("lfm2_colbert").config_class() is Lfm2ColBERTConfig

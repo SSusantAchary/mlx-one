@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import threading
 import uuid
 from dataclasses import asdict
 from pathlib import Path
@@ -284,6 +285,213 @@ def generate_command(
     except (OSError, RuntimeError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(result.to_json() if as_json else result.text)
+
+
+@main.command("serve", help="Serve a native text model with an OpenAI-compatible API and UI.")
+@click.argument("model")
+@click.option("--host", default="127.0.0.1", show_default=True)
+@click.option("--port", type=click.IntRange(min=1, max=65535), default=8080, show_default=True)
+@click.option("--revision", help="Hugging Face branch, tag, or commit.")
+@click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+@click.option(
+    "--tokenizer",
+    "tokenizer_source",
+    help="Optional local directory or Hugging Face tokenizer repository.",
+)
+@click.option("--alias", help="Public model ID exposed by the API.")
+@click.option("--api-key", multiple=True, envvar="MLX_ONE_API_KEY", help="Accepted Bearer key.")
+@click.option("--context-length", "context_length", "-c", type=click.IntRange(min=1))
+@click.option("--queue-size", type=click.IntRange(min=1), default=8, show_default=True)
+@click.option("--timeout", type=click.FloatRange(min=0), default=600.0, show_default=True)
+@click.option("--warmup/--no-warmup", default=True, show_default=True)
+@click.option("--parallel", "parallel", "-np", type=click.IntRange(min=1), default=1)
+@click.option("--reasoning", type=click.Choice(["auto", "on", "off"]), default="auto")
+@click.option(
+    "--reasoning-format",
+    type=click.Choice(["none", "deepseek", "deepseek-legacy"]),
+    default="deepseek",
+)
+@click.option("--reasoning-budget", type=click.IntRange(min=-1), default=-1)
+@click.option("--reasoning-preserve/--no-reasoning-preserve", default=False)
+@click.option("--cache-prompt/--no-cache-prompt", default=True)
+@click.option("--cache-reuse", type=click.IntRange(min=0), default=256)
+@click.option("--cache-idle-slots/--no-cache-idle-slots", default=False)
+@click.option("--context-shift/--no-context-shift", default=False)
+@click.option(
+    "--kv-cache-bits",
+    type=click.Choice(["4", "8", "16"]),
+    default=None,
+    show_default="16",
+)
+@click.option(
+    "--cache-type-k",
+    "cache_type_k",
+    "-ctk",
+    type=click.Choice(["f16", "bf16", "q4_0", "q8_0"]),
+)
+@click.option(
+    "--cache-type-v",
+    "cache_type_v",
+    "-ctv",
+    type=click.Choice(["f16", "bf16", "q4_0", "q8_0"]),
+)
+@click.option("--spec-type", type=click.Choice(["none", "draft-mtp"]), default="none")
+@click.option("--spec-draft-n-max", type=click.IntRange(min=1), default=3)
+def serve_command(
+    model: str,
+    host: str,
+    port: int,
+    revision: str | None,
+    offline: bool,
+    cache_dir: str | None,
+    tokenizer_source: str | None,
+    alias: str | None,
+    api_key: tuple[str, ...],
+    context_length: int | None,
+    queue_size: int,
+    timeout: float,
+    warmup: bool,
+    parallel: int,
+    reasoning: str,
+    reasoning_format: str,
+    reasoning_budget: int,
+    reasoning_preserve: bool,
+    cache_prompt: bool,
+    cache_reuse: int,
+    cache_idle_slots: bool,
+    context_shift: bool,
+    kv_cache_bits: str | None,
+    cache_type_k: str | None,
+    cache_type_v: str | None,
+    spec_type: str,
+    spec_draft_n_max: int,
+) -> None:
+    """Load one native model, then run the local mlx-one server."""
+
+    try:
+        import uvicorn
+
+        from mlx_one.server import (
+            GenerationEngine,
+            GenerationScheduler,
+            ModelManager,
+            ServerConfig,
+            create_app,
+        )
+        from mlx_one.server.config import cache_type_from_bits
+
+        default_cache_type = cache_type_from_bits(int(kv_cache_bits or "16"))
+        if (
+            kv_cache_bits is not None
+            and cache_type_k is not None
+            and cache_type_k != default_cache_type
+        ):
+            raise ValueError("--kv-cache-bits conflicts with -ctk/--cache-type-k")
+        if (
+            kv_cache_bits is not None
+            and cache_type_v is not None
+            and cache_type_v != default_cache_type
+        ):
+            raise ValueError("--kv-cache-bits conflicts with -ctv/--cache-type-v")
+        config = ServerConfig(
+            alias=alias,
+            api_keys=tuple(api_key),
+            context_length=context_length,
+            queue_size=queue_size,
+            timeout=timeout,
+            warmup=warmup,
+            parallel=parallel,
+            reasoning=reasoning,
+            reasoning_format=reasoning_format,
+            reasoning_budget=reasoning_budget,
+            reasoning_preserve=reasoning_preserve,
+            cache_prompt=cache_prompt,
+            cache_reuse=cache_reuse,
+            cache_idle_slots=cache_idle_slots,
+            context_shift=context_shift,
+            cache_type_k=cache_type_k or default_cache_type,
+            cache_type_v=cache_type_v or default_cache_type,
+            spec_type=spec_type,
+            spec_draft_n_max=spec_draft_n_max,
+        )
+        manager = ModelManager(alias=alias, context_length=context_length)
+        scheduler = GenerationScheduler(
+            max_pending=queue_size, parallel=parallel, timeout=timeout
+        )
+        try:
+            bundle = scheduler.execute(
+                lambda: manager.load(
+                    model,
+                    revision=revision,
+                    offline=offline,
+                    cache_dir=cache_dir,
+                    tokenizer_source=tokenizer_source,
+                )
+            )
+            if spec_type == "draft-mtp":
+                if bundle.architecture != "qwen3_5" or not getattr(bundle.model, "mtp", None):
+                    raise ValueError(
+                        "draft-mtp requires a Qwen3.5 checkpoint with native MTP weights"
+                    )
+            if (
+                reasoning == "on"
+                and (
+                    bundle.chat_template is None
+                    or "enable_thinking" not in (bundle.chat_template.template or "")
+                )
+            ):
+                raise ValueError(
+                    "--reasoning on requires a checkpoint chat template with thinking support"
+                )
+            engine = GenerationEngine(manager)
+            if warmup:
+                scheduler.execute(
+                    lambda: list(
+                        engine.stream(
+                            model=manager.model_info().id,
+                            messages=[{"role": "user", "content": "Hi"}],
+                            options=TextGenerationOptions(max_tokens=1),
+                            cancel=threading.Event(),
+                            context_length=manager.model_info().context_length,
+                            reasoning=reasoning,
+                            reasoning_budget=reasoning_budget,
+                            reasoning_format=reasoning_format,
+                            reasoning_preserve=reasoning_preserve,
+                            cache_type_k=config.cache_type_k,
+                            cache_type_v=config.cache_type_v,
+                            spec_type=spec_type,
+                            spec_draft_n_max=spec_draft_n_max,
+                        )
+                    )
+                )
+            quantization = (
+                f"{bundle.quantization.get('bits')}-bit"
+                if bundle.quantization
+                else "none"
+            )
+            click.echo("mlx-one\n")
+            click.echo(f"Model        {manager.model_info().id}")
+            click.echo("Backend      MLX")
+            click.echo("Device       Apple Silicon")
+            click.echo(f"Architecture {bundle.architecture}")
+            click.echo(f"Quantization {quantization}\n")
+            click.echo(f"API          http://{host}:{port}/v1")
+            click.echo(f"UI           http://{host}:{port}")
+            uvicorn.run(
+                create_app(
+                    model_manager=manager,
+                    generation_engine=engine,
+                    scheduler=scheduler,
+                    config=config,
+                ),
+                host=host,
+                port=port,
+            )
+        finally:
+            scheduler.close(finalizer=manager.unload)
+    except (ImportError, OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
 
 
 @main.command("embed", help="Create embeddings with native Qwen3-Embedding.")
@@ -711,7 +919,12 @@ def data_validate(
             "structurally_valid": True,
         }
         if tokenizer_ref:
-            from mlx_lm.utils import load_tokenizer
+            try:
+                from mlx_lm.utils import load_tokenizer
+            except ModuleNotFoundError as exc:
+                from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+                raise legacy_mlx_lm_error("Legacy dataset tokenization") from exc
 
             tokenizer = load_tokenizer(tokenizer_ref)
             result["tokenization"] = preview_dataset(spec, tokenizer, max_length=max_seq_length)

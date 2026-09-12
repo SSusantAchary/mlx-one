@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Sequence
+from dataclasses import replace
 from typing import Any
 
 import mlx.core as mx
@@ -75,6 +76,18 @@ class Qwen3_5LinearCache:
         self.conv_state = combined[:, -width:, :] if width else combined[:, :0, :]
         self._offset += int(values.shape[1])
         return combined
+
+    def reset(self) -> None:
+        self.conv_state = None
+        self.recurrent_state = None
+        self._offset = 0
+
+    def clone(self) -> Qwen3_5LinearCache:
+        result = Qwen3_5LinearCache(self.kernel_size)
+        result.conv_state = self.conv_state
+        result.recurrent_state = self.recurrent_state
+        result._offset = self._offset
+        return result
 
 
 def make_qwen3_5_caches(config: Qwen3_5TextConfig) -> tuple[Any, ...]:
@@ -365,6 +378,62 @@ class Qwen3_5TextModel(nn.Module):
         return hidden, cache, tuple(states) if states is not None else None
 
 
+class Qwen3_5MTP(nn.Module):
+    """Checkpoint-native multi-token predictor for speculative decoding."""
+
+    def __init__(self, config: Qwen3_5TextConfig) -> None:
+        super().__init__()
+        self.config = replace(
+            config,
+            num_hidden_layers=config.mtp_num_hidden_layers,
+            layer_types=("full_attention",) * config.mtp_num_hidden_layers,
+        )
+        self.pre_fc_norm_embedding = Qwen3_5RMSNorm(config.hidden_size, config.rms_norm_eps)
+        self.pre_fc_norm_hidden = Qwen3_5RMSNorm(config.hidden_size, config.rms_norm_eps)
+        self.fc = nn.Linear(config.hidden_size * 2, config.hidden_size, bias=False)
+        self.layers = [
+            Qwen3_5DecoderLayer(self.config, index)
+            for index in range(config.mtp_num_hidden_layers)
+        ]
+        self.norm = Qwen3_5RMSNorm(config.hidden_size, config.rms_norm_eps)
+
+    def make_cache(self) -> tuple[KVCache, ...]:
+        return make_qwen3_5_caches(self.config)  # type: ignore[return-value]
+
+    def __call__(
+        self,
+        embeddings: Any,
+        hidden_states: Any,
+        *,
+        cache: tuple[KVCache, ...] | None = None,
+        position_offset: int = 0,
+    ) -> Any:
+        hidden = self.fc(
+            mx.concatenate(
+                (
+                    self.pre_fc_norm_embedding(embeddings),
+                    self.pre_fc_norm_hidden(hidden_states),
+                ),
+                axis=-1,
+            )
+        )
+        offset = 0 if cache is None else cache[0].offset
+        length = hidden.shape[1]
+        positions = mx.arange(
+            position_offset + offset, position_offset + offset + length
+        )[None, :]
+        mask = causal_mask(length, offset)
+        for index, layer in enumerate(self.layers):
+            hidden = layer(
+                hidden,
+                mask=mask,
+                attention_mask=None,
+                position_ids=positions,
+                cache=None if cache is None else cache[index],
+            )
+        return self.norm(hidden)
+
+
 class Qwen3_5VisionMLP(nn.Module):
     def __init__(self, config: Any) -> None:
         super().__init__()
@@ -500,6 +569,35 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
             self.lm_head = nn.Linear(
                 config.text_config.hidden_size, config.text_config.vocab_size, bias=False
             )
+
+    def enable_mtp(self) -> None:
+        if not hasattr(self, "mtp"):
+            self.mtp = Qwen3_5MTP(self.config.text_config)
+
+    def make_mtp_cache(self) -> tuple[KVCache, ...]:
+        if not hasattr(self, "mtp"):
+            raise RuntimeError("Qwen3.5 checkpoint has no MTP predictor")
+        return self.mtp.make_cache()
+
+    def mtp_logits(
+        self,
+        input_ids: Any,
+        hidden_states: Any,
+        *,
+        cache: tuple[KVCache, ...] | None = None,
+        position_offset: int = 0,
+    ) -> Any:
+        if not hasattr(self, "mtp"):
+            raise RuntimeError("Qwen3.5 checkpoint has no MTP predictor")
+        embeddings = self.language_model.embed_tokens(input_ids)
+        hidden = self.mtp(
+            embeddings, hidden_states, cache=cache, position_offset=position_offset
+        )
+        return (
+            self.language_model.embed_tokens.as_linear(hidden)
+            if self.config.tie_word_embeddings
+            else self.lm_head(hidden)
+        )
 
     def make_cache(self) -> tuple[Any, ...]:
         return make_qwen3_5_caches(self.config.text_config)

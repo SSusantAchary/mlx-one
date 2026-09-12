@@ -14,12 +14,24 @@ class ModelRegistration:
     model_path: str
     modality: str
     capabilities: frozenset[str]
+    sanitizer_path: str | None = None
+    weight_contract_path: str | None = None
 
     def config_class(self) -> type[Any]:
         return _resolve(self.config_path)
 
     def model_class(self) -> type[Any]:
         return _resolve(self.model_path)
+
+    def sanitizer(self) -> Any:
+        if self.sanitizer_path is None:
+            raise ValueError(f"model type {self.model_type!r} has no weight sanitizer")
+        return _resolve_attribute(self.sanitizer_path)
+
+    def weight_contract(self) -> Any:
+        if self.weight_contract_path is None:
+            raise ValueError(f"model type {self.model_type!r} has no weight contract")
+        return _resolve_attribute(self.weight_contract_path)
 
 
 _REGISTRY: dict[str, ModelRegistration] = {}
@@ -57,6 +69,10 @@ def _ensure_builtins() -> None:
 
 
 def _resolve(path: str) -> type[Any]:
+    return _resolve_attribute(path)
+
+
+def _resolve_attribute(path: str) -> Any:
     module_name, _, attribute = path.partition(":")
     if not module_name or not attribute:
         raise ValueError(f"invalid registry import path: {path}")
