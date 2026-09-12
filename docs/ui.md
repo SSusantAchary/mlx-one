@@ -74,7 +74,11 @@ cd ui
 npm run check
 npm test
 npm run build
+npm run test:e2e
 ```
+
+The E2E command starts a fake native engine through the real FastAPI server and opens the
+packaged UI in Playwright Chromium, so it validates streaming and Stop without model downloads.
 
 The SvelteKit static adapter writes production files to `src/mlx_one/ui/dist`. These files are
 included as Python package data, so wheel and sdist users do not need Node.js. Maintainers must
