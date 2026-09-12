@@ -32,8 +32,14 @@ def main() -> None:
 
 def _run_inference(request: dict[str, Any]) -> dict[str, Any]:
     import mlx.core as mx
-    from mlx_lm import load
-    from mlx_lm.generate import stream_generate
+
+    try:
+        from mlx_lm import load
+        from mlx_lm.generate import stream_generate
+    except ModuleNotFoundError as exc:
+        from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+        raise legacy_mlx_lm_error("Legacy calibration") from exc
 
     _set_memory_limit(mx, request["memory_limit_bytes"])
     mx.reset_peak_memory()
@@ -93,11 +99,17 @@ def _run_inference(request: dict[str, Any]) -> dict[str, Any]:
 def _run_training(request: dict[str, Any]) -> dict[str, Any]:
     import mlx.core as mx
     import mlx.optimizers as optim
-    from mlx_lm import load
-    from mlx_lm.tuner.callbacks import TrainingCallback
-    from mlx_lm.tuner.datasets import CacheDataset
-    from mlx_lm.tuner.trainer import TrainingArgs, train
-    from mlx_lm.tuner.utils import linear_to_lora_layers
+
+    try:
+        from mlx_lm import load
+        from mlx_lm.tuner.callbacks import TrainingCallback
+        from mlx_lm.tuner.datasets import CacheDataset
+        from mlx_lm.tuner.trainer import TrainingArgs, train
+        from mlx_lm.tuner.utils import linear_to_lora_layers
+    except ModuleNotFoundError as exc:
+        from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+        raise legacy_mlx_lm_error("Legacy training calibration") from exc
 
     _set_memory_limit(mx, request["memory_limit_bytes"])
     workload = request["workload"]

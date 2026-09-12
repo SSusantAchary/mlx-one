@@ -46,7 +46,7 @@ def test_openelm_registry_is_lazy_and_backend_free() -> None:
     assert "openelm" in registered_model_types()
     registration = get_registration("openelm")
     assert registration.modality == "text"
-    assert registration.capabilities == {"forward", "cache"}
+    assert registration.capabilities >= {"forward", "cache", "generate", "sample", "stream"}
     assert registration.config_class() is OpenELMConfig
 
 

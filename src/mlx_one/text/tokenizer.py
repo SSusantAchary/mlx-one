@@ -48,6 +48,11 @@ class GPT2Tokenizer:
         self.bos_token = bos_token
         self.eos_token = eos_token
         self.unk_token = unk_token
+        self.special_tokens = {
+            "bos_token": bos_token,
+            "eos_token": eos_token,
+            "unk_token": unk_token,
+        }
         self.bos_token_id = self.token_id(bos_token)
         self.eos_token_id = self.token_id(eos_token)
 

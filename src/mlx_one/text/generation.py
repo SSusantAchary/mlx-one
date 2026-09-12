@@ -1,16 +1,17 @@
-"""Native greedy, sampled, batched, and streaming text generation."""
+"""Native greedy, sampled, batched, cancellable, and streaming text generation."""
 
 from __future__ import annotations
 
-import codecs
-import math
 import random
 import time
-from collections.abc import Iterator, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from pathlib import Path
 
 from mlx_one.text.loading import LoadedTextModel, load_text_model
+from mlx_one.text.sampling import select_token
 from mlx_one.text.schemas import GenerationChunk, GenerationResult, TextGenerationOptions
+
+CancelCheck = Callable[[], bool]
 
 
 def stream_generate(
@@ -21,6 +22,8 @@ def stream_generate(
     revision: str | None = None,
     offline: bool = False,
     cache_dir: str | Path | None = None,
+    tokenizer_source: str | Path | None = None,
+    is_cancelled: CancelCheck | None = None,
 ) -> Iterator[GenerationChunk]:
     """Yield native generation chunks for one prompt."""
 
@@ -29,9 +32,28 @@ def stream_generate(
     bundle = (
         model
         if isinstance(model, LoadedTextModel)
-        else load_text_model(model, revision=revision, offline=offline, cache_dir=cache_dir)
+        else load_text_model(
+            model,
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
+            tokenizer_source=tokenizer_source,
+        )
     )
-    yield from _stream_bundle(bundle, prompt, options or TextGenerationOptions())
+    yield from _stream_bundle(bundle, prompt, options or TextGenerationOptions(), is_cancelled)
+
+
+def stream_chat(
+    model: LoadedTextModel,
+    messages: Sequence[Mapping[str, str]],
+    *,
+    options: TextGenerationOptions | None = None,
+    is_cancelled: CancelCheck | None = None,
+) -> Iterator[GenerationChunk]:
+    if model.chat_template is None:
+        raise ValueError("loaded model has no chat-template layer")
+    prompt = model.chat_template.render(messages)
+    yield from _stream_bundle(model, prompt, options or TextGenerationOptions(), is_cancelled)
 
 
 def generate(
@@ -42,13 +64,20 @@ def generate(
     revision: str | None = None,
     offline: bool = False,
     cache_dir: str | Path | None = None,
+    tokenizer_source: str | Path | None = None,
 ) -> GenerationResult | tuple[GenerationResult, ...]:
     """Generate one completion or an independent batch of completions."""
 
     bundle = (
         model
         if isinstance(model, LoadedTextModel)
-        else load_text_model(model, revision=revision, offline=offline, cache_dir=cache_dir)
+        else load_text_model(
+            model,
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
+            tokenizer_source=tokenizer_source,
+        )
     )
     if isinstance(prompt_or_prompts, str):
         return _generate_one(bundle, prompt_or_prompts, options or TextGenerationOptions())
@@ -67,7 +96,7 @@ def _generate_one(
         raise ValueError("prompt must be non-empty text")
     started = time.perf_counter()
     prompt_ids = bundle.tokenizer.encode(prompt)
-    chunks = tuple(_stream_bundle(bundle, prompt, options))
+    chunks = tuple(_stream_bundle(bundle, prompt, options, None))
     terminal = chunks[-1]
     content = tuple(chunk for chunk in chunks if chunk.token_id is not None)
     return GenerationResult(
@@ -83,33 +112,49 @@ def _generate_one(
 
 
 def _stream_bundle(
-    bundle: LoadedTextModel, prompt: str, options: TextGenerationOptions
+    bundle: LoadedTextModel,
+    prompt: str,
+    options: TextGenerationOptions,
+    is_cancelled: CancelCheck | None,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
+    cancelled = is_cancelled or (lambda: False)
     prompt_ids = bundle.tokenizer.encode(prompt)
     if not prompt_ids:
-        prompt_ids = [bundle.tokenizer.bos_token_id]
-    if len(prompt_ids) >= bundle.model.config.n_positions:
-        raise ValueError("prompt leaves no room inside the GPT-2 context window")
-    maximum = min(options.max_tokens, bundle.model.config.n_positions - len(prompt_ids))
+        bos = bundle.tokenizer.bos_token_id
+        if bos is None:
+            raise ValueError("empty prompt requires a tokenizer BOS token")
+        prompt_ids = [bos]
+    context_length = bundle.context_length or _legacy_context_length(bundle)
+    if len(prompt_ids) >= context_length:
+        raise ValueError("prompt leaves no room inside the model context window")
+    maximum = min(options.max_tokens, context_length - len(prompt_ids))
     stop_tokens = tuple(tuple(bundle.tokenizer.encode(value)) for value in options.stop)
     if any(not value for value in stop_tokens):
         raise ValueError("stop sequences must encode to at least one token")
     pending: list[int] = []
+    generated: list[int] = []
+    decoded = ""
     hold = max((len(value) for value in stop_tokens), default=1)
     cache = bundle.model.make_cache()
     randomizer = random.Random(options.seed)
     tokens = list(prompt_ids)
     emitted = 0
     finish_reason = "length"
-    decoder = codecs.getincrementaldecoder("utf-8")("replace")
+    eos_token_id = bundle.tokenizer.eos_token_id
+    if eos_token_id is None:
+        config = getattr(bundle.model.config, "text_config", bundle.model.config)
+        eos_token_id = getattr(config, "eos_token_id", None)
     for step in range(maximum):
+        if cancelled():
+            finish_reason = "stop"
+            break
         current = tokens if step == 0 else [tokens[-1]]
         output = bundle.model(mx.array([current]), cache=cache)
         logits = output.logits[0, -1]
-        token = _select_token(logits, options, randomizer)
-        if token == bundle.tokenizer.eos_token_id:
+        token = select_token(logits, options, randomizer)
+        if eos_token_id is not None and token == eos_token_id:
             finish_reason = "stop"
             break
         tokens.append(token)
@@ -128,46 +173,27 @@ def _stream_bundle(
             break
         while len(pending) >= hold:
             emitted += 1
-            current_token = pending.pop(0)
-            text = decoder.decode(bundle.tokenizer.token_bytes(current_token), final=False)
-            yield GenerationChunk(current_token, text, emitted)
+            generated.append(pending.pop(0))
+            current_text = bundle.tokenizer.decode(generated)
+            piece = (
+                current_text[len(decoded) :] if current_text.startswith(decoded) else current_text
+            )
+            decoded = current_text
+            yield GenerationChunk(generated[-1], piece, emitted)
     for current_token in pending:
         emitted += 1
-        text = decoder.decode(bundle.tokenizer.token_bytes(current_token), final=False)
-        yield GenerationChunk(current_token, text, emitted)
-    trailing = decoder.decode(b"", final=True)
-    if trailing:
-        yield GenerationChunk(None, trailing, emitted)
+        generated.append(current_token)
+        current_text = bundle.tokenizer.decode(generated)
+        piece = current_text[len(decoded) :] if current_text.startswith(decoded) else current_text
+        decoded = current_text
+        yield GenerationChunk(current_token, piece, emitted)
     yield GenerationChunk(None, "", emitted, finish_reason)
 
 
-def _select_token(logits: object, options: TextGenerationOptions, randomizer: random.Random) -> int:
-    import mlx.core as mx
-
-    if options.temperature == 0:
-        return int(mx.argmax(logits).item())
-    probabilities = mx.softmax(logits / options.temperature, axis=-1)
-    mx.eval(probabilities)
-    ranked = sorted(enumerate(probabilities.tolist()), key=lambda item: item[1], reverse=True)
-    if options.top_k is not None:
-        ranked = ranked[: options.top_k]
-    if options.top_p < 1.0:
-        cutoff = options.top_p * sum(probability for _, probability in ranked)
-        selected = []
-        cumulative = 0.0
-        for item in ranked:
-            selected.append(item)
-            cumulative += item[1]
-            if cumulative >= cutoff:
-                break
-        ranked = selected
-    total = sum(value for _, value in ranked)
-    if not math.isfinite(total) or total <= 0:
-        raise RuntimeError("sampling probabilities are invalid")
-    threshold = randomizer.random() * total
-    cumulative = 0.0
-    for token, probability in ranked:
-        cumulative += probability
-        if threshold <= cumulative:
-            return int(token)
-    return int(ranked[-1][0])
+def _legacy_context_length(bundle: LoadedTextModel) -> int:
+    config = getattr(bundle.model.config, "text_config", bundle.model.config)
+    for name in ("max_position_embeddings", "max_context_length", "n_positions", "n_ctx"):
+        value = getattr(config, name, None)
+        if isinstance(value, int) and value > 0:
+            return value
+    raise ValueError("model configuration does not declare a context length")

@@ -76,6 +76,7 @@ from mlx_one.text import (
     TextModelLoadError,
     generate,
     load_text_model,
+    stream_chat,
     stream_generate,
 )
 from mlx_one.training import SFTTrainer
@@ -157,4 +158,5 @@ __all__ = [
     "rerank",
     "transcribe",
     "stream_generate",
+    "stream_chat",
 ]
