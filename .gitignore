@@ -9,9 +9,15 @@ mlx_one_full.md
 .coverage
 build/
 dist/
+!src/mlx_one/ui/
+!src/mlx_one/ui/dist/
+!src/mlx_one/ui/dist/**
 runs/
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
 __pycache__/
+node_modules/
+.svelte-kit/
+test-results/
 *.py[cod]
