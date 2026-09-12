@@ -134,6 +134,27 @@ def test_gpt2_weight_contract_transposes_conv1d_and_cleans_buffers() -> None:
         contract.validate(mismatched)
 
 
+def test_gpt2_sanitizer_accepts_official_unprefixed_safetensor_names() -> None:
+    config = tiny_config()
+    contract = weight_contract(config)
+    transposed_suffixes = (
+        "attn.c_attn.weight",
+        "attn.c_proj.weight",
+        "mlp.c_fc.weight",
+        "mlp.c_proj.weight",
+    )
+    source = {
+        name.removeprefix("transformer."): Shaped(
+            tuple(reversed(shape)) if name.endswith(transposed_suffixes) else shape
+        )
+        for name, shape in contract.expected.items()
+    }
+    source["lm_head.weight"] = Shaped((config.vocab_size, config.n_embd))
+    source["h.0.attn.bias"] = Shaped((1, 1, 16, 16))
+    source["h.0.attn.masked_bias"] = Shaped(())
+    contract.validate(sanitize_weights(source, config))
+
+
 def _write_tokenizer(root: Path, *, token_objects: bool = False) -> GPT2Tokenizer:
     encoder = bytes_to_unicode()
     vocabulary = {character: index for index, character in enumerate(encoder.values())}
