@@ -12,6 +12,7 @@ from mlx_one.text.tokenizers import HFTokenizerAdapter
 class TinyTokenizer:
     bos_token = "<s>"
     eos_token = "</s>"
+    special_tokens = {"bos_token": "<s>", "eos_token": "</s>"}
 
 
 @pytest.mark.parametrize(
@@ -36,6 +37,17 @@ def test_chat_template_fallbacks_and_restricted_template(tmp_path: Path) -> None
     )
     template = ChatTemplate.from_directory(tmp_path, "gpt2", TinyTokenizer())
     assert template.render([{"role": "user", "content": "Hello"}]) == "Hello :: assistant"
+
+
+def test_standalone_chat_template_preserves_required_bos_token(tmp_path: Path) -> None:
+    (tmp_path / "chat_template.jinja").write_text(
+        "{{ bos_token }}{% for message in messages %}{{ message['content'] }}{% endfor %}",
+        encoding="utf-8",
+    )
+
+    template = ChatTemplate.from_directory(tmp_path, "lfm2", TinyTokenizer())
+
+    assert template.render([{"role": "user", "content": "Hello"}]) == "<s>Hello"
 
 
 def test_hf_tokenizer_adapter_exposes_special_tokens(tmp_path: Path) -> None:

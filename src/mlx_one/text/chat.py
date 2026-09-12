@@ -39,6 +39,12 @@ class ChatTemplate:
             template = preferred.get("template") if preferred else None
         if template is not None and not isinstance(template, str):
             raise ValueError("chat_template must be a string or a named template list")
+        template_path = root / "chat_template.jinja"
+        if template is None and template_path.is_file():
+            try:
+                template = template_path.read_text(encoding="utf-8")
+            except OSError as exc:
+                raise ValueError(f"cannot read chat_template.jinja: {exc}") from exc
         return cls(model_type, template, tokenizer)
 
     def render(self, messages: Sequence[ChatMessage]) -> str:
@@ -50,16 +56,16 @@ class ChatTemplate:
         bos = getattr(self.tokenizer, "bos_token", "") or ""
         try:
             token_values = dict(getattr(self.tokenizer, "special_tokens", {}))
-            return str(
-                compiled.render(
-                    **token_values,
-                    messages=list(messages),
-                    add_generation_prompt=True,
-                    bos_token=bos,
-                    eos_token=eos,
-                    tools=None,
-                )
+            token_values.update(
+                {
+                    "messages": list(messages),
+                    "add_generation_prompt": True,
+                    "bos_token": bos,
+                    "eos_token": eos,
+                    "tools": None,
+                }
             )
+            return str(compiled.render(**token_values))
         except Exception as exc:
             raise ValueError(f"chat template rendering failed: {exc}") from exc
 
