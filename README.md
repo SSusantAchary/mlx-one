@@ -61,8 +61,9 @@ artifact ecosystem for configuration, tokenizer/processor assets, and safe
 - Safe local and pinned Hugging Face artifact inspection.
 - Native Whisper loading, audio preprocessing, tokenization, decoding, language
   detection, segment timestamps, word timestamps, and WER/CER evaluation.
-- Native GPT-2 loading, byte-level BPE, cached greedy and seeded sampling,
-  batched generation, stop sequences, and token streaming.
+- Unified native text loading, tokenizer/chat templates, MLX 4-bit checkpoints,
+  cached greedy and seeded sampling, stop sequences, token streaming, and serving
+  for GPT-2, Qwen2/Qwen3, LFM2, OpenELM, and text-only Qwen3.5 families.
 - Native Qwen3 embedding and reranking with byte-level BPE, safe loading,
   padding-aware batching, Matryoshka dimensions, normalization, cosine similarity,
   yes/no pair scoring, and stable ranking.
@@ -93,6 +94,21 @@ FFmpeg is required only when the Whisper API receives an audio file. Already
 decoded mono 16-kHz waveforms can be passed directly from Python.
 
 ## Quick start
+
+### Native server and Web UI
+
+Load one supported text model and start the bundled local UI:
+
+```bash
+mlx-one serve mlx-community/Qwen3.5-0.8B-4bit
+```
+
+Then open `http://127.0.0.1:8080`. The same process exposes an OpenAI-compatible API at
+`http://127.0.0.1:8080/v1`, including streaming chat completions. Model execution remains inside
+mlx-one's native model, tokenizer, sampling, generation, and MLX runtime. See
+[the Web UI and server guide](docs/ui.md) for API and development details.
+
+### Inspect, plan, and run tasks
 
 Check the machine and inspect a model without loading its weights:
 
