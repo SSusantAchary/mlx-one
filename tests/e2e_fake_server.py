@@ -37,7 +37,9 @@ class FakeEngine:
         messages = kwargs["messages"]
         assert isinstance(cancel, threading.Event)
         assert isinstance(messages, list)
-        if "slow" not in messages[-1]["content"]:
+        if "long" in messages[-1]["content"]:
+            yield GenerationEvent(text="\n".join(f"Response line {line}" for line in range(100)))
+        elif "slow" not in messages[-1]["content"]:
             yield GenerationEvent(text="Hello from native MLX")
         else:
             for _ in range(100):
