@@ -27,9 +27,11 @@ class ModelMetadata:
 class ModelManager:
     """Own exactly one model bundle for the lifetime of a server process."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, alias: str | None = None, context_length: int | None = None) -> None:
         self._bundle: LoadedTextModel | None = None
         self._lock = RLock()
+        self._alias = alias
+        self._context_length = context_length
 
     def load(
         self,
@@ -50,6 +52,15 @@ class ModelManager:
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
             )
+            if (
+                self._context_length is not None
+                and self._context_length > self._bundle.context_length
+            ):
+                native = self._bundle.context_length
+                self._bundle = None
+                raise ValueError(
+                    f"context length {self._context_length} exceeds model maximum {native}"
+                )
             return self._bundle
 
     def unload(self) -> None:
@@ -76,9 +87,9 @@ class ModelManager:
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
         return ModelMetadata(
-            id=bundle.model_id,
+            id=self._alias or bundle.model_id,
             architecture=bundle.architecture,
-            context_length=bundle.context_length,
+            context_length=self._context_length or bundle.context_length,
             parameter_count=bundle.parameter_count,
             quantization=dict(bundle.quantization),
             revision=bundle.revision,

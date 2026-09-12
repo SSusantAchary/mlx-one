@@ -11,6 +11,7 @@ class ChatMessage(BaseModel):
     model_config = ConfigDict(extra="forbid")
     role: Literal["system", "user", "assistant"]
     content: str = Field(min_length=1)
+    reasoning_content: str | None = None
 
 
 class ChatCompletionRequest(BaseModel):
@@ -24,6 +25,8 @@ class ChatCompletionRequest(BaseModel):
     seed: int = 0
     stop: str | list[str] | None = None
     stream: bool = False
+    reasoning: Literal["auto", "on", "off"] | None = None
+    reasoning_budget: int | None = Field(default=None, ge=-1)
 
     @field_validator("stop")
     @classmethod
