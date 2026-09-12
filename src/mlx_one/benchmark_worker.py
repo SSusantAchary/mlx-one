@@ -15,35 +15,64 @@ def main() -> None:
     request = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 
     import mlx.core as mx
-    from mlx_lm import load
-    from mlx_lm.generate import stream_generate
+
+    from mlx_one.text.loading import resolve_text_model_type
 
     mx.reset_peak_memory()
     loaded_at = time.perf_counter()
-    model, tokenizer = load(request["model_id"], revision=request["revision"])
+    native = resolve_text_model_type(request["model_id"], revision=request["revision"]) == "gpt2"
+    if native:
+        from mlx_one.text import load_text_model
+
+        bundle = load_text_model(request["model_id"], revision=request["revision"])
+    else:
+        from mlx_lm import load
+
+        model, tokenizer = load(request["model_id"], revision=request["revision"])
     load_seconds = time.perf_counter() - loaded_at
     load_peak = int(mx.get_peak_memory())
 
     def once(prompt: str) -> dict[str, float | int]:
         mx.reset_peak_memory()
         started = time.perf_counter()
-        responses = list(
-            stream_generate(
-                model,
-                tokenizer,
+        if native:
+            from mlx_one.text import TextGenerationOptions, generate
+
+            response = generate(
+                bundle,
                 prompt,
-                max_tokens=request["max_tokens"],
+                options=TextGenerationOptions(max_tokens=request["max_tokens"]),
             )
-        )
-        if not responses:
-            raise RuntimeError("generation produced no response records")
-        final = responses[-1]
+            wall_seconds = time.perf_counter() - started
+            prompt_tokens = response.prompt_tokens
+            generation_tokens = response.generation_tokens
+            prompt_tps = prompt_tokens / wall_seconds
+            generation_tps = generation_tokens / wall_seconds
+        else:
+            from mlx_lm.generate import stream_generate
+
+            responses = list(
+                stream_generate(
+                    model,
+                    tokenizer,
+                    prompt,
+                    max_tokens=request["max_tokens"],
+                )
+            )
+            if not responses:
+                raise RuntimeError("generation produced no response records")
+            final = responses[-1]
+            wall_seconds = time.perf_counter() - started
+            prompt_tokens = int(final.prompt_tokens)
+            generation_tokens = int(final.generation_tokens)
+            prompt_tps = float(final.prompt_tps)
+            generation_tps = float(final.generation_tps)
         return {
-            "wall_seconds": time.perf_counter() - started,
-            "prompt_tokens": int(final.prompt_tokens),
-            "generation_tokens": int(final.generation_tokens),
-            "prompt_tokens_per_second": float(final.prompt_tps),
-            "decode_tokens_per_second": float(final.generation_tps),
+            "wall_seconds": wall_seconds,
+            "prompt_tokens": prompt_tokens,
+            "generation_tokens": generation_tokens,
+            "prompt_tokens_per_second": prompt_tps,
+            "decode_tokens_per_second": generation_tps,
             "peak_metal_bytes": int(mx.get_peak_memory()),
         }
 

@@ -149,6 +149,21 @@ class MLXTrainingBackend:
         )
 
 
+def _is_native_gpt2(model: str) -> bool:
+    normalized = model.rstrip("/").lower()
+    if normalized.rsplit("/", 1)[-1] in {"gpt2", "gpt2-medium", "gpt2-large", "gpt2-xl"}:
+        return True
+    path = Path(model).expanduser()
+    config_path = path / "config.json"
+    if not config_path.is_file():
+        return False
+    try:
+        value = json.loads(config_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return isinstance(value, dict) and value.get("model_type") == "gpt2"
+
+
 class SFTTrainer:
     """Backend-neutral SFT entry point; MLX is the initial execution backend."""
 
@@ -163,6 +178,10 @@ class SFTTrainer:
     ) -> None:
         if not re.fullmatch(r"[0-9a-fA-F]{40,64}", revision):
             raise TrainingError("training requires an immutable 40-64 character revision")
+        if _is_native_gpt2(model):
+            raise TrainingError(
+                "native GPT-2 training and adapters are not implemented; inference only"
+            )
         self.model = model
         self.revision = revision.lower()
         self.train_dataset = Path(train_dataset)

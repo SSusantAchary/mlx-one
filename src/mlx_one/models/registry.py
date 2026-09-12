@@ -6,6 +6,13 @@ from mlx_one.core.registry import ModelRegistration, register_model
 def register_builtin_models() -> None:
     registrations = (
         ModelRegistration(
+            "gpt2",
+            "mlx_one.models.language.gpt2.config:GPT2Config",
+            "mlx_one.models.language.gpt2.model:GPT2LMHeadModel",
+            "text",
+            frozenset({"forward", "cache", "generate", "sample", "stream"}),
+        ),
+        ModelRegistration(
             "bert",
             "mlx_one.models.embeddings.bert.config:BertEmbeddingConfig",
             "mlx_one.models.embeddings.bert.model:BertForSentenceEmbedding",
@@ -76,6 +83,20 @@ def register_builtin_models() -> None:
             frozenset({"forward", "cache"}),
         ),
         ModelRegistration(
+            "qwen3_embedding",
+            "mlx_one.models.embeddings.qwen3_embedding.config:Qwen3EmbeddingConfig",
+            "mlx_one.models.embeddings.qwen3_embedding.model:Qwen3ForEmbedding",
+            "embedding",
+            frozenset({"forward", "last-token-pooling", "dimensions", "normalize", "cosine"}),
+        ),
+        ModelRegistration(
+            "qwen3_reranker",
+            "mlx_one.models.embeddings.qwen3_reranker.config:Qwen3RerankerConfig",
+            "mlx_one.models.embeddings.qwen3_reranker.model:Qwen3ForReranking",
+            "reranking",
+            frozenset({"forward", "pair-scoring", "rerank", "probability"}),
+        ),
+        ModelRegistration(
             "qwen2_moe",
             "mlx_one.models.language.qwen2_moe.config:Qwen2MoeConfig",
             "mlx_one.models.language.qwen2_moe.model:Qwen2MoeForCausalLM",
@@ -88,6 +109,20 @@ def register_builtin_models() -> None:
             "mlx_one.models.vision_language.qwen2_vl.model:Qwen2VLForConditionalGeneration",
             "vision-language",
             frozenset({"forward", "cache", "image", "video"}),
+        ),
+        ModelRegistration(
+            "qwen2_5_vl",
+            "mlx_one.models.vision_language.qwen2_5_vl.config:Qwen2_5_VLConfig",
+            "mlx_one.models.vision_language.qwen2_5_vl.model:Qwen2_5_VLForConditionalGeneration",
+            "vision-language",
+            frozenset({"forward", "cache", "image", "video"}),
+        ),
+        ModelRegistration(
+            "qwen3_5",
+            "mlx_one.models.vision_language.qwen3_5.config:Qwen3_5Config",
+            "mlx_one.models.vision_language.qwen3_5.model:Qwen3_5ForConditionalGeneration",
+            "vision-language",
+            frozenset({"forward", "cache", "image", "video", "linear-attention"}),
         ),
         ModelRegistration(
             "whisper",

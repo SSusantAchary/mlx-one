@@ -14,6 +14,7 @@ class ModelOutput:
     hidden_states: tuple[Any, ...] | None = None
     router_logits: tuple[Any, ...] | None = None
     router_aux_loss: Any | None = None
+    attentions: tuple[Any, ...] | None = None
 
 
 @dataclass

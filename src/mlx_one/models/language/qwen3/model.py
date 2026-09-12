@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.core.outputs import ModelOutput
@@ -28,6 +29,7 @@ class Qwen3Model(nn.Module):
         *,
         cache: tuple[Any, ...] | None = None,
         input_embeddings: Any | None = None,
+        attention_mask: Any | None = None,
         position_ids: Any | None = None,
         output_hidden_states: bool = False,
     ) -> tuple[Any, tuple[Any, ...] | None, tuple[Any, ...] | None]:
@@ -38,6 +40,15 @@ class Qwen3Model(nn.Module):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
         mask = causal_mask(hidden.shape[1], offset)
+        if attention_mask is not None:
+            expected = (hidden.shape[0], offset + hidden.shape[1])
+            if attention_mask.shape != expected:
+                raise ValueError("attention_mask must cover the complete cached sequence")
+            if position_ids is None:
+                positions = mx.maximum(mx.cumsum(attention_mask, axis=-1) - 1, 0)
+                position_ids = positions[:, -hidden.shape[1] :]
+            padding = mx.where(attention_mask[:, None, None, :] != 0, 0.0, -1e9)
+            mask = padding if mask is None else mask + padding
         states = [hidden] if output_hidden_states else None
         for layer, layer_cache in zip(
             self.layers, cache or (None,) * len(self.layers), strict=True

@@ -32,7 +32,7 @@ class Qwen2Config:
     extra: Mapping[str, Any] = field(default_factory=dict, repr=False)
 
     def __post_init__(self) -> None:
-        if self.model_type not in {"qwen2", "qwen2_vl_text"}:
+        if self.model_type not in {"qwen2", "qwen2_vl_text", "qwen2_5_vl_text"}:
             raise ConfigError(f"Qwen2Config cannot represent model_type={self.model_type!r}")
         for name in (
             "hidden_size",

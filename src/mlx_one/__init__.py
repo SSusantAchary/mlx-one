@@ -16,6 +16,16 @@ from mlx_one.hardware import (
 )
 from mlx_one.inspection import InspectionError, inspect_model
 from mlx_one.planning import PlanningError, estimate_memory, plan_inference, plan_training
+from mlx_one.retrieval import (
+    EmbeddingResult,
+    LoadedRetrievalModel,
+    RerankItem,
+    RerankResult,
+    RetrievalModelLoadError,
+    embed,
+    load_retrieval_model,
+    rerank,
+)
 from mlx_one.schemas import (
     SCHEMA_VERSION,
     ArtifactRef,
@@ -58,6 +68,16 @@ from mlx_one.schemas import (
     WorkloadKind,
     WorkloadSpec,
 )
+from mlx_one.text import (
+    GenerationChunk,
+    GenerationResult,
+    LoadedTextModel,
+    TextGenerationOptions,
+    TextModelLoadError,
+    generate,
+    load_text_model,
+    stream_generate,
+)
 from mlx_one.training import SFTTrainer
 
 __version__ = "0.1.0a1"
@@ -78,9 +98,12 @@ __all__ = [
     "Confidence",
     "Failure",
     "FitStatus",
+    "GenerationChunk",
+    "GenerationResult",
     "DatasetFormat",
     "DatasetLayout",
     "DatasetSpec",
+    "EmbeddingResult",
     "MetricProvenance",
     "MetricValue",
     "HardwareSpec",
@@ -92,6 +115,8 @@ __all__ = [
     "ModelSource",
     "ModelDimensions",
     "ModelSpec",
+    "LoadedTextModel",
+    "LoadedRetrievalModel",
     "Operation",
     "PlanResult",
     "PlanningError",
@@ -100,8 +125,13 @@ __all__ = [
     "RunResult",
     "RunSpec",
     "RunStatus",
+    "RerankItem",
+    "RerankResult",
+    "RetrievalModelLoadError",
     "SoftwareProvenance",
     "TaskResult",
+    "TextGenerationOptions",
+    "TextModelLoadError",
     "TrainingMethod",
     "TranscriptionResult",
     "TranscriptionSegment",
@@ -116,9 +146,15 @@ __all__ = [
     "inspect_model",
     "detect_hardware",
     "estimate_memory",
+    "embed",
+    "generate",
     "list_hardware_profiles",
     "load_hardware_profile",
+    "load_retrieval_model",
+    "load_text_model",
     "plan_inference",
     "plan_training",
+    "rerank",
     "transcribe",
+    "stream_generate",
 ]

@@ -3,6 +3,7 @@
 import hashlib
 import json
 import uuid
+from dataclasses import asdict
 from pathlib import Path
 
 import click
@@ -50,6 +51,8 @@ from mlx_one.planning import (
     write_plan_result,
 )
 from mlx_one.registry import CapabilityRegistry, RegistryError
+from mlx_one.retrieval import embed as embed_texts
+from mlx_one.retrieval import rerank as rerank_documents
 from mlx_one.run_store import RunStore
 from mlx_one.schemas import (
     CapabilitySpec,
@@ -61,6 +64,15 @@ from mlx_one.schemas import (
     RunResult,
     RunSpec,
     TrainingMethod,
+)
+from mlx_one.text import (
+    TextGenerationOptions,
+)
+from mlx_one.text import (
+    generate as generate_text,
+)
+from mlx_one.text import (
+    stream_generate as stream_text,
 )
 from mlx_one.training import SFTTrainer, TrainingError, export_adapter, load_train_config
 from mlx_one.workflow import WorkflowError, run_text_workflow
@@ -202,6 +214,174 @@ def transcribe_command(
     except (OSError, RuntimeError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(result.to_json() if as_json else result.text)
+
+
+@main.command("generate", help="Generate text with a native model family.")
+@click.argument("model")
+@click.argument("prompt")
+@click.option("--revision", help="Hugging Face branch, tag, or commit.")
+@click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+@click.option("--max-tokens", type=click.IntRange(min=1), default=128, show_default=True)
+@click.option("--temperature", type=click.FloatRange(min=0), default=0.0, show_default=True)
+@click.option("--top-k", type=click.IntRange(min=1))
+@click.option("--top-p", type=click.FloatRange(min=0, max=1, min_open=True), default=1.0)
+@click.option("--seed", type=int, default=0, show_default=True)
+@click.option("--stop", multiple=True, help="Stop string; may be repeated.")
+@click.option("--stream", is_flag=True, help="Emit token text as it becomes available.")
+@click.option("--json-output", "as_json", is_flag=True)
+def generate_command(
+    model: str,
+    prompt: str,
+    revision: str | None,
+    offline: bool,
+    cache_dir: str | None,
+    max_tokens: int,
+    temperature: float,
+    top_k: int | None,
+    top_p: float,
+    seed: int,
+    stop: tuple[str, ...],
+    stream: bool,
+    as_json: bool,
+) -> None:
+    """Generate a completion through the native text API."""
+
+    options = TextGenerationOptions(
+        max_tokens=max_tokens,
+        temperature=temperature,
+        top_k=top_k,
+        top_p=top_p,
+        seed=seed,
+        stop=stop,
+    )
+    try:
+        if stream:
+            chunks = stream_text(
+                model,
+                prompt,
+                options=options,
+                revision=revision,
+                offline=offline,
+                cache_dir=cache_dir,
+            )
+            for chunk in chunks:
+                if as_json:
+                    click.echo(json.dumps(asdict(chunk), sort_keys=True))
+                elif chunk.text:
+                    click.echo(chunk.text, nl=False)
+            if not as_json:
+                click.echo()
+            return
+        result = generate_text(
+            model,
+            prompt,
+            options=options,
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
+        )
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json() if as_json else result.text)
+
+
+@main.command("embed", help="Create embeddings with native Qwen3-Embedding.")
+@click.argument("model")
+@click.argument("texts", nargs=-1, required=True)
+@click.option("--revision", help="Hugging Face branch, tag, or commit.")
+@click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+@click.option("--input-type", type=click.Choice(["query", "document"]), default="document")
+@click.option("--instruction", help="Retrieval instruction for query embeddings.")
+@click.option("--dimensions", type=click.IntRange(min=1))
+@click.option("--max-length", type=click.IntRange(min=1), default=8192, show_default=True)
+@click.option("--batch-size", type=click.IntRange(min=1), default=8, show_default=True)
+@click.option("--json-output", "as_json", is_flag=True)
+def embed_command(
+    model: str,
+    texts: tuple[str, ...],
+    revision: str | None,
+    offline: bool,
+    cache_dir: str | None,
+    input_type: str,
+    instruction: str | None,
+    dimensions: int | None,
+    max_length: int,
+    batch_size: int,
+    as_json: bool,
+) -> None:
+    """Embed one or more texts through the native retrieval API."""
+    try:
+        result = embed_texts(
+            model,
+            texts,
+            input_type=input_type,  # type: ignore[arg-type]
+            instruction=instruction,
+            dimensions=dimensions,
+            max_length=max_length,
+            batch_size=batch_size,
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
+        )
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    if as_json:
+        click.echo(result.to_json())
+        return
+    for index, vector in enumerate(result.embeddings):
+        click.echo(f"{index}\t{json.dumps(vector)}")
+
+
+@main.command("rerank", help="Rerank documents with native Qwen3-Reranker.")
+@click.argument("model")
+@click.argument("query")
+@click.argument("documents", nargs=-1, required=True)
+@click.option("--revision", help="Hugging Face branch, tag, or commit.")
+@click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+@click.option("--instruction", help="Retrieval instruction used to judge each pair.")
+@click.option("--top-k", type=click.IntRange(min=1))
+@click.option("--max-length", type=click.IntRange(min=1), default=8192, show_default=True)
+@click.option("--batch-size", type=click.IntRange(min=1), default=8, show_default=True)
+@click.option("--json-output", "as_json", is_flag=True)
+def rerank_command(
+    model: str,
+    query: str,
+    documents: tuple[str, ...],
+    revision: str | None,
+    offline: bool,
+    cache_dir: str | None,
+    instruction: str | None,
+    top_k: int | None,
+    max_length: int,
+    batch_size: int,
+    as_json: bool,
+) -> None:
+    """Score and sort documents through the native retrieval API."""
+    try:
+        result = rerank_documents(
+            model,
+            query,
+            documents,
+            instruction=instruction,
+            top_k=top_k,
+            max_length=max_length,
+            batch_size=batch_size,
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
+        )
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    if as_json:
+        click.echo(result.to_json())
+        return
+    for item in result.items:
+        click.echo(
+            f"{item.index}\t{item.score:.6f}\t{item.probability:.6f}\t{item.document}"
+        )
 
 
 @main.group(help="Estimate text workload memory without loading model weights.")
@@ -416,7 +596,7 @@ def eval_command(
                 "source": (
                     "precomputed"
                     if predictions
-                    else ("native-whisper" if asr_profile else "mlx-lm")
+                    else ("native-whisper" if asr_profile else "text-generation-router")
                 ),
                 "deterministic": True,
                 "max_tokens": max_tokens,
