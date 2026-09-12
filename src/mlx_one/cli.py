@@ -286,6 +286,58 @@ def generate_command(
     click.echo(result.to_json() if as_json else result.text)
 
 
+@main.command("serve", help="Serve a native text model with an OpenAI-compatible API and UI.")
+@click.argument("model")
+@click.option("--host", default="127.0.0.1", show_default=True)
+@click.option("--port", type=click.IntRange(min=1, max=65535), default=8080, show_default=True)
+@click.option("--revision", help="Hugging Face branch, tag, or commit.")
+@click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+@click.option(
+    "--tokenizer",
+    "tokenizer_source",
+    help="Optional local directory or Hugging Face tokenizer repository.",
+)
+def serve_command(
+    model: str,
+    host: str,
+    port: int,
+    revision: str | None,
+    offline: bool,
+    cache_dir: str | None,
+    tokenizer_source: str | None,
+) -> None:
+    """Load one native model, then run the local mlx-one server."""
+
+    try:
+        import uvicorn
+
+        from mlx_one.server import ModelManager, create_app
+
+        manager = ModelManager()
+        bundle = manager.load(
+            model,
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
+            tokenizer_source=tokenizer_source,
+        )
+        quantization = (
+            f"{bundle.quantization.get('bits')}-bit" if bundle.quantization else "none"
+        )
+        click.echo("mlx-one\n")
+        click.echo(f"Model        {bundle.model_id}")
+        click.echo("Backend      MLX")
+        click.echo("Device       Apple Silicon")
+        click.echo(f"Architecture {bundle.architecture}")
+        click.echo(f"Quantization {quantization}\n")
+        click.echo(f"API          http://{host}:{port}/v1")
+        click.echo(f"UI           http://{host}:{port}")
+        uvicorn.run(create_app(model_manager=manager), host=host, port=port)
+    except (ImportError, OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+
+
 @main.command("embed", help="Create embeddings with native Qwen3-Embedding.")
 @click.argument("model")
 @click.argument("texts", nargs=-1, required=True)
@@ -711,7 +763,12 @@ def data_validate(
             "structurally_valid": True,
         }
         if tokenizer_ref:
-            from mlx_lm.utils import load_tokenizer
+            try:
+                from mlx_lm.utils import load_tokenizer
+            except ModuleNotFoundError as exc:
+                from mlx_one.compat.dependencies import legacy_mlx_lm_error
+
+                raise legacy_mlx_lm_error("Legacy dataset tokenization") from exc
 
             tokenizer = load_tokenizer(tokenizer_ref)
             result["tokenization"] = preview_dataset(spec, tokenizer, max_length=max_seq_length)
