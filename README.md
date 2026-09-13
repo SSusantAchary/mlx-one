@@ -44,6 +44,14 @@ Evaluation · benchmarking · evidence · qualification
 MLX on Apple Silicon
 ```
 
+<p align="center">
+  <a href="mlx-one-stack.png">
+    <img src="mlx-one-stack.png" alt="mlx-one current and target architecture stack" width="1100">
+  </a>
+</p>
+
+Click the architecture diagram to view it at full resolution.
+
 The project owns its supported model math directly. Hugging Face is used as the
 artifact ecosystem for configuration, tokenizer/processor assets, and safe
 `safetensors` checkpoints—not as a remote-code execution runtime.
