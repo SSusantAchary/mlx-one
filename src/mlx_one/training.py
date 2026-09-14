@@ -1,4 +1,4 @@
-"""Native mlx-one SFT orchestration over the upstream MLX execution engine."""
+"""Native mlx-one SFT orchestration implemented directly with Apple MLX."""
 
 from __future__ import annotations
 
@@ -6,9 +6,6 @@ import hashlib
 import json
 import re
 import shutil
-import subprocess
-import sys
-import tempfile
 import time
 import uuid
 from dataclasses import dataclass
@@ -70,7 +67,7 @@ class TrainingBackend(Protocol):
 
 
 class MLXTrainingBackend:
-    """Lazy, isolated adapter for mlx-lm's maintained LoRA implementation."""
+    """Native Apple MLX LoRA/QLoRA training backend."""
 
     def train(
         self,
@@ -81,72 +78,183 @@ class MLXTrainingBackend:
         config: TrainConfig,
         resume_adapter: Path | None,
     ) -> BackendTrainingResult:
-        adapter_dir = Path(config.output_dir).expanduser().resolve() / "adapters"
-        request = {
-            "model_id": model_id,
-            "revision": revision,
-            "mlx_lm_config": {
-                "train": True,
-                "test": False,
-                "data": str(data_dir),
-                "fine_tune_type": "lora",
-                "optimizer": config.optimizer,
-                "seed": config.seed,
+        if config.optimizer.lower() != "adamw":
+            raise TrainingError("native training currently supports optimizer='adamw'")
+        try:
+            import mlx.core as mx
+            import mlx.nn as nn
+            import mlx.optimizers as optim
+            from mlx.utils import tree_map
+
+            from mlx_one.datasets import tokenize_record
+            from mlx_one.text import load_text_model
+            from mlx_one.tuning import apply_lora, load_adapter, save_adapter
+
+            mx.random.seed(config.seed)
+            bundle = load_text_model(model_id, revision=revision)
+            if bundle.architecture not in {"qwen2", "llama"}:
+                raise TrainingError(
+                    f"native LoRA training is unsupported for {bundle.architecture!r}"
+                )
+            if config.method is TrainingMethod.QLORA and not bundle.quantization:
+                raise TrainingError("QLoRA requires a native four-bit base checkpoint")
+            adapter_root = resume_adapter.parent if resume_adapter is not None else None
+            if adapter_root is not None:
+                adapter_config = load_adapter(
+                    bundle.model,
+                    adapter_root,
+                    base_model_id=model_id,
+                    base_revision=revision,
+                )
+                target_paths = tuple(adapter_config.get("resolved_targets", ()))
+            else:
+                target_paths = apply_lora(
+                    bundle.model,
+                    num_layers=config.lora_layers,
+                    rank=config.lora_rank,
+                    scale=config.lora_alpha / config.lora_rank,
+                    dropout=config.lora_dropout,
+                    target_modules=config.target_modules,
+                )
+            if config.gradient_checkpointing:
+                _enable_gradient_checkpointing(bundle.model, mx)
+            records = [
+                json.loads(line)
+                for line in (data_dir / "train.jsonl").read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            prepared = []
+            for record in records:
+                if "messages" in record:
+                    if bundle.chat_template is None:
+                        raise TrainingError("messages training data requires a chat template")
+                    prompt = bundle.chat_template.render(
+                        record["messages"][:-1], add_generation_prompt=True
+                    )
+                    complete = bundle.chat_template.render(
+                        record["messages"], add_generation_prompt=False
+                    )
+                    prompt_ids = bundle.tokenizer.encode(prompt)
+                    ids = bundle.tokenizer.encode(complete)
+                    cutoff = min(len(prompt_ids), len(ids))
+                    labels = [-100] * cutoff + ids[cutoff:]
+                    ids, labels = ids[: config.max_seq_length], labels[: config.max_seq_length]
+                    if not ids or all(value == -100 for value in labels):
+                        raise TrainingError("training record has no supervised tokens")
+                    prepared.append((ids, labels))
+                else:
+                    item = tokenize_record(
+                        record,
+                        bundle.tokenizer,
+                        max_length=config.max_seq_length,
+                        response_only=True,
+                    )
+                    prepared.append((list(item.input_ids), list(item.labels)))
+            if len(prepared) < config.batch_size:
+                raise TrainingError("training dataset is smaller than batch_size")
+            optimizer = optim.AdamW(learning_rate=config.learning_rate)
+
+            def loss_fn(model: Any, inputs: Any, labels: Any) -> tuple[Any, Any]:
+                targets = labels[:, 1:]
+                mask = targets != -100
+                safe_targets = mx.where(mask, targets, 0)
+                logits = model(inputs[:, :-1]).logits
+                losses = nn.losses.cross_entropy(logits, safe_targets) * mask
+                token_count = mask.sum()
+                return losses.astype(mx.float32).sum() / mx.maximum(token_count, 1), token_count
+
+            value_and_grad = nn.value_and_grad(bundle.model, loss_fn)
+            gradient = None
+            losses: list[float] = []
+            token_total = 0
+            started = time.perf_counter()
+            bundle.model.train()
+            for step in range(config.max_steps):
+                batch = [
+                    prepared[(step * config.batch_size + i) % len(prepared)]
+                    for i in range(config.batch_size)
+                ]
+                inputs, labels = _pad_training_batch(batch, mx)
+                (loss, token_count), current = value_and_grad(bundle.model, inputs, labels)
+                gradient = current if gradient is None else tree_map(
+                    lambda left, right: left + right, gradient, current
+                )
+                update = (
+                    (step + 1) % config.gradient_accumulation_steps == 0
+                    or step + 1 == config.max_steps
+                )
+                if update:
+                    divisor = (
+                        config.gradient_accumulation_steps
+                        if (step + 1) % config.gradient_accumulation_steps == 0
+                        else (step % config.gradient_accumulation_steps) + 1
+                    )
+                    gradient = tree_map(
+                        lambda value, divisor=divisor: value / divisor, gradient
+                    )
+                    optimizer.update(bundle.model, gradient)
+                    gradient = None
+                mx.eval(bundle.model.parameters(), optimizer.state, loss, token_count)
+                losses.append(float(loss.item()))
+                token_total += int(token_count.item())
+            elapsed = time.perf_counter() - started
+            adapter_dir = Path(config.output_dir).expanduser().resolve() / "adapters"
+            adapter_config = {
+                "schema_version": 1,
+                "base_model_id": model_id,
+                "base_revision": revision,
+                "fine_tune_type": config.method.value,
                 "num_layers": config.lora_layers,
-                "batch_size": config.batch_size,
-                "iters": config.max_steps,
-                "learning_rate": config.learning_rate,
-                "steps_per_report": 1,
-                "steps_per_eval": config.eval_steps or config.max_steps + 1,
-                "grad_accumulation_steps": config.gradient_accumulation_steps,
-                "adapter_path": str(adapter_dir),
-                "save_every": config.save_steps,
-                "max_seq_length": config.max_seq_length,
-                "grad_checkpoint": config.gradient_checkpointing,
-                "mask_prompt": True,
-                "resume_adapter_file": str(resume_adapter) if resume_adapter else None,
-                "lora_parameters": {
-                    "rank": config.lora_rank,
-                    "dropout": config.lora_dropout,
-                    "scale": config.lora_alpha / config.lora_rank,
-                    **({"keys": list(config.target_modules)} if config.target_modules else {}),
-                },
-            },
-        }
-        with tempfile.TemporaryDirectory(prefix="mlx-one-train-") as temporary:
-            request_path = Path(temporary) / "request.json"
-            request_path.write_text(json.dumps(request), encoding="utf-8")
-            completed = subprocess.run(
-                [sys.executable, "-m", "mlx_one.training_worker", str(request_path)],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-        if completed.returncode != 0:
-            detail = (
-                completed.stderr.strip().splitlines()[-1]
-                if completed.stderr.strip()
-                else "worker failed"
-            )
-            raise TrainingError(f"MLX training failed: {detail}")
-        adapter = adapter_dir / "adapters.safetensors"
-        if not adapter.is_file():
-            raise TrainingError("MLX training completed without producing adapter weights")
-        losses = [float(item) for item in re.findall(r"Train loss ([0-9.eE+-]+)", completed.stdout)]
-        rates = [float(item) for item in re.findall(r"Tokens/sec ([0-9.eE+-]+)", completed.stdout)]
-        peak_gib = [
-            float(item) for item in re.findall(r"Peak mem ([0-9.eE+-]+) GB", completed.stdout)
-        ]
+                "rank": config.lora_rank,
+                "scale": config.lora_alpha / config.lora_rank,
+                "dropout": config.lora_dropout,
+                "target_modules": list(config.target_modules),
+                "resolved_targets": list(target_paths),
+            }
+            adapter = save_adapter(bundle.model, adapter_dir, adapter_config)
+            peak = int(mx.get_peak_memory())
+        except TrainingError:
+            raise
+        except Exception as exc:
+            raise TrainingError(f"native MLX training failed: {exc}") from exc
         return BackendTrainingResult(
             adapter_path=adapter,
             loss=losses[-1] if losses else None,
-            tokens_per_second=rates[-1] if rates else None,
-            stdout=completed.stdout,
+            tokens_per_second=token_total / elapsed if elapsed else None,
             loss_history=tuple(losses),
-            peak_memory_bytes=int(peak_gib[-1] * 1024**3) if peak_gib else None,
+            peak_memory_bytes=peak,
             resumable_state=(),
             resume_semantics=ResumeSemantics.ADAPTER_ONLY,
         )
+
+
+def _pad_training_batch(batch: list[tuple[list[int], list[int]]], mx: Any) -> tuple[Any, Any]:
+    width = max(len(ids) for ids, _ in batch)
+    if width < 2:
+        raise TrainingError("training sequences must contain at least two tokens")
+    inputs = [ids + [0] * (width - len(ids)) for ids, _ in batch]
+    labels = [values + [-100] * (width - len(values)) for _, values in batch]
+    return mx.array(inputs), mx.array(labels)
+
+
+def _enable_gradient_checkpointing(model: Any, mx: Any) -> None:
+    """Checkpoint the decoder layer call for the current model class."""
+    from mlx_one.tuning import _decoder_layers
+
+    layer_type = type(_decoder_layers(model)[0])
+    if hasattr(layer_type, "_mlx_one_uncheckpointed_call"):
+        return
+    original = layer_type.__call__
+    layer_type._mlx_one_uncheckpointed_call = original
+
+    def checkpointed(layer: Any, *args: Any, **kwargs: Any) -> Any:
+        def inner(parameters: Any, *inner_args: Any, **inner_kwargs: Any) -> Any:
+            layer.update(parameters)
+            return original(layer, *inner_args, **inner_kwargs)
+
+        return mx.checkpoint(inner)(layer.trainable_parameters(), *args, **kwargs)
+
+    layer_type.__call__ = checkpointed
 
 
 def _is_native_gpt2(model: str) -> bool:
@@ -197,7 +305,7 @@ class SFTTrainer:
                 )
 
     def train(self, *, resume_from_checkpoint: str | Path | None = None) -> RunResult:
-        """Normalize data, execute isolated training, and persist terminal evidence."""
+        """Normalize data, execute native training, and persist terminal evidence."""
         output = Path(self.args.output_dir).expanduser().resolve()
         store = RunStore(output / "runs")
         dataset = dataset_spec_from_path(self.train_dataset, response_only=True)

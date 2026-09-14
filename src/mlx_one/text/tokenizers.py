@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Protocol
 
@@ -31,6 +31,7 @@ class HFTokenizerAdapter:
         eos_token: str | None,
         bos_token_id: int | None,
         eos_token_id: int | None,
+        pad_token_id: int | None,
         special_tokens: Mapping[str, str],
     ) -> None:
         self._tokenizer = tokenizer
@@ -38,6 +39,7 @@ class HFTokenizerAdapter:
         self.eos_token = eos_token
         self.bos_token_id = bos_token_id
         self.eos_token_id = eos_token_id
+        self.pad_token_id = pad_token_id
         self.special_tokens = dict(special_tokens)
 
     @classmethod
@@ -56,6 +58,7 @@ class HFTokenizerAdapter:
             raise ValueError(f"cannot load tokenizer assets: {exc}") from exc
         bos = _token_text(config.get("bos_token", special.get("bos_token")))
         eos = _token_text(config.get("eos_token", special.get("eos_token")))
+        pad = _token_text(config.get("pad_token", special.get("pad_token")))
         token_values = {
             key: text
             for key in set(config) | set(special)
@@ -68,13 +71,21 @@ class HFTokenizerAdapter:
             eos_token=eos,
             bos_token_id=tokenizer.token_to_id(bos) if bos is not None else None,
             eos_token_id=tokenizer.token_to_id(eos) if eos is not None else None,
+            pad_token_id=tokenizer.token_to_id(pad) if pad is not None else None,
             special_tokens=token_values,
         )
 
-    def encode(self, text: str, *, add_special_tokens: bool = False) -> list[int]:
+    def encode(
+        self,
+        text: str,
+        *,
+        add_special_tokens: bool = False,
+        max_length: int | None = None,
+    ) -> list[int]:
         if not isinstance(text, str):
             raise TypeError("text must be a string")
-        return list(self._tokenizer.encode(text, add_special_tokens=add_special_tokens).ids)
+        values = list(self._tokenizer.encode(text, add_special_tokens=add_special_tokens).ids)
+        return values if max_length is None else values[:max_length]
 
     def decode(self, token_ids: Iterable[int], *, skip_special_tokens: bool = True) -> str:
         return str(
@@ -82,6 +93,29 @@ class HFTokenizerAdapter:
                 [int(value) for value in token_ids], skip_special_tokens=skip_special_tokens
             )
         )
+
+    def pad(
+        self, sequences: Sequence[Sequence[int]], *, padding_side: str = "right"
+    ) -> tuple[list[list[int]], list[list[int]]]:
+        if padding_side not in {"left", "right"}:
+            raise ValueError("padding_side must be left or right")
+        if not sequences:
+            raise ValueError("cannot pad an empty batch")
+        pad_id = self.pad_token_id
+        if pad_id is None:
+            raise ValueError("tokenizer has no pad token")
+        width = max(len(item) for item in sequences)
+        ids, masks = [], []
+        for item in sequences:
+            values = [int(value) for value in item]
+            count = width - len(values)
+            if padding_side == "left":
+                ids.append([pad_id] * count + values)
+                masks.append([0] * count + [1] * len(values))
+            else:
+                ids.append(values + [pad_id] * count)
+                masks.append([1] * len(values) + [0] * count)
+        return ids, masks
 
 
 def _token_text(value: object) -> str | None:

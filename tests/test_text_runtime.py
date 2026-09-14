@@ -5,7 +5,11 @@ import pytest
 
 from mlx_one.core.registry import get_registration
 from mlx_one.text.chat import ChatTemplate
-from mlx_one.text.loading import _quantization_config, _validate_quantized_tensors
+from mlx_one.text.loading import (
+    _eos_token_ids,
+    _quantization_config,
+    _validate_quantized_tensors,
+)
 from mlx_one.text.tokenizers import HFTokenizerAdapter
 
 
@@ -17,7 +21,17 @@ class TinyTokenizer:
 
 @pytest.mark.parametrize(
     "model_type",
-    ["gpt2", "lfm2", "lfm2_moe", "openelm", "qwen2", "qwen2_moe", "qwen3", "qwen3_5"],
+    [
+        "gpt2",
+        "lfm2",
+        "lfm2_moe",
+        "llama",
+        "openelm",
+        "qwen2",
+        "qwen2_moe",
+        "qwen3",
+        "qwen3_5",
+    ],
 )
 def test_native_serving_families_have_loading_hooks(model_type: str) -> None:
     registration = get_registration(model_type)
@@ -48,6 +62,27 @@ def test_standalone_chat_template_preserves_required_bos_token(tmp_path: Path) -
     template = ChatTemplate.from_directory(tmp_path, "lfm2", TinyTokenizer())
 
     assert template.render([{"role": "user", "content": "Hello"}]) == "<s>Hello"
+
+
+def test_strict_chat_template_normalizes_optional_assistant_fields() -> None:
+    template = ChatTemplate(
+        "llama",
+        "{% for message in messages %}"
+        "{{ message.role }}={{ message.content }}"
+        "{% if message.tool_calls %}:tools{% endif %}"
+        "{% if message.reasoning_content is string and message.reasoning_content %}"
+        ":reasoning={{ message.reasoning_content }}{% endif %};"
+        "{% endfor %}"
+        "{% if enable_thinking is defined and enable_thinking %}<think>{% endif %}",
+        TinyTokenizer(),
+    )
+    messages = [
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hi"},
+        {"role": "user", "content": "Again"},
+    ]
+    assert template.render(messages, enable_thinking=True).endswith("<think>")
+    assert ":tools" not in template.render(messages, enable_thinking=False)
 
 
 def test_hf_tokenizer_adapter_exposes_special_tokens(tmp_path: Path) -> None:
@@ -84,6 +119,14 @@ def test_quantization_metadata_is_strict() -> None:
         _quantization_config(
             {"quantization_config": {"bits": 4, "quant_method": "bitsandbytes"}}
         )
+
+
+def test_eos_token_metadata_accepts_single_multiple_and_nested_values() -> None:
+    assert _eos_token_ids({"eos_token_id": 1}) == (1,)
+    assert _eos_token_ids({"eos_token_id": [1, 130073, 1]}) == (1, 130073)
+    assert _eos_token_ids({"text_config": {"eos_token_id": [2, 3]}}) == (2, 3)
+    with pytest.raises(ValueError, match="eos_token_id"):
+        _eos_token_ids({"eos_token_id": []})
 
 
 def test_mixed_quantized_tensor_tree_is_strict() -> None:

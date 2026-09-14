@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "hardware_profile": "Apple M4 32 GB",
+  "metrics": {},
+  "note": "Populate only from a completed native qualification run on the fixed host."
+}

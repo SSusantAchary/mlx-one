@@ -16,82 +16,36 @@ def main() -> None:
 
     import mlx.core as mx
 
-    from mlx_one.text.loading import resolve_text_model_type
-
     mx.reset_peak_memory()
     loaded_at = time.perf_counter()
-    native_types = {
-        "gpt2",
-        "lfm2",
-        "lfm2_moe",
-        "openelm",
-        "qwen2",
-        "qwen2_moe",
-        "qwen3",
-        "qwen3_5",
-    }
-    native = (
-        resolve_text_model_type(request["model_id"], revision=request["revision"])
-        in native_types
-    )
-    if native:
-        from mlx_one.text import load_text_model
+    from mlx_one.text import load_text_model
 
-        bundle = load_text_model(request["model_id"], revision=request["revision"])
-    else:
-        try:
-            from mlx_lm import load
-        except ModuleNotFoundError as exc:
-            from mlx_one.compat.dependencies import legacy_mlx_lm_error
-
-            raise legacy_mlx_lm_error("Legacy text benchmarking") from exc
-
-        model, tokenizer = load(request["model_id"], revision=request["revision"])
+    bundle = load_text_model(request["model_id"], revision=request["revision"])
     load_seconds = time.perf_counter() - loaded_at
     load_peak = int(mx.get_peak_memory())
 
     def once(prompt: str) -> dict[str, float | int]:
         mx.reset_peak_memory()
         started = time.perf_counter()
-        if native:
-            from mlx_one.text import TextGenerationOptions, generate
+        from mlx_one.text import TextGenerationOptions, stream_generate
 
-            response = generate(
-                bundle,
-                prompt,
-                options=TextGenerationOptions(max_tokens=request["max_tokens"]),
-            )
-            wall_seconds = time.perf_counter() - started
-            prompt_tokens = response.prompt_tokens
-            generation_tokens = response.generation_tokens
-            prompt_tps = prompt_tokens / wall_seconds
-            generation_tps = generation_tokens / wall_seconds
-        else:
-            try:
-                from mlx_lm.generate import stream_generate
-            except ModuleNotFoundError as exc:
-                from mlx_one.compat.dependencies import legacy_mlx_lm_error
-
-                raise legacy_mlx_lm_error("Legacy text benchmarking") from exc
-
-            responses = list(
-                stream_generate(
-                    model,
-                    tokenizer,
-                    prompt,
-                    max_tokens=request["max_tokens"],
-                )
-            )
-            if not responses:
-                raise RuntimeError("generation produced no response records")
-            final = responses[-1]
-            wall_seconds = time.perf_counter() - started
-            prompt_tokens = int(final.prompt_tokens)
-            generation_tokens = int(final.generation_tokens)
-            prompt_tps = float(final.prompt_tps)
-            generation_tps = float(final.generation_tps)
+        iterator = stream_generate(
+            bundle,
+            prompt,
+            options=TextGenerationOptions(max_tokens=request["max_tokens"]),
+        )
+        first = next(iterator)
+        ttft_seconds = time.perf_counter() - started
+        chunks = [first, *iterator]
+        wall_seconds = time.perf_counter() - started
+        prompt_tokens = max(len(bundle.tokenizer.encode(prompt)), 1)
+        generation_tokens = max(chunks[-1].generated_tokens, 0)
+        prompt_tps = prompt_tokens / ttft_seconds
+        decode_seconds = max(wall_seconds - ttft_seconds, 1e-12)
+        generation_tps = max(generation_tokens - 1, 0) / decode_seconds
         return {
             "wall_seconds": wall_seconds,
+            "ttft_seconds": ttft_seconds,
             "prompt_tokens": prompt_tokens,
             "generation_tokens": generation_tokens,
             "prompt_tokens_per_second": prompt_tps,
@@ -106,10 +60,17 @@ def main() -> None:
         "load_peak_metal_bytes": load_peak,
         "sample_count": len(samples),
         "mean_wall_seconds": statistics.mean(item["wall_seconds"] for item in samples),
+        "median_ttft_seconds": statistics.median(item["ttft_seconds"] for item in samples),
         "mean_prompt_tokens_per_second": statistics.mean(
             item["prompt_tokens_per_second"] for item in samples
         ),
         "mean_decode_tokens_per_second": statistics.mean(
+            item["decode_tokens_per_second"] for item in samples
+        ),
+        "median_prompt_tokens_per_second": statistics.median(
+            item["prompt_tokens_per_second"] for item in samples
+        ),
+        "median_decode_tokens_per_second": statistics.median(
             item["decode_tokens_per_second"] for item in samples
         ),
         "peak_metal_bytes": max(load_peak, *(item["peak_metal_bytes"] for item in samples)),

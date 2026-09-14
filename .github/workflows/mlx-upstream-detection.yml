@@ -1,0 +1,31 @@
+name: Detect upstream MLX releases
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Detect stable non-yanked release
+        run: >-
+          python scripts/detect_mlx_release.py
+          --output candidate-report.json
+          --manifest src/mlx_one/data/compatibility/mlx.json
+          --updated-manifest candidate-manifest.json
+      - name: Upload candidate report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlx-unverified-candidate
+          path: |
+            candidate-report.json
+            candidate-manifest.json

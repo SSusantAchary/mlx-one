@@ -80,6 +80,9 @@ def test_lfm_registry_entries_are_lazy_and_backend_free() -> None:
     assert get_registration("lfm2_vl").config_class() is Lfm2VLConfig
     assert get_registration("lfm2_colbert").config_class() is Lfm2ColBERTConfig
     assert get_registration("lfm2_audio").config_class() is Lfm2AudioConfig
+    assert get_registration("lfm2_vl").loader_path is None
+    assert get_registration("lfm2_audio").loader_path is None
+    assert get_registration("lfm2_colbert").supports("late-interaction")
 
 
 def test_lfm_dense_derives_layer_layout_and_ffn_width() -> None:

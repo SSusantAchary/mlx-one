@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-ChatMessage = Mapping[str, str]
+ChatMessage = Mapping[str, Any]
 
 
 class ChatTemplate:
@@ -55,10 +55,16 @@ class ChatTemplate:
         eos = getattr(self.tokenizer, "eos_token", "") or ""
         bos = getattr(self.tokenizer, "bos_token", "") or ""
         try:
+            normalized_messages = []
+            for message in messages:
+                normalized = dict(message)
+                normalized.setdefault("reasoning_content", "")
+                normalized.setdefault("tool_calls", [])
+                normalized_messages.append(normalized)
             token_values = dict(getattr(self.tokenizer, "special_tokens", {}))
             token_values.update(
                 {
-                    "messages": list(messages),
+                    "messages": normalized_messages,
                     "add_generation_prompt": True,
                     "bos_token": bos,
                     "eos_token": eos,

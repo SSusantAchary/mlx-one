@@ -33,42 +33,33 @@ def main() -> None:
 def _run_inference(request: dict[str, Any]) -> dict[str, Any]:
     import mlx.core as mx
 
-    try:
-        from mlx_lm import load
-        from mlx_lm.generate import stream_generate
-    except ModuleNotFoundError as exc:
-        from mlx_one.compat.dependencies import legacy_mlx_lm_error
-
-        raise legacy_mlx_lm_error("Legacy calibration") from exc
+    from mlx_one.text import TextGenerationOptions, generate, load_text_model
 
     _set_memory_limit(mx, request["memory_limit_bytes"])
     mx.reset_peak_memory()
     started = time.perf_counter()
-    model, tokenizer = load(request["model_path"])
+    bundle = load_text_model(request["model_path"])
     load_seconds = time.perf_counter() - started
     load_peak = int(mx.get_peak_memory())
     workload = request["workload"]
-    prompt = _exact_tokens(tokenizer, workload["context_length"])
+    tokens = _exact_tokens(bundle.tokenizer, workload["context_length"])
+    prompt = bundle.tokenizer.decode(tokens, skip_special_tokens=False)
 
     def generate_once() -> dict[str, float | int]:
         mx.reset_peak_memory()
         started_at = time.perf_counter()
-        responses = list(
-            stream_generate(
-                model,
-                tokenizer,
-                prompt,
-                max_tokens=workload["generation_length"],
-            )
+        response = generate(
+            bundle,
+            prompt,
+            options=TextGenerationOptions(max_tokens=workload["generation_length"]),
         )
         elapsed = time.perf_counter() - started_at
-        final = responses[-1]
         return {
             "wall_seconds": elapsed,
-            "prompt_tokens": int(final.prompt_tokens),
-            "generation_tokens": int(final.generation_tokens),
-            "prompt_tokens_per_second": float(final.prompt_tps),
-            "decode_tokens_per_second": float(final.generation_tps),
+            "prompt_tokens": int(response.prompt_tokens),
+            "generation_tokens": int(response.generation_tokens),
+            "prompt_tokens_per_second": float(response.prompt_tokens / elapsed),
+            "decode_tokens_per_second": float(response.generation_tokens / elapsed),
             "peak_metal_bytes": int(mx.get_peak_memory()),
         }
 
@@ -98,111 +89,68 @@ def _run_inference(request: dict[str, Any]) -> dict[str, Any]:
 
 def _run_training(request: dict[str, Any]) -> dict[str, Any]:
     import mlx.core as mx
-    import mlx.optimizers as optim
 
-    try:
-        from mlx_lm import load
-        from mlx_lm.tuner.callbacks import TrainingCallback
-        from mlx_lm.tuner.datasets import CacheDataset
-        from mlx_lm.tuner.trainer import TrainingArgs, train
-        from mlx_lm.tuner.utils import linear_to_lora_layers
-    except ModuleNotFoundError as exc:
-        from mlx_one.compat.dependencies import legacy_mlx_lm_error
-
-        raise legacy_mlx_lm_error("Legacy training calibration") from exc
+    from mlx_one.schemas import TrainConfig, TrainingMethod
+    from mlx_one.text import load_text_model
+    from mlx_one.training import MLXTrainingBackend
 
     _set_memory_limit(mx, request["memory_limit_bytes"])
     workload = request["workload"]
     started = time.perf_counter()
-    model, tokenizer = load(request["model_path"])
+    bundle = load_text_model(request["model_path"])
     load_seconds = time.perf_counter() - started
     load_peak = int(mx.get_peak_memory())
-    model.freeze()
-    linear_to_lora_layers(
-        model,
-        workload["lora_layers"],
-        {
-            "rank": workload["lora_rank"],
-            "dropout": request["lora_dropout"],
-            "scale": request["lora_scale"],
-        },
+    tokens = _exact_tokens(bundle.tokenizer, workload["context_length"])
+    text = bundle.tokenizer.decode(tokens, skip_special_tokens=False)
+    data_dir = Path(request["scratch_dir"]) / "data"
+    data_dir.mkdir()
+    (data_dir / "train.jsonl").write_text(
+        "".join(json.dumps({"text": text}) + "\n" for _ in range(16)), encoding="utf-8"
     )
-    tokens = _exact_tokens(tokenizer, workload["context_length"])
-    dataset = CacheDataset(_TokenDataset(tokens, count=16))
-    adapter_file = Path(request["scratch_dir"]) / "adapters.safetensors"
     total_steps = request["warmup_steps"] + request["measured_steps"]
-    args = TrainingArgs(
-        batch_size=workload["batch_size"],
-        iters=total_steps,
-        val_batches=0,
-        steps_per_report=1,
-        steps_per_eval=total_steps + 1,
-        steps_per_save=total_steps + 1,
-        adapter_file=adapter_file,
+    config = TrainConfig(
+        output_dir=request["scratch_dir"],
+        method=TrainingMethod(workload["method"]),
         max_seq_length=workload["context_length"],
-        grad_checkpoint=workload["gradient_checkpointing"],
-        grad_accumulation_steps=1,
+        batch_size=workload["batch_size"],
+        max_steps=total_steps,
+        learning_rate=1e-5,
+        lora_rank=workload["lora_rank"],
+        lora_alpha=request["lora_scale"] * workload["lora_rank"],
+        lora_dropout=request["lora_dropout"],
+        lora_layers=workload["lora_layers"],
+        gradient_checkpointing=workload["gradient_checkpointing"],
+        save_steps=total_steps,
+        metadata={"base_quantized": bool(bundle.quantization)},
     )
-    callback = _TrainingMeasurements(mx, TrainingCallback, request["warmup_steps"])
-    optimizer = optim.AdamW(learning_rate=1e-5)
+    del bundle
+    mx.clear_cache()
     mx.reset_peak_memory()
     started = time.perf_counter()
-    train(
-        model=model,
-        optimizer=optimizer,
-        train_dataset=dataset,
-        val_dataset=None,
-        args=args,
-        training_callback=callback,
+    result = MLXTrainingBackend().train(
+        model_id=request["model_path"],
+        revision="0" * 40,
+        data_dir=data_dir,
+        config=config,
+        resume_adapter=None,
     )
     wall_seconds = time.perf_counter() - started
-    warm = callback.reports[request["warmup_steps"] :]
-    peak = max((int(item["peak_memory"] * 1e9) for item in callback.reports), default=0)
+    measured = max(total_steps - request["warmup_steps"], 1)
     return {
         "metrics": {
             "load_seconds": load_seconds,
             "training_wall_seconds": wall_seconds,
             "warmup_steps": request["warmup_steps"],
-            "measured_steps": len(warm),
-            "warm_iterations_per_second_mean": mean(
-                item["iterations_per_second"] for item in warm
-            ),
-            "warm_tokens_per_second_mean": mean(item["tokens_per_second"] for item in warm),
+            "measured_steps": measured,
+            "warm_iterations_per_second_mean": measured / wall_seconds,
+            "warm_tokens_per_second_mean": result.tokens_per_second,
         },
         "memory": {
             "load_peak_metal_bytes": load_peak,
-            "peak_metal_bytes": peak,
+            "peak_metal_bytes": result.peak_memory_bytes or int(mx.get_peak_memory()),
             "peak_process_rss_bytes": _peak_rss_bytes(),
         },
     }
-
-
-class _TokenDataset:
-    def __init__(self, tokens: list[int], *, count: int):
-        self.tokens = tokens
-        self.count = count
-
-    def __len__(self) -> int:
-        return self.count
-
-    def __getitem__(self, _index: int) -> list[int]:
-        return self.tokens
-
-    def process(self, tokens: list[int]) -> tuple[list[int], int]:
-        return tokens, 0
-
-
-def _TrainingMeasurements(mx: Any, base: type, warmup_steps: int) -> Any:
-    class Callback(base):
-        def __init__(self) -> None:
-            self.reports: list[dict[str, Any]] = []
-
-        def on_train_loss_report(self, train_info: dict[str, Any]) -> None:
-            self.reports.append(dict(train_info))
-            if len(self.reports) == warmup_steps:
-                mx.reset_peak_memory()
-
-    return Callback()
 
 
 def _exact_tokens(tokenizer: Any, length: int) -> list[int]:

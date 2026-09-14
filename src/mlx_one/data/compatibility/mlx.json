@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-09-13",
+  "policy": {
+    "release_window": 5
+  },
+  "latest_upstream": "0.32.2",
+  "latest_verified": null,
+  "mlx_versions": {
+    "0.32.2": {
+      "status": "supported",
+      "capabilities": {},
+      "qualified_at": null,
+      "repository_commit": null,
+      "environment": null,
+      "performance": null,
+      "report": null
+    },
+    "0.32.1": {
+      "status": "supported",
+      "capabilities": {},
+      "qualified_at": null,
+      "repository_commit": null,
+      "environment": null,
+      "performance": null,
+      "report": null
+    },
+    "0.32.0": {
+      "status": "supported",
+      "capabilities": {},
+      "qualified_at": null,
+      "repository_commit": null,
+      "environment": null,
+      "performance": null,
+      "report": null
+    },
+    "0.31.2": {
+      "status": "supported",
+      "capabilities": {},
+      "qualified_at": null,
+      "repository_commit": null,
+      "environment": null,
+      "performance": null,
+      "report": null
+    },
+    "0.31.1": {
+      "status": "supported",
+      "capabilities": {},
+      "qualified_at": null,
+      "repository_commit": null,
+      "environment": null,
+      "performance": null,
+      "report": null
+    }
+  }
+}

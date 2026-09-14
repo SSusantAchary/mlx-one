@@ -12,7 +12,7 @@ from mlx_one.schemas import SoftwareProvenance
 def collect_software_provenance() -> SoftwareProvenance:
     """Collect public runtime versions without usernames or private paths."""
     packages = {}
-    for name in ("mlx", "mlx-lm", "mlx-one"):
+    for name in ("mlx", "mlx-one"):
         try:
             packages[name] = version(name)
         except PackageNotFoundError:

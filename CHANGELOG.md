@@ -6,6 +6,9 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+- Added native Llama causal-model support and pinned MiniCPM5 1B/2B MLX
+  integration gates, including explicit head dimensions, 4-bit loading,
+  multi-EOS termination, and strict reasoning-template compatibility.
 - Added coding, instruction-following, and reasoning evaluation profiles with
   per-sample records, explicit exclusions, and 95% Wilson confidence intervals.
 - Added schema migrations, evidence-driven capability import/promotion, backend

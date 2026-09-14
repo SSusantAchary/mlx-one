@@ -491,10 +491,14 @@ def serve_command(
         finally:
             scheduler.close(finalizer=manager.unload)
     except (ImportError, OSError, RuntimeError, ValueError) as exc:
+        if isinstance(exc, ImportError) and exc.name in {"fastapi", "uvicorn"}:
+            raise click.ClickException(
+                "Native serving requires: pip install 'mlx-one[server]'"
+            ) from exc
         raise click.ClickException(str(exc)) from exc
 
 
-@main.command("embed", help="Create embeddings with native Qwen3-Embedding.")
+@main.command("embed", help="Create embeddings with a supported native retrieval model.")
 @click.argument("model")
 @click.argument("texts", nargs=-1, required=True)
 @click.option("--revision", help="Hugging Face branch, tag, or commit.")
@@ -919,14 +923,12 @@ def data_validate(
             "structurally_valid": True,
         }
         if tokenizer_ref:
-            try:
-                from mlx_lm.utils import load_tokenizer
-            except ModuleNotFoundError as exc:
-                from mlx_one.compat.dependencies import legacy_mlx_lm_error
+            from mlx_one.text.loading import _load_tokenizer, _resolve_tokenizer
 
-                raise legacy_mlx_lm_error("Legacy dataset tokenization") from exc
-
-            tokenizer = load_tokenizer(tokenizer_ref)
+            tokenizer_root = _resolve_tokenizer(
+                tokenizer_ref, revision=None, offline=False, cache_dir=None
+            )
+            tokenizer = _load_tokenizer(tokenizer_root, "")
             result["tokenization"] = preview_dataset(spec, tokenizer, max_length=max_seq_length)
     except (DatasetError, OSError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc

@@ -16,6 +16,8 @@ class ModelRegistration:
     capabilities: frozenset[str]
     sanitizer_path: str | None = None
     weight_contract_path: str | None = None
+    loader_path: str | None = None
+    tasks: frozenset[str] = frozenset()
 
     def config_class(self) -> type[Any]:
         return _resolve(self.config_path)
@@ -32,6 +34,14 @@ class ModelRegistration:
         if self.weight_contract_path is None:
             raise ValueError(f"model type {self.model_type!r} has no weight contract")
         return _resolve_attribute(self.weight_contract_path)
+
+    def loader(self) -> Any:
+        if self.loader_path is None:
+            raise ValueError(f"model type {self.model_type!r} has no native task loader")
+        return _resolve_attribute(self.loader_path)
+
+    def supports(self, capability: str) -> bool:
+        return capability in self.capabilities or capability in self.tasks
 
 
 _REGISTRY: dict[str, ModelRegistration] = {}

@@ -13,6 +13,8 @@ def register_builtin_models() -> None:
             frozenset({"forward", "cache", "generate", "sample", "stream"}),
             "mlx_one.models.language.gpt2.weights:sanitize_weights",
             "mlx_one.models.language.gpt2.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "bert",
@@ -20,6 +22,10 @@ def register_builtin_models() -> None:
             "mlx_one.models.embeddings.bert.model:BertForSentenceEmbedding",
             "embedding",
             frozenset({"forward", "mean-pooling", "normalize", "cosine"}),
+            "mlx_one.models.embeddings.bert.weights:sanitize_weights",
+            "mlx_one.models.embeddings.bert.weights:weight_contract",
+            loader_path="mlx_one.retrieval.loading:load_retrieval_model",
+            tasks=frozenset({"embedding"}),
         ),
         ModelRegistration(
             "lfm2",
@@ -29,6 +35,19 @@ def register_builtin_models() -> None:
             frozenset({"forward", "cache", "generate", "sample", "stream"}),
             "mlx_one.models.language.lfm2.weights:sanitize_weights",
             "mlx_one.models.language.lfm2.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
+        ),
+        ModelRegistration(
+            "llama",
+            "mlx_one.models.language.llama.config:LlamaConfig",
+            "mlx_one.models.language.llama.model:LlamaForCausalLM",
+            "text",
+            frozenset({"forward", "cache", "generate", "sample", "stream"}),
+            "mlx_one.models.language.llama.weights:sanitize_weights",
+            "mlx_one.models.language.llama.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "lfm2_moe",
@@ -40,6 +59,8 @@ def register_builtin_models() -> None:
             ),
             "mlx_one.models.language.lfm2_moe.weights:sanitize_weights",
             "mlx_one.models.language.lfm2_moe.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "lfm2_vl",
@@ -54,6 +75,10 @@ def register_builtin_models() -> None:
             "mlx_one.models.embeddings.lfm2_colbert.model:Lfm2ColBERTModel",
             "embedding",
             frozenset({"forward", "late-interaction"}),
+            "mlx_one.models.embeddings.lfm2_colbert.weights:sanitize_weights",
+            "mlx_one.models.embeddings.lfm2_colbert.weights:weight_contract",
+            loader_path="mlx_one.retrieval.loading:load_retrieval_model",
+            tasks=frozenset({"embedding", "late-interaction"}),
         ),
         ModelRegistration(
             "lfm2_audio",
@@ -70,6 +95,8 @@ def register_builtin_models() -> None:
             frozenset({"forward", "cache", "generate", "sample", "stream"}),
             "mlx_one.models.language.openelm.weights:sanitize_weights",
             "mlx_one.models.language.openelm.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "mpnet",
@@ -77,6 +104,10 @@ def register_builtin_models() -> None:
             "mlx_one.models.embeddings.mpnet.model:MPNetForSentenceEmbedding",
             "embedding",
             frozenset({"forward", "mean-pooling", "normalize", "cosine"}),
+            "mlx_one.models.embeddings.mpnet.weights:sanitize_weights",
+            "mlx_one.models.embeddings.mpnet.weights:weight_contract",
+            loader_path="mlx_one.retrieval.loading:load_retrieval_model",
+            tasks=frozenset({"embedding"}),
         ),
         ModelRegistration(
             "qwen2",
@@ -86,6 +117,8 @@ def register_builtin_models() -> None:
             frozenset({"forward", "cache", "generate", "sample", "stream"}),
             "mlx_one.models.language.qwen2.weights:sanitize_weights",
             "mlx_one.models.language.qwen2.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "qwen3",
@@ -95,6 +128,8 @@ def register_builtin_models() -> None:
             frozenset({"forward", "cache", "generate", "sample", "stream"}),
             "mlx_one.models.language.qwen3.weights:sanitize_weights",
             "mlx_one.models.language.qwen3.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "qwen3_embedding",
@@ -102,6 +137,8 @@ def register_builtin_models() -> None:
             "mlx_one.models.embeddings.qwen3_embedding.model:Qwen3ForEmbedding",
             "embedding",
             frozenset({"forward", "last-token-pooling", "dimensions", "normalize", "cosine"}),
+            loader_path="mlx_one.retrieval.loading:load_retrieval_model",
+            tasks=frozenset({"embedding"}),
         ),
         ModelRegistration(
             "qwen3_reranker",
@@ -109,6 +146,8 @@ def register_builtin_models() -> None:
             "mlx_one.models.embeddings.qwen3_reranker.model:Qwen3ForReranking",
             "reranking",
             frozenset({"forward", "pair-scoring", "rerank", "probability"}),
+            loader_path="mlx_one.retrieval.loading:load_retrieval_model",
+            tasks=frozenset({"reranking"}),
         ),
         ModelRegistration(
             "qwen2_moe",
@@ -120,6 +159,8 @@ def register_builtin_models() -> None:
             ),
             "mlx_one.models.language.qwen2_moe.weights:sanitize_weights",
             "mlx_one.models.language.qwen2_moe.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
         ),
         ModelRegistration(
             "qwen2_vl",
@@ -127,6 +168,10 @@ def register_builtin_models() -> None:
             "mlx_one.models.vision_language.qwen2_vl.model:Qwen2VLForConditionalGeneration",
             "vision-language",
             frozenset({"forward", "cache", "image", "video"}),
+            "mlx_one.models.vision_language.qwen2_vl.weights:sanitize_weights",
+            "mlx_one.models.vision_language.qwen2_vl.weights:weight_contract",
+            loader_path="mlx_one.vision.loading:load_vlm_model",
+            tasks=frozenset({"vision-language-generation"}),
         ),
         ModelRegistration(
             "qwen2_5_vl",
@@ -157,6 +202,8 @@ def register_builtin_models() -> None:
             ),
             "mlx_one.models.vision_language.qwen3_5.weights:sanitize_weights",
             "mlx_one.models.vision_language.qwen3_5.weights:weight_contract",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation", "vision-language-generation"}),
         ),
         ModelRegistration(
             "whisper",
@@ -173,6 +220,8 @@ def register_builtin_models() -> None:
                     "word-timestamps",
                 }
             ),
+            loader_path="mlx_one.models.audio.whisper.loading:load_whisper",
+            tasks=frozenset({"asr"}),
         ),
     )
     for registration in registrations:

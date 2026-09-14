@@ -377,7 +377,7 @@ def _prepare_artifact(cell: CalibrationCell, root: Path) -> Path:
         completed = subprocess.run(command, check=False, text=True)
         if completed.returncode != 0:
             raise CalibrationError(
-                f"mlx-lm conversion failed for {cell.model.model_id} ({precision.value})"
+                f"native conversion failed for {cell.model.model_id} ({precision.value})"
             )
         converted.replace(destination)
     return destination
@@ -506,7 +506,7 @@ def _records_in_directory(path: Path) -> list[CalibrationRecord]:
 
 def _software_provenance() -> SoftwareProvenance:
     packages = {}
-    for package in ("mlx-one", "mlx", "mlx-lm", "transformers", "huggingface-hub"):
+    for package in ("mlx-one", "mlx"):
         try:
             packages[package] = metadata.version(package)
         except metadata.PackageNotFoundError:

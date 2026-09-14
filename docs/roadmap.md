@@ -34,7 +34,7 @@ authoritative; compatibility facades expose only documented, tested subsets.
 
 M1's backend-free contracts, multi-profile text evaluation, confidence intervals,
 evidence promotion, and comparison workflow are implemented and tested. M2 has
-strict data/config contracts, an isolated `mlx-lm` LoRA adapter, explicitly
+strict data/config contracts, native MLX LoRA/QLoRA primitives, explicitly
 adapter-only continuation, transactional export, and limited compatibility
 facades. Qwen2.5-Coder and SmolLM2 are pinned candidates from the maintained
 model catalog. Both now have M4 LoRA-training and adapter-reload evidence; their

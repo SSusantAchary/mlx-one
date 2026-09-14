@@ -134,12 +134,13 @@ without Node.js or a frontend checkout.
 
 ## Dependencies and security
 
-FastAPI, Uvicorn, `tokenizers`, and Jinja2 are runtime dependencies. Legacy workflows that still
-bridge to `mlx-lm` require:
+`tokenizers` and Jinja2 are runtime dependencies. Install FastAPI and Uvicorn only for serving:
 
 ```bash
-python -m pip install 'mlx-one[legacy-mlx-lm]'
+python -m pip install 'mlx-one[server]'
 ```
+
+All model execution remains inside mlx-one's native Apple MLX implementations.
 
 The server binds only to loopback by default, applies a 1 MiB request limit, accepts development
 CORS only from the local Vite origins, and never accepts model or filesystem paths through its
