@@ -46,14 +46,24 @@ def embed(
         raise ValueError("input_type must be query or document")
     if input_type == "document" and instruction is not None:
         raise ValueError("instruction is only valid for query embeddings")
-    _validate_batch_options(max_length, batch_size, bundle.model.config.max_seq_length)
-    size = bundle.model.config.validate_dimensions(dimensions)
+    model_limit = getattr(
+        bundle.model.config,
+        "max_seq_length",
+        getattr(bundle.model.config, "sentence_max_length", 0),
+    )
+    _validate_batch_options(max_length, batch_size, model_limit)
+    if hasattr(bundle.model.config, "validate_dimensions"):
+        size = bundle.model.config.validate_dimensions(dimensions)
+    else:
+        size = bundle.model.config.hidden_size
+        if dimensions not in {None, size}:
+            raise ValueError(f"dimensions must equal the native embedding width ({size})")
     task = DEFAULT_RETRIEVAL_INSTRUCTION if instruction is None else instruction
     if input_type == "query" and (not isinstance(task, str) or not task):
         raise ValueError("query instruction must be non-empty text")
     formatted = (
         tuple(f"Instruct: {task}\nQuery:{value}" for value in values)
-        if input_type == "query"
+        if input_type == "query" and bundle.architecture.startswith("qwen3")
         else values
     )
     vectors: list[tuple[float, ...]] = []
@@ -65,9 +75,10 @@ def embed(
             for value in formatted[start : start + batch_size]
         ]
         ids, masks = bundle.tokenizer.pad(sequences, padding_side="left")
-        output = bundle.model(
-            mx.array(ids), attention_mask=mx.array(masks), dimensions=size
-        )
+        arguments = {"attention_mask": mx.array(masks)}
+        if hasattr(bundle.model.config, "validate_dimensions"):
+            arguments["dimensions"] = size
+        output = bundle.model(mx.array(ids), **arguments)
         mx.eval(output.embeddings)
         vectors.extend(tuple(float(item) for item in row) for row in output.embeddings.tolist())
     return EmbeddingResult(

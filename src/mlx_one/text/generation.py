@@ -25,6 +25,7 @@ def stream_generate(
     offline: bool = False,
     cache_dir: str | Path | None = None,
     tokenizer_source: str | Path | None = None,
+    adapter_path: str | Path | None = None,
     is_cancelled: CancelCheck | None = None,
 ) -> Iterator[GenerationChunk]:
     """Yield native generation chunks for one prompt."""
@@ -40,6 +41,7 @@ def stream_generate(
             offline=offline,
             cache_dir=cache_dir,
             tokenizer_source=tokenizer_source,
+            adapter_path=adapter_path,
         )
     )
     yield from _stream_bundle(bundle, prompt, options or TextGenerationOptions(), is_cancelled)
@@ -95,6 +97,7 @@ def generate(
     offline: bool = False,
     cache_dir: str | Path | None = None,
     tokenizer_source: str | Path | None = None,
+    adapter_path: str | Path | None = None,
 ) -> GenerationResult | tuple[GenerationResult, ...]:
     """Generate one completion or an independent batch of completions."""
 
@@ -107,6 +110,7 @@ def generate(
             offline=offline,
             cache_dir=cache_dir,
             tokenizer_source=tokenizer_source,
+            adapter_path=adapter_path,
         )
     )
     if isinstance(prompt_or_prompts, str):
@@ -199,10 +203,20 @@ def _stream_bundle(
         closing_reasoning = True
     emitted = 0
     finish_reason = "length"
-    eos_token_id = bundle.tokenizer.eos_token_id
-    if eos_token_id is None:
+    eos_token_ids = set(bundle.eos_token_ids)
+    if bundle.tokenizer.eos_token_id is not None:
+        eos_token_ids.add(bundle.tokenizer.eos_token_id)
+    if not eos_token_ids:
         config = getattr(bundle.model.config, "text_config", bundle.model.config)
-        eos_token_id = getattr(config, "eos_token_id", None)
+        configured = getattr(config, "eos_token_id", None)
+        if isinstance(configured, int) and not isinstance(configured, bool):
+            eos_token_ids.add(configured)
+        elif isinstance(configured, (list, tuple)):
+            eos_token_ids.update(
+                value
+                for value in configured
+                if isinstance(value, int) and not isinstance(value, bool)
+            )
     produced = 0
     cache_safe = True
     cache_token_count = len(cached)
@@ -247,7 +261,7 @@ def _stream_bundle(
                 speculative_stats["accepted_draft_tokens"] += accepted
         stopped = False
         for candidate in candidates[: maximum - produced]:
-            if eos_token_id is not None and candidate == eos_token_id:
+            if candidate in eos_token_ids:
                 finish_reason = "stop"
                 stopped = True
                 break

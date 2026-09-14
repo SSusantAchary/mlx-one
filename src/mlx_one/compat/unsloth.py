@@ -4,7 +4,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from mlx_one.utils.model_loader import load_model
+
+def _load_bundle(model_name: str, revision: str | None) -> Any:
+    from mlx_one.text import load_text_model
+
+    return load_text_model(model_name, revision=revision)
+
+
+def _apply_lora(model: Any, **kwargs: Any) -> tuple[str, ...]:
+    from mlx_one.tuning import apply_lora
+
+    return apply_lora(model, **kwargs)
 
 
 class FastLanguageModel:
@@ -24,8 +34,8 @@ class FastLanguageModel:
             raise TypeError(f"unsupported FastLanguageModel arguments: {names}")
         if max_seq_length < 1:
             raise ValueError("max_seq_length must be at least 1")
-        loaded = load_model(model_name, revision=revision)
-        model, tokenizer = loaded
+        bundle = _load_bundle(model_name, revision)
+        model, tokenizer = bundle.model, bundle.tokenizer
         model._mlx_one_model_name = model_name
         model._mlx_one_revision = revision
         model._mlx_one_max_seq_length = max_seq_length
@@ -47,31 +57,21 @@ class FastLanguageModel:
             raise TypeError(f"unsupported PEFT arguments: {names}")
         if r < 1 or lora_alpha <= 0 or not 0 <= lora_dropout < 1:
             raise ValueError("invalid LoRA rank, alpha, or dropout")
-        try:
-            from mlx_lm.tuner.utils import linear_to_lora_layers
-        except ModuleNotFoundError as exc:
-            raise RuntimeError(
-                "LoRA compatibility requires: pip install 'mlx-one[legacy-mlx-lm]'"
-            ) from exc
-
-        keys = list(target_modules or ())
-        layer_count = len(getattr(model, "layers", ()))
-        if layer_count == 0:
-            raise ValueError("model does not expose transformer layers")
-        linear_to_lora_layers(
+        keys = tuple(target_modules or ())
+        layers = getattr(getattr(model, "model", model), "layers", ())
+        layer_count = len(layers)
+        _apply_lora(
             model,
-            layer_count,
-            {
-                "rank": r,
-                "scale": lora_alpha / r,
-                "dropout": lora_dropout,
-                **({"keys": keys} if keys else {}),
-            },
+            num_layers=layer_count,
+            rank=r,
+            scale=lora_alpha / r,
+            dropout=lora_dropout,
+            target_modules=keys,
         )
         model._mlx_one_peft_config = {
             "lora_rank": r,
             "lora_alpha": lora_alpha,
             "lora_dropout": lora_dropout,
-            "target_modules": tuple(keys),
+            "target_modules": keys,
         }
         return model

@@ -6,9 +6,11 @@ import json
 import platform
 import subprocess
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from importlib import metadata, util
 from typing import Any
+
+from mlx_one.core.compatibility import MLXCompatibility, get_mlx_compatibility
 
 
 @dataclass(frozen=True)
@@ -33,19 +35,18 @@ class DoctorReport:
     metal_available: bool
     metal_error: str | None
     backends: tuple[BackendStatus, ...]
+    mlx_compatibility: MLXCompatibility | None = None
+    native_capabilities: dict[str, str] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Return the report as a JSON-compatible dictionary."""
-        return asdict(self)
+        payload = asdict(self)
+        if self.mlx_compatibility is not None:
+            payload["mlx_compatibility"] = self.mlx_compatibility.to_dict()
+        return payload
 
 
-_BACKENDS = (
-    ("mlx", "mlx"),
-    ("mlx-lm", "mlx_lm"),
-    ("mlx-vlm", "mlx_vlm"),
-    ("mlx-audio", "mlx_audio"),
-    ("mlx-embeddings", "mlx_embeddings"),
-)
+_BACKENDS = (("mlx", "mlx"),)
 
 
 def collect_doctor_report() -> DoctorReport:
@@ -72,6 +73,8 @@ def collect_doctor_report() -> DoctorReport:
         metal_available=metal_available,
         metal_error=metal_error,
         backends=tuple(_backend_status(distribution, module) for distribution, module in _BACKENDS),
+        mlx_compatibility=get_mlx_compatibility(),
+        native_capabilities=_native_capabilities(),
     )
 
 
@@ -80,16 +83,41 @@ def format_doctor_report(report: DoctorReport) -> str:
     memory = _format_bytes(report.memory_bytes)
     lines = [
         "mlx-one doctor",
-        f"Host: {report.operating_system} {report.architecture}",
-        f"Chip: {report.chip}",
-        f"Unified memory: {memory}",
-        f"Python: {report.python_version}",
-        f"MLX Metal: {'available' if report.metal_available else 'unavailable'}",
-        "Backends:",
+        "Runtime",
+        f"  Host: {report.operating_system} {report.architecture}",
+        f"  Chip: {report.chip}",
+        f"  Unified memory: {memory}",
+        f"  Python: {report.python_version}",
+        f"  MLX Metal: {'available' if report.metal_available else 'unavailable'}",
     ]
-    for backend in report.backends:
-        state = backend.version if backend.installed and backend.version else "not installed"
-        lines.append(f"  {backend.name}: {state}")
+    compatibility = report.mlx_compatibility
+    if compatibility is not None:
+        lines.extend(
+            [
+                "MLX Compatibility",
+                f"  Installed: {compatibility.runtime_version or 'not installed'}",
+                f"  Latest upstream: {compatibility.latest_upstream}",
+                f"  Latest verified: {compatibility.latest_verified or 'none'}",
+                "  Window: latest 5 stable releases",
+                f"  Status: {compatibility.state.value.upper()}",
+                f"  Reason: {compatibility.reason}",
+                "Qualified Releases:",
+            ]
+        )
+        for version in compatibility.supported_versions:
+            marker = "✓" if version == compatibility.latest_verified else "·"
+            lines.append(f"  {marker} {version}")
+        if not compatibility.supported_versions:
+            lines.append("  none")
+    elif report.backends:
+        mlx = report.backends[0]
+        installed = mlx.version if mlx.installed else "not installed"
+        lines.append(f"  mlx: {installed}")
+    if report.native_capabilities:
+        lines.append("Native Capabilities:")
+        lines.extend(
+            f"  {name}: {status}" for name, status in sorted(report.native_capabilities.items())
+        )
     if not report.supported_host:
         lines.append("Action: mlx-one requires macOS on Apple Silicon for model execution.")
     elif not report.metal_available:
@@ -110,6 +138,34 @@ def _backend_status(distribution: str, module: str) -> BackendStatus:
     except metadata.PackageNotFoundError:
         version = "unknown" if installed else None
     return BackendStatus(name=distribution, installed=installed, version=version)
+
+
+def _native_capabilities() -> dict[str, str]:
+    """Summarize task readiness without importing model implementations."""
+    from mlx_one.core.registry import get_registration, registered_model_types
+
+    registrations = [get_registration(name) for name in registered_model_types()]
+    return {
+        "asr": "supported"
+        if any("transcribe" in item.capabilities for item in registrations)
+        else "planned",
+        "embeddings": "experimental"
+        if any(
+            item.modality in {"embedding", "reranking"} and item.loader_path
+            for item in registrations
+        )
+        else "planned",
+        "text": "supported"
+        if any(
+            item.modality == "text" and item.loader_path and item.supports("generate")
+            for item in registrations
+        )
+        else "planned",
+        "tts": "planned",
+        "vlm": "experimental"
+        if any(item.modality == "vision-language" for item in registrations)
+        else "planned",
+    }
 
 
 def _probe_metal() -> tuple[bool, str | None]:

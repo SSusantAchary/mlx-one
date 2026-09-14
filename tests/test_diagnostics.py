@@ -1,4 +1,5 @@
 from mlx_one import diagnostics
+from mlx_one.core.compatibility import MLXCompatibility, MLXCompatibilityStatus
 from mlx_one.diagnostics import (
     BackendStatus,
     DoctorReport,
@@ -37,13 +38,26 @@ def test_doctor_json_is_stable_and_serializable() -> None:
         python_version="3.13.0",
         metal_available=True,
         metal_error=None,
-        backends=(BackendStatus("mlx", True, "1.0"),),
+        backends=(BackendStatus("mlx", True, "0.32.2"),),
+        mlx_compatibility=MLXCompatibility(
+            "0.32.2",
+            "0.32.2",
+            None,
+            ("0.32.2", "0.32.1", "0.32.0", "0.31.2", "0.31.1"),
+            MLXCompatibilityStatus.SUPPORTED,
+            {},
+            "inside support window",
+            "2026-09-13",
+        ),
+        native_capabilities={"text": "supported", "tts": "planned"},
     )
 
     output = doctor_report_json(report)
 
     assert '"chip": "Apple M4"' in output
     assert '"name": "mlx"' in output
+    assert '"state": "supported"' in output
+    assert '"text": "supported"' in output
 
 
 def test_collect_report_uses_hardware_profile_fallback(monkeypatch) -> None:

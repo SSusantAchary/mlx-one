@@ -8,6 +8,7 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import VisionLanguageModelOutput
 from mlx_one.models.language.qwen2.config import Qwen2Config
 from mlx_one.models.language.qwen2.model import Qwen2Model
@@ -74,6 +75,9 @@ class Qwen2VLForConditionalGeneration(nn.Module):
         if not config.tie_word_embeddings:
             self.lm_head = nn.Linear(text.hidden_size, text.vocab_size, bias=False)
 
+    def make_cache(self) -> tuple[Any, ...]:
+        return make_kv_caches(self.config.text_config.num_hidden_layers)
+
     def __call__(
         self,
         input_ids: Any,
@@ -113,14 +117,20 @@ class Qwen2VLForConditionalGeneration(nn.Module):
             mm_token_type_ids = mx.where(
                 input_ids == self.config.video_token_id, 2, mm_token_type_ids
             )
-        position_ids, rope_deltas = multimodal_position_ids(
-            input_ids,
-            mm_token_type_ids=mm_token_type_ids,
-            image_grid_thw=image_grid_thw,
-            video_grid_thw=video_grid_thw,
-            spatial_merge_size=self.config.vision_config.spatial_merge_size,
-            attention_mask=attention_mask,
-        )
+        offset = 0 if cache is None else cache[0].offset
+        if offset and not vision_states:
+            base = mx.arange(offset, offset + input_ids.shape[1])[None, :]
+            position_ids = mx.broadcast_to(base, (3, input_ids.shape[0], input_ids.shape[1]))
+            rope_deltas = mx.zeros((input_ids.shape[0], 1), mx.int32)
+        else:
+            position_ids, rope_deltas = multimodal_position_ids(
+                input_ids,
+                mm_token_type_ids=mm_token_type_ids,
+                image_grid_thw=image_grid_thw,
+                video_grid_thw=video_grid_thw,
+                spatial_merge_size=self.config.vision_config.spatial_merge_size,
+                attention_mask=attention_mask,
+            )
         hidden, cache, states = self.language_model(
             None,
             cache=cache,

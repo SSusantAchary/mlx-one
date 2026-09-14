@@ -21,8 +21,9 @@ from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.gpt2.config import GPT2Config
 from mlx_one.models.language.gpt2.model import GPT2LMHeadModel, gelu_new
 from mlx_one.models.language.gpt2.weights import weight_contract
-from mlx_one.text.generation import _select_token, generate, stream_generate
+from mlx_one.text.generation import generate, stream_generate
 from mlx_one.text.loading import LoadedTextModel, load_text_model
+from mlx_one.text.sampling import select_token
 from mlx_one.text.schemas import TextGenerationOptions
 from mlx_one.text.tokenizer import GPT2Tokenizer, bytes_to_unicode
 
@@ -148,8 +149,8 @@ def test_gpt2_generation_greedy_stop_batch_stream_and_seeded_sampling() -> None:
 
     logits = mx.array([0.1, 0.2, 0.3, 4.0])
     options = TextGenerationOptions(temperature=0.8, top_k=2, top_p=0.9, seed=7)
-    first = _select_token(logits, options, random.Random(7))
-    second = _select_token(logits, options, random.Random(7))
+    first = select_token(logits, options, random.Random(7))
+    second = select_token(logits, options, random.Random(7))
     assert first == second
     assert first in {2, 3}
 

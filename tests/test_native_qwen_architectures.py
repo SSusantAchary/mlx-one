@@ -128,6 +128,7 @@ def test_registry_is_lazy_and_contains_all_qwen_families() -> None:
     }
     assert qwen_types <= set(registered_model_types())
     assert get_registration("qwen2_vl").modality == "vision-language"
+    assert get_registration("qwen2_vl").supports("vision-language-generation")
     assert get_registration("qwen2_moe").capabilities >= {"forward", "router-outputs"}
     assert all(
         "training" not in get_registration(model_type).capabilities

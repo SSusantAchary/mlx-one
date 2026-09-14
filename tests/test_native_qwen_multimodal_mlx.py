@@ -174,5 +174,8 @@ def test_model_parameter_tree_exactly_matches_weight_contract(
     model = model_type(config)
     parameters = dict(tree_flatten(model.parameters()))
     contract = contract_factory(config)
-    assert set(parameters) == set(contract.expected)
-    assert {name: tuple(value.shape) for name, value in parameters.items()} == contract.expected
+    required = set(contract.expected) - set(contract.optional)
+    assert set(parameters) == required
+    assert {name: tuple(value.shape) for name, value in parameters.items()} == {
+        name: shape for name, shape in contract.expected.items() if name in required
+    }

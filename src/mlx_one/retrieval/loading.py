@@ -1,4 +1,4 @@
-"""Safe native Qwen3 retrieval-model loading."""
+"""Safe native loading for registered embedding and reranking models."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from typing import Any, Literal
 from huggingface_hub import snapshot_download
 from safetensors import SafetensorError, safe_open
 
+from mlx_one.core.registry import get_registration
 from mlx_one.models.embeddings.qwen3_embedding.config import Qwen3EmbeddingConfig
 from mlx_one.models.embeddings.qwen3_embedding.weights import (
     sanitize_weights as sanitize_embedding_weights,
@@ -26,6 +27,12 @@ from mlx_one.models.embeddings.qwen3_reranker.weights import (
     weight_contract as reranker_weight_contract,
 )
 from mlx_one.retrieval.tokenizer import Qwen3Tokenizer
+from mlx_one.text.loading import (
+    _prepare_quantized_model,
+    _quantization_config,
+    _validate_quantized_tensors,
+)
+from mlx_one.text.tokenizers import HFTokenizerAdapter
 
 RetrievalTask = Literal["embedding", "reranking"]
 
@@ -37,11 +44,12 @@ class RetrievalModelLoadError(RuntimeError):
 @dataclass(frozen=True)
 class LoadedRetrievalModel:
     model: Any
-    tokenizer: Qwen3Tokenizer
+    tokenizer: Any
     task: RetrievalTask
     path: Path
     model_id: str
     revision: str | None
+    architecture: str = "qwen3"
 
 
 def load_retrieval_model(
@@ -56,10 +64,19 @@ def load_retrieval_model(
         raise RetrievalModelLoadError(f"unsupported retrieval task: {task!r}")
     root = _resolve(model, revision=revision, offline=offline, cache_dir=cache_dir)
     config_data = _read_json(root / "config.json")
-    if config_data.get("model_type") != "qwen3":
-        raise RetrievalModelLoadError(
-            f"unsupported native retrieval model type: {config_data.get('model_type')!r}"
+    model_type = str(config_data.get("model_type", ""))
+    if model_type in {"lfm2_colbert", "lfm2-colbert"}:
+        if task not in {None, "embedding"}:
+            raise RetrievalModelLoadError("LFM2 ColBERT supports embedding only")
+        return _load_colbert(root, model, revision, config_data)
+    if model_type in {"bert", "mpnet"}:
+        if task not in {None, "embedding"}:
+            raise RetrievalModelLoadError(f"{model_type} supports embedding only")
+        return _load_sentence_encoder(
+            root, model, revision, model_type, config_data
         )
+    if model_type != "qwen3":
+        raise RetrievalModelLoadError(f"unsupported native retrieval model type: {model_type!r}")
     try:
         detected = detect_retrieval_task(root)
     except RetrievalModelLoadError:
@@ -131,7 +148,86 @@ def load_retrieval_model(
     resolved_revision = revision
     if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
         resolved_revision = root.name
-    return LoadedRetrievalModel(native, tokenizer, task, root, str(model), resolved_revision)
+    return LoadedRetrievalModel(
+        native, tokenizer, task, root, str(model), resolved_revision, f"qwen3_{task}"
+    )
+
+
+def _load_sentence_encoder(
+    root: Path,
+    model: str | Path,
+    revision: str | None,
+    model_type: str,
+    config_data: dict[str, Any],
+) -> LoadedRetrievalModel:
+    try:
+        pooling = _read_json(root / "1_Pooling" / "config.json")
+        sentence_config = _read_json(root / "sentence_bert_config.json")
+        payload = {
+            **config_data,
+            "sentence_max_length": sentence_config.get(
+                "max_seq_length", config_data.get("max_position_embeddings", 512)
+            ),
+            "add_pooling_layer": False,
+            "normalize_embeddings": bool(pooling.get("pooling_mode_mean_tokens", True)),
+        }
+        registration = get_registration(model_type)
+        config = registration.config_class().from_dict(payload)
+        tokenizer = HFTokenizerAdapter.from_directory(root)
+        tensors = registration.sanitizer()(_read_safetensors(root), config)
+        native = registration.model_class()(config)
+        quantization = _quantization_config(config_data)
+        if quantization:
+            _prepare_quantized_model(native, tensors, quantization)
+            _validate_quantized_tensors(native, tensors)
+        else:
+            registration.weight_contract()(config).validate(tensors)
+        native.load_weights(list(tensors.items()), strict=True)
+        native.eval()
+    except (OSError, RuntimeError, ValueError, KeyError) as exc:
+        raise RetrievalModelLoadError(f"cannot load native {model_type} embedding: {exc}") from exc
+    resolved_revision = revision
+    if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
+        resolved_revision = root.name
+    return LoadedRetrievalModel(
+        native, tokenizer, "embedding", root, str(model), resolved_revision, model_type
+    )
+
+
+def _load_colbert(
+    root: Path,
+    model: str | Path,
+    revision: str | None,
+    config_data: dict[str, Any],
+) -> LoadedRetrievalModel:
+    try:
+        registration = get_registration("lfm2_colbert")
+        config = registration.config_class().from_dict(config_data)
+        tokenizer = HFTokenizerAdapter.from_directory(root)
+        tensors = registration.sanitizer()(_read_safetensors(root), config)
+        native = registration.model_class()(config)
+        quantization = _quantization_config(config_data)
+        if quantization:
+            _prepare_quantized_model(native, tensors, quantization)
+            _validate_quantized_tensors(native, tensors)
+        else:
+            registration.weight_contract()(config).validate(tensors)
+        native.load_weights(list(tensors.items()), strict=True)
+        native.eval()
+    except (OSError, RuntimeError, ValueError, KeyError) as exc:
+        raise RetrievalModelLoadError(f"cannot load native LFM2 ColBERT: {exc}") from exc
+    resolved_revision = revision
+    if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
+        resolved_revision = root.name
+    return LoadedRetrievalModel(
+        native,
+        tokenizer,
+        "embedding",
+        root,
+        str(model),
+        resolved_revision,
+        "lfm2_colbert",
+    )
 
 
 def detect_retrieval_task(root: str | Path) -> RetrievalTask:
@@ -194,6 +290,7 @@ def _resolve(
                     "modules.json",
                     "config_sentence_transformers.json",
                     "1_Pooling/config.json",
+                    "sentence_bert_config.json",
                     "*.safetensors",
                     "*.safetensors.index.json",
                 ],

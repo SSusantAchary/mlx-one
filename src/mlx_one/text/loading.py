@@ -32,9 +32,7 @@ class LoadedTextModel:
     quantization: dict[str, Any] = field(default_factory=dict)
     chat_template: ChatTemplate | None = None
     parameter_count: int | None = None
-
-
-_TEXT_TYPES = {"gpt2", "lfm2", "lfm2_moe", "openelm", "qwen2", "qwen2_moe", "qwen3"}
+    eos_token_ids: tuple[int, ...] = ()
 
 
 def resolve_text_model_type(
@@ -77,16 +75,15 @@ def load_text_model(
     offline: bool = False,
     cache_dir: str | Path | None = None,
     tokenizer_source: str | Path | None = None,
+    adapter_path: str | Path | None = None,
 ) -> LoadedTextModel:
     root = _resolve(model, revision=revision, offline=offline, cache_dir=cache_dir)
     config_data = _read_json(root / "config.json")
     model_type = str(config_data.get("model_type", ""))
-    if model_type not in _TEXT_TYPES | {"qwen3_5"}:
-        raise TextModelLoadError(f"unsupported native text model type: {model_type!r}")
     try:
         registration = get_registration(model_type)
-        if registration.modality != "text" and model_type != "qwen3_5":
-            raise ValueError(f"model type {model_type!r} is not text-generative")
+        if not registration.loader_path or not registration.supports("text-generation"):
+            raise ValueError(f"model type {model_type!r} has no native text loader")
         config = registration.config_class().from_dict(config_data)
         tokenizer_root = (
             _resolve_tokenizer(
@@ -110,12 +107,22 @@ def load_text_model(
                 raise ValueError(f"incomplete Qwen3.5 MTP tensors: {', '.join(missing_mtp)}")
             native.enable_mtp()
         quantization = _quantization_config(config_data)
+        eos_token_ids = _eos_token_ids(config_data)
         if quantization:
             _prepare_quantized_model(native, tensors, quantization)
             _validate_quantized_tensors(native, tensors)
         else:
             registration.weight_contract()(config).validate(tensors)
         native.load_weights(list(tensors.items()), strict=True)
+        if adapter_path is not None:
+            from mlx_one.tuning import load_adapter
+
+            load_adapter(
+                native,
+                adapter_path,
+                base_model_id=str(model),
+                base_revision=revision,
+            )
         native.eval()
     except (OSError, RuntimeError, ValueError, KeyError) as exc:
         if isinstance(exc, TextModelLoadError):
@@ -135,6 +142,7 @@ def load_text_model(
         quantization=quantization,
         chat_template=chat_template,
         parameter_count=_parameter_count(config_data),
+        eos_token_ids=eos_token_ids,
     )
 
 
@@ -305,6 +313,20 @@ def _parameter_count(config: dict[str, Any]) -> int | None:
         if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
             return value
     return None
+
+
+def _eos_token_ids(config: dict[str, Any]) -> tuple[int, ...]:
+    value = config.get("eos_token_id")
+    if value is None and isinstance(config.get("text_config"), dict):
+        value = config["text_config"].get("eos_token_id")
+    if value is None:
+        return ()
+    values = value if isinstance(value, (list, tuple)) else (value,)
+    if not values or any(
+        isinstance(item, bool) or not isinstance(item, int) or item < 0 for item in values
+    ):
+        raise ValueError("eos_token_id must be a non-negative integer or list of integers")
+    return tuple(dict.fromkeys(values))
 
 
 def _read_json(path: Path) -> dict[str, Any]:

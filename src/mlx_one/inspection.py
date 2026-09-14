@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping
-from importlib import metadata
 from pathlib import Path
 from typing import Any
 
@@ -72,12 +71,11 @@ _TEXT_PIPELINES = {
     "translation",
     "zero-shot-classification",
 }
-_ADAPTERS = {
-    Modality.TEXT: ("mlx-lm", (Operation.TRAIN, Operation.CONVERT, Operation.EVALUATE)),
-    Modality.VISION_LANGUAGE: ("mlx-vlm", (Operation.CONVERT, Operation.EVALUATE)),
-    Modality.ASR: ("mlx-audio", (Operation.CONVERT, Operation.EVALUATE)),
-    Modality.TTS: ("mlx-audio", (Operation.CONVERT, Operation.EVALUATE)),
-    Modality.EMBEDDING: ("mlx-embeddings", (Operation.CONVERT, Operation.EVALUATE)),
+_NATIVE_OPERATIONS = {
+    Modality.TEXT: (Operation.TRAIN, Operation.CONVERT, Operation.EVALUATE),
+    Modality.VISION_LANGUAGE: (Operation.EVALUATE,),
+    Modality.ASR: (Operation.EVALUATE,),
+    Modality.EMBEDDING: (Operation.EVALUATE,),
 }
 
 
@@ -253,7 +251,7 @@ def _inspect_hub(
         model=model_spec,
         source=ModelSource.HUGGING_FACE,
         requested_revision=revision,
-        capabilities=_capability_hints(model_spec.modality),
+        capabilities=_capability_hints(model_spec.modality, model_spec.model_type),
         warnings=tuple(warnings),
     )
 
@@ -370,7 +368,7 @@ def _inspect_local(
         model=model_spec,
         source=source,
         requested_revision=requested_revision,
-        capabilities=_capability_hints(model_spec.modality),
+        capabilities=_capability_hints(model_spec.modality, model_spec.model_type),
         warnings=tuple(warnings),
     )
 
@@ -581,39 +579,48 @@ def _hub_weights(siblings: Mapping[str, Any]) -> tuple[tuple[str, ...], int | No
     return tuple(sorted(formats)), total if known_size else None
 
 
-def _capability_hints(modality: Modality) -> tuple[CapabilityHint, ...]:
+def _capability_hints(
+    modality: Modality, model_type: str | None
+) -> tuple[CapabilityHint, ...]:
     if modality is Modality.UNKNOWN or modality is Modality.MULTIMODAL:
         return (
             CapabilityHint(
                 adapter="unknown",
                 status=CapabilityHintStatus.UNKNOWN,
-                reason="The modality does not map to one first-party MLX adapter.",
+                reason="The modality does not map to one native mlx-one task loader.",
             ),
         )
-    adapter = _ADAPTERS.get(modality)
-    if adapter is None:
+    operations = _NATIVE_OPERATIONS.get(modality)
+    if operations is None:
         return ()
-    distribution, operations = adapter
     try:
-        version = metadata.version(distribution)
-    except metadata.PackageNotFoundError:
+        from mlx_one.core.registry import get_registration
+
+        registration = get_registration(model_type or "")
+    except KeyError:
         return (
             CapabilityHint(
-                adapter=distribution,
-                status=CapabilityHintStatus.BACKEND_UNAVAILABLE,
+                adapter="mlx-one",
+                status=CapabilityHintStatus.UNKNOWN,
                 operations=operations,
-                reason=f"Install the optional {distribution} backend to evaluate this candidate.",
+                reason="No native architecture registration exists for this model type.",
+            ),
+        )
+    if registration.loader_path is None:
+        return (
+            CapabilityHint(
+                adapter="mlx-one",
+                status=CapabilityHintStatus.UNKNOWN,
+                operations=(),
+                reason="The architecture is registered, but has no executable native task loader.",
             ),
         )
     return (
         CapabilityHint(
-            adapter=distribution,
-            installed_version=version,
+            adapter="mlx-one",
             status=CapabilityHintStatus.CANDIDATE,
             operations=operations,
-            reason=(
-                "Backend availability is a hint; architecture compatibility is not yet verified."
-            ),
+            reason="A native task loader exists; checkpoint compatibility remains unverified.",
         ),
     )
 

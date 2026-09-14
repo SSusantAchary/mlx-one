@@ -108,6 +108,7 @@ decoded mono 16-kHz waveforms can be passed directly from Python.
 Load one supported text model and start the bundled local UI:
 
 ```bash
+python -m pip install 'mlx-one[server]'
 mlx-one serve mlx-community/Qwen3.5-0.8B-4bit
 ```
 
@@ -235,6 +236,7 @@ records rather than introductory examples.
 | Registry type | Family | Native components | Architecture | Qualification |
 | --- | --- | --- | :---: | --- |
 | `gpt2` | GPT-2 124M, 355M, 774M, 1.5B | Learned positions, fused QKV, byte BPE, safe loading, cache, generation and streaming | ✅ | Candidate; synthetic validation only |
+| `llama` | Llama, MiniCPM5 1B/2B | GQA, explicit head dimensions, RoPE, 4-bit MLX loading, multi-EOS generation | ✅ | MiniCPM5 pinned integration gate |
 | `qwen2` | Qwen2, Qwen2.5, Qwen2.5-Coder | Dense Transformer, GQA, RoPE, cache | ✅ | Per checkpoint |
 | `qwen3` | Qwen3 dense | Bias-free attention, Q/K norm, explicit head dimensions | ✅ | Candidate |
 | `qwen2_moe` | Qwen2-MoE | Top-k experts, shared expert, router outputs | ✅ | Architecture only |
@@ -548,9 +550,6 @@ The implementation proceeds by evidence-backed vertical slices:
    and TTS coverage.
 5. Add native quantization, advanced training, export, and community evidence
    workflows.
-
-See [mlxone_roadmap.md](mlxone_roadmap.md) for milestone exit criteria and
-[mlx_one_full.md](mlx_one_full.md) for the complete product plan.
 
 ## Contributing
 

@@ -1,17 +1,14 @@
-"""Model loading helpers for MLX text, multimodal, audio, and embedding models."""
+"""Compatibility helpers routed exclusively through native mlx-one loaders."""
 
 from __future__ import annotations
 
 import sys
-from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Literal
 
 from mlx_one.utils.memory import format_memory, get_memory_snapshot
 
 ModelModality = Literal["llm", "vlm", "audio-tts", "audio-stt", "audio-sts", "embedding"]
-ModelLoader = Callable[..., Any]
-
 SUPPORTED_MODALITIES = ("llm", "vlm", "audio-tts", "audio-stt", "audio-sts", "embedding")
 
 _MODALITY_ALIASES = {
@@ -45,25 +42,18 @@ def load_model(
 ) -> Any:
     """Load an MLX model from a local path or Hugging Face repository ID.
 
-    The default ``llm`` modality preserves the Week 1 behavior and returns the
-    ``mlx-lm`` ``(model, tokenizer)`` tuple. Other modalities return the native
-    backend result:
-
-    - ``vlm``: ``mlx-vlm`` ``(model, processor)``
-    - ``audio-tts``: ``mlx-audio`` TTS model
-    - ``audio-stt``: ``mlx-audio`` STT model
-    - ``audio-sts``: ``mlx-audio`` STS model
-    - ``embedding``: ``mlx-embeddings`` ``(model, tokenizer_or_processor)``
+    The historical result shapes are retained where a native task loader exists.
+    No third-party MLX ecosystem package is imported as an execution backend.
     """
     model_ref = _normalize_model_ref(path_or_repo)
     resolved_modality = _resolve_modality(modality)
     _validate_local_path(model_ref)
-    loader = _get_loader(resolved_modality)
-
     before = _safe_memory_snapshot()
 
     try:
-        loaded = loader(model_ref, **load_kwargs)
+        loaded = _load_native(model_ref, resolved_modality, load_kwargs)
+    except ModelLoadError:
+        raise
     except FileNotFoundError as exc:
         raise ModelLoadError(f"Model files were not found for '{model_ref}': {exc}") from exc
     except ValueError as exc:
@@ -87,7 +77,7 @@ def load_model(
 
 
 def load_vlm_model(path_or_repo: str | Path, **load_kwargs: Any) -> Any:
-    """Load a vision-language model through ``mlx-vlm``."""
+    """Load a vision-language model through the native task loader."""
     return load_model(path_or_repo, modality="vlm", **load_kwargs)
 
 
@@ -97,12 +87,12 @@ def load_audio_model(
     task: Literal["tts", "stt", "sts"] = "tts",
     **load_kwargs: Any,
 ) -> Any:
-    """Load an audio model through ``mlx-audio`` for TTS, STT, or STS."""
+    """Load an audio model natively for an explicitly selected task."""
     return load_model(path_or_repo, modality=f"audio-{task}", **load_kwargs)
 
 
 def load_embedding_model(path_or_repo: str | Path, **load_kwargs: Any) -> Any:
-    """Load an embedding model through ``mlx-embeddings``."""
+    """Load an embedding model through native retrieval support."""
     return load_model(path_or_repo, modality="embedding", **load_kwargs)
 
 
@@ -122,68 +112,32 @@ def _resolve_modality(modality: str) -> ModelModality:
     return normalized  # type: ignore[return-value]
 
 
-def _get_loader(modality: ModelModality) -> ModelLoader:
+def _load_native(model_ref: str, modality: ModelModality, kwargs: dict[str, Any]) -> Any:
     if modality == "llm":
-        return _import_loader("mlx_lm", "load", "mlx-lm", "mlx-one[legacy-mlx-lm]")
+        from mlx_one.text import load_text_model
+
+        bundle = load_text_model(model_ref, **kwargs)
+        return bundle.model, bundle.tokenizer
     if modality == "vlm":
-        return _import_loader("mlx_vlm", "load", "mlx-vlm", "mlx-one[vlm]")
-    if modality == "audio-tts":
-        return _import_loader(
-            "mlx_audio.tts.utils",
-            "load_model",
-            "mlx-audio",
-            "mlx-one[audio]",
-        )
-    if modality == "audio-stt":
-        return _import_loader(
-            "mlx_audio.stt.utils",
-            "load_model",
-            "mlx-audio",
-            "mlx-one[audio]",
-        )
-    if modality == "audio-sts":
-        return _import_loader(
-            "mlx_audio.sts.utils",
-            "load_model",
-            "mlx-audio",
-            "mlx-one[audio]",
-        )
-    return _import_loader(
-        "mlx_embeddings.utils",
-        "load",
-        "mlx-embeddings",
-        "mlx-one[embeddings]",
-    )
-
-
-def _import_loader(
-    module_name: str,
-    attribute_name: str,
-    package_name: str,
-    install_extra: str,
-) -> ModelLoader:
-    try:
-        module = __import__(module_name, fromlist=[attribute_name])
-    except ModuleNotFoundError as exc:
-        missing_root = module_name.split(".", 1)[0]
-        if exc.name == missing_root:
+        try:
+            from mlx_one.vision.loading import load_vlm_model as native_load_vlm
+        except ModuleNotFoundError as exc:
             raise ModelLoadError(
-                f"Optional dependency '{package_name}' is not installed. "
-                f"Install it with: pip install '{install_extra}'"
+                "Native VLM task loading is not available for this build."
             ) from exc
-        raise ModelLoadError(f"Unable to import {package_name}: {exc}") from exc
-    except Exception as exc:  # pragma: no cover - depends on host MLX setup.
-        raise ModelLoadError(f"Unable to import {package_name}: {exc}") from exc
+        bundle = native_load_vlm(model_ref, **kwargs)
+        return bundle.model, bundle.processor
+    if modality == "audio-stt":
+        from mlx_one.models.audio.whisper.loading import load_whisper
 
-    try:
-        loader = getattr(module, attribute_name)
-    except AttributeError as exc:
-        raise ModelLoadError(
-            f"Package '{package_name}' does not expose loader "
-            f"'{module_name}.{attribute_name}'."
-        ) from exc
+        return load_whisper(model_ref, **kwargs).model
+    if modality in {"audio-tts", "audio-sts"}:
+        task = modality.removeprefix("audio-").upper()
+        raise ModelLoadError(f"Native {task} model loading is planned but not implemented.")
+    from mlx_one.retrieval import load_retrieval_model
 
-    return loader
+    bundle = load_retrieval_model(model_ref, task="embedding", **kwargs)
+    return bundle.model, bundle.tokenizer
 
 
 def _normalize_model_ref(path_or_repo: str | Path) -> str:
@@ -199,7 +153,6 @@ def _validate_local_path(model_ref: str) -> None:
         path.is_absolute()
         or model_ref.startswith(".")
         or model_ref.startswith("~")
-        or "/" not in model_ref
     )
     if looks_like_local and not path.exists():
         raise ModelLoadError(

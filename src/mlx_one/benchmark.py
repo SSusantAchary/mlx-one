@@ -98,10 +98,18 @@ def benchmark_inference(
         raise BenchmarkError(str(exc)) from exc
     metrics = {
         "performance.prompt_tokens_per_second": _measured(
-            measured["mean_prompt_tokens_per_second"], "tokens/second"
+            measured.get(
+                "median_prompt_tokens_per_second",
+                measured["mean_prompt_tokens_per_second"],
+            ),
+            "tokens/second",
         ),
         "performance.decode_tokens_per_second": _measured(
-            measured["mean_decode_tokens_per_second"], "tokens/second"
+            measured.get(
+                "median_decode_tokens_per_second",
+                measured["mean_decode_tokens_per_second"],
+            ),
+            "tokens/second",
         ),
     }
     result = RunResult(
@@ -113,6 +121,11 @@ def benchmark_inference(
         timings={
             "load_seconds": _measured(measured["load_seconds"], "seconds"),
             "mean_wall_seconds": _measured(measured["mean_wall_seconds"], "seconds"),
+            **(
+                {"median_ttft_seconds": _measured(measured["median_ttft_seconds"], "seconds")}
+                if "median_ttft_seconds" in measured
+                else {}
+            ),
         },
         memory={"peak_metal_bytes": _measured(measured["peak_metal_bytes"], "bytes")},
         started_at=started,
