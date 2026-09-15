@@ -8,6 +8,7 @@ from mlx_one.audio import (
     transcribe,
 )
 from mlx_one.compat.unsloth import FastLanguageModel
+from mlx_one.engine.public import Engine, EngineRequestHandle
 from mlx_one.hardware import (
     HardwareProfileError,
     detect_hardware,
@@ -105,6 +106,8 @@ __all__ = [
     "DatasetLayout",
     "DatasetSpec",
     "EmbeddingResult",
+    "Engine",
+    "EngineRequestHandle",
     "MetricProvenance",
     "MetricValue",
     "HardwareSpec",
