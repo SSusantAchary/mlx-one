@@ -57,14 +57,19 @@ Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"
 tracking = ["mlflow"]
 wandb = ["wandb"]
 viz = ["matplotlib"]
+legacy-mlx-lm = ["mlx-lm>=0.31,<1"]
 server = [
     "fastapi>=0.115,<1",
+    "httpx>=0.27,<1",
+    "python-multipart>=0.0.9,<1",
     "uvicorn>=0.30,<1",
 ]
 vision = ["pillow>=10,<13"]
 dev = [
     "fastapi>=0.115,<1",
+    "httpx>=0.27,<1",
     "uvicorn>=0.30,<1",
+    "python-multipart>=0.0.9,<1",
     "pillow>=10,<13",
     "pytest",
     "pytest-cov",

@@ -79,6 +79,20 @@ from mlx_one.training import SFTTrainer, TrainingError, export_adapter, load_tra
 from mlx_one.workflow import WorkflowError, run_text_workflow
 
 
+def _positive_int_or_auto(
+    _: click.Context, parameter: click.Parameter, value: str
+) -> int | None:
+    if value == "auto":
+        return None
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise click.BadParameter("must be 'auto' or a positive integer", param=parameter) from exc
+    if parsed < 1:
+        raise click.BadParameter("must be 'auto' or a positive integer", param=parameter)
+    return parsed
+
+
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.version_option(__version__, prog_name="mlx-one")
 def main() -> None:
@@ -306,6 +320,26 @@ def generate_command(
 @click.option("--timeout", type=click.FloatRange(min=0), default=600.0, show_default=True)
 @click.option("--warmup/--no-warmup", default=True, show_default=True)
 @click.option("--parallel", "parallel", "-np", type=click.IntRange(min=1), default=1)
+@click.option(
+    "--prefill-chunk-size",
+    type=str,
+    callback=_positive_int_or_auto,
+    default="auto",
+    help="Prefill chunk token count; auto currently selects 512.",
+)
+@click.option(
+    "--max-batch-tokens",
+    type=str,
+    callback=_positive_int_or_auto,
+    default="auto",
+    help="Execution token budget; auto currently selects 2048.",
+)
+@click.option(
+    "--prefix-cache-mib",
+    type=click.IntRange(min=0),
+    default=512,
+    show_default=True,
+)
 @click.option("--reasoning", type=click.Choice(["auto", "on", "off"]), default="auto")
 @click.option(
     "--reasoning-format",
@@ -353,6 +387,9 @@ def serve_command(
     timeout: float,
     warmup: bool,
     parallel: int,
+    prefill_chunk_size: int | None,
+    max_batch_tokens: int | None,
+    prefix_cache_mib: int,
     reasoning: str,
     reasoning_format: str,
     reasoning_budget: int,
@@ -375,6 +412,7 @@ def serve_command(
         from mlx_one.server import (
             GenerationEngine,
             GenerationScheduler,
+            MemoryAdmission,
             ModelManager,
             ServerConfig,
             create_app,
@@ -402,6 +440,9 @@ def serve_command(
             timeout=timeout,
             warmup=warmup,
             parallel=parallel,
+            prefill_chunk_size=prefill_chunk_size or 512,
+            max_batch_tokens=max_batch_tokens or 2048,
+            prefix_cache_bytes=prefix_cache_mib * 1024**2,
             reasoning=reasoning,
             reasoning_format=reasoning_format,
             reasoning_budget=reasoning_budget,
@@ -444,7 +485,10 @@ def serve_command(
                 raise ValueError(
                     "--reasoning on requires a checkpoint chat template with thinking support"
                 )
-            engine = GenerationEngine(manager)
+            engine = GenerationEngine(
+                manager, prefix_cache_bytes=config.prefix_cache_bytes
+            )
+            memory_admission = MemoryAdmission.detect()
             if warmup:
                 scheduler.execute(
                     lambda: list(
@@ -484,6 +528,7 @@ def serve_command(
                     generation_engine=engine,
                     scheduler=scheduler,
                     config=config,
+                    memory_admission=memory_admission,
                 ),
                 host=host,
                 port=port,

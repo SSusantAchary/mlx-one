@@ -8,7 +8,8 @@ from collections.abc import Iterator
 from dataclasses import asdict, dataclass
 from typing import Any
 
-from mlx_one.core.cache import clone_caches
+from mlx_one.engine.cache import CacheBundle
+from mlx_one.engine.prefix_cache import PrefixCache
 from mlx_one.server.model_manager import ModelManager
 from mlx_one.server.scheduler import current_slot
 from mlx_one.text import TextGenerationOptions, stream_chat
@@ -38,19 +39,23 @@ class RuntimeStats:
     reused_prompt_tokens: int | None = None
     drafted_tokens: int | None = None
     accepted_draft_tokens: int | None = None
+    rejected_draft_tokens: int | None = None
+    draft_acceptance_ratio: float | None = None
+    prompt_tokens_per_second: float | None = None
+    decode_tokens_per_second: float | None = None
+    inter_token_latency_ms: float | None = None
+    cache_bytes: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
 class GenerationEngine:
-    def __init__(self, manager: ModelManager) -> None:
+    def __init__(self, manager: ModelManager, *, prefix_cache_bytes: int = 512 * 1024**2) -> None:
         self.manager = manager
         self._stats = RuntimeStats()
         self._lock = threading.Lock()
-        self._prompt_caches: list[
-            tuple[int, tuple[object, ...], tuple[int, ...], tuple[object, ...]]
-        ] = []
+        self._prompt_cache = PrefixCache(prefix_cache_bytes)
 
     @property
     def stats(self) -> RuntimeStats:
@@ -112,22 +117,15 @@ class GenerationEngine:
             context_length or bundle.context_length,
             cache_type_k,
             cache_type_v,
+            None if cache_idle_slots else slot,
         )
         if cache_prompt:
-            candidates = [
-                entry
-                for entry in self._prompt_caches
-                if (cache_idle_slots or entry[0] == slot)
-                and entry[1] == cache_key
-                and len(entry[2]) >= cache_reuse
-                and len(entry[2]) < len(prompt_ids)
-                and prompt_ids[: len(entry[2])] == entry[2]
-            ]
-            if candidates:
-                _, _, cached_ids, cached_state = max(
-                    candidates, key=lambda item: len(item[2])
-                )
-                cached_state = clone_caches(cached_state)
+            matched = self._prompt_cache.longest_prefix(
+                cache_key, prompt_ids, minimum_tokens=cache_reuse
+            )
+            if matched is not None:
+                cached_ids, cached_bundle = matched
+                cached_state = cached_bundle.entries
         started = time.perf_counter()
         first_at: float | None = None
         generated = 0
@@ -203,6 +201,20 @@ class GenerationEngine:
             reused_prompt_tokens=len(cached_ids),
             drafted_tokens=speculative_stats["drafted_tokens"],
             accepted_draft_tokens=speculative_stats["accepted_draft_tokens"],
+            rejected_draft_tokens=max(
+                speculative_stats["drafted_tokens"]
+                - speculative_stats["accepted_draft_tokens"],
+                0,
+            ),
+            draft_acceptance_ratio=(
+                speculative_stats["accepted_draft_tokens"]
+                / speculative_stats["drafted_tokens"]
+                if speculative_stats["drafted_tokens"]
+                else None
+            ),
+            decode_tokens_per_second=generated / elapsed if elapsed > 0 else None,
+            inter_token_latency_ms=(elapsed * 1000 / generated if generated else None),
+            cache_bytes=self._prompt_cache.nbytes,
         )
         with self._lock:
             self._stats = stats
@@ -218,12 +230,15 @@ class GenerationEngine:
     ) -> None:
         if not tokens or capacity < 1:
             return
-        self._prompt_caches = [entry for entry in self._prompt_caches if entry[0] != slot]
-        self._prompt_caches.append((slot, key, tokens, clone_caches(caches)))
-        del self._prompt_caches[: -capacity]
+        del slot
+        self._prompt_cache.put(key, tokens, CacheBundle(caches))
+        self._prompt_cache.limit_entries(capacity)
 
     def clear_caches(self) -> None:
-        self._prompt_caches.clear()
+        self._prompt_cache.clear()
+
+    def cache_stats(self) -> dict[str, int]:
+        return self._prompt_cache.stats()
 
 
 def _reasoning_template_options(

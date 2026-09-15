@@ -17,6 +17,9 @@ class ServerConfig:
     timeout: float = 600.0
     warmup: bool = True
     parallel: int = 1
+    prefill_chunk_size: int | None = 512
+    max_batch_tokens: int | None = 2048
+    prefix_cache_bytes: int = 512 * 1024**2
     reasoning: Literal["auto", "on", "off"] = "auto"
     reasoning_format: Literal["none", "deepseek", "deepseek-legacy"] = "deepseek"
     reasoning_budget: int = -1
@@ -39,6 +42,12 @@ class ServerConfig:
             raise ValueError("context length must be positive")
         if self.queue_size < 1 or self.parallel < 1:
             raise ValueError("queue size and parallel slots must be positive")
+        if self.prefill_chunk_size is not None and self.prefill_chunk_size < 1:
+            raise ValueError("prefill chunk size must be positive or auto")
+        if self.max_batch_tokens is not None and self.max_batch_tokens < 1:
+            raise ValueError("maximum batch tokens must be positive or auto")
+        if self.prefix_cache_bytes < 0:
+            raise ValueError("prefix cache capacity cannot be negative")
         if self.timeout < 0:
             raise ValueError("timeout cannot be negative")
         if self.reasoning_budget < -1:

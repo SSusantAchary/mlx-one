@@ -9,6 +9,7 @@ import time
 from collections import deque
 from collections.abc import AsyncIterator, Callable, Iterator
 from concurrent.futures import Future
+from concurrent.futures import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -36,12 +37,16 @@ class _Job:
     deadline: float | None = None
     iterator: Iterator[Any] | None = None
     slot_id: int | None = None
+    created_at: float = field(default_factory=time.monotonic)
+    first_step_at: float | None = None
+    recorded: bool = False
 
 
 @dataclass
 class _Call:
     factory: Callable[[], Any]
     result: Future[Any] = field(default_factory=Future)
+    deadline: float | None = None
 
 
 class GenerationScheduler:
@@ -56,31 +61,62 @@ class GenerationScheduler:
         self._timeout = timeout
         self._deferred_call: _Call | None = None
         self._finalizer: Callable[[], Any] | None = None
+        self._metrics_lock = threading.Lock()
+        self._submitted = 0
+        self._completed = 0
+        self._cancelled = 0
+        self._timed_out = 0
+        self._failed = 0
+        self._rejected = 0
+        self._latencies_ms: deque[float] = deque(maxlen=1024)
+        self._ttft_ms: deque[float] = deque(maxlen=1024)
         self._thread = threading.Thread(target=self._run, name="mlx-one-generation", daemon=True)
         self._thread.start()
 
-    def stats(self) -> dict[str, int]:
+    def stats(self) -> dict[str, Any]:
         active = len(self._active_jobs) + (1 if self._active is not None else 0)
+        with self._metrics_lock:
+            result = {
+                "submitted_requests": self._submitted,
+                "completed_requests": self._completed,
+                "cancelled_requests": self._cancelled,
+                "timed_out_requests": self._timed_out,
+                "failed_requests": self._failed,
+                "rejected_requests": self._rejected,
+                "latency_p50_ms": _percentile(self._latencies_ms, 0.50),
+                "latency_p95_ms": _percentile(self._latencies_ms, 0.95),
+                "latency_p99_ms": _percentile(self._latencies_ms, 0.99),
+                "ttft_p50_ms": _percentile(self._ttft_ms, 0.50),
+            }
         return {
             "active_slots": active,
             "parallel_slots": self._parallel,
             "queue_depth": self._jobs.qsize(),
             "queue_capacity": self._jobs.maxsize,
+            **result,
         }
 
-    def execute(self, factory: Callable[[], Any]) -> Any:
+    def execute(self, factory: Callable[[], Any], *, apply_timeout: bool = False) -> Any:
         """Run lifecycle work on the same thread used for model generation."""
 
         if self._closed.is_set():
             raise RuntimeError("generation scheduler is closed")
         if threading.current_thread() is self._thread:
             return factory()
-        call = _Call(factory)
+        deadline = (
+            time.monotonic() + self._timeout
+            if apply_timeout and self._timeout
+            else None
+        )
+        call = _Call(factory, deadline=deadline)
         try:
             self._jobs.put_nowait(call)
         except queue.Full as exc:
             raise QueueFullError("generation queue is full") from exc
-        return call.result.result()
+        try:
+            return call.result.result(self._timeout if deadline is not None else None)
+        except FutureTimeoutError as exc:
+            raise RequestTimeoutError("request timed out before task completion") from exc
 
     def schedule(self, factory: Callable[[threading.Event], Iterator[Any]]) -> AsyncIterator[Any]:
         if self._closed.is_set():
@@ -90,7 +126,11 @@ class GenerationScheduler:
         try:
             self._jobs.put_nowait(job)
         except queue.Full as exc:
+            with self._metrics_lock:
+                self._rejected += 1
             raise QueueFullError("generation queue is full") from exc
+        with self._metrics_lock:
+            self._submitted += 1
         return self._read(job)
 
     async def submit(
@@ -134,6 +174,7 @@ class GenerationScheduler:
             if isinstance(pending, _Job):
                 pending.cancel.set()
                 pending.output.put(("error", RuntimeError("generation scheduler stopped")))
+                self._record(pending, "cancelled")
             elif isinstance(pending, _Call):
                 pending.result.set_exception(RuntimeError("generation scheduler stopped"))
         try:
@@ -159,6 +200,8 @@ class GenerationScheduler:
                     work = self._deferred_call
                     self._deferred_call = None
                     try:
+                        if work.deadline is not None and time.monotonic() >= work.deadline:
+                            raise RequestTimeoutError("request timed out in the task queue")
                         work.result.set_result(work.factory())
                     except BaseException as exc:
                         work.result.set_exception(exc)
@@ -168,6 +211,8 @@ class GenerationScheduler:
                     return
                 if isinstance(work, _Call):
                     try:
+                        if work.deadline is not None and time.monotonic() >= work.deadline:
+                            raise RequestTimeoutError("request timed out in the task queue")
                         work.result.set_result(work.factory())
                     except BaseException as exc:
                         work.result.set_exception(exc)
@@ -205,18 +250,48 @@ class GenerationScheduler:
             _slot_local.value = work.slot_id or 0
             if work.cancel.is_set():
                 work.output.put(("done", None))
+                self._record(work, "cancelled")
                 return False
             if work.deadline is not None and time.monotonic() >= work.deadline:
                 work.cancel.set()
                 raise RequestTimeoutError("generation request timed out")
             if work.iterator is None:
                 work.iterator = iter(work.factory(work.cancel))
-            work.output.put(("item", next(work.iterator)))
+            item = next(work.iterator)
+            if work.first_step_at is None:
+                work.first_step_at = time.monotonic()
+            work.output.put(("item", item))
             return True
         except StopIteration:
             work.output.put(("done", None))
+            self._record(work, "completed")
+            return False
+        except RequestTimeoutError as exc:
+            work.output.put(("error", exc))
+            work.output.put(("done", None))
+            self._record(work, "timed_out")
             return False
         except BaseException as exc:
             work.output.put(("error", exc))
             work.output.put(("done", None))
+            self._record(work, "failed")
             return False
+
+    def _record(self, work: _Job, outcome: str) -> None:
+        if work.recorded:
+            return
+        work.recorded = True
+        ended = time.monotonic()
+        with self._metrics_lock:
+            setattr(self, f"_{outcome}", getattr(self, f"_{outcome}") + 1)
+            self._latencies_ms.append((ended - work.created_at) * 1000)
+            if work.first_step_at is not None:
+                self._ttft_ms.append((work.first_step_at - work.created_at) * 1000)
+
+
+def _percentile(values: deque[float], fraction: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    index = min(round((len(ordered) - 1) * fraction), len(ordered) - 1)
+    return ordered[index]
