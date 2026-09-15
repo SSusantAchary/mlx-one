@@ -19,6 +19,8 @@
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
 
+[**Quickstart**](#quick-start) | [**Installation**](#installation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
+
 > [!IMPORTANT]
 > mlx-one is under active development. Native architecture support and model
 > qualification are tracked separately. A family marked Architecture ✅ has a
@@ -56,6 +58,29 @@ The project owns its supported model math directly. Hugging Face is used as the
 artifact ecosystem for configuration, tokenizer/processor assets, and safe
 `safetensors` checkpoints—not as a remote-code execution runtime.
 
+## Native inference engine
+
+mlx-one now exposes a lifecycle-managed Python engine while retaining the
+existing `generate()` and `stream_generate()` functions:
+
+```python
+from mlx_one import Engine
+
+with Engine(model="mlx-community/LFM2-350M-4bit") as engine:
+    result = engine.generate("Explain unified memory briefly.", max_tokens=128)
+    print(result.text)
+
+    for chunk in engine.stream("Name two advantages of MLX."):
+        print(chunk.text, end="", flush=True)
+```
+
+The internal runtime includes explicit request/state/runner contracts, typed
+cache bundles, byte-bounded prefix caching, token-budget scheduling policy,
+unified-memory admission forecasting, and experimental block-cache allocation.
+Continuous dense batching and paged attention stay capability-gated until their
+correctness and M4 performance gates pass. See the
+[native inference-engine roadmap](mlx-one_inference_engine.md).
+
 ## What is implemented
 
 - Native MLX architectures across language, vision-language, embeddings,
@@ -78,6 +103,8 @@ artifact ecosystem for configuration, tokenizer/processor assets, and safe
 - Dataset validation, memory planning, LoRA/QLoRA SFT workflows, adapter export,
   evaluation, comparison, benchmarking, and evidence records.
 - Backend-free tests plus opt-in Metal and real-checkpoint integration gates.
+- A context-managed `mlx_one.Engine` with streaming, asynchronous submission,
+  cooperative cancellation, runtime capability inspection, and explicit cleanup.
 
 ## Installation
 
@@ -97,6 +124,10 @@ Install development tools with:
 ```bash
 python -m pip install -e ".[dev]"
 ```
+
+The native engine and server do not require `mlx-lm`. Install
+`mlx-one[legacy-mlx-lm]` only for legacy compatibility workflows that explicitly
+request that bridge.
 
 FFmpeg is required only when the Whisper API receives an audio file. Already
 decoded mono 16-kHz waveforms can be passed directly from Python.
