@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
+import base64
 import hmac
+import inspect
 import json
 import time
 import uuid
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable, Mapping
 from contextlib import asynccontextmanager
 from importlib.resources import files
 from pathlib import Path
@@ -19,11 +22,14 @@ from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from mlx_one.diagnostics import collect_doctor_report
+from mlx_one.engine.memory import AdmissionStatus
+from mlx_one.server.admission import MemoryAdmission
 from mlx_one.server.config import ServerConfig
 from mlx_one.server.generation_engine import GenerationEngine, GenerationEvent
+from mlx_one.server.media import ImageResolver, MediaError
 from mlx_one.server.model_manager import ModelManager
 from mlx_one.server.scheduler import GenerationScheduler, QueueFullError, RequestTimeoutError
-from mlx_one.server.schemas import ChatCompletionRequest
+from mlx_one.server.schemas import ChatCompletionRequest, EmbeddingRequest, RerankRequest
 from mlx_one.text import TextGenerationOptions
 
 
@@ -36,14 +42,25 @@ class BodyLimitMiddleware:
         if scope.get("type") != "http":
             await self.app(scope, receive, send)
             return
+        path = str(scope.get("path", ""))
+        limit = (
+            32 * 1024**2
+            if path == "/v1/chat/completions"
+            else 26 * 1024**2
+            if path == "/v1/audio/transcriptions"
+            else self.limit
+        )
         headers = dict(scope.get("headers", ()))
         try:
             declared = int(headers.get(b"content-length", b"0"))
         except ValueError:
             declared = 0
-        if declared > self.limit:
-            response = _error(413, "request body exceeds 1 MiB", "invalid_request_error")
+        if declared > limit:
+            response = _error(413, "request body exceeds its route limit", "invalid_request_error")
             await response(scope, receive, send)
+            return
+        if path == "/v1/chat/completions":
+            await self._chat_request(scope, receive, send, limit)
             return
         consumed = 0
 
@@ -51,19 +68,78 @@ class BodyLimitMiddleware:
             nonlocal consumed
             message = await receive()
             consumed += len(message.get("body", b""))
-            if consumed > self.limit:
+            scope.setdefault("state", {})["body_bytes"] = consumed
+            if consumed > limit:
                 raise _BodyTooLarge
             return message
 
         try:
             await self.app(scope, limited_receive, send)
         except _BodyTooLarge:
-            response = _error(413, "request body exceeds 1 MiB", "invalid_request_error")
+            response = _error(413, "request body exceeds its route limit", "invalid_request_error")
             await response(scope, receive, send)
+
+    async def _chat_request(
+        self,
+        scope: dict[str, Any],
+        receive: Any,
+        send: Any,
+        limit: int,
+    ) -> None:
+        content = bytearray()
+        more_body = True
+        while more_body:
+            message = await receive()
+            content.extend(message.get("body", b""))
+            if len(content) > limit:
+                response = _error(
+                    413,
+                    "request body exceeds its route limit",
+                    "invalid_request_error",
+                )
+                await response(scope, receive, send)
+                return
+            more_body = bool(message.get("more_body", False))
+        scope.setdefault("state", {})["body_bytes"] = len(content)
+        if len(content) > self.limit and not _is_multimodal_chat_body(content):
+            response = _error(413, "text request body exceeds 1 MiB", "invalid_request_error")
+            await response(scope, receive, send)
+            return
+        delivered = False
+
+        async def replay() -> dict[str, Any]:
+            nonlocal delivered
+            if delivered:
+                return await receive()
+            delivered = True
+            return {"type": "http.request", "body": bytes(content), "more_body": False}
+
+        await self.app(scope, replay, send)
 
 
 class _BodyTooLarge(Exception):
     pass
+
+
+def _is_multimodal_chat_body(content: bytes) -> bool:
+    try:
+        payload = json.loads(content)
+    except (TypeError, ValueError):
+        return False
+    messages = payload.get("messages", ()) if isinstance(payload, dict) else ()
+    return any(
+        isinstance(message, dict)
+        and isinstance(message.get("content"), list)
+        and any(
+            isinstance(part, dict) and part.get("type") == "image_url"
+            for part in message["content"]
+        )
+        for message in messages
+    )
+
+
+def _cache_bits(cache_type: str) -> int:
+    return {"q4_0": 4, "q8_0": 8}.get(cache_type, 16)
 
 
 def create_app(
@@ -72,18 +148,25 @@ def create_app(
     scheduler: GenerationScheduler | None = None,
     ui_dir: str | Path | None = None,
     config: ServerConfig | None = None,
+    task_services: Mapping[str, Any] | None = None,
+    image_resolver: ImageResolver | None = None,
+    memory_admission: MemoryAdmission | None = None,
 ) -> FastAPI:
     settings = config or ServerConfig(warmup=False, cache_prompt=False, timeout=0)
     manager = model_manager or ModelManager(
         alias=settings.alias, context_length=settings.context_length
     )
-    engine = generation_engine or GenerationEngine(manager)
+    engine = generation_engine or GenerationEngine(
+        manager, prefix_cache_bytes=settings.prefix_cache_bytes
+    )
     jobs = scheduler or GenerationScheduler(
         max_pending=settings.queue_size,
         parallel=settings.parallel,
         timeout=settings.timeout,
     )
     bearer = HTTPBearer(auto_error=False)
+    services = dict(task_services or {})
+    images = image_resolver or ImageResolver()
     bearer_dependency = Depends(bearer)
 
     async def authorize(
@@ -155,6 +238,8 @@ def create_app(
                         "quantization": item.quantization or None,
                         "context_length": item.context_length,
                         "revision": item.revision,
+                        "tasks": list(item.tasks),
+                        "modalities": list(item.modalities),
                     },
                 }
                 for item in manager.list_models()
@@ -180,6 +265,8 @@ def create_app(
         )
         result["server"] = settings.public_dict()
         result["scheduler"] = jobs.stats()
+        if memory_admission is not None:
+            result["memory_budget"] = memory_admission.stats()
         return result
 
     @app.post("/v1/chat/completions")
@@ -196,7 +283,17 @@ def create_app(
             if body.model != exposed_model:
                 return _error(404, f"model {body.model!r} is not loaded", "invalid_request_error")
             effective_reasoning = body.reasoning or settings.reasoning
-            if effective_reasoning == "on" and (
+            multimodal = any(not isinstance(item.content, str) for item in body.messages)
+            if not multimodal and getattr(request.state, "body_bytes", 0) > 1024 * 1024:
+                return _error(413, "text request body exceeds 1 MiB", "invalid_request_error")
+            selected_engine = services.get("vision") if multimodal else engine
+            if selected_engine is None:
+                return _error(
+                    400,
+                    "the loaded model does not support vision chat requests",
+                    "capability_error",
+                )
+            if not multimodal and effective_reasoning == "on" and (
                 bundle.chat_template is None
                 or "enable_thinking" not in (bundle.chat_template.template or "")
             ):
@@ -215,8 +312,31 @@ def create_app(
                 stop=stop,
             )
             messages = [item.model_dump(exclude_none=True) for item in body.messages]
+            if multimodal:
+                messages = await _resolve_message_images(messages, images)
+            if memory_admission is not None and not multimodal:
+                prompt = bundle.chat_template.render(messages)
+                prompt_tokens = len(bundle.tokenizer.encode(prompt))
+                cache_stats = (
+                    engine.cache_stats()
+                    if callable(getattr(engine, "cache_stats", None))
+                    else {}
+                )
+                decision = memory_admission.decide(
+                    bundle,
+                    prompt_tokens + body.max_tokens,
+                    key_bits=_cache_bits(settings.cache_type_k),
+                    value_bits=_cache_bits(settings.cache_type_v),
+                    prefix_cache_bytes=int(cache_stats.get("bytes", 0)),
+                )
+                if decision.status is AdmissionStatus.REJECT:
+                    return _error(
+                        503,
+                        decision.reason or "request exceeds unified-memory capacity",
+                        "capacity_error",
+                    )
             stream = jobs.schedule(
-                lambda cancel: engine.stream(
+                lambda cancel: selected_engine.stream(
                     model=body.model,
                     messages=messages,
                     options=options,
@@ -308,6 +428,140 @@ def create_app(
             "mlx": metrics,
         }
 
+    @app.post("/v1/embeddings")
+    async def embeddings(
+        body: EmbeddingRequest,
+        auth: None | JSONResponse = authorization_dependency,
+    ) -> Any:
+        if auth is not None:
+            return auth
+        invalid = _validate_task_model(manager, body.model)
+        if invalid is not None:
+            return invalid
+        service = services.get("embedding")
+        if service is None:
+            return _error(400, "the loaded model does not support embeddings", "capability_error")
+        values = [body.input] if isinstance(body.input, str) else body.input
+        try:
+            result = await _call_service(
+                jobs,
+                service,
+                values,
+                input_type=body.input_type,
+                dimensions=body.dimensions,
+            )
+        except QueueFullError:
+            return _error(429, "task queue is full", "rate_limit_error")
+        except RequestTimeoutError as exc:
+            return _error(408, str(exc), "timeout_error")
+        except Exception as exc:
+            return _error(500, str(exc), "server_error")
+        payload = result.to_dict() if hasattr(result, "to_dict") else result
+        vectors = payload.get("embeddings", ())
+        return {
+            "object": "list",
+            "data": [
+                {"object": "embedding", "index": index, "embedding": list(vector)}
+                for index, vector in enumerate(vectors)
+            ],
+            "model": body.model,
+            "usage": {
+                "prompt_tokens": payload.get("prompt_tokens", 0),
+                "total_tokens": payload.get("prompt_tokens", 0),
+            },
+            "mlx": {
+                "dimensions": payload.get("dimensions"),
+                "input_type": payload.get("input_type", body.input_type),
+            },
+        }
+
+    @app.post("/v1/rerank")
+    async def rerank_endpoint(
+        body: RerankRequest,
+        auth: None | JSONResponse = authorization_dependency,
+    ) -> Any:
+        if auth is not None:
+            return auth
+        invalid = _validate_task_model(manager, body.model)
+        if invalid is not None:
+            return invalid
+        service = services.get("rerank")
+        if service is None:
+            return _error(400, "the loaded model does not support reranking", "capability_error")
+        try:
+            result = await _call_service(
+                jobs,
+                service,
+                body.query,
+                body.documents,
+                instruction=body.instruction,
+                top_k=body.top_n,
+            )
+        except QueueFullError:
+            return _error(429, "task queue is full", "rate_limit_error")
+        except RequestTimeoutError as exc:
+            return _error(408, str(exc), "timeout_error")
+        except Exception as exc:
+            return _error(500, str(exc), "server_error")
+        payload = result.to_dict() if hasattr(result, "to_dict") else result
+        items = payload.get("items", ())
+        return {
+            "id": f"rerank-{uuid.uuid4().hex}",
+            "object": "list",
+            "model": body.model,
+            "results": [dict(item) for item in items],
+        }
+
+    @app.post("/v1/audio/transcriptions")
+    async def audio_transcriptions(
+        request: Request,
+        auth: None | JSONResponse = authorization_dependency,
+    ) -> Any:
+        if auth is not None:
+            return auth
+        service = services.get("transcription")
+        if service is None:
+            return _error(
+                400,
+                "the loaded model does not support transcription",
+                "capability_error",
+            )
+        try:
+            form = await request.form()
+            model = str(form.get("model", ""))
+            invalid = _validate_task_model(manager, model)
+            if invalid is not None:
+                return invalid
+            uploaded = form.get("file")
+            if uploaded is None or not hasattr(uploaded, "read"):
+                return _error(422, "file is required", "invalid_request_error")
+            audio = await uploaded.read()
+            if len(audio) > 25 * 1024**2:
+                return _error(413, "audio file exceeds 25 MiB", "invalid_request_error")
+            result = await _call_service(
+                jobs,
+                service,
+                audio,
+                language=form.get("language"),
+                task=str(form.get("task", "transcribe")),
+            )
+        except QueueFullError:
+            return _error(429, "task queue is full", "rate_limit_error")
+        except RequestTimeoutError as exc:
+            return _error(408, str(exc), "timeout_error")
+        except Exception as exc:
+            return _error(500, str(exc), "server_error")
+        payload = result.to_dict() if hasattr(result, "to_dict") else result
+        return {
+            "text": payload.get("text", ""),
+            **({"language": payload["language"]} if payload.get("language") else {}),
+            "mlx": {
+                key: value
+                for key, value in payload.items()
+                if key in {"duration", "segments", "timings"}
+            },
+        }
+
     assets = Path(ui_dir) if ui_dir is not None else Path(str(files("mlx_one").joinpath("ui/dist")))
 
     @app.get("/{asset_path:path}", include_in_schema=False)
@@ -324,6 +578,70 @@ def create_app(
         return _error(503, "mlx-one UI assets are not installed", "server_error")
 
     return app
+
+
+def _validate_task_model(manager: ModelManager, requested: str) -> JSONResponse | None:
+    try:
+        loaded = manager.model_info().id
+    except RuntimeError:
+        return _error(503, "no model is loaded", "capacity_error")
+    if requested != loaded:
+        return _error(404, f"model {requested!r} is not loaded", "invalid_request_error")
+    return None
+
+
+async def _call_service(
+    scheduler: GenerationScheduler,
+    service: Callable[..., Any],
+    *args: Any,
+    **kwargs: Any,
+) -> Any:
+    result = await asyncio.to_thread(
+        scheduler.execute,
+        lambda: service(*args, **kwargs),
+        apply_timeout=True,
+    )
+    return await result if inspect.isawaitable(result) else result
+
+
+async def _resolve_message_images(
+    messages: list[dict[str, Any]], resolver: ImageResolver
+) -> list[dict[str, Any]]:
+    references = [
+        part["image_url"]["url"]
+        for message in messages
+        if isinstance(message.get("content"), list)
+        for part in message["content"]
+        if isinstance(part, dict) and part.get("type") == "image_url"
+    ]
+    if len(references) > 4:
+        raise MediaError("chat requests support at most four images")
+    resolved = iter(await asyncio.gather(*(resolver.resolve(source) for source in references)))
+    normalized: list[dict[str, Any]] = []
+    for message in messages:
+        content = message.get("content")
+        if not isinstance(content, list):
+            normalized.append(message)
+            continue
+        parts: list[dict[str, Any]] = []
+        for part in content:
+            if part.get("type") != "image_url":
+                parts.append(part)
+                continue
+            image = next(resolved)
+            encoded = base64.b64encode(image.content).decode("ascii")
+            parts.append(
+                {
+                    **part,
+                    "image_url": {
+                        **part["image_url"],
+                        "url": f"data:{image.media_type};base64,{encoded}",
+                    },
+                    "mlx_digest": image.source_digest,
+                }
+            )
+        normalized.append({**message, "content": parts})
+    return normalized
 
 
 async def _sse(

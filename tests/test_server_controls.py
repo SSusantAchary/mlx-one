@@ -61,6 +61,9 @@ def test_server_config_and_cli_expose_native_controls() -> None:
         "--context-length",
         "--queue-size",
         "--parallel",
+        "--prefill-chunk-size",
+        "--max-batch-tokens",
+        "--prefix-cache-mib",
         "--reasoning-budget",
         "--cache-prompt",
         "--context-shift",
@@ -168,6 +171,37 @@ def test_scheduler_lifecycle_call_is_a_barrier() -> None:
         assert asyncio.run(collect_with_barrier()) == [[0, 1], None, [2]]
         assert order == ["first-0", "first-1", "barrier", "second"]
     finally:
+        scheduler.close()
+
+
+def test_scheduler_applies_deadline_to_non_lifecycle_tasks() -> None:
+    scheduler = GenerationScheduler(parallel=1, timeout=0.01)
+    started = threading.Event()
+    release = threading.Event()
+
+    def active(cancel: threading.Event):
+        del cancel
+        started.set()
+        yield 1
+        release.wait(1)
+        yield 2
+
+    async def exercise() -> None:
+        stream = scheduler.schedule(active)
+        assert await anext(stream) == 1
+        with pytest.raises(RequestTimeoutError):
+            await asyncio.to_thread(
+                scheduler.execute,
+                lambda: "late",
+                apply_timeout=True,
+            )
+        release.set()
+        await stream.aclose()
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        release.set()
         scheduler.close()
 
 

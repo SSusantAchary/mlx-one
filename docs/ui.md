@@ -29,6 +29,9 @@ mlx-one serve MODEL \
   -c 32768 \
   -np 2 \
   --queue-size 8 \
+  --prefill-chunk-size auto \
+  --max-batch-tokens auto \
+  --prefix-cache-mib 512 \
   --timeout 600 \
   --warmup \
   --cache-prompt \
@@ -58,6 +61,9 @@ that every checkpoint has completed qualification.
 - `GET /v1/runtime` returns measured model, context, timing, and MLX memory information.
 - `POST /v1/chat/completions` supports text messages, streaming, temperature, top-p, top-k,
   maximum tokens, seed, and stop strings.
+- `POST /v1/embeddings` and `POST /v1/rerank` use OpenAI-compatible and documented
+  mlx-one response shapes when the loaded runner advertises those capabilities.
+- `POST /v1/audio/transcriptions` accepts multipart audio when a native ASR runner is loaded.
 
 Streaming responses are SSE records followed by `data: [DONE]`. Stop in the UI aborts the HTTP
 request, which cooperatively cancels native generation. Requests execute through one MLX worker
@@ -86,8 +92,12 @@ Qwen3.5 checkpoints containing the complete native `mtp.*` tensor group can use
 sampled requests safely fall back to ordinary decoding. Missing or partial MTP weights are an
 explicit startup error when speculation is requested.
 
-This is a deliberately limited compatibility target. Tools, multimodal message content, agents,
-and remote model routing are rejected or unavailable in V1.
+Tools, agents, and remote model routing remain outside the compatibility target. Multimodal chat
+content is accepted only for a capability-qualified vision runner. Images are limited to four per
+request and 20 MiB decoded each, and must be JPEG, PNG, or WebP data URLs or public HTTPS URLs.
+Remote retrieval rejects credentials, private/link-local/reserved destinations, unsafe redirects,
+oversized responses, MIME mismatches, and invalid image bytes. Server filesystem paths are never
+accepted from HTTP clients.
 
 ## Development
 
@@ -141,11 +151,13 @@ python -m pip install 'mlx-one[server]'
 ```
 
 All model execution remains inside mlx-one's native Apple MLX implementations.
+`mlx-lm` is not a serving dependency; the optional `legacy-mlx-lm` extra exists
+only for compatibility workflows outside this server path.
 
-The server binds only to loopback by default, applies a 1 MiB request limit, accepts development
-CORS only from the local Vite origins, and never accepts model or filesystem paths through its
-HTTP API. Binding to a public interface is an explicit operator decision; V1 is not a hardened
-multi-user gateway.
+The server binds only to loopback by default, applies a 1 MiB text JSON limit, a 32 MiB
+multimodal-chat limit, and a 25 MiB audio-file limit, accepts development CORS only from the local
+Vite origins, and never accepts model or filesystem paths through its HTTP API. Binding to a public
+interface is an explicit operator decision; V1 is not a hardened multi-user gateway.
 
 Four-bit loading accepts only standard MLX metadata with `bits: 4`, a positive group size, and
 the `affine`, `mxfp4`, or `nvfp4` mode. Modules are quantized only when matching scale tensors

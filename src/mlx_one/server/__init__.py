@@ -1,5 +1,6 @@
 """Native mlx-one HTTP serving services."""
 
+from mlx_one.server.admission import MemoryAdmission
 from mlx_one.server.app import create_app
 from mlx_one.server.config import ServerConfig
 from mlx_one.server.generation_engine import GenerationEngine, RuntimeStats
@@ -13,6 +14,7 @@ from mlx_one.server.scheduler import (
 __all__ = [
     "GenerationEngine",
     "GenerationScheduler",
+    "MemoryAdmission",
     "ModelManager",
     "ModelMetadata",
     "QueueFullError",

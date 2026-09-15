@@ -66,6 +66,14 @@ class Qwen3_5LinearCache:
     def offset(self) -> int:
         return self._offset
 
+    @property
+    def nbytes(self) -> int:
+        return sum(
+            int(value.nbytes)
+            for value in (self.conv_state, self.recurrent_state)
+            if value is not None
+        )
+
     def prefix(self, values: Any) -> Any:
         width = self.kernel_size - 1
         if self.conv_state is None:
@@ -88,6 +96,36 @@ class Qwen3_5LinearCache:
         result.recurrent_state = self.recurrent_state
         result._offset = self._offset
         return result
+
+    snapshot = clone
+
+    def batch_select(self, indices: tuple[int, ...]) -> Qwen3_5LinearCache:
+        result = self.clone()
+        if result.conv_state is not None:
+            result.conv_state = result.conv_state[list(indices)]
+        if result.recurrent_state is not None:
+            result.recurrent_state = result.recurrent_state[list(indices)]
+        return result
+
+    @classmethod
+    def merge(
+        cls, caches: tuple[Qwen3_5LinearCache, ...]
+    ) -> Qwen3_5LinearCache:
+        if not caches or len({(cache.kernel_size, cache.offset) for cache in caches}) != 1:
+            raise ValueError("Qwen3.5 recurrent caches are incompatible")
+        result = cls(caches[0].kernel_size)
+        if caches[0].conv_state is not None:
+            result.conv_state = mx.concatenate(
+                tuple(cache.conv_state for cache in caches), axis=0
+            )
+        if caches[0].recurrent_state is not None:
+            result.recurrent_state = mx.concatenate(
+                tuple(cache.recurrent_state for cache in caches), axis=0
+            )
+        result._offset = caches[0].offset
+        return result
+
+    release = reset
 
 
 def make_qwen3_5_caches(config: Qwen3_5TextConfig) -> tuple[Any, ...]:

@@ -1,8 +1,10 @@
 import threading
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 
+from mlx_one.engine.memory import AdmissionStatus
 from mlx_one.server.app import create_app
 from mlx_one.server.generation_engine import GenerationEvent, RuntimeStats
 from mlx_one.server.model_manager import ModelMetadata
@@ -10,6 +12,8 @@ from mlx_one.server.model_manager import ModelMetadata
 
 class FakeBundle:
     model_id = "test/model"
+    chat_template = SimpleNamespace(render=lambda messages: str(messages))
+    tokenizer = SimpleNamespace(encode=lambda prompt: list(range(len(prompt.split()))))
 
 
 class FakeManager:
@@ -44,6 +48,26 @@ class FailingEngine(FakeEngineEngine):
         del kwargs
         raise RuntimeError("generation failed")
         yield
+
+
+def embedding_service(texts, **kwargs):
+    assert kwargs["input_type"] == "document"
+    return {
+        "embeddings": [[float(index), 1.0] for index, _ in enumerate(texts)],
+        "dimensions": 2,
+        "input_type": kwargs["input_type"],
+        "prompt_tokens": len(texts),
+    }
+
+
+def rerank_service(query, documents, **kwargs):
+    assert query == "q"
+    assert kwargs["top_k"] == 1
+    return {
+        "items": [
+            {"index": 0, "document": documents[0], "score": 1.0, "probability": 0.9}
+        ]
+    }
 
 
 def test_health_models_runtime_and_static_ui(tmp_path: Path) -> None:
@@ -105,3 +129,81 @@ def test_runtime_errors_use_openai_error_shape(tmp_path: Path) -> None:
         assert streamed.status_code == 200
         assert '"type":"server_error"' in streamed.text
         assert "data: [DONE]" in streamed.text
+
+
+def test_additive_embedding_and_rerank_endpoints(tmp_path: Path) -> None:
+    app = create_app(
+        FakeManager(),
+        FakeEngineEngine(),
+        ui_dir=tmp_path,
+        task_services={"embedding": embedding_service, "rerank": rerank_service},
+    )
+    with TestClient(app) as client:
+        embedded = client.post(
+            "/v1/embeddings",
+            json={"model": "test/model", "input": ["one", "two"]},
+        )
+        assert embedded.status_code == 200
+        assert embedded.json()["data"][1]["embedding"] == [1.0, 1.0]
+        assert embedded.json()["mlx"]["dimensions"] == 2
+
+        reranked = client.post(
+            "/v1/rerank",
+            json={
+                "model": "test/model",
+                "query": "q",
+                "documents": ["document"],
+                "top_n": 1,
+            },
+        )
+        assert reranked.status_code == 200
+        assert reranked.json()["results"][0]["document"] == "document"
+
+
+def test_multimodal_chat_requires_vision_service(tmp_path: Path) -> None:
+    payload = {
+        "model": "test/model",
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "describe"},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": "data:image/png;base64,AA=="},
+                    },
+                ],
+            }
+        ],
+    }
+    app = create_app(FakeManager(), FakeEngineEngine(), ui_dir=tmp_path)
+    with TestClient(app) as client:
+        response = client.post("/v1/chat/completions", json=payload)
+        assert response.status_code == 400
+        assert response.json()["error"]["type"] == "capability_error"
+
+
+def test_memory_admission_rejects_before_generation(tmp_path: Path) -> None:
+    class Admission:
+        def stats(self):
+            return {"process_bytes": 1}
+
+        def decide(self, bundle, tokens, **kwargs):
+            del bundle, tokens, kwargs
+            return SimpleNamespace(
+                status=AdmissionStatus.REJECT,
+                reason="request exceeds the configured unified-memory capacity",
+            )
+
+    app = create_app(
+        FakeManager(),
+        FakeEngineEngine(),
+        ui_dir=tmp_path,
+        memory_admission=Admission(),  # type: ignore[arg-type]
+    )
+    payload = {"model": "test/model", "messages": [{"role": "user", "content": "Hi"}]}
+    with TestClient(app) as client:
+        assert client.get("/v1/runtime").json()["memory_budget"]["process_bytes"] == 1
+        response = client.post("/v1/chat/completions", json=payload)
+        assert response.status_code == 503
+        assert response.json()["error"]["type"] == "capacity_error"
