@@ -8,6 +8,7 @@ from mlx_one.audio import (
     transcribe,
 )
 from mlx_one.compat.unsloth import FastLanguageModel
+from mlx_one.engine.cache_specs import CacheConfig
 from mlx_one.engine.public import Engine, EngineRequestHandle
 from mlx_one.hardware import (
     HardwareProfileError,
@@ -88,6 +89,7 @@ __all__ = [
     "SCHEMA_VERSION",
     "ArtifactRef",
     "CachePolicy",
+    "CacheConfig",
     "CapabilitySpec",
     "CapabilityStatus",
     "CapabilityHint",

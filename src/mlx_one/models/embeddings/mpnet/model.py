@@ -1,4 +1,11 @@
-"""Native MLX MPNet encoder with Sentence Transformers pooling."""
+"""Model: MPNet
+
+Paper: MPNet: Masked and Permuted Pre-training for Language Understanding
+Paper link: https://arxiv.org/abs/2004.09297
+Architecture gist: Transformer encoder combines masked-token prediction with permuted language-model
+objectives to model position dependencies.
+mlx-one implementation notes: Native MLX MPNet encoder and sentence embedding pooling path.
+"""
 
 from __future__ import annotations
 

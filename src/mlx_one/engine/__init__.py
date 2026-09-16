@@ -1,7 +1,44 @@
 """Internal native inference-engine contracts and services."""
 
-from mlx_one.engine.block_cache import BlockAllocator, CacheBlock, PageTable
-from mlx_one.engine.cache import CacheBundle, array_nbytes, cache_capabilities, cache_nbytes
+from mlx_one.engine.block_cache import (
+    BlockAllocator,
+    BlockId,
+    BlockPool,
+    BlockRef,
+    CacheBlock,
+    PageTable,
+)
+from mlx_one.engine.block_kv import BlockKVCache
+from mlx_one.engine.cache import (
+    CacheBundle,
+    array_nbytes,
+    cache_allocated_nbytes,
+    cache_capabilities,
+    cache_nbytes,
+)
+from mlx_one.engine.cache_errors import (
+    CacheCapacityError,
+    CacheCorruptionError,
+    CacheError,
+    CacheOwnershipError,
+    CacheReservationError,
+    CacheTopologyUnsupported,
+    KVQuantizationUnsupported,
+    PrefixReuseUnsupported,
+)
+from mlx_one.engine.cache_manager import CacheManager
+from mlx_one.engine.cache_planner import build_cache_plan
+from mlx_one.engine.cache_specs import (
+    CacheConfig,
+    CacheFingerprint,
+    CacheHandle,
+    CacheKind,
+    CacheMemoryStats,
+    CachePlan,
+    CacheReservation,
+    LayerCacheSpec,
+    ReservationState,
+)
 from mlx_one.engine.contracts import (
     CacheCapabilities,
     EngineError,
@@ -25,7 +62,14 @@ from mlx_one.engine.memory import (
     UnifiedMemoryPlanner,
     forecast_kv_bytes,
 )
-from mlx_one.engine.prefix_cache import PrefixCache, PrefixCacheEntry, PrefixCacheKey
+from mlx_one.engine.prefix_cache import (
+    BlockPrefixEntry,
+    BlockPrefixIndex,
+    BlockPrefixMatch,
+    PrefixCache,
+    PrefixCacheEntry,
+    PrefixCacheKey,
+)
 from mlx_one.engine.public import Engine, EngineRequestHandle
 from mlx_one.engine.runners import ASRRunner, CausalLMRunner, EncoderRunner, VLMRunner
 from mlx_one.engine.scheduler import TokenBudgetScheduler
@@ -35,9 +79,30 @@ __all__ = [
     "AdmissionStatus",
     "ASRRunner",
     "BlockAllocator",
+    "BlockId",
+    "BlockKVCache",
+    "BlockPool",
+    "BlockPrefixEntry",
+    "BlockPrefixIndex",
+    "BlockPrefixMatch",
+    "BlockRef",
     "CacheBlock",
     "CacheBundle",
+    "CacheCapacityError",
     "CacheCapabilities",
+    "CacheConfig",
+    "CacheCorruptionError",
+    "CacheError",
+    "CacheFingerprint",
+    "CacheHandle",
+    "CacheKind",
+    "CacheManager",
+    "CacheMemoryStats",
+    "CacheOwnershipError",
+    "CachePlan",
+    "CacheReservation",
+    "CacheReservationError",
+    "CacheTopologyUnsupported",
     "CausalLMRunner",
     "EngineError",
     "EngineEvent",
@@ -48,6 +113,8 @@ __all__ = [
     "EngineRuntime",
     "EncoderRunner",
     "ExecutionBatch",
+    "KVQuantizationUnsupported",
+    "LayerCacheSpec",
     "MemoryBudget",
     "MemoryUsage",
     "ModelRunner",
@@ -55,7 +122,9 @@ __all__ = [
     "PrefixCache",
     "PrefixCacheEntry",
     "PrefixCacheKey",
+    "PrefixReuseUnsupported",
     "RequestKind",
+    "ReservationState",
     "RunnerCapabilities",
     "SequenceContext",
     "SequenceState",
@@ -64,6 +133,8 @@ __all__ = [
     "UnifiedMemoryPlanner",
     "VLMRunner",
     "array_nbytes",
+    "build_cache_plan",
+    "cache_allocated_nbytes",
     "cache_capabilities",
     "cache_nbytes",
     "forecast_kv_bytes",

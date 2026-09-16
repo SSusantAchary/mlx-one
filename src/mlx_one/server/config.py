@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 from typing import Any, Literal, cast
 
 CacheType = Literal["f16", "bf16", "q4_0", "q8_0"]
+CacheBackend = Literal["dense", "block"]
 
 
 @dataclass(frozen=True)
@@ -20,6 +21,9 @@ class ServerConfig:
     prefill_chunk_size: int | None = 512
     max_batch_tokens: int | None = 2048
     prefix_cache_bytes: int = 512 * 1024**2
+    cache_backend: CacheBackend = "dense"
+    cache_block_size: int = 32
+    cache_memory_budget_bytes: int | None = None
     reasoning: Literal["auto", "on", "off"] = "auto"
     reasoning_format: Literal["none", "deepseek", "deepseek-legacy"] = "deepseek"
     reasoning_budget: int = -1
@@ -49,6 +53,12 @@ class ServerConfig:
             raise ValueError("maximum batch tokens must be positive or auto")
         if self.prefix_cache_bytes < 0:
             raise ValueError("prefix cache capacity cannot be negative")
+        if self.cache_backend not in {"dense", "block"}:
+            raise ValueError("cache backend must be dense or block")
+        if self.cache_block_size not in {16, 32, 64, 128}:
+            raise ValueError("cache block size must be 16, 32, 64, or 128")
+        if self.cache_memory_budget_bytes is not None and self.cache_memory_budget_bytes < 1:
+            raise ValueError("cache memory budget must be positive")
         if self.timeout < 0:
             raise ValueError("timeout cannot be negative")
         if self.reasoning_budget < -1:

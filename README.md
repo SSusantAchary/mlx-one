@@ -196,6 +196,27 @@ limits, request deadlines, cooperative parallel slots, prompt/context caching, c
 reasoning output, quantized KV caches, and Qwen3.5 MTP speculative decoding. Run
 `mlx-one serve --help` for the complete flag list.
 
+Cache Runtime V1 keeps dense KV as the default and exposes the Qwen2/Qwen2.5 block backend as an
+opt-in experimental path:
+
+```bash
+mlx-one serve MODEL --cache-backend block --kv-block-size 32 \
+  --kv-cache-budget-mib 8192 --prefix-cache-mib 512
+```
+
+The block backend currently requires unquantized f16 Qwen2/Qwen2.5 text generation with batch size
+one. Unsupported combinations fail explicitly. Runtime cache ownership, memory, reservation, block,
+and prefix statistics are included in `GET /v1/runtime`.
+
+> [!WARNING]
+> M4/32 GB qualification is incomplete. An unquantized Qwen2.5-0.5B dense run completed through
+> 16K input tokens but failed at approximately 32K under the current memory budget. Dense snapshot
+> APC did not reuse divergent chat-prompt suffixes, so block APC, block sharing, and dense/block
+> parity are not qualified. Keep dense as the recommended backend; use block mode only for
+> development testing. Hybrid LFM models reject block KV and APC intentionally. See the measured
+> [cache qualification report](docs/cache-benchmark-m4-32gb.md) and
+> [runtime support matrix](docs/cache-runtime.md).
+
 Then open `http://127.0.0.1:8080`. The same process exposes an OpenAI-compatible API at
 `http://127.0.0.1:8080/v1`, including streaming chat completions. Model execution remains inside
 mlx-one's native model, tokenizer, sampling, generation, and MLX runtime. See

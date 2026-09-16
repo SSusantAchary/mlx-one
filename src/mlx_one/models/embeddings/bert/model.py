@@ -1,4 +1,11 @@
-"""Native MLX BERT encoder with Sentence Transformers pooling."""
+"""Model: BERT
+
+Paper: BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
+Paper link: https://arxiv.org/abs/1810.04805
+Architecture gist: Bidirectional Transformer encoder pretrained with masked-language modeling and
+next-sentence prediction.
+mlx-one implementation notes: Native MLX BERT encoder plus sentence-level pooling for embeddings.
+"""
 
 from __future__ import annotations
 

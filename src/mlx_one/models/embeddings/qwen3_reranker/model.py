@@ -1,4 +1,11 @@
-"""Native Qwen3 yes/no cross-encoder reranker."""
+"""Model: Qwen3 Reranker
+
+Paper: Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models
+Paper link: https://arxiv.org/abs/2506.05176
+Architecture gist: A Qwen3 cross-encoder scores query-document relevance through prompted yes/no
+token likelihoods.
+mlx-one implementation notes: Native MLX pair-scoring reranker built on the Qwen3 decoder.
+"""
 
 from __future__ import annotations
 

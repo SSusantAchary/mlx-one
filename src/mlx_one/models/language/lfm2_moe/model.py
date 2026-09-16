@@ -1,4 +1,11 @@
-"""Native MLX Liquid LFM2 mixture-of-experts model."""
+"""Model: LFM2 mixture of experts
+
+Paper: LFM2 Technical Report
+Paper link: https://arxiv.org/abs/2511.23404
+Architecture gist: LFM2 hybrid sequence layers pair attention or convolutional state with sparse
+expert feed-forward routing.
+mlx-one implementation notes: Native MLX LFM2-MoE routing, experts, and hybrid cache topology.
+"""
 
 from __future__ import annotations
 

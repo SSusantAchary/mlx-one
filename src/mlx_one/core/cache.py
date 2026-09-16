@@ -70,6 +70,10 @@ class KVCache:
     def nbytes(self) -> int:
         return _tree_nbytes(self.state())
 
+    @property
+    def allocated_nbytes(self) -> int:
+        return _tree_nbytes((self.keys, self.values))
+
     def reset(self) -> None:
         self.keys = None
         self.values = None
@@ -149,6 +153,12 @@ class QuantizedKVCache:
 
     @property
     def nbytes(self) -> int:
+        return _tree_nbytes(
+            (self._active_component(self._keys), self._active_component(self._values))
+        )
+
+    @property
+    def allocated_nbytes(self) -> int:
         return _tree_nbytes((self._keys, self._values))
 
     def update(self, keys: Any, values: Any) -> tuple[Any, Any]:
@@ -350,6 +360,12 @@ class EncoderDecoderKVCache:
             (self.cross_keys, self.cross_values)
         )
 
+    @property
+    def allocated_nbytes(self) -> int:
+        return self.self_attention.allocated_nbytes + _tree_nbytes(
+            (self.cross_keys, self.cross_values)
+        )
+
     def update_self(self, keys: Any, values: Any) -> tuple[Any, Any]:
         return self.self_attention.update(keys, values)
 
@@ -435,6 +451,8 @@ class ConvCache:
     @property
     def nbytes(self) -> int:
         return _tree_nbytes(self.values)
+
+    allocated_nbytes = nbytes
 
     def update(self, values: Any) -> Any:
         import mlx.core as mx

@@ -1,4 +1,11 @@
-"""Native Qwen3 final-token sentence embedding model."""
+"""Model: Qwen3 Embedding
+
+Paper: Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models
+Paper link: https://arxiv.org/abs/2506.05176
+Architecture gist: Qwen3 decoder backbones are trained for multilingual embedding with task-aware
+instructions and final-token representations.
+mlx-one implementation notes: Native MLX final-token embedding path and normalization support.
+"""
 
 from __future__ import annotations
 

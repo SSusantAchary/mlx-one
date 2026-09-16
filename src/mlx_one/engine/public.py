@@ -11,6 +11,8 @@ from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
+from mlx_one.engine.cache_manager import CacheManager
+from mlx_one.engine.cache_specs import CacheConfig
 from mlx_one.text import (
     GenerationChunk,
     GenerationResult,
@@ -51,6 +53,7 @@ class Engine:
         offline: bool = False,
         cache_dir: str | Path | None = None,
         tokenizer_source: str | Path | None = None,
+        cache_config: CacheConfig | None = None,
     ) -> None:
         self._bundle = (
             model
@@ -62,6 +65,11 @@ class Engine:
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
             )
+        )
+        self._cache_manager = (
+            CacheManager(self._bundle, cache_config)
+            if callable(getattr(self._bundle.model, "make_cache", None))
+            else None
         )
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="mlx-one-engine")
         self._closed = False
@@ -76,6 +84,11 @@ class Engine:
     @property
     def capabilities(self) -> dict[str, Any]:
         bundle = self.model
+        qualified_block = (
+            self._cache_manager is not None
+            and self._cache_manager.plan.architecture == "qwen2"
+            and self._cache_manager.plan.block_compatible
+        )
         return {
             "architecture": bundle.architecture,
             "modalities": ("text",),
@@ -84,6 +97,15 @@ class Engine:
             "quantization": dict(bundle.quantization),
             "streaming": True,
             "cancellation": True,
+            "cache": {
+                "dense_kv": True,
+                "quantized_kv": True,
+                "block_kv": qualified_block,
+                "prefix_block_cache": qualified_block,
+                "sliding_block_kv": False,
+                "hybrid_prefix_restore": False,
+                "continuous_batching": False,
+            },
         }
 
     @property
@@ -99,12 +121,14 @@ class Engine:
         **settings: Any,
     ) -> GenerationResult:
         resolved = _options(options, settings)
-        result = generate(self.model, prompt, options=resolved)
-        if not isinstance(result, GenerationResult):
-            raise RuntimeError("single-prompt generation returned a batch")
-        with self._lock:
-            self._latest_result = result
-        return result
+        if self._cache_manager is None:
+            result = generate(self.model, prompt, options=resolved)
+            if not isinstance(result, GenerationResult):
+                raise RuntimeError("single-prompt generation returned a batch")
+            with self._lock:
+                self._latest_result = result
+            return result
+        return self._consume(prompt, resolved, threading.Event())
 
     def stream(
         self,
@@ -121,6 +145,7 @@ class Engine:
             prompt,
             options=resolved,
             is_cancelled=event.is_set,
+            _cache_manager=self._cache_manager,
         )
 
     def submit(
@@ -174,6 +199,8 @@ class Engine:
                 return
             self._closed = True
         self._executor.shutdown(wait=True, cancel_futures=True)
+        if self._cache_manager is not None:
+            self._cache_manager.close()
         gc.collect()
         try:
             mx = sys.modules.get("mlx.core")

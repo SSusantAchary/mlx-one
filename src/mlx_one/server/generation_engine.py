@@ -8,8 +8,9 @@ from collections.abc import Iterator
 from dataclasses import asdict, dataclass
 from typing import Any
 
-from mlx_one.engine.cache import CacheBundle
-from mlx_one.engine.prefix_cache import PrefixCache
+from mlx_one.engine.cache_errors import PrefixReuseUnsupported
+from mlx_one.engine.cache_manager import CacheManager
+from mlx_one.engine.cache_specs import CacheConfig, CacheHandle
 from mlx_one.server.model_manager import ModelManager
 from mlx_one.server.scheduler import current_slot
 from mlx_one.text import TextGenerationOptions, stream_chat
@@ -45,17 +46,40 @@ class RuntimeStats:
     decode_tokens_per_second: float | None = None
     inter_token_latency_ms: float | None = None
     cache_bytes: int | None = None
+    cache_backend: str | None = None
+    cache_logical_bytes: int | None = None
+    cache_allocated_bytes: int | None = None
+    cache_reserved_bytes: int | None = None
+    cache_shared_blocks: int | None = None
+    cache_lookup_time_ms: float | None = None
+    cache_allocation_time_ms: float | None = None
+    avoided_prefill_tokens: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
 class GenerationEngine:
-    def __init__(self, manager: ModelManager, *, prefix_cache_bytes: int = 512 * 1024**2) -> None:
+    def __init__(
+        self,
+        manager: ModelManager,
+        *,
+        prefix_cache_bytes: int = 512 * 1024**2,
+        cache_backend: str = "dense",
+        cache_block_size: int = 32,
+        cache_memory_budget_bytes: int | None = None,
+    ) -> None:
         self.manager = manager
         self._stats = RuntimeStats()
         self._lock = threading.Lock()
-        self._prompt_cache = PrefixCache(prefix_cache_bytes)
+        self._cache_config = CacheConfig(
+            backend=cache_backend,  # type: ignore[arg-type]
+            memory_budget_bytes=cache_memory_budget_bytes,
+            prefix_cache_budget_bytes=prefix_cache_bytes,
+            block_size_tokens=cache_block_size,
+        )
+        self._cache_runtime: CacheManager | None = None
+        self._cache_bundle: Any | None = None
 
     @property
     def stats(self) -> RuntimeStats:
@@ -84,6 +108,62 @@ class GenerationEngine:
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
     ) -> Iterator[GenerationEvent]:
+        lifecycle: dict[str, Any] = {}
+        try:
+            yield from self._stream_request(
+                model=model,
+                messages=messages,
+                options=options,
+                cancel=cancel,
+                context_length=context_length,
+                context_shift=context_shift,
+                reasoning=reasoning,
+                reasoning_budget=reasoning_budget,
+                reasoning_format=reasoning_format,
+                reasoning_preserve=reasoning_preserve,
+                cache_prompt=cache_prompt,
+                cache_reuse=cache_reuse,
+                cache_entries=cache_entries,
+                cache_idle_slots=cache_idle_slots,
+                cache_type_k=cache_type_k,
+                cache_type_v=cache_type_v,
+                spec_type=spec_type,
+                spec_draft_n_max=spec_draft_n_max,
+                lifecycle=lifecycle,
+            )
+        finally:
+            runtime = lifecycle.get("runtime")
+            handle = lifecycle.get("handle")
+            if (
+                isinstance(runtime, CacheManager)
+                and isinstance(handle, CacheHandle)
+                and not handle.closed
+            ):
+                runtime.release(handle)
+
+    def _stream_request(
+        self,
+        *,
+        model: str,
+        messages: list[dict[str, str]],
+        options: TextGenerationOptions,
+        cancel: threading.Event,
+        context_length: int | None = None,
+        context_shift: bool = False,
+        reasoning: str = "auto",
+        reasoning_budget: int = -1,
+        reasoning_format: str = "deepseek",
+        reasoning_preserve: bool = False,
+        cache_prompt: bool = False,
+        cache_reuse: int = 256,
+        cache_entries: int = 1,
+        cache_idle_slots: bool = False,
+        cache_type_k: str = "f16",
+        cache_type_v: str = "f16",
+        spec_type: str = "none",
+        spec_draft_n_max: int = 3,
+        lifecycle: dict[str, Any],
+    ) -> Iterator[GenerationEvent]:
         bundle = self.manager.current_model()
         if model != self.manager.model_info().id:
             raise ValueError(f"model {model!r} is not loaded")
@@ -103,29 +183,39 @@ class GenerationEngine:
         )
         prompt_tokens = len(bundle.tokenizer.encode(prompt))
         prompt_ids = tuple(bundle.tokenizer.encode(prompt))
+        runtime = self._cache_manager_for(bundle)
+        handle = runtime.create_handle(
+            f"server-{time.time_ns()}",
+            key_type=cache_type_k,
+            value_type=cache_type_v,
+        )
+        lifecycle.update({"runtime": runtime, "handle": handle})
         cached_ids: tuple[int, ...] = ()
-        cached_state: tuple[object, ...] | None = None
         slot = current_slot()
-        cache_key = (
-            bundle.model_id,
-            bundle.revision,
-            id(bundle.tokenizer),
-            bundle.chat_template.template,
-            reasoning,
-            reasoning_budget,
-            reasoning_preserve,
-            context_length or bundle.context_length,
-            cache_type_k,
-            cache_type_v,
-            None if cache_idle_slots else slot,
+        fingerprint = runtime.fingerprint(
+            key_type=cache_type_k,
+            value_type=cache_type_v,
+            context_tokens=context_length or bundle.context_length,
+            namespace="global" if cache_idle_slots else f"slot:{slot}",
         )
         if cache_prompt:
-            matched = self._prompt_cache.longest_prefix(
-                cache_key, prompt_ids, minimum_tokens=cache_reuse
-            )
-            if matched is not None:
-                cached_ids, cached_bundle = matched
-                cached_state = cached_bundle.entries
+            try:
+                reused = runtime.adopt_prefix(
+                    handle, fingerprint, prompt_ids, minimum_tokens=cache_reuse
+                )
+            except PrefixReuseUnsupported:
+                reused = 0
+            cached_ids = prompt_ids[:reused]
+        requested = runtime.estimate_growth(
+            handle,
+            prompt_tokens=len(prompt_ids),
+            max_new_tokens=options.max_tokens,
+        )
+        runtime.reserve(
+            handle,
+            tokens=max(len(prompt_ids) - len(cached_ids), 0) + options.max_tokens,
+            requested_bytes=requested,
+        )
         started = time.perf_counter()
         first_at: float | None = None
         generated = 0
@@ -146,13 +236,16 @@ class GenerationEngine:
                 reasoning, reasoning_budget, reasoning_preserve
             ),
             context_length=context_length,
-            cache=cached_state,
+            cache=handle.bundle.entries,
             cached_prompt_ids=cached_ids,
             cache_type_k=cache_type_k,
             cache_type_v=cache_type_v,
             on_cache_update=(
-                lambda tokens, caches: self._store_prompt_cache(
-                    slot, cache_key, tokens, caches, cache_entries
+                lambda tokens, caches: runtime.publish_prefix(
+                    handle,
+                    fingerprint,
+                    tuple(tokens),
+                    maximum_entries=cache_entries,
                 )
                 if cache_prompt
                 else None
@@ -187,6 +280,7 @@ class GenerationEngine:
             memory_used, memory_peak = memory.active_bytes, memory.peak_bytes
         except Exception:
             pass
+        cache_snapshot = runtime.stats()
         stats = RuntimeStats(
             prompt_tokens=prompt_tokens,
             generated_tokens=generated,
@@ -197,7 +291,7 @@ class GenerationEngine:
             memory_used_bytes=memory_used,
             memory_peak_bytes=memory_peak,
             reasoning_tokens=parser.reasoning_tokens,
-            prompt_cache_hit=bool(cached_state),
+            prompt_cache_hit=bool(cached_ids),
             reused_prompt_tokens=len(cached_ids),
             drafted_tokens=speculative_stats["drafted_tokens"],
             accepted_draft_tokens=speculative_stats["accepted_draft_tokens"],
@@ -214,31 +308,91 @@ class GenerationEngine:
             ),
             decode_tokens_per_second=generated / elapsed if elapsed > 0 else None,
             inter_token_latency_ms=(elapsed * 1000 / generated if generated else None),
-            cache_bytes=self._prompt_cache.nbytes,
+            cache_bytes=cache_snapshot.physical_bytes,
+            cache_backend=handle.backend,
+            cache_logical_bytes=handle.bundle.nbytes,
+            cache_allocated_bytes=handle.bundle.allocated_nbytes,
+            cache_reserved_bytes=handle.reserved_bytes,
+            cache_shared_blocks=int(handle.metadata.get("shared_blocks", 0)),
+            cache_lookup_time_ms=float(
+                handle.metadata.get("prefix_lookup_time_ms", 0.0)
+            ),
+            cache_allocation_time_ms=float(
+                handle.metadata.get("allocation_time_ms", 0.0)
+            ),
+            avoided_prefill_tokens=len(cached_ids),
         )
+        if handle.reservation is not None:
+            runtime.commit(handle.reservation, min(handle.bundle.allocated_nbytes, requested))
         with self._lock:
             self._stats = stats
         yield GenerationEvent(finish_reason=finish_reason, metrics=stats.to_dict())
 
-    def _store_prompt_cache(
-        self,
-        slot: int,
-        key: tuple[object, ...],
-        tokens: tuple[int, ...],
-        caches: tuple[object, ...],
-        capacity: int,
-    ) -> None:
-        if not tokens or capacity < 1:
-            return
-        del slot
-        self._prompt_cache.put(key, tokens, CacheBundle(caches))
-        self._prompt_cache.limit_entries(capacity)
-
     def clear_caches(self) -> None:
-        self._prompt_cache.clear()
+        if self._cache_runtime is not None:
+            self._cache_runtime.clear_prefixes()
 
-    def cache_stats(self) -> dict[str, int]:
-        return self._prompt_cache.stats()
+    def close(self) -> None:
+        if self._cache_runtime is not None:
+            self._cache_runtime.close()
+            self._cache_runtime = None
+            self._cache_bundle = None
+
+    def cache_stats(self) -> dict[str, Any]:
+        if self._cache_runtime is None:
+            return {}
+        runtime = self._cache_runtime
+        result: dict[str, Any] = runtime.stats().to_dict()
+        qualified_block = (
+            runtime.plan.architecture == "qwen2" and runtime.plan.block_compatible
+        )
+        result.update(
+            {
+                "backend": runtime.config.backend,
+                "block_size_tokens": runtime.config.block_size_tokens,
+                "capabilities": {
+                    "dense_kv": True,
+                    "quantized_kv": True,
+                    "block_kv": qualified_block,
+                    "prefix_block_cache": qualified_block,
+                    "sliding_block_kv": False,
+                    "hybrid_prefix_restore": False,
+                    "continuous_batching": False,
+                },
+            }
+        )
+        return result
+
+    def preview_prefix_tokens(
+        self,
+        prompt_ids: tuple[int, ...],
+        *,
+        cache_type_k: str,
+        cache_type_v: str,
+        context_length: int,
+        minimum_tokens: int,
+        cache_idle_slots: bool,
+        slot: int = 0,
+    ) -> int:
+        bundle = self.manager.current_model()
+        runtime = self._cache_manager_for(bundle)
+        fingerprint = runtime.fingerprint(
+            key_type=cache_type_k,
+            value_type=cache_type_v,
+            context_tokens=context_length,
+            namespace="global" if cache_idle_slots else f"slot:{slot}",
+        )
+        return runtime.preview_prefix(
+            fingerprint, prompt_ids, minimum_tokens=minimum_tokens
+        )
+
+    def _cache_manager_for(self, bundle: Any) -> CacheManager:
+        if self._cache_runtime is None or self._cache_bundle is not bundle:
+            if self._cache_runtime is not None:
+                self._cache_runtime.close()
+            self._cache_runtime = CacheManager(bundle, self._cache_config)
+            self._cache_bundle = bundle
+        return self._cache_runtime
 
 
 def _reasoning_template_options(

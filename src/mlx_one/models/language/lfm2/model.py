@@ -1,4 +1,11 @@
-"""Native MLX dense Liquid LFM2/LFM2.5 model."""
+"""Model: LFM2 / LFM2.5
+
+Paper: LFM2 Technical Report
+Paper link: https://arxiv.org/abs/2511.23404
+Architecture gist: Hybrid sequence model that interleaves full attention with short convolutional
+state layers for efficient on-device inference.
+mlx-one implementation notes: Native MLX dense LFM2 blocks and complete hybrid cache construction.
+"""
 
 from __future__ import annotations
 

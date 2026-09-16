@@ -159,7 +159,11 @@ def create_app(
         alias=settings.alias, context_length=settings.context_length
     )
     engine = generation_engine or GenerationEngine(
-        manager, prefix_cache_bytes=settings.prefix_cache_bytes
+        manager,
+        prefix_cache_bytes=settings.prefix_cache_bytes,
+        cache_backend=settings.cache_backend,
+        cache_block_size=settings.cache_block_size,
+        cache_memory_budget_bytes=settings.cache_memory_budget_bytes,
     )
     jobs = scheduler or GenerationScheduler(
         max_pending=settings.queue_size,
@@ -198,10 +202,15 @@ def create_app(
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         yield
+
         def release() -> None:
-            clear_caches = getattr(engine, "clear_caches", None)
-            if callable(clear_caches):
-                clear_caches()
+            close_engine = getattr(engine, "close", None)
+            if callable(close_engine):
+                close_engine()
+            else:
+                clear_caches = getattr(engine, "clear_caches", None)
+                if callable(clear_caches):
+                    clear_caches()
             manager.unload()
 
         jobs.close(finalizer=release)
@@ -267,6 +276,8 @@ def create_app(
         )
         result["server"] = settings.public_dict()
         result["scheduler"] = jobs.stats()
+        cache_stats = getattr(engine, "cache_stats", None)
+        result["cache"] = cache_stats() if callable(cache_stats) else {}
         if memory_admission is not None:
             result["memory_budget"] = memory_admission.stats()
         transcription = services.get("transcription")
@@ -331,21 +342,46 @@ def create_app(
             messages = [item.model_dump(exclude_none=True) for item in body.messages]
             if multimodal:
                 messages = await _resolve_message_images(messages, images)
+            admission_check = None
             if memory_admission is not None and not multimodal:
                 prompt = bundle.chat_template.render(messages)
-                prompt_tokens = len(bundle.tokenizer.encode(prompt))
-                cache_stats = (
-                    engine.cache_stats()
-                    if callable(getattr(engine, "cache_stats", None))
-                    else {}
-                )
-                decision = memory_admission.decide(
-                    bundle,
-                    prompt_tokens + body.max_tokens,
-                    key_bits=_cache_bits(settings.cache_type_k),
-                    value_bits=_cache_bits(settings.cache_type_v),
-                    prefix_cache_bytes=int(cache_stats.get("bytes", 0)),
-                )
+                prompt_ids = tuple(bundle.tokenizer.encode(prompt))
+                prompt_tokens = len(prompt_ids)
+
+                def admission_check():
+                    cache_stats = (
+                        engine.cache_stats()
+                        if callable(getattr(engine, "cache_stats", None))
+                        else {}
+                    )
+                    reused_tokens = 0
+                    preview = getattr(engine, "preview_prefix_tokens", None)
+                    if (
+                        settings.cache_prompt
+                        and callable(preview)
+                        and (settings.cache_idle_slots or settings.parallel == 1)
+                    ):
+                        reused_tokens = preview(
+                            prompt_ids,
+                            cache_type_k=settings.cache_type_k,
+                            cache_type_v=settings.cache_type_v,
+                            context_length=manager.model_info().context_length,
+                            minimum_tokens=settings.cache_reuse,
+                            cache_idle_slots=settings.cache_idle_slots,
+                        )
+                    return memory_admission.decide(
+                        bundle,
+                        max(prompt_tokens - reused_tokens, 0) + body.max_tokens,
+                        key_bits=_cache_bits(settings.cache_type_k),
+                        value_bits=_cache_bits(settings.cache_type_v),
+                        prefix_cache_bytes=int(
+                            cache_stats.get(
+                                "prefix_bytes", cache_stats.get("bytes", 0)
+                            )
+                        ),
+                    )
+
+                decision = admission_check()
                 if decision.status is AdmissionStatus.REJECT:
                     return _error(
                         503,
@@ -376,7 +412,8 @@ def create_app(
                     cache_type_v=settings.cache_type_v,
                     spec_type=settings.spec_type,
                     spec_draft_n_max=settings.spec_draft_n_max,
-                )
+                ),
+                admission=admission_check,
             )
         except QueueFullError:
             return _error(429, "generation queue is full", "rate_limit_error")

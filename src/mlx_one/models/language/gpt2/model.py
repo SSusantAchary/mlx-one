@@ -1,4 +1,11 @@
-"""Native MLX implementation of the GPT-2 causal language model."""
+"""Model: GPT-2
+
+Paper: Language Models are Unsupervised Multitask Learners
+Paper link: https://openai.com/index/language-models/
+Architecture gist: Decoder-only Transformer with learned positions, masked self-attention, and
+autoregressive next-token prediction.
+mlx-one implementation notes: Native MLX GPT-2 blocks, cache-aware attention, and LM head.
+"""
 
 from __future__ import annotations
 

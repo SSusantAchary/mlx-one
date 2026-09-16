@@ -1,4 +1,11 @@
-"""Native MLX LFM2-ColBERT token encoder and MaxSim scorer."""
+"""Model: LFM2-ColBERT
+
+Paper: ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT
+Paper link: https://arxiv.org/abs/2004.12832
+Architecture gist: LFM encoder produces contextual token embeddings; ColBERT late interaction scores
+query and document tokens with MaxSim.
+mlx-one implementation notes: Native MLX LFM2 token encoder and ColBERT-style MaxSim scorer.
+"""
 
 from __future__ import annotations
 

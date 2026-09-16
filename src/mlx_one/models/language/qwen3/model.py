@@ -1,4 +1,11 @@
-"""Native MLX implementation of dense Qwen3."""
+"""Model: Qwen3
+
+Paper: Qwen3 Technical Report
+Paper link: https://arxiv.org/abs/2505.09388
+Architecture gist: Dense decoder-only Transformer with RoPE, GQA, SwiGLU, and unified thinking or
+non-thinking inference behavior.
+mlx-one implementation notes: Native MLX dense Qwen3 decoder with cache-aware causal generation.
+"""
 
 from __future__ import annotations
 

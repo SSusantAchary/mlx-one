@@ -7,6 +7,7 @@ from dataclasses import is_dataclass, replace
 from typing import Any
 
 from mlx_one.engine.cache import CacheBundle, cache_capabilities
+from mlx_one.engine.cache_planner import build_cache_plan
 from mlx_one.engine.contracts import (
     EngineRequest,
     ExecutionBatch,
@@ -57,6 +58,9 @@ class CausalLMRunner:
 
     def make_cache(self) -> CacheBundle:
         return CacheBundle(tuple(self.bundle.model.make_cache()))
+
+    def cache_plan(self, *, block_size_tokens: int = 32):
+        return build_cache_plan(self.bundle, block_size_tokens=block_size_tokens)
 
     def prefill(self, batch: ExecutionBatch) -> Sequence[Any]:
         if batch.phase != "prefill":

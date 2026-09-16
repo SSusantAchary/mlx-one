@@ -32,6 +32,13 @@ def cache_nbytes(cache: Any) -> int:
     return array_nbytes(values)
 
 
+def cache_allocated_nbytes(cache: Any) -> int:
+    amount = getattr(cache, "allocated_nbytes", None)
+    if amount is not None:
+        return int(amount)
+    return cache_nbytes(cache)
+
+
 def cache_capabilities(cache: Any) -> CacheCapabilities:
     name = type(cache).__name__.lower()
     attention = "kvcache" in name or "attention" in name
@@ -48,10 +55,15 @@ def cache_capabilities(cache: Any) -> CacheCapabilities:
 @dataclass
 class CacheBundle:
     entries: tuple[Any, ...]
+    closed: bool = False
 
     @property
     def nbytes(self) -> int:
         return sum(cache_nbytes(entry) for entry in self.entries)
+
+    @property
+    def allocated_nbytes(self) -> int:
+        return sum(cache_allocated_nbytes(entry) for entry in self.entries)
 
     @property
     def offset(self) -> int:
@@ -63,6 +75,8 @@ class CacheBundle:
         return tuple(cache_capabilities(entry) for entry in self.entries)
 
     def clone(self) -> CacheBundle:
+        if self.closed:
+            raise RuntimeError("cannot clone a closed cache bundle")
         return CacheBundle(tuple(entry.clone() for entry in self.entries))
 
     snapshot = clone
@@ -71,9 +85,15 @@ class CacheBundle:
         for entry in self.entries:
             entry.reset()
 
-    release = reset
+    def release(self) -> None:
+        if self.closed:
+            return
+        self.reset()
+        self.closed = True
 
     def trim(self, count: int) -> bool:
+        if self.closed:
+            raise RuntimeError("cannot trim a closed cache bundle")
         if count < 0:
             raise ValueError("cache trim count cannot be negative")
         if not all(callable(getattr(entry, "trim", None)) for entry in self.entries):
@@ -89,6 +109,8 @@ class CacheBundle:
             raise
 
     def batch_select(self, indices: tuple[int, ...]) -> CacheBundle:
+        if self.closed:
+            raise RuntimeError("cannot select from a closed cache bundle")
         if not indices:
             raise ValueError("cache batch selection cannot be empty")
         selected = []
