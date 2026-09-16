@@ -6,6 +6,7 @@ import json
 import math
 import shutil
 import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -53,7 +54,12 @@ class WhisperProcessorConfig:
         )
 
 
-def decode_audio(path: str | Path, *, ffmpeg: str = "ffmpeg") -> Any:
+def decode_audio(
+    path: str | Path,
+    *,
+    ffmpeg: str = "ffmpeg",
+    cancelled: Callable[[], bool] | None = None,
+) -> Any:
     """Decode any FFmpeg-supported file to mono 16-kHz float32 samples."""
 
     source = Path(path)
@@ -80,19 +86,29 @@ def decode_audio(path: str | Path, *, ffmpeg: str = "ffmpeg") -> Any:
         "-",
     ]
     try:
-        result = subprocess.run(command, check=False, capture_output=True)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        while True:
+            if cancelled is not None and cancelled():
+                process.terminate()
+                process.communicate()
+                raise AudioProcessingError("audio decoding was cancelled")
+            try:
+                stdout, stderr = process.communicate(timeout=0.1)
+                break
+            except subprocess.TimeoutExpired:
+                continue
     except OSError as exc:
         raise AudioProcessingError(f"cannot execute ffmpeg: {exc}") from exc
-    if result.returncode:
-        detail = result.stderr.decode("utf-8", errors="replace").strip().splitlines()
+    if process.returncode:
+        detail = stderr.decode("utf-8", errors="replace").strip().splitlines()
         raise AudioProcessingError(
             "ffmpeg could not decode audio" + (f": {detail[-1]}" if detail else "")
         )
-    if len(result.stdout) % 4:
+    if len(stdout) % 4:
         raise AudioProcessingError("ffmpeg returned malformed float32 audio")
     import mlx.core as mx
 
-    return mx.array(memoryview(result.stdout).cast("f"))
+    return mx.array(memoryview(stdout).cast("f"))
 
 
 def pad_or_trim(waveform: Any, length: int = N_SAMPLES) -> Any:

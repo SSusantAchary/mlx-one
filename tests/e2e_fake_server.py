@@ -53,5 +53,28 @@ class FakeEngine:
         )
 
 
+class FakeTranscription:
+    def capabilities(self):
+        return {
+            "enabled": True,
+            "accepted_formats": ["audio/webm"],
+            "max_bytes": 25 * 1024**2,
+            "language_detection": True,
+        }
+
+    def __call__(self, audio, **kwargs):
+        del kwargs
+        assert audio
+        return {"text": "editable local transcript", "language": "en"}
+
+
 if __name__ == "__main__":
-    uvicorn.run(create_app(FakeManager(), FakeEngine()), host="127.0.0.1", port=8080)
+    uvicorn.run(
+        create_app(
+            FakeManager(),
+            FakeEngine(),
+            task_services={"transcription": FakeTranscription()},
+        ),
+        host="127.0.0.1",
+        port=8199,
+    )

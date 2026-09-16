@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('streams a response and stops a second generation', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByLabel('Loaded model', { exact: true })).toHaveValue('test/native');
+  await expect(page.locator('.model')).toContainText('test/native');
 
   const composer = page.getByLabel('Message', { exact: true });
   await composer.fill('hello');
@@ -37,4 +37,16 @@ test('keeps long generated output in a scrolling message viewport', async ({ pag
   expect(dimensions.overflowY).toBe('auto');
   expect(dimensions.scrollHeight).toBeGreaterThan(dimensions.clientHeight);
   expect(dimensions.scrollTop).toBeGreaterThan(0);
+});
+
+test('uploads audio and inserts an editable local transcript', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('Upload audio file').setInputFiles({
+    name: 'recording.webm',
+    mimeType: 'audio/webm',
+    buffer: Buffer.from('fake browser audio')
+  });
+  const composer = page.getByLabel('Message', { exact: true });
+  await expect(composer).toHaveValue('editable local transcript');
+  await expect(page.locator('article[aria-label="user message"]')).toHaveCount(0);
 });

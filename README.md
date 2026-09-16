@@ -161,6 +161,19 @@ mlx-one serve mlx-community/LFM2-350M-4bit \
   --api-key local-secret
 ```
 
+To enable the UI microphone and audio-file transcription, load a private native Whisper sidecar:
+
+```bash
+mlx-one serve CHAT_MODEL \
+  --transcription-model WHISPER_MODEL \
+  --host 127.0.0.1 \
+  --port 8181
+```
+
+The Whisper model is loaded only when this flag is supplied. Recordings stay local, are
+transcribed through MLX, and the editable transcript is inserted into the composer without being
+sent automatically. FFmpeg is required for browser audio decoding.
+
 Enter `local-secret` in the UI's **API key** field and select **Connect**. Terminal clients must
 send the same key and use the alias as the request model:
 

@@ -69,6 +69,8 @@ def test_server_config_and_cli_expose_native_controls() -> None:
         "--context-shift",
         "--kv-cache-bits",
         "--spec-type",
+        "--transcription-model",
+        "--transcription-revision",
     ):
         assert flag in result.output
 

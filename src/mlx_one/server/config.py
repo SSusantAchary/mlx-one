@@ -32,6 +32,7 @@ class ServerConfig:
     cache_type_v: CacheType = "f16"
     spec_type: Literal["none", "draft-mtp"] = "none"
     spec_draft_n_max: int = 3
+    transcription_enabled: bool = False
 
     def __post_init__(self) -> None:
         if self.alias is not None and not self.alias.strip():

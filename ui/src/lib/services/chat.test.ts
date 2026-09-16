@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { streamChat } from './chat';
+import { transcribeAudio } from './audio';
 
 describe('streamChat', () => {
   it('parses incremental OpenAI SSE chunks and terminal metrics', async () => {
@@ -35,5 +36,23 @@ describe('streamChat', () => {
       'data: {"error":{"message":"decode failed"}}\n\ndata: [DONE]\n\n', { status: 200 }
     )));
     await expect(invoke()).rejects.toThrow('decode failed');
+  });
+});
+
+describe('transcribeAudio', () => {
+  it('posts authenticated multipart audio and returns editable text', async () => {
+    const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
+      expect(init.headers).toEqual({ authorization: 'Bearer local-key' });
+      expect(init.body).toBeInstanceOf(FormData);
+      expect((init.body as FormData).get('model')).toBe('test/model');
+      return new Response(JSON.stringify({ text: 'local transcript', language: 'en' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' }
+      });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const audio = new File(['audio'], 'recording.webm', { type: 'audio/webm' });
+    const result = await transcribeAudio('test/model', audio, 'local-key', new AbortController().signal);
+    expect(result.text).toBe('local transcript');
   });
 });

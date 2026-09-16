@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import replace
 from pathlib import Path
 from typing import Any, Literal
@@ -40,6 +41,7 @@ def transcribe(
     options: WhisperDecodeOptions | None = None,
     offline: bool = False,
     cache_dir: str | Path | None = None,
+    cancelled: Callable[[], bool] | None = None,
 ) -> TranscriptionResult:
     """Transcribe a file or mono 16-kHz waveform with native Whisper."""
 
@@ -52,8 +54,9 @@ def transcribe(
         else load_whisper(model, revision=revision, offline=offline, cache_dir=cache_dir)
     )
     loaded_at = time.perf_counter()
+    _raise_if_cancelled(cancelled)
     if isinstance(audio, (str, Path)):
-        waveform = decode_audio(audio)
+        waveform = decode_audio(audio, cancelled=cancelled)
     else:
         waveform = mx.array(audio)
         if waveform.ndim != 1:
@@ -77,6 +80,7 @@ def transcribe(
     seek = 0
     detected_language = language
     while seek < total_frames:
+        _raise_if_cancelled(cancelled)
         chunk = mel[:, seek : seek + N_FRAMES]
         if chunk.shape[1] < N_FRAMES:
             chunk = mx.pad(chunk, ((0, 0), (0, N_FRAMES - chunk.shape[1])))
@@ -100,6 +104,7 @@ def transcribe(
             word_timestamps=word_timestamps,
             options=opts,
             prompt_tokens=prompt,
+            cancelled=cancelled,
         )
         if (
             opts.no_speech_threshold is not None
@@ -162,3 +167,8 @@ def transcribe(
             "wall_seconds": completed_at - started,
         },
     )
+
+
+def _raise_if_cancelled(cancelled: Callable[[], bool] | None) -> None:
+    if cancelled is not None and cancelled():
+        raise RuntimeError("transcription was cancelled")

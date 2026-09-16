@@ -7,6 +7,7 @@ import base64
 import hmac
 import inspect
 import json
+import threading
 import time
 import uuid
 from collections.abc import AsyncIterator, Callable, Mapping
@@ -30,6 +31,7 @@ from mlx_one.server.media import ImageResolver, MediaError
 from mlx_one.server.model_manager import ModelManager
 from mlx_one.server.scheduler import GenerationScheduler, QueueFullError, RequestTimeoutError
 from mlx_one.server.schemas import ChatCompletionRequest, EmbeddingRequest, RerankRequest
+from mlx_one.server.transcription import MAX_AUDIO_BYTES, AudioUploadError
 from mlx_one.text import TextGenerationOptions
 
 
@@ -267,6 +269,21 @@ def create_app(
         result["scheduler"] = jobs.stats()
         if memory_admission is not None:
             result["memory_budget"] = memory_admission.stats()
+        transcription = services.get("transcription")
+        capability = getattr(transcription, "capabilities", None)
+        result["transcription"] = (
+            capability()
+            if callable(capability)
+            else {
+                "enabled": transcription is not None,
+                "accepted_formats": [],
+                "max_bytes": MAX_AUDIO_BYTES,
+                "language_detection": transcription is not None,
+            }
+        )
+        if result["transcription"]["enabled"]:
+            measured = getattr(manager, "transcription_bytes", 0)
+            result["transcription"]["model_memory_bytes"] = measured or None
         return result
 
     @app.post("/v1/chat/completions")
@@ -536,19 +553,25 @@ def create_app(
             if uploaded is None or not hasattr(uploaded, "read"):
                 return _error(422, "file is required", "invalid_request_error")
             audio = await uploaded.read()
-            if len(audio) > 25 * 1024**2:
+            if len(audio) > MAX_AUDIO_BYTES:
                 return _error(413, "audio file exceeds 25 MiB", "invalid_request_error")
             result = await _call_service(
                 jobs,
                 service,
                 audio,
+                media_type=str(getattr(uploaded, "content_type", "") or ""),
                 language=form.get("language"),
                 task=str(form.get("task", "transcribe")),
+                request=request,
             )
         except QueueFullError:
             return _error(429, "task queue is full", "rate_limit_error")
         except RequestTimeoutError as exc:
             return _error(408, str(exc), "timeout_error")
+        except AudioUploadError as exc:
+            return _error(415, str(exc), "invalid_request_error")
+        except ClientDisconnected:
+            return _error(499, "client disconnected", "cancelled_error")
         except Exception as exc:
             return _error(500, str(exc), "server_error")
         payload = result.to_dict() if hasattr(result, "to_dict") else result
@@ -594,14 +617,44 @@ async def _call_service(
     scheduler: GenerationScheduler,
     service: Callable[..., Any],
     *args: Any,
+    request: Request | None = None,
     **kwargs: Any,
 ) -> Any:
-    result = await asyncio.to_thread(
-        scheduler.execute,
-        lambda: service(*args, **kwargs),
-        apply_timeout=True,
+    cancel = threading.Event()
+    try:
+        parameters = inspect.signature(service).parameters
+    except (TypeError, ValueError):
+        parameters = {}
+    if "cancel" in parameters:
+        kwargs["cancel"] = cancel
+    worker = asyncio.create_task(
+        asyncio.to_thread(
+            scheduler.execute,
+            lambda: service(*args, **kwargs),
+            apply_timeout=True,
+        )
     )
+    try:
+        while not worker.done():
+            done, _ = await asyncio.wait({worker}, timeout=0.1)
+            if done:
+                break
+            if request is not None and await request.is_disconnected():
+                cancel.set()
+                try:
+                    await worker
+                except Exception:
+                    pass
+                raise ClientDisconnected
+        result = await worker
+    except BaseException:
+        cancel.set()
+        raise
     return await result if inspect.isawaitable(result) else result
+
+
+class ClientDisconnected(RuntimeError):
+    pass
 
 
 async def _resolve_message_images(

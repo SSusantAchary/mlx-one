@@ -313,6 +313,14 @@ def generate_command(
     "tokenizer_source",
     help="Optional local directory or Hugging Face tokenizer repository.",
 )
+@click.option(
+    "--transcription-model",
+    help="Optional private native Whisper model for microphone and audio transcription.",
+)
+@click.option(
+    "--transcription-revision",
+    help="Hugging Face branch, tag, or commit for the transcription model.",
+)
 @click.option("--alias", help="Public model ID exposed by the API.")
 @click.option("--api-key", multiple=True, envvar="MLX_ONE_API_KEY", help="Accepted Bearer key.")
 @click.option("--context-length", "context_length", "-c", type=click.IntRange(min=1))
@@ -380,6 +388,8 @@ def serve_command(
     offline: bool,
     cache_dir: str | None,
     tokenizer_source: str | None,
+    transcription_model: str | None,
+    transcription_revision: str | None,
     alias: str | None,
     api_key: tuple[str, ...],
     context_length: int | None,
@@ -455,6 +465,7 @@ def serve_command(
             cache_type_v=cache_type_v or default_cache_type,
             spec_type=spec_type,
             spec_draft_n_max=spec_draft_n_max,
+            transcription_enabled=transcription_model is not None,
         )
         manager = ModelManager(alias=alias, context_length=context_length)
         scheduler = GenerationScheduler(
@@ -470,6 +481,19 @@ def serve_command(
                     tokenizer_source=tokenizer_source,
                 )
             )
+            transcription_service = None
+            if transcription_model is not None:
+                from mlx_one.server.transcription import NativeTranscriptionService
+
+                transcription_bundle = scheduler.execute(
+                    lambda: manager.load_transcription(
+                        transcription_model,
+                        revision=transcription_revision,
+                        offline=offline,
+                        cache_dir=cache_dir,
+                    )
+                )
+                transcription_service = NativeTranscriptionService(transcription_bundle)
             if spec_type == "draft-mtp":
                 if bundle.architecture != "qwen3_5" or not getattr(bundle.model, "mtp", None):
                     raise ValueError(
@@ -509,6 +533,8 @@ def serve_command(
                         )
                     )
                 )
+                if transcription_service is not None:
+                    scheduler.execute(transcription_service.warmup)
             quantization = (
                 f"{bundle.quantization.get('bits')}-bit"
                 if bundle.quantization
@@ -520,6 +546,8 @@ def serve_command(
             click.echo("Device       Apple Silicon")
             click.echo(f"Architecture {bundle.architecture}")
             click.echo(f"Quantization {quantization}\n")
+            if transcription_service is not None:
+                click.echo("Transcription enabled (private native Whisper sidecar)\n")
             click.echo(f"API          http://{host}:{port}/v1")
             click.echo(f"UI           http://{host}:{port}")
             uvicorn.run(
@@ -529,6 +557,11 @@ def serve_command(
                     scheduler=scheduler,
                     config=config,
                     memory_admission=memory_admission,
+                    task_services=(
+                        {"transcription": transcription_service}
+                        if transcription_service is not None
+                        else None
+                    ),
                 ),
                 host=host,
                 port=port,
