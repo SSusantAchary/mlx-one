@@ -23,16 +23,15 @@
 
 <div class="messages" bind:this={viewport} onscroll={updateFollowState} aria-live="polite">
   {#if messages.length === 0}
-    <section class="welcome"><span>MLX / LOCAL</span><h1>Your Mac.<br />Your model.</h1><p>Native generation through mlx-one—private, direct, and built for Apple Silicon.</p></section>
+    <section class="welcome"><h1>Hello there</h1><p>Type a message or upload audio to get started</p></section>
   {:else}
     {#each messages as message (message.id)}<ChatMessage {message} />{/each}
   {/if}
 </div>
 
 <style>
-  .messages { flex:1 1 0; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:3rem clamp(1rem,4vw,4rem) 9rem; scrollbar-gutter:stable; }
-  .welcome { max-width:50rem; margin:12vh auto; }
-  .welcome span { color:var(--accent); font:700 .72rem ui-monospace,monospace; letter-spacing:.16em; }
-  h1 { font-size:clamp(3rem,8vw,6.5rem); line-height:.88; letter-spacing:-.07em; margin:1rem 0 1.5rem; }
-  p { color:var(--muted); max-width:31rem; line-height:1.7; }
+  .messages { flex:1 1 0; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:3rem clamp(1rem,4vw,4rem) 14rem; scrollbar-gutter:stable; }
+  .welcome { text-align:center; margin:5vh auto 0; }
+  h1 { font-size:clamp(2.2rem,5vw,3.5rem); letter-spacing:-.05em; margin:.5rem 0 1rem; }
+  p { color:var(--muted); font-size:clamp(1rem,2vw,1.35rem); }
 </style>

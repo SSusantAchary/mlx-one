@@ -7,9 +7,12 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from threading import RLock
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mlx_one.text import LoadedTextModel, load_text_model
+
+if TYPE_CHECKING:
+    from mlx_one.models.audio.whisper.loading import LoadedWhisper
 
 
 @dataclass(frozen=True)
@@ -33,6 +36,8 @@ class ModelManager:
     def __init__(self, *, alias: str | None = None, context_length: int | None = None) -> None:
         self._bundle: LoadedTextModel | None = None
         self._draft_bundle: LoadedTextModel | None = None
+        self._transcription_bundle: LoadedWhisper | None = None
+        self._transcription_bytes = 0
         self._lock = RLock()
         self._alias = alias
         self._context_length = context_length
@@ -101,6 +106,8 @@ class ModelManager:
 
     def unload(self) -> None:
         with self._lock:
+            self._transcription_bundle = None
+            self._transcription_bytes = 0
             self._draft_bundle = None
             self._bundle = None
         gc.collect()
@@ -121,12 +128,53 @@ class ModelManager:
         with self._lock:
             return self._draft_bundle
 
+    def load_transcription(
+        self,
+        model_id: str | Path,
+        *,
+        revision: str | None = None,
+        offline: bool = False,
+        cache_dir: str | Path | None = None,
+    ) -> LoadedWhisper:
+        """Load one private native Whisper bundle for speech-to-text requests."""
+
+        from mlx_one.models.audio.whisper.loading import load_whisper
+
+        with self._lock:
+            if self._bundle is None:
+                raise RuntimeError("load the primary model before its transcription model")
+            if self._transcription_bundle is not None:
+                raise RuntimeError("a transcription model is already loaded")
+            before = _active_memory()
+            bundle = load_whisper(
+                model_id,
+                revision=revision,
+                offline=offline,
+                cache_dir=cache_dir,
+            )
+            self._transcription_bundle = bundle
+            after = _active_memory()
+            if before is not None and after is not None:
+                self._transcription_bytes = max(0, after - before)
+            return bundle
+
+    def transcription_model(self) -> LoadedWhisper | None:
+        with self._lock:
+            return self._transcription_bundle
+
+    @property
+    def transcription_bytes(self) -> int:
+        return self._transcription_bytes
+
     def list_models(self) -> tuple[ModelMetadata, ...]:
         with self._lock:
             return () if self._bundle is None else (self.model_info(),)
 
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
+        tasks = ("text-generation",)
+        if self.transcription_model() is not None:
+            tasks += ("transcription",)
         return ModelMetadata(
             id=self._alias or bundle.model_id,
             architecture=bundle.architecture,
@@ -134,7 +182,17 @@ class ModelManager:
             parameter_count=bundle.parameter_count,
             quantization=dict(bundle.quantization),
             revision=bundle.revision,
+            tasks=tasks,
         )
+
+
+def _active_memory() -> int | None:
+    try:
+        mx = sys.modules.get("mlx.core")
+        getter = getattr(mx, "get_active_memory", None)
+        return int(getter()) if callable(getter) else None
+    except Exception:
+        return None
 
 
 def _tokenizer_fingerprint(tokenizer: Any) -> tuple[object, ...]:

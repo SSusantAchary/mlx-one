@@ -89,7 +89,7 @@ def test_non_streaming_and_streaming_chat(tmp_path: Path) -> None:
     payload = {"model": "test/model", "messages": [{"role": "user", "content": "Hi"}]}
     with TestClient(app) as client:
         response = client.post("/v1/chat/completions", json=payload)
-        assert response.status_code == 200
+        assert response.status_code == 200, response.text
         assert response.json()["choices"][0]["message"]["content"] == "Hello"
         streamed = client.post("/v1/chat/completions", json={**payload, "stream": True})
         assert streamed.status_code == 200
@@ -158,6 +158,55 @@ def test_additive_embedding_and_rerank_endpoints(tmp_path: Path) -> None:
         )
         assert reranked.status_code == 200
         assert reranked.json()["results"][0]["document"] == "document"
+
+
+def test_private_transcription_capability_and_endpoint(tmp_path: Path) -> None:
+    class TranscriptionService:
+        def capabilities(self):
+            return {
+                "enabled": True,
+                "accepted_formats": ["audio/webm"],
+                "max_bytes": 25 * 1024**2,
+                "language_detection": True,
+            }
+
+        def __call__(self, audio, *, media_type, language, task, cancel):
+            assert audio == b"browser audio"
+            assert media_type == "audio/webm"
+            assert language == "en"
+            assert task == "transcribe"
+            assert not cancel.is_set()
+            return {"text": "hello from the microphone", "language": "en"}
+
+    app = create_app(
+        FakeManager(),
+        FakeEngineEngine(),
+        ui_dir=tmp_path,
+        task_services={"transcription": TranscriptionService()},
+    )
+    with TestClient(app) as client:
+        runtime = client.get("/v1/runtime").json()
+        assert runtime["transcription"]["enabled"] is True
+        response = client.post(
+            "/v1/audio/transcriptions",
+            data={"model": "test/model", "language": "en"},
+            files={"file": ("recording.webm", b"browser audio", "audio/webm")},
+        )
+        assert response.status_code == 200, response.text
+        assert response.json()["text"] == "hello from the microphone"
+
+
+def test_transcription_rejects_invalid_model_and_missing_capability(tmp_path: Path) -> None:
+    app = create_app(FakeManager(), FakeEngineEngine(), ui_dir=tmp_path)
+    with TestClient(app) as client:
+        assert client.get("/v1/runtime").json()["transcription"]["enabled"] is False
+        response = client.post(
+            "/v1/audio/transcriptions",
+            data={"model": "test/model"},
+            files={"file": ("recording.webm", b"audio", "audio/webm")},
+        )
+        assert response.status_code == 400
+        assert response.json()["error"]["type"] == "capability_error"
 
 
 def test_multimodal_chat_requires_vision_service(tmp_path: Path) -> None:

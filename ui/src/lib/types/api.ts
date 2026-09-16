@@ -22,6 +22,13 @@ export interface RuntimeInfo {
   draft_acceptance_ratio?: number;
   scheduler?: { active_slots: number; parallel_slots: number; queue_depth: number; queue_capacity: number };
   server?: { cache_type_k?: string; cache_type_v?: string; max_batch_tokens?: number; prefill_chunk_size?: number };
+  transcription?: {
+    enabled: boolean;
+    accepted_formats: string[];
+    max_bytes: number;
+    language_detection: boolean;
+    model_memory_bytes?: number | null;
+  };
 }
 export interface Settings { temperature: number; top_p: number; max_tokens: number; api_key: string; reasoning: 'auto' | 'on' | 'off'; reasoning_budget: number; }
 export interface StreamResult { finishReason: string | null; metrics: Record<string, number>; }

@@ -52,3 +52,21 @@ def test_private_draft_requires_identical_token_ids(monkeypatch) -> None:
     manager.load("primary")
     with pytest.raises(ValueError, match="identical token-ID"):
         manager.load_draft("bad")
+
+
+def test_private_transcription_model_is_capability_only(monkeypatch) -> None:
+    primary = loaded("primary", {"a": 1})
+    whisper = SimpleNamespace(revision="whisper-revision")
+    monkeypatch.setattr(model_manager, "load_text_model", lambda *_, **__: primary)
+    monkeypatch.setattr(
+        "mlx_one.models.audio.whisper.loading.load_whisper",
+        lambda *_, **__: whisper,
+    )
+    manager = model_manager.ModelManager(alias="public")
+    manager.load("primary")
+    assert manager.load_transcription("whisper") is whisper
+    assert manager.transcription_model() is whisper
+    assert manager.list_models()[0].id == "public"
+    assert manager.list_models()[0].tasks == ("text-generation", "transcription")
+    manager.unload()
+    assert manager.transcription_model() is None

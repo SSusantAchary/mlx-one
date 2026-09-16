@@ -40,6 +40,21 @@ mlx-one serve MODEL \
   --kv-cache-bits 4
 ```
 
+Enable private, local microphone and audio-file transcription by explicitly loading a native
+Whisper sidecar:
+
+```bash
+mlx-one serve CHAT_MODEL \
+  --transcription-model WHISPER_MODEL \
+  --transcription-revision REVISION
+```
+
+The sidecar is not exposed as a second chat model and is never downloaded implicitly. The Web UI
+enables its microphone and audio-upload controls only after `/v1/runtime` reports transcription
+support. Recordings are limited to five minutes and uploads to 25 MiB. The returned transcript is
+inserted into the composer for editing and is never sent automatically. FFmpeg must be installed
+when the sidecar is enabled.
+
 `MLX_ONE_API_KEY` is an alternative to `--api-key`, and the option can be repeated. API keys
 protect `/v1/*`; health and the UI shell remain public. Enter the key in the UI's settings and
 press Connect. The browser keeps it in memory only.
@@ -58,12 +73,14 @@ that every checkpoint has completed qualification.
 
 - `GET /health` reports server readiness.
 - `GET /v1/models` returns the loaded model using the OpenAI list shape.
-- `GET /v1/runtime` returns measured model, context, timing, and MLX memory information.
+- `GET /v1/runtime` returns measured model, context, timing, MLX memory, and transcription
+  capability information.
 - `POST /v1/chat/completions` supports text messages, streaming, temperature, top-p, top-k,
   maximum tokens, seed, and stop strings.
 - `POST /v1/embeddings` and `POST /v1/rerank` use OpenAI-compatible and documented
   mlx-one response shapes when the loaded runner advertises those capabilities.
-- `POST /v1/audio/transcriptions` accepts multipart audio when a native ASR runner is loaded.
+- `POST /v1/audio/transcriptions` accepts authenticated multipart audio when the private native
+  Whisper sidecar is loaded.
 
 Streaming responses are SSE records followed by `data: [DONE]`. Stop in the UI aborts the HTTP
 request, which cooperatively cancels native generation. Requests execute through one MLX worker

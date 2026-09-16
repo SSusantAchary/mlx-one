@@ -6,6 +6,7 @@ import math
 import random
 import re
 import zlib
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -92,9 +93,11 @@ def decode_with_fallback(
     word_timestamps: bool,
     options: WhisperDecodeOptions,
     prompt_tokens: list[int] | None = None,
+    cancelled: Callable[[], bool] | None = None,
 ) -> DecodingResult:
     last: DecodingResult | None = None
     for index, temperature in enumerate(options.temperatures):
+        _raise_if_cancelled(cancelled)
         result = decode_segment(
             model,
             audio_features,
@@ -106,6 +109,7 @@ def decode_with_fallback(
             temperature=temperature,
             prompt_tokens=prompt_tokens,
             seed=options.seed + index,
+            cancelled=cancelled,
         )
         last = result
         needs_fallback = False
@@ -139,6 +143,7 @@ def decode_segment(
     temperature: float,
     prompt_tokens: list[int] | None,
     seed: int,
+    cancelled: Callable[[], bool] | None = None,
 ) -> DecodingResult:
     import mlx.core as mx
 
@@ -153,7 +158,14 @@ def decode_segment(
     maximum = options.max_tokens or max(1, model.config.max_target_positions - len(prefix))
     if temperature == 0 and options.beam_size and options.beam_size > 1:
         tokens, logprobs, no_speech = _beam_search(
-            model, audio_features, prefix, eos, tokenizer, options, maximum
+            model,
+            audio_features,
+            prefix,
+            eos,
+            tokenizer,
+            options,
+            maximum,
+            cancelled,
         )
     else:
         candidates = options.best_of if temperature > 0 and options.best_of else 1
@@ -168,6 +180,7 @@ def decode_segment(
                 maximum,
                 temperature,
                 seed + candidate,
+                cancelled,
             )
             for candidate in range(candidates)
         ]
@@ -214,6 +227,7 @@ def _sample_sequence(
     maximum: int,
     temperature: float,
     seed: int,
+    cancelled: Callable[[], bool] | None = None,
 ) -> tuple[list[int], list[float], float]:
     import mlx.core as mx
 
@@ -223,6 +237,7 @@ def _sample_sequence(
     no_speech = 0.0
     cache = model.make_cache()
     for step in range(maximum):
+        _raise_if_cancelled(cancelled)
         decoder_input = tokens if step == 0 else [tokens[-1]]
         output = model(
             None,
@@ -259,6 +274,7 @@ def _beam_search(
     tokenizer: Any,
     options: WhisperDecodeOptions,
     maximum: int,
+    cancelled: Callable[[], bool] | None = None,
 ) -> tuple[list[int], list[float], float]:
     import mlx.core as mx
 
@@ -267,6 +283,7 @@ def _beam_search(
     finished: list[tuple[list[int], list[float]]] = []
     no_speech = 0.0
     for step in range(maximum):
+        _raise_if_cancelled(cancelled)
         candidates: list[tuple[list[int], list[float]]] = []
         for tokens, scores in beams:
             output = model(None, mx.array([tokens]), encoder_outputs=audio)
@@ -289,6 +306,11 @@ def _beam_search(
             break
     pool = finished or beams
     return (*max(pool, key=lambda item: _rank(item, options)), no_speech)
+
+
+def _raise_if_cancelled(cancelled: Callable[[], bool] | None) -> None:
+    if cancelled is not None and cancelled():
+        raise RuntimeError("transcription was cancelled")
 
 
 def _rank(item: tuple[list[int], list[float]], options: WhisperDecodeOptions) -> float:
