@@ -1,4 +1,12 @@
-"""Native MLX implementation of Apple OpenELM."""
+"""Model: OpenELM
+
+Paper: OpenELM: An Efficient Language Model Family with Open Training and Inference Framework
+Paper link: https://arxiv.org/abs/2404.14619
+Architecture gist: Decoder-only Transformer whose attention and feed-forward widths are allocated
+layer-wise to improve parameter efficiency.
+mlx-one implementation notes: Native MLX OpenELM blocks with heterogeneous per-layer attention
+shapes.
+"""
 
 from __future__ import annotations
 

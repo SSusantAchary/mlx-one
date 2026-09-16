@@ -1,4 +1,11 @@
-"""Native MLX LFM2.5-Audio architecture and waveform detokenizer."""
+"""Model: LFM2.5-Audio
+
+Paper: Official LFM audio model documentation (no separate formal paper located)
+Paper link: https://docs.liquid.ai/lfm/models/audio-models
+Architecture gist: Interleaved audio/text foundation model combines an LFM reasoning backbone with
+audio tokenization and waveform detokenization.
+mlx-one implementation notes: Native MLX audio-language path and waveform detokenizer components.
+"""
 
 from __future__ import annotations
 

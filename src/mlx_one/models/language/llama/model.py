@@ -1,4 +1,12 @@
-"""Native MLX implementation of dense Llama-family causal models."""
+"""Model: Llama
+
+Paper: LLaMA: Open and Efficient Foundation Language Models
+Paper link: https://arxiv.org/abs/2302.13971
+Architecture gist: Decoder-only Transformer using RoPE, RMSNorm, SwiGLU, and grouped-query-style
+causal attention in later variants.
+mlx-one implementation notes: Native MLX dense Llama layers, RoPE attention, KV caching, and
+LM head.
+"""
 
 from __future__ import annotations
 

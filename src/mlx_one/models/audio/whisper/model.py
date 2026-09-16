@@ -1,4 +1,12 @@
-"""Native MLX Whisper encoder-decoder architecture."""
+"""Model: Whisper
+
+Paper: Robust Speech Recognition via Large-Scale Weak Supervision
+Paper link: https://arxiv.org/abs/2212.04356
+Architecture gist: Encoder-decoder Transformer maps log-Mel audio features to multilingual text
+tokens with cross-attention.
+mlx-one implementation notes: Native MLX Whisper audio encoder, causal decoder, and
+cross-attention cache.
+"""
 
 from __future__ import annotations
 

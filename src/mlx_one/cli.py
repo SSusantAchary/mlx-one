@@ -348,6 +348,19 @@ def generate_command(
     default=512,
     show_default=True,
 )
+@click.option(
+    "--cache-backend",
+    type=click.Choice(["dense", "block"]),
+    default="dense",
+    show_default=True,
+)
+@click.option(
+    "--kv-block-size",
+    type=click.Choice(["16", "32", "64", "128"]),
+    default="32",
+    show_default=True,
+)
+@click.option("--kv-cache-budget-mib", type=click.IntRange(min=1))
 @click.option("--reasoning", type=click.Choice(["auto", "on", "off"]), default="auto")
 @click.option(
     "--reasoning-format",
@@ -400,6 +413,9 @@ def serve_command(
     prefill_chunk_size: int | None,
     max_batch_tokens: int | None,
     prefix_cache_mib: int,
+    cache_backend: str,
+    kv_block_size: str,
+    kv_cache_budget_mib: int | None,
     reasoning: str,
     reasoning_format: str,
     reasoning_budget: int,
@@ -453,6 +469,13 @@ def serve_command(
             prefill_chunk_size=prefill_chunk_size or 512,
             max_batch_tokens=max_batch_tokens or 2048,
             prefix_cache_bytes=prefix_cache_mib * 1024**2,
+            cache_backend=cache_backend,
+            cache_block_size=int(kv_block_size),
+            cache_memory_budget_bytes=(
+                kv_cache_budget_mib * 1024**2
+                if kv_cache_budget_mib is not None
+                else None
+            ),
             reasoning=reasoning,
             reasoning_format=reasoning_format,
             reasoning_budget=reasoning_budget,
@@ -510,7 +533,11 @@ def serve_command(
                     "--reasoning on requires a checkpoint chat template with thinking support"
                 )
             engine = GenerationEngine(
-                manager, prefix_cache_bytes=config.prefix_cache_bytes
+                manager,
+                prefix_cache_bytes=config.prefix_cache_bytes,
+                cache_backend=config.cache_backend,
+                cache_block_size=config.cache_block_size,
+                cache_memory_budget_bytes=config.cache_memory_budget_bytes,
             )
             memory_admission = MemoryAdmission.detect()
             if warmup:

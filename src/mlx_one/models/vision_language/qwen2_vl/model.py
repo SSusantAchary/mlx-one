@@ -1,4 +1,11 @@
-"""Native MLX implementation of the Qwen2-VL architecture."""
+"""Model: Qwen2-VL
+
+Paper: Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution
+Paper link: https://arxiv.org/abs/2409.12191
+Architecture gist: Vision encoder and Qwen language decoder consume dynamic-resolution visual tokens
+alongside text with multimodal RoPE.
+mlx-one implementation notes: Native MLX vision encoder, visual-token projection, and Qwen decoder.
+"""
 
 from __future__ import annotations
 

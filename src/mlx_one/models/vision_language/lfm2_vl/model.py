@@ -1,4 +1,11 @@
-"""Native MLX Liquid LFM2-VL architecture."""
+"""Model: LFM2-VL
+
+Paper: LFM2 Technical Report
+Paper link: https://arxiv.org/abs/2511.23404
+Architecture gist: Liquid's hybrid LFM backbone consumes projected visual features with text tokens
+and mixed attention/convolution state.
+mlx-one implementation notes: Native MLX vision-language assembly and LFM2 hybrid decoder path.
+"""
 
 from __future__ import annotations
 

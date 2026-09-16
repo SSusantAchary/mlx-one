@@ -1,4 +1,12 @@
-"""Native MLX architecture for dense Qwen3.5 multimodal models."""
+"""Model: Qwen3.5 multimodal
+
+Paper: Official Qwen model documentation (no formal technical report located)
+Paper link: https://qwenlm.github.io/
+Architecture gist: Multimodal Qwen architecture combines visual processing, dense language decoding,
+linear-attention state, and optional multi-token prediction.
+mlx-one implementation notes: Native MLX text-only and multimodal forward paths, caches, and
+MTP hooks.
+"""
 
 from __future__ import annotations
 

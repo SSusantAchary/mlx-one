@@ -27,6 +27,7 @@ def stream_generate(
     tokenizer_source: str | Path | None = None,
     adapter_path: str | Path | None = None,
     is_cancelled: CancelCheck | None = None,
+    _cache_manager: object | None = None,
 ) -> Iterator[GenerationChunk]:
     """Yield native generation chunks for one prompt."""
 
@@ -44,7 +45,52 @@ def stream_generate(
             adapter_path=adapter_path,
         )
     )
-    yield from _stream_bundle(bundle, prompt, options or TextGenerationOptions(), is_cancelled)
+    resolved = options or TextGenerationOptions()
+    if _cache_manager is None:
+        yield from _stream_bundle(bundle, prompt, resolved, is_cancelled)
+        return
+    from mlx_one.engine.cache_errors import PrefixReuseUnsupported
+    from mlx_one.engine.cache_manager import CacheManager
+
+    if not isinstance(_cache_manager, CacheManager):
+        raise TypeError("_cache_manager must be a CacheManager")
+    token_ids = tuple(int(value) for value in bundle.tokenizer.encode(prompt))
+    handle = _cache_manager.create_handle(f"engine-{time.time_ns()}")
+    fingerprint = _cache_manager.fingerprint()
+    try:
+        try:
+            reused = _cache_manager.adopt_prefix(handle, fingerprint, token_ids)
+        except PrefixReuseUnsupported:
+            reused = 0
+        requested = _cache_manager.estimate_growth(
+            handle,
+            prompt_tokens=len(token_ids),
+            max_new_tokens=resolved.max_tokens,
+        )
+        _cache_manager.reserve(
+            handle,
+            tokens=max(len(token_ids) - reused, 0) + resolved.max_tokens,
+            requested_bytes=requested,
+        )
+        yield from _stream_bundle(
+            bundle,
+            prompt,
+            resolved,
+            is_cancelled,
+            cache=handle.bundle.entries,
+            cached_prompt_ids=token_ids[:reused],
+            on_cache_update=lambda tokens, _: _cache_manager.publish_prefix(
+                handle, fingerprint, tokens
+            ),
+        )
+        if handle.reservation is not None:
+            _cache_manager.commit(
+                handle.reservation,
+                min(handle.bundle.allocated_nbytes, requested),
+            )
+    finally:
+        if not handle.closed:
+            _cache_manager.release(handle)
 
 
 def stream_chat(
@@ -218,8 +264,7 @@ def _stream_bundle(
                 if isinstance(value, int) and not isinstance(value, bool)
             )
     produced = 0
-    cache_safe = True
-    cache_token_count = len(cached)
+    prompt_cache_published = False
     while produced < maximum:
         if cancelled():
             finish_reason = "stop"
@@ -228,7 +273,9 @@ def _stream_bundle(
         if not current:
             raise ValueError("prompt cache must leave at least one token for prefill")
         output = bundle.model(mx.array([current]), cache=cache)
-        cache_token_count += len(current)
+        if on_cache_update is not None and produced == 0 and not prompt_cache_published:
+            on_cache_update(tuple(prompt_ids), cache)
+            prompt_cache_published = True
         logits = output.logits[0, -1]
         using_forced = bool(forced_tokens)
         token = (
@@ -255,7 +302,6 @@ def _stream_bundle(
                 options,
                 randomizer,
             )
-            cache_safe = False
             if speculative_stats is not None:
                 speculative_stats["drafted_tokens"] += drafted
                 speculative_stats["accepted_draft_tokens"] += accepted
@@ -326,8 +372,6 @@ def _stream_bundle(
         piece = current_text[len(decoded) :] if current_text.startswith(decoded) else current_text
         decoded = current_text
         yield GenerationChunk(current_token, piece, emitted)
-    if on_cache_update is not None and tokens and cache_safe:
-        on_cache_update(tuple(tokens[:cache_token_count]), cache)
     yield GenerationChunk(None, "", emitted, finish_reason)
 
 

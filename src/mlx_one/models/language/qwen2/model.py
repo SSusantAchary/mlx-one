@@ -1,4 +1,11 @@
-"""Native MLX implementation of dense Qwen2/Qwen2.5."""
+"""Model: Qwen2 / Qwen2.5
+
+Paper: Qwen2 Technical Report
+Paper link: https://arxiv.org/abs/2407.10671
+Architecture gist: Decoder-only Transformer using GQA, RoPE, RMSNorm, SwiGLU, and long-context
+training variants.
+mlx-one implementation notes: Native MLX Qwen2 text decoder with cache-aware attention and LM head.
+"""
 
 from __future__ import annotations
 

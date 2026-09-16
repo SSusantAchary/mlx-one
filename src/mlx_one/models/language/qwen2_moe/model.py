@@ -1,4 +1,11 @@
-"""Native MLX implementation of Qwen2-MoE."""
+"""Model: Qwen2-MoE
+
+Paper: Qwen2 Technical Report
+Paper link: https://arxiv.org/abs/2407.10671
+Architecture gist: Qwen decoder layers combine GQA/RoPE attention with routed sparse expert
+feed-forward networks.
+mlx-one implementation notes: Native MLX Qwen2-MoE decoder, routing, expert dispatch, and KV cache.
+"""
 
 from __future__ import annotations
 

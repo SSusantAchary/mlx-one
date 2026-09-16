@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass, field
@@ -33,6 +34,8 @@ class LoadedTextModel:
     chat_template: ChatTemplate | None = None
     parameter_count: int | None = None
     eos_token_ids: tuple[int, ...] = ()
+    tokenizer_identity: str | None = None
+    adapter_identity: str | None = None
 
 
 def resolve_text_model_type(
@@ -143,7 +146,41 @@ def load_text_model(
         chat_template=chat_template,
         parameter_count=_parameter_count(config_data),
         eos_token_ids=eos_token_ids,
+        tokenizer_identity=_asset_identity(tokenizer_root),
+        adapter_identity=(
+            _asset_identity(Path(adapter_path).expanduser())
+            if adapter_path is not None
+            else None
+        ),
     )
+
+
+def _asset_identity(root: Path) -> str:
+    """Create a process-safe identity without hashing multi-gigabyte weight contents."""
+
+    candidates = (
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "special_tokens_map.json",
+        "chat_template.jinja",
+        "adapter_config.json",
+        "adapter_model.safetensors",
+    )
+    records = []
+    for name in candidates:
+        path = root / name if root.is_dir() else root
+        if not path.is_file():
+            continue
+        stat = path.stat()
+        digest = None
+        if stat.st_size <= 16 * 1024**2:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        records.append((path.name, stat.st_size, stat.st_mtime_ns, digest))
+        if not root.is_dir():
+            break
+    return hashlib.sha256(
+        json.dumps(records, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
 
 
 def _load_tokenizer(root: Path, model_type: str) -> TextTokenizer:

@@ -13,6 +13,8 @@ from concurrent.futures import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, field
 from typing import Any
 
+from mlx_one.engine.cache_errors import CacheCapacityError
+
 
 class QueueFullError(RuntimeError):
     pass
@@ -32,6 +34,8 @@ def current_slot() -> int:
 @dataclass
 class _Job:
     factory: Callable[[threading.Event], Iterator[Any]]
+    admission: Callable[[], Any] | None = None
+    on_cancel: Callable[[], Any] | None = None
     cancel: threading.Event = field(default_factory=threading.Event)
     output: queue.Queue[tuple[str, Any]] = field(default_factory=queue.Queue)
     deadline: float | None = None
@@ -40,6 +44,8 @@ class _Job:
     created_at: float = field(default_factory=time.monotonic)
     first_step_at: float | None = None
     recorded: bool = False
+    admitted: bool = False
+    cleaned: bool = False
 
 
 @dataclass
@@ -118,11 +124,22 @@ class GenerationScheduler:
         except FutureTimeoutError as exc:
             raise RequestTimeoutError("request timed out before task completion") from exc
 
-    def schedule(self, factory: Callable[[threading.Event], Iterator[Any]]) -> AsyncIterator[Any]:
+    def schedule(
+        self,
+        factory: Callable[[threading.Event], Iterator[Any]],
+        *,
+        admission: Callable[[], Any] | None = None,
+        on_cancel: Callable[[], Any] | None = None,
+    ) -> AsyncIterator[Any]:
         if self._closed.is_set():
             raise RuntimeError("generation scheduler is closed")
         deadline = time.monotonic() + self._timeout if self._timeout else None
-        job = _Job(factory, deadline=deadline)
+        job = _Job(
+            factory,
+            admission=admission,
+            on_cancel=on_cancel,
+            deadline=deadline,
+        )
         try:
             self._jobs.put_nowait(job)
         except queue.Full as exc:
@@ -134,9 +151,15 @@ class GenerationScheduler:
         return self._read(job)
 
     async def submit(
-        self, factory: Callable[[threading.Event], Iterator[Any]]
+        self,
+        factory: Callable[[threading.Event], Iterator[Any]],
+        *,
+        admission: Callable[[], Any] | None = None,
+        on_cancel: Callable[[], Any] | None = None,
     ) -> AsyncIterator[Any]:
-        async for item in self.schedule(factory):
+        async for item in self.schedule(
+            factory, admission=admission, on_cancel=on_cancel
+        ):
             yield item
 
     async def _read(self, job: _Job) -> AsyncIterator[Any]:
@@ -173,6 +196,7 @@ class GenerationScheduler:
                 break
             if isinstance(pending, _Job):
                 pending.cancel.set()
+                self._dispose(pending)
                 pending.output.put(("error", RuntimeError("generation scheduler stopped")))
                 self._record(pending, "cancelled")
             elif isinstance(pending, _Call):
@@ -249,12 +273,26 @@ class GenerationScheduler:
         try:
             _slot_local.value = work.slot_id or 0
             if work.cancel.is_set():
+                self._dispose(work)
                 work.output.put(("done", None))
                 self._record(work, "cancelled")
                 return False
             if work.deadline is not None and time.monotonic() >= work.deadline:
                 work.cancel.set()
                 raise RequestTimeoutError("generation request timed out")
+            if not work.admitted and work.admission is not None:
+                decision = work.admission()
+                status = getattr(decision, "status", decision)
+                value = str(getattr(status, "value", status)).lower()
+                if value == "queue":
+                    work.cancel.wait(0.001)
+                    return True
+                if value == "reject" or value == "false":
+                    reason = getattr(decision, "reason", None) or "request admission rejected"
+                    raise RuntimeError(reason)
+                work.admitted = True
+            else:
+                work.admitted = True
             if work.iterator is None:
                 work.iterator = iter(work.factory(work.cancel))
             item = next(work.iterator)
@@ -263,19 +301,45 @@ class GenerationScheduler:
             work.output.put(("item", item))
             return True
         except StopIteration:
+            self._dispose(work)
             work.output.put(("done", None))
             self._record(work, "completed")
             return False
         except RequestTimeoutError as exc:
+            self._dispose(work)
             work.output.put(("error", exc))
             work.output.put(("done", None))
             self._record(work, "timed_out")
             return False
+        except CacheCapacityError as exc:
+            if exc.retryable and work.first_step_at is None:
+                close = getattr(work.iterator, "close", None)
+                if callable(close):
+                    close()
+                work.iterator = None
+                work.cancel.wait(0.001)
+                return True
+            self._dispose(work)
+            work.output.put(("error", exc))
+            work.output.put(("done", None))
+            self._record(work, "rejected")
+            return False
         except BaseException as exc:
+            self._dispose(work)
             work.output.put(("error", exc))
             work.output.put(("done", None))
             self._record(work, "failed")
             return False
+
+    def _dispose(self, work: _Job) -> None:
+        if work.cleaned:
+            return
+        work.cleaned = True
+        close = getattr(work.iterator, "close", None)
+        if callable(close):
+            close()
+        if work.on_cancel is not None:
+            work.on_cancel()
 
     def _record(self, work: _Job, outcome: str) -> None:
         if work.recorded:

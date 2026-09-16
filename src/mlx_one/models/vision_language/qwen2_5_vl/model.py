@@ -1,4 +1,12 @@
-"""Native MLX Qwen2.5-VL architecture."""
+"""Model: Qwen2.5-VL
+
+Paper: Qwen2.5-VL Technical Report
+Paper link: https://arxiv.org/abs/2502.13923
+Architecture gist: Dynamic-resolution vision Transformer and Qwen language decoder support image,
+video, spatial, and temporal grounding.
+mlx-one implementation notes: Native MLX visual encoding, multimodal positions, and language
+decoder.
+"""
 
 from __future__ import annotations
 
