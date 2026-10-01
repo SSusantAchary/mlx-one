@@ -14,7 +14,7 @@
 <p align="center">
   <a href="https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml"><img src="https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
@@ -80,6 +80,27 @@ unified-memory admission forecasting, and experimental block-cache allocation.
 Continuous dense batching and paged attention stay capability-gated until their
 correctness and M4 performance gates pass. See the
 [native inference-engine roadmap](mlx-one_inference_engine.md).
+
+## Cache runtime qualification
+
+The current [M4/32 GB cache qualification report](docs/cache-benchmark-m4-32gb.md)
+is a partial result; dense APC and block APC are not yet qualified.
+
+- The backend-free cache, server, scheduler, allocator, and lifecycle suite
+  passed: `357 passed, 14 skipped`.
+- Native dense Qwen testing passed at approximately 2K and 8K context, passed
+  with a memory limitation at 16K, and failed cleanly at approximately 32K after
+  reaching about 28.2 GB peak MLX memory at 16K.
+- The initial APC run produced four prefix misses, zero reused tokens, and zero
+  avoided prefill tokens because the published snapshot boundary does not yet
+  match the intended shared prompt prefix.
+- Qwen block execution passed a basic smoke test, but token parity, shared-block
+  ownership, and block APC remain unqualified.
+- LFM2 hybrid block requests are explicitly rejected as unsupported; dense,
+  parallel, and cancellation qualification remains pending.
+
+Dense remains the recommended backend until the APC prompt-prefix boundary and
+the remaining native Metal matrix pass.
 
 ## What is implemented
 
@@ -601,6 +622,22 @@ MLX_ONE_RUN_WHISPER_INTEGRATION=1 pytest -q \
 Ordinary tests are network-free. Integration tests may download only the pinned
 assets needed by their explicit gate.
 
+## Citation
+
+If you use `mlx-one` in your work, please cite it as:
+
+```bibtex
+@software{mlx_one2026,
+author = {Achary, S. Susant},
+title  = {mlx-one: Unified Native MLX Stack for Apple Silicon},
+year   = {2026},
+url    = {https://github.com/SSusantAchary/mlx-one},
+note   = {Version 0.1.0a1. Native GPU-accelerated machine learning workflows on Apple Silicon}
+}
+```
+
+See [CITATION.bib](CITATION.bib) for the repository citation file.
+
 ## Roadmap
 
 The implementation proceeds by evidence-backed vertical slices:
@@ -623,4 +660,4 @@ weight-contract, integration, and documentation updates. Read
 [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report security
 issues through [SECURITY.md](SECURITY.md), not a public issue.
 
-Released under the [MIT License](LICENSE).
+Released under the [Apache License 2.0](LICENSE).
