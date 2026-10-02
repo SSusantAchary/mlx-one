@@ -4,6 +4,10 @@ This catalog is derived from the maintainer's `model_list.txt`. A row is a
 discovery candidate, not a support claim. Only exact revisions with linked run
 evidence may be promoted in the capability registry.
 
+For current native workflows, checkpoint assets, and family-specific examples,
+see the [model guide index](../README.md#model-specific-documentation). This catalog
+tracks qualification candidates; it is not the inventory of implemented architectures.
+
 ## Active qualification targets
 
 | Model | Revision | Architecture | Operations | Status |
@@ -31,4 +35,18 @@ and [SmolLM2 result](../qualification/results/smollm2-1.7b-lora-m4-air-32gb.json
 Before onboarding any candidate, resolve its canonical publisher, immutable
 revision, complete parameter count, license, tokenizer or processor, upstream
 backend support, and safe hardware workload. The VLM, embedding, and audio rows
-in `model_list.txt` remain deferred until the text qualification gate passes.
+in `model_list.txt` track separate qualification targets. Existing native loaders
+and synthetic architecture tests do not complete those task/quality gates; their
+current workflow boundaries are documented in the model guides linked above.
+
+## Segmentation qualification candidate
+
+| Model | Revision | Operations | Status |
+| --- | --- | --- | --- |
+| `facebook/sam3` | `3c879f39826c281e95690f02c7821c4de09afae7` | Concept/interactive segmentation, automatic-mask candidate, offline/streaming tracking | Partial M4/32 GB fixture evidence; full qualification pending |
+
+The two 32-frame single-object comparisons pass the pinned CPU-reference gates;
+they do not qualify multi-object tracking, occlusion, corrections, or all image
+prompts. See the [SAM3 guide](../src/mlx_one/models/segmentation/sam3/README.md) and
+[measured results](sam3-qualification-m4-32gb.md). Checkpoint license/access terms
+are separate from the repository's Apache-2.0 license.

@@ -5,6 +5,32 @@ from mlx_one.core.registry import ModelRegistration, register_model
 
 def register_builtin_models() -> None:
     registrations = (
+        *(
+            ModelRegistration(
+                model_type,
+                f"mlx_one.models.segmentation.sam3.config:{config}",
+                f"mlx_one.models.segmentation.sam3.{module}:{model}",
+                "segmentation",
+                capabilities,
+                "mlx_one.models.segmentation.sam3.weights:sanitize_weights",
+                "mlx_one.models.segmentation.sam3.weights:weight_contract",
+                loader_path=(None if model_type == "sam3_tracker_video"
+                             else "mlx_one.segmentation.loading:load_segmentation_model"),
+                tasks=tasks,
+            )
+            for model_type, config, module, model, capabilities, tasks in (
+                ("sam3", "Sam3Config", "model", "Sam3Model",
+                 frozenset({"forward", "text", "box-exemplars"}), frozenset({"image-segmentation"})),
+                ("sam3_tracker", "Sam3TrackerConfig", "tracker", "Sam3TrackerModel",
+                 frozenset({"forward", "points", "boxes", "mask-refinement"}),
+                 frozenset({"image-segmentation", "mask-generation"})),
+                ("sam3_tracker_video", "Sam3TrackerVideoConfig", "tracker_video", "Sam3TrackerVideoModel",
+                 frozenset({"forward", "memory", "object-pointers"}), frozenset({"video-segmentation"})),
+                ("sam3_video", "Sam3VideoConfig", "video", "Sam3VideoModel",
+                 frozenset({"forward", "text", "memory", "object-pointers", "stream"}),
+                 frozenset({"image-segmentation", "video-segmentation"})),
+            )
+        ),
         ModelRegistration(
             "gpt2",
             "mlx_one.models.language.gpt2.config:GPT2Config",

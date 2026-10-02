@@ -8,7 +8,7 @@
 
 <p align="center">
   A unified, native MLX stack for language, vision-language, embeddings,
-  audio-language, and speech models on Apple Silicon.
+  audio-language, speech, and segmentation models on Apple Silicon.
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
 
-[**Quickstart**](#quick-start) | [**Installation**](#installation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
+[**Quickstart**](#quick-start) | [**Installation**](#installation) | [**Model guides**](#model-specific-documentation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
 
 > [!IMPORTANT]
 > mlx-one is under active development. Native architecture support and model
@@ -37,7 +37,7 @@ mlx-one is building those pieces as one coherent stack:
 ```text
 Python API + CLI
        ↓
-Tasks: generation · embeddings · VLM · ASR · training
+Tasks: generation · embeddings · VLM · ASR · segmentation · tracking · training
        ↓
 Native model families + shared processors + safe loading
        ↓
@@ -105,7 +105,7 @@ the remaining native Metal matrix pass.
 ## What is implemented
 
 - Native MLX architectures across language, vision-language, embeddings,
-  audio-language, and ASR.
+  audio-language, ASR, and segmentation.
 - Shared attention, GQA, RoPE, normalization, feed-forward, MoE, vision, hybrid
   convolution, masking, and KV-cache primitives.
 - Lazy metadata-driven model registration without initializing Metal during
@@ -121,6 +121,11 @@ the remaining native Metal matrix pass.
 - Native Qwen3 embedding and reranking with byte-level BPE, safe loading,
   padding-aware batching, Matryoshka dimensions, normalization, cosine similarity,
   yes/no pair scoring, and stable ranking.
+- Native Meta SAM3 float32 loading, text/box concept segmentation, interactive
+  point/box/mask prediction, experimental automatic masks, and stateful offline
+  and streaming video tracking through Python and CLI. Qualification is partial;
+  see the [SAM3 model guide](src/mlx_one/models/segmentation/sam3/README.md) and
+  [M4/32 GB results](docs/sam3-qualification-m4-32gb.md).
 - Dataset validation, memory planning, LoRA/QLoRA SFT workflows, adapter export,
   evaluation, comparison, benchmarking, and evidence records.
 - Backend-free tests plus opt-in Metal and real-checkpoint integration gates.
@@ -150,8 +155,20 @@ The native engine and server do not require `mlx-lm`. Install
 `mlx-one[legacy-mlx-lm]` only for legacy compatibility workflows that explicitly
 request that bridge.
 
-FFmpeg is required only when the Whisper API receives an audio file. Already
-decoded mono 16-kHz waveforms can be passed directly from Python.
+For SAM3 image processing, install the existing vision extra:
+
+```bash
+python -m pip install -e ".[vision]"
+```
+
+Meta's [SAM3 checkpoint](https://huggingface.co/facebook/sam3) requires authorized
+gated access and acceptance of its separate checkpoint license. Authenticate with
+`hf auth login`, or use an authorized complete local snapshot with `--offline`.
+SAM3 runs in float32; quantized checkpoints and SAM3.1 are unsupported.
+
+FFmpeg is required when the Whisper API receives an audio file; encoded SAM3
+videos require both FFmpeg and ffprobe. Decoded mono 16-kHz waveforms, SAM3 frame
+directories, and Python RGB frame iterators need no video/audio decoder.
 
 ## Quick start
 
@@ -315,7 +332,72 @@ For reproducible evaluation and qualification, add `--revision` with an exact
 model commit. Raw commit hashes are kept in integration tests and evidence
 records rather than introductory examples.
 
+## Model-Specific Documentation
+
+Each registered model type has a guide beside its implementation, with checkpoint
+assets, input formats, examples, settings, troubleshooting, and validation links.
+The organization follows [mlx-vlm's model guides](https://github.com/Blaizzy/mlx-vlm/tree/main#model-specific-documentation);
+the workflows below describe mlx-one's current implementation.
+
+An available loader or integration gate is not a passing qualification result.
+Examples marked as candidates require verification for the exact checkpoint and
+workload. See [capability levels](#capability-levels) and the
+[qualification candidate catalog](docs/model-catalog.md).
+
+### Text generation guides
+
+| Family | Available workflow | Qualification summary | Guide |
+| --- | --- | --- | --- |
+| GPT-2 | Completion, sampling, streaming | Candidate; synthetic validation | [Docs](src/mlx_one/models/language/gpt2/README.md) |
+| Llama / MiniCPM5 / SmolLM2 | Completion, template chat, quantized loading | MiniCPM5 pinned gate; SmolLM2 M4 LoRA/reload evidence, quality gate failed | [Docs](src/mlx_one/models/language/llama/README.md) |
+| Qwen2 / Qwen2.5 / Qwen2.5-Coder | Completion, template chat, streaming | Coder M4 LoRA/reload evidence, quality gate failed; cache qualification partial | [Docs](src/mlx_one/models/language/qwen2/README.md) |
+| Qwen3 dense | Completion, template chat, streaming | Candidate; synthetic validation | [Docs](src/mlx_one/models/language/qwen3/README.md) |
+| Qwen2-MoE | Experimental native text loading/generation | Architecture/synthetic; checkpoint unqualified | [Docs](src/mlx_one/models/language/qwen2_moe/README.md) |
+| OpenELM | Completion with compatible tokenizer assets | Candidate; verify exact release | [Docs](src/mlx_one/models/language/openelm/README.md) |
+| LFM2 / LFM2.5 | Hybrid text generation and chat | Per checkpoint; M4 block-rejection safety result | [Docs](src/mlx_one/models/language/lfm2/README.md) |
+| LFM2-MoE | Experimental hybrid text loading/generation | Checkpoint unqualified; 8B-A1B outside initial ≤3B tier | [Docs](src/mlx_one/models/language/lfm2_moe/README.md) |
+
+### Vision-language guides
+
+| Family | Available workflow | Qualification summary | Guide |
+| --- | --- | --- | --- |
+| Qwen2-VL | Native loading and static-image streaming API | Verify exact checkpoint and processor; video workflow unqualified | [Docs](src/mlx_one/models/vision_language/qwen2_vl/README.md) |
+| Qwen2.5-VL | Config/architecture inspection and synthetic execution | Architecture only; no registered task loader | [Docs](src/mlx_one/models/vision_language/qwen2_5_vl/README.md) |
+| Qwen3.5 | Native text generation; multimodal architecture | Candidate/synthetic; vision task path unqualified | [Docs](src/mlx_one/models/vision_language/qwen3_5/README.md) |
+| LFM2-VL / LFM2.5-VL | Config/architecture inspection and synthetic execution | Architecture only; task loader/processor integration pending | [Docs](src/mlx_one/models/vision_language/lfm2_vl/README.md) |
+
+### Retrieval guides
+
+| Family | Available workflow | Qualification summary | Guide |
+| --- | --- | --- | --- |
+| BERT / all-MiniLM-L6-v2 | Single-vector embeddings and similarity | Candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/bert/README.md) |
+| MPNet / all-mpnet-base-v2 | Single-vector embeddings and similarity | Candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/mpnet/README.md) |
+| Qwen3 Embedding | Instructed queries, dimensions, normalized vectors | 0.6B candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/qwen3_embedding/README.md) |
+| Qwen3 Reranker | Pair scores, probabilities, stable ranking | 0.6B candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/qwen3_reranker/README.md) |
+| LFM2 ColBERT | Lower-level token embeddings and masked MaxSim | Candidate; generic single-vector `embed` incompatible | [Docs](src/mlx_one/models/embeddings/lfm2_colbert/README.md) |
+
+### Audio guides
+
+| Family | Available workflow | Qualification summary | Guide |
+| --- | --- | --- | --- |
+| Whisper | Transcription, language detection, timestamps, WER/CER | Candidate; pinned tiny/turbo smoke gates reported passing | [Docs](src/mlx_one/models/audio/whisper/README.md) |
+| LFM2.5 Audio | Config inspection, frontend and architecture tests | Architecture only; checkpoint/codec/task integration pending | [Docs](src/mlx_one/models/audio/lfm2_audio/README.md) |
+
+### Segmentation guides
+
+| Family | Available workflow | Qualification summary | Guide |
+| --- | --- | --- | --- |
+| Meta SAM3 (`sam3`, `sam3_tracker`, `sam3_tracker_video`, `sam3_video`) | Concept/interactive images, experimental automatic masks, composite offline/streaming tracking | M4/32 GB single-object 32-frame fixture passes CPU-reference gates; full qualification pending; standalone temporal tracker architecture-only | [Docs](src/mlx_one/models/segmentation/sam3/README.md) |
+
+The [SAM3 qualification report](docs/sam3-qualification-m4-32gb.md) records exact
+checkpoint/reference revisions, memory measurements, preserved failures, and
+remaining gates. These fixture passes do not qualify all segmentation workflows.
+
 ## Native model coverage
+
+For checkpoint assets, input formats, and usage limitations, see the
+[model-specific guides](#model-specific-documentation). The tables below summarize
+implemented components; architecture coverage does not guarantee an end-to-end task.
 
 ### Language models
 
@@ -355,6 +437,24 @@ records rather than introductory examples.
 | --- | --- | --- | :---: | --- |
 | `whisper` | tiny, base, small, medium, large-v3, turbo | Encoder-decoder, safe loading, log-Mel, BPE, decoding, language, timestamps, WER/CER | ✅ | Candidate; pinned tiny/turbo smoke gates pass |
 | `lfm2_audio` | LFM2.5-Audio | Audio encoder, Conformer, Depthformer, detokenizer, feature insertion | ✅ | Verify processor and codec weights |
+
+### Segmentation and tracking
+
+| Registry type | Family | Native components | Architecture | Qualification |
+| --- | --- | --- | :---: | --- |
+| `sam3` | Meta SAM3 concept detector | ViT, feature pyramid, CLIP text/geometry encoders, DETR, presence scoring, masks | Native | Pinned text-prompt image fixture evidence; box exemplars and full qualification pending |
+| `sam3_tracker` | Meta SAM3 interactive image model | Point/box/mask prompts, two-way decoder, multimask prediction, refinement | Native | Pinned positive-point fixture passes; refinement and automatic-mask parity pending |
+| `sam3_tracker_video` | Meta SAM3 temporal tracker | Memory encoding/attention, object pointers, temporal state | Native | Standalone architecture only; used by the composite video workflow |
+| `sam3_video` | Meta SAM3 composite video model | Shared image backbone, detector/tracker association, object lifecycle, offline/streaming sessions | Native | Separate 32-frame single-object CPU-reference comparisons pass on M4/32 GB; natural multi-object clips unqualified |
+
+Use [`facebook/sam3`](https://huggingface.co/facebook/sam3) through the dedicated
+segmentation API or `segment`/`track` commands, not text generation or the text
+`Engine`. Native components do not imply full task qualification. The measured
+video fixtures achieved minimum mask IoU 0.99998, maximum score difference
+0.00007511, exact boxes, and stable object ID `0`, with approximately 8.41 GB peak
+MLX allocation. These are controlled single-truck clips, not general tracking
+quality or isolated performance benchmarks; see the
+[qualification report](docs/sam3-qualification-m4-32gb.md).
 
 The detailed family backlog and exact status are maintained in
 [model_list.txt](model_list.txt). Package ownership and dependency boundaries
@@ -420,6 +520,42 @@ Both commands use the native Qwen3 tokenizer and strict safetensors loader.
 Document embeddings are unprefixed; query embeddings use the documented Qwen3
 instruction format. Reranking returns the original document index, raw yes/no
 logit difference, and two-class probability.
+
+### Segment images and track video
+
+```bash
+mlx-one segment facebook/sam3 image.jpg --mode concept --text "person" \
+  --output results-concept
+mlx-one segment facebook/sam3 image.jpg --mode interactive \
+  --prompts-json prompts.json --output results-interactive
+mlx-one segment facebook/sam3 image.jpg --mode automatic \
+  --points-per-side 32 --output results-automatic
+
+mlx-one track facebook/sam3 video.mp4 --text "person" --output results-offline
+mlx-one track facebook/sam3 frames/ --streaming --text "person" --output results-stream
+```
+
+Both commands accept `--revision`, `--offline`, and `--cache-dir`. The publisher's
+SAM3 checkpoint defaults to the pinned revision recorded in the qualification
+report. An interactive `prompts.json` can contain:
+
+```json
+{"points": [[100, 120]], "point_labels": [1]}
+```
+
+Coordinates must lie within the original image; labels `1` and `0` mean positive
+and negative points. The [SAM3 guide](src/mlx_one/models/segmentation/sam3/README.md)
+documents box exemplars, refinement masks, and timed video prompt JSON for
+corrections/removal. Exports contain mask PNGs and a JSON manifest with scores,
+pixel-space XYXY boxes, identifiers, dimensions, and checkpoint provenance.
+Existing output directories are never overwritten.
+
+Streaming processes frames chronologically and rejects retroactive corrections;
+offline sessions retain frames for replay. Streaming omits future-dependent
+hotstart removal, so its outputs are qualified separately. Automatic generation
+currently uses a single-image point grid and mask-IoU NMS, not a qualified
+crop-layer pipeline. These workflows remain experimental; no SAM3 training,
+HTTP endpoints, or Web UI integration is provided.
 
 ### Validate training data
 
@@ -546,6 +682,42 @@ print(query.embeddings[0])
 print(ranking.items[0].index, ranking.items[0].score)
 ```
 
+Segment an image with Meta SAM3 through the lazy segmentation namespace:
+
+```python
+from mlx_one.segmentation import load_segmentation_model, segment_image
+
+model = load_segmentation_model("facebook/sam3", task="concept")
+result = segment_image(model, "image.jpg", text="person")
+print(result.masks.shape, result.scores, result.boxes)
+```
+
+For interactive masks, load with `task="interactive"` and call
+`predict_masks(model, image, points=..., point_labels=...)`. Interactive
+`predicted_iou` is distinct from concept confidence `scores`; refinement uses
+`low_res_logits`. All masks are original-resolution boolean arrays.
+
+Track lexically ordered, fixed-dimension frames with a session-owned state:
+
+```python
+from mlx_one.segmentation import load_segmentation_model
+
+model = load_segmentation_model("facebook/sam3", task="video", offline=True)
+with model.video_session("frames/") as session:
+    prompt_id = session.add_prompt("person")
+    for result in session.propagate():
+        print(result.frame_index, result.object_ids, result.prompt_ids)
+```
+
+`offline=True` requires a complete cached checkpoint. Use zero-padded frame
+filenames. Python RGB iterators and local encoded-video paths are also accepted.
+For live Python frames, use `model.video_session(streaming=True)` and
+`session.process_frame(frame)`. Context exit releases session resources without
+unloading another session's shared model. SAM3 temporal memory is separate from
+the text dense/APC/block cache runtime. See the
+[model guide](src/mlx_one/models/segmentation/sam3/README.md) for prompt validation,
+corrections, cancellation, and current qualification limits.
+
 Train through the typed SFT contract:
 
 ```python
@@ -592,6 +764,9 @@ The current repository gates include:
 - Pinned real-checkpoint smoke gates for `openai/whisper-tiny` and
   `openai/whisper-large-v3-turbo`.
 - Whisper log-Mel comparison within `1e-5` against the pinned reference path.
+- SAM3 network-free prompt/export/lifecycle checks, strict pinned checkpoint
+  loading, and separately recorded 32-frame offline/streaming CPU-reference
+  fixture comparisons. Natural multi-object tracking qualification is pending.
 - Ruff, source/wheel builds, and package metadata checks.
 
 These counts describe the current development tree and will change as coverage

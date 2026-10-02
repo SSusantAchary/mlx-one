@@ -48,6 +48,9 @@ _WEIGHT_FORMATS = {
     ".npz": "npz",
 }
 _PIPELINE_MODALITIES = {
+    "image-segmentation": Modality.SEGMENTATION,
+    "video-segmentation": Modality.SEGMENTATION,
+    "mask-generation": Modality.SEGMENTATION,
     "image-text-to-text": Modality.VISION_LANGUAGE,
     "visual-question-answering": Modality.VISION_LANGUAGE,
     "document-question-answering": Modality.VISION_LANGUAGE,
@@ -72,6 +75,7 @@ _TEXT_PIPELINES = {
     "zero-shot-classification",
 }
 _NATIVE_OPERATIONS = {
+    Modality.SEGMENTATION: (Operation.VERIFY, Operation.EVALUATE, Operation.BENCHMARK),
     Modality.TEXT: (Operation.TRAIN, Operation.CONVERT, Operation.EVALUATE),
     Modality.VISION_LANGUAGE: (Operation.EVALUATE,),
     Modality.ASR: (Operation.EVALUATE,),
@@ -643,6 +647,10 @@ def _infer_modality(
             *[str(item) for item in config.get("architectures", ())],
         ]
     ).lower()
+    if str(config.get("model_type", "")) in {
+        "sam3", "sam3_tracker", "sam3_tracker_video", "sam3_video"
+    }:
+        return Modality.SEGMENTATION
     if config.get("vision_config") is not None or any(
         marker in names
         for marker in (

@@ -24,6 +24,7 @@ class Modality(str, Enum):
 
     TEXT = "text"
     VISION_LANGUAGE = "vision-language"
+    SEGMENTATION = "segmentation"
     ASR = "asr"
     TTS = "tts"
     EMBEDDING = "embedding"
