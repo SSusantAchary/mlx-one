@@ -99,6 +99,12 @@ def main() -> None:
     """Train anywhere. Prove it on Apple Silicon."""
 
 
+from mlx_one.segmentation.cli import segment_command, track_command
+
+main.add_command(segment_command)
+main.add_command(track_command)
+
+
 @main.command(help="Check host and MLX backend readiness.")
 @click.option("--json-output", "as_json", is_flag=True, help="Print the report as JSON.")
 def doctor(as_json: bool) -> None:
