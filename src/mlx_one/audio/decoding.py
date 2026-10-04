@@ -55,8 +55,7 @@ def detect_language(
     probabilities = mx.softmax(logits[mx.array(ids)], axis=-1)
     mx.eval(probabilities)
     scores = {
-        language: float(probabilities[index].item())
-        for index, language in enumerate(languages)
+        language: float(probabilities[index].item()) for index, language in enumerate(languages)
     }
     detected = max(scores, key=scores.__getitem__)
     return detected, scores
@@ -121,8 +120,7 @@ def decode_with_fallback(
             options.no_speech_threshold is not None
             and result.no_speech_prob > options.no_speech_threshold
             and (
-                options.logprob_threshold is None
-                or result.avg_logprob < options.logprob_threshold
+                options.logprob_threshold is None or result.avg_logprob < options.logprob_threshold
             )
         )
         if not needs_fallback or silent:
@@ -151,7 +149,7 @@ def decode_segment(
         tokenizer,
         language=language,
         task=task,
-        without_timestamps=False,
+        without_timestamps=options.without_timestamps,
         prompt_tokens=prompt_tokens,
     )
     eos = tokenizer.token_id("<|endoftext|>")
@@ -247,9 +245,11 @@ def _sample_sequence(
             use_cache=True,
         )
         logits = output.logits[0, -1]
-        logits = apply_logit_filters(logits, tokens, tokenizer, options, step)
         if step == 0 and "<|nospeech|>" in tokenizer.special_tokens:
-            no_speech = float(mx.softmax(logits)[tokenizer.token_id("<|nospeech|>")].item())
+            sot_index = prefix.index(tokenizer.token_id("<|startoftranscript|>"))
+            raw = output.logits[0, sot_index].astype(mx.float32)
+            no_speech = float(mx.softmax(raw)[tokenizer.token_id("<|nospeech|>")].item())
+        logits = apply_logit_filters(logits, tokens, tokenizer, options, step)
         scaled = logits if temperature == 0 else logits / temperature
         probabilities = mx.softmax(scaled, axis=-1)
         mx.eval(probabilities)
@@ -287,13 +287,15 @@ def _beam_search(
         candidates: list[tuple[list[int], list[float]]] = []
         for tokens, scores in beams:
             output = model(None, mx.array([tokens]), encoder_outputs=audio)
+            if step == 0 and "<|nospeech|>" in tokenizer.special_tokens:
+                sot_index = prefix.index(tokenizer.token_id("<|startoftranscript|>"))
+                raw = output.logits[0, sot_index].astype(mx.float32)
+                no_speech = float(mx.softmax(raw)[tokenizer.token_id("<|nospeech|>")].item())
             logits = apply_logit_filters(output.logits[0, -1], tokens, tokenizer, options, step)
             probabilities = mx.softmax(logits, axis=-1)
-            if step == 0 and "<|nospeech|>" in tokenizer.special_tokens:
-                no_speech = float(probabilities[tokenizer.token_id("<|nospeech|>")].item())
-            indices = mx.argpartition(
-                -probabilities, kth=min(width, probabilities.shape[0] - 1)
-            )[:width]
+            indices = mx.argpartition(-probabilities, kth=min(width, probabilities.shape[0] - 1))[
+                :width
+            ]
             mx.eval(probabilities, indices)
             for token in indices.tolist():
                 probability = max(float(probabilities[token].item()), 1e-20)
@@ -335,18 +337,41 @@ def apply_logit_filters(
         suppressed.update(getattr(options, "config_suppress_tokens", ()) or ())
     if step == 0 and options.suppress_blank:
         suppressed.add(tokenizer.encoder.get(" ", -1))
+        suppressed.add(tokenizer.token_id("<|endoftext|>"))
     valid = [value for value in suppressed if 0 <= value < logits.shape[0]]
     if valid:
         logits = logits.at[mx.array(valid)].add(-float("inf"))
     timestamp_begin = tokenizer.special_tokens.get("<|0.00|>")
+    if timestamp_begin is not None and options.without_timestamps:
+        return logits.at[timestamp_begin:].add(-float("inf"))
     if timestamp_begin is not None:
-        timestamps = [token for token in tokens if token >= timestamp_begin]
-        if len(timestamps) >= 2 and timestamps[-1] < timestamps[-2]:
+        # Follow the Whisper timestamp protocol (Transformers
+        # WhisperTimeStampLogitsProcessor, Apache-2.0): paired boundaries,
+        # monotonic time, initial timestamp constraint, and timestamp mass.
+        no_timestamps = tokenizer.special_tokens.get("<|notimestamps|>")
+        if no_timestamps is not None:
+            logits = logits.at[no_timestamps].add(-float("inf"))
+        sampled = tokens[-step:] if step else []
+        last_timestamp = bool(sampled and sampled[-1] >= timestamp_begin)
+        previous_timestamp = len(sampled) < 2 or sampled[-2] >= timestamp_begin
+        if last_timestamp:
+            if previous_timestamp:
+                logits = logits.at[timestamp_begin:].add(-float("inf"))
+            else:
+                eos = tokenizer.token_id("<|endoftext|>")
+                logits = logits.at[:eos].add(-float("inf"))
+        timestamps = [token for token in sampled if token >= timestamp_begin]
+        if timestamps:
+            earliest = timestamps[-1] + (0 if last_timestamp and not previous_timestamp else 1)
+            logits = logits.at[timestamp_begin:earliest].add(-float("inf"))
+        if step == 0:
             logits = logits.at[:timestamp_begin].add(-float("inf"))
         if step == 0 and options.max_initial_timestamp is not None:
             maximum = timestamp_begin + round(options.max_initial_timestamp / 0.02)
             if maximum + 1 < logits.shape[0]:
                 logits = logits.at[maximum + 1 :].add(-float("inf"))
+        if mx.logsumexp(logits[timestamp_begin:]).item() > mx.max(logits[:timestamp_begin]).item():
+            logits = logits.at[:timestamp_begin].add(-float("inf"))
     return logits
 
 
@@ -365,7 +390,8 @@ def timestamp_segments(
             if start is None:
                 start = value
             else:
-                result.append((start, value, tuple(text_tokens)))
+                if text_tokens:
+                    result.append((start, value, tuple(text_tokens)))
                 start = value
                 text_tokens = []
         else:
@@ -373,6 +399,29 @@ def timestamp_segments(
     if text_tokens:
         result.append((start or 0.0, 30.0, tuple(text_tokens)))
     return result
+
+
+def timestamp_seek_frames(tokens: tuple[int, ...], tokenizer: Any, segment_frames: int) -> int:
+    """Follow sequential Whisper's paired-boundary versus completed-chunk rule.
+
+    A lone ending timestamp completes the chunk, even when speech finishes before
+    trailing silence. Only an unfinished paired-boundary result requests another
+    window from its last closed timestamp. Always guarantee forward progress.
+    """
+
+    begin = tokenizer.special_tokens.get("<|0.00|>")
+    if begin is None or len(tokens) < 2:
+        return segment_frames
+    timestamp = [token >= begin for token in tokens]
+    boundaries = [
+        index + 1 for index in range(len(tokens) - 1) if timestamp[index] and timestamp[index + 1]
+    ]
+    single_ending = not timestamp[-2] and timestamp[-1]
+    if not boundaries or single_ending:
+        return segment_frames
+    # Timestamp ticks are 20 ms; mel frames are 10 ms.
+    consumed = (tokens[boundaries[-1] - 1] - begin) * 2
+    return min(segment_frames, max(1, consumed))
 
 
 def median_filter(values: list[list[float]], width: int) -> list[list[float]]:
@@ -441,9 +490,7 @@ def align_words(
     matrices = [cross_attentions[layer][0, head, -len(token_ids) :, :] for layer, head in heads]
     weights = mx.mean(mx.stack(matrices), axis=0)
     centered = weights - mx.mean(weights, axis=-1, keepdims=True)
-    weights = centered / (
-        mx.sqrt(mx.mean(centered**2, axis=-1, keepdims=True)) + 1e-6
-    )
+    weights = centered / (mx.sqrt(mx.mean(centered**2, axis=-1, keepdims=True)) + 1e-6)
     mx.eval(weights)
     filtered = median_filter(weights.tolist(), median_width)
     text_path, time_path = dynamic_time_warp([[-value for value in row] for row in filtered])
@@ -455,20 +502,14 @@ def align_words(
         group_start = consumed
         consumed += len(group)
         matching = [
-            time
-            for text, time in zip(text_path, time_path, strict=True)
-            if text < consumed
+            time for text, time in zip(text_path, time_path, strict=True) if text < consumed
         ]
         boundaries.append(max(matching, default=0))
         scores = token_logprobs[group_start:consumed]
-        probabilities.append(
-            math.exp(sum(scores) / len(scores)) if scores else 0.0
-        )
+        probabilities.append(math.exp(sum(scores) / len(scores)) if scores else 0.0)
     result = []
     previous = 0
-    for word, boundary, probability in zip(
-        words, boundaries, probabilities, strict=True
-    ):
+    for word, boundary, probability in zip(words, boundaries, probabilities, strict=True):
         result.append(
             TranscriptionWord(
                 word=word,

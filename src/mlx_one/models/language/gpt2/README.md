@@ -12,6 +12,29 @@ caches. Configuration profiles cover 124M, 355M, 774M, and 1.5B variants.
 124M checkpoint candidate. Architecture and synthetic execution tests exist;
 this guide does not establish real-checkpoint, performance, or quality qualification.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs
+    ↓
+Token embeddings + learned absolute position embeddings
+    ↓
+┌──────────────────── Decoder block × L ─────────────────────┐
+│ LayerNorm → causal multi-head attention + KV cache → add   │
+│ LayerNorm → linear → GELU → linear                 → add   │
+└────────────────────────────────────────────────────────────┘
+    ↓
+Final LayerNorm → tied vocabulary projection → next-token logits
+```
+
+## Papers and upstream references
+
+Paper: [Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf).
+
 ## Installation and assets
 
 Use Python 3.10+ and an Apple Silicon Mac with working Metal for execution.

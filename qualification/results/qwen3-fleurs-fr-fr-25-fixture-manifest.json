@@ -1,0 +1,261 @@
+{
+  "dataset": "google/fleurs",
+  "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "source": "parquet-data/fr_fr/test-00000-of-00001.parquet",
+  "source_sha256": "99a08ff00edbc7b6f040e23b33e49bc4a1fce38f364d50c603227d612fd797ef",
+  "records": [
+    {
+      "id": "fr_fr:1660:440",
+      "audio": "clip-000.wav",
+      "audio_sha256": "0c5d9c9461baf95d294fad94d7444c103fe2c55668bee21a0bc9fb34e4bc2593",
+      "reference": "le romantisme pr\u00e9sentait un important \u00e9l\u00e9ment de d\u00e9terminisme culturel tir\u00e9 d'\u00e9crivains tels que goethe fichte et schlegel",
+      "anchor": false,
+      "language": "French",
+      "source_row": 440,
+      "publisher_audio_path": "4115181558875922783.wav"
+    },
+    {
+      "id": "fr_fr:1660:644",
+      "audio": "clip-001.wav",
+      "audio_sha256": "7d48a8b87ae302aec78f294a16aec1750136e316a7628d30b5ac0bfa5ad31999",
+      "reference": "le romantisme pr\u00e9sentait un important \u00e9l\u00e9ment de d\u00e9terminisme culturel tir\u00e9 d'\u00e9crivains tels que goethe fichte et schlegel",
+      "anchor": false,
+      "language": "French",
+      "source_row": 644,
+      "publisher_audio_path": "925292890493340703.wav"
+    },
+    {
+      "id": "fr_fr:1660:647",
+      "audio": "clip-002.wav",
+      "audio_sha256": "a3ecc37c6cee3fc96938dbd36a6c066b4d394e782c686eb31b1b5c647763321c",
+      "reference": "le romantisme pr\u00e9sentait un important \u00e9l\u00e9ment de d\u00e9terminisme culturel tir\u00e9 d'\u00e9crivains tels que goethe fichte et schlegel",
+      "anchor": false,
+      "language": "French",
+      "source_row": 647,
+      "publisher_audio_path": "9287631375827907640.wav"
+    },
+    {
+      "id": "fr_fr:1661:215",
+      "audio": "clip-003.wav",
+      "audio_sha256": "9501c16dc4654f662f477441b1aa89cf1eb2ac2c6ab17f6dc2f932c17a865ffc",
+      "reference": "il n'a pas chiffr\u00e9 ces r\u00e9ductions disant qu'elles seront bas\u00e9es sur la production \u00e9conomique chinoise",
+      "anchor": false,
+      "language": "French",
+      "source_row": 215,
+      "publisher_audio_path": "15379055304038386900.wav"
+    },
+    {
+      "id": "fr_fr:1661:423",
+      "audio": "clip-004.wav",
+      "audio_sha256": "f74996fab1adbc84c0d8c0d0447d503bd3559f2fc9cf65f7d2270a176020e3ff",
+      "reference": "il n'a pas chiffr\u00e9 ces r\u00e9ductions disant qu'elles seront bas\u00e9es sur la production \u00e9conomique chinoise",
+      "anchor": false,
+      "language": "French",
+      "source_row": 423,
+      "publisher_audio_path": "3691404159043158686.wav"
+    },
+    {
+      "id": "fr_fr:1662:295",
+      "audio": "clip-005.wav",
+      "audio_sha256": "8b77e2372d71d0da20d9960b3b7850ca857f111cf6757b76c0050294e99d681a",
+      "reference": "les alliages sont essentiellement un m\u00e9lange de deux m\u00e9taux ou plus n'oubliez pas que le tableau p\u00e9riodique comporte de nombreux \u00e9l\u00e9ments",
+      "anchor": false,
+      "language": "French",
+      "source_row": 295,
+      "publisher_audio_path": "17087096902724341712.wav"
+    },
+    {
+      "id": "fr_fr:1662:638",
+      "audio": "clip-006.wav",
+      "audio_sha256": "d8f7dc960ec8993ce0b331bd986c65c974982179b816f9f92d7310d0b8da216a",
+      "reference": "les alliages sont essentiellement un m\u00e9lange de deux m\u00e9taux ou plus n'oubliez pas que le tableau p\u00e9riodique comporte de nombreux \u00e9l\u00e9ments",
+      "anchor": false,
+      "language": "French",
+      "source_row": 638,
+      "publisher_audio_path": "9182067139125495353.wav"
+    },
+    {
+      "id": "fr_fr:1663:379",
+      "audio": "clip-007.wav",
+      "audio_sha256": "c1fac65101489e0ed68f75628f1891c994735b516368c0ae94e173b66786147d",
+      "reference": "vall\u00e9e de cocham\u00f3 \u2013 la destination d'excellence pour l'escalade au chili connue comme le yosemite d'am\u00e9rique du sud avec de nombreuses grandes parois et falaises granitiques diff\u00e9rentes",
+      "anchor": false,
+      "language": "French",
+      "source_row": 379,
+      "publisher_audio_path": "2442077088303431914.wav"
+    },
+    {
+      "id": "fr_fr:1663:493",
+      "audio": "clip-008.wav",
+      "audio_sha256": "7d244f6f23bc9062e89581b555647db6aa13004be05a117d39cac76fe4a4c8a2",
+      "reference": "vall\u00e9e de cocham\u00f3 \u2013 la destination d'excellence pour l'escalade au chili connue comme le yosemite d'am\u00e9rique du sud avec de nombreuses grandes parois et falaises granitiques diff\u00e9rentes",
+      "anchor": false,
+      "language": "French",
+      "source_row": 493,
+      "publisher_audio_path": "5451505813889356389.wav"
+    },
+    {
+      "id": "fr_fr:1664:109",
+      "audio": "clip-009.wav",
+      "audio_sha256": "c7ba557db5270186a456c984bc0177fb2e6f3b5e058ce46aa2e56858df407161",
+      "reference": "m\u00e9langez les deux poudres s\u00e8ches ensemble puis avec les mains propres et humides pressez-les en une boule",
+      "anchor": false,
+      "language": "French",
+      "source_row": 109,
+      "publisher_audio_path": "12890960815994116340.wav"
+    },
+    {
+      "id": "fr_fr:1664:208",
+      "audio": "clip-010.wav",
+      "audio_sha256": "162c28970c7b1b84e6257e567393894f5115a648581a3f3176edd14a5052e056",
+      "reference": "m\u00e9langez les deux poudres s\u00e8ches ensemble puis avec les mains propres et humides pressez-les en une boule",
+      "anchor": false,
+      "language": "French",
+      "source_row": 208,
+      "publisher_audio_path": "15187989767152462233.wav"
+    },
+    {
+      "id": "fr_fr:1665:262",
+      "audio": "clip-011.wav",
+      "audio_sha256": "ac5d312b74d9d25a824d93dc8d0531e32ab8b02c6a38a2680f70b046e39ff973",
+      "reference": "d'apr\u00e8s la fuite le document portera sur le diff\u00e9rend \u00e0 la fronti\u00e8re que la palestine revendique sur la base des fronti\u00e8res existantes avant la guerre du moyen-orient de 1967",
+      "anchor": false,
+      "language": "French",
+      "source_row": 262,
+      "publisher_audio_path": "16264538655325299705.wav"
+    },
+    {
+      "id": "fr_fr:1666:301",
+      "audio": "clip-012.wav",
+      "audio_sha256": "b94ad2a381b1bd7f2d2d79673907b0e7187ae98b0a26afbe2d4b0a4e22a3353a",
+      "reference": "vous pouvez \u00e9galement avoir recours aux conseils d'autres gouvernements que le v\u00f4tre mais leurs conseils sont adapt\u00e9s \u00e0 leurs citoyens",
+      "anchor": false,
+      "language": "French",
+      "source_row": 301,
+      "publisher_audio_path": "17290753542296190049.wav"
+    },
+    {
+      "id": "fr_fr:1666:418",
+      "audio": "clip-013.wav",
+      "audio_sha256": "b11ebfdedf969b054a7b13fd18706004510d0cbb1892cec8c8dd23876be04eba",
+      "reference": "vous pouvez \u00e9galement avoir recours aux conseils d'autres gouvernements que le v\u00f4tre mais leurs conseils sont adapt\u00e9s \u00e0 leurs citoyens",
+      "anchor": false,
+      "language": "French",
+      "source_row": 418,
+      "publisher_audio_path": "3565117049425388243.wav"
+    },
+    {
+      "id": "fr_fr:1666:514",
+      "audio": "clip-014.wav",
+      "audio_sha256": "b31869f7bd3bc3673d664728e78a6138d2c88498e7c2701b8c81f317e6ee99f0",
+      "reference": "vous pouvez \u00e9galement avoir recours aux conseils d'autres gouvernements que le v\u00f4tre mais leurs conseils sont adapt\u00e9s \u00e0 leurs citoyens",
+      "anchor": false,
+      "language": "French",
+      "source_row": 514,
+      "publisher_audio_path": "5871257984177192095.wav"
+    },
+    {
+      "id": "fr_fr:1667:91",
+      "audio": "clip-015.wav",
+      "audio_sha256": "f7ed989838d985cbd5a3164f4e58712329b9ad390a24f40439ac807ee307e773",
+      "reference": "de mani\u00e8re g\u00e9n\u00e9rale deux comportements peuvent \u00e9merger lorsqu'un manager devient le chef d'anciens coll\u00e8gues. d'une des extr\u00e9mit\u00e9s du spectre \u00e9tant d'essayer de rester \u00ab\u00a0le bon copain\u00a0\u00bb ou la bonne copine",
+      "anchor": false,
+      "language": "French",
+      "source_row": 91,
+      "publisher_audio_path": "12405478354284816354.wav"
+    },
+    {
+      "id": "fr_fr:1667:630",
+      "audio": "clip-016.wav",
+      "audio_sha256": "6c824f6223c5d687d84a003607adf89cf435fad9137ec2fd1ff85bd80bcd1a82",
+      "reference": "de mani\u00e8re g\u00e9n\u00e9rale deux comportements peuvent \u00e9merger lorsqu'un manager devient le chef d'anciens coll\u00e8gues. d'une des extr\u00e9mit\u00e9s du spectre \u00e9tant d'essayer de rester \u00ab\u00a0le bon copain\u00a0\u00bb ou la bonne copine",
+      "anchor": false,
+      "language": "French",
+      "source_row": 630,
+      "publisher_audio_path": "8908834532261426776.wav"
+    },
+    {
+      "id": "fr_fr:1668:280",
+      "audio": "clip-017.wav",
+      "audio_sha256": "d12cfb142501a9897103af94cebcc544e5ab04b50d217ec8922b44720d11e36d",
+      "reference": "il peut \u00eatre avantageux de se procurer une wild card qui donne acc\u00e8s \u00e0 certains parcs d'afrique du sud ainsi qu'\u00e0 tous les parcs nationaux sud-africains",
+      "anchor": false,
+      "language": "French",
+      "source_row": 280,
+      "publisher_audio_path": "16826340613779643957.wav"
+    },
+    {
+      "id": "fr_fr:1669:320",
+      "audio": "clip-018.wav",
+      "audio_sha256": "377d8c39edf0b92edc2cedada0967c6a7004b640899eca73970f59aded26e185",
+      "reference": "chandra shekhar solanki commissaire de police a d\u00e9clar\u00e9 que les personnes accus\u00e9es avaient le visage dissimul\u00e9 lorsqu'elles ont comparu devant le tribunal",
+      "anchor": false,
+      "language": "French",
+      "source_row": 320,
+      "publisher_audio_path": "17562643601014102283.wav"
+    },
+    {
+      "id": "fr_fr:1670:396",
+      "audio": "clip-019.wav",
+      "audio_sha256": "0f7de3e8a446f13f8e496212f8ac1c28f54dcae616d1873690b5571572665e71",
+      "reference": "\u00ab\u00a0leur comportement thermique n\u2019est pas aussi stable que celui des grandes grottes de la plan\u00e8te qui maintiennent une temp\u00e9rature constante mais ils se ressemblent en ce qu\u2019ils sont des trous profonds dans la terre\u00a0\u00bb selon glen cushing membre de l\u2019\u00e9quipage de l'usgs centre am\u00e9ricain d\u2019\u00e9tudes g\u00e9ologiques et du personnel de l\u2019universit\u00e9 d\u2019arizona du nord situ\u00e9 \u00e0 flagstaff en arizona",
+      "anchor": false,
+      "language": "French",
+      "source_row": 396,
+      "publisher_audio_path": "2717766324364632627.wav"
+    },
+    {
+      "id": "fr_fr:1670:484",
+      "audio": "clip-020.wav",
+      "audio_sha256": "76c7e380e93aa85c9dd7292b44e8b8b58bb29eea7c01f51a1c59c3cfd1ffe0f0",
+      "reference": "\u00ab\u00a0leur comportement thermique n\u2019est pas aussi stable que celui des grandes grottes de la plan\u00e8te qui maintiennent une temp\u00e9rature constante mais ils se ressemblent en ce qu\u2019ils sont des trous profonds dans la terre\u00a0\u00bb selon glen cushing membre de l\u2019\u00e9quipage de l'usgs centre am\u00e9ricain d\u2019\u00e9tudes g\u00e9ologiques et du personnel de l\u2019universit\u00e9 d\u2019arizona du nord situ\u00e9 \u00e0 flagstaff en arizona",
+      "anchor": false,
+      "language": "French",
+      "source_row": 484,
+      "publisher_audio_path": "5161983009398441910.wav"
+    },
+    {
+      "id": "fr_fr:1671:196",
+      "audio": "clip-021.wav",
+      "audio_sha256": "c566c6e42f5c331a73429c5639b505dd905db38929a3bdd0c601ae4ef0ed7f85",
+      "reference": "le congr\u00e8s a lanc\u00e9 le financement de l'initiative contre la pornographie au cours de l'exercice 2005 tout en pr\u00e9cisant que le fbi s'appr\u00eatait \u00e0 affecter dix agents \u00e0 la lutte contre la pornographie adulte",
+      "anchor": false,
+      "language": "French",
+      "source_row": 196,
+      "publisher_audio_path": "14882051599287594401.wav"
+    },
+    {
+      "id": "fr_fr:1671:220",
+      "audio": "clip-022.wav",
+      "audio_sha256": "233bb1f532ca00b6fbdc6b99f7e06df9952535ace976c104dde4e5663f136d54",
+      "reference": "le congr\u00e8s a lanc\u00e9 le financement de l'initiative contre la pornographie au cours de l'exercice 2005 tout en pr\u00e9cisant que le fbi s'appr\u00eatait \u00e0 affecter dix agents \u00e0 la lutte contre la pornographie adulte",
+      "anchor": false,
+      "language": "French",
+      "source_row": 220,
+      "publisher_audio_path": "155000780886023197.wav"
+    },
+    {
+      "id": "fr_fr:1671:468",
+      "audio": "clip-023.wav",
+      "audio_sha256": "89cc719a31818a0971facd86d30b6abee092d391a8431cbf239d823d532ec178",
+      "reference": "le congr\u00e8s a lanc\u00e9 le financement de l'initiative contre la pornographie au cours de l'exercice 2005 tout en pr\u00e9cisant que le fbi s'appr\u00eatait \u00e0 affecter dix agents \u00e0 la lutte contre la pornographie adulte",
+      "anchor": false,
+      "language": "French",
+      "source_row": 468,
+      "publisher_audio_path": "4695180606587908182.wav"
+    },
+    {
+      "id": "fr_fr:1672:366",
+      "audio": "clip-024.wav",
+      "audio_sha256": "bd432163f7022f84f67bdcacfd5a5c04c89a72f2b58085f349ab331657c3c01c",
+      "reference": "\u00e9vitez de ne pas laisser le tissu surchauffer ce qui peut causer son r\u00e9tr\u00e9cissement ou dans les cas extr\u00eames le br\u00fbler",
+      "anchor": false,
+      "language": "French",
+      "source_row": 366,
+      "publisher_audio_path": "2176479717063502140.wav"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "language": "French",
+  "selection": "first count test recordings sorted by (sentence ID, source row); no deduplication"
+}

@@ -10,7 +10,7 @@ from pathlib import Path
 import click
 
 from mlx_one import __version__
-from mlx_one.audio import WhisperDecodeOptions, transcribe
+from mlx_one.audio import ASRDecodeOptions, QwenASROptions, WhisperDecodeOptions, transcribe
 from mlx_one.audio.evaluation import (
     ASR_PROFILES,
     ASREvaluationError,
@@ -182,20 +182,26 @@ def hardware_detect(as_json: bool) -> None:
     click.echo(result.to_json() if as_json else format_hardware_profile(result))
 
 
-@main.command("transcribe", help="Transcribe audio with native Whisper.")
+@main.command("transcribe", help="Transcribe audio with a native audio model.")
 @click.argument("model")
 @click.argument("audio", type=click.Path(exists=True, dir_okay=False, path_type=str))
 @click.option("--revision", help="Hugging Face branch, tag, or commit.")
 @click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
 @click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
-@click.option("--language", help="Language code; omit for automatic detection.")
+@click.option("--language", help="Whisper language code or Qwen language name (e.g. English).")
 @click.option("--task", type=click.Choice(["transcribe", "translate"]), default="transcribe")
 @click.option("--word-timestamps", is_flag=True)
-@click.option("--beam-size", type=click.IntRange(min=1), default=5, show_default=True)
-@click.option("--best-of", type=click.IntRange(min=1), default=5, show_default=True)
-@click.option("--temperature", "temperatures", multiple=True, type=click.FloatRange(min=0))
-@click.option("--seed", type=int, default=0, show_default=True)
-@click.option("--initial-prompt")
+@click.option("--beam-size", type=click.IntRange(min=1), default=5, show_default=True,
+              help="Whisper only; omitted flags use the model family's defaults.")
+@click.option("--best-of", type=click.IntRange(min=1), default=5, show_default=True,
+              help="Whisper only.")
+@click.option("--temperature", "temperatures", multiple=True, type=click.FloatRange(min=0),
+              help="Whisper only.")
+@click.option("--seed", type=int, default=0, show_default=True, help="Whisper only.")
+@click.option("--initial-prompt", help="Whisper only.")
+@click.option("--context", default="", help="Qwen ASR system context only.")
+@click.option("--max-tokens", type=click.IntRange(min=1), help="Explicit decoding budget; no silent truncation.")
+@click.option("--stream", is_flag=True, help="Qwen bounded accumulated utterance; JSON events are full hypotheses.")
 @click.option("--json-output", "as_json", is_flag=True)
 def transcribe_command(
     model: str,
@@ -211,16 +217,54 @@ def transcribe_command(
     temperatures: tuple[float, ...],
     seed: int,
     initial_prompt: str | None,
+    context: str,
+    max_tokens: int | None,
+    stream: bool,
     as_json: bool,
 ) -> None:
-    options = WhisperDecodeOptions(
-        temperatures=temperatures or WhisperDecodeOptions().temperatures,
-        beam_size=beam_size,
-        best_of=best_of,
-        seed=seed,
-        initial_prompt=initial_prompt,
+    # Omitted decoding flags select family defaults. Whisper keeps its original
+    # beam/fallback defaults; non-Whisper models never inherit them silently.
+    from click.core import ParameterSource
+
+    ctx = click.get_current_context()
+    explicit_decode = any(
+        ctx.get_parameter_source(name) != ParameterSource.DEFAULT
+        for name in ("temperatures", "beam_size", "best_of", "seed", "initial_prompt")
+    )
+    options = (
+        WhisperDecodeOptions(
+            temperatures=temperatures or WhisperDecodeOptions().temperatures,
+            beam_size=beam_size,
+            best_of=best_of,
+            seed=seed,
+            initial_prompt=initial_prompt,
+            max_tokens=max_tokens,
+        )
+        if explicit_decode
+        else None
     )
     try:
+        if ctx.get_parameter_source("context") != ParameterSource.DEFAULT:
+            if explicit_decode:
+                raise ValueError("Qwen context cannot be combined with Whisper decoding flags")
+            options = QwenASROptions(max_tokens=max_tokens, context=context)
+        elif max_tokens is not None and options is None:
+            options = ASRDecodeOptions(max_tokens=max_tokens)
+        if stream:
+            if explicit_decode or task != "transcribe" or word_timestamps:
+                raise ValueError("streaming does not support Whisper decoding, translation, or word timestamps")
+            from mlx_one.audio import open_audio_stream
+            from mlx_one.audio.streaming import decoded_pcm_chunks
+
+            with open_audio_stream(model, sample_rate=16000, language=language, options=options,
+                                   revision=revision, offline=offline, cache_dir=cache_dir) as session:
+                with decoded_pcm_chunks(audio) as chunks:
+                    for chunk in chunks:
+                        for event in session.push(chunk):
+                            click.echo(event.to_json() if as_json else event.text)
+                    final = session.finish()
+                    click.echo(final.to_json() if as_json else final.text)
+            return
         result = transcribe(
             model,
             audio,
@@ -235,6 +279,31 @@ def transcribe_command(
     except (OSError, RuntimeError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(result.to_json() if as_json else result.text)
+
+
+@main.command("align", help="Align known text to audio using the native Qwen ForcedAligner.")
+@click.argument("model")
+@click.argument("audio", type=click.Path(exists=True, dir_okay=False, path_type=str))
+@click.option("--text-file", required=True, type=click.Path(exists=True, dir_okay=False, path_type=Path))
+@click.option("--language", required=True, help="Checkpoint language name, e.g. English.")
+@click.option("--output", required=True, type=click.Path(dir_okay=False, path_type=Path))
+@click.option("--revision")
+@click.option("--offline", is_flag=True)
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+def align_command(model: str, audio: str, text_file: Path, language: str, output: Path,
+                  revision: str | None, offline: bool, cache_dir: str | None) -> None:
+    from mlx_one.audio import align_audio
+
+    try:
+        if output.exists():
+            raise ValueError("alignment output already exists; refusing overwrite")
+        result = align_audio(model, audio, text_file.read_text(encoding="utf-8"), language=language,
+                             revision=revision, offline=offline, cache_dir=cache_dir)
+        with output.open("x", encoding="utf-8") as destination:
+            destination.write(result.to_json() + "\n")
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(str(output))
 
 
 @main.command("generate", help="Generate text with a native model family.")

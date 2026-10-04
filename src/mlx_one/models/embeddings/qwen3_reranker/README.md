@@ -11,6 +11,36 @@ The implemented profile/candidate is
 Prompt construction, scoring, probabilities, and stable ranking have synthetic
 tests; real-checkpoint quality, parity, and hardware performance remain unqualified.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Instruction + query + document → official pair prompt → token IDs
+                                  ↓
+               Qwen3 dense causal decoder (GQA, Q/K norm, RoPE)
+                                  ↓
+                      Final decision-position hidden state
+                                  ↓
+                    Vocabulary projection → [no, yes] logits
+                                  ↓
+┌──────────────────────── Pair scoring ──────────────────────────┐
+│ Raw relevance = yes logit - no logit                           │
+│ Probability = softmax([no, yes])[yes]                          │
+│ Stable sort / top-k → original document indexes                │
+└────────────────────────────────────────────────────────────────┘
+```
+
+## Papers and upstream references
+
+Paper: [Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models](https://arxiv.org/abs/2506.05176).
+Backbone: [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388).
+
+The model jointly reads each query/document pair. It returns relevance scores,
+not sentence vectors or generated answers.
+
 ## Installation and assets
 
 Install `python -m pip install -e .` from the repository root using Python 3.10+.

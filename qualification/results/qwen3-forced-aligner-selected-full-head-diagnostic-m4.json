@@ -1,0 +1,2704 @@
+{
+  "scope": "diagnostic selected/full head comparison on previously failing clips only",
+  "model": "Qwen/Qwen3-ForcedAligner-0.6B",
+  "revision": "c7cbfc2048c462b0d63a45797104fc9db3ad62b7",
+  "reference_sha256": "9aad06acfdd998c913e37d5ef3b5ad951de19e6357903fba36f747133d3e6f29",
+  "comparison_sha256": "d87b2bec06756e2977575ad5d8bc3ab2dae80a7685535d428714e52a0bdb1da9",
+  "manifest_sha256": "5fc089180becc98eb44d7ae45b7d92471b404d163d7ea3a68280fed2f63e0ff2",
+  "reports": [
+    {
+      "id": "1089-134686-0005",
+      "sequence_tokens": 213,
+      "timestamp_tokens": 44,
+      "maximum_logit_difference": 0.0,
+      "selected": {
+        "timestamp_classes": [
+          5,
+          6,
+          6,
+          12,
+          12,
+          15,
+          15,
+          21,
+          21,
+          24,
+          24,
+          25,
+          24,
+          32,
+          32,
+          33,
+          33,
+          40,
+          45,
+          46,
+          46,
+          51,
+          51,
+          52,
+          52,
+          59,
+          59,
+          66,
+          66,
+          70,
+          70,
+          71,
+          71,
+          77,
+          77,
+          84,
+          84,
+          95,
+          99,
+          104,
+          104,
+          107,
+          107,
+          116
+        ],
+        "units": [
+          {
+            "text": "THE",
+            "start": 0.4,
+            "end": 0.48
+          },
+          {
+            "text": "MUSIC",
+            "start": 0.48,
+            "end": 0.96
+          },
+          {
+            "text": "CAME",
+            "start": 0.96,
+            "end": 1.2
+          },
+          {
+            "text": "NEARER",
+            "start": 1.2,
+            "end": 1.68
+          },
+          {
+            "text": "AND",
+            "start": 1.68,
+            "end": 1.92
+          },
+          {
+            "text": "HE",
+            "start": 1.92,
+            "end": 2.0
+          },
+          {
+            "text": "RECALLED",
+            "start": 2.0,
+            "end": 2.56
+          },
+          {
+            "text": "THE",
+            "start": 2.56,
+            "end": 2.64
+          },
+          {
+            "text": "WORDS",
+            "start": 2.64,
+            "end": 3.2
+          },
+          {
+            "text": "THE",
+            "start": 3.6,
+            "end": 3.68
+          },
+          {
+            "text": "WORDS",
+            "start": 3.68,
+            "end": 4.08
+          },
+          {
+            "text": "OF",
+            "start": 4.08,
+            "end": 4.16
+          },
+          {
+            "text": "SHELLEY'S",
+            "start": 4.16,
+            "end": 4.72
+          },
+          {
+            "text": "FRAGMENT",
+            "start": 4.72,
+            "end": 5.28
+          },
+          {
+            "text": "UPON",
+            "start": 5.28,
+            "end": 5.6
+          },
+          {
+            "text": "THE",
+            "start": 5.6,
+            "end": 5.68
+          },
+          {
+            "text": "MOON",
+            "start": 5.68,
+            "end": 6.16
+          },
+          {
+            "text": "WANDERING",
+            "start": 6.16,
+            "end": 6.72
+          },
+          {
+            "text": "COMPANIONLESS",
+            "start": 6.72,
+            "end": 7.6
+          },
+          {
+            "text": "PALE",
+            "start": 7.92,
+            "end": 8.32
+          },
+          {
+            "text": "FOR",
+            "start": 8.32,
+            "end": 8.56
+          },
+          {
+            "text": "WEARINESS",
+            "start": 8.56,
+            "end": 9.28
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.3199999999999994,
+        "within_one_tick": false
+      },
+      "full": {
+        "timestamp_classes": [
+          5,
+          6,
+          6,
+          12,
+          12,
+          15,
+          15,
+          21,
+          21,
+          24,
+          24,
+          25,
+          24,
+          32,
+          32,
+          33,
+          33,
+          40,
+          45,
+          46,
+          46,
+          51,
+          51,
+          52,
+          52,
+          59,
+          59,
+          66,
+          66,
+          70,
+          70,
+          71,
+          71,
+          77,
+          77,
+          84,
+          84,
+          95,
+          99,
+          104,
+          104,
+          107,
+          107,
+          116
+        ],
+        "units": [
+          {
+            "text": "THE",
+            "start": 0.4,
+            "end": 0.48
+          },
+          {
+            "text": "MUSIC",
+            "start": 0.48,
+            "end": 0.96
+          },
+          {
+            "text": "CAME",
+            "start": 0.96,
+            "end": 1.2
+          },
+          {
+            "text": "NEARER",
+            "start": 1.2,
+            "end": 1.68
+          },
+          {
+            "text": "AND",
+            "start": 1.68,
+            "end": 1.92
+          },
+          {
+            "text": "HE",
+            "start": 1.92,
+            "end": 2.0
+          },
+          {
+            "text": "RECALLED",
+            "start": 2.0,
+            "end": 2.56
+          },
+          {
+            "text": "THE",
+            "start": 2.56,
+            "end": 2.64
+          },
+          {
+            "text": "WORDS",
+            "start": 2.64,
+            "end": 3.2
+          },
+          {
+            "text": "THE",
+            "start": 3.6,
+            "end": 3.68
+          },
+          {
+            "text": "WORDS",
+            "start": 3.68,
+            "end": 4.08
+          },
+          {
+            "text": "OF",
+            "start": 4.08,
+            "end": 4.16
+          },
+          {
+            "text": "SHELLEY'S",
+            "start": 4.16,
+            "end": 4.72
+          },
+          {
+            "text": "FRAGMENT",
+            "start": 4.72,
+            "end": 5.28
+          },
+          {
+            "text": "UPON",
+            "start": 5.28,
+            "end": 5.6
+          },
+          {
+            "text": "THE",
+            "start": 5.6,
+            "end": 5.68
+          },
+          {
+            "text": "MOON",
+            "start": 5.68,
+            "end": 6.16
+          },
+          {
+            "text": "WANDERING",
+            "start": 6.16,
+            "end": 6.72
+          },
+          {
+            "text": "COMPANIONLESS",
+            "start": 6.72,
+            "end": 7.6
+          },
+          {
+            "text": "PALE",
+            "start": 7.92,
+            "end": 8.32
+          },
+          {
+            "text": "FOR",
+            "start": 8.32,
+            "end": 8.56
+          },
+          {
+            "text": "WEARINESS",
+            "start": 8.56,
+            "end": 9.28
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.3199999999999994,
+        "within_one_tick": false
+      }
+    },
+    {
+      "id": "1089-134686-0018",
+      "sequence_tokens": 362,
+      "timestamp_tokens": 82,
+      "maximum_logit_difference": 0.0,
+      "selected": {
+        "timestamp_classes": [
+          7,
+          8,
+          8,
+          10,
+          10,
+          18,
+          18,
+          22,
+          26,
+          22,
+          18,
+          22,
+          29,
+          35,
+          35,
+          36,
+          37,
+          42,
+          42,
+          47,
+          48,
+          50,
+          50,
+          57,
+          57,
+          58,
+          60,
+          61,
+          61,
+          63,
+          64,
+          68,
+          71,
+          73,
+          73,
+          77,
+          77,
+          84,
+          84,
+          86,
+          86,
+          86,
+          86,
+          94,
+          94,
+          95,
+          95,
+          96,
+          96,
+          102,
+          105,
+          108,
+          108,
+          117,
+          117,
+          121,
+          121,
+          128,
+          135,
+          138,
+          140,
+          144,
+          144,
+          146,
+          146,
+          152,
+          152,
+          154,
+          154,
+          160,
+          160,
+          162,
+          162,
+          164,
+          164,
+          171,
+          171,
+          174,
+          174,
+          178,
+          178,
+          190
+        ],
+        "units": [
+          {
+            "text": "IT",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "WAS",
+            "start": 0.64,
+            "end": 0.8
+          },
+          {
+            "text": "STRANGE",
+            "start": 0.8,
+            "end": 1.44
+          },
+          {
+            "text": "TOO",
+            "start": 1.44,
+            "end": 1.76
+          },
+          {
+            "text": "THAT",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "HE",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "FOUND",
+            "start": 2.32,
+            "end": 2.8
+          },
+          {
+            "text": "AN",
+            "start": 2.8,
+            "end": 2.88
+          },
+          {
+            "text": "ARID",
+            "start": 2.96,
+            "end": 3.36
+          },
+          {
+            "text": "PLEASURE",
+            "start": 3.36,
+            "end": 3.76
+          },
+          {
+            "text": "IN",
+            "start": 3.84,
+            "end": 4.0
+          },
+          {
+            "text": "FOLLOWING",
+            "start": 4.0,
+            "end": 4.56
+          },
+          {
+            "text": "UP",
+            "start": 4.56,
+            "end": 4.64
+          },
+          {
+            "text": "TO",
+            "start": 4.8,
+            "end": 4.88
+          },
+          {
+            "text": "THE",
+            "start": 4.88,
+            "end": 5.04
+          },
+          {
+            "text": "END",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "text": "THE",
+            "start": 5.68,
+            "end": 5.84
+          },
+          {
+            "text": "RIGID",
+            "start": 5.84,
+            "end": 6.16
+          },
+          {
+            "text": "LINES",
+            "start": 6.16,
+            "end": 6.72
+          },
+          {
+            "text": "OF",
+            "start": 6.72,
+            "end": 6.88
+          },
+          {
+            "text": "THE",
+            "start": 6.88,
+            "end": 6.88
+          },
+          {
+            "text": "DOCTRINES",
+            "start": 6.88,
+            "end": 7.52
+          },
+          {
+            "text": "OF",
+            "start": 7.52,
+            "end": 7.6
+          },
+          {
+            "text": "THE",
+            "start": 7.6,
+            "end": 7.68
+          },
+          {
+            "text": "CHURCH",
+            "start": 7.68,
+            "end": 8.16
+          },
+          {
+            "text": "AND",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "text": "PENETRATING",
+            "start": 8.64,
+            "end": 9.36
+          },
+          {
+            "text": "INTO",
+            "start": 9.36,
+            "end": 9.68
+          },
+          {
+            "text": "OBSCURE",
+            "start": 9.68,
+            "end": 10.24
+          },
+          {
+            "text": "SILENCES",
+            "start": 10.8,
+            "end": 11.04
+          },
+          {
+            "text": "ONLY",
+            "start": 11.2,
+            "end": 11.52
+          },
+          {
+            "text": "TO",
+            "start": 11.52,
+            "end": 11.68
+          },
+          {
+            "text": "HEAR",
+            "start": 11.68,
+            "end": 12.16
+          },
+          {
+            "text": "AND",
+            "start": 12.16,
+            "end": 12.32
+          },
+          {
+            "text": "FEEL",
+            "start": 12.32,
+            "end": 12.8
+          },
+          {
+            "text": "THE",
+            "start": 12.8,
+            "end": 12.96
+          },
+          {
+            "text": "MORE",
+            "start": 12.96,
+            "end": 13.12
+          },
+          {
+            "text": "DEEPLY",
+            "start": 13.12,
+            "end": 13.68
+          },
+          {
+            "text": "HIS",
+            "start": 13.68,
+            "end": 13.92
+          },
+          {
+            "text": "OWN",
+            "start": 13.92,
+            "end": 14.24
+          },
+          {
+            "text": "CONDEMNATION",
+            "start": 14.24,
+            "end": 15.2
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.4800000000000004,
+        "within_one_tick": false
+      },
+      "full": {
+        "timestamp_classes": [
+          7,
+          8,
+          8,
+          10,
+          10,
+          18,
+          18,
+          22,
+          26,
+          22,
+          18,
+          22,
+          29,
+          35,
+          35,
+          36,
+          37,
+          42,
+          42,
+          47,
+          48,
+          50,
+          50,
+          57,
+          57,
+          58,
+          60,
+          61,
+          61,
+          63,
+          64,
+          68,
+          71,
+          73,
+          73,
+          77,
+          77,
+          84,
+          84,
+          86,
+          86,
+          86,
+          86,
+          94,
+          94,
+          95,
+          95,
+          96,
+          96,
+          102,
+          105,
+          108,
+          108,
+          117,
+          117,
+          121,
+          121,
+          128,
+          135,
+          138,
+          140,
+          144,
+          144,
+          146,
+          146,
+          152,
+          152,
+          154,
+          154,
+          160,
+          160,
+          162,
+          162,
+          164,
+          164,
+          171,
+          171,
+          174,
+          174,
+          178,
+          178,
+          190
+        ],
+        "units": [
+          {
+            "text": "IT",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "WAS",
+            "start": 0.64,
+            "end": 0.8
+          },
+          {
+            "text": "STRANGE",
+            "start": 0.8,
+            "end": 1.44
+          },
+          {
+            "text": "TOO",
+            "start": 1.44,
+            "end": 1.76
+          },
+          {
+            "text": "THAT",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "HE",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "FOUND",
+            "start": 2.32,
+            "end": 2.8
+          },
+          {
+            "text": "AN",
+            "start": 2.8,
+            "end": 2.88
+          },
+          {
+            "text": "ARID",
+            "start": 2.96,
+            "end": 3.36
+          },
+          {
+            "text": "PLEASURE",
+            "start": 3.36,
+            "end": 3.76
+          },
+          {
+            "text": "IN",
+            "start": 3.84,
+            "end": 4.0
+          },
+          {
+            "text": "FOLLOWING",
+            "start": 4.0,
+            "end": 4.56
+          },
+          {
+            "text": "UP",
+            "start": 4.56,
+            "end": 4.64
+          },
+          {
+            "text": "TO",
+            "start": 4.8,
+            "end": 4.88
+          },
+          {
+            "text": "THE",
+            "start": 4.88,
+            "end": 5.04
+          },
+          {
+            "text": "END",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "text": "THE",
+            "start": 5.68,
+            "end": 5.84
+          },
+          {
+            "text": "RIGID",
+            "start": 5.84,
+            "end": 6.16
+          },
+          {
+            "text": "LINES",
+            "start": 6.16,
+            "end": 6.72
+          },
+          {
+            "text": "OF",
+            "start": 6.72,
+            "end": 6.88
+          },
+          {
+            "text": "THE",
+            "start": 6.88,
+            "end": 6.88
+          },
+          {
+            "text": "DOCTRINES",
+            "start": 6.88,
+            "end": 7.52
+          },
+          {
+            "text": "OF",
+            "start": 7.52,
+            "end": 7.6
+          },
+          {
+            "text": "THE",
+            "start": 7.6,
+            "end": 7.68
+          },
+          {
+            "text": "CHURCH",
+            "start": 7.68,
+            "end": 8.16
+          },
+          {
+            "text": "AND",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "text": "PENETRATING",
+            "start": 8.64,
+            "end": 9.36
+          },
+          {
+            "text": "INTO",
+            "start": 9.36,
+            "end": 9.68
+          },
+          {
+            "text": "OBSCURE",
+            "start": 9.68,
+            "end": 10.24
+          },
+          {
+            "text": "SILENCES",
+            "start": 10.8,
+            "end": 11.04
+          },
+          {
+            "text": "ONLY",
+            "start": 11.2,
+            "end": 11.52
+          },
+          {
+            "text": "TO",
+            "start": 11.52,
+            "end": 11.68
+          },
+          {
+            "text": "HEAR",
+            "start": 11.68,
+            "end": 12.16
+          },
+          {
+            "text": "AND",
+            "start": 12.16,
+            "end": 12.32
+          },
+          {
+            "text": "FEEL",
+            "start": 12.32,
+            "end": 12.8
+          },
+          {
+            "text": "THE",
+            "start": 12.8,
+            "end": 12.96
+          },
+          {
+            "text": "MORE",
+            "start": 12.96,
+            "end": 13.12
+          },
+          {
+            "text": "DEEPLY",
+            "start": 13.12,
+            "end": 13.68
+          },
+          {
+            "text": "HIS",
+            "start": 13.68,
+            "end": 13.92
+          },
+          {
+            "text": "OWN",
+            "start": 13.92,
+            "end": 14.24
+          },
+          {
+            "text": "CONDEMNATION",
+            "start": 14.24,
+            "end": 15.2
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.4800000000000004,
+        "within_one_tick": false
+      }
+    },
+    {
+      "id": "1089-134691-0009",
+      "sequence_tokens": 457,
+      "timestamp_tokens": 98,
+      "maximum_logit_difference": 0.0,
+      "selected": {
+        "timestamp_classes": [
+          6,
+          10,
+          10,
+          12,
+          12,
+          18,
+          14,
+          24,
+          24,
+          28,
+          28,
+          29,
+          29,
+          34,
+          34,
+          36,
+          36,
+          40,
+          40,
+          43,
+          43,
+          49,
+          46,
+          50,
+          51,
+          58,
+          58,
+          58,
+          58,
+          62,
+          62,
+          72,
+          72,
+          74,
+          74,
+          75,
+          75,
+          89,
+          82,
+          89,
+          89,
+          94,
+          94,
+          97,
+          97,
+          98,
+          98,
+          103,
+          111,
+          112,
+          112,
+          113,
+          113,
+          119,
+          119,
+          124,
+          124,
+          124,
+          125,
+          133,
+          133,
+          140,
+          140,
+          142,
+          142,
+          144,
+          144,
+          148,
+          147,
+          152,
+          152,
+          161,
+          156,
+          161,
+          168,
+          170,
+          170,
+          175,
+          176,
+          182,
+          179,
+          182,
+          183,
+          190,
+          193,
+          196,
+          196,
+          202,
+          202,
+          209,
+          209,
+          215,
+          216,
+          223,
+          237,
+          223,
+          217,
+          245
+        ],
+        "units": [
+          {
+            "text": "ANGRY",
+            "start": 0.48,
+            "end": 0.8
+          },
+          {
+            "text": "WITH",
+            "start": 0.8,
+            "end": 0.96
+          },
+          {
+            "text": "HIMSELF",
+            "start": 0.96,
+            "end": 1.44
+          },
+          {
+            "text": "HE",
+            "start": 1.44,
+            "end": 1.92
+          },
+          {
+            "text": "TRIED",
+            "start": 1.92,
+            "end": 2.24
+          },
+          {
+            "text": "TO",
+            "start": 2.24,
+            "end": 2.32
+          },
+          {
+            "text": "HIDE",
+            "start": 2.32,
+            "end": 2.72
+          },
+          {
+            "text": "HIS",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "text": "FACE",
+            "start": 2.88,
+            "end": 3.2
+          },
+          {
+            "text": "FROM",
+            "start": 3.2,
+            "end": 3.44
+          },
+          {
+            "text": "THEIR",
+            "start": 3.44,
+            "end": 3.92
+          },
+          {
+            "text": "EYES",
+            "start": 3.92,
+            "end": 4.0
+          },
+          {
+            "text": "BY",
+            "start": 4.08,
+            "end": 4.64
+          },
+          {
+            "text": "GAZING",
+            "start": 4.64,
+            "end": 4.64
+          },
+          {
+            "text": "DOWN",
+            "start": 4.64,
+            "end": 4.96
+          },
+          {
+            "text": "SIDEWAYS",
+            "start": 4.96,
+            "end": 5.76
+          },
+          {
+            "text": "INTO",
+            "start": 5.76,
+            "end": 5.92
+          },
+          {
+            "text": "THE",
+            "start": 5.92,
+            "end": 6.0
+          },
+          {
+            "text": "SHALLOW",
+            "start": 6.0,
+            "end": 7.12
+          },
+          {
+            "text": "SWIRLING",
+            "start": 7.12,
+            "end": 7.12
+          },
+          {
+            "text": "WATER",
+            "start": 7.12,
+            "end": 7.52
+          },
+          {
+            "text": "UNDER",
+            "start": 7.52,
+            "end": 7.76
+          },
+          {
+            "text": "THE",
+            "start": 7.76,
+            "end": 7.84
+          },
+          {
+            "text": "BRIDGE",
+            "start": 7.84,
+            "end": 8.24
+          },
+          {
+            "text": "BUT",
+            "start": 8.88,
+            "end": 8.96
+          },
+          {
+            "text": "HE",
+            "start": 8.96,
+            "end": 9.04
+          },
+          {
+            "text": "STILL",
+            "start": 9.04,
+            "end": 9.52
+          },
+          {
+            "text": "SAW",
+            "start": 9.52,
+            "end": 9.92
+          },
+          {
+            "text": "A",
+            "start": 9.92,
+            "end": 9.92
+          },
+          {
+            "text": "REFLECTION",
+            "start": 10.0,
+            "end": 10.64
+          },
+          {
+            "text": "THEREIN",
+            "start": 10.64,
+            "end": 11.2
+          },
+          {
+            "text": "OF",
+            "start": 11.2,
+            "end": 11.36
+          },
+          {
+            "text": "THEIR",
+            "start": 11.36,
+            "end": 11.52
+          },
+          {
+            "text": "TOP",
+            "start": 11.52,
+            "end": 11.84
+          },
+          {
+            "text": "HEAVY",
+            "start": 11.84,
+            "end": 12.16
+          },
+          {
+            "text": "SILK",
+            "start": 12.16,
+            "end": 12.88
+          },
+          {
+            "text": "HATS",
+            "start": 12.88,
+            "end": 12.88
+          },
+          {
+            "text": "AND",
+            "start": 13.44,
+            "end": 13.6
+          },
+          {
+            "text": "HUMBLE",
+            "start": 13.6,
+            "end": 14.0
+          },
+          {
+            "text": "TAPE",
+            "start": 14.08,
+            "end": 14.56
+          },
+          {
+            "text": "LIKE",
+            "start": 14.56,
+            "end": 14.56
+          },
+          {
+            "text": "COLLARS",
+            "start": 14.64,
+            "end": 15.2
+          },
+          {
+            "text": "AND",
+            "start": 15.44,
+            "end": 15.68
+          },
+          {
+            "text": "LOOSELY",
+            "start": 15.68,
+            "end": 16.16
+          },
+          {
+            "text": "HANGING",
+            "start": 16.16,
+            "end": 16.72
+          },
+          {
+            "text": "CLERICAL",
+            "start": 16.72,
+            "end": 17.2
+          },
+          {
+            "text": "CLOTHES",
+            "start": 17.28,
+            "end": 17.84
+          },
+          {
+            "text": "BROTHER",
+            "start": 18.96,
+            "end": 18.96
+          },
+          {
+            "text": "HICKEY",
+            "start": 19.6,
+            "end": 19.6
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.16000000000000014,
+        "within_one_tick": false
+      },
+      "full": {
+        "timestamp_classes": [
+          6,
+          10,
+          10,
+          12,
+          12,
+          18,
+          14,
+          24,
+          24,
+          28,
+          28,
+          29,
+          29,
+          34,
+          34,
+          36,
+          36,
+          40,
+          40,
+          43,
+          43,
+          49,
+          46,
+          50,
+          51,
+          58,
+          58,
+          58,
+          58,
+          62,
+          62,
+          72,
+          72,
+          74,
+          74,
+          75,
+          75,
+          89,
+          82,
+          89,
+          89,
+          94,
+          94,
+          97,
+          97,
+          98,
+          98,
+          103,
+          111,
+          112,
+          112,
+          113,
+          113,
+          119,
+          119,
+          124,
+          124,
+          124,
+          125,
+          133,
+          133,
+          140,
+          140,
+          142,
+          142,
+          144,
+          144,
+          148,
+          147,
+          152,
+          152,
+          161,
+          156,
+          161,
+          168,
+          170,
+          170,
+          175,
+          176,
+          182,
+          179,
+          182,
+          183,
+          190,
+          193,
+          196,
+          196,
+          202,
+          202,
+          209,
+          209,
+          215,
+          216,
+          223,
+          237,
+          223,
+          217,
+          245
+        ],
+        "units": [
+          {
+            "text": "ANGRY",
+            "start": 0.48,
+            "end": 0.8
+          },
+          {
+            "text": "WITH",
+            "start": 0.8,
+            "end": 0.96
+          },
+          {
+            "text": "HIMSELF",
+            "start": 0.96,
+            "end": 1.44
+          },
+          {
+            "text": "HE",
+            "start": 1.44,
+            "end": 1.92
+          },
+          {
+            "text": "TRIED",
+            "start": 1.92,
+            "end": 2.24
+          },
+          {
+            "text": "TO",
+            "start": 2.24,
+            "end": 2.32
+          },
+          {
+            "text": "HIDE",
+            "start": 2.32,
+            "end": 2.72
+          },
+          {
+            "text": "HIS",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "text": "FACE",
+            "start": 2.88,
+            "end": 3.2
+          },
+          {
+            "text": "FROM",
+            "start": 3.2,
+            "end": 3.44
+          },
+          {
+            "text": "THEIR",
+            "start": 3.44,
+            "end": 3.92
+          },
+          {
+            "text": "EYES",
+            "start": 3.92,
+            "end": 4.0
+          },
+          {
+            "text": "BY",
+            "start": 4.08,
+            "end": 4.64
+          },
+          {
+            "text": "GAZING",
+            "start": 4.64,
+            "end": 4.64
+          },
+          {
+            "text": "DOWN",
+            "start": 4.64,
+            "end": 4.96
+          },
+          {
+            "text": "SIDEWAYS",
+            "start": 4.96,
+            "end": 5.76
+          },
+          {
+            "text": "INTO",
+            "start": 5.76,
+            "end": 5.92
+          },
+          {
+            "text": "THE",
+            "start": 5.92,
+            "end": 6.0
+          },
+          {
+            "text": "SHALLOW",
+            "start": 6.0,
+            "end": 7.12
+          },
+          {
+            "text": "SWIRLING",
+            "start": 7.12,
+            "end": 7.12
+          },
+          {
+            "text": "WATER",
+            "start": 7.12,
+            "end": 7.52
+          },
+          {
+            "text": "UNDER",
+            "start": 7.52,
+            "end": 7.76
+          },
+          {
+            "text": "THE",
+            "start": 7.76,
+            "end": 7.84
+          },
+          {
+            "text": "BRIDGE",
+            "start": 7.84,
+            "end": 8.24
+          },
+          {
+            "text": "BUT",
+            "start": 8.88,
+            "end": 8.96
+          },
+          {
+            "text": "HE",
+            "start": 8.96,
+            "end": 9.04
+          },
+          {
+            "text": "STILL",
+            "start": 9.04,
+            "end": 9.52
+          },
+          {
+            "text": "SAW",
+            "start": 9.52,
+            "end": 9.92
+          },
+          {
+            "text": "A",
+            "start": 9.92,
+            "end": 9.92
+          },
+          {
+            "text": "REFLECTION",
+            "start": 10.0,
+            "end": 10.64
+          },
+          {
+            "text": "THEREIN",
+            "start": 10.64,
+            "end": 11.2
+          },
+          {
+            "text": "OF",
+            "start": 11.2,
+            "end": 11.36
+          },
+          {
+            "text": "THEIR",
+            "start": 11.36,
+            "end": 11.52
+          },
+          {
+            "text": "TOP",
+            "start": 11.52,
+            "end": 11.84
+          },
+          {
+            "text": "HEAVY",
+            "start": 11.84,
+            "end": 12.16
+          },
+          {
+            "text": "SILK",
+            "start": 12.16,
+            "end": 12.88
+          },
+          {
+            "text": "HATS",
+            "start": 12.88,
+            "end": 12.88
+          },
+          {
+            "text": "AND",
+            "start": 13.44,
+            "end": 13.6
+          },
+          {
+            "text": "HUMBLE",
+            "start": 13.6,
+            "end": 14.0
+          },
+          {
+            "text": "TAPE",
+            "start": 14.08,
+            "end": 14.56
+          },
+          {
+            "text": "LIKE",
+            "start": 14.56,
+            "end": 14.56
+          },
+          {
+            "text": "COLLARS",
+            "start": 14.64,
+            "end": 15.2
+          },
+          {
+            "text": "AND",
+            "start": 15.44,
+            "end": 15.68
+          },
+          {
+            "text": "LOOSELY",
+            "start": 15.68,
+            "end": 16.16
+          },
+          {
+            "text": "HANGING",
+            "start": 16.16,
+            "end": 16.72
+          },
+          {
+            "text": "CLERICAL",
+            "start": 16.72,
+            "end": 17.2
+          },
+          {
+            "text": "CLOTHES",
+            "start": 17.28,
+            "end": 17.84
+          },
+          {
+            "text": "BROTHER",
+            "start": 18.96,
+            "end": 18.96
+          },
+          {
+            "text": "HICKEY",
+            "start": 19.6,
+            "end": 19.6
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.16000000000000014,
+        "within_one_tick": false
+      }
+    },
+    {
+      "id": "1089-134691-0017",
+      "sequence_tokens": 268,
+      "timestamp_tokens": 58,
+      "maximum_logit_difference": 0.0,
+      "selected": {
+        "timestamp_classes": [
+          7,
+          8,
+          8,
+          12,
+          13,
+          14,
+          14,
+          17,
+          17,
+          19,
+          19,
+          24,
+          24,
+          27,
+          27,
+          31,
+          31,
+          34,
+          34,
+          39,
+          39,
+          40,
+          40,
+          52,
+          45,
+          52,
+          58,
+          62,
+          62,
+          63,
+          64,
+          71,
+          71,
+          77,
+          86,
+          89,
+          79,
+          89,
+          86,
+          89,
+          89,
+          99,
+          90,
+          102,
+          102,
+          112,
+          112,
+          114,
+          114,
+          112,
+          115,
+          123,
+          123,
+          126,
+          126,
+          133,
+          132,
+          140
+        ],
+        "units": [
+          {
+            "text": "THE",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "EUROPE",
+            "start": 0.64,
+            "end": 0.96
+          },
+          {
+            "text": "THEY",
+            "start": 1.04,
+            "end": 1.12
+          },
+          {
+            "text": "HAD",
+            "start": 1.12,
+            "end": 1.36
+          },
+          {
+            "text": "COME",
+            "start": 1.36,
+            "end": 1.52
+          },
+          {
+            "text": "FROM",
+            "start": 1.52,
+            "end": 1.92
+          },
+          {
+            "text": "LAY",
+            "start": 1.92,
+            "end": 2.16
+          },
+          {
+            "text": "OUT",
+            "start": 2.16,
+            "end": 2.48
+          },
+          {
+            "text": "THERE",
+            "start": 2.48,
+            "end": 2.72
+          },
+          {
+            "text": "BEYOND",
+            "start": 2.72,
+            "end": 3.12
+          },
+          {
+            "text": "THE",
+            "start": 3.12,
+            "end": 3.2
+          },
+          {
+            "text": "IRISH",
+            "start": 3.2,
+            "end": 4.16
+          },
+          {
+            "text": "SEA",
+            "start": 4.16,
+            "end": 4.16
+          },
+          {
+            "text": "EUROPE",
+            "start": 4.64,
+            "end": 4.96
+          },
+          {
+            "text": "OF",
+            "start": 4.96,
+            "end": 5.04
+          },
+          {
+            "text": "STRANGE",
+            "start": 5.12,
+            "end": 5.68
+          },
+          {
+            "text": "TONGUES",
+            "start": 5.68,
+            "end": 6.16
+          },
+          {
+            "text": "AND",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "VALLEYED",
+            "start": 7.12,
+            "end": 7.12
+          },
+          {
+            "text": "AND",
+            "start": 7.12,
+            "end": 7.12
+          },
+          {
+            "text": "WOODBEGIRT",
+            "start": 7.12,
+            "end": 7.92
+          },
+          {
+            "text": "AND",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "CITADELLED",
+            "start": 8.16,
+            "end": 8.96
+          },
+          {
+            "text": "AND",
+            "start": 8.96,
+            "end": 9.12
+          },
+          {
+            "text": "OF",
+            "start": 9.12,
+            "end": 9.12
+          },
+          {
+            "text": "ENTRENCHED",
+            "start": 9.2,
+            "end": 9.84
+          },
+          {
+            "text": "AND",
+            "start": 9.84,
+            "end": 10.08
+          },
+          {
+            "text": "MARSHALLED",
+            "start": 10.08,
+            "end": 10.64
+          },
+          {
+            "text": "RACES",
+            "start": 10.64,
+            "end": 11.2
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.8000000000000007,
+        "within_one_tick": false
+      },
+      "full": {
+        "timestamp_classes": [
+          7,
+          8,
+          8,
+          12,
+          13,
+          14,
+          14,
+          17,
+          17,
+          19,
+          19,
+          24,
+          24,
+          27,
+          27,
+          31,
+          31,
+          34,
+          34,
+          39,
+          39,
+          40,
+          40,
+          52,
+          45,
+          52,
+          58,
+          62,
+          62,
+          63,
+          64,
+          71,
+          71,
+          77,
+          86,
+          89,
+          79,
+          89,
+          86,
+          89,
+          89,
+          99,
+          90,
+          102,
+          102,
+          112,
+          112,
+          114,
+          114,
+          112,
+          115,
+          123,
+          123,
+          126,
+          126,
+          133,
+          132,
+          140
+        ],
+        "units": [
+          {
+            "text": "THE",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "EUROPE",
+            "start": 0.64,
+            "end": 0.96
+          },
+          {
+            "text": "THEY",
+            "start": 1.04,
+            "end": 1.12
+          },
+          {
+            "text": "HAD",
+            "start": 1.12,
+            "end": 1.36
+          },
+          {
+            "text": "COME",
+            "start": 1.36,
+            "end": 1.52
+          },
+          {
+            "text": "FROM",
+            "start": 1.52,
+            "end": 1.92
+          },
+          {
+            "text": "LAY",
+            "start": 1.92,
+            "end": 2.16
+          },
+          {
+            "text": "OUT",
+            "start": 2.16,
+            "end": 2.48
+          },
+          {
+            "text": "THERE",
+            "start": 2.48,
+            "end": 2.72
+          },
+          {
+            "text": "BEYOND",
+            "start": 2.72,
+            "end": 3.12
+          },
+          {
+            "text": "THE",
+            "start": 3.12,
+            "end": 3.2
+          },
+          {
+            "text": "IRISH",
+            "start": 3.2,
+            "end": 4.16
+          },
+          {
+            "text": "SEA",
+            "start": 4.16,
+            "end": 4.16
+          },
+          {
+            "text": "EUROPE",
+            "start": 4.64,
+            "end": 4.96
+          },
+          {
+            "text": "OF",
+            "start": 4.96,
+            "end": 5.04
+          },
+          {
+            "text": "STRANGE",
+            "start": 5.12,
+            "end": 5.68
+          },
+          {
+            "text": "TONGUES",
+            "start": 5.68,
+            "end": 6.16
+          },
+          {
+            "text": "AND",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "VALLEYED",
+            "start": 7.12,
+            "end": 7.12
+          },
+          {
+            "text": "AND",
+            "start": 7.12,
+            "end": 7.12
+          },
+          {
+            "text": "WOODBEGIRT",
+            "start": 7.12,
+            "end": 7.92
+          },
+          {
+            "text": "AND",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "CITADELLED",
+            "start": 8.16,
+            "end": 8.96
+          },
+          {
+            "text": "AND",
+            "start": 8.96,
+            "end": 9.12
+          },
+          {
+            "text": "OF",
+            "start": 9.12,
+            "end": 9.12
+          },
+          {
+            "text": "ENTRENCHED",
+            "start": 9.2,
+            "end": 9.84
+          },
+          {
+            "text": "AND",
+            "start": 9.84,
+            "end": 10.08
+          },
+          {
+            "text": "MARSHALLED",
+            "start": 10.08,
+            "end": 10.64
+          },
+          {
+            "text": "RACES",
+            "start": 10.64,
+            "end": 11.2
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.8000000000000007,
+        "within_one_tick": false
+      }
+    },
+    {
+      "id": "1188-133604-0001",
+      "sequence_tokens": 195,
+      "timestamp_tokens": 36,
+      "maximum_logit_difference": 0.0,
+      "selected": {
+        "timestamp_classes": [
+          7,
+          10,
+          10,
+          13,
+          14,
+          16,
+          16,
+          24,
+          38,
+          39,
+          39,
+          45,
+          45,
+          46,
+          46,
+          47,
+          48,
+          57,
+          50,
+          52,
+          52,
+          57,
+          57,
+          58,
+          58,
+          60,
+          60,
+          62,
+          62,
+          72,
+          81,
+          90,
+          88,
+          106,
+          90,
+          106
+        ],
+        "units": [
+          {
+            "text": "THEY",
+            "start": 0.56,
+            "end": 0.8
+          },
+          {
+            "text": "UNITE",
+            "start": 0.8,
+            "end": 1.04
+          },
+          {
+            "text": "EVERY",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "text": "QUALITY",
+            "start": 1.28,
+            "end": 1.92
+          },
+          {
+            "text": "AND",
+            "start": 3.04,
+            "end": 3.12
+          },
+          {
+            "text": "SOMETIMES",
+            "start": 3.12,
+            "end": 3.6
+          },
+          {
+            "text": "YOU",
+            "start": 3.6,
+            "end": 3.68
+          },
+          {
+            "text": "WILL",
+            "start": 3.68,
+            "end": 3.76
+          },
+          {
+            "text": "FIND",
+            "start": 3.84,
+            "end": 3.84
+          },
+          {
+            "text": "ME",
+            "start": 4.0,
+            "end": 4.16
+          },
+          {
+            "text": "REFERRING",
+            "start": 4.16,
+            "end": 4.56
+          },
+          {
+            "text": "TO",
+            "start": 4.56,
+            "end": 4.64
+          },
+          {
+            "text": "THEM",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "text": "AS",
+            "start": 4.8,
+            "end": 4.96
+          },
+          {
+            "text": "COLORISTS",
+            "start": 4.96,
+            "end": 5.76
+          },
+          {
+            "text": "SOMETIMES",
+            "start": 6.48,
+            "end": 7.2
+          },
+          {
+            "text": "AS",
+            "start": 7.2,
+            "end": 8.48
+          },
+          {
+            "text": "CHIAROSCURISTS",
+            "start": 8.48,
+            "end": 8.48
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.16000000000000014,
+        "within_one_tick": false
+      },
+      "full": {
+        "timestamp_classes": [
+          7,
+          10,
+          10,
+          13,
+          14,
+          16,
+          16,
+          24,
+          38,
+          39,
+          39,
+          45,
+          45,
+          46,
+          46,
+          47,
+          48,
+          57,
+          50,
+          52,
+          52,
+          57,
+          57,
+          58,
+          58,
+          60,
+          60,
+          62,
+          62,
+          72,
+          81,
+          90,
+          88,
+          106,
+          90,
+          106
+        ],
+        "units": [
+          {
+            "text": "THEY",
+            "start": 0.56,
+            "end": 0.8
+          },
+          {
+            "text": "UNITE",
+            "start": 0.8,
+            "end": 1.04
+          },
+          {
+            "text": "EVERY",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "text": "QUALITY",
+            "start": 1.28,
+            "end": 1.92
+          },
+          {
+            "text": "AND",
+            "start": 3.04,
+            "end": 3.12
+          },
+          {
+            "text": "SOMETIMES",
+            "start": 3.12,
+            "end": 3.6
+          },
+          {
+            "text": "YOU",
+            "start": 3.6,
+            "end": 3.68
+          },
+          {
+            "text": "WILL",
+            "start": 3.68,
+            "end": 3.76
+          },
+          {
+            "text": "FIND",
+            "start": 3.84,
+            "end": 3.84
+          },
+          {
+            "text": "ME",
+            "start": 4.0,
+            "end": 4.16
+          },
+          {
+            "text": "REFERRING",
+            "start": 4.16,
+            "end": 4.56
+          },
+          {
+            "text": "TO",
+            "start": 4.56,
+            "end": 4.64
+          },
+          {
+            "text": "THEM",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "text": "AS",
+            "start": 4.8,
+            "end": 4.96
+          },
+          {
+            "text": "COLORISTS",
+            "start": 4.96,
+            "end": 5.76
+          },
+          {
+            "text": "SOMETIMES",
+            "start": 6.48,
+            "end": 7.2
+          },
+          {
+            "text": "AS",
+            "start": 7.2,
+            "end": 8.48
+          },
+          {
+            "text": "CHIAROSCURISTS",
+            "start": 8.48,
+            "end": 8.48
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.16000000000000014,
+        "within_one_tick": false
+      }
+    },
+    {
+      "id": "1188-133604-0027",
+      "sequence_tokens": 247,
+      "timestamp_tokens": 48,
+      "maximum_logit_difference": 0.0,
+      "selected": {
+        "timestamp_classes": [
+          7,
+          8,
+          8,
+          10,
+          10,
+          12,
+          12,
+          20,
+          30,
+          37,
+          37,
+          42,
+          42,
+          42,
+          42,
+          47,
+          52,
+          56,
+          56,
+          60,
+          60,
+          66,
+          66,
+          69,
+          70,
+          77,
+          72,
+          77,
+          82,
+          85,
+          85,
+          92,
+          90,
+          92,
+          101,
+          108,
+          108,
+          113,
+          113,
+          116,
+          116,
+          123,
+          123,
+          125,
+          125,
+          127,
+          127,
+          134
+        ],
+        "units": [
+          {
+            "text": "NOW",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "HERE",
+            "start": 0.64,
+            "end": 0.8
+          },
+          {
+            "text": "IS",
+            "start": 0.8,
+            "end": 0.96
+          },
+          {
+            "text": "RAPHAEL",
+            "start": 0.96,
+            "end": 1.6
+          },
+          {
+            "text": "EXACTLY",
+            "start": 2.4,
+            "end": 2.96
+          },
+          {
+            "text": "BETWEEN",
+            "start": 2.96,
+            "end": 3.36
+          },
+          {
+            "text": "THE",
+            "start": 3.36,
+            "end": 3.36
+          },
+          {
+            "text": "TWO",
+            "start": 3.36,
+            "end": 3.76
+          },
+          {
+            "text": "TREES",
+            "start": 4.16,
+            "end": 4.48
+          },
+          {
+            "text": "STILL",
+            "start": 4.48,
+            "end": 4.8
+          },
+          {
+            "text": "DRAWN",
+            "start": 4.8,
+            "end": 5.28
+          },
+          {
+            "text": "LEAF",
+            "start": 5.28,
+            "end": 5.52
+          },
+          {
+            "text": "BY",
+            "start": 5.6,
+            "end": 6.16
+          },
+          {
+            "text": "LEAF",
+            "start": 6.16,
+            "end": 6.16
+          },
+          {
+            "text": "WHOLLY",
+            "start": 6.56,
+            "end": 6.8
+          },
+          {
+            "text": "FORMAL",
+            "start": 6.8,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.36
+          },
+          {
+            "text": "BEAUTIFUL",
+            "start": 8.08,
+            "end": 8.64
+          },
+          {
+            "text": "MIST",
+            "start": 8.64,
+            "end": 9.04
+          },
+          {
+            "text": "COMING",
+            "start": 9.04,
+            "end": 9.28
+          },
+          {
+            "text": "GRADUALLY",
+            "start": 9.28,
+            "end": 9.84
+          },
+          {
+            "text": "INTO",
+            "start": 9.84,
+            "end": 10.0
+          },
+          {
+            "text": "THE",
+            "start": 10.0,
+            "end": 10.16
+          },
+          {
+            "text": "DISTANCE",
+            "start": 10.16,
+            "end": 10.72
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.23999999999999932,
+        "within_one_tick": false
+      },
+      "full": {
+        "timestamp_classes": [
+          7,
+          8,
+          8,
+          10,
+          10,
+          12,
+          12,
+          20,
+          30,
+          37,
+          37,
+          42,
+          42,
+          42,
+          42,
+          47,
+          52,
+          56,
+          56,
+          60,
+          60,
+          66,
+          66,
+          69,
+          70,
+          77,
+          72,
+          77,
+          82,
+          85,
+          85,
+          92,
+          90,
+          92,
+          101,
+          108,
+          108,
+          113,
+          113,
+          116,
+          116,
+          123,
+          123,
+          125,
+          125,
+          127,
+          127,
+          134
+        ],
+        "units": [
+          {
+            "text": "NOW",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "HERE",
+            "start": 0.64,
+            "end": 0.8
+          },
+          {
+            "text": "IS",
+            "start": 0.8,
+            "end": 0.96
+          },
+          {
+            "text": "RAPHAEL",
+            "start": 0.96,
+            "end": 1.6
+          },
+          {
+            "text": "EXACTLY",
+            "start": 2.4,
+            "end": 2.96
+          },
+          {
+            "text": "BETWEEN",
+            "start": 2.96,
+            "end": 3.36
+          },
+          {
+            "text": "THE",
+            "start": 3.36,
+            "end": 3.36
+          },
+          {
+            "text": "TWO",
+            "start": 3.36,
+            "end": 3.76
+          },
+          {
+            "text": "TREES",
+            "start": 4.16,
+            "end": 4.48
+          },
+          {
+            "text": "STILL",
+            "start": 4.48,
+            "end": 4.8
+          },
+          {
+            "text": "DRAWN",
+            "start": 4.8,
+            "end": 5.28
+          },
+          {
+            "text": "LEAF",
+            "start": 5.28,
+            "end": 5.52
+          },
+          {
+            "text": "BY",
+            "start": 5.6,
+            "end": 6.16
+          },
+          {
+            "text": "LEAF",
+            "start": 6.16,
+            "end": 6.16
+          },
+          {
+            "text": "WHOLLY",
+            "start": 6.56,
+            "end": 6.8
+          },
+          {
+            "text": "FORMAL",
+            "start": 6.8,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.36
+          },
+          {
+            "text": "BEAUTIFUL",
+            "start": 8.08,
+            "end": 8.64
+          },
+          {
+            "text": "MIST",
+            "start": 8.64,
+            "end": 9.04
+          },
+          {
+            "text": "COMING",
+            "start": 9.04,
+            "end": 9.28
+          },
+          {
+            "text": "GRADUALLY",
+            "start": 9.28,
+            "end": 9.84
+          },
+          {
+            "text": "INTO",
+            "start": 9.84,
+            "end": 10.0
+          },
+          {
+            "text": "THE",
+            "start": 10.0,
+            "end": 10.16
+          },
+          {
+            "text": "DISTANCE",
+            "start": 10.16,
+            "end": 10.72
+          }
+        ],
+        "maximum_boundary_difference_seconds": 0.23999999999999932,
+        "within_one_tick": false
+      }
+    }
+  ]
+}

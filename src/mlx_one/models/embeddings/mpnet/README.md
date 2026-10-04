@@ -10,6 +10,35 @@ bidirectional attention, mean pooling, normalization, and single-vector retrieva
 is the primary checkpoint candidate. Native loading and synthetic execution are
 implemented; exact-checkpoint quality, parity, and hardware qualification remain pending.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token + position embeddings → LayerNorm
+                    ↓
+┌──────────────── Bidirectional encoder × L ─────────────────┐
+│ Multi-head attention + relative-position bias              │
+│ Residual/LayerNorm → feed-forward → residual/LayerNorm     │
+└────────────────────────────────────────────────────────────┘
+                    ↓
+          Padding-aware masked mean pooling
+                    ↓
+     Optional L2 normalization → one vector per text
+                    └→ Cosine similarity for sentence pairs
+```
+
+## Papers and upstream references
+
+Paper: [MPNet: Masked and Permuted Pre-training for Language Understanding](https://arxiv.org/abs/2004.09297).
+Sentence-embedding background:
+[Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084).
+
+Masked/permuted objectives describe upstream pretraining, not extra inference
+branches. The local sentence-embedding path uses the pooling shown above.
+
 ## Installation and assets
 
 Install `python -m pip install -e .` from the repository root using Python 3.10+.

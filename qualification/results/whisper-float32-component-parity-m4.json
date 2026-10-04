@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "gates": {
+    "encoder": true,
+    "logits": true,
+    "mel": true
+  },
+  "max_absolute_errors": {
+    "encoder": 2.384185791015625e-7,
+    "logits": 1.816079020500183e-8,
+    "mel": 0.0000324249267578125
+  },
+  "atol": 0.0001,
+  "rtol": 0.0001,
+  "dtype": "float32",
+  "scope": "synthetic asymmetric Whisper and frontend",
+  "weights_sha256": "81b87ab3cf4056398d14d139e8f42772b096f7c3557bd8f2a0fa879143292c2b",
+  "goldens_sha256": "299dab6e94acd2585b52cf58754e6636c66dc3f72a3de7df73590623ad41cdeb"
+}

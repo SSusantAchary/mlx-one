@@ -1,0 +1,161 @@
+{
+  "source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+  "versions": {
+    "torch": "2.7.1",
+    "transformers": "4.57.6"
+  },
+  "dtype": "float32",
+  "seed": 123,
+  "waveform_seed": 42,
+  "configs": {
+    "qwen3_asr": {
+      "model_type": "qwen3_asr",
+      "timestamp_token_id": 6,
+      "timestamp_segment_time": 80,
+      "thinker_config": {
+        "model_type": "qwen3_asr",
+        "audio_token_id": 3,
+        "audio_start_token_id": 4,
+        "audio_end_token_id": 5,
+        "classify_num": 12,
+        "audio_config": {
+          "d_model": 8,
+          "encoder_layers": 2,
+          "encoder_attention_heads": 2,
+          "encoder_ffn_dim": 16,
+          "output_dim": 8,
+          "downsample_hidden_size": 2,
+          "num_mel_bins": 128,
+          "n_window": 50,
+          "n_window_infer": 800,
+          "max_source_positions": 1500,
+          "conv_chunksize": 500
+        },
+        "text_config": {
+          "model_type": "qwen3",
+          "hidden_size": 8,
+          "intermediate_size": 16,
+          "num_hidden_layers": 2,
+          "num_attention_heads": 2,
+          "num_key_value_heads": 1,
+          "head_dim": 4,
+          "vocab_size": 32,
+          "rope_theta": 1000000.0,
+          "max_position_embeddings": 2048,
+          "tie_word_embeddings": true,
+          "rope_scaling": {
+            "rope_type": "default",
+            "mrope_section": [
+              24,
+              20,
+              20
+            ],
+            "mrope_interleaved": true
+          }
+        }
+      }
+    },
+    "qwen3_forced_aligner": {
+      "model_type": "qwen3_asr",
+      "timestamp_token_id": 6,
+      "timestamp_segment_time": 80,
+      "thinker_config": {
+        "model_type": "qwen3_forced_aligner",
+        "audio_token_id": 3,
+        "audio_start_token_id": 4,
+        "audio_end_token_id": 5,
+        "classify_num": 12,
+        "audio_config": {
+          "d_model": 8,
+          "encoder_layers": 2,
+          "encoder_attention_heads": 2,
+          "encoder_ffn_dim": 16,
+          "output_dim": 8,
+          "downsample_hidden_size": 2,
+          "num_mel_bins": 128,
+          "n_window": 50,
+          "n_window_infer": 800,
+          "max_source_positions": 1500,
+          "conv_chunksize": 500
+        },
+        "text_config": {
+          "model_type": "qwen3",
+          "hidden_size": 8,
+          "intermediate_size": 16,
+          "num_hidden_layers": 2,
+          "num_attention_heads": 2,
+          "num_key_value_heads": 1,
+          "head_dim": 4,
+          "vocab_size": 32,
+          "rope_theta": 1000000.0,
+          "max_position_embeddings": 2048,
+          "tie_word_embeddings": false,
+          "rope_scaling": {
+            "rope_type": "default",
+            "mrope_section": [
+              24,
+              20,
+              20
+            ],
+            "mrope_interleaved": true
+          }
+        }
+      }
+    }
+  },
+  "fixtures": {
+    "fixtures.npz": "d097ac96ef08385b09c9fd5189c4defd212e22026e9a76872500cac67ed05802",
+    "qwen3_asr-weights.npz": "8f688a5f2a2f4fe3562f0cacb1a7bde85cedbaf8f42adc749b7a1e07a0d87879",
+    "qwen3_forced_aligner-weights.npz": "5c3a9a5fd12839bb62ede14fed326cb2517f598f2e97b776524e63e7b52dfca9"
+  },
+  "tokenizer_assets": {
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "tokenizer_config.json": "4942d005604266809309cabc9f4e9cb89ce855d59b14681fdc0e1cc62ea26c4c"
+  },
+  "tokenizer": [
+    {
+      "text": "Hello \u5317\u4eac \uff11\uff12\uff13 caf\u00e9 e\u0301<asr_text>",
+      "ids": [
+        9707,
+        94305,
+        245,
+        46553,
+        220,
+        20109,
+        24918,
+        33517,
+        51950,
+        3958,
+        151704
+      ]
+    },
+    {
+      "text": "\n\u3053\u3093\u306b\u3061\u306f \ud55c\uad6d\uc5b4",
+      "ids": [
+        198,
+        89015,
+        130092,
+        31079
+      ]
+    },
+    {
+      "text": "<|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|><|audio_pad|>",
+      "ids": [
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676,
+        151676
+      ]
+    }
+  ]
+}

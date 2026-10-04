@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "gates": {
+    "encoder": true,
+    "logits": true,
+    "frontend": true,
+    "cached_logits": true
+  },
+  "max_absolute_errors": {
+    "encoder": 0.000004023313522338867,
+    "logits": 3.3155083656311035e-7,
+    "frontend": 3.725290298461914e-7,
+    "cached_logits": 3.520399332046509e-7
+  },
+  "atol": 0.0001,
+  "rtol": 0.0001,
+  "dtype": "float32",
+  "scope": "synthetic Moonshine frontend, padded attention heads, partial RoPE and cached decoder",
+  "reference_source_commit": "cc832f9055ba11c8c55f918ab4bda9472b910d48",
+  "weights_sha256": "42dae395511f1d2c6a81f8bc35e5084e06eb41be54fcfb40b20c31999d2275f7",
+  "goldens_sha256": "00784877dd8835810b4ef168e5950e41f5d5160d570f624eb9256f7d5ffb163d"
+}

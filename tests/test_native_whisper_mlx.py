@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 import struct
-from types import SimpleNamespace
+import subprocess
 
 import pytest
 
@@ -13,7 +13,8 @@ if os.environ.get("MLX_ONE_RUN_MLX_TESTS") != "1":
 
 import mlx.core as mx
 
-from mlx_one.audio.decoding import align_words
+from mlx_one.audio.decoding import align_words, apply_logit_filters
+from mlx_one.audio.schemas import WhisperDecodeOptions
 from mlx_one.models.audio.whisper.config import WhisperConfig
 from mlx_one.models.audio.whisper.model import WhisperForConditionalGeneration
 from mlx_one.models.audio.whisper.processing import (
@@ -99,6 +100,83 @@ def test_whisper_cached_decode_matches_full_sequence_and_reuses_cross_cache() ->
     assert caches[0].cross_keys is first_cross
 
 
+def timestamp_tokenizer() -> WhisperTokenizer:
+    mapping = bytes_to_unicode()
+    return WhisperTokenizer(
+        {character: byte for byte, character in mapping.items()},
+        [],
+        {
+            "<|endoftext|>": 256,
+            "<|startoftranscript|>": 257,
+            "<|en|>": 258,
+            "<|transcribe|>": 259,
+            "<|notimestamps|>": 260,
+            "<|0.00|>": 261,
+            "<|0.02|>": 262,
+            "<|0.04|>": 263,
+        },
+    )
+
+
+def test_timestamp_initial_pairing_and_monotonicity_filters() -> None:
+    tokenizer = timestamp_tokenizer()
+    prefix = [257, 258, 259]
+    options = WhisperDecodeOptions(max_initial_timestamp=0.02)
+    first = apply_logit_filters(mx.zeros((264,)), prefix, tokenizer, options, 0)
+    assert [index for index, valid in enumerate(mx.isfinite(first).tolist()) if valid] == [261, 262]
+    after_start = apply_logit_filters(mx.zeros((264,)), prefix + [261], tokenizer, options, 1)
+    assert mx.all(mx.isneginf(after_start[261:])).item()
+    end = apply_logit_filters(mx.zeros((264,)), prefix + [261, 65, 262], tokenizer, options, 3)
+    assert mx.all(mx.isneginf(end[:256])).item()
+    assert mx.isneginf(end[261]).item()
+    paired = apply_logit_filters(
+        mx.zeros((264,)), prefix + [261, 65, 262, 262], tokenizer, options, 4
+    )
+    assert mx.all(mx.isneginf(paired[261:])).item()
+
+
+def test_text_only_decode_suppresses_timestamp_tokens() -> None:
+    tokenizer = timestamp_tokenizer()
+    scores = apply_logit_filters(
+        mx.zeros((264,)),
+        [257, 258, 259, 260],
+        tokenizer,
+        WhisperDecodeOptions(without_timestamps=True),
+        0,
+    )
+    assert mx.all(mx.isneginf(scores[261:])).item()
+    assert mx.isneginf(scores[256]).item()
+
+
+def test_explicit_tied_output_projection_is_validated() -> None:
+    from mlx_one.models.audio.whisper.loading import WhisperLoadError, _validate_tied_projection
+
+    embedding = mx.zeros((300, 8))
+    _validate_tied_projection(
+        {"model.decoder.embed_tokens.weight": embedding, "proj_out.weight": embedding}
+    )
+    with pytest.raises(WhisperLoadError, match="untied"):
+        _validate_tied_projection(
+            {"model.decoder.embed_tokens.weight": embedding, "proj_out.weight": mx.ones((300, 8))}
+        )
+    with pytest.raises(WhisperLoadError, match="does not match"):
+        _validate_tied_projection({"proj_out.weight": embedding})
+
+
+def test_safe_loading_preserves_bfloat16_and_ignores_precision_variant(tmp_path) -> None:
+    from mlx_one.models.audio.whisper.loading import _read_safetensors
+
+    mx.save_safetensors(
+        str(tmp_path / "model.safetensors"), {"selected": mx.ones((2, 3), dtype=mx.bfloat16)}
+    )
+    mx.save_safetensors(
+        str(tmp_path / "model.fp32.safetensors"), {"alternate": mx.ones((2, 3), dtype=mx.float32)}
+    )
+    weights = _read_safetensors(tmp_path)
+    assert set(weights) == {"selected"}
+    assert weights["selected"].dtype == mx.bfloat16
+
+
 @pytest.mark.parametrize("mel_bins", [80, 128])
 def test_whisper_mel_profiles_and_conv_subsampling(mel_bins: int) -> None:
     model = WhisperForConditionalGeneration(config(num_mel_bins=mel_bins))
@@ -120,9 +198,7 @@ def test_whisper_log_mel_padding_and_dynamic_range_are_finite() -> None:
 
 def test_whisper_word_alignment_returns_monotonic_boundaries() -> None:
     mapping = bytes_to_unicode()
-    tokenizer = WhisperTokenizer(
-        {character: byte for byte, character in mapping.items()}, [], {}
-    )
+    tokenizer = WhisperTokenizer({character: byte for byte, character in mapping.items()}, [], {})
     tokens = tuple(tokenizer.encode(" hi"))
     attention = mx.zeros((1, 2, len(tokens), 8))
     diagonal = mx.arange(len(tokens)) % 8
@@ -146,17 +222,20 @@ def test_whisper_ffmpeg_decode_uses_argument_array(monkeypatch, tmp_path) -> Non
     source.write_bytes(b"fixture")
     captured = {}
 
-    def fake_run(command, **kwargs):
+    def fake_popen(command, **kwargs):
         captured["command"] = command
         captured["kwargs"] = kwargs
-        return SimpleNamespace(
-            returncode=0,
-            stdout=struct.pack("<3f", 0.0, 0.5, -0.5),
-            stderr=b"",
-        )
+
+        class Process:
+            returncode = 0
+
+            def communicate(self, **kwargs):
+                return struct.pack("<3f", 0.0, 0.5, -0.5), b""
+
+        return Process()
 
     monkeypatch.setattr("shutil.which", lambda value: "/fake/ffmpeg")
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("subprocess.Popen", fake_popen)
     waveform = decode_audio(source)
     mx.eval(waveform)
     assert waveform.shape == (3,)
@@ -177,4 +256,4 @@ def test_whisper_ffmpeg_decode_uses_argument_array(monkeypatch, tmp_path) -> Non
         "16000",
         "-",
     ]
-    assert captured["kwargs"] == {"check": False, "capture_output": True}
+    assert captured["kwargs"] == {"stdout": subprocess.PIPE, "stderr": subprocess.PIPE}

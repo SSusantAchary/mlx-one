@@ -1,0 +1,255 @@
+{
+  "backend": "reference",
+  "model": "Qwen/Qwen3-ASR-0.6B",
+  "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+  "task": "transcribe",
+  "mode": "offline",
+  "chunk_samples": null,
+  "stream_reference": null,
+  "dtype": "bfloat16",
+  "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+  "attention": "sdpa-global",
+  "language_subset": [
+    "French"
+  ],
+  "manifest_sha256": "d1a304ad1cde6335f316c5a08b7a3c02377b838eea47f2b8f49afe8830f40f21",
+  "dataset": "google/fleurs",
+  "dataset_revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "predictions": [
+    {
+      "id": "fr_fr:1660:440",
+      "anchor": false,
+      "reference": "le romantisme présentait un important élément de déterminisme culturel tiré d'écrivains tels que goethe fichte et schlegel",
+      "prediction": "Le romantisme présentait un important élément de déterminisme culturel attiré, décrits ainsi que Godeffert et Schlegel.",
+      "duration": 7.86,
+      "language": "French",
+      "seconds": 8.07361000002129
+    },
+    {
+      "id": "fr_fr:1660:644",
+      "anchor": false,
+      "reference": "le romantisme présentait un important élément de déterminisme culturel tiré d'écrivains tels que goethe fichte et schlegel",
+      "prediction": "Le romantisme présentait un important élément de déterminisme culturel tiré d'écrivains tels que Goethe, Fichte et Schlegel.",
+      "duration": 7.38,
+      "language": "French",
+      "seconds": 7.486260999983642
+    },
+    {
+      "id": "fr_fr:1660:647",
+      "anchor": false,
+      "reference": "le romantisme présentait un important élément de déterminisme culturel tiré d'écrivains tels que goethe fichte et schlegel",
+      "prediction": "Le romantisme présentait un important élément de déterminisme culturel, tiré des écrivains tels que Goethe, Fichte et Schlegel.",
+      "duration": 9.24,
+      "language": "French",
+      "seconds": 9.707980166975176
+    },
+    {
+      "id": "fr_fr:1661:215",
+      "anchor": false,
+      "reference": "il n'a pas chiffré ces réductions disant qu'elles seront basées sur la production économique chinoise",
+      "prediction": "Il n'a pas chiffré ces réductions, disant qu'elles seront basées sur la production économique chinoise.",
+      "duration": 10.56,
+      "language": "French",
+      "seconds": 10.460981791984523
+    },
+    {
+      "id": "fr_fr:1661:423",
+      "anchor": false,
+      "reference": "il n'a pas chiffré ces réductions disant qu'elles seront basées sur la production économique chinoise",
+      "prediction": "Il n'a pas chiffré ses réductions, disant qu'elles seront basées sur la production économique chinoise.",
+      "duration": 8.76,
+      "language": "French",
+      "seconds": 10.699263499991503
+    },
+    {
+      "id": "fr_fr:1662:295",
+      "anchor": false,
+      "reference": "les alliages sont essentiellement un mélange de deux métaux ou plus n'oubliez pas que le tableau périodique comporte de nombreux éléments",
+      "prediction": "Les alliages sont essentiellement un mélange de deux métaux plus. N'oubliez pas que le tableau périodique comporte de nombreux éléments.",
+      "duration": 7.14,
+      "language": "French",
+      "seconds": 9.595824582997011
+    },
+    {
+      "id": "fr_fr:1662:638",
+      "anchor": false,
+      "reference": "les alliages sont essentiellement un mélange de deux métaux ou plus n'oubliez pas que le tableau périodique comporte de nombreux éléments",
+      "prediction": "Les alliages sont essentiellement un mélange de deux métaux au plus. N'oubliez pas que le tableau périodique comporte de nombreux éléments.",
+      "duration": 6.42,
+      "language": "French",
+      "seconds": 10.76449249999132
+    },
+    {
+      "id": "fr_fr:1663:379",
+      "anchor": false,
+      "reference": "vallée de cochamó – la destination d'excellence pour l'escalade au chili connue comme le yosemite d'amérique du sud avec de nombreuses grandes parois et falaises granitiques différentes",
+      "prediction": "Valais de Côte Chamois, la destination d'excellence pour les escalades au Chili, connue comme le Yosemite d'Amérique du Sud, avec de nombreuses grandes parois et falaises granitiques différentes.",
+      "duration": 11.82,
+      "language": "French",
+      "seconds": 18.859689792006975
+    },
+    {
+      "id": "fr_fr:1663:493",
+      "anchor": false,
+      "reference": "vallée de cochamó – la destination d'excellence pour l'escalade au chili connue comme le yosemite d'amérique du sud avec de nombreuses grandes parois et falaises granitiques différentes",
+      "prediction": "Valais de Cauchamont, la destination d'excellence pour l'escalade au Chili, connue comme le Yosemite d'Amérique du Sud, avec le de nombreuses grandes parois et falaises granitiques différentes.",
+      "duration": 13.38,
+      "language": "French",
+      "seconds": 25.01313541602576
+    },
+    {
+      "id": "fr_fr:1664:109",
+      "anchor": false,
+      "reference": "mélangez les deux poudres sèches ensemble puis avec les mains propres et humides pressez-les en une boule",
+      "prediction": "Mélangez les deux poudres sèches ensemble puis, avec les mains propres et humides, précédez en boule.",
+      "duration": 7.8,
+      "language": "French",
+      "seconds": 16.23481912497664
+    },
+    {
+      "id": "fr_fr:1664:208",
+      "anchor": false,
+      "reference": "mélangez les deux poudres sèches ensemble puis avec les mains propres et humides pressez-les en une boule",
+      "prediction": "Mélangez les deux poudres sèches ensemble, puis avec les mains propres et humides, précédez en une boule.",
+      "duration": 8.76,
+      "language": "French",
+      "seconds": 16.828664957982255
+    },
+    {
+      "id": "fr_fr:1665:262",
+      "anchor": false,
+      "reference": "d'après la fuite le document portera sur le différend à la frontière que la palestine revendique sur la base des frontières existantes avant la guerre du moyen-orient de 1967",
+      "prediction": "D'après la fuite, le document portera sur le différend à la frontière que la Palestine revendique sur la base des frontières existantes avant la guerre du Moyen Orient de 1967.",
+      "duration": 16.38,
+      "language": "French",
+      "seconds": 28.164961292000953
+    },
+    {
+      "id": "fr_fr:1666:301",
+      "anchor": false,
+      "reference": "vous pouvez également avoir recours aux conseils d'autres gouvernements que le vôtre mais leurs conseils sont adaptés à leurs citoyens",
+      "prediction": "Vous pouvez également avoir recours au conseil d'autres gouvernements que le vôtre, mais leurs conseils sont adaptés à leurs citoyens.",
+      "duration": 11.64,
+      "language": "French",
+      "seconds": 17.99474070899305
+    },
+    {
+      "id": "fr_fr:1666:418",
+      "anchor": false,
+      "reference": "vous pouvez également avoir recours aux conseils d'autres gouvernements que le vôtre mais leurs conseils sont adaptés à leurs citoyens",
+      "prediction": "Vous pouvez également avoir recours au conseil d'autres gouvernements que le vôtre, mais leurs conseils sont adaptés à leurs citoyens.",
+      "duration": 6.42,
+      "language": "French",
+      "seconds": 12.298157915996853
+    },
+    {
+      "id": "fr_fr:1666:514",
+      "anchor": false,
+      "reference": "vous pouvez également avoir recours aux conseils d'autres gouvernements que le vôtre mais leurs conseils sont adaptés à leurs citoyens",
+      "prediction": "Vous pouvez également avoir recours au conseil d'autres gouvernements que le vôtre, mais leurs conseils sont adaptés à leurs citoyens.",
+      "duration": 9.6,
+      "language": "French",
+      "seconds": 16.47641804200248
+    },
+    {
+      "id": "fr_fr:1667:91",
+      "anchor": false,
+      "reference": "de manière générale deux comportements peuvent émerger lorsqu'un manager devient le chef d'anciens collègues. d'une des extrémités du spectre étant d'essayer de rester « le bon copain » ou la bonne copine",
+      "prediction": "De manière générale, deux comportements peuvent émerger lorsqu'un manager devient le chef d'anciens collègues, d'une des extrémités du spectre étant d'essayer de rester le bon copain ou la bonne copine.",
+      "duration": 14.88,
+      "language": "French",
+      "seconds": 25.171104084001854
+    },
+    {
+      "id": "fr_fr:1667:630",
+      "anchor": false,
+      "reference": "de manière générale deux comportements peuvent émerger lorsqu'un manager devient le chef d'anciens collègues. d'une des extrémités du spectre étant d'essayer de rester « le bon copain » ou la bonne copine",
+      "prediction": "De manière générale, deux comportements peuvent émerger lorsqu'un manager devient le chef d'anciens collègues : d'une, les extrémités du spectre étant d'essayer de rester le bon copain ou la bonne copine.",
+      "duration": 13.2,
+      "language": "French",
+      "seconds": 24.077425291005056
+    },
+    {
+      "id": "fr_fr:1668:280",
+      "anchor": false,
+      "reference": "il peut être avantageux de se procurer une wild card qui donne accès à certains parcs d'afrique du sud ainsi qu'à tous les parcs nationaux sud-africains",
+      "prediction": "Il peut être avantageux de se procurer une Wild Card qui donne accès à certains parcs d'Afrique du Sud ainsi qu'à tous les parcs nationaux sud-africains.",
+      "duration": 7.62,
+      "language": "French",
+      "seconds": 12.967964082985418
+    },
+    {
+      "id": "fr_fr:1669:320",
+      "anchor": false,
+      "reference": "chandra shekhar solanki commissaire de police a déclaré que les personnes accusées avaient le visage dissimulé lorsqu'elles ont comparu devant le tribunal",
+      "prediction": "Chandra Shikhar Solanki, commissaire de police, a déclaré que les personnes accusées avaient le visage dissimulé lorsqu'elles ont comparu devant le tribunal.",
+      "duration": 9.6,
+      "language": "French",
+      "seconds": 16.893640334019437
+    },
+    {
+      "id": "fr_fr:1670:396",
+      "anchor": false,
+      "reference": "« leur comportement thermique n’est pas aussi stable que celui des grandes grottes de la planète qui maintiennent une température constante mais ils se ressemblent en ce qu’ils sont des trous profonds dans la terre » selon glen cushing membre de l’équipage de l'usgs centre américain d’études géologiques et du personnel de l’université d’arizona du nord situé à flagstaff en arizona",
+      "prediction": "Leur comportement thermique n'est pas aussi stable que celui des grandes grottes de la planète qui maintiennent une température constante. Mais ils se ressemblent en ce qui sont des trous profonds dans la Terre, selon Glenn Cushing, membre de l'équipage de l'USGS, cent américain d'études géologiques et du personnel de l'université d'Arizona du nord situé à Flagstaff en Arizona.",
+      "duration": 21.78,
+      "language": "French",
+      "seconds": 38.25139474999742
+    },
+    {
+      "id": "fr_fr:1670:484",
+      "anchor": false,
+      "reference": "« leur comportement thermique n’est pas aussi stable que celui des grandes grottes de la planète qui maintiennent une température constante mais ils se ressemblent en ce qu’ils sont des trous profonds dans la terre » selon glen cushing membre de l’équipage de l'usgs centre américain d’études géologiques et du personnel de l’université d’arizona du nord situé à flagstaff en arizona",
+      "prediction": "Leur comportement thermique n'est pas aussi stable que celui des grandes grottes de la planète qui maintiennent une température constante, mais ils se ressemblent en ce qu'ils sont des trous profonds dans la terre. Selon Glenn Couching, membre de l'équipage de l'USGS, centre américain des études géologiques, et du personnel de l'université d'Arizona du Nord située à Flagstaff en Arizona.",
+      "duration": 28.68,
+      "language": "French",
+      "seconds": 51.41862279199995
+    },
+    {
+      "id": "fr_fr:1671:196",
+      "anchor": false,
+      "reference": "le congrès a lancé le financement de l'initiative contre la pornographie au cours de l'exercice 2005 tout en précisant que le fbi s'apprêtait à affecter dix agents à la lutte contre la pornographie adulte",
+      "prediction": "Le congrès a lancé le financement de l'initiative contre la pornographie au cours de l'exercice 2005, tout en précisant que les BRI s'apprêtait à effectuer dix agents à la lutte contre la pornographie adulte.",
+      "duration": 12.9,
+      "language": "French",
+      "seconds": 23.693514208018314
+    },
+    {
+      "id": "fr_fr:1671:220",
+      "anchor": false,
+      "reference": "le congrès a lancé le financement de l'initiative contre la pornographie au cours de l'exercice 2005 tout en précisant que le fbi s'apprêtait à affecter dix agents à la lutte contre la pornographie adulte",
+      "prediction": "Le Congrès a lancé le financement de l'initiative contre la pornographie au cours de l'exercice 2005, tout en précisant que le FBI s'apprêtait à affecter 10 agents à la lutte contre la pornographie adulte.",
+      "duration": 13.14,
+      "language": "French",
+      "seconds": 23.38626241599559
+    },
+    {
+      "id": "fr_fr:1671:468",
+      "anchor": false,
+      "reference": "le congrès a lancé le financement de l'initiative contre la pornographie au cours de l'exercice 2005 tout en précisant que le fbi s'apprêtait à affecter dix agents à la lutte contre la pornographie adulte",
+      "prediction": "Le congrès a lancé le financement de l'initiative contre la pornographie au cours de l'exercice 2005, tout en précisant que le FIA s'apprêtait à effectuer dix agents à la lutte contre la pornographie adulte.",
+      "duration": 12.06,
+      "language": "French",
+      "seconds": 22.632143166993046
+    },
+    {
+      "id": "fr_fr:1672:366",
+      "anchor": false,
+      "reference": "évitez de ne pas laisser le tissu surchauffer ce qui peut causer son rétrécissement ou dans les cas extrêmes le brûler",
+      "prediction": "Évitez de ne pas laisser le tissu surchauffer, ce qui peut causer son rétrécissement ou, dans les cas extrêmes, le brûler.",
+      "duration": 7.74,
+      "language": "French",
+      "seconds": 12.816525750007713
+    }
+  ],
+  "load_seconds": 4.03274591700756,
+  "wall_seconds": 477.44218166699284,
+  "peak_process_bytes": 3660333056,
+  "real_time_factor": 1.6503989242413022,
+  "versions": {
+    "torch": "2.7.1",
+    "transformers": "4.57.6",
+    "numpy": "2.5.3",
+    "safetensors": "0.7.0"
+  }
+}

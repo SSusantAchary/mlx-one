@@ -14,6 +14,36 @@ is registered for this model type.
 is an upstream checkpoint candidate. Complete checkpoint loading, processor
 parity, image/video task integration, training, and quality remain unqualified.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Images / video frame patches                 Text token IDs
+             ↓                                      ↓
+┌──────────── Vision encoder ───────────┐     Token embeddings
+│ Temporal/spatial patch embedding      │             │
+│ Windowed + selected full attention    │             │
+│ Vision RoPE + biased SwiGLU blocks    │             │
+│ Spatial patch merger / projection     │             │
+└──────────────────┬────────────────────┘             │
+                   └──────────────┬──────────────────┘
+                       Replace visual-token slots
+                                  ↓
+                 Qwen decoder + multimodal position IDs / RoPE
+                                  ↓
+                         LM head → token logits
+```
+
+## Papers and upstream references
+
+Paper: [Qwen2.5-VL Technical Report](https://arxiv.org/abs/2502.13923).
+
+This is the native forward architecture, not a registered end-to-end task
+loader. Publisher processing and temporal-coordinate parity remain unqualified.
+
 ## Installation and assets
 
 Use Python 3.10+ and install `python -m pip install -e '.[vision]'` from the

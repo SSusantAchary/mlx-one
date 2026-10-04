@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "gates": {
+    "100_clips": true,
+    "16_exact_anchors": true,
+    "wer_degradation": true,
+    "cer_degradation": true,
+    "process_budget": true,
+    "cleanup_growth": true
+  },
+  "anchor_mismatches": [],
+  "reference_wer": 0.032821824381926684,
+  "native_wer": 0.032821824381926684,
+  "reference_cer": 0.013714395319842716,
+  "native_cer": 0.013714395319842716,
+  "reference": "/private/tmp/mlx-one-audio-reference.ulJYlH/moonshine-tiny-reference.json",
+  "native": "/private/tmp/mlx-one-audio-reference.ulJYlH/moonshine-tiny-native.json",
+  "scope": "English short-form transcript parity only; components/timestamps pending"
+}

@@ -1,0 +1,154 @@
+{
+  "status": "PASS",
+  "source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+  "fixture_manifest_sha256": "41694d83bdd779f28ad0e92244219a27bb400ea5e8980d16e973390b23e5f2c3",
+  "fixtures": {
+    "fixtures.npz": "d097ac96ef08385b09c9fd5189c4defd212e22026e9a76872500cac67ed05802",
+    "qwen3_asr-weights.npz": "8f688a5f2a2f4fe3562f0cacb1a7bde85cedbaf8f42adc749b7a1e07a0d87879",
+    "qwen3_forced_aligner-weights.npz": "5c3a9a5fd12839bb62ede14fed326cb2517f598f2e97b776524e63e7b52dfca9"
+  },
+  "reference_versions": {
+    "torch": "2.7.1",
+    "transformers": "4.57.6"
+  },
+  "native_mlx_version": "0.32.2",
+  "dtype": "float32",
+  "atol": 0.0001,
+  "rtol": 0.0001,
+  "metrics": {
+    "preprocessing": {
+      "pass": true,
+      "maximum_absolute_difference": 7.152557373046875e-05
+    },
+    "tokenizer-0": {
+      "pass": true
+    },
+    "tokenizer-1": {
+      "pass": true
+    },
+    "tokenizer-2": {
+      "pass": true
+    },
+    "qwen3_asr-1-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 6.984919309616089e-10
+    },
+    "qwen3_asr-1-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 2.9802322387695312e-08
+    },
+    "qwen3_asr-1-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 1.4901161193847656e-08
+    },
+    "qwen3_asr-99-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 1.0477378964424133e-09
+    },
+    "qwen3_asr-99-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 5.587935447692871e-08
+    },
+    "qwen3_asr-99-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 1.4901161193847656e-08
+    },
+    "qwen3_asr-100-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 9.313225746154785e-10
+    },
+    "qwen3_asr-100-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 6.239861249923706e-08
+    },
+    "qwen3_asr-100-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 1.4901161193847656e-08
+    },
+    "qwen3_asr-101-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 9.313225746154785e-10
+    },
+    "qwen3_asr-101-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 6.705522537231445e-08
+    },
+    "qwen3_asr-101-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 1.4901161193847656e-08
+    },
+    "qwen3_asr-257-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 1.1641532182693481e-09
+    },
+    "qwen3_asr-257-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 5.960464477539063e-08
+    },
+    "qwen3_asr-257-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 1.4901161193847656e-08
+    },
+    "qwen3_forced_aligner-1-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 6.984919309616089e-10
+    },
+    "qwen3_forced_aligner-1-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 2.2351741790771484e-08
+    },
+    "qwen3_forced_aligner-1-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 1.4901161193847656e-08
+    },
+    "qwen3_forced_aligner-99-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 1.1350493878126144e-09
+    },
+    "qwen3_forced_aligner-99-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 4.6566128730773926e-08
+    },
+    "qwen3_forced_aligner-99-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 7.450580596923828e-09
+    },
+    "qwen3_forced_aligner-100-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 1.3969838619232178e-09
+    },
+    "qwen3_forced_aligner-100-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 5.960464477539063e-08
+    },
+    "qwen3_forced_aligner-100-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 3.725290298461914e-09
+    },
+    "qwen3_forced_aligner-101-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 1.1641532182693481e-09
+    },
+    "qwen3_forced_aligner-101-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 7.264316082000732e-08
+    },
+    "qwen3_forced_aligner-101-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 7.450580596923828e-09
+    },
+    "qwen3_forced_aligner-257-encoder": {
+      "pass": true,
+      "maximum_absolute_difference": 1.1641532182693481e-09
+    },
+    "qwen3_forced_aligner-257-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 5.960464477539063e-08
+    },
+    "qwen3_forced_aligner-257-cached-logits": {
+      "pass": true,
+      "maximum_absolute_difference": 7.450580596923828e-09
+    }
+  },
+  "scope": "synthetic deterministic components, not checkpoint qualification"
+}

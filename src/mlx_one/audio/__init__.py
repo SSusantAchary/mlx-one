@@ -1,17 +1,36 @@
-"""Native automatic speech-recognition services."""
+"""Native audio services; importing this namespace does not initialize MLX."""
 
+from mlx_one.audio.loading import AudioModelLoadError, load_audio_model
+from mlx_one.audio.qwen import align_audio
 from mlx_one.audio.schemas import (
+    AlignmentUnit,
+    ASRDecodeOptions,
+    AudioAlignment,
+    AudioStreamEvent,
+    QwenASROptions,
+    SpeechTranscript,
     TranscriptionResult,
     TranscriptionSegment,
     TranscriptionWord,
     WhisperDecodeOptions,
 )
 from mlx_one.audio.service import transcribe
+from mlx_one.audio.streaming import open_audio_stream
 
 __all__ = [
+    "ASRDecodeOptions",
+    "QwenASROptions",
+    "AlignmentUnit",
+    "AudioAlignment",
+    "AudioStreamEvent",
+    "SpeechTranscript",
+    "AudioModelLoadError",
     "TranscriptionResult",
     "TranscriptionSegment",
     "TranscriptionWord",
     "WhisperDecodeOptions",
+    "load_audio_model",
     "transcribe",
+    "align_audio",
+    "open_audio_stream",
 ]

@@ -7,7 +7,7 @@
 Registry type: `whisper`. The native encoder-decoder stack includes safe checkpoint
 loading, log-Mel preprocessing, BPE, language detection, beam/sampled decoding,
 segment and word timestamps, and WER/CER evaluation. Configurations cover tiny,
-base, small, medium, large-v3, and large-v3-turbo variants.
+base, small, medium, large-v3, large-v3-turbo, and Distil-Whisper large-v3 variants.
 
 The root README reports passing pinned tiny/turbo smoke gates. The
 [integration test](../../../../../tests/test_native_whisper_integration.py) pins:
@@ -16,10 +16,93 @@ The root README reports passing pinned tiny/turbo smoke gates. The
 | --- | --- |
 | [openai/whisper-tiny](https://huggingface.co/openai/whisper-tiny) | `169d4a4341b33bc18d8881c4b69c2e104e1cc0af` |
 | [openai/whisper-large-v3-turbo](https://huggingface.co/openai/whisper-large-v3-turbo) | `60be3615a4d667e1258e8ad29130467587c489aa` |
+| [distil-whisper/distil-large-v3](https://huggingface.co/distil-whisper/distil-large-v3) | `8031d2e6ce6631b7fc45629dddfc00271116d981` |
 
 These smoke contracts do not establish general transcription quality, WER,
 timestamp accuracy, or throughput for all variants. The family remains a candidate
 for broader task/hardware qualification.
+
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Audio waveform → log-Mel features
+                    ↓
+┌──────────────────── Audio encoder ──────────────────────────┐
+│ Conv1d + GELU → strided Conv1d + GELU → position embeddings │
+│ Bidirectional Transformer encoder → final LayerNorm         │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ cross-attention keys/values
+Prefix / previous text tokens → token + position embeddings
+                           ↓
+┌──────────────────── Text decoder ───────────────────────────┐
+│ Causal self-attention → audio cross-attention → MLP         │
+│ Residuals + LayerNorm; self/cross-attention caches          │
+└──────────────────────────┬──────────────────────────────────┘
+                           ↓
+         Tied vocabulary projection → text/task/timestamp tokens
+```
+
+## Papers and upstream references
+
+Paper: [Robust Speech Recognition via Large-Scale Weak Supervision](https://arxiv.org/abs/2212.04356).
+
+Distillation reference: [Distil-Whisper: Robust Knowledge Distillation via
+Large-Scale Pseudo Labelling](https://arxiv.org/abs/2311.00430), and the
+[publisher's large-v3 model card](https://huggingface.co/distil-whisper/distil-large-v3).
+
+Language/task/timestamp behavior is encoded in the decoder token protocol;
+word-timestamp postprocessing is not a separate audio encoder.
+
+## Distil-Whisper large-v3
+
+This checkpoint keeps the 32-layer Whisper large-v3 encoder and uses a two-layer
+decoder (width 1280, 20 heads, 128 Mel bins). It uses the same `whisper` registry
+type and public transcription result as other Whisper variants, not a new ASR
+architecture or upstream-library runtime bridge.
+
+The [M4 qualification report](../../../../../docs/audio-qualification-m4-32gb.md)
+records 100 English test-clean clips, 16 exact transcript anchors, matching
+WER/CER, and 16 reference-matched segment-timestamp clips. This does not qualify
+word timestamps, non-English quality, translation or general long-form workloads.
+
+The loader chooses `model.safetensors` or its authoritative shard index and does
+not combine the publisher's alternate `model.fp32.safetensors` export. Explicit
+tied output projections must match decoder embeddings. Generation-file suppression
+IDs and alignment heads are validated against the two-layer decoder.
+
+```bash
+mlx-one transcribe distil-whisper/distil-large-v3 recording.wav \
+  --revision 8031d2e6ce6631b7fc45629dddfc00271116d981 \
+  --language en --beam-size 1 --best-of 1 --temperature 0 --json-output
+```
+
+```python
+from mlx_one.audio import WhisperDecodeOptions, load_audio_model, transcribe
+
+model = load_audio_model(
+    "distil-whisper/distil-large-v3",
+    revision="8031d2e6ce6631b7fc45629dddfc00271116d981",
+    offline=True,  # Requires a complete previously cached snapshot.
+)
+result = transcribe(
+    model, "recording.wav", language="en",
+    options=WhisperDecodeOptions(
+        temperatures=(0.0,), beam_size=1, best_of=1,
+        condition_on_previous_text=False, max_tokens=128,
+        compression_ratio_threshold=None, logprob_threshold=None,
+        no_speech_threshold=None,
+    ),
+)
+print(result.text)
+```
+
+Historical default beam/fallback/previous-text behavior remains available.
+For explicit text-only generation, Python decode options expose
+`without_timestamps=True`; do not use that profile as segment-timestamp evidence.
 
 ## Installation and assets
 

@@ -1,0 +1,261 @@
+{
+  "dataset": "google/fleurs",
+  "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "source": "parquet-data/de_de/test-00000-of-00001.parquet",
+  "source_sha256": "3b40c214cabd603f1ddbf3da0499f7780975d6c56b75240f07a8990dbb7a6c07",
+  "records": [
+    {
+      "id": "de_de:1660:108",
+      "audio": "clip-000.wav",
+      "audio_sha256": "7fedda3ac6a639187b484a968421f8c5f6abdcc7eb264ef8021ffca1014c99fa",
+      "reference": "die romantik hatte ein starkes kulturell deterministisches element dass sich aus schriftstellern wie goethe fichte und schlegel sch\u00f6pfte",
+      "anchor": false,
+      "language": "German",
+      "source_row": 108,
+      "publisher_audio_path": "1191248392415945452.wav"
+    },
+    {
+      "id": "de_de:1660:529",
+      "audio": "clip-001.wav",
+      "audio_sha256": "cbb26980c5ebd5b53aaf3846984bc110acd7367e758ce9789343976af5364ec8",
+      "reference": "die romantik hatte ein starkes kulturell deterministisches element dass sich aus schriftstellern wie goethe fichte und schlegel sch\u00f6pfte",
+      "anchor": false,
+      "language": "German",
+      "source_row": 529,
+      "publisher_audio_path": "3702978878419561855.wav"
+    },
+    {
+      "id": "de_de:1660:833",
+      "audio": "clip-002.wav",
+      "audio_sha256": "86ee3f01399e89c4d402fbcc0de19daa658ea6161c07e987893c3dbec38ed40d",
+      "reference": "die romantik hatte ein starkes kulturell deterministisches element dass sich aus schriftstellern wie goethe fichte und schlegel sch\u00f6pfte",
+      "anchor": false,
+      "language": "German",
+      "source_row": 833,
+      "publisher_audio_path": "9365583498065468558.wav"
+    },
+    {
+      "id": "de_de:1661:189",
+      "audio": "clip-003.wav",
+      "audio_sha256": "8430e54b4cc4cb48142266537213db2960d0308205c30384c7e84b4660fc77d9",
+      "reference": "er nannte keine zahl f\u00fcr die k\u00fcrzungen sondern sagte sie w\u00fcrden auf der grundlage der wirtschaftsleistung chinas vorgenommen",
+      "anchor": false,
+      "language": "German",
+      "source_row": 189,
+      "publisher_audio_path": "1344636249392808118.wav"
+    },
+    {
+      "id": "de_de:1661:280",
+      "audio": "clip-004.wav",
+      "audio_sha256": "88c5ada33a920d1080c34f0e25bacae7d3a66ae9d935b1f2f1fa7359ac7ec61d",
+      "reference": "er nannte keine zahl f\u00fcr die k\u00fcrzungen sondern sagte sie w\u00fcrden auf der grundlage der wirtschaftsleistung chinas vorgenommen",
+      "anchor": false,
+      "language": "German",
+      "source_row": 280,
+      "publisher_audio_path": "15210891218254551745.wav"
+    },
+    {
+      "id": "de_de:1662:105",
+      "audio": "clip-005.wav",
+      "audio_sha256": "cb4108041c7b9ea6d0ae9109b810646b954646476225c632cf0fb5bd6467ac53",
+      "reference": "legierungen sind im grunde eine mischung aus zwei oder mehr metallen vergessen sie nicht dass es viele elemente im periodensystem gibt",
+      "anchor": false,
+      "language": "German",
+      "source_row": 105,
+      "publisher_audio_path": "11871610055270234526.wav"
+    },
+    {
+      "id": "de_de:1662:278",
+      "audio": "clip-006.wav",
+      "audio_sha256": "1c7a591ba5e952adac7d56227eeea42807ec7844541e58fe6add6df1f186d4db",
+      "reference": "legierungen sind im grunde eine mischung aus zwei oder mehr metallen vergessen sie nicht dass es viele elemente im periodensystem gibt",
+      "anchor": false,
+      "language": "German",
+      "source_row": 278,
+      "publisher_audio_path": "15175045596108872942.wav"
+    },
+    {
+      "id": "de_de:1662:649",
+      "audio": "clip-007.wav",
+      "audio_sha256": "a6cda6a5bf4931db5f9a630f693bafb428ed7144eb25dab0ab575f70842af602",
+      "reference": "legierungen sind im grunde eine mischung aus zwei oder mehr metallen vergessen sie nicht dass es viele elemente im periodensystem gibt",
+      "anchor": false,
+      "language": "German",
+      "source_row": 649,
+      "publisher_audio_path": "5763232029126848552.wav"
+    },
+    {
+      "id": "de_de:1663:741",
+      "audio": "clip-008.wav",
+      "audio_sha256": "538728d89645fe6c1abd6e090a03c5b34d43c97c754d056747190f36bb672439",
+      "reference": "das cocham\u00f3-tal \u2013 chiles wichtigstes kletterziel bekannt als der yosemite-nationalpark von s\u00fcdamerika mit einer vielzahl von gro\u00dfen granitw\u00e4nden und -klippen",
+      "anchor": false,
+      "language": "German",
+      "source_row": 741,
+      "publisher_audio_path": "7488275135478003184.wav"
+    },
+    {
+      "id": "de_de:1664:512",
+      "audio": "clip-009.wav",
+      "audio_sha256": "0f8201286de9de1b71ae601055f1845f24c64a0e79e02b89f3793b3ebd4061b1",
+      "reference": "mischen sie die zwei trockenpulver zusammen und formen sie sie dann mit sauberen nassen h\u00e4nden zu einem ball",
+      "anchor": false,
+      "language": "German",
+      "source_row": 512,
+      "publisher_audio_path": "3251613536890899752.wav"
+    },
+    {
+      "id": "de_de:1664:751",
+      "audio": "clip-010.wav",
+      "audio_sha256": "be3f45e41885a1ec1bde06131a2dbd02fd9316043bb3475c41f117e8890fad75",
+      "reference": "mischen sie die zwei trockenpulver zusammen und formen sie sie dann mit sauberen nassen h\u00e4nden zu einem ball",
+      "anchor": false,
+      "language": "German",
+      "source_row": 751,
+      "publisher_audio_path": "7662538099465174898.wav"
+    },
+    {
+      "id": "de_de:1664:752",
+      "audio": "clip-011.wav",
+      "audio_sha256": "abfdc48e17a5732588f96949237e44d8ab1ebd7fd58c0fe61325eb6bff2b1698",
+      "reference": "mischen sie die zwei trockenpulver zusammen und formen sie sie dann mit sauberen nassen h\u00e4nden zu einem ball",
+      "anchor": false,
+      "language": "German",
+      "source_row": 752,
+      "publisher_audio_path": "7718225761462485999.wav"
+    },
+    {
+      "id": "de_de:1665:33",
+      "audio": "clip-012.wav",
+      "audio_sha256": "7e5caa4feee3f52b1e071df3baed6aa9a09a0b220bebdf3825931b98a9a143f0",
+      "reference": "dem leak zufolge bezieht sich das dokument auf den grenzstreit in dem die pal\u00e4stinenser ein zur\u00fccksetzen der grenzen in den zustand vor dem sechstagekrieg von 1967 fordern",
+      "anchor": false,
+      "language": "German",
+      "source_row": 33,
+      "publisher_audio_path": "10534115037762380445.wav"
+    },
+    {
+      "id": "de_de:1665:360",
+      "audio": "clip-013.wav",
+      "audio_sha256": "8b38e792bf4ad2db08737e590856ae2e5898fd4f5d7fe771fe8de70daeb82e38",
+      "reference": "dem leak zufolge bezieht sich das dokument auf den grenzstreit in dem die pal\u00e4stinenser ein zur\u00fccksetzen der grenzen in den zustand vor dem sechstagekrieg von 1967 fordern",
+      "anchor": false,
+      "language": "German",
+      "source_row": 360,
+      "publisher_audio_path": "16846909353761153442.wav"
+    },
+    {
+      "id": "de_de:1665:792",
+      "audio": "clip-014.wav",
+      "audio_sha256": "94c10c5907953dc182aef8deb071c1542d6befd8cdb70cd752f3a171ff0a44d9",
+      "reference": "dem leak zufolge bezieht sich das dokument auf den grenzstreit in dem die pal\u00e4stinenser ein zur\u00fccksetzen der grenzen in den zustand vor dem sechstagekrieg von 1967 fordern",
+      "anchor": false,
+      "language": "German",
+      "source_row": 792,
+      "publisher_audio_path": "8437577507466055001.wav"
+    },
+    {
+      "id": "de_de:1666:593",
+      "audio": "clip-015.wav",
+      "audio_sha256": "92bf64d2bd913444a9614aa2c73eb25e9403ba1634051074169cb2e05042c227",
+      "reference": "sie k\u00f6nnen auch die ratschl\u00e4ge anderer regierungen als der ihren konsultieren deren hinweise sind jedoch auf ihre eigenen staatsb\u00fcrger zugeschnitten",
+      "anchor": false,
+      "language": "German",
+      "source_row": 593,
+      "publisher_audio_path": "4807927553917148837.wav"
+    },
+    {
+      "id": "de_de:1666:671",
+      "audio": "clip-016.wav",
+      "audio_sha256": "07310c6f263d41d04753285b62023e1f6538dec6a5585c1d6a0f2539079c7da8",
+      "reference": "sie k\u00f6nnen auch die ratschl\u00e4ge anderer regierungen als der ihren konsultieren deren hinweise sind jedoch auf ihre eigenen staatsb\u00fcrger zugeschnitten",
+      "anchor": false,
+      "language": "German",
+      "source_row": 671,
+      "publisher_audio_path": "6177379652368982884.wav"
+    },
+    {
+      "id": "de_de:1666:676",
+      "audio": "clip-017.wav",
+      "audio_sha256": "c99e9ff0526e2688a5ab2c54ce4d5ddca2343b7cf0c941938e0652f3e085e3b9",
+      "reference": "sie k\u00f6nnen auch die ratschl\u00e4ge anderer regierungen als der ihren konsultieren deren hinweise sind jedoch auf ihre eigenen staatsb\u00fcrger zugeschnitten",
+      "anchor": false,
+      "language": "German",
+      "source_row": 676,
+      "publisher_audio_path": "6234855942488554382.wav"
+    },
+    {
+      "id": "de_de:1667:257",
+      "audio": "clip-018.wav",
+      "audio_sha256": "b782f85456f6990fb6af6be4fb565861b787da813e9d94f44f620b705bcefa89",
+      "reference": "im allgemeinen k\u00f6nnen sich zwei verhaltensweisen abzeichnen wenn manager beginnen ihre ehemaligen kollegen zu leiten. das eine ende des spektrums ist der versuch einer der jungs  oder eines der m\u00e4dels zu bleiben",
+      "anchor": false,
+      "language": "German",
+      "source_row": 257,
+      "publisher_audio_path": "14812431812112878039.wav"
+    },
+    {
+      "id": "de_de:1667:832",
+      "audio": "clip-019.wav",
+      "audio_sha256": "47182adadca106c46413ada4f1b94000125c023d198485654980e59223e29df1",
+      "reference": "im allgemeinen k\u00f6nnen sich zwei verhaltensweisen abzeichnen wenn manager beginnen ihre ehemaligen kollegen zu leiten. das eine ende des spektrums ist der versuch einer der jungs  oder eines der m\u00e4dels zu bleiben",
+      "anchor": false,
+      "language": "German",
+      "source_row": 832,
+      "publisher_audio_path": "9338926399606482905.wav"
+    },
+    {
+      "id": "de_de:1668:201",
+      "audio": "clip-020.wav",
+      "audio_sha256": "45c68c4d33fb19c105d773777cac155056b02adf3bb7f27bb16c72ea5cc2d184",
+      "reference": "es kann sich auch lohnen eine wild card zu kaufen die zutritt entweder zu ausgew\u00e4hlten parks in s\u00fcdafrika oder zu allen s\u00fcdafrikanischen nationalparks gew\u00e4hrt",
+      "anchor": false,
+      "language": "German",
+      "source_row": 201,
+      "publisher_audio_path": "13631299328082055159.wav"
+    },
+    {
+      "id": "de_de:1668:204",
+      "audio": "clip-021.wav",
+      "audio_sha256": "c4122bef9624efe63e38c373b4ed3ebce73b37e70999263bf8e7a0aa6e992f4e",
+      "reference": "es kann sich auch lohnen eine wild card zu kaufen die zutritt entweder zu ausgew\u00e4hlten parks in s\u00fcdafrika oder zu allen s\u00fcdafrikanischen nationalparks gew\u00e4hrt",
+      "anchor": false,
+      "language": "German",
+      "source_row": 204,
+      "publisher_audio_path": "13687270558726908593.wav"
+    },
+    {
+      "id": "de_de:1668:391",
+      "audio": "clip-022.wav",
+      "audio_sha256": "23efe86c64ee3e548344c14c5f6ae4da1675754abca7be2e7c3ce0db2afe6a82",
+      "reference": "es kann sich auch lohnen eine wild card zu kaufen die zutritt entweder zu ausgew\u00e4hlten parks in s\u00fcdafrika oder zu allen s\u00fcdafrikanischen nationalparks gew\u00e4hrt",
+      "anchor": false,
+      "language": "German",
+      "source_row": 391,
+      "publisher_audio_path": "17464087427779801353.wav"
+    },
+    {
+      "id": "de_de:1669:503",
+      "audio": "clip-023.wav",
+      "audio_sha256": "d2fcc27063dd3e509f7343133df25cb9f689294734b54e988d0addd98a1d996b",
+      "reference": "die polizeipr\u00e4sidentin chandra shekhar solanki gab an die angeklagten seien mit bedeckten gesichtern vor gericht erschienen",
+      "anchor": false,
+      "language": "German",
+      "source_row": 503,
+      "publisher_audio_path": "3045631440446403419.wav"
+    },
+    {
+      "id": "de_de:1669:703",
+      "audio": "clip-024.wav",
+      "audio_sha256": "8d03bb304da21e0e3c4f0a8e9e7cb9c02fcaf3bbde62d2a67d703d8129e31b87",
+      "reference": "die polizeipr\u00e4sidentin chandra shekhar solanki gab an die angeklagten seien mit bedeckten gesichtern vor gericht erschienen",
+      "anchor": false,
+      "language": "German",
+      "source_row": 703,
+      "publisher_audio_path": "6754907113927429020.wav"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "language": "German",
+  "selection": "first count test recordings sorted by (sentence ID, source row); no deduplication"
+}

@@ -20,6 +20,32 @@ Qwen2.5 0.5B/1.5B/3B and additional Coder sizes remain candidates in the
 [catalog](../../../../../docs/model-catalog.md). The Coder variant uses the same
 architecture, with its own weights and tokenizer/template assets.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token embeddings
+    ↓
+┌──────────────────── Decoder block × L ──────────────────────┐
+│ RMSNorm → biased Q/K/V → GQA + RoPE + attention KV → add    │
+│ RMSNorm → gated feed-forward (SwiGLU)               → add   │
+└─────────────────────────────────────────────────────────────┘
+    ↓
+Final RMSNorm → LM head → next-token logits
+```
+
+## Papers and upstream references
+
+Papers: [Qwen2 Technical Report](https://arxiv.org/abs/2407.10671),
+[Qwen2.5 Technical Report](https://arxiv.org/abs/2412.15115), and
+[Qwen2.5-Coder Technical Report](https://arxiv.org/abs/2409.12186).
+
+Qwen2.5 and Qwen2.5-Coder share this dense implementation; the diagram does not
+describe the separate MoE registry type.
+
 ## Installation and assets
 
 From the repository root, install `python -m pip install -e .` in a Python 3.10+

@@ -1,0 +1,1683 @@
+{
+  "assets": {
+    "README.md": {
+      "bytes": 7960,
+      "sha256": "9a1effbe460f863c59f37f1023496e3f7297ea03ecda5f94d790e95c2d99f21b"
+    },
+    "config.json": {
+      "bytes": 976,
+      "sha256": "f2073049d85ebf3d02825a35e6355004d59310568a1098779e4421b01333a2b1"
+    },
+    "generation_config.json": {
+      "bytes": 189,
+      "sha256": "abf6644989715d3704713bf6e5542b433ddc891583b3a89ce31a7614d124c1aa"
+    },
+    "model.safetensors": {
+      "bytes": 246079928,
+      "sha256": "e020c79d0a979a7ec099f718ff1cd2f19e92aead230d69654bca5975a8e1b862"
+    },
+    "preprocessor_config.json": {
+      "bytes": 215,
+      "sha256": "99272fe8ccfab114b68b478681ea47ee3a1ce62bb788cb92dd6e4f69fb1f1da2"
+    },
+    "tokenizer.json": {
+      "bytes": 1985530,
+      "sha256": "6579793438bc4fbafffacf699169ff53e3769c5a0a0f5e71cdee8853e8130deb"
+    }
+  },
+  "checkpoint_license": "MIT",
+  "config": {
+    "_name_or_path": "/home/eustache_lebihan/dev/add-moonshine/moonshine-base",
+    "architectures": [
+      "MoonshineForConditionalGeneration"
+    ],
+    "attention_bias": false,
+    "attention_dropout": 0,
+    "bos_token_id": 1,
+    "decoder_hidden_act": "silu",
+    "decoder_num_attention_heads": 8,
+    "decoder_num_hidden_layers": 8,
+    "decoder_num_key_value_heads": 8,
+    "decoder_start_token_id": 1,
+    "encoder_hidden_act": "gelu",
+    "encoder_num_attention_heads": 8,
+    "encoder_num_hidden_layers": 8,
+    "encoder_num_key_value_heads": 8,
+    "eos_token_id": 2,
+    "hidden_size": 416,
+    "initializer_range": 0.02,
+    "intermediate_size": 1664,
+    "is_encoder_decoder": true,
+    "max_position_embeddings": 194,
+    "model_type": "moonshine",
+    "pad_head_dim_to_multiple_of": 8,
+    "pad_token_id": 2,
+    "partial_rotary_factor": 0.62,
+    "rope_scaling": null,
+    "rope_theta": 10000,
+    "torch_dtype": "float32",
+    "transformers_version": "4.48.0.dev0",
+    "use_cache": true,
+    "vocab_size": 32768
+  },
+  "model": "moonshine-ai/moonshine-base",
+  "preprocessing": {
+    "do_normalize": false,
+    "feature_extractor_type": "Wav2Vec2FeatureExtractor",
+    "feature_size": 1,
+    "padding_side": "right",
+    "padding_value": 0,
+    "return_attention_mask": true,
+    "sampling_rate": 16000
+  },
+  "reference_commit": "cc832f9055ba11c8c55f918ab4bda9472b910d48",
+  "reference_source": "https://github.com/huggingface/transformers",
+  "revision": "7a73d8d55ac0ba2ef3ae761593f6784b51f96dcf",
+  "tensors": {
+    "model.decoder.embed_tokens.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        32768,
+        416
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.0.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.0.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.0.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.0.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.1.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.1.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.1.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.1.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.2.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.2.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.2.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.2.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.3.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.3.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.3.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.3.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.4.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.4.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.4.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.4.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.5.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.5.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.5.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.5.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.6.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.6.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.6.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.6.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.6.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.6.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.6.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.6.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.7.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.7.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328
+      ]
+    },
+    "model.decoder.layers.7.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        3328,
+        416
+      ]
+    },
+    "model.decoder.layers.7.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.7.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.decoder.layers.7.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.decoder.layers.7.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.layers.7.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.decoder.norm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.conv1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1,
+        127
+      ]
+    },
+    "model.encoder.conv2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        832
+      ]
+    },
+    "model.encoder.conv2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        832,
+        416,
+        7
+      ]
+    },
+    "model.encoder.conv3.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.conv3.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        832,
+        3
+      ]
+    },
+    "model.encoder.groupnorm.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.groupnorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layer_norm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.0.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.0.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.0.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.0.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.0.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.0.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.1.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.1.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.1.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.1.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.1.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.1.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.2.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.2.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.2.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.2.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.2.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.2.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.3.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.3.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.3.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.3.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.3.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.3.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.4.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.4.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.4.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.4.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.4.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.4.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.5.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.5.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.5.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.5.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.5.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.5.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.6.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.6.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.6.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.6.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.6.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.6.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.6.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.6.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.6.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.6.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.7.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.7.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664
+      ]
+    },
+    "model.encoder.layers.7.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1664,
+        416
+      ]
+    },
+    "model.encoder.layers.7.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.7.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        1664
+      ]
+    },
+    "model.encoder.layers.7.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416
+      ]
+    },
+    "model.encoder.layers.7.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.7.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.7.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    },
+    "model.encoder.layers.7.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        416,
+        416
+      ]
+    }
+  }
+}

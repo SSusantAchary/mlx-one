@@ -1,0 +1,1300 @@
+{
+  "assets": {
+    "README.md": {
+      "bytes": 7959,
+      "sha256": "e78d23eeed44c568f638f60c0f84437674c12724056714c374ba24d02e278277"
+    },
+    "config.json": {
+      "bytes": 897,
+      "sha256": "47a43777a14e17b1ffd5f533e021d4d18c3c475cbb96de0947ce409e16444ded"
+    },
+    "generation_config.json": {
+      "bytes": 189,
+      "sha256": "a8e1437432c3ba7d0fca84ced5b3a254bf0c42b8e75fc336497cdcb56675e303"
+    },
+    "model.safetensors": {
+      "bytes": 108389192,
+      "sha256": "867cd2215804859c55aa972d740bd5002be149b4e7526328c895d2408848c736"
+    },
+    "preprocessor_config.json": {
+      "bytes": 215,
+      "sha256": "99272fe8ccfab114b68b478681ea47ee3a1ce62bb788cb92dd6e4f69fb1f1da2"
+    },
+    "tokenizer.json": {
+      "bytes": 1985530,
+      "sha256": "6579793438bc4fbafffacf699169ff53e3769c5a0a0f5e71cdee8853e8130deb"
+    }
+  },
+  "checkpoint_license": "MIT",
+  "config": {
+    "architectures": [
+      "MoonshineForConditionalGeneration"
+    ],
+    "attention_bias": false,
+    "attention_dropout": 0,
+    "bos_token_id": 1,
+    "decoder_hidden_act": "silu",
+    "decoder_num_attention_heads": 8,
+    "decoder_num_hidden_layers": 6,
+    "decoder_num_key_value_heads": 8,
+    "decoder_start_token_id": 1,
+    "encoder_hidden_act": "gelu",
+    "encoder_num_attention_heads": 8,
+    "encoder_num_hidden_layers": 6,
+    "encoder_num_key_value_heads": 8,
+    "eos_token_id": 2,
+    "hidden_size": 288,
+    "initializer_range": 0.02,
+    "intermediate_size": 1152,
+    "is_encoder_decoder": true,
+    "max_position_embeddings": 194,
+    "model_type": "moonshine",
+    "pad_head_dim_to_multiple_of": 8,
+    "pad_token_id": 2,
+    "partial_rotary_factor": 0.9,
+    "rope_scaling": null,
+    "rope_theta": 10000,
+    "torch_dtype": "float32",
+    "transformers_version": "4.48.0.dev0",
+    "use_cache": true,
+    "vocab_size": 32768
+  },
+  "model": "moonshine-ai/moonshine-tiny",
+  "preprocessing": {
+    "do_normalize": false,
+    "feature_extractor_type": "Wav2Vec2FeatureExtractor",
+    "feature_size": 1,
+    "padding_side": "right",
+    "padding_value": 0,
+    "return_attention_mask": true,
+    "sampling_rate": 16000
+  },
+  "reference_commit": "cc832f9055ba11c8c55f918ab4bda9472b910d48",
+  "reference_source": "https://github.com/huggingface/transformers",
+  "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+  "tensors": {
+    "model.decoder.embed_tokens.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        32768,
+        288
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.0.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304,
+        288
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.0.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.decoder.layers.0.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.0.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.0.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.1.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304,
+        288
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.1.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.decoder.layers.1.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.1.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.1.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.2.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304,
+        288
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.2.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.decoder.layers.2.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.2.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.2.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.3.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304,
+        288
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.3.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.decoder.layers.3.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.3.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.3.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.4.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304,
+        288
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.4.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.decoder.layers.4.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.4.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.4.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.encoder_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.final_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.5.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        2304,
+        288
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.5.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.decoder.layers.5.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.decoder.layers.5.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.layers.5.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.decoder.norm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.conv1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1,
+        127
+      ]
+    },
+    "model.encoder.conv2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        576
+      ]
+    },
+    "model.encoder.conv2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        576,
+        288,
+        7
+      ]
+    },
+    "model.encoder.conv3.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.conv3.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        576,
+        3
+      ]
+    },
+    "model.encoder.groupnorm.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.groupnorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layer_norm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.0.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152,
+        288
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.0.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.encoder.layers.0.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.0.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.0.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.0.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.0.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.1.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152,
+        288
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.1.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.encoder.layers.1.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.1.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.1.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.1.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.1.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.2.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152,
+        288
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.2.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.encoder.layers.2.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.2.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.2.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.2.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.2.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.3.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152,
+        288
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.3.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.encoder.layers.3.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.3.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.3.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.3.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.3.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.4.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152,
+        288
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.4.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.encoder.layers.4.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.4.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.4.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.4.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.4.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.5.input_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc1.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc1.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        1152,
+        288
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc2.bias": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.5.mlp.fc2.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        1152
+      ]
+    },
+    "model.encoder.layers.5.post_attention_layernorm.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288
+      ]
+    },
+    "model.encoder.layers.5.self_attn.k_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.5.self_attn.o_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.5.self_attn.q_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    },
+    "model.encoder.layers.5.self_attn.v_proj.weight": {
+      "dtype": "F32",
+      "file": "model.safetensors",
+      "shape": [
+        288,
+        288
+      ]
+    }
+  }
+}

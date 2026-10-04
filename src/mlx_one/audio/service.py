@@ -1,4 +1,4 @@
-"""Public native Whisper transcription service."""
+"""Model-dispatched native transcription; legacy Whisper results are unchanged."""
 
 from __future__ import annotations
 
@@ -12,14 +12,22 @@ from mlx_one.audio.decoding import (
     align_words,
     decode_with_fallback,
     detect_language,
+    timestamp_seek_frames,
     timestamp_segments,
 )
+from mlx_one.audio.loading import load_audio_model
 from mlx_one.audio.schemas import (
+    ASRDecodeOptions,
+    QwenASROptions,
+    SpeechTranscript,
     TranscriptionResult,
     TranscriptionSegment,
     WhisperDecodeOptions,
 )
-from mlx_one.models.audio.whisper.loading import LoadedWhisper, load_whisper
+from mlx_one.models.audio.moonshine.loading import LoadedMoonshine
+from mlx_one.models.audio.parakeet.loading import LoadedParakeet
+from mlx_one.models.audio.qwen3_asr.loading import LoadedQwenAudio
+from mlx_one.models.audio.whisper.loading import LoadedWhisper
 from mlx_one.models.audio.whisper.processing import (
     HOP_LENGTH,
     N_FRAMES,
@@ -31,30 +39,77 @@ from mlx_one.models.audio.whisper.processing import (
 
 
 def transcribe(
-    model: str | Path | LoadedWhisper,
+    model: str | Path | LoadedWhisper | LoadedMoonshine | LoadedQwenAudio | LoadedParakeet,
     audio: str | Path | Any,
     *,
     revision: str | None = None,
     language: str | None = None,
     task: Literal["transcribe", "translate"] = "transcribe",
     word_timestamps: bool = False,
-    options: WhisperDecodeOptions | None = None,
+    options: WhisperDecodeOptions | ASRDecodeOptions | None = None,
     offline: bool = False,
     cache_dir: str | Path | None = None,
     cancelled: Callable[[], bool] | None = None,
-) -> TranscriptionResult:
-    """Transcribe a file or mono 16-kHz waveform with native Whisper."""
+    sample_rate: int | None = None,
+) -> TranscriptionResult | SpeechTranscript:
+    """Transcribe with a native family; new waveform APIs require a sample rate.
 
-    import mlx.core as mx
+    Legacy Whisper arrays still implicitly use 16 kHz, and return the original
+    TranscriptionResult/JSON schema. Moonshine uses a separate SpeechTranscript.
+    """
 
     started = time.perf_counter()
     bundle = (
         model
-        if isinstance(model, LoadedWhisper)
-        else load_whisper(model, revision=revision, offline=offline, cache_dir=cache_dir)
+        if isinstance(model, (LoadedWhisper, LoadedMoonshine, LoadedQwenAudio, LoadedParakeet))
+        else load_audio_model(model, revision=revision, offline=offline, cache_dir=cache_dir)
     )
     loaded_at = time.perf_counter()
+    if isinstance(bundle, LoadedParakeet):
+        from mlx_one.audio.parakeet import transcribe_parakeet
+
+        return transcribe_parakeet(
+            bundle, audio,
+            model_name=str(bundle.path) if isinstance(model, LoadedParakeet) else str(model),
+            sample_rate=sample_rate, language=language, task=task, word_timestamps=word_timestamps,
+            options=options, cancelled=cancelled, started=started, loaded_at=loaded_at,
+        )
+    if isinstance(bundle, LoadedQwenAudio):
+        from mlx_one.audio.qwen import transcribe_qwen
+
+        return transcribe_qwen(
+            bundle, audio,
+            model_name=str(bundle.path) if isinstance(model, LoadedQwenAudio) else str(model),
+            sample_rate=sample_rate, language=language, task=task, word_timestamps=word_timestamps,
+            options=options, cancelled=cancelled, started=started, loaded_at=loaded_at,
+        )
+    if isinstance(bundle, LoadedMoonshine):
+        if isinstance(options, QwenASROptions):
+            raise ValueError("Moonshine does not support Qwen context/decoding options")
+        from mlx_one.audio.moonshine import transcribe_moonshine
+
+        return transcribe_moonshine(
+            bundle,
+            audio,
+            model_name=str(bundle.path) if isinstance(model, LoadedMoonshine) else str(model),
+            sample_rate=sample_rate,
+            language=language,
+            task=task,
+            word_timestamps=word_timestamps,
+            options=options,
+            cancelled=cancelled,
+            started=started,
+            loaded_at=loaded_at,
+        )
+    if not isinstance(bundle, LoadedWhisper):
+        raise ValueError("audio loader returned an unsupported native transcription bundle")
+    if options is not None and not isinstance(options, WhisperDecodeOptions):
+        raise ValueError("Whisper requires WhisperDecodeOptions")
+    if sample_rate is not None and (isinstance(sample_rate, bool) or sample_rate != SAMPLE_RATE):
+        raise ValueError("Whisper waveform sample_rate must be 16000")
     _raise_if_cancelled(cancelled)
+    import mlx.core as mx
+
     if isinstance(audio, (str, Path)):
         waveform = decode_audio(audio, cancelled=cancelled)
     else:
@@ -73,8 +128,12 @@ def transcribe(
     processed_at = time.perf_counter()
     total_frames = max(1, mel.shape[1] - N_FRAMES)
     opts = options or WhisperDecodeOptions()
-    if opts.suppress_tokens is None and bundle.model.config.suppress_tokens is not None:
-        opts = replace(opts, suppress_tokens=tuple(bundle.model.config.suppress_tokens))
+    if opts.suppress_tokens is None:
+        suppressed = bundle.generation_config.get(
+            "suppress_tokens", bundle.model.config.suppress_tokens
+        )
+        if suppressed is not None:
+            opts = replace(opts, suppress_tokens=tuple(suppressed))
     all_tokens: list[int] = []
     segments: list[TranscriptionSegment] = []
     seek = 0
@@ -87,9 +146,7 @@ def transcribe(
         encoded, _ = bundle.model.encode(chunk[None, ...])
         mx.eval(encoded)
         if detected_language is None:
-            detected_language, _ = detect_language(
-                bundle.model, encoded, bundle.tokenizer
-            )
+            detected_language, _ = detect_language(bundle.model, encoded, bundle.tokenizer)
         prompt = None
         if opts.initial_prompt and not all_tokens:
             prompt = bundle.tokenizer.encode(" " + opts.initial_prompt.strip())
@@ -119,15 +176,19 @@ def transcribe(
             decoded_segments = [(0.0, min(30.0, duration - offset), decoded.tokens)]
         for start, end, token_ids in decoded_segments:
             text = bundle.tokenizer.decode(token_ids).strip()
-            words = align_words(
-                token_ids,
-                decoded.cross_attentions,
-                bundle.tokenizer,
-                alignment_heads=bundle.generation_config.get("alignment_heads"),
-                median_width=bundle.model.config.median_filter_width,
-                time_offset=offset + start,
-                token_logprobs=decoded.token_logprobs,
-            ) if word_timestamps else ()
+            words = (
+                align_words(
+                    token_ids,
+                    decoded.cross_attentions,
+                    bundle.tokenizer,
+                    alignment_heads=bundle.generation_config.get("alignment_heads"),
+                    median_width=bundle.model.config.median_filter_width,
+                    time_offset=offset + start,
+                    token_logprobs=decoded.token_logprobs,
+                )
+                if word_timestamps
+                else ()
+            )
             segments.append(
                 TranscriptionSegment(
                     id=len(segments),
@@ -144,12 +205,9 @@ def transcribe(
                 )
             )
             all_tokens.extend(token_ids)
-        if decoded_segments:
-            last_end = decoded_segments[-1][1]
-            consumed_frames = round(last_end * SAMPLE_RATE / HOP_LENGTH)
-            seek += min(N_FRAMES, max(1, consumed_frames))
-        else:
-            seek += N_FRAMES
+        seek += timestamp_seek_frames(
+            decoded.tokens, bundle.tokenizer, min(N_FRAMES, total_frames - seek)
+        )
     completed_at = time.perf_counter()
     model_name = str(model) if not isinstance(model, LoadedWhisper) else str(bundle.path)
     return TranscriptionResult(

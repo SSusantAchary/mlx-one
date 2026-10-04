@@ -9,6 +9,32 @@ head dimensions, RoPE, RMSNorm, and gated feed-forward layers. Configuration,
 weight mapping, quantized loading, multi-EOS handling, and cached execution have
 tests. A shared registry type does not qualify every Llama-compatible checkpoint.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token embeddings
+    ↓
+┌──────────────────── Decoder block × L ──────────────────────┐
+│ RMSNorm → causal GQA + RoPE + attention KV          → add   │
+│ RMSNorm → gated feed-forward (SwiGLU)               → add   │
+└─────────────────────────────────────────────────────────────┘
+    ↓
+Final RMSNorm → tied/untied LM head → next-token logits
+```
+
+## Papers and upstream references
+
+Papers: [LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971)
+and [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783).
+
+The diagram describes the local Llama-compatible decoder, not every historical
+Llama release. MiniCPM5 and SmolLM2 use this implementation with their own
+configuration, weights, and tokenizer; their references appear below.
+
 ## Installation and assets
 
 Use Python 3.10+, Apple Silicon, and Metal for execution. From the repository
@@ -19,6 +45,12 @@ tokenizer metadata. Chat uses the bundle's `chat_template.jinja` or
 quantization configuration; model-weight precision and cache precision are separate.
 
 ## MiniCPM5
+
+This checkpoint follows the Llama-compatible decoder diagram above. Its
+[official model card](https://huggingface.co/openbmb/MiniCPM5-1B) links
+[MiniCPM4: Ultra-Efficient LLMs on End Devices](https://arxiv.org/abs/2506.07900)
+as background; that is a MiniCPM4 paper, not a verified MiniCPM5-specific report.
+Do not infer that MiniCPM4-only architectural features are implemented here.
 
 The pinned integration gate covers these publisher MLX checkpoints:
 
@@ -52,6 +84,10 @@ prompt does not establish reasoning quality. Use `True` only when the loaded
 checkpoint template supports it and allow enough output tokens for the answer.
 
 ## SmolLM2
+
+Paper: [SmolLM2: When Smol Goes Big — Data-Centric Training of a Small Language Model](https://arxiv.org/abs/2502.02737).
+Its local inference path uses the shared decoder diagram above; the paper's
+data/training recipe is distinct from this repository's implementation coverage.
 
 [HuggingFaceTB/SmolLM2-1.7B-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct)
 uses the Llama path. The catalog pins

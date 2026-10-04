@@ -1,0 +1,5862 @@
+{
+  "assets": {
+    "README.md": {
+      "bytes": 16579,
+      "sha256": "1bab81d52b2b8cab0a57603fc3ece9aec2afc53447bf4c4c3a45f620895c20d2"
+    },
+    "config.json": {
+      "bytes": 1361,
+      "sha256": "368124c9a9171b3a6c0cdb35cd7fedeff465eefecf315e2a621684bbed7dcd7e"
+    },
+    "generation_config.json": {
+      "bytes": 108,
+      "sha256": "cebeed3d4a1680c9b311863385d32b91008480dfbf8cf7abc2142447b8f73b76"
+    },
+    "model-00001-of-00002.safetensors": {
+      "bytes": 4977385976,
+      "sha256": "1facdc4c5a0e84f2881a59c4756441b7030a1f1036b2124c117540408d0e5fe9"
+    },
+    "model-00002-of-00002.safetensors": {
+      "bytes": 4379088336,
+      "sha256": "0a103ba715bc0d656e94bf79d637d4f8f0f4fe6d76fb1d4db7ee46c6b940f631"
+    },
+    "model.safetensors.index.json": {
+      "bytes": 68088,
+      "sha256": "7506794dd65e4324685f9634b3d83f20d36a723543650c1e6b72d81965289930"
+    },
+    "params.json": {
+      "bytes": 731,
+      "sha256": "4a37e19f2524a44bebf36a3da37a55dde31b8df9eab9b35d359b9a315c74e991"
+    },
+    "preprocessor_config.json": {
+      "bytes": 357,
+      "sha256": "86d67d926e17d3a9bb0bae334c9fc46bc163181992357a0357c0aec2c7e131d1"
+    },
+    "tekken.json": {
+      "bytes": 14894206,
+      "sha256": "4aaf3836c2a5332f029ce85a7a62255c966f47b6797ef81dedd0ade9c862e4a8"
+    }
+  },
+  "checkpoint_license": "apache-2.0",
+  "config": {
+    "architectures": [
+      "VoxtralForConditionalGeneration"
+    ],
+    "audio_config": {
+      "activation_dropout": 0.0,
+      "activation_function": "gelu",
+      "attention_dropout": 0.0,
+      "dropout": 0.0,
+      "head_dim": 64,
+      "hidden_size": 1280,
+      "initializer_range": 0.02,
+      "intermediate_size": 5120,
+      "layerdrop": 0.0,
+      "max_source_positions": 1500,
+      "model_type": "voxtral_encoder",
+      "num_attention_heads": 20,
+      "num_hidden_layers": 32,
+      "num_key_value_heads": 20,
+      "num_mel_bins": 128,
+      "scale_embedding": false,
+      "vocab_size": 51866
+    },
+    "audio_token_id": 24,
+    "hidden_size": 3072,
+    "model_type": "voxtral",
+    "projector_hidden_act": "gelu",
+    "text_config": {
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "head_dim": 128,
+      "hidden_act": "silu",
+      "hidden_size": 3072,
+      "initializer_range": 0.02,
+      "intermediate_size": 8192,
+      "max_position_embeddings": 131072,
+      "mlp_bias": false,
+      "model_type": "llama",
+      "num_attention_heads": 32,
+      "num_hidden_layers": 30,
+      "num_key_value_heads": 8,
+      "pretraining_tp": 1,
+      "rms_norm_eps": 1e-05,
+      "rope_scaling": null,
+      "rope_theta": 100000000.0,
+      "sliding_window": null,
+      "use_cache": true,
+      "vocab_size": 131072
+    },
+    "torch_dtype": "bfloat16",
+    "transformers_version": "4.54.0.dev0",
+    "vocab_size": 131072
+  },
+  "model": "mistralai/Voxtral-Mini-3B-2507",
+  "preprocessing": {
+    "chunk_length": 30,
+    "dither": 0.0,
+    "feature_extractor_type": "WhisperFeatureExtractor",
+    "feature_size": 128,
+    "hop_length": 160,
+    "n_fft": 400,
+    "n_samples": 480000,
+    "nb_max_frames": 3000,
+    "padding_side": "right",
+    "padding_value": 0.0,
+    "processor_class": "VoxtralProcessor",
+    "return_attention_mask": false,
+    "sampling_rate": 16000
+  },
+  "reference_commit": "469230357aab0f2b303b0d638c1f8d06edb14184",
+  "reference_source": "https://github.com/huggingface/transformers",
+  "revision": "3060fe34b35ba5d44202ce9ff3c097642914f8f3",
+  "supplemental_assets": {},
+  "tensors": {
+    "audio_tower.conv1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.conv1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        128,
+        3
+      ]
+    },
+    "audio_tower.conv2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.conv2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280,
+        3
+      ]
+    },
+    "audio_tower.embed_positions.weight": {
+      "dtype": "F32",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1500,
+        1280
+      ]
+    },
+    "audio_tower.layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.0.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.0.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.0.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.0.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.1.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.1.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.1.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.1.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.10.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.10.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.10.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.10.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.11.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.11.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.11.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.11.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.12.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.12.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.12.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.12.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.13.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.13.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.13.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.13.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.14.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.14.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.14.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.14.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.15.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.15.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.15.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.15.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.16.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.16.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.16.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.16.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.17.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.17.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.17.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.17.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.18.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.18.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.18.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.18.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.19.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.19.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.19.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.19.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.2.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.2.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.2.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.2.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.20.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.20.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.20.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.20.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.21.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.21.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.21.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.21.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.22.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.22.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.22.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.22.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.23.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.23.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.23.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.23.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.24.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.24.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.24.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.24.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.25.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.25.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.25.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.25.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.26.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.26.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.26.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.26.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.27.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.27.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.27.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.27.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.28.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.28.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.28.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.28.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.29.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.29.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.29.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.29.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.3.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.3.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.3.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.3.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.30.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.30.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.30.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.30.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.31.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.31.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.31.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.31.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.4.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.4.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.4.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.4.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.5.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.5.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.5.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.5.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.6.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.6.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.6.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.6.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.7.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.7.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.7.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.7.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.8.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.8.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.8.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.8.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.fc1.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120
+      ]
+    },
+    "audio_tower.layers.9.fc1.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        5120,
+        1280
+      ]
+    },
+    "audio_tower.layers.9.fc2.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.fc2.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        5120
+      ]
+    },
+    "audio_tower.layers.9.final_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.final_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.out_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.out_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.q_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.v_proj.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280,
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn_layer_norm.bias": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "audio_tower.layers.9.self_attn_layer_norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1280
+      ]
+    },
+    "language_model.lm_head.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        131072,
+        3072
+      ]
+    },
+    "language_model.model.embed_tokens.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        131072,
+        3072
+      ]
+    },
+    "language_model.model.layers.0.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.0.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.0.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.0.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.0.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.0.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.0.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.0.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.0.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.1.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.1.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.1.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.1.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.1.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.1.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.1.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.1.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.1.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.10.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.10.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.10.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.10.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.10.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.10.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.10.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.10.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.10.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.11.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.11.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.11.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.11.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.11.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.11.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.11.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.11.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.11.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.12.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.12.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.12.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.12.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.12.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.12.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.12.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.12.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.12.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.13.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.13.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.13.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.13.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.13.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.13.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.13.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.13.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.13.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.14.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.14.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.14.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.14.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.14.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.14.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.14.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.14.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.14.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.15.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.15.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.15.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.15.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.15.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.15.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.15.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.15.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.15.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.16.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.16.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.16.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.16.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.16.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.16.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.16.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.16.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.16.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.17.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.17.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.17.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.17.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.17.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.17.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.17.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.17.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.17.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.18.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.18.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.18.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.18.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.18.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.18.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.18.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.18.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.18.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.19.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.19.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.19.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.19.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.19.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.19.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.19.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.19.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.19.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.2.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.2.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.2.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.2.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.2.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.2.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.2.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.2.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.2.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.20.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.20.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.20.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.20.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.20.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.20.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.20.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.20.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.20.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.21.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.21.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.21.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.21.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.21.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.21.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.21.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.21.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.21.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.22.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.22.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.22.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.22.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.22.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.22.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.22.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.22.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.22.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.23.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.23.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.23.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.23.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.23.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.23.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.23.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.23.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.23.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.24.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.24.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.24.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.24.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.24.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.24.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.24.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.24.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.24.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.25.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.25.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.25.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.25.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.25.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.25.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.25.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.25.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.25.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.26.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.26.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.26.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.26.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.26.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.26.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.26.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.26.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.26.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.27.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.27.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.27.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.27.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.27.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.27.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.27.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.27.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.27.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.28.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.28.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.28.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.28.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.28.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.28.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.28.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.28.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.28.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.29.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.29.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.29.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.29.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.29.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.29.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.29.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.29.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.29.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.3.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.3.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.3.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.3.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.3.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.3.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.3.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.3.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.3.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.4.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.4.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.4.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.4.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.4.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.4.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.4.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.4.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.4.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.5.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.5.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.5.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.5.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.5.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.5.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.5.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.5.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.5.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.6.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.6.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.6.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.6.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.6.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.6.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.6.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.6.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.6.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.7.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.7.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.7.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.7.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.7.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.7.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.7.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.7.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.7.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.8.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.8.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.8.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.8.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.8.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.8.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.8.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.8.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.8.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.9.input_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.9.mlp.down_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        8192
+      ]
+    },
+    "language_model.model.layers.9.mlp.gate_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.9.mlp.up_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        8192,
+        3072
+      ]
+    },
+    "language_model.model.layers.9.post_attention_layernorm.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "language_model.model.layers.9.self_attn.k_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.layers.9.self_attn.o_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        3072,
+        4096
+      ]
+    },
+    "language_model.model.layers.9.self_attn.q_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        4096,
+        3072
+      ]
+    },
+    "language_model.model.layers.9.self_attn.v_proj.weight": {
+      "dtype": "BF16",
+      "file": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        3072
+      ]
+    },
+    "language_model.model.norm.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072
+      ]
+    },
+    "multi_modal_projector.linear_1.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        5120
+      ]
+    },
+    "multi_modal_projector.linear_2.weight": {
+      "dtype": "BF16",
+      "file": "model-00002-of-00002.safetensors",
+      "shape": [
+        3072,
+        3072
+      ]
+    }
+  },
+  "weight_layout": "indexed"
+}

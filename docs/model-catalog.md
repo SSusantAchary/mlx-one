@@ -50,3 +50,47 @@ they do not qualify multi-object tracking, occlusion, corrections, or all image
 prompts. See the [SAM3 guide](../src/mlx_one/models/segmentation/sam3/README.md) and
 [measured results](sam3-qualification-m4-32gb.md). Checkpoint license/access terms
 are separate from the repository's Apache-2.0 license.
+
+## Requested native audio qualification matrix
+
+The audio plan contains twelve checkpoints, with original VibeVoice 1.5B as
+multi-speaker TTS rather than ASR. The first three have scoped English short-form
+evidence, and Qwen ASR 0.6B adds passing English/French offline evidence. Qwen
+ASR/alignment have native implementations, but their remaining checkpoint,
+language and streaming gates are incomplete. Parakeet v2/v3 now have native
+offline implementations; full qualification is WIP. Nemotron, Voxtral and
+VibeVoice inference remain unimplemented. This table does not promote an
+unqualified candidate into a general quality/streaming support claim.
+
+| Stage | Checkpoint | Revision / status |
+| --- | --- | --- |
+| 1 | `distil-whisper/distil-large-v3` | `8031d2e6ce6631b7fc45629dddfc00271116d981`; recorded M4 English short-form gates pass |
+| 2 | `moonshine-ai/moonshine-tiny` | `390624ed33d594443aa4aa221f5b9f283b545b5a`; recorded M4 English short-form gates pass |
+| 2 | `moonshine-ai/moonshine-base` | `7a73d8d55ac0ba2ef3ae761593f6784b51f96dcf`; recorded M4 English short-form gates pass |
+| 3 | `Qwen/Qwen3-ASR-0.6B` | `5eb144179a02acc5e5ba31e748d22b0cf3e303b0`; native ASR/streaming; English/French offline gates pass, streaming diagnostic fails; other gates pending |
+| 3 | `Qwen/Qwen3-ASR-1.7B` | `7278e1e70fe206f11671096ffdd38061171dd6e5`; native ASR/streaming; English 100-clip WER/CER match reference, but exact anchors fail (15/16); other languages/streaming pending |
+| 3 | `Qwen/Qwen3-ForcedAligner-0.6B` | `c7cbfc2048c462b0d63a45797104fc9db3ad62b7`; native alignment, never ASR; English timestamp gate fails (800 ms versus 80-ms limit) |
+| 4 | `nvidia/parakeet-tdt-0.6b-v2` | `ae9ad07059c7c739ffaf932226a8fe64ae2620b0`; native offline + isolated conversion implemented; English 100-clip/16-anchor converted-reference gates pass; **WIP** original NeMo/timestamp/full qualification |
+| 4 | `nvidia/parakeet-tdt-0.6b-v3` | `541d1f99c6b0c3cd0b11a95167540bb8edefd82b`; native offline implemented; English 100/16 anchors and French/German 25-clip gates pass; **WIP** timestamp/full qualification |
+| 4 | `nvidia/nemotron-3.5-asr-streaming-0.6b` | `ea30d66debe3740a08b573244286791d423d6b3e`; canonical tensor/asset contract frozen; **WIP / not implemented** native cached streaming |
+| 5 | `mistralai/Voxtral-Mini-3B-2507` | `3060fe34b35ba5d44202ce9ff3c097642914f8f3`; indexed tensor/Tekken/processor contract frozen; **WIP / not implemented** native transcription |
+| 5 | `mistralai/Voxtral-Mini-4B-Realtime-2602` | `2769294da9567371363522aac9bbcfdd19447add`; canonical tensor/Tekken/processor contract frozen; **WIP / not implemented** native cached streaming; exception to initial text 3B tier |
+| 6 | `microsoft/VibeVoice-1.5B` | `c00898d257e6b46004e3e2866a47534085fb685a`; indexed tensor contract and original TTS source/tokenizer pinned; **WIP / not implemented** native synthesis, parity and publisher-fixture permission/intended-use evidence |
+
+Target revision pins alone identify qualification candidates, not runnable
+loaders. All six Stage 4–6 targets now have checksummed tensor/asset contracts;
+only Parakeet has a native inference implementation among Stage 4 targets.
+As of 2026-10-04, failed and missing
+qualification gates remain **WIP** but no longer block later implementation.
+Development proceeds through Stage 4, Stage 5 and Stage 6; a checkpoint is not
+qualified until its applicable unchanged gates pass. The
+[failed numerical candidate](audio-qualification-m4-32gb.md#stage-three-closure-investigation--rejected-numerical-candidate)
+is explicit benchmark-only tooling and does not replace production defaults.
+
+See [audio evidence](audio-qualification-m4-32gb.md),
+[Whisper/Distil guide](../src/mlx_one/models/audio/whisper/README.md) and
+[Moonshine guide](../src/mlx_one/models/audio/moonshine/README.md), and
+[Qwen ASR/alignment guide](../src/mlx_one/models/audio/qwen3_asr/README.md) and
+[Parakeet guide](../src/mlx_one/models/audio/parakeet/README.md). The maintainer's
+`model_list.txt` is locally ignored by Git; this tracked table retains the audio
+matrix for repository readers without changing historical text results or roadmap.

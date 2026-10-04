@@ -1,0 +1,15 @@
+{
+  "status": "FAIL",
+  "gates": {
+    "required_corpus_size": true,
+    "process_budget": true,
+    "cleanup": true,
+    "matching_units_and_order": true,
+    "timestamp_tick_80ms": false
+  },
+  "mismatches": [],
+  "maximum_boundary_difference_seconds": 0.8000000000000007,
+  "scope": "one checkpoint/task/language/mode only; all other gates remain separate",
+  "reference_sha256": "9aad06acfdd998c913e37d5ef3b5ad951de19e6357903fba36f747133d3e6f29",
+  "native_sha256": "55a9d5fec834bdc316b9913d02d4e5e4a455080fe0c0d61817c039bcbbc0d7b8"
+}
