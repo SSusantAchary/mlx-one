@@ -5,7 +5,7 @@ from __future__ import annotations
 import time
 from collections import deque
 
-from mlx_one.engine.contracts import ExecutionBatch, SequenceContext, SequenceState
+from mlx_one.engine.contracts import BatchPlan, Phase, ScheduledSequence, SequenceState
 
 
 class TokenBudgetScheduler:
@@ -16,32 +16,32 @@ class TokenBudgetScheduler:
             raise ValueError("scheduler token limits must be positive")
         self.max_batch_tokens = max_batch_tokens
         self.prefill_chunk_size = min(prefill_chunk_size, max_batch_tokens)
-        self.waiting: deque[SequenceContext] = deque()
-        self.active: list[SequenceContext] = []
+        self.waiting: deque[SequenceState] = deque()
+        self.active: list[SequenceState] = []
 
-    def add(self, sequence: SequenceContext) -> None:
-        if sequence.state is not SequenceState.WAITING:
+    def add(self, sequence: SequenceState) -> None:
+        if sequence.phase is not Phase.WAITING:
             raise ValueError("only waiting sequences can enter the scheduler")
         self.waiting.append(sequence)
 
-    def schedule(self, now: float | None = None) -> tuple[ExecutionBatch, ...]:
+    def schedule(self, now: float | None = None) -> tuple[BatchPlan, ...]:
         current = time.monotonic() if now is None else now
         self._expire(current)
         while self.waiting:
             sequence = self.waiting.popleft()
-            sequence.transition(SequenceState.PREFILL)
+            sequence.transition(Phase.PREFILL)
             self.active.append(sequence)
         decodes = tuple(
             sequence
             for sequence in self.active
-            if sequence.state is SequenceState.DECODING and not sequence.cancel.is_set()
+            if sequence.phase is Phase.DECODE and not sequence.cancel.is_set()
         )
-        batches: list[ExecutionBatch] = []
+        batches: list[BatchPlan] = []
         if decodes:
             batches.append(
-                ExecutionBatch(
-                    decodes[: self.max_batch_tokens],
-                    "decode",
+                BatchPlan(
+                    tuple(ScheduledSequence(s.request_id, "decode", s.computed_len, 1)
+                          for s in decodes[:self.max_batch_tokens]),
                     min(len(decodes), self.max_batch_tokens),
                 )
             )
@@ -49,7 +49,7 @@ class TokenBudgetScheduler:
             (
                 sequence
                 for sequence in self.active
-                if sequence.state is SequenceState.PREFILL and not sequence.cancel.is_set()
+                if sequence.phase is Phase.PREFILL and not sequence.cancel.is_set()
             ),
             None,
         )
@@ -59,21 +59,23 @@ class TokenBudgetScheduler:
                 self.max_batch_tokens,
                 max(prefill.remaining_prompt_tokens, 1),
             )
-            batches.append(ExecutionBatch((prefill,), "prefill", budget))
+            batches.append(BatchPlan((ScheduledSequence(
+                prefill.request_id, "prefill", prefill.computed_len, budget
+            ),), budget))
         return tuple(batches)
 
     def prune(self) -> None:
-        self.active = [sequence for sequence in self.active if not sequence.state.terminal]
+        self.active = [sequence for sequence in self.active if not sequence.phase.terminal]
 
     def _expire(self, now: float) -> None:
         for sequence in (*self.waiting, *self.active):
-            if sequence.cancel.is_set() and not sequence.state.terminal:
-                sequence.transition(SequenceState.CANCELLED)
+            if sequence.cancel.is_set() and not sequence.phase.terminal:
+                sequence.transition(Phase.CANCELLED)
             elif (
-                sequence.request.deadline is not None
-                and now >= sequence.request.deadline
-                and not sequence.state.terminal
+                sequence.deadline_ns is not None
+                and int(now * 1e9) >= sequence.deadline_ns
+                and not sequence.phase.terminal
             ):
-                sequence.transition(SequenceState.TIMED_OUT)
-        self.waiting = deque(item for item in self.waiting if not item.state.terminal)
+                sequence.transition(Phase.TIMED_OUT)
+        self.waiting = deque(item for item in self.waiting if not item.phase.terminal)
         self.prune()

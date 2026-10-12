@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mlx_one.engine.block_cache import BlockPool, BlockRef
+from mlx_one.engine.block_cache import BlockLayout, BlockPool, BlockRef
 from mlx_one.engine.cache import array_nbytes
 from mlx_one.engine.cache_errors import CacheCorruptionError
 
@@ -12,8 +12,9 @@ from mlx_one.engine.cache_errors import CacheCorruptionError
 class BlockKVCache:
     """B=1, unquantized attention cache stored in fixed-width blocks."""
 
-    def __init__(self, pool: BlockPool) -> None:
+    def __init__(self, pool: BlockPool, *, layer_id: int = 0) -> None:
         self.pool = pool
+        self.layer_id = layer_id
         self.block_tokens = pool.block_tokens
         self._blocks: list[BlockRef] = []
         self._offset = 0
@@ -45,6 +46,28 @@ class BlockKVCache:
     def update(self, keys: Any, values: Any) -> tuple[Any, Any]:
         import mlx.core as mx
 
+        keys, values = keys.astype(mx.float16), values.astype(mx.float16)
+        draft = self.clone()
+        try:
+            result = draft._append(keys, values, mx)
+            evaluate = getattr(mx, "eval", None)
+            if evaluate is not None:
+                evaluate(*result)
+        except BaseException:
+            draft.reset()
+            self.pool.discard_free()
+            raise
+        self.replace_from(draft)
+        return result
+
+    def replace_from(self, draft: BlockKVCache) -> None:
+        old = self._blocks
+        self._blocks, self._offset = draft._blocks, draft._offset
+        draft._blocks, draft._offset = [], 0
+        for ref in old:
+            ref.close()
+
+    def _append(self, keys: Any, values: Any, mx: Any) -> tuple[Any, Any]:
         if keys.shape != values.shape:
             raise ValueError("cache keys and values must have identical shapes")
         if int(keys.shape[0]) != 1:
@@ -60,7 +83,10 @@ class BlockKVCache:
             if tail is None or tail.token_count == self.block_tokens:
                 shape = (*keys.shape[:2], self.block_tokens, *keys.shape[3:])
                 storage = (mx.zeros(shape, dtype=keys.dtype), mx.zeros(shape, dtype=values.dtype))
-                ref = self.pool.allocate_ref(storage, 1)
+                ref = self.pool.allocate_ref(storage, 1, layout=BlockLayout(
+                    layer_id=self.layer_id, page_tokens=self.block_tokens,
+                    num_kv_heads=int(keys.shape[1]), head_dim=int(keys.shape[3]),
+                ))
                 self._blocks.append(ref)
                 tail = ref.block
                 start = 0
@@ -105,7 +131,11 @@ class BlockKVCache:
         if self._blocks or self._offset:
             raise CacheCorruptionError("prefix adoption requires an empty block cache")
         for reference in references:
+            if reference.pool is not self.pool:
+                raise CacheCorruptionError("prefix belongs to another pool")
             block = reference.block
+            if block.layout is not None and block.layout.layer_id != self.layer_id:
+                raise CacheCorruptionError("prefix belongs to another layer")
             if not block.immutable or block.token_count != self.block_tokens:
                 raise CacheCorruptionError("only sealed complete blocks may be adopted")
         self._blocks.extend(references)
@@ -114,24 +144,28 @@ class BlockKVCache:
     def clone(self) -> BlockKVCache:
         import mlx.core as mx
 
-        result = BlockKVCache(self.pool)
-        for ref in self._blocks:
-            block = ref.block
-            if block.immutable:
-                result._blocks.append(ref.fork())
+        result = BlockKVCache(self.pool, layer_id=self.layer_id)
+        try:
+            for ref in self._blocks:
+                block = ref.block
+                if block.immutable:
+                    copied = ref.fork()
+                else:
+                    keys, values = block.state
+                    copied_keys = mx.zeros(keys.shape, dtype=keys.dtype)
+                    copied_values = mx.zeros(values.shape, dtype=values.dtype)
+                    copied_keys[...] = keys
+                    copied_values[...] = values
+                    copied = self.pool.allocate_ref(
+                        (copied_keys, copied_values), block.token_count, layout=block.layout
+                    )
+                result._blocks.append(copied)
                 result._offset += block.token_count
-                continue
-            keys, values = block.state
-            shape = keys.shape
-            copied_keys = mx.zeros(shape, dtype=keys.dtype)
-            copied_values = mx.zeros(shape, dtype=values.dtype)
-            copied_keys[:, :, : block.token_count, :] = keys[:, :, : block.token_count, :]
-            copied_values[:, :, : block.token_count, :] = values[:, :, : block.token_count, :]
-            result._blocks.append(
-                self.pool.allocate_ref((copied_keys, copied_values), block.token_count)
-            )
-            result._offset += block.token_count
-        return result
+            return result
+        except BaseException:
+            result.reset()
+            self.pool.discard_free()
+            raise
 
     snapshot = clone
 
@@ -147,8 +181,13 @@ class BlockKVCache:
         keys, values = self.state()
         assert keys is not None and values is not None
         keys, values = keys[:, :, :target, :], values[:, :, :target, :]
-        self.reset()
-        self.update(keys, values)
+        draft = BlockKVCache(self.pool, layer_id=self.layer_id)
+        try:
+            draft.update(keys, values)
+        except BaseException:
+            draft.reset()
+            raise
+        self.replace_from(draft)
         return True
 
     def reset(self) -> None:

@@ -256,3 +256,21 @@ def test_memory_admission_rejects_before_generation(tmp_path: Path) -> None:
         response = client.post("/v1/chat/completions", json=payload)
         assert response.status_code == 503
         assert response.json()["error"]["type"] == "capacity_error"
+
+
+def test_explicit_capability_failure_is_structured_for_both_response_modes(tmp_path):
+    from mlx_one.engine.modes import ModelCapabilityUnsupported
+
+    class UnsupportedEngine(FakeEngineEngine):
+        def stream(self, **kwargs):
+            raise ModelCapabilityUnsupported("unsupported explicit inference mode")
+
+    with TestClient(create_app(FakeManager(), UnsupportedEngine(), ui_dir=tmp_path)) as client:
+        for streaming in (False, True):
+            response = client.post("/v1/chat/completions", json={
+                "model": "test/model", "messages": [{"role": "user", "content": "hi"}],
+                "stream": streaming,
+            })
+            assert response.status_code == 400
+            assert response.json()["error"]["code"] == "MODEL_CAPABILITY_UNSUPPORTED"
+            assert response.json()["error"]["type"] == "capability_error"

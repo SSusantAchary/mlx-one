@@ -1,5 +1,6 @@
 """Internal native inference-engine contracts and services."""
 
+from mlx_one.engine.batching import BatchedDenseRunner, BatchingConfig, BatchScheduler
 from mlx_one.engine.block_cache import (
     BlockAllocator,
     BlockId,
@@ -37,20 +38,23 @@ from mlx_one.engine.cache_specs import (
     CachePlan,
     CacheReservation,
     LayerCacheSpec,
+    LayerStateSpec,
     ReservationState,
 )
 from mlx_one.engine.contracts import (
+    BatchPlan,
     CacheCapabilities,
     EngineError,
     EngineEvent,
     EngineMetrics,
     EngineRequest,
     EngineRuntime,
-    ExecutionBatch,
     ModelRunner,
+    Phase,
     RequestKind,
     RunnerCapabilities,
-    SequenceContext,
+    RunnerOutput,
+    ScheduledSequence,
     SequenceState,
     TaskRunner,
 )
@@ -70,11 +74,16 @@ from mlx_one.engine.prefix_cache import (
     PrefixCacheEntry,
     PrefixCacheKey,
 )
+from mlx_one.engine.pressure import MemoryPressureConfig
 from mlx_one.engine.public import Engine, EngineRequestHandle
 from mlx_one.engine.runners import ASRRunner, CausalLMRunner, EncoderRunner, VLMRunner
 from mlx_one.engine.scheduler import TokenBudgetScheduler
 
 __all__ = [
+    "MemoryPressureConfig",
+    "BatchScheduler",
+    "BatchedDenseRunner",
+    "BatchingConfig",
     "AdmissionDecision",
     "AdmissionStatus",
     "ASRRunner",
@@ -112,9 +121,13 @@ __all__ = [
     "EngineRequestHandle",
     "EngineRuntime",
     "EncoderRunner",
-    "ExecutionBatch",
+    "BatchPlan",
+    "Phase",
+    "ScheduledSequence",
+    "RunnerOutput",
     "KVQuantizationUnsupported",
     "LayerCacheSpec",
+    "LayerStateSpec",
     "MemoryBudget",
     "MemoryUsage",
     "ModelRunner",
@@ -126,7 +139,6 @@ __all__ = [
     "RequestKind",
     "ReservationState",
     "RunnerCapabilities",
-    "SequenceContext",
     "SequenceState",
     "TaskRunner",
     "TokenBudgetScheduler",

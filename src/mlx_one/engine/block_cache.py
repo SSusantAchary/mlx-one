@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import threading
 import time
+import uuid
 from collections import defaultdict, deque
 from dataclasses import dataclass
 from typing import Any
@@ -13,7 +14,33 @@ from mlx_one.engine.cache_errors import CacheCapacityError, CacheCorruptionError
 
 
 class BlockId(int):
-    """Opaque physical block identifier."""
+    """Opaque epoch/slot/generation identity; integers are never recycled."""
+
+    @property
+    def epoch(self) -> int:
+        return int(self) >> 96
+
+    @property
+    def slot(self) -> int:
+        return (int(self) >> 32) & ((1 << 64) - 1)
+
+    @property
+    def generation(self) -> int:
+        return int(self) & ((1 << 32) - 1)
+
+
+@dataclass(frozen=True)
+class BlockLayout:
+    version: int = 1
+    layer_id: int = 0
+    page_tokens: int = 32
+    num_kv_heads: int | None = None
+    head_dim: int | None = None
+    key_dtype: str = "float16"
+    value_dtype: str = "float16"
+    quantization_bits: int | None = None
+    quantization_group_size: int = 32
+    kernel_version: str | None = None
 
 
 def _signature(value: Any) -> tuple[object, ...]:
@@ -50,6 +77,7 @@ class CacheBlock:
     immutable: bool = False
     last_access: float = 0.0
     signature: tuple[object, ...] = ()
+    layout: BlockLayout | None = None
 
     @property
     def nbytes(self) -> int:
@@ -109,6 +137,8 @@ class BlockPool:
         self._free: dict[tuple[object, ...], deque[CacheBlock]] = defaultdict(deque)
         self._free_ids: deque[BlockId] = deque()
         self._next_id = 0
+        self._epoch = uuid.uuid4().int
+        self._generation = 0
         self._lock = threading.RLock()
 
     @property
@@ -123,10 +153,12 @@ class BlockPool:
                 block.nbytes for blocks in self._free.values() for block in blocks
             )
 
-    def allocate(self, state: Any, token_count: int) -> BlockId:
+    def allocate(
+        self, state: Any, token_count: int, *, layout: BlockLayout | None = None
+    ) -> BlockId:
         if token_count < 1 or token_count > self.block_tokens:
             raise ValueError("block token count exceeds the configured block width")
-        signature = _signature(state)
+        signature = (layout, _signature(state))
         size = array_nbytes(state)
         with self._lock:
             free = self._free.get(signature)
@@ -134,6 +166,7 @@ class BlockPool:
                 block = free.popleft()
                 if not free:
                     self._free.pop(signature, None)
+                block.block_id = self._identity(block.block_id.slot)
                 block.token_count = token_count
                 block.references = 1
                 block.pins = 0
@@ -145,20 +178,22 @@ class BlockPool:
             self._discard_free_for(size)
             if self.allocated_nbytes + size > self.capacity_bytes:
                 raise CacheCapacityError("KV block pool is full")
-            block_id = self._free_ids.popleft() if self._free_ids else BlockId(self._next_id)
-            if int(block_id) == self._next_id:
+            slot = self._free_ids.popleft().slot if self._free_ids else self._next_id
+            if slot == self._next_id:
                 self._next_id += 1
+            block_id = self._identity(slot)
             self._blocks[block_id] = CacheBlock(
                 block_id,
                 token_count,
                 state,
                 last_access=time.monotonic(),
                 signature=signature,
+                layout=layout,
             )
             return block_id
 
-    def allocate_ref(self, state: Any, token_count: int) -> BlockRef:
-        return BlockRef(self, self.allocate(state, token_count))
+    def allocate_ref(self, state: Any, token_count: int, *, layout=None) -> BlockRef:
+        return BlockRef(self, self.allocate(state, token_count, layout=layout))
 
     def acquire(self, block_id: int) -> None:
         with self._lock:
@@ -210,7 +245,7 @@ class BlockPool:
             block = self._require(block_id)
             if block.immutable:
                 raise CacheCorruptionError("cannot mutate an immutable KV block")
-            if _signature(state) != block.signature:
+            if (block.layout, _signature(state)) != block.signature:
                 raise CacheCorruptionError("KV block storage signature changed")
             old_size = block.nbytes
             new_size = array_nbytes(state)
@@ -226,7 +261,7 @@ class BlockPool:
             if block.references == 1 and block.pins == 0 and not block.immutable:
                 self.update(block_id, state, token_count)
                 return BlockId(block_id)
-            replacement = self.allocate(state, token_count)
+            replacement = self.allocate(state, token_count, layout=block.layout)
             self.release(block_id)
             return replacement
 
@@ -242,6 +277,12 @@ class BlockPool:
                 "block_pinned": sum(block.pins > 0 for block in self._blocks.values()),
                 "physical_bytes": self.allocated_nbytes,
                 "live_bytes": self.nbytes,
+                "retained_free_bytes": self.allocated_nbytes - self.nbytes,
+                "evictable_bytes": sum(block.nbytes for block in self._blocks.values()
+                                       if block.references == 0 and block.pins == 1),
+                "shared_page_savings_bytes": sum(
+                    block.nbytes * max(block.references - 1, 0) for block in self._blocks.values()
+                ),
                 "pinned_bytes": sum(
                     block.nbytes for block in self._blocks.values() if block.pins
                 ),
@@ -253,6 +294,15 @@ class BlockPool:
             self._free.clear()
             self._free_ids.clear()
             self._next_id = 0
+            self._epoch = uuid.uuid4().int
+
+    def _identity(self, slot: int) -> BlockId:
+        self._generation += 1
+        return BlockId((self._epoch << 96) | (slot << 32) | self._generation)
+
+    def discard_free(self) -> None:
+        with self._lock:
+            self._free.clear()
 
     def _require(self, block_id: int) -> CacheBlock:
         try:
@@ -289,9 +339,16 @@ class PageTable:
     block_ids: list[int]
 
     def clone(self) -> PageTable:
-        for block_id in self.block_ids:
-            self.allocator.acquire(block_id)
-        return PageTable(self.allocator, list(self.block_ids))
+        acquired = []
+        try:
+            for block_id in self.block_ids:
+                self.allocator.acquire(block_id)
+                acquired.append(block_id)
+            return PageTable(self.allocator, list(self.block_ids))
+        except BaseException:
+            for block_id in acquired:
+                self.allocator.release(block_id)
+            raise
 
     def release(self) -> None:
         for block_id in self.block_ids:

@@ -44,6 +44,10 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
     else:
         kind = CacheKind.MODEL_DEFINED
 
+    layer_types = getattr(config, "layer_types", ())
+    if index < len(layer_types) and layer_types[index] == "sliding_attention":
+        kind = CacheKind.ROTATING_KV
+
     heads = _per_layer_int(config, index, "num_key_value_heads", "num_kv_heads", "n_head")
     head_dim = _per_layer_int(config, index, "head_dim")
     if head_dim is None:
@@ -53,7 +57,7 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
         )
         if hidden and query_heads:
             head_dim = hidden // query_heads
-    attention = kind is CacheKind.ATTENTION_KV
+    attention = kind in {CacheKind.ATTENTION_KV, CacheKind.ROTATING_KV}
     return LayerCacheSpec(
         layer_id=index,
         kind=kind,
@@ -61,12 +65,17 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
         key_head_dim=head_dim if attention else None,
         value_head_dim=head_dim if attention else None,
         dtype="f16" if attention else None,
-        max_window_tokens=getattr(cache, "max_size", None),
+        max_window_tokens=(getattr(config, "sliding_window", None)
+                           if kind is CacheKind.ROTATING_KV else getattr(cache, "max_size", None)),
         quantizable=attention,
         shareable_prefix=attention,
         trimmable=callable(getattr(cache, "trim", None)),
         batchable=attention,
         block_compatible=attention and heads is not None and head_dim is not None,
+        state_shapes=((1, int(cache.kernel_size) - 1,
+                       _per_layer_int(config, index, "hidden_size") or 0),)
+        if kind is CacheKind.CONV_STATE and hasattr(cache, "kernel_size") else (),
+        checkpoint_semantics="exact_committed_boundary" if kind is CacheKind.CONV_STATE else None,
     )
 
 

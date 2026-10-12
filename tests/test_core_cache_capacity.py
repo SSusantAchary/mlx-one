@@ -5,7 +5,14 @@ import numpy as np
 
 from mlx_one.core.cache import KVCache, QuantizedKVCache
 from mlx_one.core.outputs import ModelOutput
-from mlx_one.engine import CausalLMRunner, EngineRequest, ExecutionBatch, RequestKind, SequenceState
+from mlx_one.engine import (
+    BatchPlan,
+    CausalLMRunner,
+    EngineRequest,
+    Phase,
+    RequestKind,
+    ScheduledSequence,
+)
 from mlx_one.engine.cache import CacheBundle
 
 
@@ -108,17 +115,20 @@ def test_causal_runner_batches_compatible_attention_decode(monkeypatch) -> None:
         sequence = runner.prepare(
             EngineRequest(RequestKind.TEXT, "model", {"prompt": "p"})
         )
-        sequence.transition(SequenceState.PREFILL)
-        sequence.computed_tokens = 1
+        sequence.transition(Phase.PREFILL)
+        sequence.computed_len = 1
         sequence.cache.entries[0].update(
             np.ones((1, 1, 1, 4), dtype=np.float16),
             np.ones((1, 1, 1, 4), dtype=np.float16),
         )
-        sequence.generated_tokens.append(index + 2)
-        sequence.transition(SequenceState.DECODING)
+        sequence.generated_ids.append(index + 2)
+        sequence.transition(Phase.DECODE)
         sequences.append(sequence)
-    outputs = runner.decode(ExecutionBatch(tuple(sequences), "decode", 2))
-    assert runner.capabilities.batchable
+    outputs = runner.decode(BatchPlan(tuple(
+        ScheduledSequence(s.request_id, "decode", 1, 1) for s in sequences
+    ), 2))
+    assert runner.capabilities().batchable
     assert model.calls == 1
-    assert len(outputs) == 2
+    assert len(outputs.request_ids) == 2
+    assert all(s.computed_len == 2 for s in sequences)
     assert all(sequence.cache.offset == 2 for sequence in sequences)

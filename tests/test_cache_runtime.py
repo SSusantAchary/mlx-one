@@ -16,8 +16,6 @@ from mlx_one.engine import (
     CacheCorruptionError,
     CacheKind,
     CacheManager,
-    CacheOwnershipError,
-    CacheReservationError,
     CacheTopologyUnsupported,
     ReservationState,
     build_cache_plan,
@@ -115,10 +113,8 @@ def test_manager_owns_dense_handles_accounting_and_reservations(tmp_path, monkey
     assert manager.stats().reserved_bytes == 64
     manager.release(handle)
     assert manager.stats().active_handles == 0
-    with pytest.raises(CacheOwnershipError):
-        manager.release(handle)
-    with pytest.raises(CacheReservationError):
-        manager.release_reservation(reservation)
+    manager.release(handle)  # repeated cleanup is idempotent
+    manager.release_reservation(reservation)
 
 
 def test_block_pool_pins_reuses_and_rejects_invalid_release() -> None:
@@ -133,7 +129,10 @@ def test_block_pool_pins_reuses_and_rejects_invalid_release() -> None:
     pool.unpin(block_id)
     assert pool.stats()["block_free"] == 1
     reused = pool.allocate_ref((state.copy(), state.copy()), 1)
-    assert reused.block_id == block_id
+    assert reused.block_id != block_id
+    assert reused.block_id.slot == block_id.slot
+    with pytest.raises(CacheCorruptionError):
+        pool.get(block_id)
     replacement = np.ones_like(state)
     reused.close()
     reused = pool.allocate_ref((replacement, replacement.copy()), 1)

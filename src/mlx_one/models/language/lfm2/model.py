@@ -37,6 +37,7 @@ class Lfm2Model(nn.Module):
         cache: tuple[Any, ...] | None = None,
         input_embeddings: Any | None = None,
         attention_mask: Any | None = None,
+        position_ids: Any | None = None,
         output_hidden_states: bool = False,
     ) -> tuple[Any, tuple[Any, ...] | None, tuple[Any, ...] | None]:
         if (input_ids is None) == (input_embeddings is None):
@@ -48,7 +49,9 @@ class Lfm2Model(nn.Module):
         states = [hidden] if output_hidden_states else None
         for layer, layer_cache in zip(self.layers, layer_caches, strict=True):
             offset = 0 if layer_cache is None else layer_cache.offset
-            if layer.layer_type == "sliding_attention":
+            if callable(getattr(layer_cache, "attend", None)):
+                mask = None
+            elif layer.layer_type == "sliding_attention":
                 mask = sliding_causal_mask(hidden.shape[1], offset, int(self.config.sliding_window))
             elif layer.is_attention_layer:
                 mask = causal_mask(hidden.shape[1], offset)
@@ -59,6 +62,7 @@ class Lfm2Model(nn.Module):
                 attention_mask=mask,
                 padding_mask=attention_mask,
                 cache=layer_cache,
+                position_ids=position_ids,
             )
             if states is not None:
                 states.append(hidden)
@@ -86,6 +90,7 @@ class Lfm2ForCausalLM(nn.Module):
         cache: tuple[Any, ...] | None = None,
         input_embeddings: Any | None = None,
         attention_mask: Any | None = None,
+        position_ids: Any | None = None,
         output_hidden_states: bool = False,
     ) -> ModelOutput:
         hidden, cache, states = self.model(
@@ -93,6 +98,7 @@ class Lfm2ForCausalLM(nn.Module):
             cache=cache,
             input_embeddings=input_embeddings,
             attention_mask=attention_mask,
+            position_ids=position_ids,
             output_hidden_states=output_hidden_states,
         )
         logits = (

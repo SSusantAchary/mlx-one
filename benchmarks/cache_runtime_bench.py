@@ -24,6 +24,8 @@ from typing import Any
 
 import httpx
 
+from mlx_one.inference_baseline import deterministic_prompt
+
 
 @dataclass(frozen=True)
 class RunSpec:
@@ -85,27 +87,6 @@ def load_tokenizer(source: str, *, offline: bool) -> Any:
 
     root = _resolve(source, revision=None, offline=offline, cache_dir=None)
     return _load_tokenizer(root, resolve_text_model_type(root, offline=True))
-
-
-def deterministic_prompt(tokenizer: Any, target_tokens: int, *, suffix: str = "") -> str:
-    """Create locally reproducible, numbered retrieval text near a token target."""
-
-    sections: list[str] = []
-    index = 1
-    while len(tokenizer.encode("".join(sections))) < target_tokens:
-        sections.append(
-            f"SECTION {index:05d}\n"
-            f"The project identifier is PROJECT-{index:05d}.\n"
-            f"The owner is OWNER-{index:05d}.\n"
-            f"The checksum is VALUE-{index:05d}.\n\n"
-        )
-        index += 1
-    prompt = "".join(sections)
-    # Keep the final retrieval request intact while approaching the requested size.
-    while len(tokenizer.encode(prompt + suffix)) > target_tokens and sections:
-        sections.pop()
-        prompt = "".join(sections)
-    return prompt + suffix
 
 
 async def runtime(client: httpx.AsyncClient) -> dict[str, Any]:

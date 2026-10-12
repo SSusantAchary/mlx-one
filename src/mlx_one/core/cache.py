@@ -81,7 +81,14 @@ class KVCache:
 
     def clone(self) -> KVCache:
         result = KVCache()
-        result.keys, result.values = self.state()
+        keys, values = self.state()
+        if keys is not None:
+            import mlx.core as mx
+
+            result.keys = mx.zeros(keys.shape, dtype=keys.dtype)
+            result.values = mx.zeros(values.shape, dtype=values.dtype)
+            result.keys[...] = keys
+            result.values[...] = values
         result._offset = self._offset
         return result
 
@@ -249,8 +256,21 @@ class QuantizedKVCache:
             key_dtype=self.key_dtype,
             value_dtype=self.value_dtype,
         )
-        result._keys = self._active_component(self._keys)
-        result._values = self._active_component(self._values)
+        import mlx.core as mx
+
+        def copied(value):
+            if value is None:
+                return None
+            if isinstance(value, tuple):
+                return tuple(copied(item) for item in value)
+            if isinstance(value, list):
+                return [copied(item) for item in value]
+            result = mx.zeros(value.shape, dtype=value.dtype)
+            result[...] = value
+            return result
+
+        result._keys = copied(self._active_component(self._keys))
+        result._values = copied(self._active_component(self._values))
         result._offset = self._offset
         return result
 

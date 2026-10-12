@@ -35,7 +35,8 @@ class LfmAttention(nn.Module):
         self.q_layernorm = nn.RMSNorm(self.head_dim, eps=config.norm_eps)
         self.k_layernorm = nn.RMSNorm(self.head_dim, eps=config.norm_eps)
 
-    def __call__(self, hidden: Any, *, mask: Any | None, cache: Any | None) -> Any:
+    def __call__(self, hidden: Any, *, mask: Any | None, cache: Any | None,
+                 position_ids: Any | None = None) -> Any:
         batch, length, _ = hidden.shape
         queries = self.q_proj(hidden).reshape(batch, length, self.num_heads, self.head_dim)
         keys = self.k_proj(hidden).reshape(batch, length, self.num_kv_heads, self.head_dim)
@@ -44,8 +45,13 @@ class LfmAttention(nn.Module):
         keys = self.k_layernorm(keys).transpose(0, 2, 1, 3)
         values = values.transpose(0, 2, 1, 3)
         offset = 0 if cache is None else cache.offset
-        queries = apply_rope(queries, offset=offset, theta=self.rope_theta)
-        keys = apply_rope(keys, offset=offset, theta=self.rope_theta)
+        queries = apply_rope(queries, offset=offset, theta=self.rope_theta,
+                             position_ids=position_ids)
+        keys = apply_rope(keys, offset=offset, theta=self.rope_theta, position_ids=position_ids)
+        if cache is not None and callable(getattr(cache, "attend", None)):
+            output = cache.attend(queries, keys, values, scale=self.scale,
+                                  position_ids=position_ids)
+            return self.out_proj(output.transpose(0, 2, 1, 3).reshape(batch, length, -1))
         if cache is not None:
             keys, values = cache.update(keys, values)
         repeats = self.num_heads // self.num_kv_heads
@@ -131,10 +137,12 @@ class HybridDecoderLayer(nn.Module):
         attention_mask: Any | None,
         padding_mask: Any | None,
         cache: Any | None,
+        position_ids: Any | None = None,
     ) -> Any:
         normalized = self.operator_norm(hidden)
         if self.is_attention_layer:
-            operated = self.self_attn(normalized, mask=attention_mask, cache=cache)
+            operated = self.self_attn(normalized, mask=attention_mask, cache=cache,
+                                     position_ids=position_ids)
         else:
             operated = self.conv(normalized, padding_mask=padding_mask, cache=cache)
         hidden = hidden + operated

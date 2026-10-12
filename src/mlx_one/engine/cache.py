@@ -77,7 +77,15 @@ class CacheBundle:
     def clone(self) -> CacheBundle:
         if self.closed:
             raise RuntimeError("cannot clone a closed cache bundle")
-        return CacheBundle(tuple(entry.clone() for entry in self.entries))
+        entries = []
+        try:
+            for entry in self.entries:
+                entries.append(entry.clone())
+            return CacheBundle(tuple(entries))
+        except BaseException:
+            for entry in entries:
+                entry.reset()
+            raise
 
     snapshot = clone
 
@@ -98,15 +106,18 @@ class CacheBundle:
             raise ValueError("cache trim count cannot be negative")
         if not all(callable(getattr(entry, "trim", None)) for entry in self.entries):
             return False
-        snapshots = self.clone()
+        if count == 0:
+            return True
+        staged = self.clone()
         try:
-            complete = all(bool(entry.trim(count)) for entry in self.entries)
-            if not complete:
-                self.entries = snapshots.entries
-            return complete
-        except Exception:
-            self.entries = snapshots.entries
-            raise
+            if not all(bool(entry.trim(count)) for entry in staged.entries):
+                return False
+            old = self.entries
+            self.entries = staged.entries
+            staged.entries = old
+            return True
+        finally:
+            staged.release()
 
     def batch_select(self, indices: tuple[int, ...]) -> CacheBundle:
         if self.closed:
