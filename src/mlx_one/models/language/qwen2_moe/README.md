@@ -14,6 +14,34 @@ upstream family reference, not a qualified mlx-one checkpoint. Its active-parame
 name must not be used as its total memory footprint. Verify `model_type`, complete
 expert weights, total parameters, and the local weight contract before attempting a load.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → embeddings → RMSNorm → GQA + RoPE + KV → residual
+    ↓
+┌──────────────────────── MoE feed-forward ───────────────────────┐
+│                          RMSNorm                                │
+│                    ┌────────┴──────────┐                        │
+│             Router → top-k experts   Shared expert + gate       │
+│                    └────────┬──────────┘                        │
+│                 Weighted routed sum + shared output             │
+└─────────────────────────────────────────────────────────────────┘
+    ↓
+Residual → repeat decoder layers → final RMSNorm → LM head
+```
+
+## Papers and upstream references
+
+Paper: [Qwen2 Technical Report](https://arxiv.org/abs/2407.10671).
+
+The diagram shows the native routed/shared-expert topology. The Qwen1.5-MoE
+checkpoint mentioned above is an earlier family reference, not a Qwen2
+checkpoint qualification result.
+
 ## Installation and assets
 
 Use Python 3.10+ and install `python -m pip install -e .` from the repository root.

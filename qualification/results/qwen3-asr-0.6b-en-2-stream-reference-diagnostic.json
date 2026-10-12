@@ -1,0 +1,118 @@
+{
+  "backend": "reference",
+  "model": "Qwen/Qwen3-ASR-0.6B",
+  "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+  "task": "transcribe",
+  "mode": "stream",
+  "chunk_samples": 16000,
+  "stream_reference": "upstream rollback wrapper + pinned SDPA decoder",
+  "dtype": "bfloat16",
+  "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+  "attention": "sdpa-global",
+  "language_subset": [
+    "English"
+  ],
+  "manifest_sha256": "5fc089180becc98eb44d7ae45b7d92471b404d163d7ea3a68280fed2f63e0ff2",
+  "dataset": "openslr/librispeech_asr",
+  "dataset_revision": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+  "predictions": [
+    {
+      "id": "1089-134686-0000",
+      "anchor": true,
+      "reference": "HE HOPED THERE WOULD BE STEW FOR DINNER TURNIPS AND CARROTS AND BRUISED POTATOES AND FAT MUTTON PIECES TO BE LADLED OUT IN THICK PEPPERED FLOUR FATTENED SAUCE",
+      "prediction": "He hoped there would be stew for dinner: turnips and carrots and bruised potatoes and fat mutton pieces to be ladled out in thick peppered flour-fatted sauce.",
+      "duration": 10.435,
+      "language": "English",
+      "seconds": 45.61047195800347,
+      "events": [
+        {
+          "kind": "partial",
+          "text": "He hoped there would be stew for.",
+          "language": "English",
+          "audio_seconds": 2.0,
+          "sequence": 0,
+          "latency_seconds": 3.4891442079970147
+        },
+        {
+          "kind": "partial",
+          "text": "He hoped there would be stew for dinner: turnips and carrots and.",
+          "language": "English",
+          "audio_seconds": 4.0,
+          "sequence": 1,
+          "latency_seconds": 8.040699375007534
+        },
+        {
+          "kind": "partial",
+          "text": "He hoped there would be stew for dinner: turnips and carrots and bruised potatoes and fat mutton.",
+          "language": "English",
+          "audio_seconds": 6.0,
+          "sequence": 2,
+          "latency_seconds": 15.202609625004698
+        },
+        {
+          "kind": "partial",
+          "text": "He hoped there would be stew for dinner: turnips and carrots and bruised potatoes and fat mutton pieces to be ladled out in thick.",
+          "language": "English",
+          "audio_seconds": 8.0,
+          "sequence": 3,
+          "latency_seconds": 23.620116958016297
+        },
+        {
+          "kind": "partial",
+          "text": "He hoped there would be stew for dinner: turnips and carrots and bruised potatoes and fat mutton pieces to be ladled out in thick peppered flour-fatted sauce.",
+          "language": "English",
+          "audio_seconds": 10.0,
+          "sequence": 4,
+          "latency_seconds": 34.560265208012424
+        },
+        {
+          "kind": "final",
+          "text": "He hoped there would be stew for dinner: turnips and carrots and bruised potatoes and fat mutton pieces to be ladled out in thick peppered flour-fatted sauce.",
+          "language": "English",
+          "audio_seconds": 10.435,
+          "sequence": 5,
+          "latency_seconds": 45.60937245801324
+        }
+      ],
+      "first_partial_seconds": 3.4891442079970147
+    },
+    {
+      "id": "1089-134686-0001",
+      "anchor": true,
+      "reference": "STUFF IT INTO YOU HIS BELLY COUNSELLED HIM",
+      "prediction": "Stuff it into you. His belly counseled him.",
+      "duration": 3.275,
+      "language": "English",
+      "seconds": 7.843621415988309,
+      "events": [
+        {
+          "kind": "partial",
+          "text": "Stuff it into you, his belly.",
+          "language": "English",
+          "audio_seconds": 2.0,
+          "sequence": 0,
+          "latency_seconds": 3.4229479159985203
+        },
+        {
+          "kind": "final",
+          "text": "Stuff it into you. His belly counseled him.",
+          "language": "English",
+          "audio_seconds": 3.275,
+          "sequence": 1,
+          "latency_seconds": 7.843609624978853
+        }
+      ],
+      "first_partial_seconds": 3.4229479159985203
+    }
+  ],
+  "load_seconds": 6.200934042019071,
+  "wall_seconds": 59.85757783401641,
+  "peak_process_bytes": 2715860992,
+  "real_time_factor": 3.8989127187448416,
+  "versions": {
+    "torch": "2.7.1",
+    "transformers": "4.57.6",
+    "numpy": "2.5.3",
+    "safetensors": "0.7.0"
+  }
+}

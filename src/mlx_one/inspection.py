@@ -651,6 +651,8 @@ def _infer_modality(
         "sam3", "sam3_tracker", "sam3_tracker_video", "sam3_video"
     }:
         return Modality.SEGMENTATION
+    if config.get("model_type") in {"qwen3_asr", "qwen3_forced_aligner"}:
+        return Modality.ASR
     if config.get("vision_config") is not None or any(
         marker in names
         for marker in (
@@ -668,7 +670,7 @@ def _infer_modality(
     if any(marker in names for marker in ("texttospeech", "speecht5", "bark", "tts")):
         return Modality.TTS
     if config.get("audio_config") is not None or any(
-        marker in names for marker in ("whisper", "ctc", "speechrecognition", "wav2vec")
+        marker in names for marker in ("whisper", "moonshine", "ctc", "speechrecognition", "wav2vec")
     ):
         return Modality.ASR
     if any(marker in names for marker in ("sentence", "embedding", "clipmodel")):

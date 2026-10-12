@@ -12,6 +12,39 @@ is an upstream reference/candidate. Current validation is architectural and
 synthetic; no complete native checkpoint task loader or registry weight
 sanitizer/contract is registered for this entry.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Waveform → log-Mel → Conformer audio encoder → projection ───────┐
+Text token IDs → token embeddings ───────────────────────────────┤
+                                                               ↓
+                                              Replace audio-token slots
+                                                               ↓
+                                         LFM2 hybrid language backbone
+                                                               ↓
+                                  ┌────────────────────────────┴───────┐
+                              Text logits                        Depthformer
+                                                               codebook logits
+
+Supplied audio codes → audio detokenizer → spectrum → iFFT / overlap-add
+                                                               ↓
+                                                        Waveform output
+```
+
+## Papers and upstream references
+
+Backbone paper: [LFM2 Technical Report](https://arxiv.org/abs/2511.23404).
+Variant reference: [LFM2.5-Audio-1.5B official model card](https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B).
+
+The diagram shows local modules, not a complete qualified speech pipeline.
+Depthformer logits require an external decoding loop to become discrete audio
+codes; the detokenizer consumes supplied codes rather than logits directly.
+Publisher codec/processor integration remains pending.
+
 ## Installation and assets
 
 Install `python -m pip install -e .` from the repository root using Python 3.10+.

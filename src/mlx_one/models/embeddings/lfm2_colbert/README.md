@@ -11,6 +11,38 @@ is an upstream candidate reference. Architecture and synthetic execution have
 tests; exact publisher checkpoint compatibility, quality, and hardware remain
 unqualified. The retrieval loader accepts compatible local ColBERT bundles.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Query token IDs + mask                    Document token IDs + mask
+          ↓                                           ↓
+      LFM2 hybrid backbone (shared weights; separate forward passes)
+          ↓                                           ↓
+      Linear projection                           Linear projection
+          ↓                                           ↓
+   Optional per-token L2 norm                  Optional per-token L2 norm
+          └───────────────────┬───────────────────────┘
+                              ↓
+            Token similarity matrix [batch, query_tokens, doc_tokens]
+                              ↓
+            Mask document padding → max over document tokens
+                              ↓
+            Mask query padding → sum maxima → MaxSim score
+```
+
+## Papers and upstream references
+
+Papers: [ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT](https://arxiv.org/abs/2004.12832)
+and [LFM2 Technical Report](https://arxiv.org/abs/2511.23404).
+
+ColBERT supplies the late-interaction scoring reference; this local architecture
+substitutes an LFM2 backbone for BERT. Neither paper by itself qualifies the
+LiquidAI checkpoint's tokenizer, indexing recipe, or task quality.
+
 ## Installation and assets
 
 Use Python 3.10+, `python -m pip install -e .` from the repository root, and

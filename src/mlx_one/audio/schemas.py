@@ -24,6 +24,7 @@ class WhisperDecodeOptions:
     max_initial_timestamp: float | None = 1.0
     max_tokens: int | None = None
     seed: int = 0
+    without_timestamps: bool = False
 
     def __post_init__(self) -> None:
         temperatures = tuple(float(value) for value in self.temperatures)
@@ -83,3 +84,103 @@ class TranscriptionResult:
 
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), indent=2, sort_keys=True)
+
+
+@dataclass(frozen=True)
+class ASRDecodeOptions:
+    """Greedy decoding for non-Whisper ASR; no Whisper fallback metrics."""
+
+    max_tokens: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.max_tokens is not None and (
+            isinstance(self.max_tokens, bool)
+            or not isinstance(self.max_tokens, int)
+            or self.max_tokens < 1
+        ):
+            raise ValueError("max_tokens must be a positive integer")
+
+
+@dataclass(frozen=True)
+class SpeechTranscript:
+    """Non-Whisper transcript: unavailable timestamps/confidence remain unset."""
+
+    text: str
+    duration: float
+    model: str
+    revision: str | None
+    sample_rate: int
+    tokens: tuple[int, ...] = ()
+    language: str | None = None
+    confidence: float | None = None
+    timestamps: tuple[dict[str, Any], ...] | None = None
+    task: str = "transcribe"
+    timings: dict[str, float] = field(default_factory=dict)
+    provenance: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), indent=2, sort_keys=True)
+
+
+@dataclass(frozen=True)
+class QwenASROptions(ASRDecodeOptions):
+    """Qwen greedy budget and system context; not Whisper initial-prompt tokens."""
+
+    context: str = ""
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        if not isinstance(self.context, str):
+            raise ValueError("Qwen context must be a string")
+
+
+@dataclass(frozen=True)
+class AlignmentUnit:
+    text: str
+    start: float
+    end: float
+
+
+@dataclass(frozen=True)
+class AudioAlignment:
+    units: tuple[AlignmentUnit, ...]
+    text: str
+    language: str
+    duration: float
+    model: str
+    revision: str | None
+    timestamp_tick_seconds: float
+    sample_rate: int = 16000
+    task: Literal["align"] = "align"
+    provenance: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), indent=2, sort_keys=True, ensure_ascii=False)
+
+
+@dataclass(frozen=True)
+class AudioStreamEvent:
+    """Complete current hypothesis, never an append-only text delta."""
+
+    kind: Literal["partial", "final"]
+    text: str
+    sequence: int
+    audio_seconds: float
+    model: str
+    revision: str | None
+    language: str | None = None
+    confidence: float | None = None
+    timestamps: tuple[dict[str, Any], ...] | None = None
+    provenance: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True)

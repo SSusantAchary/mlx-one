@@ -28,6 +28,9 @@ def stream_generate(
     adapter_path: str | Path | None = None,
     is_cancelled: CancelCheck | None = None,
     _cache_manager: object | None = None,
+    _cache_namespace: str | None = None,
+    _cooperative: bool = False,
+    _prefill_chunk_size: int = 512,
 ) -> Iterator[GenerationChunk]:
     """Yield native generation chunks for one prompt."""
 
@@ -55,8 +58,17 @@ def stream_generate(
     if not isinstance(_cache_manager, CacheManager):
         raise TypeError("_cache_manager must be a CacheManager")
     token_ids = tuple(int(value) for value in bundle.tokenizer.encode(prompt))
-    handle = _cache_manager.create_handle(f"engine-{time.time_ns()}")
-    fingerprint = _cache_manager.fingerprint()
+    if (_cache_manager.config.backend in {"paged", "hybrid"}
+            or getattr(_cache_manager, "requested_mode", None) == "auto"):
+        from mlx_one.engine.selection import validate_context_admission
+
+        validate_context_admission(_cache_manager, len(token_ids), resolved.max_tokens)
+    key_type, value_type = _cache_manager.config.key_type, _cache_manager.config.value_type
+    handle = _cache_manager.create_handle(f"engine-{time.time_ns()}",
+                                         key_type=key_type, value_type=value_type)
+    handle.metadata["is_cancelled"] = is_cancelled
+    fingerprint = _cache_manager.fingerprint(namespace=_cache_namespace,
+                                             key_type=key_type, value_type=value_type)
     try:
         try:
             reused = _cache_manager.adopt_prefix(handle, fingerprint, token_ids)
@@ -79,6 +91,8 @@ def stream_generate(
             is_cancelled,
             cache=handle.bundle.entries,
             cached_prompt_ids=token_ids[:reused],
+            _cooperative=_cooperative, _prefill_chunk_size=_prefill_chunk_size,
+            _cache_runtime=_cache_manager, _cache_handle=handle,
             on_cache_update=lambda tokens, _: _cache_manager.publish_prefix(
                 handle, fingerprint, tokens
             ),
@@ -111,6 +125,11 @@ def stream_chat(
     speculative_stats: dict[str, int] | None = None,
     reasoning_budget: int = -1,
     yield_steps: bool = False,
+    on_execution: Callable[[dict[str, object]], None] | None = None,
+    _cooperative: bool = False,
+    _prefill_chunk_size: int = 512,
+    _cache_runtime: object | None = None,
+    _cache_handle: object | None = None,
 ) -> Iterator[GenerationChunk]:
     if model.chat_template is None:
         raise ValueError("loaded model has no chat-template layer")
@@ -131,6 +150,9 @@ def stream_chat(
         speculative_stats=speculative_stats,
         reasoning_budget=reasoning_budget,
         yield_steps=yield_steps,
+        on_execution=on_execution,
+        _cooperative=_cooperative, _prefill_chunk_size=_prefill_chunk_size,
+        _cache_runtime=_cache_runtime, _cache_handle=_cache_handle,
     )
 
 
@@ -208,13 +230,23 @@ def _stream_bundle(
     speculative_stats: dict[str, int] | None = None,
     reasoning_budget: int = -1,
     yield_steps: bool = False,
+    on_execution: Callable[[dict[str, object]], None] | None = None,
+    _cooperative: bool = False,
+    _prefill_chunk_size: int = 512,
+    _cache_runtime: object | None = None,
+    _cache_handle: object | None = None,
+    _forced_token_ids: tuple[int, ...] = (),
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
     from mlx_one.core.cache import configure_kv_caches
 
     cancelled = is_cancelled or (lambda: False)
+    tokenization_started = time.perf_counter()
     prompt_ids = bundle.tokenizer.encode(prompt)
+    if on_execution is not None:
+        on_execution({"kind": "tokenization", "duration_ms":
+                      (time.perf_counter() - tokenization_started) * 1000})
     if not prompt_ids:
         bos = bundle.tokenizer.bos_token_id
         if bos is None:
@@ -242,7 +274,7 @@ def _stream_bundle(
     think_close = tuple(bundle.tokenizer.encode("</think>"))
     reasoning_active = bool(think_open and tuple(prompt_ids[-len(think_open) :]) == think_open)
     reasoning_count = 0
-    forced_tokens: deque[int] = deque()
+    forced_tokens: deque[int] = deque(_forced_token_ids)
     closing_reasoning = False
     if reasoning_active and reasoning_budget == 0:
         forced_tokens.extend(think_close)
@@ -272,7 +304,70 @@ def _stream_bundle(
         current = tokens[len(cached) :] if produced == 0 else [tokens[-1]]
         if not current:
             raise ValueError("prompt cache must leave at least one token for prefill")
-        output = bundle.model(mx.array([current]), cache=cache)
+        phase = "prefill" if produced == 0 else "decode"
+        width = _prefill_chunk_size if _cooperative and produced == 0 else len(current)
+        start = 0
+        while start < len(current):
+            stop = min(start + width, len(current))
+            if (phase == "prefill" and _cache_runtime is not None
+                    and _cache_runtime.config.backend == "hybrid" and stop == len(current)):
+                page = _cache_runtime.config.block_size_tokens
+                boundary = (len(prompt_ids) - 1) // page * page
+                aligned = boundary - cache[0].offset
+                if 0 < aligned < stop - start:
+                    stop = start + aligned
+            part = tuple(current[start:stop])
+            start = stop
+            forward_started = time.perf_counter()
+            if _cooperative:
+                from mlx_one.engine.batching import ForwardRequest
+
+                output = yield ForwardRequest(bundle, part, cache, phase, tuple(prompt_ids),
+                                              _cache_runtime, _cache_handle, options=options)
+            else:
+                from contextlib import ExitStack
+
+                from mlx_one.engine.block_kv import BlockKVCache
+                from mlx_one.engine.cache import CacheBundle
+
+                transactional = any(isinstance(entry, BlockKVCache) for entry in cache)
+                staged = None
+                try:
+                    with ExitStack() as execution:
+                        if _cache_runtime is not None and _cache_runtime.pressure is not None:
+                            from mlx_one.engine.pressure import execution_forecast
+
+                            amount = execution_forecast(
+                                _cache_runtime, bundle.model.config, batch=1,
+                                chunk=len(part), history=cache[0].offset)["bytes"]
+                            if transactional:
+                                amount += CacheBundle(cache).allocated_nbytes
+                            execution.enter_context(_cache_runtime.transient_reservation(amount))
+                        staged = CacheBundle(cache).clone() if transactional else None
+                        output = bundle.model(mx.array([part]),
+                                              cache=staged.entries if staged else cache)
+                        # Publication and committed boundaries require evaluated state.
+                        mx.eval(output.logits)
+                        if cancelled():
+                            return
+                        if staged is not None:
+                            for original, draft in zip(cache, staged.entries, strict=True):
+                                original.replace_from(draft)
+                finally:
+                    if staged is not None:
+                        staged.release()
+            if _cache_handle is not None:
+                _cache_handle.computed_tokens = cache[0].offset
+                _cache_runtime.reconcile(_cache_handle)
+            if on_execution is not None:
+                elapsed_ms = (time.perf_counter() - forward_started) * 1000
+                on_execution({"kind": "forward", "phase": phase,
+                              "duration_ms": getattr(output, "forward_duration_ms", elapsed_ms),
+                              "at": time.perf_counter(),
+                              "batch_size": getattr(output, "batch_size", 1),
+                              "input_tokens": len(part), "logits_dtype": str(output.logits.dtype)})
+        if cancelled():
+            return
         if on_cache_update is not None and produced == 0 and not prompt_cache_published:
             on_cache_update(tuple(prompt_ids), cache)
             prompt_cache_published = True
@@ -311,6 +406,8 @@ def _stream_bundle(
                 finish_reason = "stop"
                 stopped = True
                 break
+            if on_execution is not None:
+                on_execution({"kind": "token", "at": time.perf_counter()})
             tokens.append(candidate)
             produced += 1
             opened = bool(

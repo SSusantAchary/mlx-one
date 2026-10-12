@@ -1,0 +1,42 @@
+{
+  "status": "FAIL",
+  "reference_source_commit": "469230357aab0f2b303b0d638c1f8d06edb14184",
+  "fixture_sha256": "d91044177081794c48a2240482c8fafb91a189b02b7659f2c529af1f634ff4b7",
+  "atol": 0.0001,
+  "rtol": 0.0001,
+  "reports": {
+    "encoder": {
+      "pass": true,
+      "max_abs": 1.1368683772161603e-12
+    },
+    "decoder_first": {
+      "pass": true,
+      "max_abs": 1.4551915228366852e-11
+    },
+    "decoder_second": {
+      "pass": true,
+      "max_abs": 1.4551915228366852e-11
+    },
+    "hidden": {
+      "pass": true,
+      "max_abs": 9.313225746154785e-10
+    },
+    "cell": {
+      "pass": true,
+      "max_abs": 1.862645149230957e-09
+    },
+    "features": {
+      "pass": true,
+      "max_abs": 3.278534859418869e-05
+    },
+    "silence": {
+      "pass": false,
+      "max_abs": 0.1588064730167389
+    },
+    "mel_filters": {
+      "pass": true,
+      "max_abs": 0.0
+    }
+  },
+  "scope": "float32 deterministic components; not checkpoint qualification"
+}

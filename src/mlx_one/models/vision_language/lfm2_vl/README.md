@@ -14,6 +14,37 @@ image-chat processor workflow is registered for this entry.
 upstream candidate reference. Publisher checkpoint/processor mapping and real
 task parity remain unqualified; architecture tests are not a loadability claim.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Image patch grids                            Text token IDs
+       ↓                                            ↓
+┌────────── Native vision tower ──────────┐    Token embeddings
+│ Patch + interpolated position embeds    │            │
+│ Vision Transformer                      │            │
+│ Pixel unshuffle → norm (if set)         │            │
+│ Projection to text hidden width         │            │
+└──────────────────┬──────────────────────┘            │
+                   └──────────────┬───────────────────┘
+                       Replace image-token slots
+                                  ↓
+                   LFM2 convolution/attention hybrid decoder
+                                  ↓
+                         LM head → token logits
+```
+
+## Papers and upstream references
+
+Backbone paper: [LFM2 Technical Report](https://arxiv.org/abs/2511.23404).
+Variant reference: [LFM2.5-VL-1.6B official model card](https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B).
+
+This diagram reflects the local generic vision tower and projector, not a claim
+that all publisher vision/processor assets have been ported or qualified.
+
 ## Installation and assets
 
 Use Python 3.10+ and `python -m pip install -e '.[vision]'` from the repository

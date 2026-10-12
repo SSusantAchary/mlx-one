@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 import threading
 import time
 from collections.abc import Iterator
@@ -11,8 +12,15 @@ from typing import Any
 from mlx_one.engine.cache_errors import PrefixReuseUnsupported
 from mlx_one.engine.cache_manager import CacheManager
 from mlx_one.engine.cache_specs import CacheConfig, CacheHandle
+from mlx_one.engine.modes import (
+    InferenceMode,
+    configure_execution_dtype,
+    resolve_backend,
+    validate_mode,
+)
+from mlx_one.engine.reporting import native_report
 from mlx_one.server.model_manager import ModelManager
-from mlx_one.server.scheduler import current_slot
+from mlx_one.server.scheduler import current_queue_ms
 from mlx_one.text import TextGenerationOptions, stream_chat
 from mlx_one.utils.memory import get_memory_snapshot
 
@@ -54,6 +62,17 @@ class RuntimeStats:
     cache_lookup_time_ms: float | None = None
     cache_allocation_time_ms: float | None = None
     avoided_prefill_tokens: int | None = None
+    queue_ms: float | None = None
+    tokenization_ms: float | None = None
+    prefill_ms: float | None = None
+    decode_ms: float | None = None
+    model_token_times_ms: tuple[float, ...] | None = None
+    model_generation_started_at: float | None = None
+    model_forward_batch_sizes: tuple[int, ...] | None = None
+    execution_observer: str | None = None
+    mlx_cached_bytes: int | None = None
+    actual_logits_dtypes: tuple[str, ...] | None = None
+    cache_layers: tuple[dict[str, Any], ...] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -65,18 +84,46 @@ class GenerationEngine:
         manager: ModelManager,
         *,
         prefix_cache_bytes: int = 512 * 1024**2,
-        cache_backend: str = "dense",
+        cache_backend: str | None = None,
+        inference_mode: InferenceMode | None = None,
         cache_block_size: int = 32,
         cache_memory_budget_bytes: int | None = None,
+        collect_execution_metrics: bool = False,
+        execution_dtype: str | None = None,
+        prefill_chunk_size: int = 512,
+        memory_pressure_config: Any = None,
+        qualification_registry: Any = None,
+        qualification_profile: dict[str, Any] | None = None,
+        cache_type_k: str = "f16",
+        cache_type_v: str = "f16",
     ) -> None:
         self.manager = manager
+        self._inference_mode = inference_mode
+        self._requested_mode = inference_mode
+        self._qualification_registry = qualification_registry
+        self._qualification_profile = qualification_profile
+        self._selection = {"requested_mode": inference_mode, "resolved_mode": inference_mode,
+                           "reason": "explicit configuration", "evidence_scope": None}
+        self._pressure = None
+        if memory_pressure_config is not None or inference_mode in {
+            "paged", "experimental_hybrid_batch", "auto"
+        }:
+            from mlx_one.engine.pressure import MemoryPressureController
+
+            self._pressure = MemoryPressureController(memory_pressure_config)
+        self._execution_dtype = execution_dtype
+        self._prefill_chunk_size = prefill_chunk_size
+        self._converted_bundle = None
+        self._actor = None
+        self._collect_execution_metrics = collect_execution_metrics
         self._stats = RuntimeStats()
         self._lock = threading.Lock()
         self._cache_config = CacheConfig(
-            backend=cache_backend,  # type: ignore[arg-type]
+            backend=resolve_backend(inference_mode, cache_backend),  # type: ignore[arg-type]
             memory_budget_bytes=cache_memory_budget_bytes,
             prefix_cache_budget_bytes=prefix_cache_bytes,
             block_size_tokens=cache_block_size,
+            key_type=cache_type_k, value_type=cache_type_v,
         )
         self._cache_runtime: CacheManager | None = None
         self._cache_bundle: Any | None = None
@@ -103,6 +150,7 @@ class GenerationEngine:
         cache_reuse: int = 256,
         cache_entries: int = 1,
         cache_idle_slots: bool = False,
+        cache_namespace: str | None = None,
         cache_type_k: str = "f16",
         cache_type_v: str = "f16",
         spec_type: str = "none",
@@ -125,6 +173,7 @@ class GenerationEngine:
                 cache_reuse=cache_reuse,
                 cache_entries=cache_entries,
                 cache_idle_slots=cache_idle_slots,
+                cache_namespace=cache_namespace,
                 cache_type_k=cache_type_k,
                 cache_type_v=cache_type_v,
                 spec_type=spec_type,
@@ -158,12 +207,14 @@ class GenerationEngine:
         cache_reuse: int = 256,
         cache_entries: int = 1,
         cache_idle_slots: bool = False,
+        cache_namespace: str | None = None,
         cache_type_k: str = "f16",
         cache_type_v: str = "f16",
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
         lifecycle: dict[str, Any],
     ) -> Iterator[GenerationEvent]:
+        queue_ms = current_queue_ms()
         bundle = self.manager.current_model()
         if model != self.manager.model_info().id:
             raise ValueError(f"model {model!r} is not loaded")
@@ -181,22 +232,30 @@ class GenerationEngine:
             reasoning_budget,
             reasoning_preserve,
         )
-        prompt_tokens = len(bundle.tokenizer.encode(prompt))
+        tokenization_started = time.perf_counter()
         prompt_ids = tuple(bundle.tokenizer.encode(prompt))
+        tokenization_ms = (time.perf_counter() - tokenization_started) * 1000
+        prompt_tokens = len(prompt_ids)
         runtime = self._cache_manager_for(bundle)
+        if runtime.config.backend in {"paged", "hybrid"} or self._requested_mode == "auto":
+            from mlx_one.engine.selection import validate_context_admission
+
+            validate_context_admission(runtime, prompt_tokens, options.max_tokens)
         handle = runtime.create_handle(
             f"server-{time.time_ns()}",
             key_type=cache_type_k,
             value_type=cache_type_v,
         )
+        handle.metadata["is_cancelled"] = cancel.is_set
         lifecycle.update({"runtime": runtime, "handle": handle})
         cached_ids: tuple[int, ...] = ()
-        slot = current_slot()
         fingerprint = runtime.fingerprint(
             key_type=cache_type_k,
             value_type=cache_type_v,
             context_tokens=context_length or bundle.context_length,
-            namespace="global" if cache_idle_slots else f"slot:{slot}",
+            namespace=cache_namespace,
+            rendering_options=_reasoning_template_options(
+                reasoning, reasoning_budget, reasoning_preserve),
         )
         if cache_prompt:
             try:
@@ -227,7 +286,8 @@ class GenerationEngine:
             start_in_reasoning=prompt.rstrip().endswith("<think>"),
         )
         speculative_stats = {"drafted_tokens": 0, "accepted_draft_tokens": 0}
-        for chunk in stream_chat(
+        observations: list[dict[str, Any]] = []
+        iterator = stream_chat(
             bundle,
             rendered_messages,
             options=options,
@@ -255,17 +315,35 @@ class GenerationEngine:
             speculative_stats=speculative_stats,
             reasoning_budget=reasoning_budget,
             yield_steps=True,
-        ):
-            if chunk.token_id is not None:
-                generated = chunk.generated_tokens
-                if first_at is None:
-                    first_at = time.perf_counter()
-                text, thought = parser.feed(chunk.text) if chunk.text else ("", "")
-                yield GenerationEvent(text=text, reasoning_content=thought)
-            elif chunk.finish_reason is None:
-                yield GenerationEvent()
-            if chunk.finish_reason is not None:
-                finish_reason = chunk.finish_reason
+            **({"on_execution": observations.append} if self._collect_execution_metrics else {}),
+            _cooperative=self._actor is not None,
+            _prefill_chunk_size=self._prefill_chunk_size,
+            _cache_runtime=runtime, _cache_handle=handle,
+        )
+        from mlx_one.engine.batching import ForwardRequest
+
+        try:
+            chunk = next(iterator)
+            while True:
+                if isinstance(chunk, ForwardRequest):
+                    response = yield chunk
+                    chunk = iterator.send(response)
+                    continue
+                if chunk.token_id is not None:
+                    generated = chunk.generated_tokens
+                    if first_at is None:
+                        first_at = time.perf_counter()
+                    text, thought = parser.feed(chunk.text) if chunk.text else ("", "")
+                    yield GenerationEvent(text=text, reasoning_content=thought)
+                elif chunk.finish_reason is None:
+                    yield GenerationEvent()
+                if chunk.finish_reason is not None:
+                    finish_reason = chunk.finish_reason
+                chunk = next(iterator)
+        except StopIteration:
+            pass
+        finally:
+            iterator.close()
         trailing_text, trailing_reasoning = parser.flush()
         if trailing_text or trailing_reasoning:
             yield GenerationEvent(
@@ -281,7 +359,34 @@ class GenerationEngine:
         except Exception:
             pass
         cache_snapshot = runtime.stats()
+        token_times = tuple(
+            (o["at"] - started) * 1000 for o in observations if o["kind"] == "token"
+        )
+        prefill_ms = sum(o["duration_ms"] for o in observations
+                         if o["kind"] == "forward" and o["phase"] == "prefill")
+        decode_ms = sum(o["duration_ms"] for o in observations
+                        if o["kind"] == "forward" and o["phase"] == "decode")
+        observed_tokenization = sum(o["duration_ms"] for o in observations
+                                    if o["kind"] == "tokenization")
+        mx = sys.modules.get("mlx.core")
+        cached_memory = getattr(mx, "get_cache_memory", None)
+        from mlx_one.engine.reporting import describe_cache
+
         stats = RuntimeStats(
+            queue_ms=queue_ms,
+            tokenization_ms=tokenization_ms + observed_tokenization,
+            prefill_ms=prefill_ms if observations else None,
+            decode_ms=decode_ms if observations else None,
+            model_token_times_ms=token_times if observations else None,
+            model_generation_started_at=started if observations else None,
+            model_forward_batch_sizes=tuple(o["batch_size"] for o in observations
+                                           if o["kind"] == "forward") if observations else None,
+            execution_observer="synchronized-forward-v1" if observations else None,
+            actual_logits_dtypes=(tuple(sorted({o["logits_dtype"] for o in observations
+                                                if o["kind"] == "forward"}))
+                                  if observations else None),
+            mlx_cached_bytes=int(cached_memory()) if callable(cached_memory) else None,
+            cache_layers=tuple(describe_cache(handle.bundle.entries, runtime.plan)),
             prompt_tokens=prompt_tokens,
             generated_tokens=generated,
             tokens_per_second=generated / elapsed if elapsed > 0 else None,
@@ -306,7 +411,14 @@ class GenerationEngine:
                 if speculative_stats["drafted_tokens"]
                 else None
             ),
-            decode_tokens_per_second=generated / elapsed if elapsed > 0 else None,
+            prompt_tokens_per_second=(
+                (prompt_tokens - len(cached_ids)) * 1000 / prefill_ms if prefill_ms else None
+            ),
+            decode_tokens_per_second=(
+                (len(token_times) - 1) * 1000 / (token_times[-1] - token_times[0])
+                if len(token_times) > 1 and token_times[-1] > token_times[0]
+                else None
+            ) if observations else (generated / elapsed if elapsed > 0 else None),
             inter_token_latency_ms=(elapsed * 1000 / generated if generated else None),
             cache_bytes=cache_snapshot.physical_bytes,
             cache_backend=handle.backend,
@@ -333,18 +445,34 @@ class GenerationEngine:
             self._cache_runtime.clear_prefixes()
 
     def close(self) -> None:
+        if self._pressure is not None:
+            self._pressure.close()
+        self._converted_bundle = None
         if self._cache_runtime is not None:
             self._cache_runtime.close()
             self._cache_runtime = None
             self._cache_bundle = None
+
+    def runtime_stats(self) -> dict[str, Any]:
+        try:
+            bundle = self.manager.current_model()
+        except RuntimeError:
+            return {"engine_mode": None, "qualification": {}, "model_revision": None}
+        runtime = self._cache_runtime if self._cache_bundle is bundle else None
+        report = native_report(bundle, runtime, backend=self._cache_config.backend,
+                               mode=self._inference_mode, execution_dtype=self._execution_dtype)
+        report["selection"] = self._selection
+        report["memory_pressure"] = self._pressure.stats() if self._pressure else None
+        return report
 
     def cache_stats(self) -> dict[str, Any]:
         if self._cache_runtime is None:
             return {}
         runtime = self._cache_runtime
         result: dict[str, Any] = runtime.stats().to_dict()
-        qualified_block = (
+        block_supported = (
             runtime.plan.architecture == "qwen2" and runtime.plan.block_compatible
+            and not getattr(runtime.bundle, "quantization", {})
         )
         result.update(
             {
@@ -353,11 +481,12 @@ class GenerationEngine:
                 "capabilities": {
                     "dense_kv": True,
                     "quantized_kv": True,
-                    "block_kv": qualified_block,
-                    "prefix_block_cache": qualified_block,
+                    "block_kv": block_supported,
+                    "prefix_block_cache": block_supported,
                     "sliding_block_kv": False,
-                    "hybrid_prefix_restore": False,
-                    "continuous_batching": False,
+                    "hybrid_prefix_restore": self._inference_mode == "experimental_hybrid_batch",
+                    "continuous_batching": self._inference_mode in {
+                        "experimental_dense_batch", "paged", "experimental_hybrid_batch"},
                 },
             }
         )
@@ -373,6 +502,7 @@ class GenerationEngine:
         minimum_tokens: int,
         cache_idle_slots: bool,
         slot: int = 0,
+        cache_namespace: str | None = None,
     ) -> int:
         bundle = self.manager.current_model()
         runtime = self._cache_manager_for(bundle)
@@ -380,19 +510,87 @@ class GenerationEngine:
             key_type=cache_type_k,
             value_type=cache_type_v,
             context_tokens=context_length,
-            namespace="global" if cache_idle_slots else f"slot:{slot}",
+            namespace=cache_namespace,
         )
         return runtime.preview_prefix(
             fingerprint, prompt_ids, minimum_tokens=minimum_tokens
         )
 
+    def bind_actor(self, actor) -> None:
+        self._actor = actor
+        actor.pressure = self._pressure
+        actor.execution_mode = self._inference_mode
+        config = actor.config
+        self._prefill_chunk_size = min(self._prefill_chunk_size, config.prefill_chunk_size,
+                                       config.max_prefill_tokens,
+                                       max(config.max_scheduled_tokens // 2, 1))
+
     def _cache_manager_for(self, bundle: Any) -> CacheManager:
+        if (self._actor is not None and threading.current_thread() is not self._actor._thread
+                and (self._cache_runtime is None or self._cache_bundle is not bundle)):
+            return self._actor.execute(lambda: self._cache_manager_for(bundle))
         if self._cache_runtime is None or self._cache_bundle is not bundle:
             if self._cache_runtime is not None:
                 self._cache_runtime.close()
-            self._cache_runtime = CacheManager(bundle, self._cache_config)
+            self._cache_runtime = None
+            self._cache_bundle = None
+            runtime = CacheManager(bundle, self._cache_config)
+            try:
+                if self._converted_bundle is not bundle:
+                    configure_execution_dtype(bundle, self._execution_dtype)
+                    self._converted_bundle = bundle
+                if self._requested_mode == "auto":
+                    from mlx_one.engine.selection import select_auto_mode
+
+                    self._selection = select_auto_mode(bundle, runtime,
+                                                       self._qualification_registry,
+                                                       self._qualification_profile)
+                    self._inference_mode = self._selection["resolved_mode"]
+                    from dataclasses import replace
+
+                    runtime.config = replace(runtime.config, backend=resolve_backend(
+                        self._inference_mode, None))
+                validate_mode(bundle, runtime.plan, self._inference_mode)
+                runtime.mode = self._inference_mode
+                runtime.requested_mode = self._requested_mode
+                runtime.pressure = self._pressure
+                if self._pressure is not None:
+                    self._pressure.start()
+                runtime.qualification_registry = self._qualification_registry
+                runtime.qualification_profile = self._qualification_profile
+                runtime.batching_config = self._actor.config if self._actor is not None else None
+                if self._qualification_profile and (
+                    self._requested_mode == "auto" and self._selection.get("evidence_scope")
+                    or runtime.config.key_type in {"q4_0", "q8_0"}
+                ):
+                    from mlx_one.engine.selection import validate_execution_envelope
+
+                    if self._actor is None:
+                        raise ValueError("qualified actor execution requires a bound scheduler")
+                    validate_execution_envelope(runtime, self._actor.config, required=True)
+                if self._actor is not None:
+                    self._actor.execution_mode = self._inference_mode
+            except Exception:
+                runtime.close()
+                raise
+            self._cache_runtime = runtime
             self._cache_bundle = bundle
         return self._cache_runtime
+
+    def preview_request(self, messages, options, *, namespace, context_length,
+                        context_shift=False, reasoning="auto", reasoning_budget=-1,
+                        reasoning_preserve=False, minimum_tokens=1):
+        bundle = self.manager.current_model()
+        _, prompt = _fit_messages(bundle, messages, options.max_tokens, context_length,
+                                  context_shift, reasoning, reasoning_budget, reasoning_preserve)
+        runtime = self._cache_manager_for(bundle)
+        fingerprint = runtime.fingerprint(
+            namespace=namespace, context_tokens=context_length,
+            key_type=runtime.config.key_type, value_type=runtime.config.value_type,
+            rendering_options=_reasoning_template_options(
+                reasoning, reasoning_budget, reasoning_preserve))
+        return runtime.preview_prefix(fingerprint, tuple(bundle.tokenizer.encode(prompt)),
+                                      minimum_tokens=minimum_tokens)
 
 
 def _reasoning_template_options(

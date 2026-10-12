@@ -5,6 +5,34 @@ from mlx_one.core.registry import ModelRegistration, register_model
 
 def register_builtin_models() -> None:
     registrations = (
+        ModelRegistration(
+            "parakeet_tdt",
+            "mlx_one.models.audio.parakeet.config:ParakeetConfig",
+            "mlx_one.models.audio.parakeet.model:ParakeetTDT",
+            "asr", frozenset({"transcribe"}),
+            "mlx_one.models.audio.parakeet.weights:sanitize_weights",
+            "mlx_one.models.audio.parakeet.weights:weight_contract",
+            loader_path="mlx_one.models.audio.parakeet.loading:load_parakeet",
+            tasks=frozenset({"transcribe"}),
+        ),
+        *(
+            ModelRegistration(
+                model_type,
+                "mlx_one.models.audio.qwen3_asr.config:QwenASRConfig",
+                "mlx_one.models.audio.qwen3_asr.model:QwenASRModel",
+                "asr",
+                capabilities,
+                "mlx_one.models.audio.qwen3_asr.weights:sanitize_weights",
+                "mlx_one.models.audio.qwen3_asr.weights:weight_contract",
+                loader_path="mlx_one.models.audio.qwen3_asr.loading:load_qwen_audio",
+                tasks=tasks,
+            )
+            for model_type, capabilities, tasks in (
+                ("qwen3_asr", frozenset({"forward", "cache", "transcribe", "stream"}),
+                 frozenset({"transcribe"})),
+                ("qwen3_forced_aligner", frozenset({"forward", "align"}), frozenset({"align"})),
+            )
+        ),
         *(
             ModelRegistration(
                 model_type,
@@ -247,6 +275,17 @@ def register_builtin_models() -> None:
                 }
             ),
             loader_path="mlx_one.models.audio.whisper.loading:load_whisper",
+            tasks=frozenset({"asr"}),
+        ),
+        ModelRegistration(
+            "moonshine",
+            "mlx_one.models.audio.moonshine.config:MoonshineConfig",
+            "mlx_one.models.audio.moonshine.model:MoonshineForConditionalGeneration",
+            "asr",
+            frozenset({"forward", "cache", "transcribe"}),
+            "mlx_one.models.audio.moonshine.weights:sanitize_weights",
+            "mlx_one.models.audio.moonshine.weights:weight_contract",
+            loader_path="mlx_one.models.audio.moonshine.loading:load_moonshine",
             tasks=frozenset({"asr"}),
         ),
     )

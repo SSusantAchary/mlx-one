@@ -14,6 +14,43 @@ architecture-level and synthetic.
 checkpoint reference; 0.8B/2B variants are candidates. The presence of image/video
 capabilities in the registry does not qualify the public vision task path.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Image/video patches                         Text token IDs
+             ↓                                      ↓
+┌──────────── Vision encoder ───────────┐     Token embeddings
+│ Learned/interpolated positions        │             │
+│ Vision Transformer → spatial merger   │             │
+└──────────────────┬────────────────────┘             │
+                   └──────────────┬──────────────────┘
+                       Replace visual-token slots
+                                  ↓
+┌────────────────── Dense hybrid text decoder ────────────────────┐
+│ RMSNorm → Gated DeltaNet OR full GQA + multimodal RoPE → add    │
+│           conv/recurrent state     attention KV                 │
+│ RMSNorm → gated feed-forward                         → add      │
+└─────────────────────────────────────────────────────────────────┘
+    ↓
+Final norm → LM head → logits
+    └→ Optional MTP modules, only with complete compatible tensors
+```
+
+## Papers and upstream references
+
+Component paper: [Gated Delta Networks: Improving Mamba2 with Delta Rule](https://arxiv.org/abs/2412.06464).
+Checkpoint architecture reference:
+[Qwen3.5-0.8B official model card](https://huggingface.co/Qwen/Qwen3.5-0.8B).
+
+A standalone dense-Qwen3.5 technical report was not verified for this guide.
+The component paper is not a Qwen3.5 release report; Qwen3.5-Omni is a different
+model. The image branch is architectural; the implemented public workflow is
+text generation, and task/checkpoint qualification remains as described below.
+
 ## Installation and assets
 
 Use Python 3.10+ and `python -m pip install -e .` from the repository root.

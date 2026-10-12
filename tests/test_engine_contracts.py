@@ -6,18 +6,19 @@ import pytest
 from mlx_one.engine import (
     AdmissionStatus,
     ASRRunner,
+    BatchPlan,
     BlockAllocator,
     CacheBundle,
     CausalLMRunner,
     EncoderRunner,
     EngineRequest,
-    ExecutionBatch,
     MemoryBudget,
     MemoryUsage,
     PageTable,
+    Phase,
     PrefixCache,
     RequestKind,
-    SequenceState,
+    ScheduledSequence,
     TokenBudgetScheduler,
     UnifiedMemoryPlanner,
     VLMRunner,
@@ -73,15 +74,15 @@ def test_engine_request_and_sequence_state_contract() -> None:
             model=SimpleNamespace(make_cache=lambda: (FakeCache(8),)),
         )
     ).prepare(request())
-    assert item.state is SequenceState.WAITING
+    assert item.phase is Phase.WAITING
     assert item.remaining_prompt_tokens == 2
-    item.transition(SequenceState.PREFILL)
-    item.computed_tokens = 2
-    item.transition(SequenceState.DECODING)
-    item.transition(SequenceState.FINISHED)
-    assert item.state.terminal
+    item.transition(Phase.PREFILL)
+    item.computed_len = 2
+    item.transition(Phase.DECODE)
+    item.transition(Phase.FINISHED)
+    assert item.phase.terminal
     with pytest.raises(ValueError, match="invalid sequence transition"):
-        item.transition(SequenceState.DECODING)
+        item.transition(Phase.DECODE)
 
 
 def test_request_rejects_invalid_deadline_and_token_limit() -> None:
@@ -98,13 +99,13 @@ def test_non_autoregressive_task_runners_dispatch_by_capability() -> None:
         request(kind=RequestKind.EMBEDDING, payload={"texts": ("one",)})
     )
     assert value == ("one",)
-    assert embedding.capabilities.batchable
+    assert embedding.capabilities().batchable
 
     vlm = VLMRunner(lambda **payload: payload["images"])
     assert vlm.execute(
         request(kind=RequestKind.VISION, payload={"images": ("image",)})
     ) == ("image",)
-    assert vlm.capabilities.modalities == frozenset({"text", "image"})
+    assert vlm.capabilities().modalities == frozenset({"text", "image"})
 
     asr = ASRRunner(lambda **payload: payload["audio"])
     assert asr.execute(
@@ -151,12 +152,12 @@ def test_execution_batch_validates_phase_and_budget() -> None:
             model=SimpleNamespace(make_cache=lambda: (FakeCache(0),)),
         )
     ).prepare(request())
-    batch = ExecutionBatch((sequence,), "prefill", 512)
-    assert batch.token_budget == 512
+    batch = BatchPlan((ScheduledSequence(sequence.request_id, "prefill", 0, 512),), 512)
+    assert batch.total_scheduled_tokens == 512
     with pytest.raises(ValueError, match="cannot be empty"):
-        ExecutionBatch((), "prefill", 1)
-    with pytest.raises(ValueError, match="positive"):
-        ExecutionBatch((sequence,), "decode", 0)
+        BatchPlan((), 1)
+    with pytest.raises(ValueError, match="counts"):
+        BatchPlan((ScheduledSequence(sequence.request_id, "decode", 0, 1),), 0)
 
 
 def test_token_scheduler_prioritizes_decode_and_progresses_oldest_prefill() -> None:
@@ -167,17 +168,17 @@ def test_token_scheduler_prioritizes_decode_and_progresses_oldest_prefill() -> N
         )
     )
     decoding = runner.prepare(request(request_id="decode"))
-    decoding.transition(SequenceState.PREFILL)
-    decoding.computed_tokens = 3
-    decoding.generated_tokens.append(4)
-    decoding.transition(SequenceState.DECODING)
+    decoding.transition(Phase.PREFILL)
+    decoding.computed_len = 3
+    decoding.generated_ids.append(4)
+    decoding.transition(Phase.DECODE)
     prefill = runner.prepare(request(request_id="prefill"))
     scheduler = TokenBudgetScheduler(max_batch_tokens=8, prefill_chunk_size=2)
     scheduler.active.append(decoding)
     scheduler.add(prefill)
     batches = scheduler.schedule()
-    assert [batch.phase for batch in batches] == ["decode", "prefill"]
-    assert batches[1].token_budget == 2
+    assert [batch.sequences[0].phase for batch in batches] == ["decode", "prefill"]
+    assert batches[1].total_scheduled_tokens == 2
 
 
 def test_token_scheduler_expires_and_cancels_requests() -> None:
@@ -195,8 +196,8 @@ def test_token_scheduler_expires_and_cancels_requests() -> None:
     scheduler.add(expired)
     scheduler.add(cancelled)
     assert scheduler.schedule(now=created + 2) == ()
-    assert expired.state is SequenceState.TIMED_OUT
-    assert cancelled.state is SequenceState.CANCELLED
+    assert expired.phase is Phase.TIMED_OUT
+    assert cancelled.phase is Phase.CANCELLED
 
 
 def test_memory_planner_forecasts_and_distinguishes_queue_from_reject() -> None:

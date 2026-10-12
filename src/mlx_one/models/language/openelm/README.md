@@ -10,6 +10,28 @@ counts and feed-forward widths, fused QKV, GQA, RoPE, and RMSNorm.
 reference; 270M–3B variants are catalog candidates. Native loading/generation and
 synthetic tests exist, but each exact checkpoint release needs integration qualification.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token embeddings
+    ↓
+┌────────────────── Layer i (checkpoint-defined widths) ──────────┐
+│ RMSNorm → fused QKV → optional Q/K norm → GQA + RoPE → add      │
+│ RMSNorm → feed-forward (optional gated form)         → add      │
+│ Query/KV head counts and feed-forward width vary by layer       │
+└─────────────────────────────────────────────────────────────────┘
+    ↓
+Final RMSNorm → tied/untied LM head → next-token logits
+```
+
+## Papers and upstream references
+
+Paper: [OpenELM: An Efficient Language Model Family with Open Training and Inference Framework](https://arxiv.org/abs/2404.14619).
+
 ## Installation and assets
 
 Install `python -m pip install -e .` from the repository root using Python 3.10+.

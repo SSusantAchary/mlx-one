@@ -29,7 +29,7 @@ def test_engine_context_manager_and_capabilities(monkeypatch) -> None:
     engine = Engine(bundle())
     with engine:
         assert engine.generate("hi", max_tokens=2) is expected
-        assert engine.capabilities["architecture"] == "qwen3"
+        assert engine.capabilities()["architecture"] == "qwen3"
         assert engine.latest_result is expected
     try:
         engine.generate("again")

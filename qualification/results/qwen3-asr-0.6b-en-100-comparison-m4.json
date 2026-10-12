@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "gates": {
+    "required_corpus_size": true,
+    "process_budget": true,
+    "cleanup": true,
+    "exact_anchors": true,
+    "wer_degradation": true,
+    "cer_degradation": true
+  },
+  "mismatches": [],
+  "reference_wer": 0.014492753623188406,
+  "native_wer": 0.014066496163682864,
+  "reference_cer": 0.004891147981202647,
+  "native_cer": 0.004603433394073079,
+  "scope": "one checkpoint/task/language/mode only; all other gates remain separate",
+  "reference_sha256": "7b0f6694a044a71b2c278b2f1c2afd263e989c616ba9ac3984a83d41d9824bcc",
+  "native_sha256": "9424b685435ed24d895e4ab957df5c3781fa809873ffd77dbef35b01f498b79b"
+}

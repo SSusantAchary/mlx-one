@@ -24,6 +24,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from mlx_one.diagnostics import collect_doctor_report
 from mlx_one.engine.memory import AdmissionStatus
+from mlx_one.engine.modes import ACTOR_MODES, ModelCapabilityUnsupported
+from mlx_one.engine.selection import load_evidence
 from mlx_one.server.admission import MemoryAdmission
 from mlx_one.server.config import ServerConfig
 from mlx_one.server.generation_engine import GenerationEngine, GenerationEvent
@@ -162,22 +164,54 @@ def create_app(
         manager,
         prefix_cache_bytes=settings.prefix_cache_bytes,
         cache_backend=settings.cache_backend,
+        inference_mode=settings.inference_mode,
+        execution_dtype=settings.execution_dtype,
+        prefill_chunk_size=min(settings.prefill_chunk_size or 512, settings.max_prefill_tokens,
+                               max((settings.max_batch_tokens or 2048) // 2, 1)),
         cache_block_size=settings.cache_block_size,
         cache_memory_budget_bytes=settings.cache_memory_budget_bytes,
+        memory_pressure_config=settings.memory_pressure_config,
+        cache_type_k=settings.cache_type_k, cache_type_v=settings.cache_type_v,
+        qualification_registry=load_evidence(settings.qualification_evidence),
+        qualification_profile=settings.qualification_profile or {
+                               "context_tokens": settings.context_length,
+                               "slots": settings.parallel,
+                               "chunk_tokens": settings.prefill_chunk_size,
+                               "ttft_budget_ms": settings.ttft_budget_ms,
+                               "decode_gap_budget_ms": settings.decode_gap_budget_ms},
     )
-    jobs = scheduler or GenerationScheduler(
-        max_pending=settings.queue_size,
-        parallel=settings.parallel,
-        timeout=settings.timeout,
-    )
+    if settings.inference_mode in ACTOR_MODES:
+        from mlx_one.engine.actor import InferenceActor
+        from mlx_one.engine.batching import BatchingConfig
+        from mlx_one.engine.dispatch import DispatchRunner
+
+        if scheduler is not None and not isinstance(scheduler, InferenceActor):
+            raise ValueError("experimental_dense_batch requires the inference actor")
+        jobs = scheduler or InferenceActor(BatchingConfig(
+            max_sequences=settings.parallel, queue_size=settings.queue_size,
+            timeout=settings.timeout,
+            prefill_chunk_size=settings.prefill_chunk_size or 512,
+            max_scheduled_tokens=settings.max_batch_tokens or 2048,
+            max_prefill_tokens=settings.max_prefill_tokens,
+            admission_policy=settings.admission_policy), runner=DispatchRunner())
+    else:
+        jobs = scheduler or GenerationScheduler(max_pending=settings.queue_size,
+                                                parallel=settings.parallel,
+                                                timeout=settings.timeout)
+    if settings.inference_mode in ACTOR_MODES:
+        engine.bind_actor(jobs)
     bearer = HTTPBearer(auto_error=False)
     services = dict(task_services or {})
     images = image_resolver or ImageResolver()
     bearer_dependency = Depends(bearer)
 
+    principal_secret = uuid.uuid4().bytes
+
     async def authorize(
+        request: Request,
         credentials: HTTPAuthorizationCredentials | None = bearer_dependency,
     ) -> None | JSONResponse:
+        request.state.cache_namespace = f"anonymous:{uuid.uuid4().hex}"
         if not settings.api_keys:
             return None
         supplied = (
@@ -195,6 +229,8 @@ def create_app(
                 "authentication_error",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        request.state.cache_namespace = "principal:" + hmac.new(
+            principal_secret, supplied.encode(), "sha256").hexdigest()
         return None
 
     authorization_dependency = Depends(authorize)
@@ -278,6 +314,9 @@ def create_app(
         result["scheduler"] = jobs.stats()
         cache_stats = getattr(engine, "cache_stats", None)
         result["cache"] = cache_stats() if callable(cache_stats) else {}
+        runtime_stats = getattr(engine, "runtime_stats", None)
+        if callable(runtime_stats):
+            result["inference"] = runtime_stats()
         if memory_admission is not None:
             result["memory_budget"] = memory_admission.stats()
         transcription = services.get("transcription")
@@ -314,6 +353,8 @@ def create_app(
             multimodal = any(not isinstance(item.content, str) for item in body.messages)
             if not multimodal and getattr(request.state, "body_bytes", 0) > 1024 * 1024:
                 return _error(413, "text request body exceeds 1 MiB", "invalid_request_error")
+            if multimodal and settings.inference_mode in ACTOR_MODES:
+                raise ModelCapabilityUnsupported("dense batching supports Qwen text requests only")
             selected_engine = services.get("vision") if multimodal else engine
             if selected_engine is None:
                 return _error(
@@ -368,6 +409,7 @@ def create_app(
                             context_length=manager.model_info().context_length,
                             minimum_tokens=settings.cache_reuse,
                             cache_idle_slots=settings.cache_idle_slots,
+                            cache_namespace=request.state.cache_namespace,
                         )
                     return memory_admission.decide(
                         bundle,
@@ -408,12 +450,25 @@ def create_app(
                     cache_reuse=settings.cache_reuse,
                     cache_entries=settings.parallel,
                     cache_idle_slots=settings.cache_idle_slots,
+                    **({"cache_namespace": request.state.cache_namespace}
+                       if isinstance(selected_engine, GenerationEngine) else {}),
                     cache_type_k=settings.cache_type_k,
                     cache_type_v=settings.cache_type_v,
                     spec_type=settings.spec_type,
                     spec_draft_n_max=settings.spec_draft_n_max,
                 ),
                 admission=admission_check,
+                **({"prefix_preview": lambda: selected_engine.preview_request(
+                    messages, options, namespace=request.state.cache_namespace,
+                    context_length=manager.model_info().context_length,
+                    context_shift=settings.context_shift, reasoning=effective_reasoning,
+                    reasoning_budget=(body.reasoning_budget if body.reasoning_budget is not None
+                                      else settings.reasoning_budget),
+                    reasoning_preserve=settings.reasoning_preserve,
+                    minimum_tokens=settings.cache_reuse)}
+                   if settings.inference_mode in ACTOR_MODES
+                   and isinstance(selected_engine, GenerationEngine) and settings.cache_prompt
+                   else {}),
             )
         except QueueFullError:
             return _error(429, "generation queue is full", "rate_limit_error")
@@ -424,6 +479,9 @@ def create_app(
         if body.stream:
             try:
                 first_event = await anext(stream)
+            except ModelCapabilityUnsupported as exc:
+                await stream.aclose()
+                return _error(400, str(exc), "capability_error", code=exc.code)
             except RequestTimeoutError as exc:
                 await stream.aclose()
                 return _error(408, str(exc), "timeout_error")
@@ -453,6 +511,8 @@ def create_app(
                 reasoning_content += event.reasoning_content
                 if event.finish_reason is not None:
                     terminal = event
+        except ModelCapabilityUnsupported as exc:
+            return _error(400, str(exc), "capability_error", code=exc.code)
         except RequestTimeoutError as exc:
             return _error(408, str(exc), "timeout_error")
         except Exception as exc:
@@ -800,11 +860,13 @@ def _error(
     error_type: str,
     *,
     headers: dict[str, str] | None = None,
+    code: str | int | None = None,
 ) -> JSONResponse:
     return JSONResponse(
         status_code=status,
         headers=headers,
-        content={"error": {"message": message, "type": error_type, "code": status}},
+        content={"error": {"message": message, "type": error_type,
+                           "code": code if code is not None else status}},
     )
 
 

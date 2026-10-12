@@ -18,6 +18,49 @@ Standalone `sam3_tracker_video` is architecture-only: use the composite checkpoi
 for the public video API. Training, text generation, HTTP/UI integration,
 quantization, reduced-precision defaults, and SAM3.1 are unsupported.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+RGB image / video frame → preprocessing → shared ViT + feature pyramid
+                                                        ↓
+                      Features reused by detector and tracker paths
+                           │
+┌──────────────────── Concept detector (sam3) ────────────────────┐
+│ Features + CLIP text encoding + box geometry encoding           │
+│                        ↓                                        │
+│ DETR encoder/decoder → presence / instance scores, boxes, masks │
+└─────────────────────────────────────────────────────────────────┘
+
+┌───────────────── Interactive model (sam3_tracker) ─────────────┐
+│ Features + encoded points / box / refinement mask              │
+│                        ↓                                       │
+│ Two-way mask decoder → candidate masks + predicted-IoU scores  │
+└────────────────────────────────────────────────────────────────┘
+
+┌──────────────────── Composite video (sam3_video) ──────────────┐
+│ Shared features + prior mask memory + object pointers          │
+│                        ↓                                       │
+│ Memory attention / tracker ←→ detector association             │
+│                        ↓                                       │
+│ Object lifecycle → frame masks + stable object/prompt IDs      │
+└────────────────────────────────────────────────────────────────┘
+```
+
+## Papers and upstream references
+
+Paper: [SAM 3: Segment Anything with Concepts](https://arxiv.org/abs/2511.16719).
+
+The image detector and temporal tracker share the backbone in the composite
+video model. The boxes show separate task paths, not a detector-to-interactive
+cascade; detector outputs feed the composite video's association logic.
+Concept confidence and interactive predicted-IoU are distinct
+outputs. The diagram covers the original SAM3 architecture, not SAM3.1, and
+does not broaden the fixture qualification recorded above.
+
 ## Installation and assets
 
 On Apple Silicon, install the existing Pillow vision extra:

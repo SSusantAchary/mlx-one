@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import time
 import uuid
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import Enum
 from threading import Event
@@ -19,10 +19,11 @@ class RequestKind(str, Enum):
     TRANSCRIPTION = "transcription"
 
 
-class SequenceState(str, Enum):
+class Phase(str, Enum):
     WAITING = "waiting"
     PREFILL = "prefill"
-    DECODING = "decoding"
+    DECODE = "decode"
+    PAUSED = "paused"
     FINISHED = "finished"
     CANCELLED = "cancelled"
     TIMED_OUT = "timed_out"
@@ -31,10 +32,10 @@ class SequenceState(str, Enum):
     @property
     def terminal(self) -> bool:
         return self in {
-            SequenceState.FINISHED,
-            SequenceState.CANCELLED,
-            SequenceState.TIMED_OUT,
-            SequenceState.FAILED,
+            Phase.FINISHED,
+            Phase.CANCELLED,
+            Phase.TIMED_OUT,
+            Phase.FAILED,
         }
 
 
@@ -54,6 +55,15 @@ class RunnerCapabilities:
     chunked_prefill: bool = False
     speculative: bool = False
     modalities: frozenset[str] = frozenset({"text"})
+    family: str = "unknown"
+    supported_cache_backends: tuple[str, ...] = ("dense",)
+    supported_state_kinds: tuple[str, ...] = ()
+    supports_batched_prefill: bool = False
+    supports_batched_decode: bool = False
+    supports_mixed_prefill_decode: bool = False
+    supports_paged_attention: bool = False
+    supports_exact_prefix_restore: bool = False
+    supports_128k: bool = False
 
 
 @dataclass(frozen=True)
@@ -82,61 +92,117 @@ class EngineRequest:
 
 
 @dataclass
-class SequenceContext:
-    """Mutable lifecycle state owned by the scheduler for one request."""
+class SequenceState:
+    """Actor-owned committed state. Generated IDs may include one uncomputed token."""
 
-    request: EngineRequest
-    state: SequenceState = SequenceState.WAITING
-    prompt_tokens: tuple[int, ...] = ()
-    computed_tokens: int = 0
-    generated_tokens: list[int] = field(default_factory=list)
+    request_id: str
+    input_ids: tuple[int, ...]
+    prompt_len: int
+    computed_len: int = 0
+    generated_ids: list[int] = field(default_factory=list)
+    phase: Phase = Phase.WAITING
+    cache_handle_id: str | None = None
+    deadline_ns: int | None = None
+    tenant_namespace: str = "private"
+    rng_seed: int | None = None
+    request: EngineRequest | None = None
     cache: Any | None = None
     cancel: Event = field(default_factory=Event)
     error: BaseException | None = None
+    model_epoch: int = 0
+    last_event_no: int = -1
+
+    def __post_init__(self) -> None:
+        if not self.request_id or self.prompt_len != len(self.input_ids):
+            raise ValueError("sequence requires an ID and matching prompt length")
+        if not 0 <= self.computed_len <= self.prompt_len + len(self.generated_ids):
+            raise ValueError("invalid committed token boundary")
 
     @property
     def remaining_prompt_tokens(self) -> int:
-        return max(len(self.prompt_tokens) - self.computed_tokens, 0)
+        return max(self.prompt_len - self.computed_len, 0)
 
-    def transition(self, target: SequenceState) -> None:
+    def transition(self, target: Phase) -> None:
+        if target is self.phase:
+            return
         allowed = {
-            SequenceState.WAITING: {
-                SequenceState.PREFILL,
-                SequenceState.CANCELLED,
-                SequenceState.TIMED_OUT,
-                SequenceState.FAILED,
-            },
-            SequenceState.PREFILL: {
-                SequenceState.PREFILL,
-                SequenceState.DECODING,
-                SequenceState.CANCELLED,
-                SequenceState.TIMED_OUT,
-                SequenceState.FAILED,
-            },
-            SequenceState.DECODING: {
-                SequenceState.DECODING,
-                SequenceState.FINISHED,
-                SequenceState.CANCELLED,
-                SequenceState.TIMED_OUT,
-                SequenceState.FAILED,
-            },
+            Phase.WAITING: {Phase.PREFILL},
+            Phase.PREFILL: {Phase.DECODE, Phase.PAUSED, Phase.FINISHED},
+            Phase.DECODE: {Phase.PAUSED, Phase.FINISHED},
+            Phase.PAUSED: {Phase.PREFILL, Phase.DECODE},
         }
-        if self.state.terminal or target not in allowed.get(self.state, set()):
-            raise ValueError(f"invalid sequence transition: {self.state.value} -> {target.value}")
-        self.state = target
+        failures = {Phase.CANCELLED, Phase.TIMED_OUT, Phase.FAILED}
+        if self.phase.terminal or target not in allowed.get(self.phase, set()) | failures:
+            raise ValueError(f"invalid sequence transition: {self.phase.value} -> {target.value}")
+        self.phase = target
+
+    def commit(self, count: int) -> None:
+        if self.phase not in {Phase.PREFILL, Phase.DECODE} or count < 1:
+            raise ValueError("commit requires active execution and a positive token count")
+        if self.computed_len + count > self.prompt_len + len(self.generated_ids):
+            raise ValueError("commit exceeds available input tokens")
+        self.computed_len += count
+
+    def accept_event(self, *, request_id: str, model_epoch: int, event_no: int) -> bool:
+        """Ignore stale lifecycle/transport events without touching committed state."""
+        if (request_id != self.request_id or model_epoch != self.model_epoch
+                or event_no <= self.last_event_no or self.phase.terminal):
+            return False
+        self.last_event_no = event_no
+        return True
 
 
 @dataclass(frozen=True)
-class ExecutionBatch:
-    sequences: tuple[SequenceContext, ...]
-    phase: Literal["prefill", "decode", "encode"]
-    token_budget: int
+class ScheduledSequence:
+    request_id: str
+    phase: Literal["prefill", "decode"]
+    start_pos: int
+    input_token_count: int
+    block_table_id: int | None = None
+
+    def __post_init__(self) -> None:
+        if not self.request_id or self.phase not in {"prefill", "decode"}:
+            raise ValueError("invalid scheduled request or phase")
+        if self.start_pos < 0 or self.input_token_count < 1:
+            raise ValueError("scheduled positions and token counts must be valid")
+        if self.phase == "decode" and self.input_token_count != 1:
+            raise ValueError("decode schedules exactly one input token")
+
+
+@dataclass(frozen=True)
+class BatchPlan:
+    sequences: tuple[ScheduledSequence, ...]
+    total_scheduled_tokens: int
+    reserved_new_blocks: int = 0
+    execution_mode: Literal["dense", "paged", "hybrid"] = "dense"
 
     def __post_init__(self) -> None:
         if not self.sequences:
-            raise ValueError("execution batch cannot be empty")
-        if self.token_budget < 1:
-            raise ValueError("execution token budget must be positive")
+            raise ValueError("batch plan cannot be empty")
+        ids = [item.request_id for item in self.sequences]
+        if len(set(ids)) != len(ids):
+            raise ValueError("batch request IDs must be unique")
+        if self.total_scheduled_tokens != sum(s.input_token_count for s in self.sequences):
+            raise ValueError("batch total must equal scheduled token counts")
+        if self.reserved_new_blocks < 0 or self.execution_mode not in {"dense", "paged", "hybrid"}:
+            raise ValueError("invalid batch reservations or execution mode")
+
+
+@dataclass(frozen=True)
+class RunnerOutput:
+    request_ids: tuple[str, ...]
+    logits: Any
+    committed_token_counts: tuple[int, ...]
+
+    def __post_init__(self) -> None:
+        if len(set(self.request_ids)) != len(self.request_ids):
+            raise ValueError("runner output request IDs must be unique")
+        if len(self.request_ids) != len(self.committed_token_counts):
+            raise ValueError("runner output mappings must align")
+        if any(count < 0 for count in self.committed_token_counts):
+            raise ValueError("committed counts cannot be negative")
+        if len(self.logits) != len(self.request_ids):
+            raise ValueError("runner logits must align with request IDs")
 
 
 @dataclass(frozen=True)
@@ -168,7 +234,7 @@ class EngineMetrics:
     effective_tokens_per_second: float | None = None
     prefix_cache_hit: bool = False
     reused_prompt_tokens: int = 0
-    terminal_state: SequenceState | None = None
+    terminal_state: Phase | None = None
     finish_reason: Literal["stop", "length"] | None = None
     failure: EngineError | None = None
 
@@ -186,7 +252,7 @@ class EngineEvent:
     text: str = ""
     reasoning_content: str = ""
     token_ids: tuple[int, ...] = ()
-    state: SequenceState | None = None
+    state: Phase | None = None
     finish_reason: Literal["stop", "length"] | None = None
     metrics: EngineMetrics | None = None
     error: EngineError | None = None
@@ -194,25 +260,25 @@ class EngineEvent:
 
 @runtime_checkable
 class ModelRunner(Protocol):
-    @property
     def capabilities(self) -> RunnerCapabilities: ...
 
-    def prepare(self, request: EngineRequest) -> SequenceContext: ...
+    def prepare(self, request: EngineRequest) -> SequenceState: ...
 
     def make_cache(self) -> Any: ...
 
-    def prefill(self, batch: ExecutionBatch) -> Sequence[Any]: ...
+    def prefill(self, plan: BatchPlan) -> RunnerOutput: ...
 
-    def decode(self, batch: ExecutionBatch) -> Sequence[Any]: ...
+    def decode(self, plan: BatchPlan) -> RunnerOutput: ...
 
-    def finalize(self, sequence: SequenceContext) -> None: ...
+    def finalize(self, sequence: SequenceState) -> None: ...
+
+    def release(self) -> None: ...
 
 
 @runtime_checkable
 class TaskRunner(Protocol):
     """Non-autoregressive runner contract for encoder and transcription tasks."""
 
-    @property
     def capabilities(self) -> RunnerCapabilities: ...
 
     def execute(self, request: EngineRequest) -> Any: ...

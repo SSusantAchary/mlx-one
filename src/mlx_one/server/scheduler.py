@@ -14,21 +14,13 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from mlx_one.engine.cache_errors import CacheCapacityError
-
-
-class QueueFullError(RuntimeError):
-    pass
-
-
-class RequestTimeoutError(TimeoutError):
-    pass
-
-
-_slot_local = threading.local()
-
-
-def current_slot() -> int:
-    return int(getattr(_slot_local, "value", 0))
+from mlx_one.engine.execution_context import (
+    QueueFullError,
+    RequestTimeoutError,
+    _slot_local,
+)
+from mlx_one.engine.execution_context import current_queue_ms as current_queue_ms
+from mlx_one.engine.execution_context import current_slot as current_slot
 
 
 @dataclass
@@ -294,6 +286,7 @@ class GenerationScheduler:
             else:
                 work.admitted = True
             if work.iterator is None:
+                _slot_local.queue_ms = (time.monotonic() - work.created_at) * 1000
                 work.iterator = iter(work.factory(work.cancel))
             item = next(work.iterator)
             if work.first_step_at is None:

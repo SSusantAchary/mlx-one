@@ -11,6 +11,30 @@ implemented. [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) is a
 checkpoint candidate; synthetic validation does not qualify real-model quality
 or throughput. Qwen3 MoE checkpoints are outside this dense implementation.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token embeddings
+    ↓
+┌──────────────────── Decoder block × L ──────────────────────┐
+│ RMSNorm → bias-free Q/K/V → Q/K norm → GQA + RoPE   → add   │
+│ RMSNorm → gated feed-forward (SwiGLU)               → add   │
+└─────────────────────────────────────────────────────────────┘
+    ↓
+Final RMSNorm → LM head → next-token logits
+```
+
+## Papers and upstream references
+
+Paper: [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388).
+
+Only the dense decoder is shown. Thinking/non-thinking behavior comes from the
+checkpoint and chat template, not a second decoder branch.
+
 ## Installation and assets
 
 Use Python 3.10+ and `python -m pip install -e .` from the repository root.

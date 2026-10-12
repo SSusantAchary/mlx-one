@@ -1,0 +1,108 @@
+{
+  "numerical_candidate": "cpu-bf16-rounding",
+  "status": "FAIL",
+  "gates": {
+    "required_corpus_size": true,
+    "process_budget": true,
+    "cleanup": true,
+    "matching_units_and_order": true,
+    "timestamp_tick_80ms": false
+  },
+  "mismatches": [],
+  "maximum_boundary_difference_seconds": 0.4800000000000004,
+  "boundary_mismatches": [
+    {
+      "id": "1089-134686-0005",
+      "text": "UPON",
+      "reference": {
+        "text": "UPON",
+        "start": 5.28,
+        "end": 5.28
+      },
+      "native": {
+        "text": "UPON",
+        "start": 5.28,
+        "end": 5.6
+      },
+      "difference_seconds": 0.3199999999999994
+    },
+    {
+      "id": "1089-134686-0018",
+      "text": "SILENCES",
+      "reference": {
+        "text": "SILENCES",
+        "start": 10.32,
+        "end": 11.04
+      },
+      "native": {
+        "text": "SILENCES",
+        "start": 10.8,
+        "end": 11.04
+      },
+      "difference_seconds": 0.4800000000000004
+    },
+    {
+      "id": "1089-134691-0009",
+      "text": "WITH",
+      "reference": {
+        "text": "WITH",
+        "start": 0.8,
+        "end": 1.12
+      },
+      "native": {
+        "text": "WITH",
+        "start": 0.8,
+        "end": 0.96
+      },
+      "difference_seconds": 0.16000000000000014
+    },
+    {
+      "id": "1089-134691-0009",
+      "text": "HIMSELF",
+      "reference": {
+        "text": "HIMSELF",
+        "start": 1.12,
+        "end": 1.44
+      },
+      "native": {
+        "text": "HIMSELF",
+        "start": 0.96,
+        "end": 1.44
+      },
+      "difference_seconds": 0.16000000000000014
+    },
+    {
+      "id": "1089-134691-0025",
+      "text": "THROUGH",
+      "reference": {
+        "text": "THROUGH",
+        "start": 5.04,
+        "end": 5.36
+      },
+      "native": {
+        "text": "THROUGH",
+        "start": 5.04,
+        "end": 5.04
+      },
+      "difference_seconds": 0.3200000000000003
+    },
+    {
+      "id": "1188-133604-0032",
+      "text": "AFTER",
+      "reference": {
+        "text": "AFTER",
+        "start": 8.72,
+        "end": 8.96
+      },
+      "native": {
+        "text": "AFTER",
+        "start": 8.72,
+        "end": 8.72
+      },
+      "difference_seconds": 0.2400000000000002
+    }
+  ],
+  "scope": "one checkpoint/task/language/mode only; all other gates remain separate",
+  "reference_sha256": "9aad06acfdd998c913e37d5ef3b5ad951de19e6357903fba36f747133d3e6f29",
+  "native_sha256": "825616ba85cd1f48fe54b49bf07522ff69a733107996973d144f158f5c70e2fe"
+}

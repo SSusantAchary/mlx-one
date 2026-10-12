@@ -33,6 +33,8 @@ class LayerCacheSpec:
     trimmable: bool = True
     batchable: bool = True
     block_compatible: bool = False
+    state_shapes: tuple[tuple[int, ...], ...] = ()
+    checkpoint_semantics: str | None = None
 
     def bytes_per_token(self, *, key_bits: int = 16, value_bits: int = 16) -> int:
         if self.kind not in {
@@ -50,6 +52,64 @@ class LayerCacheSpec:
 
 
 @dataclass(frozen=True)
+class LayerStateSpec:
+    """Runtime state schema; implementation ability is separate from qualification."""
+
+    layer_id: int
+    kind: Literal["full_kv", "sliding_kv", "conv", "recurrent", "cross_kv", "unknown"]
+    num_kv_heads: int | None = None
+    key_head_dim: int | None = None
+    value_head_dim: int | None = None
+    dtype: str | None = None
+    window_tokens: int | None = None
+    state_shapes: tuple[tuple[int, ...], ...] = ()
+    checkpoint_semantics: str | None = None
+    can_batch: bool = False
+    can_page: bool = False
+    can_snapshot: bool = False
+    can_quantize: bool = False
+    can_share_prefix: bool = False
+
+    @classmethod
+    def from_cache_spec(cls, spec: LayerCacheSpec) -> LayerStateSpec:
+        kinds = {
+            CacheKind.ATTENTION_KV: "full_kv",
+            CacheKind.QUANTIZED_KV: "full_kv",
+            CacheKind.ROTATING_KV: "sliding_kv",
+            CacheKind.CONV_STATE: "conv",
+            CacheKind.RECURRENT_STATE: "recurrent",
+            CacheKind.CROSS_ATTENTION: "cross_kv",
+        }
+        # Block compatibility describes storage, not direct page-table attention.
+        kind = kinds.get(spec.kind, "unknown")
+        return cls(
+            spec.layer_id, kind, spec.num_kv_heads, spec.key_head_dim,
+            spec.value_head_dim, None, spec.max_window_tokens,
+            state_shapes=spec.state_shapes, checkpoint_semantics=spec.checkpoint_semantics,
+            can_batch=spec.batchable and kind == "full_kv",
+            can_snapshot=spec.shareable_prefix and kind == "full_kv",
+            can_quantize=spec.quantizable and kind == "full_kv",
+            can_share_prefix=spec.shareable_prefix and kind == "full_kv",
+        )
+
+    def to_cache_spec(self) -> LayerCacheSpec:
+        kinds = {
+            "full_kv": CacheKind.ATTENTION_KV,
+            "sliding_kv": CacheKind.ROTATING_KV,
+            "conv": CacheKind.CONV_STATE,
+            "recurrent": CacheKind.RECURRENT_STATE,
+            "cross_kv": CacheKind.CROSS_ATTENTION,
+            "unknown": CacheKind.MODEL_DEFINED,
+        }
+        return LayerCacheSpec(
+            self.layer_id, kinds[self.kind], self.num_kv_heads, self.key_head_dim,
+            self.value_head_dim, self.dtype, self.window_tokens,
+            quantizable=self.can_quantize, shareable_prefix=self.can_share_prefix,
+            trimmable=False, batchable=self.can_batch, block_compatible=False,
+        )
+
+
+@dataclass(frozen=True)
 class CachePlan:
     model_id: str
     revision: str | None
@@ -57,6 +117,10 @@ class CachePlan:
     layer_specs: tuple[LayerCacheSpec, ...]
     max_context_tokens: int
     block_size_tokens: int = 32
+
+    @property
+    def state_specs(self) -> tuple[LayerStateSpec, ...]:
+        return tuple(LayerStateSpec.from_cache_spec(spec) for spec in self.layer_specs)
 
     @property
     def block_compatible(self) -> bool:
@@ -87,14 +151,16 @@ class CachePlan:
 
 @dataclass(frozen=True)
 class CacheConfig:
-    backend: Literal["dense", "block"] = "dense"
+    backend: Literal["dense", "block", "paged", "hybrid"] = "dense"
     memory_budget_bytes: int | None = None
     prefix_cache_enabled: bool = True
     prefix_cache_budget_bytes: int = 512 * 1024**2
     block_size_tokens: int = 32
+    key_type: str = "f16"
+    value_type: str = "f16"
 
     def __post_init__(self) -> None:
-        if self.backend not in {"dense", "block"}:
+        if self.backend not in {"dense", "block", "paged", "hybrid"}:
             raise ValueError("cache backend must be dense or block")
         if self.memory_budget_bytes is not None and self.memory_budget_bytes < 1:
             raise ValueError("cache memory budget must be positive")
@@ -102,6 +168,10 @@ class CacheConfig:
             raise ValueError("prefix cache budget cannot be negative")
         if self.block_size_tokens not in {16, 32, 64, 128}:
             raise ValueError("cache block size must be 16, 32, 64, or 128")
+        if self.key_type not in {"f16", "bf16", "q4_0", "q8_0"} or self.value_type not in {
+            "f16", "bf16", "q4_0", "q8_0"
+        }:
+            raise ValueError("unsupported configured cache precision")
 
 
 @dataclass(frozen=True)
@@ -117,7 +187,10 @@ class CacheFingerprint:
     value_type: str
     context_tokens: int
     rope_identity: str
-    namespace: str = "global"
+    namespace: str = "private"
+    special_tokens_identity: str = ""
+    rendering_identity: str = ""
+    multimodal_identity: str | None = None
 
     @property
     def digest(self) -> str:
@@ -141,6 +214,7 @@ class CacheReservation:
     requested_tokens: int
     state: ReservationState = ReservationState.REQUESTED
     committed_bytes: int = 0
+    manager_id: str | None = None
 
 
 @dataclass
@@ -176,6 +250,10 @@ class CacheMemoryStats:
     block_live: int = 0
     block_prefix: int = 0
     block_shared: int = 0
+    retained_free_bytes: int = 0
+    unique_live_physical_bytes: int = 0
+    shared_page_savings_bytes: int = 0
+    prefix_metadata_bytes: int = 0
     prefix_entries: int = 0
     prefix_hits: int = 0
     prefix_misses: int = 0

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import asdict, dataclass
+from enum import Enum
 from importlib import resources
 from pathlib import Path
 
@@ -180,3 +182,123 @@ class CapabilityRegistry:
             entry.operation.value,
             constraints,
         )
+
+
+# Runtime implementation status is deliberately independent of operation-level support.
+
+class InferenceFeatureStatus(str, Enum):
+    NOT_IMPLEMENTED = "not_implemented"
+    EXPERIMENTAL = "experimental"
+    CORRECTNESS_PASSED = "correctness_passed"
+    PERFORMANCE_QUALIFIED = "performance_qualified"
+
+
+@dataclass(frozen=True)
+class InferenceScope:
+    model_id: str
+    revision: str | None
+    execution_path: str
+    topology_digest: str | None
+    weight_precision: str | None
+    cache_precision: str | None
+    mlx_version: str | None
+    hardware: str | None
+    source_revision: str | None = None
+
+    @property
+    def complete(self) -> bool:
+        import re
+
+        return bool(
+            self.revision and re.fullmatch(r"[0-9a-fA-F]{40,64}", self.revision)
+            and all(asdict(self).values())
+        )
+
+
+@dataclass(frozen=True)
+class InferenceFeatureRecord:
+    feature: str
+    scope: InferenceScope
+    status: InferenceFeatureStatus
+    evidence: tuple[ArtifactRef, ...] = ()
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "feature": self.feature, "scope": asdict(self.scope), "status": self.status.value,
+            "evidence": [item.to_dict() for item in self.evidence],
+        }
+
+
+class InferenceFeatureRegistry:
+    """Exact-scope native feature claims. Only validated native results can promote them."""
+
+    def __init__(self) -> None:
+        self._records: dict[tuple[str, InferenceScope], InferenceFeatureRecord] = {}
+
+    def find(self, feature: str, scope: InferenceScope) -> InferenceFeatureRecord | None:
+        return self._records.get((feature, scope))
+
+    def records(self) -> tuple[InferenceFeatureRecord, ...]:
+        return tuple(self._records.values())
+
+    def register_experimental(self, feature: str, scope: InferenceScope) -> None:
+        self._records[(feature, scope)] = InferenceFeatureRecord(
+            feature, scope, InferenceFeatureStatus.EXPERIMENTAL
+        )
+
+    def promote(
+        self, feature: str, scope: InferenceScope, result_path: str | Path,
+        status: InferenceFeatureStatus,
+    ) -> InferenceFeatureRecord:
+        status = InferenceFeatureStatus(status)
+        if not scope.complete or status not in {
+            InferenceFeatureStatus.CORRECTNESS_PASSED,
+            InferenceFeatureStatus.PERFORMANCE_QUALIFIED,
+        }:
+            raise RegistryError("qualification requires complete identity and a qualified status")
+        source = Path(result_path)
+        raw = source.read_bytes()
+        result = json.loads(raw)
+        if (result.get("schema_version") != "native-inference-qualification-v1"
+                or result.get("backend") != "mlx-one-native"
+                or result.get("scope") != asdict(scope)
+                or result.get("feature") != feature
+                or result.get("status") != "passed"
+                or result.get("correctness_passed") is not True):
+            raise RegistryError("native qualification evidence does not match feature and scope")
+        if (status is InferenceFeatureStatus.PERFORMANCE_QUALIFIED
+                and result.get("performance_qualified") is not True):
+            raise RegistryError("performance qualification requires measured performance gates")
+        evidence = [ArtifactRef(
+            uri=str(source), kind="native-inference-qualification",
+            sha256=hashlib.sha256(raw).hexdigest(), media_type="application/json",
+        )]
+        for artifact in result.get("artifacts", []):
+            path = Path(artifact["uri"])
+            if not path.is_absolute():
+                path = source.parent / path
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if digest != artifact.get("sha256"):
+                raise RegistryError("native qualification backing artifact checksum mismatch")
+            evidence.append(ArtifactRef(uri=str(path), kind=artifact["kind"], sha256=digest,
+                                        media_type=artifact.get("media_type")))
+        record = InferenceFeatureRecord(feature, scope, status, tuple(evidence))
+        self._records[(feature, scope)] = record
+        return record
+
+    def report(self, feature: str, scope: InferenceScope) -> dict[str, object]:
+        record = self.find(feature, scope)
+        if record is None:
+            record = InferenceFeatureRecord(feature, scope, InferenceFeatureStatus.NOT_IMPLEMENTED)
+        # Evidence is checked again on every use, including edits after promotion.
+        for artifact in record.evidence:
+            try:
+                digest = hashlib.sha256(Path(artifact.uri).read_bytes()).hexdigest()
+                valid = digest == artifact.sha256
+            except OSError:
+                valid = False
+            if not valid:
+                return {
+                    **record.to_dict(), "status": "experimental", "stale_evidence": True
+                }
+        return record.to_dict()

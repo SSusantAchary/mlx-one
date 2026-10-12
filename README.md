@@ -115,6 +115,17 @@ the remaining native Metal matrix pass.
 - Safe local and pinned Hugging Face artifact inspection.
 - Native Whisper loading, audio preprocessing, tokenization, decoding, language
   detection, segment timestamps, word timestamps, and WER/CER evaluation.
+- Distil-Whisper large-v3 through the native Whisper loader, with pinned M4
+  English short-form transcript/segment gates and safe precision-variant selection.
+  See [audio qualification](docs/audio-qualification-m4-32gb.md).
+- Native original Moonshine Tiny/Base waveform encoders and cached greedy
+  transcription, with pinned M4 English short-form gates.
+- Native Qwen3-ASR 0.6B/1.7B, separate known-text ForcedAligner, and bounded
+  accumulated-utterance streaming through Python/CLI. Qwen checkpoint qualification
+  is incomplete; 0.6B has scoped English/French offline passing evidence.
+- Native offline Parakeet TDT v2/v3, strict float32 loading and isolated v2 NeMo
+  conversion. Both English transcript gates and v3 French/German gates pass;
+  original v2 NeMo parity, timestamps and broader qualification remain WIP.
 - Unified native text loading, tokenizer/chat templates, MLX 4-bit checkpoints,
   cached greedy and seeded sampling, stop sequences, token streaming, and serving
   for GPT-2, Qwen2/Qwen3, LFM2, OpenELM, and text-only Qwen3.5 families.
@@ -166,7 +177,7 @@ gated access and acceptance of its separate checkpoint license. Authenticate wit
 `hf auth login`, or use an authorized complete local snapshot with `--offline`.
 SAM3 runs in float32; quantized checkpoints and SAM3.1 are unsupported.
 
-FFmpeg is required when the Whisper API receives an audio file; encoded SAM3
+FFmpeg is required when the Whisper/Moonshine/Qwen/Parakeet API receives an audio file; encoded SAM3
 videos require both FFmpeg and ffprobe. Decoded mono 16-kHz waveforms, SAM3 frame
 directories, and Python RGB frame iterators need no video/audio decoder.
 
@@ -335,7 +346,8 @@ records rather than introductory examples.
 ## Model-Specific Documentation
 
 Each registered model type has a guide beside its implementation, with checkpoint
-assets, input formats, examples, settings, troubleshooting, and validation links.
+assets, model architecture diagrams, paper references, input formats, examples,
+settings, troubleshooting, and validation links.
 The organization follows [mlx-vlm's model guides](https://github.com/Blaizzy/mlx-vlm/tree/main#model-specific-documentation);
 the workflows below describe mlx-one's current implementation.
 
@@ -380,8 +392,34 @@ workload. See [capability levels](#capability-levels) and the
 
 | Family | Available workflow | Qualification summary | Guide |
 | --- | --- | --- | --- |
-| Whisper | Transcription, language detection, timestamps, WER/CER | Candidate; pinned tiny/turbo smoke gates reported passing | [Docs](src/mlx_one/models/audio/whisper/README.md) |
+| Whisper / Distil-Whisper | Transcription, language detection, timestamps, WER/CER | Tiny/turbo smoke gates; Distil-large-v3 M4 English short-form gates pass; broader qualification pending | [Docs](src/mlx_one/models/audio/whisper/README.md) |
+| Moonshine Tiny / Base | Native offline English transcription, Python/CLI | Both pinned checkpoints pass M4 English short-form gates; streaming/long-form unqualified | [Docs](src/mlx_one/models/audio/moonshine/README.md) |
+| Qwen3-ASR 0.6B / 1.7B | Native transcription and bounded accumulated-utterance streaming, Python/CLI | 0.6B English/French offline gates pass; **WIP**: 1.7B English WER/CER match reference but only 15/16 exact anchors pass; streaming parity and remaining language gates unresolved | [Docs](src/mlx_one/models/audio/qwen3_asr/README.md) |
+| Qwen3-ForcedAligner 0.6B | Native known-text alignment, Python/CLI; not ASR | Float32 components pass; **WIP**: English timestamp differences reach 800 ms against an 80-ms limit; remaining qualification unresolved | [Docs](src/mlx_one/models/audio/qwen3_asr/README.md) |
+| Parakeet TDT v2 / v3 | Native offline transcription, Python/CLI; isolated v2 archive conversion | Float32 components, both English 100-clip/16-anchor gates and v3 French/German 25-clip gates pass; **WIP** original v2 NeMo, timestamp and broader qualification | [Docs](src/mlx_one/models/audio/parakeet/README.md) |
 | LFM2.5 Audio | Config inspection, frontend and architecture tests | Architecture only; checkpoint/codec/task integration pending | [Docs](src/mlx_one/models/audio/lfm2_audio/README.md) |
+
+### Audio implementation progress — WIP
+
+As of 2026-10-04, unresolved qualification gates remain **WIP** and no longer
+block implementation of later families. This changes development sequencing,
+not acceptance thresholds: WIP does not mean qualified, and unavailable tasks
+are not advertised as working loaders.
+
+| Stage | Checkpoints | Implementation / qualification status |
+| --- | --- | --- |
+| 3 | Qwen3-ASR 0.6B / 1.7B; ForcedAligner 0.6B | Implemented; **WIP** exact anchors, alignment timestamps, streaming parity and missing language/corpus gates |
+| 4 | Parakeet TDT v2 / v3; Nemotron 3.5 ASR | Parakeet offline implemented; **WIP** full qualification. Nemotron contract frozen; native cached streaming not implemented |
+| 5 | Voxtral Mini 3B; Voxtral Realtime 4B | Checkpoint/tensor/processor contracts frozen; **WIP / not implemented** native offline/streaming transcription and qualification |
+| 6 | Original VibeVoice 1.5B multi-speaker TTS | Checkpoint contract, original source and supplemental tokenizer pinned; **WIP / not implemented** native synthesis, reference parity and fixture permission evidence |
+
+A numerical candidate failed the unchanged checkpoint gates and was not
+promoted into the production loader; see the [closure investigation](docs/audio-qualification-m4-32gb.md#stage-three-closure-investigation--rejected-numerical-candidate).
+The [follow-up results](docs/audio-qualification-m4-32gb.md#stage-three-follow-up--decoder-ties-and-isolated-timestamp-classifier)
+record the completed 1.7B English corpus and isolated numerical diagnostics;
+the exact-anchor, alignment and streaming failures remain unresolved.
+VibeVoice intelligibility scoring will use the pinned Qwen 1.7B reference in an
+isolated validation environment, not unqualified native ASR or a production fallback.
 
 ### Segmentation guides
 
@@ -435,7 +473,11 @@ implemented components; architecture coverage does not guarantee an end-to-end t
 
 | Registry type | Family | Native components | Architecture | Qualification |
 | --- | --- | --- | :---: | --- |
-| `whisper` | tiny, base, small, medium, large-v3, turbo | Encoder-decoder, safe loading, log-Mel, BPE, decoding, language, timestamps, WER/CER | ✅ | Candidate; pinned tiny/turbo smoke gates pass |
+| `whisper` | tiny, base, small, medium, large-v3, turbo, Distil-large-v3 | Encoder-decoder, safe loading, log-Mel, BPE, decoding, language, timestamps, WER/CER | ✅ | Tiny/turbo smoke gates; [Distil M4 English short-form evidence](docs/audio-qualification-m4-32gb.md); broader qualification pending |
+| `moonshine` | Original Tiny 27M / Base 61M | Raw-waveform convolutions, GroupNorm, partial interleaved RoPE, encoder/cached decoder, tokenizer, greedy transcription | ✅ | [M4 English short-form evidence](docs/audio-qualification-m4-32gb.md#moonshine-tinybase-stage-two-results); streaming/long-form unqualified |
+| `qwen3_asr` | Qwen3-ASR 0.6B / 1.7B | Chunked Conv2D/audio encoder, Qwen3 decoder, strict BF16 loading, context/language prompts, accumulated-utterance streaming | ✅ | [0.6B offline passes and remaining failures](docs/audio-qualification-m4-32gb.md#additional-stage-three-checkpoint-runs-and-failures); **WIP** full qualification |
+| `qwen3_forced_aligner` | Qwen3-ForcedAligner 0.6B | Separate 5,000-class timestamp head, known-text units and boundary reconstruction | ✅ | Alignment only; **WIP** timestamp parity (800 ms versus 80-ms limit) |
+| `parakeet_tdt` | Parakeet TDT 0.6B v2 / v3 | Float32 FastConformer, LSTM predictor, joint token/duration heads, greedy offline transcription, strict safetensors loading | ✅ | [Scoped M4 evidence](docs/audio-qualification-m4-32gb.md#parakeet-stage-four-progress--2026-10-04); **WIP** full qualification; offline-only |
 | `lfm2_audio` | LFM2.5-Audio | Audio encoder, Conformer, Depthformer, detokenizer, feature insertion | ✅ | Verify processor and codec weights |
 
 ### Segmentation and tracking

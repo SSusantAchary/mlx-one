@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "gates": {
+    "required_corpus_size": true,
+    "exact_anchors": true,
+    "wer_degradation": true,
+    "cer_degradation": true,
+    "process_budget": true,
+    "cleanup": true
+  },
+  "mismatches": [],
+  "reference_wer": 0.0196078431372549,
+  "native_wer": 0.0196078431372549,
+  "reference_cer": 0.004507528531696557,
+  "native_cer": 0.004507528531696557,
+  "reference_sha256": "ef6900a610c440a292bcb62853b598271b54bdebdfa0ca69dace8857a9365c91",
+  "native_sha256": "79f40addec2f66d318399aafbaa705646786c4c0d8474dae04a7ba9b871276b9",
+  "scope": "one pinned float32 offline transcript/language corpus; components, timestamps and original NeMo parity remain separate"
+}

@@ -10,7 +10,7 @@ from pathlib import Path
 import click
 
 from mlx_one import __version__
-from mlx_one.audio import WhisperDecodeOptions, transcribe
+from mlx_one.audio import ASRDecodeOptions, QwenASROptions, WhisperDecodeOptions, transcribe
 from mlx_one.audio.evaluation import (
     ASR_PROFILES,
     ASREvaluationError,
@@ -182,20 +182,26 @@ def hardware_detect(as_json: bool) -> None:
     click.echo(result.to_json() if as_json else format_hardware_profile(result))
 
 
-@main.command("transcribe", help="Transcribe audio with native Whisper.")
+@main.command("transcribe", help="Transcribe audio with a native audio model.")
 @click.argument("model")
 @click.argument("audio", type=click.Path(exists=True, dir_okay=False, path_type=str))
 @click.option("--revision", help="Hugging Face branch, tag, or commit.")
 @click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
 @click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
-@click.option("--language", help="Language code; omit for automatic detection.")
+@click.option("--language", help="Whisper language code or Qwen language name (e.g. English).")
 @click.option("--task", type=click.Choice(["transcribe", "translate"]), default="transcribe")
 @click.option("--word-timestamps", is_flag=True)
-@click.option("--beam-size", type=click.IntRange(min=1), default=5, show_default=True)
-@click.option("--best-of", type=click.IntRange(min=1), default=5, show_default=True)
-@click.option("--temperature", "temperatures", multiple=True, type=click.FloatRange(min=0))
-@click.option("--seed", type=int, default=0, show_default=True)
-@click.option("--initial-prompt")
+@click.option("--beam-size", type=click.IntRange(min=1), default=5, show_default=True,
+              help="Whisper only; omitted flags use the model family's defaults.")
+@click.option("--best-of", type=click.IntRange(min=1), default=5, show_default=True,
+              help="Whisper only.")
+@click.option("--temperature", "temperatures", multiple=True, type=click.FloatRange(min=0),
+              help="Whisper only.")
+@click.option("--seed", type=int, default=0, show_default=True, help="Whisper only.")
+@click.option("--initial-prompt", help="Whisper only.")
+@click.option("--context", default="", help="Qwen ASR system context only.")
+@click.option("--max-tokens", type=click.IntRange(min=1), help="Explicit decoding budget; no silent truncation.")
+@click.option("--stream", is_flag=True, help="Qwen bounded accumulated utterance; JSON events are full hypotheses.")
 @click.option("--json-output", "as_json", is_flag=True)
 def transcribe_command(
     model: str,
@@ -211,16 +217,54 @@ def transcribe_command(
     temperatures: tuple[float, ...],
     seed: int,
     initial_prompt: str | None,
+    context: str,
+    max_tokens: int | None,
+    stream: bool,
     as_json: bool,
 ) -> None:
-    options = WhisperDecodeOptions(
-        temperatures=temperatures or WhisperDecodeOptions().temperatures,
-        beam_size=beam_size,
-        best_of=best_of,
-        seed=seed,
-        initial_prompt=initial_prompt,
+    # Omitted decoding flags select family defaults. Whisper keeps its original
+    # beam/fallback defaults; non-Whisper models never inherit them silently.
+    from click.core import ParameterSource
+
+    ctx = click.get_current_context()
+    explicit_decode = any(
+        ctx.get_parameter_source(name) != ParameterSource.DEFAULT
+        for name in ("temperatures", "beam_size", "best_of", "seed", "initial_prompt")
+    )
+    options = (
+        WhisperDecodeOptions(
+            temperatures=temperatures or WhisperDecodeOptions().temperatures,
+            beam_size=beam_size,
+            best_of=best_of,
+            seed=seed,
+            initial_prompt=initial_prompt,
+            max_tokens=max_tokens,
+        )
+        if explicit_decode
+        else None
     )
     try:
+        if ctx.get_parameter_source("context") != ParameterSource.DEFAULT:
+            if explicit_decode:
+                raise ValueError("Qwen context cannot be combined with Whisper decoding flags")
+            options = QwenASROptions(max_tokens=max_tokens, context=context)
+        elif max_tokens is not None and options is None:
+            options = ASRDecodeOptions(max_tokens=max_tokens)
+        if stream:
+            if explicit_decode or task != "transcribe" or word_timestamps:
+                raise ValueError("streaming does not support Whisper decoding, translation, or word timestamps")
+            from mlx_one.audio import open_audio_stream
+            from mlx_one.audio.streaming import decoded_pcm_chunks
+
+            with open_audio_stream(model, sample_rate=16000, language=language, options=options,
+                                   revision=revision, offline=offline, cache_dir=cache_dir) as session:
+                with decoded_pcm_chunks(audio) as chunks:
+                    for chunk in chunks:
+                        for event in session.push(chunk):
+                            click.echo(event.to_json() if as_json else event.text)
+                    final = session.finish()
+                    click.echo(final.to_json() if as_json else final.text)
+            return
         result = transcribe(
             model,
             audio,
@@ -235,6 +279,31 @@ def transcribe_command(
     except (OSError, RuntimeError, ValueError) as exc:
         raise click.ClickException(str(exc)) from exc
     click.echo(result.to_json() if as_json else result.text)
+
+
+@main.command("align", help="Align known text to audio using the native Qwen ForcedAligner.")
+@click.argument("model")
+@click.argument("audio", type=click.Path(exists=True, dir_okay=False, path_type=str))
+@click.option("--text-file", required=True, type=click.Path(exists=True, dir_okay=False, path_type=Path))
+@click.option("--language", required=True, help="Checkpoint language name, e.g. English.")
+@click.option("--output", required=True, type=click.Path(dir_okay=False, path_type=Path))
+@click.option("--revision")
+@click.option("--offline", is_flag=True)
+@click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
+def align_command(model: str, audio: str, text_file: Path, language: str, output: Path,
+                  revision: str | None, offline: bool, cache_dir: str | None) -> None:
+    from mlx_one.audio import align_audio
+
+    try:
+        if output.exists():
+            raise ValueError("alignment output already exists; refusing overwrite")
+        result = align_audio(model, audio, text_file.read_text(encoding="utf-8"), language=language,
+                             revision=revision, offline=offline, cache_dir=cache_dir)
+        with output.open("x", encoding="utf-8") as destination:
+            destination.write(result.to_json() + "\n")
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(str(output))
 
 
 @main.command("generate", help="Generate text with a native model family.")
@@ -357,9 +426,27 @@ def generate_command(
 @click.option(
     "--cache-backend",
     type=click.Choice(["dense", "block"]),
-    default="dense",
-    show_default=True,
+    default=None,
+    help="KV backend (default: dense); explicit selections must agree with inference mode.",
 )
+@click.option(
+    "--inference-mode",
+    type=click.Choice(["reference_dense", "experimental_block", "experimental_dense_batch",
+                       "paged", "experimental_hybrid_batch", "auto"]),
+    default=None,
+    help="Select an explicit native execution path; unsupported combinations fail.",
+)
+@click.option("--execution-dtype", type=click.Choice(["float16", "bfloat16"]), default=None)
+@click.option("--max-prefill-tokens", type=click.IntRange(min=1), default=1024)
+@click.option("--admission-policy", type=click.Choice(["deadline", "cache_aware"]),
+              default="deadline")
+@click.option("--memory-pressure/--no-memory-pressure", default=None)
+@click.option("--process-ceiling-mib", type=click.IntRange(min=1))
+@click.option("--qualification-evidence", multiple=True, type=click.Path(exists=True))
+@click.option("--qualification-profile", type=click.Path(exists=True, dir_okay=False),
+              help="JSON workload envelope required for qualified selection/admission.")
+@click.option("--ttft-budget-ms", type=click.FloatRange(min=0, min_open=True))
+@click.option("--decode-gap-budget-ms", type=click.FloatRange(min=0, min_open=True))
 @click.option(
     "--kv-block-size",
     type=click.Choice(["16", "32", "64", "128"]),
@@ -419,7 +506,17 @@ def serve_command(
     prefill_chunk_size: int | None,
     max_batch_tokens: int | None,
     prefix_cache_mib: int,
-    cache_backend: str,
+    cache_backend: str | None,
+    inference_mode: str | None,
+    execution_dtype: str | None,
+    max_prefill_tokens: int,
+    admission_policy: str,
+    memory_pressure: bool | None,
+    process_ceiling_mib: int | None,
+    qualification_evidence: tuple[str, ...],
+    qualification_profile: str | None,
+    ttft_budget_ms: float | None,
+    decode_gap_budget_ms: float | None,
     kv_block_size: str,
     kv_cache_budget_mib: int | None,
     reasoning: str,
@@ -441,6 +538,9 @@ def serve_command(
     try:
         import uvicorn
 
+        from mlx_one.engine.modes import ACTOR_MODES
+        from mlx_one.engine.pressure import MemoryPressureConfig
+        from mlx_one.engine.selection import load_evidence
         from mlx_one.server import (
             GenerationEngine,
             GenerationScheduler,
@@ -476,6 +576,18 @@ def serve_command(
             max_batch_tokens=max_batch_tokens or 2048,
             prefix_cache_bytes=prefix_cache_mib * 1024**2,
             cache_backend=cache_backend,
+            inference_mode=inference_mode,
+            execution_dtype=execution_dtype, max_prefill_tokens=max_prefill_tokens,
+            admission_policy=admission_policy,
+            memory_pressure_config=(MemoryPressureConfig(
+                enabled=memory_pressure is not False,
+                process_ceiling_bytes=(process_ceiling_mib * 1024**2
+                                       if process_ceiling_mib else None))
+                if memory_pressure is not None or process_ceiling_mib else None),
+            qualification_evidence=qualification_evidence,
+            qualification_profile=(json.loads(Path(qualification_profile).read_text())
+                                   if qualification_profile else None),
+            ttft_budget_ms=ttft_budget_ms, decode_gap_budget_ms=decode_gap_budget_ms,
             cache_block_size=int(kv_block_size),
             cache_memory_budget_bytes=(
                 kv_cache_budget_mib * 1024**2
@@ -497,9 +609,20 @@ def serve_command(
             transcription_enabled=transcription_model is not None,
         )
         manager = ModelManager(alias=alias, context_length=context_length)
-        scheduler = GenerationScheduler(
-            max_pending=queue_size, parallel=parallel, timeout=timeout
-        )
+        if inference_mode in ACTOR_MODES:
+            from mlx_one.engine.actor import InferenceActor
+            from mlx_one.engine.batching import BatchingConfig
+            from mlx_one.engine.dispatch import DispatchRunner
+
+            scheduler = InferenceActor(BatchingConfig(
+                max_sequences=parallel, queue_size=queue_size, timeout=timeout,
+                prefill_chunk_size=config.prefill_chunk_size or 512,
+                max_scheduled_tokens=config.max_batch_tokens or 2048,
+                max_prefill_tokens=config.max_prefill_tokens,
+                admission_policy=config.admission_policy), runner=DispatchRunner())
+        else:
+            scheduler = GenerationScheduler(max_pending=queue_size, parallel=parallel,
+                                            timeout=timeout)
         try:
             bundle = scheduler.execute(
                 lambda: manager.load(
@@ -542,30 +665,40 @@ def serve_command(
                 manager,
                 prefix_cache_bytes=config.prefix_cache_bytes,
                 cache_backend=config.cache_backend,
+                inference_mode=config.inference_mode,
+                execution_dtype=config.execution_dtype,
+                prefill_chunk_size=min(config.prefill_chunk_size or 512, config.max_prefill_tokens,
+                                       max((config.max_batch_tokens or 2048) // 2, 1)),
                 cache_block_size=config.cache_block_size,
                 cache_memory_budget_bytes=config.cache_memory_budget_bytes,
+                memory_pressure_config=config.memory_pressure_config,
+                qualification_registry=load_evidence(config.qualification_evidence),
+                qualification_profile=config.qualification_profile or {
+                                       "context_tokens": config.context_length,
+                                       "slots": config.parallel,
+                                       "chunk_tokens": config.prefill_chunk_size,
+                                       "ttft_budget_ms": config.ttft_budget_ms,
+                                       "decode_gap_budget_ms": config.decode_gap_budget_ms},
+                cache_type_k=config.cache_type_k, cache_type_v=config.cache_type_v,
             )
             memory_admission = MemoryAdmission.detect()
+            if inference_mode in ACTOR_MODES:
+                engine.bind_actor(scheduler)
             if warmup:
-                scheduler.execute(
-                    lambda: list(
-                        engine.stream(
-                            model=manager.model_info().id,
-                            messages=[{"role": "user", "content": "Hi"}],
-                            options=TextGenerationOptions(max_tokens=1),
-                            cancel=threading.Event(),
-                            context_length=manager.model_info().context_length,
-                            reasoning=reasoning,
-                            reasoning_budget=reasoning_budget,
-                            reasoning_format=reasoning_format,
-                            reasoning_preserve=reasoning_preserve,
-                            cache_type_k=config.cache_type_k,
-                            cache_type_v=config.cache_type_v,
-                            spec_type=spec_type,
-                            spec_draft_n_max=spec_draft_n_max,
-                        )
-                    )
-                )
+                def warmup_stream(cancel):
+                    return engine.stream(
+                        model=manager.model_info().id,
+                        messages=[{"role": "user", "content": "Hi"}],
+                        options=TextGenerationOptions(max_tokens=1), cancel=cancel,
+                        context_length=manager.model_info().context_length,
+                        reasoning=reasoning, reasoning_budget=reasoning_budget,
+                        reasoning_format=reasoning_format, reasoning_preserve=reasoning_preserve,
+                        cache_type_k=config.cache_type_k, cache_type_v=config.cache_type_v,
+                        spec_type=spec_type, spec_draft_n_max=spec_draft_n_max)
+                if inference_mode in ACTOR_MODES:
+                    list(scheduler.schedule_sync(warmup_stream))
+                else:
+                    scheduler.execute(lambda: list(warmup_stream(threading.Event())))
                 if transcription_service is not None:
                     scheduler.execute(transcription_service.warmup)
             quantization = (

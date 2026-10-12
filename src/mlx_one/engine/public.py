@@ -8,11 +8,23 @@ import sys
 import threading
 from collections.abc import Iterator
 from concurrent.futures import Future, ThreadPoolExecutor
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+from mlx_one.engine.batching import BatchingConfig
 from mlx_one.engine.cache_manager import CacheManager
 from mlx_one.engine.cache_specs import CacheConfig
+from mlx_one.engine.modes import (
+    ACTOR_MODES,
+    InferenceMode,
+    configure_execution_dtype,
+    resolve_backend,
+    resolved_mode,
+    validate_mode,
+)
+from mlx_one.engine.pressure import MemoryPressureConfig, MemoryPressureController
+from mlx_one.engine.reporting import native_report
 from mlx_one.text import (
     GenerationChunk,
     GenerationResult,
@@ -54,7 +66,17 @@ class Engine:
         cache_dir: str | Path | None = None,
         tokenizer_source: str | Path | None = None,
         cache_config: CacheConfig | None = None,
+        inference_mode: InferenceMode | None = None,
+        execution_dtype: str | None = None,
+        batching_config: BatchingConfig | None = None,
+        cache_namespace: str | None = None,
+        memory_pressure_config: MemoryPressureConfig | None = None,
+        qualification_registry: Any = None,
+        qualification_profile: dict[str, Any] | None = None,
     ) -> None:
+        backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
+        config = (replace(cache_config, backend=backend)
+                  if cache_config else CacheConfig(backend=backend))
         self._bundle = (
             model
             if isinstance(model, LoadedTextModel)
@@ -66,12 +88,76 @@ class Engine:
                 tokenizer_source=tokenizer_source,
             )
         )
+        configure_execution_dtype(self._bundle, execution_dtype)
+        self._requested_mode = inference_mode
+        self._inference_mode = inference_mode
+        self._execution_dtype = execution_dtype
+        self._cache_namespace = cache_namespace
+        self._batching_config = batching_config or BatchingConfig()
+        self._actor = None
         self._cache_manager = (
-            CacheManager(self._bundle, cache_config)
+            CacheManager(self._bundle, config)
             if callable(getattr(self._bundle.model, "make_cache", None))
             else None
         )
-        self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="mlx-one-engine")
+        self._selection = {"requested_mode": inference_mode,
+                           "resolved_mode": inference_mode or resolved_mode(backend),
+                           "reason": "explicit configuration", "evidence_scope": None}
+        if inference_mode == "auto" and self._cache_manager is not None:
+            from mlx_one.engine.selection import select_auto_mode
+
+            self._selection = select_auto_mode(self._bundle, self._cache_manager,
+                                               qualification_registry, qualification_profile)
+            inference_mode = self._selection["resolved_mode"]
+            self._inference_mode = inference_mode
+            backend = resolve_backend(inference_mode, None)
+            self._cache_manager.config = replace(config, backend=backend)
+        self._pressure = None
+        if memory_pressure_config is not None or self._requested_mode in {
+            "paged", "experimental_hybrid_batch", "auto"
+        }:
+            self._pressure = MemoryPressureController(memory_pressure_config)
+            if self._cache_manager is not None:
+                self._cache_manager.pressure = self._pressure
+        if self._cache_manager is not None:
+            self._cache_manager.mode = inference_mode
+            self._cache_manager.requested_mode = self._requested_mode
+            self._cache_manager.qualification_registry = qualification_registry
+            self._cache_manager.qualification_profile = qualification_profile
+            self._cache_manager.batching_config = self._batching_config
+            if qualification_profile and (self._requested_mode == "auto"
+                    and self._selection["evidence_scope"] is not None
+                    or config.key_type in {"q4_0", "q8_0"}):
+                from mlx_one.engine.selection import validate_execution_envelope
+
+                validate_execution_envelope(self._cache_manager, self._batching_config,
+                                            required=True)
+        if (self._batching_config.admission_policy == "cache_aware"
+                and inference_mode not in ACTOR_MODES):
+            raise ValueError("cache-aware admission requires an actor execution mode")
+        try:
+            validate_mode(self._bundle, self._cache_manager.plan if self._cache_manager else None,
+                          inference_mode)
+            if self._pressure is not None:
+                self._pressure.start()
+        except Exception:
+            if self._cache_manager is not None:
+                self._cache_manager.close()
+            if self._pressure is not None:
+                self._pressure.close()
+            raise
+        self._backend = backend
+        if inference_mode in ACTOR_MODES or self._requested_mode == "auto":
+            from mlx_one.engine.actor import InferenceActor
+            from mlx_one.engine.dispatch import DispatchRunner
+
+            self._actor = InferenceActor(self._batching_config, runner=DispatchRunner(),
+                                         pressure=self._pressure)
+            self._actor.execution_mode = inference_mode
+        workers = (self._batching_config.max_sequences + self._batching_config.queue_size
+                   if self._actor is not None else 1)
+        self._executor = ThreadPoolExecutor(
+            max_workers=workers, thread_name_prefix="mlx-one-engine")
         self._closed = False
         self._latest_result: GenerationResult | None = None
         self._lock = threading.RLock()
@@ -81,13 +167,13 @@ class Engine:
         self._ensure_open()
         return self._bundle
 
-    @property
     def capabilities(self) -> dict[str, Any]:
         bundle = self.model
-        qualified_block = (
+        block_supported = (
             self._cache_manager is not None
             and self._cache_manager.plan.architecture == "qwen2"
             and self._cache_manager.plan.block_compatible
+            and not bundle.quantization
         )
         return {
             "architecture": bundle.architecture,
@@ -97,16 +183,30 @@ class Engine:
             "quantization": dict(bundle.quantization),
             "streaming": True,
             "cancellation": True,
+            **self.runtime_stats(),
             "cache": {
                 "dense_kv": True,
                 "quantized_kv": True,
-                "block_kv": qualified_block,
-                "prefix_block_cache": qualified_block,
+                "block_kv": block_supported,
+                "prefix_block_cache": block_supported,
                 "sliding_block_kv": False,
-                "hybrid_prefix_restore": False,
-                "continuous_batching": False,
+                "hybrid_prefix_restore": self._inference_mode == "experimental_hybrid_batch",
+                "continuous_batching": self._inference_mode in ACTOR_MODES,
             },
         }
+
+    def runtime_stats(self) -> dict[str, Any]:
+        self._ensure_open()
+        report = native_report(self._bundle, self._cache_manager, backend=self._backend,
+                               mode=self._inference_mode, execution_dtype=self._execution_dtype)
+        if self._actor is not None:
+            report["scheduler"] = self._actor.stats()
+        report["selection"] = self._selection
+        report["memory_pressure"] = self._pressure.stats() if self._pressure else None
+        report["cache_stats"] = (
+            self._cache_manager.stats().to_dict() if self._cache_manager else None
+        )
+        return report
 
     @property
     def latest_result(self) -> GenerationResult | None:
@@ -140,13 +240,36 @@ class Engine:
     ) -> Iterator[GenerationChunk]:
         resolved = _options(options, settings)
         event = cancel or threading.Event()
-        yield from stream_generate(
-            self.model,
-            prompt,
-            options=resolved,
-            is_cancelled=event.is_set,
-            _cache_manager=self._cache_manager,
-        )
+        if self._actor is not None:
+            latest = None
+            for chunk in self._actor.schedule_sync(
+                self._batch_factory(prompt, resolved), cancel=event):
+                latest = chunk
+                yield chunk
+            if event.is_set() and (latest is None or latest.finish_reason is None):
+                yield GenerationChunk(None, "", latest.generated_tokens if latest else 0, "stop")
+        else:
+            yield from stream_generate(
+                self.model, prompt, options=resolved, is_cancelled=event.is_set,
+                _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace)
+
+    def _batch_factory(self, prompt, options):
+        cfg = self._batching_config
+        chunk = min(cfg.prefill_chunk_size, cfg.max_prefill_tokens,
+                    max(cfg.max_scheduled_tokens // 2, 1))
+        bundle = self.model
+        def factory(cancel):
+            return stream_generate(
+                bundle, prompt, options=options, is_cancelled=cancel.is_set,
+                _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace,
+                _cooperative=True, _prefill_chunk_size=chunk)
+        if self._cache_namespace is not None:
+            factory.prefix_preview = lambda: self._cache_manager.preview_prefix(
+                self._cache_manager.fingerprint(namespace=self._cache_namespace,
+                                                key_type=self._cache_manager.config.key_type,
+                                                value_type=self._cache_manager.config.value_type),
+                tuple(bundle.tokenizer.encode(prompt)))
+        return factory
 
     def submit(
         self,
@@ -158,7 +281,12 @@ class Engine:
         self._ensure_open()
         cancel = threading.Event()
         resolved = _options(options, settings)
-        future = self._executor.submit(self._consume, prompt, resolved, cancel)
+        if self._actor is not None:
+            job = self._actor._enqueue(self._batch_factory(prompt, resolved), cancel=cancel)
+            future = self._executor.submit(
+                self._consume_chunks, prompt, self._actor.read_sync(job), cancel)
+        else:
+            future = self._executor.submit(self._consume, prompt, resolved, cancel)
         return EngineRequestHandle(future, cancel)
 
     async def async_generate(
@@ -178,14 +306,19 @@ class Engine:
         options: TextGenerationOptions,
         cancel: threading.Event,
     ) -> GenerationResult:
-        chunks = tuple(self.stream(prompt, options=options, cancel=cancel))
+        return self._consume_chunks(
+            prompt, self.stream(prompt, options=options, cancel=cancel), cancel)
+
+    def _consume_chunks(self, prompt, stream, cancel=None):
+        chunks = tuple(stream)
         terminal = chunks[-1] if chunks else None
         result = GenerationResult(
             prompt=prompt,
             text="".join(chunk.text for chunk in chunks),
             prompt_tokens=len(self.model.tokenizer.encode(prompt)) or 1,
             generation_tokens=sum(chunk.token_id is not None for chunk in chunks),
-            finish_reason=(terminal.finish_reason if terminal else None) or "length",
+            finish_reason=("stop" if cancel is not None and cancel.is_set() else
+                           (terminal.finish_reason if terminal else None) or "length"),
             model=self.model.model_id,
             revision=self.model.revision,
         )
@@ -198,9 +331,13 @@ class Engine:
             if self._closed:
                 return
             self._closed = True
+        if self._actor is not None:
+            self._actor.close()
         self._executor.shutdown(wait=True, cancel_futures=True)
         if self._cache_manager is not None:
             self._cache_manager.close()
+        if self._pressure is not None:
+            self._pressure.close()
         gc.collect()
         try:
             mx = sys.modules.get("mlx.core")

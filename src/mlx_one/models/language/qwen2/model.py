@@ -44,7 +44,8 @@ class Qwen2Model(nn.Module):
         if cache is not None and len(cache) != len(self.layers):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
-        mask = causal_mask(hidden.shape[1], offset)
+        paged = cache is not None and callable(getattr(cache[0], "attend", None))
+        mask = None if paged else causal_mask(hidden.shape[1], offset)
         if attention_mask is not None:
             expected = (hidden.shape[0], offset + hidden.shape[1])
             if attention_mask.shape != expected:

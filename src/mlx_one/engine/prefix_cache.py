@@ -67,6 +67,7 @@ class PrefixCache:
             PrefixCacheKey.create(compatibility, tokens), tokens, cache.snapshot()
         )
         if entry.nbytes > self.capacity_bytes:
+            entry.cache.release()
             return False
         with self._lock:
             previous = self._entries.pop(entry.key, None)
@@ -86,43 +87,39 @@ class PrefixCache:
         if minimum_tokens < 0:
             raise ValueError("minimum prefix tokens cannot be negative")
         with self._lock:
-            matches = [
-                entry
-                for entry in self._entries.values()
-                if entry.key.compatibility == compatibility
-                and len(entry.tokens) >= minimum_tokens
-                and len(entry.tokens) < len(tokens)
-                and tokens[: len(entry.tokens)] == entry.tokens
-            ]
-            if not matches:
+            matches = [(self._match(entry, compatibility, tokens), entry)
+                       for entry in self._entries.values()]
+            count, selected = max(matches, key=lambda pair: pair[0], default=(0, None))
+            if count < max(minimum_tokens, 1) or selected is None:
                 self.misses += 1
                 return None
-            selected = max(matches, key=lambda item: len(item.tokens))
+            restored = selected.cache.snapshot()
+            try:
+                if not restored.trim(len(selected.tokens) - count):
+                    raise ValueError("prefix state cannot be trimmed")
+            except BaseException:
+                restored.release()
+                raise
             self._entries.move_to_end(selected.key)
             self.hits += 1
-            return selected.tokens, selected.cache.snapshot()
+            return tokens[:count], restored
 
-    def longest_prefix_tokens(
-        self,
-        compatibility: tuple[object, ...],
-        tokens: tuple[int, ...],
-        *,
-        minimum_tokens: int = 1,
-    ) -> int:
-        """Return a reusable token count without cloning state or updating metrics."""
+    @staticmethod
+    def _match(entry, compatibility, tokens) -> int:
+        if entry.key.compatibility != compatibility:
+            return 0
+        count = 0
+        for left, right in zip(entry.tokens, tokens[:max(len(tokens) - 1, 0)], strict=False):
+            if left != right:
+                break
+            count += 1
+        return count
 
+    def longest_prefix_tokens(self, compatibility, tokens, *, minimum_tokens=1) -> int:
         with self._lock:
-            return max(
-                (
-                    len(entry.tokens)
-                    for entry in self._entries.values()
-                    if entry.key.compatibility == compatibility
-                    and len(entry.tokens) >= minimum_tokens
-                    and len(entry.tokens) < len(tokens)
-                    and tokens[: len(entry.tokens)] == entry.tokens
-                ),
-                default=0,
-            )
+            count = max((self._match(entry, compatibility, tokens)
+                         for entry in self._entries.values()), default=0)
+            return count if count >= minimum_tokens else 0
 
     def clear(self) -> None:
         with self._lock:
@@ -166,16 +163,17 @@ class BlockLink:
 @dataclass
 class BlockPrefixEntry:
     key: str
+    parent: str
     fingerprint: CacheFingerprint
     token_count: int
+    tokens: tuple[int, ...]
     layer_blocks: tuple[tuple[BlockLink, ...], ...]
-    created_at: float
     last_access: float
-    hit_count: int = 0
 
     @property
-    def block_count(self) -> int:
-        return sum(len(layer) for layer in self.layer_blocks)
+    def metadata_bytes(self) -> int:
+        # Conservative bounded accounting, independent of retained tensor bytes.
+        return 512 + len(self.tokens) * 40 + len(self.layer_blocks) * 128
 
 
 @dataclass(frozen=True)
@@ -186,189 +184,162 @@ class BlockPrefixMatch:
 
 
 class BlockPrefixIndex:
-    """Byte-bounded longest-prefix index over complete token blocks."""
+    """Parent-linked APC: each node pins one immutable per-layer page group."""
 
-    def __init__(self, capacity_bytes: int, *, block_tokens: int) -> None:
-        if capacity_bytes < 0:
-            raise ValueError("prefix cache capacity cannot be negative")
+    def __init__(self, capacity_bytes: int, *, block_tokens: int,
+                 metadata_capacity_bytes: int = 4 * 1024**2) -> None:
+        if capacity_bytes < 0 or metadata_capacity_bytes < 0:
+            raise ValueError("prefix capacity cannot be negative")
         self.capacity_bytes = capacity_bytes
+        self.metadata_capacity_bytes = metadata_capacity_bytes
         self.block_tokens = block_tokens
         self._entries: OrderedDict[str, BlockPrefixEntry] = OrderedDict()
         self._pin_owners: dict[tuple[int, int], int] = {}
         self._lock = threading.RLock()
-        self.hits = 0
-        self.misses = 0
-        self.evictions = 0
-        self.tokens_reused = 0
+        self.hits = self.misses = self.evictions = self.tokens_reused = 0
 
     @property
     def nbytes(self) -> int:
         with self._lock:
-            total = 0
-            seen: set[tuple[int, int]] = set()
+            seen = {}
             for entry in self._entries.values():
                 for layer in entry.layer_blocks:
                     for link in layer:
                         identity = (id(link.pool), int(link.block_id))
-                        if identity not in seen:
-                            total += link.pool.get(link.block_id).nbytes
-                            seen.add(identity)
-            return total
+                        seen[identity] = link.pool.get(link.block_id).nbytes
+            return sum(seen.values())
 
-    def lookup(
-        self,
-        fingerprint: CacheFingerprint,
-        tokens: tuple[int, ...],
-        *,
-        minimum_tokens: int = 1,
-    ) -> BlockPrefixMatch | None:
+    def _path(self, fingerprint, tokens):
         maximum = ((len(tokens) - 1) // self.block_tokens) * self.block_tokens
-        if maximum < max(minimum_tokens, self.block_tokens):
-            with self._lock:
-                self.misses += 1
-            return None
-        selected: BlockPrefixEntry | None = None
         parent = fingerprint.digest
+        path = []
+        for start in range(0, maximum, self.block_tokens):
+            chunk = tokens[start:start + self.block_tokens]
+            key = _block_hash(parent, chunk)
+            candidate = self._entries.get(key)
+            if (candidate is None or candidate.fingerprint != fingerprint
+                    or candidate.tokens != chunk):
+                break
+            path.append(candidate)
+            parent = key
+        return path
+
+    def lookup(self, fingerprint, tokens, *, minimum_tokens=1):
         with self._lock:
-            for start in range(0, maximum, self.block_tokens):
-                parent = _block_hash(parent, tokens[start : start + self.block_tokens])
-                candidate = self._entries.get(parent)
-                if candidate is None:
-                    break
-                if candidate.fingerprint == fingerprint and candidate.token_count >= minimum_tokens:
-                    selected = candidate
-            if selected is None:
+            path = self._path(fingerprint, tokens)
+            if not path or path[-1].token_count < minimum_tokens:
                 self.misses += 1
                 return None
-            acquired: list[BlockRef] = []
+            acquired = []
+            layers = [[] for _ in path[0].layer_blocks]
             try:
-                layers = []
-                for layer in selected.layer_blocks:
-                    refs = tuple(
-                        BlockRef(link.pool, link.block_id, acquired=True) for link in layer
-                    )
-                    acquired.extend(refs)
-                    layers.append(refs)
-            except Exception:
+                for node in path:
+                    for index, links in enumerate(node.layer_blocks):
+                        for link in links:
+                            ref = BlockRef(link.pool, link.block_id, acquired=True)
+                            acquired.append(ref)
+                            layers[index].append(ref)
+            except BaseException:
                 for ref in reversed(acquired):
                     ref.close()
                 raise
-            selected.hit_count += 1
-            selected.last_access = time.monotonic()
-            self._entries.move_to_end(selected.key)
+            for node in path:
+                node.last_access = time.monotonic()
+                self._entries.move_to_end(node.key)
             self.hits += 1
-            self.tokens_reused += selected.token_count
-            return BlockPrefixMatch(
-                selected.token_count,
-                tuple(layers),
-                selected.block_count,
-            )
+            self.tokens_reused += path[-1].token_count
+            return BlockPrefixMatch(path[-1].token_count,
+                                    tuple(tuple(layer) for layer in layers), len(acquired))
 
-    def longest_prefix_tokens(
-        self,
-        fingerprint: CacheFingerprint,
-        tokens: tuple[int, ...],
-        *,
-        minimum_tokens: int = 1,
-    ) -> int:
-        maximum = ((len(tokens) - 1) // self.block_tokens) * self.block_tokens
-        parent = fingerprint.digest
-        selected = 0
+    def longest_prefix_tokens(self, fingerprint, tokens, *, minimum_tokens=1):
         with self._lock:
-            for start in range(0, maximum, self.block_tokens):
-                parent = _block_hash(parent, tokens[start : start + self.block_tokens])
-                candidate = self._entries.get(parent)
-                if candidate is None:
-                    break
-                if candidate.fingerprint == fingerprint and candidate.token_count >= minimum_tokens:
-                    selected = candidate.token_count
-        return selected
+            path = self._path(fingerprint, tokens)
+            count = path[-1].token_count if path else 0
+            return count if count >= minimum_tokens else 0
 
-    def publish(
-        self,
-        fingerprint: CacheFingerprint,
-        tokens: tuple[int, ...],
-        layer_blocks: tuple[tuple[BlockRef, ...], ...],
-    ) -> int:
-        if not layer_blocks or self.capacity_bytes == 0:
+    def publish(self, fingerprint, tokens, layer_blocks):
+        if not layer_blocks or not self.capacity_bytes:
             return 0
-        complete = min(len(layer) for layer in layer_blocks)
-        complete = min(complete, len(tokens) // self.block_tokens)
-        if complete < 1:
-            return 0
+        complete = min(*(len(layer) for layer in layer_blocks), len(tokens) // self.block_tokens)
+        # Validate every layer before taking any pins.
+        for layer in layer_blocks:
+            for ref in layer[:complete]:
+                if not ref.block.immutable or ref.block.token_count != self.block_tokens:
+                    raise ValueError("prefix publication requires sealed complete pages")
+        added = []
         parent = fingerprint.digest
-        published = 0
         with self._lock:
-            for index in range(complete):
-                start = index * self.block_tokens
-                parent = _block_hash(parent, tokens[start : start + self.block_tokens])
-                if parent in self._entries:
-                    self._entries[parent].last_access = time.monotonic()
-                    self._entries.move_to_end(parent)
-                    continue
-                links = tuple(
-                    tuple(BlockLink(ref.pool, ref.block_id) for ref in layer[: index + 1])
-                    for layer in layer_blocks
-                )
-                for layer in links:
-                    for link in layer:
-                        self._retain_pin(link)
-                now = time.monotonic()
-                self._entries[parent] = BlockPrefixEntry(
-                    parent,
-                    fingerprint,
-                    (index + 1) * self.block_tokens,
-                    links,
-                    now,
-                    now,
-                )
-                published += 1
+            try:
+                for index in range(complete):
+                    chunk = tokens[index * self.block_tokens:(index + 1) * self.block_tokens]
+                    key = _block_hash(parent, chunk)
+                    if key not in self._entries:
+                        links = tuple((BlockLink(layer[index].pool, layer[index].block_id),)
+                                      for layer in layer_blocks)
+                        retained = []
+                        try:
+                            for layer in links:
+                                for link in layer:
+                                    self._retain_pin(link)
+                                    retained.append(link)
+                        except BaseException:
+                            for link in reversed(retained):
+                                self._release_pin(link)
+                            raise
+                        self._entries[key] = BlockPrefixEntry(
+                            key, parent, fingerprint, (index + 1) * self.block_tokens,
+                            chunk, links, time.monotonic())
+                        added.append(key)
+                    parent = key
+            except BaseException:
+                for key in reversed(added):
+                    self._release_entry(self._entries.pop(key))
+                raise
             self._evict()
-        return published
+            return sum(key in self._entries for key in added)
 
-    def clear(self) -> None:
+    def clear(self):
         with self._lock:
-            for entry in tuple(self._entries.values()):
+            for entry in self._entries.values():
                 self._release_entry(entry)
             self._entries.clear()
 
-    def stats(self) -> dict[str, int]:
+    def stats(self):
         with self._lock:
-            return {
-                "entries": len(self._entries),
-                "bytes": self.nbytes,
-                "capacity_bytes": self.capacity_bytes,
-                "hits": self.hits,
-                "misses": self.misses,
-                "evictions": self.evictions,
-                "tokens_reused": self.tokens_reused,
-            }
+            return {"entries": len(self._entries), "bytes": self.nbytes,
+                    "metadata_bytes": sum(e.metadata_bytes for e in self._entries.values()),
+                    "capacity_bytes": self.capacity_bytes, "hits": self.hits,
+                    "misses": self.misses, "evictions": self.evictions,
+                    "tokens_reused": self.tokens_reused}
 
-    def _retain_pin(self, link: BlockLink) -> None:
+    def _retain_pin(self, link):
         identity = (id(link.pool), int(link.block_id))
         owners = self._pin_owners.get(identity, 0)
-        if owners == 0:
+        if not owners:
             link.pool.pin(link.block_id)
         self._pin_owners[identity] = owners + 1
 
-    def _release_pin(self, link: BlockLink) -> None:
+    def _release_pin(self, link):
         identity = (id(link.pool), int(link.block_id))
         owners = self._pin_owners[identity] - 1
-        if owners == 0:
+        if not owners:
             del self._pin_owners[identity]
             link.pool.unpin(link.block_id)
         else:
             self._pin_owners[identity] = owners
 
-    def _release_entry(self, entry: BlockPrefixEntry) -> None:
+    def _release_entry(self, entry):
         for layer in entry.layer_blocks:
             for link in layer:
                 self._release_pin(link)
 
-    def _evict(self) -> None:
-        while self.nbytes > self.capacity_bytes and self._entries:
-            _, entry = self._entries.popitem(last=False)
-            self._release_entry(entry)
+    def _evict(self):
+        while (self.nbytes > self.capacity_bytes or
+               sum(e.metadata_bytes for e in self._entries.values())
+               > self.metadata_capacity_bytes):
+            parents = {entry.parent for entry in self._entries.values()}
+            key = next(key for key in self._entries if key not in parents)
+            self._release_entry(self._entries.pop(key))
             self.evictions += 1
 
 

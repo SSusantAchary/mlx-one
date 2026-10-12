@@ -11,6 +11,36 @@ token insertion. A native loader and static-image streaming API are implemented.
 candidate; exact checkpoint, processor parity, hardware, and quality qualification
 are still required. Architectural video support does not establish a video-file workflow.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Images / video frame patches                 Text token IDs
+             ↓                                      ↓
+┌──────────── Vision encoder ───────────┐     Token embeddings
+│ Temporal/spatial patch embedding      │             │
+│ Vision Transformer + vision RoPE      │             │
+│ Spatial patch merger / projection     │             │
+└──────────────────┬────────────────────┘             │
+                   └──────────────┬──────────────────┘
+                       Replace visual-token slots
+                                  ↓
+             Qwen decoder + multimodal RoPE (time/height/width)
+                                  ↓
+                         LM head → token logits
+```
+
+## Papers and upstream references
+
+Paper: [Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution](https://arxiv.org/abs/2409.12191).
+
+The diagram includes image/video architectural inputs. The implemented public
+workflow and its qualification boundaries remain those stated below; a video
+branch in the architecture is not a qualified video inference recipe.
+
 ## Installation and assets
 
 From the repository root, install `python -m pip install -e '.[vision]'` with

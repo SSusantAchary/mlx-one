@@ -12,6 +12,33 @@ and configurable Matryoshka dimensions.
 is the implemented profile/candidate. Synthetic validation is available;
 real-checkpoint retrieval quality, parity, and hardware results remain unqualified.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Document text / instruction + query → tokenizer + padding mask
+                                  ↓
+               Qwen3 dense causal decoder (GQA, Q/K norm, RoPE)
+                                  ↓
+                   Last active token's hidden representation
+                                  ↓
+                  Optional leading-dimension truncation
+                                  ↓
+                  Optional L2 normalization → [batch, dim]
+                                  └→ Cosine similarity
+```
+
+## Papers and upstream references
+
+Paper: [Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models](https://arxiv.org/abs/2506.05176).
+Backbone: [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388).
+
+This is final-token pooling, not mean pooling or ColBERT-style token retrieval.
+Requested dimensions are validated against the checkpoint profile.
+
 ## Installation and assets
 
 Use Python 3.10+, install `python -m pip install -e .` from the repository root,

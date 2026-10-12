@@ -13,6 +13,7 @@ from mlx_one.audio.decoding import (
     dynamic_time_warp,
     initial_tokens,
     median_filter,
+    timestamp_seek_frames,
     timestamp_segments,
 )
 from mlx_one.audio.evaluation import (
@@ -202,6 +203,24 @@ def test_timestamp_dtw_median_and_compression_helpers() -> None:
     text, time = dynamic_time_warp([[0.0, 2.0], [2.0, 0.0]])
     assert (text, time) == ([0, 1], [0, 1])
     assert compression_ratio("repeat " * 30) > compression_ratio("short")
+
+
+def test_completed_timestamp_chunk_does_not_redecode_trailing_silence() -> None:
+    value = tokenizer()
+    text = tuple(value.encode(" hi"))
+    assert timestamp_seek_frames((265, *text, 267), value, 200) == 200
+    assert timestamp_seek_frames((265, *text, 267, 267), value, 200) == 4
+    assert timestamp_seek_frames((265, 265), value, 200) == 1
+    assert timestamp_seek_frames(text, value, 200) == 200
+
+
+def test_paired_timestamp_boundaries_do_not_publish_empty_segments() -> None:
+    value = tokenizer()
+    text = tuple(value.encode(" hi"))
+    assert timestamp_segments((265, *text, 266, 266, *text, 267), value) == [
+        (0.0, 0.02, text),
+        (0.02, 0.04, text),
+    ]
 
 
 def test_decode_options_and_transcription_result_are_json_serializable() -> None:

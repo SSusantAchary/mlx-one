@@ -13,6 +13,34 @@ A native text loader is registered, but exact-checkpoint integration is unqualif
 family reference. Its total-parameter footprint places it outside the initial
 ≤3B qualification tier, despite the smaller active-parameter count.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token embeddings
+    ↓
+┌──────────────────────── Hybrid decoder ────────────────────────┐
+│ RMSNorm → short convolution OR GQA attention → residual        │
+│                    convolution state / attention KV            │
+│ RMSNorm → dense gated MLP (initial configured layers)          │
+│        OR router → top-k expert MLPs → weighted sum            │
+│ Feed-forward output → residual                                 │
+└────────────────────────────────────────────────────────────────┘
+    ↓
+Final RMSNorm → LM head → logits (+ optional router outputs)
+```
+
+## Papers and upstream references
+
+Backbone paper: [LFM2 Technical Report](https://arxiv.org/abs/2511.23404).
+Variant reference: [LiquidAI/LFM2-8B-A1B model card](https://huggingface.co/LiquidAI/LFM2-8B-A1B).
+
+The local MoE path uses configured dense/expert layers; the backbone paper is
+not a separate qualification claim for this MoE checkpoint.
+
 ## Installation and assets
 
 Use Python 3.10+ and `python -m pip install -e .` from the repository root.

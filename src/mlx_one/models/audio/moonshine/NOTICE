@@ -1,0 +1,14 @@
+Original Moonshine native architecture port
+
+Architecture reference: Hugging Face Transformers Moonshine
+Copyright 2025 The HuggingFace Inc. team. All rights reserved.
+Reference implementation licensed under the Apache License, Version 2.0:
+https://www.apache.org/licenses/LICENSE-2.0
+Pinned source: cc832f9055ba11c8c55f918ab4bda9472b910d48
+https://github.com/huggingface/transformers/tree/cc832f9055ba11c8c55f918ab4bda9472b910d48/src/transformers/models/moonshine
+
+Moonshine Tiny/Base checkpoints were released by Useful Sensors (Moonshine AI).
+The publisher model cards identify the checkpoint license as MIT.
+Their checkpoint licenses are separate from mlx-one's Apache-2.0 code license.
+https://huggingface.co/moonshine-ai/moonshine-tiny
+https://huggingface.co/moonshine-ai/moonshine-base

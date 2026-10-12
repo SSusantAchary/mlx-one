@@ -15,6 +15,32 @@ qualification; the shared family name alone is insufficient. The local M4 cache
 report exercised `mlx-community/LFM2-350M-4bit` for native loading and block
 rejection, while its dense/parallel/cancellation matrix remains pending.
 
+## Model Architecture
+
+The diagram follows the [native implementation](model.py). Layer counts, widths,
+head counts, and input sizes come from the checkpoint configuration; this is an
+architecture map, not an additional support or qualification claim.
+
+```text
+Token IDs → token embeddings
+    ↓
+┌────────────────── Hybrid layer (config.layer_types) ────────────┐
+│ RMSNorm → gated short convolution OR GQA attention   → add      │
+│           convolution history       attention KV                │
+│ RMSNorm → gated feed-forward                         → add      │
+└─────────────────────────────────────────────────────────────────┘
+    ↓
+Repeat configured layers → final RMSNorm → LM head → logits
+```
+
+## Papers and upstream references
+
+Paper: [LFM2 Technical Report](https://arxiv.org/abs/2511.23404).
+
+The paper supplies the LFM2 backbone reference. LFM2.5 checkpoint settings
+remain checkpoint-specific; convolution and attention are different layer types,
+not two parallel operators executed in every layer.
+
 ## Installation and assets
 
 Install `python -m pip install -e .` from the repository root in Python 3.10+.

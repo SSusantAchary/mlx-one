@@ -18,6 +18,7 @@ from mlx_one.models.audio.whisper.loading import load_whisper
 
 TINY_REVISION = "169d4a4341b33bc18d8881c4b69c2e104e1cc0af"
 TURBO_REVISION = "60be3615a4d667e1258e8ad29130467587c489aa"
+DISTIL_REVISION = "8031d2e6ce6631b7fc45629dddfc00271116d981"
 
 
 @pytest.mark.parametrize(
@@ -25,6 +26,7 @@ TURBO_REVISION = "60be3615a4d667e1258e8ad29130467587c489aa"
     [
         ("openai/whisper-tiny", TINY_REVISION, (384, 4, 4, 80)),
         ("openai/whisper-large-v3-turbo", TURBO_REVISION, (1280, 32, 4, 128)),
+        ("distil-whisper/distil-large-v3", DISTIL_REVISION, (1280, 32, 2, 128)),
     ],
 )
 def test_pinned_whisper_checkpoint_contracts(
@@ -45,6 +47,7 @@ def test_pinned_whisper_checkpoint_contracts(
     [
         ("openai/whisper-tiny", TINY_REVISION, 80, 384, 51865),
         ("openai/whisper-large-v3-turbo", TURBO_REVISION, 128, 1280, 51866),
+        ("distil-whisper/distil-large-v3", DISTIL_REVISION, 128, 1280, 51866),
     ],
 )
 def test_pinned_whisper_executes_encoder_and_decoder(

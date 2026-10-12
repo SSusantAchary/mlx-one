@@ -1,0 +1,10 @@
+Native Qwen3-ASR/ForcedAligner architecture and processing behavior adapted from:
+https://github.com/QwenLM/Qwen3-ASR
+Revision: 7c6daf77a2421100f5fb066495372c00129d39ff
+Copyright 2026 The Alibaba Qwen team.
+Copyright 2026 The Qwen team, Alibaba Group and the HuggingFace Inc. team.
+Licensed under the Apache License, Version 2.0; see the repository LICENSE.
+
+This is an independent MLX port, not the publisher's inference package.
+Weights are governed by their publisher's Apache-2.0 license. Reference dependencies
+are used only in isolated qualification environments, not production inference.

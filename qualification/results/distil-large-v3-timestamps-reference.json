@@ -1,0 +1,292 @@
+{
+  "backend": "reference",
+  "model": "distil-whisper/distil-large-v3",
+  "revision": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+  "manifest_sha256": "5fc089180becc98eb44d7ae45b7d92471b404d163d7ea3a68280fed2f63e0ff2",
+  "dataset": "openslr/librispeech_asr",
+  "dataset_revision": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+  "weight_dtype": "torch.float32",
+  "load_seconds": 3.170481541979825,
+  "wall_seconds": 134.66990774997976,
+  "peak_process_bytes": 4848893952,
+  "predictions": [
+    {
+      "id": "1089-134686-0000",
+      "anchor": true,
+      "reference": "HE HOPED THERE WOULD BE STEW FOR DINNER TURNIPS AND CARROTS AND BRUISED POTATOES AND FAT MUTTON PIECES TO BE LADLED OUT IN THICK PEPPERED FLOUR FATTENED SAUCE",
+      "prediction": "he hoped there would be stew for dinner turnips and carrots and bruised potatoes and fat mutton pieces to be ladled out in thick peppered flour-fattened sauce",
+      "duration": 10.435,
+      "seconds": 6.586313708976377,
+      "segments": [
+        {
+          "text": "he hoped there would be stew for dinner turnips and carrots and bruised potatoes and fat mutton pieces to be ladled out in thick peppered flour-fattened sauce",
+          "start": 0,
+          "end": 10.435,
+          "raw_end": 10.44
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0001",
+      "anchor": true,
+      "reference": "STUFF IT INTO YOU HIS BELLY COUNSELLED HIM",
+      "prediction": "\"'Stuff it into you,' his belly counselled him.",
+      "duration": 3.275,
+      "seconds": 6.18546866599354,
+      "segments": [
+        {
+          "text": "\"'Stuff it into you,' his belly counselled him.",
+          "start": 0,
+          "end": 2.7800000000000002,
+          "raw_end": 2.7800000000000002
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0002",
+      "anchor": true,
+      "reference": "AFTER EARLY NIGHTFALL THE YELLOW LAMPS WOULD LIGHT UP HERE AND THERE THE SQUALID QUARTER OF THE BROTHELS",
+      "prediction": "After early nightfall the yellow lamps would light up here and there the squalid quarter of the brothels.",
+      "duration": 6.625,
+      "seconds": 6.510579875000985,
+      "segments": [
+        {
+          "text": "After early nightfall the yellow lamps would light up here and there the squalid quarter of the brothels.",
+          "start": 0,
+          "end": 6.0600000000000005,
+          "raw_end": 6.0600000000000005
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0003",
+      "anchor": true,
+      "reference": "HELLO BERTIE ANY GOOD IN YOUR MIND",
+      "prediction": "\"'Hello, Bertie. Any good in your mind?'",
+      "duration": 2.68,
+      "seconds": 6.611644666001666,
+      "segments": [
+        {
+          "text": "\"'Hello, Bertie. Any good in your mind?'",
+          "start": 0,
+          "end": 2.68,
+          "raw_end": 2.68
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0004",
+      "anchor": true,
+      "reference": "NUMBER TEN FRESH NELLY IS WAITING ON YOU GOOD NIGHT HUSBAND",
+      "prediction": "Number ten, fresh Nelly is waiting on you. Good night, husband.",
+      "duration": 5.2150625,
+      "seconds": 6.761112415988464,
+      "segments": [
+        {
+          "text": "Number ten, fresh Nelly is waiting on you.",
+          "start": 0,
+          "end": 3.36,
+          "raw_end": 3.36
+        },
+        {
+          "text": "Good night, husband.",
+          "start": 4.1,
+          "end": 4.86,
+          "raw_end": 4.86
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0005",
+      "anchor": true,
+      "reference": "THE MUSIC CAME NEARER AND HE RECALLED THE WORDS THE WORDS OF SHELLEY'S FRAGMENT UPON THE MOON WANDERING COMPANIONLESS PALE FOR WEARINESS",
+      "prediction": "the music came nearer and he recalled the words the words of shelley's fragment upon the moon wandering companionless pale for weariness",
+      "duration": 9.635,
+      "seconds": 7.218458124989411,
+      "segments": [
+        {
+          "text": "the music came nearer and he recalled the words the words of shelley's fragment upon the moon wandering companionless pale for weariness",
+          "start": 0,
+          "end": 9.635,
+          "raw_end": 9.64
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0006",
+      "anchor": true,
+      "reference": "THE DULL LIGHT FELL MORE FAINTLY UPON THE PAGE WHEREON ANOTHER EQUATION BEGAN TO UNFOLD ITSELF SLOWLY AND TO SPREAD ABROAD ITS WIDENING TAIL",
+      "prediction": "The dull light fell more faintly upon the page whereon another equation began to unfold itself slowly and to spread abroad its widening tail.",
+      "duration": 10.555,
+      "seconds": 7.613087541976711,
+      "segments": [
+        {
+          "text": "The dull light fell more faintly upon the page whereon another equation began to unfold itself slowly and to spread abroad its widening tail.",
+          "start": 0,
+          "end": 9.98,
+          "raw_end": 9.98
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0007",
+      "anchor": true,
+      "reference": "A COLD LUCID INDIFFERENCE REIGNED IN HIS SOUL",
+      "prediction": "A cold, lucid indifference reigned in his soul.",
+      "duration": 4.275,
+      "seconds": 7.567306832992472,
+      "segments": [
+        {
+          "text": "A cold, lucid indifference reigned in his soul.",
+          "start": 0,
+          "end": 4.275,
+          "raw_end": 4.28
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0008",
+      "anchor": true,
+      "reference": "THE CHAOS IN WHICH HIS ARDOUR EXTINGUISHED ITSELF WAS A COLD INDIFFERENT KNOWLEDGE OF HIMSELF",
+      "prediction": "The chaos in which his ardor extinguished itself was a cold, indifferent knowledge of himself,",
+      "duration": 6.73,
+      "seconds": 7.738943540985929,
+      "segments": [
+        {
+          "text": "The chaos in which his ardor extinguished itself was a cold, indifferent knowledge of himself,",
+          "start": 0,
+          "end": 6.72,
+          "raw_end": 6.72
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0009",
+      "anchor": true,
+      "reference": "AT MOST BY AN ALMS GIVEN TO A BEGGAR WHOSE BLESSING HE FLED FROM HE MIGHT HOPE WEARILY TO WIN FOR HIMSELF SOME MEASURE OF ACTUAL GRACE",
+      "prediction": "At most, by an alms given to a beggar whose blessing he fled from, he might hope wearily to win for himself some measure of actual grace.",
+      "duration": 10.575,
+      "seconds": 7.9627215420186985,
+      "segments": [
+        {
+          "text": "At most, by an alms given to a beggar whose blessing he fled from, he might hope wearily to win for himself some measure of actual grace.",
+          "start": 0,
+          "end": 9.92,
+          "raw_end": 9.92
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0010",
+      "anchor": true,
+      "reference": "WELL NOW ENNIS I DECLARE YOU HAVE A HEAD AND SO HAS MY STICK",
+      "prediction": "Well, now, Ennis, I declare you have a head, and so has my stick.",
+      "duration": 4.405,
+      "seconds": 8.801960083976155,
+      "segments": [
+        {
+          "text": "Well, now, Ennis, I declare you have a head, and so has my stick.",
+          "start": 0,
+          "end": 4.4,
+          "raw_end": 4.4
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0011",
+      "anchor": true,
+      "reference": "ON SATURDAY MORNINGS WHEN THE SODALITY MET IN THE CHAPEL TO RECITE THE LITTLE OFFICE HIS PLACE WAS A CUSHIONED KNEELING DESK AT THE RIGHT OF THE ALTAR FROM WHICH HE LED HIS WING OF BOYS THROUGH THE RESPONSES",
+      "prediction": "on saturday mornings when the sodality met in the chapel to recite the little office his place was a cushioned kneeling desk at the right of the altar from which he led his wing of boys through the responses",
+      "duration": 12.445,
+      "seconds": 9.893256000010297,
+      "segments": [
+        {
+          "text": "on saturday mornings when the sodality met in the chapel to recite the little office his place was a cushioned kneeling desk at the right of the altar from which he led his wing of boys through the responses",
+          "start": 0,
+          "end": 12.44,
+          "raw_end": 12.44
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0012",
+      "anchor": true,
+      "reference": "HER EYES SEEMED TO REGARD HIM WITH MILD PITY HER HOLINESS A STRANGE LIGHT GLOWING FAINTLY UPON HER FRAIL FLESH DID NOT HUMILIATE THE SINNER WHO APPROACHED HER",
+      "prediction": "her eyes seemed to regard him with mild pity her holiness a strange light glowing faintly upon her frail flesh did not humiliate the sinner who approached her",
+      "duration": 11.64,
+      "seconds": 10.665563291986473,
+      "segments": [
+        {
+          "text": "her eyes seemed to regard him with mild pity her holiness a strange light glowing faintly upon her frail flesh did not humiliate the sinner who approached her",
+          "start": 0,
+          "end": 11.64,
+          "raw_end": 11.64
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0013",
+      "anchor": true,
+      "reference": "IF EVER HE WAS IMPELLED TO CAST SIN FROM HIM AND TO REPENT THE IMPULSE THAT MOVED HIM WAS THE WISH TO BE HER KNIGHT",
+      "prediction": "if ever he was impelled to cast sin from him and to repent the impulse that moved him was the wish to be her knight",
+      "duration": 7.915,
+      "seconds": 11.556598124996526,
+      "segments": [
+        {
+          "text": "if ever he was impelled to cast sin from him and to repent the impulse that moved him was the wish to be her knight",
+          "start": 0,
+          "end": 7.915,
+          "raw_end": 7.92
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0014",
+      "anchor": true,
+      "reference": "HE TRIED TO THINK HOW IT COULD BE",
+      "prediction": "He tried to think how it could be",
+      "duration": 2.225,
+      "seconds": 9.74765325000044,
+      "segments": [
+        {
+          "text": "He tried to think how it could be",
+          "start": 0,
+          "end": 2.22,
+          "raw_end": 2.22
+        }
+      ]
+    },
+    {
+      "id": "1089-134686-0015",
+      "anchor": true,
+      "reference": "BUT THE DUSK DEEPENING IN THE SCHOOLROOM COVERED OVER HIS THOUGHTS THE BELL RANG",
+      "prediction": "but the dusk, deepening in the schoolroom, covered over his thoughts. The bell rang.",
+      "duration": 5.815,
+      "seconds": 10.077068249986041,
+      "segments": [
+        {
+          "text": "but the dusk, deepening in the schoolroom, covered over his thoughts.",
+          "start": 0,
+          "end": 3.86,
+          "raw_end": 3.86
+        },
+        {
+          "text": "The bell rang.",
+          "start": 4.7,
+          "end": 5.46,
+          "raw_end": 5.46
+        }
+      ]
+    }
+  ],
+  "reference_source_commit": "cc832f9055ba11c8c55f918ab4bda9472b910d48",
+  "versions": {
+    "transformers": "5.8.1",
+    "torch": "2.7.1",
+    "numpy": "2.5.3",
+    "safetensors": "0.8.0"
+  },
+  "audio_seconds": 114.4450625,
+  "decode_seconds": 131.49773591588018,
+  "real_time_factor": 1.1490031377795802
+}
