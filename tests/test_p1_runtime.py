@@ -191,3 +191,32 @@ def test_qwen3_int8_paged_adapter_ragged_parity(advanced, size, page_width):
     finally:
         runtime.close()
     assert runtime.stats().physical_bytes == 0
+
+
+def test_int8_prefix_identity_includes_observed_modules_and_float_policy(int8_native):
+    from mlx_one import CacheConfig
+    from mlx_one.engine.cache_manager import CacheManager
+
+    manager = CacheManager(int8_native, CacheConfig())
+    try:
+        first = manager.fingerprint(namespace="same")
+        int8_native.model._mlx_one_execution_policy = {"version": "changed", "dtype": "float16"}
+        assert manager.fingerprint(namespace="same") != first
+        assert manager.fingerprint(namespace="other") != first
+    finally:
+        manager.close()
+
+
+def test_int8_dense_prefix_reuse_skips_committed_inputs(int8_native):
+    from mlx_one import BatchingConfig, Engine
+
+    with Engine(int8_native, inference_mode="experimental_dense_batch", cache_namespace="same",
+                batching_config=BatchingConfig(max_sequences=2, prefill_chunk_size=2)) as engine:
+        first = engine.generate("shared prompt", max_tokens=3)
+        before = len(int8_native.model.calls)
+        second = engine.generate("shared prompt", max_tokens=3)
+        calls = int8_native.model.calls[before:]
+        assert first.text == second.text
+        assert engine.runtime_stats()["cache_stats"]["prefix_hits"] > 0
+        assert sum(shape[0][1] for shape in calls) < len("shared prompt") + 2
+        assert engine.runtime_stats()["cache_stats"]["active_handles"] == 0

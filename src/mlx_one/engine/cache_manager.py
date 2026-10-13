@@ -94,6 +94,7 @@ class CacheManager:
         rendering_options: dict[str, Any] | None = None,
         multimodal_identity: str | None = None,
     ) -> CacheFingerprint:
+        from mlx_one.engine.adapters import ADAPTER_VERSION, quantization_identity
         from mlx_one.engine.reporting import tensor_dtypes
 
         config = getattr(self.bundle.model, "config", None)
@@ -131,6 +132,8 @@ class CacheManager:
                 "weight_dtypes": tensor_dtypes(self.bundle.model.parameters())
                     if callable(getattr(self.bundle.model, "parameters", None)) else (),
                 "eos": getattr(self.bundle, "eos_token_ids", ()),
+                "native_adapter": ADAPTER_VERSION,
+                "weight_quantization": quantization_identity(self.bundle),
             }, sort_keys=True)),
         )
 

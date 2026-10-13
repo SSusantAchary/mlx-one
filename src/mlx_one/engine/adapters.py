@@ -68,8 +68,9 @@ def quantized_modules(bundle):
 
 
 def quantization_identity(bundle):
-    modules = quantized_modules(bundle) if bundle.quantization.get("bits") == 8 else ()
-    payload = {"declared": bundle.quantization, "modules": [asdict(s) for s in modules],
+    config = getattr(bundle, "quantization", {})
+    modules = quantized_modules(bundle) if config.get("bits") == 8 else ()
+    payload = {"declared": config, "modules": [asdict(s) for s in modules],
                "floating_policy": getattr(bundle.model, "_mlx_one_execution_policy", None)}
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
