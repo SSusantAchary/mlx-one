@@ -92,7 +92,7 @@ class NativeExecutionSpec:
 
 
 class NativeModelAdapter:
-    def __init__(self, bundle, plan):
+    def __init__(self, bundle, plan, *, allow_bfloat16=False):
         from mlx_one.engine.reporting import tensor_dtypes
 
         architecture = plan.architecture
@@ -103,7 +103,7 @@ class NativeModelAdapter:
             quantized_modules(bundle)
             if set(observed) - {"float16", "uint32"} or "float16" not in observed:
                 raise ValueError("INT8 batching requires explicit FP16 floating execution")
-        elif observed != ("float16",):
+        elif observed != ("float16",) and not (allow_bfloat16 and observed == ("bfloat16",)):
             raise ValueError("dense batching requires observed FP16 weights")
         config = bundle.model.config
         self.bundle = bundle
@@ -120,7 +120,8 @@ class NativeModelAdapter:
                                  position_ids=position_ids)
 
 
-def native_adapter(bundle, plan=None):
+def native_adapter(bundle, plan=None, *, allow_bfloat16=False):
     from mlx_one.engine.cache_planner import build_cache_plan
 
-    return NativeModelAdapter(bundle, plan or build_cache_plan(bundle))
+    return NativeModelAdapter(bundle, plan or build_cache_plan(bundle),
+                              allow_bfloat16=allow_bfloat16)

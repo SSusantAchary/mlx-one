@@ -21,3 +21,7 @@ The dense runner now uses the immutable native adapter for eligibility, head lay
 ## PR-03: chunked scheduling profiles
 
 P1 profiles cover chunks 128/256/512/1024 with five measured repetitions and unchanged budget defaults. A deterministic 8K prefill fixture proves concurrent decoders receive service each iteration within the combined budget. Existing admission, reservation, cancellation and backpressure tests remain in the affected suite: **40 passed**. Native service-limit measurements remain pending.
+
+## PR-04: direct paged adapter execution
+
+The existing segmented arena and kernels now accept validated Qwen3 INT8 adapters. Packed weights remain distinct from FP16 KV; existing unquantized BF16 paging remains supported. CPU ragged B1/B2/B4 differential profiles at widths 16/32 pass with zero materializations; affected suite: **64 passed**. Metal compilation and real Qwen3 Q/K-normalized logits remain pending.

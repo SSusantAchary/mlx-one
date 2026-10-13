@@ -188,7 +188,8 @@ class BatchedDenseRunner(CausalLMRunner):
         from mlx_one.engine.contracts import RequestKind
 
         return RunnerCapabilities(frozenset({RequestKind.TEXT}), batchable=True,
-                                  chunked_prefill=True, family="qwen2",
+                                  chunked_prefill=True, family=(self.adapter.spec.architecture
+                                      if hasattr(self, "adapter") else "native"),
                                   supported_state_kinds=("full_kv",),
                                   supports_batched_decode=True, supports_batched_prefill=True)
 

@@ -2,6 +2,7 @@
 
 import pytest
 from test_dense_batching import native as native
+from test_paged_hybrid import advanced as advanced
 
 from mlx_one.p1_profiles import CHECKPOINTS, REFERENCE_PINS
 
@@ -150,3 +151,43 @@ def test_8k_prefill_yields_to_decoders_with_bounded_progress():
             for request in group:
                 committed[request.request_id] += len(request.token_ids)
     assert committed == {"0": 16, "1": 16, "2": 16, "long": 8192}
+
+
+@pytest.mark.parametrize("size", [1, 2, 4])
+@pytest.mark.parametrize("page_width", [16, 32])
+def test_qwen3_int8_paged_adapter_ragged_parity(advanced, size, page_width):
+    from dataclasses import replace
+    from types import SimpleNamespace
+
+    import numpy as np
+    from test_paged_hybrid import _requests
+
+    from mlx_one import CacheConfig
+    from mlx_one.engine.cache_manager import CacheManager
+    from mlx_one.engine.paged import PagedRunner
+
+    bundle = advanced()
+    module = SimpleNamespace(weight=np.zeros((2, 16), dtype=np.uint32),
+        scales=np.ones((2, 1), dtype=np.float16), biases=np.zeros((2, 1), dtype=np.float16),
+        bits=8, group_size=64, mode="affine")
+    original = bundle.model.parameters
+    bundle.model.named_modules = lambda: [("linear", module)]
+    bundle.model.parameters = lambda: {**original(), "packed": module.weight}
+    bundle = replace(bundle, architecture="qwen3", quantization={"bits": 8, "group_size": 64})
+    runtime = CacheManager(bundle, CacheConfig(backend="paged", block_size_tokens=page_width))
+    requests = _requests(bundle, runtime, [range(1, page_width + i + 2) for i in range(size)])
+    independent = [bundle.model.make_cache() for _ in requests]
+    runner = PagedRunner()
+    try:
+        for step in range(3):
+            result = runner.execute(tuple(requests))
+            assert bundle.model.calls[-1][0] == size
+            for i, request in enumerate(requests):
+                expected = bundle.model(np.array([request.token_ids]), cache=independent[i])
+                np.testing.assert_allclose(result.logits[i], expected.logits[:, -1:],
+                                           atol=.03, rtol=.01)
+                request.phase, request.token_ids = "decode", (step + 9,)
+            assert runner.last_trace["history_materializations"] == 0
+    finally:
+        runtime.close()
+    assert runtime.stats().physical_bytes == 0

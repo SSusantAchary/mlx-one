@@ -38,14 +38,14 @@ def resolved_mode(backend: str) -> str:
 
 def validate_mode(bundle, plan, mode: str | None) -> None:
     if mode == "paged":
-        from mlx_one.engine.reporting import tensor_dtypes
+        from mlx_one.engine.adapters import native_adapter
 
-        parameters = getattr(bundle.model, "parameters", None)
-        observed = tensor_dtypes(parameters()) if callable(parameters) else ()
-        if (plan is None or plan.architecture != "qwen2" or not plan.block_compatible
-                or bool(getattr(bundle, "quantization", {})) or not observed
-                or any(d not in {"float16", "bfloat16"} for d in observed)):
-            raise ModelCapabilityUnsupported("paged requires unquantized FP16/BF16 Qwen2/Qwen2.5")
+        try:
+            adapter = native_adapter(bundle, plan, allow_bfloat16=True)
+            if adapter.spec.head_dim > 256:
+                raise ValueError("paged head dimensions must be at most 256")
+        except (ValueError, AttributeError) as exc:
+            raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_hybrid_batch":
         if (plan is None or plan.architecture != "lfm2" or not plan.layer_specs
                 or any(s.kind.value not in {"attention_kv", "conv_state", "rotating_kv"}

@@ -232,7 +232,8 @@ class PagedRunner(BatchedDenseRunner):
         from mlx_one.engine.cache import CacheBundle
         from mlx_one.engine.reporting import tensor_dtypes
 
-        dtype = tensor_dtypes(self.bundle.model.parameters())[0]
+        dtype = next(d for d in tensor_dtypes(self.bundle.model.parameters())
+                     if d in {"float16", "bfloat16"})
         return CacheBundle(tuple(PagedKVCache(self.contract_pool, layer_id=i, dtype=dtype)
                                  for i in range(self.bundle.model.config.num_hidden_layers)))
 
@@ -250,6 +251,9 @@ class PagedRunner(BatchedDenseRunner):
         from mlx_one.engine.modes import validate_mode
 
         validate_mode(bundle, build_cache_plan(bundle), "paged")
+        from mlx_one.engine.adapters import native_adapter
+
+        self.adapter = native_adapter(bundle, allow_bfloat16=True)
 
     def execute(self, requests):
         import mlx.core as mx
@@ -321,7 +325,7 @@ class PagedRunner(BatchedDenseRunner):
                                 for r in requests])
                 positions = mx.array([list(range(r.cache[0].offset, r.cache[0].offset + width))
                                       for r in requests])
-                output = first.bundle.model(ids, cache=packed, position_ids=positions)
+                output = self.adapter.forward(ids, cache=packed, position_ids=positions)
                 logits = []
                 for i, n in enumerate(widths):
                     begin = 0 if requests[i].return_all_logits else n - 1
