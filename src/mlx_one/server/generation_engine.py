@@ -16,7 +16,6 @@ from mlx_one.engine.modes import (
     InferenceMode,
     configure_execution_dtype,
     resolve_backend,
-    validate_mode,
 )
 from mlx_one.engine.reporting import native_report
 from mlx_one.server.model_manager import ModelManager
@@ -536,45 +535,24 @@ class GenerationEngine:
                 self._cache_runtime.close()
             self._cache_runtime = None
             self._cache_bundle = None
-            runtime = CacheManager(bundle, self._cache_config)
-            runtime.pressure = self._pressure
-            runtime.batching_config = self._actor.config if self._actor is not None else None
+            if self._converted_bundle is not bundle:
+                configure_execution_dtype(bundle, self._execution_dtype)
+                self._converted_bundle = bundle
+            from mlx_one.engine.construction import construct_runtime
+
+            runtime, selection = construct_runtime(
+                bundle, self._cache_config, self._requested_mode,
+                batching=self._actor.config if self._actor is not None else None,
+                pressure=self._pressure, registry=self._qualification_registry,
+                profile=self._qualification_profile)
             try:
-                if self._converted_bundle is not bundle:
-                    configure_execution_dtype(bundle, self._execution_dtype)
-                    self._converted_bundle = bundle
-                if self._requested_mode == "auto":
-                    from mlx_one.engine.selection import select_auto_mode
-
-                    self._selection = select_auto_mode(bundle, runtime,
-                                                       self._qualification_registry,
-                                                       self._qualification_profile)
-                    self._inference_mode = self._selection["resolved_mode"]
-                    from dataclasses import replace
-
-                    runtime.config = replace(runtime.config, backend=resolve_backend(
-                        self._inference_mode, None))
-                validate_mode(bundle, runtime.plan, self._inference_mode)
-                runtime.mode = self._inference_mode
-                runtime.requested_mode = self._requested_mode
-                runtime.pressure = self._pressure
                 if self._pressure is not None:
                     self._pressure.start()
-                runtime.qualification_registry = self._qualification_registry
-                runtime.qualification_profile = self._qualification_profile
-                runtime.batching_config = self._actor.config if self._actor is not None else None
-                if self._qualification_profile and (
-                    self._requested_mode == "auto" and self._selection.get("evidence_scope")
-                    or runtime.config.key_type in {"q4_0", "q8_0"}
-                ):
-                    from mlx_one.engine.selection import validate_execution_envelope
-
-                    if self._actor is None:
-                        raise ValueError("qualified actor execution requires a bound scheduler")
-                    validate_execution_envelope(runtime, self._actor.config, required=True)
+                self._selection = selection
+                self._inference_mode = selection["resolved_mode"]
                 if self._actor is not None:
                     self._actor.execution_mode = self._inference_mode
-            except Exception:
+            except BaseException:
                 runtime.close()
                 raise
             self._cache_runtime = runtime

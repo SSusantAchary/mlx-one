@@ -122,3 +122,44 @@ def test_preview_uses_prepared_context_and_identity_changes(native):
     after = runtime.fingerprint(namespace="p")
     assert before.special_tokens_identity != after.special_tokens_identity
     runtime.close()
+
+
+@pytest.mark.parametrize("surface", ["python", "server"])
+def test_auto_paged_constructs_the_selected_pool(native, monkeypatch, surface):
+    from mlx_one import Engine
+    from mlx_one.engine.arena import SegmentedPageArena
+    from mlx_one.server.generation_engine import GenerationEngine
+
+    monkeypatch.setattr("mlx_one.engine.selection.select_auto_mode", lambda *a, **k: {
+        "requested_mode": "auto", "resolved_mode": "paged", "reason": "test selection",
+        "evidence_scope": None})
+    owner = (Engine(native, inference_mode="auto") if surface == "python" else
+             GenerationEngine(SimpleNamespace(current_model=lambda: native), inference_mode="auto"))
+    try:
+        runtime = owner._cache_manager if surface == "python" else owner._cache_manager_for(native)
+        assert runtime.config.backend == "paged"
+        assert isinstance(runtime.block_pool, SegmentedPageArena)
+    finally:
+        owner.close()
+
+
+def test_bundle_cleanup_attempts_every_layer_and_preserves_corruption():
+    from mlx_one.engine.cache import CacheBundle
+    from mlx_one.engine.cache_errors import CacheCorruptionError
+
+    called = []
+    class State:
+        def __init__(self, index):
+            self.index = index
+
+        def reset(self):
+            called.append(self.index)
+            if self.index == 0:
+                raise CacheCorruptionError("corrupt reference")
+    bundle = CacheBundle((State(0), State(1)))
+    with pytest.raises(CacheCorruptionError):
+        bundle.release()
+    assert called == [0, 1]
+    assert bundle.closed
+    bundle.release()
+    assert called == [0, 1]

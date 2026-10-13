@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Any
 
 from mlx_one.engine.batching import BatchingConfig
-from mlx_one.engine.cache_manager import CacheManager
 from mlx_one.engine.cache_specs import CacheConfig
 from mlx_one.engine.modes import (
     ACTOR_MODES,
@@ -95,45 +94,25 @@ class Engine:
         self._cache_namespace = cache_namespace
         self._batching_config = batching_config or BatchingConfig()
         self._actor = None
-        self._cache_manager = (
-            CacheManager(self._bundle, config)
-            if callable(getattr(self._bundle.model, "make_cache", None))
-            else None
-        )
+        self._cache_manager = None
         self._pressure = None
         if memory_pressure_config is not None or self._requested_mode in {
             "paged", "experimental_hybrid_batch", "auto"
         }:
             self._pressure = MemoryPressureController(memory_pressure_config)
-            if self._cache_manager is not None:
-                self._cache_manager.pressure = self._pressure
-        if self._cache_manager is not None:
-            self._cache_manager.batching_config = self._batching_config
         self._selection = {"requested_mode": inference_mode,
                            "resolved_mode": inference_mode or resolved_mode(backend),
                            "reason": "explicit configuration", "evidence_scope": None}
-        if inference_mode == "auto" and self._cache_manager is not None:
-            from mlx_one.engine.selection import select_auto_mode
+        if callable(getattr(self._bundle.model, "make_cache", None)):
+            from mlx_one.engine.construction import construct_runtime
 
-            self._selection = select_auto_mode(self._bundle, self._cache_manager,
-                                               qualification_registry, qualification_profile)
+            self._cache_manager, self._selection = construct_runtime(
+                self._bundle, config, inference_mode, batching=self._batching_config,
+                pressure=self._pressure, registry=qualification_registry,
+                profile=qualification_profile)
             inference_mode = self._selection["resolved_mode"]
             self._inference_mode = inference_mode
-            backend = resolve_backend(inference_mode, None)
-            self._cache_manager.config = replace(config, backend=backend)
-        if self._cache_manager is not None:
-            self._cache_manager.mode = inference_mode
-            self._cache_manager.requested_mode = self._requested_mode
-            self._cache_manager.qualification_registry = qualification_registry
-            self._cache_manager.qualification_profile = qualification_profile
-            self._cache_manager.batching_config = self._batching_config
-            if qualification_profile and (self._requested_mode == "auto"
-                    and self._selection["evidence_scope"] is not None
-                    or config.key_type in {"q4_0", "q8_0"}):
-                from mlx_one.engine.selection import validate_execution_envelope
-
-                validate_execution_envelope(self._cache_manager, self._batching_config,
-                                            required=True)
+            backend = self._cache_manager.config.backend
         if (self._batching_config.admission_policy == "cache_aware"
                 and inference_mode not in ACTOR_MODES):
             raise ValueError("cache-aware admission requires an actor execution mode")

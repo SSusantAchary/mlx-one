@@ -97,7 +97,8 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             validate_mode(bundle, runtime.plan, mode)
         except ValueError:
             continue
-        scope = native_report(bundle, runtime, mode=mode, hardware=hardware,
+        candidate = runtime.for_mode(mode) if hasattr(runtime, "for_mode") else runtime
+        scope = native_report(bundle, candidate, mode=mode, hardware=hardware,
                               source_revision=source)["scope"]
         scope["cache_precision"] = precision
         from mlx_one.registry import InferenceScope
@@ -113,7 +114,7 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             if proof.get("schema_version") != "native-inference-qualification-v2":
                 continue
             if (proof.get("workload_envelope") != profile
-                    or proof.get("compatibility_digest") != compatibility_digest(runtime)):
+                    or proof.get("compatibility_digest") != compatibility_digest(candidate)):
                 continue
             from mlx_one.engine.paged import KERNEL_VERSION
 

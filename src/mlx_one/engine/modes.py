@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Literal
 
+from mlx_one.engine.cache_specs import CACHE_BACKENDS
+
 InferenceMode = Literal["reference_dense", "experimental_block", "experimental_dense_batch",
                         "paged", "experimental_hybrid_batch", "auto"]
 
@@ -20,7 +22,7 @@ def resolve_backend(mode: str | None, backend: str | None) -> str:
              "experimental_hybrid_batch": "hybrid", "auto": "dense"}
     if mode is not None and mode not in modes:
         raise ModelCapabilityUnsupported(f"unsupported inference mode: {mode}")
-    if backend is not None and backend not in {"dense", "block", "paged", "hybrid"}:
+    if backend is not None and backend not in CACHE_BACKENDS:
         raise ValueError("unsupported cache backend")
     if mode is None and backend in {"paged", "hybrid"}:
         raise ModelCapabilityUnsupported("paged/hybrid backends require an explicit inference mode")

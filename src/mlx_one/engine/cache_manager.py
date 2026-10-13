@@ -38,14 +38,16 @@ from mlx_one.engine.prefix_cache import BlockPrefixIndex, PrefixCache
 class CacheManager:
     """Model-scoped owner of all cache state and capacity decisions."""
 
-    def __init__(self, bundle: Any, config: CacheConfig | None = None) -> None:
+    def __init__(self, bundle: Any, config: CacheConfig | None = None, *, _planning=None) -> None:
         self.bundle = bundle
         self._last_state_observations: list[dict[str, Any]] = []
         self._last_precision_configuration: dict[str, str] | None = None
         self.config = config or CacheConfig()
-        self.weight_identity = _model_identity(bundle)
-        self._model_identity = _digest(self.weight_identity + str(id(bundle.model)))
-        self.plan = build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens)
+        self.weight_identity = _planning.weight_identity if _planning else _model_identity(bundle)
+        self._model_identity = (_planning._model_identity if _planning else
+                                _digest(self.weight_identity + str(id(bundle.model))))
+        self.plan = (_planning.plan if _planning else
+                     build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens))
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
         from mlx_one.engine.arena import SegmentedPageArena
 
@@ -547,9 +549,9 @@ class CacheManager:
                 "key_type": str(handle.metadata["key_type"]),
                 "value_type": str(handle.metadata["value_type"]),
             }
-            handle.bundle.release()
             handle.closed = True
             self._handles.pop(handle.handle_id, None)
+            handle.bundle.release()
 
     def precision_configuration(self) -> dict[str, str] | None:
         with self._lock:
@@ -643,11 +645,16 @@ class CacheManager:
         with self._lock:
             if self._closed:
                 return
-            for handle in tuple(self._handles.values()):
-                self.release(handle)
-            self.clear_prefixes()
-            self.block_pool.clear()
+            error = None
+            for operation in [*(lambda h=h: self.release(h) for h in self._handles.values()),
+                              self.clear_prefixes, self.block_pool.clear]:
+                try:
+                    operation()
+                except BaseException as exc:
+                    error = error or exc
             self._closed = True
+            if error is not None:
+                raise error
 
     def _validate_block_backend(self, key_type: str, value_type: str) -> None:
         if key_type != "f16" or value_type != "f16":
