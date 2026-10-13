@@ -430,9 +430,14 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
     runtime = CacheManager(bundle, CacheConfig(key_type=cache_type, value_type=cache_type))
     runtime.mode = "paged"
     config = BatchingConfig(max_sequences=2)
-    envelope = {"context_tokens": 2048, "output_tokens": 128, "slots": 2, "chunk_tokens": 512,
-                "page_tokens": 32, "cache_type": cache_type, "admission_policy": "deadline",
-                "ttft_budget_ms": 1000, "decode_gap_budget_ms": 100}
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+    from mlx_one.inference_qualification import workload_envelope
+
+    envelope = workload_envelope(BaselineProfile(*CHECKPOINTS["qwen"], "paged", slots=2,
+        cache_type=cache_type, kv_bits=4 if cache_type == "q4_0" else None,
+        ttft_budget_ms=1000, decode_gap_budget_ms=100))
+    runtime.batching_config = config
+    runtime.pressure = MemoryPressureController()
     runtime.qualification_profile = envelope
     scope = native_report(bundle, runtime, mode="paged", hardware="fixture-host",
                           source_revision="fixture-source")["scope"]
@@ -440,7 +445,7 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
     feature = "quantized_paged_kv" if cache_type == "q4_0" else "paged_attention"
     artifact = tmp_path / "measured.json"
     artifact.write_text('{"fixture": true}')
-    proof = {"schema_version": "native-inference-qualification-v1", "backend": "mlx-one-native",
+    proof = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
              "feature": feature, "scope": scope, "status": "passed",
              "correctness_passed": True, "performance_qualified": True,
              "compatibility_digest": compatibility_digest(runtime),
@@ -675,11 +680,13 @@ def test_activation_calibration_requires_exact_dimensions_identity_and_freshness
                           source_revision="fixture-source")["scope"]
     scope["cache_precision"] = "float16"
     path = tmp_path / "peak.json"
-    proof = {"schema_version": "native-inference-qualification-v1", "backend": "mlx-one-native",
+    proof = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
              "scope": scope, "feature": "activation_peak", "status": "passed",
              "correctness_passed": True, "compatibility_digest": compatibility_digest(runtime),
-             "activation_peak": {"dimensions": {"batch": 2, "chunk": 4, "history": 5},
-                                 "incremental_bytes": 4096}}
+             "kernel_version": KERNEL_VERSION, "arena_version": "segmented-arena-v1",
+             "activation_peak": {"dimensions": {"batch": 2, "chunk": 4, "history": 5,
+                "history_lengths": [5, 5], "widths": [4, 4], "phase": "prefill"},
+                "policy": "activation-peak-v1-margin20", "incremental_bytes": 4096}}
     path.write_text(json.dumps(proof))
     registry = InferenceFeatureRegistry()
     registry.promote("activation_peak", InferenceScope(**scope), path,
@@ -898,3 +905,28 @@ def test_snapshot_reader_waits_for_writer_and_legacy_stays_readable(
         assert restored.offset == 32
         restored.release()
     runtime.close()
+
+
+def test_peak_producer_resets_each_measured_forward_and_records_ragged_scope(advanced, monkeypatch):
+    import mlx.core as mx
+
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+    from mlx_one.peak_calibration import native_peak_calibration
+
+    resets = []
+    for name, value in (("synchronize", lambda: None),
+                        ("reset_peak_memory", lambda: resets.append(True)),
+                        ("get_peak_memory", lambda: 100_000),
+                        ("get_active_memory", lambda: 10_000),
+                        ("get_cache_memory", lambda: 100), ("clear_cache", lambda: None)):
+        monkeypatch.setattr(mx, name, value, raising=False)
+    item = BaselineProfile(*CHECKPOINTS["qwen"], "paged", context_tokens=32,
+                           chunk_tokens=16, slots=2, workload="peak_calibration",
+                           calibration_phase="prefill", cache_type="f16")
+    result = native_peak_calibration(advanced(), item)
+    assert len(resets) == 6
+    assert result["status"] == "passed"
+    assert result["dimensions"] == {"batch": 2, "chunk": 16, "history": 16,
+                                    "history_lengths": [16, 16], "widths": [16, 16],
+                                    "phase": "prefill"}
+    assert result["actual_cache_dtypes"] == ["float16"]

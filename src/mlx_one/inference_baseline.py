@@ -64,6 +64,12 @@ class BaselineProfile:
     leak_budget_bytes: int | None = None
     min_decode_tokens_per_second: float | None = None
     quality_run: str | None = None
+    calibration_phase: str = "decode"
+    queue_size: int | None = None
+    output_buffer_events: int = 32
+    output_stall_timeout_s: float = 30.0
+    cache_capacity_bytes: int | None = None
+    pressure_config: dict | None = None
     traffic_manifest: str | None = None
     traffic_identity: str | None = None
     max_queue_wait_ms: float | None = None
@@ -96,6 +102,11 @@ class BaselineProfile:
             raise BaselineError("soak profiles require 30 or 60 minutes")
         if (self.workload == "soak") != (self.duration_seconds is not None):
             raise BaselineError("soak workload requires an explicit 30/60 minute duration")
+        if self.calibration_phase not in {"decode", "prefill"}:
+            raise BaselineError("invalid calibration phase")
+        if self.workload == "peak_calibration" and self.inference_mode not in {
+                "paged", "experimental_hybrid_batch", "experimental_dense_batch"}:
+            raise BaselineError("peak calibration requires explicit optimized execution")
         if self.workload == "lifecycle" and self.inference_mode != "experimental_hybrid_batch":
             raise BaselineError("native lifecycle profiles require explicit hybrid mode")
         if self.workload == "microbench" and self.inference_mode != "paged":
@@ -141,7 +152,8 @@ class BaselineProfile:
             raise BaselineError("latency budgets must be finite and positive")
         if self.workload not in {"baseline", "prefix", "long", "parity", "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
-                                 "quality", "pressure", "soak", "multi_turn", "lifecycle"}:
+                                 "quality", "pressure", "soak", "multi_turn",
+                                 "lifecycle", "peak_calibration"}:
             raise BaselineError("unknown baseline workload")
         if (self.atol is None) != (self.rtol is None):
             raise BaselineError("override both atol and rtol")
@@ -158,10 +170,12 @@ class BaselineProfile:
                "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None,
                "quality_manifest": None, "quality_dataset_identity": None,
                "traffic_manifest": None, "traffic_identity": None,
-               "max_queue_wait_ms": None, "max_service_gap_ms": None}
+               "max_queue_wait_ms": None, "max_service_gap_ms": None,
+               "queue_size": None, "output_buffer_events": 32, "output_stall_timeout_s": 30.,
+               "cache_capacity_bytes": None, "pressure_config": None, "calibration_phase": "decode"}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
                     or self.workload in {"microbench", "quality", "pressure", "soak",
-                                        "multi_turn", "lifecycle"}
+                                        "multi_turn", "lifecycle", "peak_calibration"}
                     or any(payload[k] != v for k, v in new.items()))
         if not advanced:
             for key in new:
@@ -401,7 +415,8 @@ def main(argv=None) -> int:
     parser.add_argument("--workload", choices=("baseline", "prefix", "long", "parity",
                                              "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
-                                 "quality", "pressure", "soak", "multi_turn", "lifecycle"),
+                                 "quality", "pressure", "soak", "multi_turn",
+                                 "lifecycle", "peak_calibration"),
                         default="baseline")
     parser.add_argument("--output", type=Path, default=Path("qualification/results"))
     parser.add_argument("--list-profiles", action="store_true")
@@ -428,6 +443,12 @@ def main(argv=None) -> int:
     parser.add_argument("--traffic-manifest", type=Path)
     parser.add_argument("--max-queue-wait-ms", type=float)
     parser.add_argument("--max-service-gap-ms", type=float)
+    parser.add_argument("--calibration-phase", choices=("decode", "prefill"), default="decode")
+    parser.add_argument("--queue-size", type=int)
+    parser.add_argument("--output-buffer-events", type=int, default=32)
+    parser.add_argument("--output-stall-timeout-s", type=float, default=30.)
+    parser.add_argument("--cache-memory-budget-bytes", type=int)
+    parser.add_argument("--pressure-config", type=Path)
     parser.add_argument("--leak-budget-bytes", type=int)
     parser.add_argument("--min-decode-tok-s", type=float)
     args = parser.parse_args(argv)
@@ -456,6 +477,13 @@ def main(argv=None) -> int:
                         traffic_manifest=str(args.traffic_manifest.resolve())
                         if args.traffic_manifest else None,
                         traffic_identity=replay["sha256"] if replay else None,
+                        calibration_phase=args.calibration_phase,
+                        queue_size=args.queue_size,
+                        output_buffer_events=args.output_buffer_events,
+                        output_stall_timeout_s=args.output_stall_timeout_s,
+                        cache_capacity_bytes=args.cache_memory_budget_bytes,
+                        pressure_config=json.loads(args.pressure_config.read_text())
+                        if args.pressure_config else None,
                         max_queue_wait_ms=args.max_queue_wait_ms,
                         max_service_gap_ms=args.max_service_gap_ms,
                         quality_manifest=str(args.quality_manifest.resolve())

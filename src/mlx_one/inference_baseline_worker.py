@@ -32,14 +32,15 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "memory-reconciliation.json", "soak-probes.json", "gate-hybrid-performance.json",
                  "quality-reference.json", "pressure-recovery.json",
                  "quantized-attention-correctness.json", "held-out-quality.json", "traffic.json",
-                 "tokenization.json", "actor-events.jsonl", "fairness.json", "lifecycle.json"):
+                 "tokenization.json", "actor-events.jsonl", "fairness.json", "lifecycle.json",
+                 "peak-calibration.json"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",
                                     sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                                     media_type="application/json")
             artifacts.append(reference.to_dict())
-    result = {"schema_version": "native-inference-qualification-v1", "backend": "mlx-one-native",
+    result = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
               "scope": scope, "feature": feature, "status": parity["status"],
               "correctness_passed": parity["status"] == "passed",
               "performance_qualified": gate is not None and gate.get("status") == "passed",
@@ -356,20 +357,28 @@ def execute(manifest):
 
         scheduler = InferenceActor(BatchingConfig(
             max_sequences=profile.slots, timeout=profile.timeout_seconds,
-            queue_size=max(profile.slots * 4, 8), prefill_chunk_size=profile.chunk_tokens,
+            queue_size=profile.queue_size or max(profile.slots * 4, 8),
+            prefill_chunk_size=profile.chunk_tokens,
             max_scheduled_tokens=profile.max_scheduled_tokens,
             max_prefill_tokens=profile.max_prefill_tokens,
+            output_buffer_events=profile.output_buffer_events,
+            output_stall_timeout_s=profile.output_stall_timeout_s,
             admission_policy=profile.admission_policy), runner=DispatchRunner())
         scheduler.capture_memory = True
     else:
         scheduler = GenerationScheduler(parallel=profile.slots, timeout=profile.timeout_seconds,
-                                        max_pending=max(profile.slots * 4, 8))
+                                        max_pending=profile.queue_size or max(profile.slots * 4, 8))
+    from mlx_one.engine.pressure import MemoryPressureConfig
+
     manager = ModelManager()
     engine = GenerationEngine(manager, inference_mode=profile.inference_mode,
                               collect_execution_metrics=True,
                               execution_dtype=profile.execution_dtype,
                               cache_type_k=profile.cache_type, cache_type_v=profile.cache_type,
                               cache_block_size=profile.page_tokens,
+                              cache_memory_budget_bytes=profile.cache_capacity_bytes,
+                              memory_pressure_config=MemoryPressureConfig(**profile.pressure_config)
+                              if profile.pressure_config else None,
                               prefill_chunk_size=profile.chunk_tokens)
     server = None
     thread = None
@@ -410,6 +419,29 @@ def execute(manifest):
             engine.bind_actor(scheduler)
         runtime_owner = scheduler.execute(lambda: engine._cache_manager_for(bundle))
         runtime_owner.harness_only = True
+        if profile.workload == "peak_calibration":
+            from mlx_one.engine.arena import ARENA_VERSION
+            from mlx_one.engine.paged import KERNEL_VERSION
+            from mlx_one.engine.reporting import native_report
+            from mlx_one.engine.selection import (
+                compatibility_digest,
+                host_identity,
+                source_identity,
+            )
+            from mlx_one.peak_calibration import native_peak_calibration
+
+            measured = scheduler.execute(lambda: native_peak_calibration(bundle, profile))
+            write_json(output / "peak-calibration.json", measured)
+            if measured["status"] == "passed":
+                scope = native_report(bundle, runtime_owner, mode=profile.inference_mode,
+                                      hardware=host_identity(),
+                                      source_revision=source_identity())["scope"]
+                scope["cache_precision"] = ",".join(measured["actual_cache_dtypes"])
+                qualification_evidence(output, feature="activation_peak", scope=scope,
+                    parity={"status": "passed"}, activation_peak=measured,
+                    compatibility_digest=compatibility_digest(runtime_owner),
+                    kernel_version=KERNEL_VERSION, arena_version=ARENA_VERSION)
+            return
         if profile.workload == "microbench":
             from mlx_one.inference_qualification_worker import attention_microbench
 
@@ -476,7 +508,8 @@ def execute(manifest):
         config = ServerConfig(
             inference_mode=profile.inference_mode, warmup=False, parallel=profile.slots,
             timeout=profile.timeout_seconds, reasoning="off",
-            api_keys=("qualification-local",), queue_size=max(profile.slots * 4, 8),
+            api_keys=("qualification-local",),
+            queue_size=profile.queue_size or max(profile.slots * 4, 8),
             execution_dtype=profile.execution_dtype, prefill_chunk_size=profile.chunk_tokens,
             max_batch_tokens=profile.max_scheduled_tokens,
             max_prefill_tokens=profile.max_prefill_tokens,
@@ -485,6 +518,9 @@ def execute(manifest):
             cache_prompt=profile.workload in {"prefix", "multi_turn"},
             cache_idle_slots=profile.workload in {"prefix", "multi_turn"},
             cache_type_k=profile.cache_type, cache_type_v=profile.cache_type,
+            cache_memory_budget_bytes=profile.cache_capacity_bytes,
+            memory_pressure_config=MemoryPressureConfig(**profile.pressure_config)
+            if profile.pressure_config else None,
         )
         from mlx_one.traffic_replay import (
             QualificationMiddleware,

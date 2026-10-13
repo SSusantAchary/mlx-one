@@ -284,14 +284,20 @@ class PagedRunner(BatchedDenseRunner):
         dim = int(getattr(first.bundle.model.config, "head_dim", 0)
                   or first.bundle.model.config.hidden_size // heads)
         transient = len(requests) * heads * width * (dim + 2) * 4 * 3
+        transient += (len(requests) * len(first.cache) * dim
+                      * first.bundle.model.config.num_key_value_heads
+                      * first.cache[0].block_tokens * 16 * 4)
         transient += 16 * sum(array_nbytes(ref.block.state) for r in requests for c in r.cache
                          for ref in c._blocks if not ref.block.immutable)
         from mlx_one.engine.pressure import execution_forecast
 
-        transient += execution_forecast(first.runtime, first.bundle.model.config,
+        transient = execution_forecast(first.runtime, first.bundle.model.config,
                                         batch=len(requests),
                                         chunk=width, history=max(r.cache[0].offset
-                                                                 for r in requests))["bytes"]
+                                                                 for r in requests),
+                                        explicit_bytes=transient,
+                                        history_lengths=[r.cache[0].offset for r in requests],
+                                        widths=widths, phase=first.phase)["bytes"]
         if any(r.runtime is not runtime for r in requests):
             raise ValueError("paged batch spans cache managers")
         with ExitStack() as stack:

@@ -22,7 +22,13 @@ def load_evidence(paths):
         proof = json.loads(Path(path).read_text())
         status = (InferenceFeatureStatus.PERFORMANCE_QUALIFIED if proof.get("performance_qualified")
                   else InferenceFeatureStatus.CORRECTNESS_PASSED)
-        registry.promote(proof["feature"], InferenceScope(**proof["scope"]), path, status)
+        from mlx_one.engine.envelope import EVIDENCE_VERSION
+
+        scope = InferenceScope(**proof["scope"])
+        if proof.get("schema_version") != EVIDENCE_VERSION:
+            registry.register_experimental(proof["feature"], scope)
+            continue
+        registry.promote(proof["feature"], scope, path, status)
     return registry
 
 
@@ -61,10 +67,19 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
                 "reason": "no matching performance-qualified execution", "evidence_scope": None}
     if registry is None or not profile:
         return {**fallback, "reason": "qualification registry and workload envelope are required"}
-    required = {"context_tokens", "slots", "chunk_tokens", "ttft_budget_ms", "decode_gap_budget_ms",
-                "output_tokens", "page_tokens", "cache_type", "admission_policy"}
-    if not required <= profile.keys() or any(profile[k] is None for k in required):
-        return {**fallback, "reason": "workload envelope or service budgets are incomplete"}
+    from mlx_one.engine.envelope import QualificationEnvelope
+
+    try:
+        envelope = QualificationEnvelope.from_mapping(profile)
+        profile = envelope.to_dict()
+        if envelope.ttft_budget_ms is None or envelope.decode_gap_budget_ms is None:
+            raise ValueError("missing service budgets")
+        batching = getattr(runtime, "batching_config", None)
+        if batching is None:
+            raise ValueError("missing execution settings")
+        validate_configured_bounds(runtime, batching, envelope)
+    except ValueError:
+        return {**fallback, "reason": "current workload envelope or configured bounds do not match"}
     hardware, source = hardware or host_identity(), source or source_identity()
     precision = {"f16": "float16", "bf16": "bfloat16", "q4_0": "float16,uint8",
                  "q8_0": "float16,uint8"}.get(runtime.config.key_type)
@@ -95,6 +110,8 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             if fresh["status"] != InferenceFeatureStatus.PERFORMANCE_QUALIFIED.value:
                 continue
             proof = json.loads(Path(record.evidence[0].uri).read_text())
+            if proof.get("schema_version") != "native-inference-qualification-v2":
+                continue
             if (proof.get("workload_envelope") != profile
                     or proof.get("compatibility_digest") != compatibility_digest(runtime)):
                 continue
@@ -121,6 +138,12 @@ def qualification_matches(runtime, feature, *, profile=None, performance=False):
     profile = profile or getattr(runtime, "qualification_profile", None)
     if not profile:
         return False
+    from mlx_one.engine.envelope import QualificationEnvelope
+
+    try:
+        profile = QualificationEnvelope.from_mapping(profile).to_dict()
+    except ValueError:
+        return False
     batching = getattr(runtime, "batching_config", None)
     if batching is None:
         return False
@@ -143,6 +166,8 @@ def qualification_matches(runtime, feature, *, profile=None, performance=False):
         if status not in accepted:
             continue
         proof = json.loads(Path(record.evidence[0].uri).read_text())
+        if proof.get("schema_version") != "native-inference-qualification-v2":
+            continue
         if proof.get("compatibility_digest") != compatibility_digest(runtime):
             continue
         if proof.get("workload_envelope") != profile:
@@ -175,16 +200,35 @@ def validate_execution_envelope(runtime, batching, *, required=False):
 
             raise ModelCapabilityUnsupported("qualified execution requires a workload envelope")
         return
+    from mlx_one.engine.envelope import QualificationEnvelope
+
+    envelope = QualificationEnvelope.from_mapping(profile)
+    validate_configured_bounds(runtime, batching, envelope)
+    runtime.qualified_envelope = envelope.to_dict()
+
+
+def validate_configured_bounds(runtime, batching, envelope):
+    from mlx_one.engine.arena import ARENA_VERSION
+    from mlx_one.engine.modes import ModelCapabilityUnsupported
+    from mlx_one.engine.paged import KERNEL_VERSION
+
+    pressure = getattr(runtime, "pressure", None)
     settings = {"slots": batching.max_sequences, "chunk_tokens": batching.prefill_chunk_size,
                 "page_tokens": runtime.config.block_size_tokens,
                 "cache_type": runtime.config.key_type,
-                "admission_policy": batching.admission_policy}
-    if any(profile.get(k) != value for k, value in settings.items()):
-        from mlx_one.engine.modes import ModelCapabilityUnsupported
-
+                "admission_policy": batching.admission_policy,
+                "max_scheduled_tokens": batching.max_scheduled_tokens,
+                "max_prefill_tokens": batching.max_prefill_tokens,
+                "queue_size": batching.queue_size, "timeout_s": batching.timeout,
+                "output_buffer_events": batching.output_buffer_events,
+                "output_stall_timeout_s": batching.output_stall_timeout_s,
+                "cache_capacity_bytes": runtime.config.memory_budget_bytes,
+                "pressure": asdict(pressure.config) if pressure is not None else {"enabled": False},
+                "kernel_version": KERNEL_VERSION, "arena_version": ARENA_VERSION}
+    profile = envelope.to_dict()
+    if any(profile[k] != value for k, value in settings.items()):
         raise ModelCapabilityUnsupported(
             "configured execution does not match qualification envelope")
-    runtime.qualified_envelope = dict(profile)
 
 
 def validate_context_admission(runtime, prompt_tokens, output_tokens):

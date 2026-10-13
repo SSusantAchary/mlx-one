@@ -259,7 +259,7 @@ class InferenceFeatureRegistry:
         source = Path(result_path)
         raw = source.read_bytes()
         result = json.loads(raw)
-        if (result.get("schema_version") != "native-inference-qualification-v1"
+        if (result.get("schema_version") != "native-inference-qualification-v2"
                 or result.get("backend") != "mlx-one-native"
                 or result.get("scope") != asdict(scope)
                 or result.get("feature") != feature

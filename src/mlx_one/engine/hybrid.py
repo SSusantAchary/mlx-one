@@ -143,8 +143,10 @@ class HybridRunner(BatchedDenseRunner):
         transient += len(requests) * config.hidden_size * config.conv_L_cache * 8
         from mlx_one.engine.pressure import execution_forecast
 
-        transient += execution_forecast(first.runtime, config, batch=len(requests), chunk=width,
-                                         history=history)["bytes"]
+        transient = execution_forecast(first.runtime, config, batch=len(requests), chunk=width,
+                                         history=history, explicit_bytes=transient,
+                                         history_lengths=[r.cache[0].offset for r in requests],
+                                         widths=widths, phase=first.phase)["bytes"]
         started, drafts = time.perf_counter(), []
         runtime = first.runtime
         if any(r.runtime is not runtime for r in requests):

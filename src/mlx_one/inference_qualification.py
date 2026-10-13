@@ -21,9 +21,12 @@ def qualification_profiles(mode, *, models, workload):
         long_context = 127872 if hybrid else 130944
         contexts = ((long_context,) if workload == "long" else ((8192, long_context)
                     if workload in {"quality", "soak"} else
-                    ((2048, 8192, 16384, 32640) if workload == "baseline" else (8192,))))
-        pages = (16, 32, 64, 128) if mode == "paged" and workload == "baseline" else (32,)
-        chunks = ((512, 1024, 2048, 4096) if workload in {"baseline", "batching"} else (512,))
+                    ((2048, 8192, 16384, 32640)
+                     if workload in {"baseline", "peak_calibration"} else (8192,))))
+        pages = ((16, 32, 64, 128) if mode == "paged"
+                 and workload in {"baseline", "peak_calibration"} else (32,))
+        chunks = ((512, 1024, 2048, 4096)
+                  if workload in {"baseline", "batching", "peak_calibration"} else (512,))
         ratios = (0, .25, .5, .8) if workload == "multi_turn" else (None,)
         policies = (("deadline", "cache_aware")
                     if workload == "multi_turn" and mode != "reference_dense" else ("deadline",))
@@ -48,11 +51,9 @@ def qualification_profiles(mode, *, models, workload):
 
 
 def workload_envelope(profile):
-    return {"context_tokens": profile.context_tokens, "slots": profile.slots,
-            "chunk_tokens": profile.chunk_tokens, "ttft_budget_ms": profile.ttft_budget_ms,
-            "decode_gap_budget_ms": profile.decode_gap_budget_ms,
-            "output_tokens": profile.output_tokens, "page_tokens": profile.page_tokens,
-            "cache_type": profile.cache_type, "admission_policy": profile.admission_policy}
+    from mlx_one.engine.envelope import profile_envelope
+
+    return profile_envelope(profile).to_dict()
 
 
 def qualified_active_decoders(rows, profile):
@@ -133,6 +134,16 @@ def load_reference(directory):
     return {"profile": summary["profile"], "identity": summary["identity"], "summary": summary}
 
 
+def matching_quality_bounds(left, right):
+    from mlx_one.engine.envelope import QualificationEnvelope
+
+    try:
+        return (QualificationEnvelope.from_mapping(left).execution_bounds()
+                == QualificationEnvelope.from_mapping(right).execution_bounds())
+    except ValueError:
+        return False
+
+
 def load_quality_reference(directory, *, profile, runtime):
     from mlx_one.engine.reporting import native_report
     from mlx_one.engine.selection import compatibility_digest, host_identity, source_identity
@@ -152,7 +163,8 @@ def load_quality_reference(directory, *, profile, runtime):
             or proof.get("quality_kind") != "native-held-out-quality-v1"
             or proof.get("quality_coverage_passed") is not True
             or proof.get("compatibility_digest") != compatibility_digest(runtime)
-            or proof.get("workload_envelope") != workload_envelope(profile)
+            or not matching_quality_bounds(
+                proof.get("workload_envelope"), workload_envelope(profile))
             or proof.get("scope") != scope):
         raise ValueError("long-context quality evidence does not match execution identity/envelope")
     return {"path": str((root / name).resolve()),
