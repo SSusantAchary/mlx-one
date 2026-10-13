@@ -192,6 +192,7 @@ class CacheFingerprint:
     special_tokens_identity: str = ""
     rendering_identity: str = ""
     multimodal_identity: str | None = None
+    execution_identity: str = ""
 
     @property
     def digest(self) -> str:

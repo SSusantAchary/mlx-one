@@ -222,18 +222,15 @@ class GenerationEngine:
             raise RuntimeError("loaded model has no chat template")
         if reasoning == "on" and "enable_thinking" not in (bundle.chat_template.template or ""):
             raise ValueError("loaded chat template does not support explicit reasoning control")
-        rendered_messages, prompt = _fit_messages(
-            bundle,
-            messages,
-            options.max_tokens,
-            context_length or bundle.context_length,
-            context_shift,
-            reasoning,
-            reasoning_budget,
-            reasoning_preserve,
-        )
+        from mlx_one.engine.prompts import prepare_chat
+
         tokenization_started = time.perf_counter()
-        prompt_ids = tuple(bundle.tokenizer.encode(prompt))
+        prepared = prepare_chat(
+            bundle, messages, options.max_tokens, context_length or bundle.context_length,
+            context_shift=context_shift, rendering_options=_reasoning_template_options(
+                reasoning, reasoning_budget, reasoning_preserve))
+        rendered_messages, prompt = list(prepared.messages), prepared.text
+        prompt_ids = prepared.token_ids
         tokenization_ms = (time.perf_counter() - tokenization_started) * 1000
         prompt_tokens = len(prompt_ids)
         runtime = self._cache_manager_for(bundle)
@@ -247,6 +244,11 @@ class GenerationEngine:
             value_type=cache_type_v,
         )
         handle.metadata["is_cancelled"] = cancel.is_set
+        handle.metadata["prepared_prompt"] = prepared
+        handle.metadata["semantic_boundary"] = (
+            prepared.semantic_boundary if cache_prompt and runtime.config.backend == "dense"
+            and runtime.plan.prefix_shareable else 0)
+        handle.metadata["maximum_prefix_entries"] = cache_entries
         lifecycle.update({"runtime": runtime, "handle": handle})
         cached_ids: tuple[int, ...] = ()
         fingerprint = runtime.fingerprint(
@@ -583,15 +585,18 @@ class GenerationEngine:
                         context_shift=False, reasoning="auto", reasoning_budget=-1,
                         reasoning_preserve=False, minimum_tokens=1):
         bundle = self.manager.current_model()
-        _, prompt = _fit_messages(bundle, messages, options.max_tokens, context_length,
-                                  context_shift, reasoning, reasoning_budget, reasoning_preserve)
+        from mlx_one.engine.prompts import prepare_chat
+
+        prepared = prepare_chat(bundle, messages, options.max_tokens, context_length,
+                                context_shift=context_shift,
+                                rendering_options=_reasoning_template_options(
+                                    reasoning, reasoning_budget, reasoning_preserve))
         runtime = self._cache_manager_for(bundle)
         fingerprint = runtime.fingerprint(
-            namespace=namespace, context_tokens=context_length,
+            namespace=namespace, context_tokens=prepared.context_tokens,
             key_type=runtime.config.key_type, value_type=runtime.config.value_type,
-            rendering_options=_reasoning_template_options(
-                reasoning, reasoning_budget, reasoning_preserve))
-        return runtime.preview_prefix(fingerprint, tuple(bundle.tokenizer.encode(prompt)),
+            rendering_options=prepared.rendering_options)
+        return runtime.preview_prefix(fingerprint, prepared.token_ids,
                                       minimum_tokens=minimum_tokens)
 
 
@@ -619,26 +624,13 @@ def _fit_messages(
     reasoning_budget: int = -1,
     reasoning_preserve: bool = False,
 ) -> tuple[list[dict[str, str]], str]:
-    if max_tokens >= context_length:
-        raise ValueError("max_tokens leaves no room inside the configured context")
-    selected = list(messages)
-    template_options = _reasoning_template_options(
-        reasoning, reasoning_budget, reasoning_preserve
-    )
-    while True:
-        prompt = bundle.chat_template.render(selected, **template_options)
-        if len(bundle.tokenizer.encode(prompt)) + max_tokens <= context_length:
-            return selected, prompt
-        if not context_shift:
-            raise ValueError("messages and requested output exceed the configured context")
-        start = 1 if selected and selected[0]["role"] == "system" else 0
-        if len(selected) - start <= 1:
-            raise ValueError("the system message or newest turn cannot fit in the context")
-        # Remove the oldest complete user/assistant turn while retaining the system message.
-        end = start + 1
-        while end < len(selected) and selected[end]["role"] == "assistant":
-            end += 1
-        del selected[start:end]
+    from mlx_one.engine.prompts import prepare_chat
+
+    prepared = prepare_chat(bundle, messages, max_tokens, context_length,
+                            context_shift=context_shift,
+                            rendering_options=_reasoning_template_options(
+                                reasoning, reasoning_budget, reasoning_preserve))
+    return list(prepared.messages), prepared.text
 
 
 class _ReasoningParser:

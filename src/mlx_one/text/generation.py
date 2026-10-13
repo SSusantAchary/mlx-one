@@ -133,7 +133,10 @@ def stream_chat(
 ) -> Iterator[GenerationChunk]:
     if model.chat_template is None:
         raise ValueError("loaded model has no chat-template layer")
-    prompt = model.chat_template.render(messages, **dict(template_options or {}))
+    prepared = (_cache_handle.metadata.get("prepared_prompt")
+                if _cache_handle is not None else None)
+    prompt = (prepared.text if prepared is not None else
+              model.chat_template.render(messages, **dict(template_options or {})))
     yield from _stream_bundle(
         model,
         prompt,
@@ -243,7 +246,10 @@ def _stream_bundle(
 
     cancelled = is_cancelled or (lambda: False)
     tokenization_started = time.perf_counter()
-    prompt_ids = bundle.tokenizer.encode(prompt)
+    prepared = (_cache_handle.metadata.get("prepared_prompt")
+                if _cache_handle is not None else None)
+    prompt_ids = (list(prepared.token_ids) if prepared is not None else
+                  bundle.tokenizer.encode(prompt))
     if on_execution is not None:
         on_execution({"kind": "tokenization", "duration_ms":
                       (time.perf_counter() - tokenization_started) * 1000})
@@ -316,6 +322,11 @@ def _stream_bundle(
                 aligned = boundary - cache[0].offset
                 if 0 < aligned < stop - start:
                     stop = start + aligned
+            boundary = (_cache_handle.metadata.get("semantic_boundary", 0)
+                        if _cache_handle is not None and phase == "prefill" else 0)
+            relative = boundary - len(cached)
+            if start < relative < stop:
+                stop = relative
             part = tuple(current[start:stop])
             start = stop
             forward_started = time.perf_counter()
@@ -359,6 +370,11 @@ def _stream_bundle(
             if _cache_handle is not None:
                 _cache_handle.computed_tokens = cache[0].offset
                 _cache_runtime.reconcile(_cache_handle)
+                if boundary and cache[0].offset == boundary and not cancelled():
+                    fingerprint = _cache_handle.metadata.get("fingerprint")
+                    if fingerprint is not None:
+                        _cache_runtime.stage_prefix(_cache_handle, fingerprint,
+                                                    tuple(prompt_ids[:boundary]))
             if on_execution is not None:
                 elapsed_ms = (time.perf_counter() - forward_started) * 1000
                 on_execution({"kind": "forward", "phase": phase,
@@ -369,7 +385,11 @@ def _stream_bundle(
         if cancelled():
             return
         if on_cache_update is not None and produced == 0 and not prompt_cache_published:
-            on_cache_update(tuple(prompt_ids), cache)
+            staged = (_cache_runtime.publish_staged_prefix(
+                _cache_handle, maximum_entries=_cache_handle.metadata.get("maximum_prefix_entries"))
+                if _cache_handle is not None else False)
+            if not staged:
+                on_cache_update(tuple(prompt_ids), cache)
             prompt_cache_published = True
         logits = output.logits[0, -1]
         using_forced = bool(forced_tokens)

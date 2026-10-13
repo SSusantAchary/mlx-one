@@ -7,7 +7,7 @@ import json
 import threading
 import time
 import uuid
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -89,6 +89,8 @@ class CacheManager:
         rendering_options: dict[str, Any] | None = None,
         multimodal_identity: str | None = None,
     ) -> CacheFingerprint:
+        from mlx_one.engine.reporting import tensor_dtypes
+
         config = getattr(self.bundle.model, "config", None)
         rope = {
             name: getattr(getattr(config, "text_config", config), name, None)
@@ -114,10 +116,17 @@ class CacheManager:
             special_tokens_identity=_digest(json.dumps({
                 name: getattr(self.bundle.tokenizer, name, None)
                 for name in ("bos_token_id", "eos_token_id", "pad_token_id", "special_tokens_map",
-                             "added_tokens_decoder")}, sort_keys=True, default=str)),
+                             "added_tokens_decoder", "special_tokens")},
+                sort_keys=True, default=str)),
             rendering_identity=_digest(json.dumps(
                 rendering_options or {}, sort_keys=True, default=str)),
             multimodal_identity=multimodal_identity,
+            execution_identity=_digest(json.dumps({
+                "mode": getattr(self, "mode", None),
+                "weight_dtypes": tensor_dtypes(self.bundle.model.parameters())
+                    if callable(getattr(self.bundle.model, "parameters", None)) else (),
+                "eos": getattr(self.bundle, "eos_token_ids", ()),
+            }, sort_keys=True)),
         )
 
     def create_handle(
@@ -426,6 +435,57 @@ class CacheManager:
             (fingerprint,), tokens, minimum_tokens=minimum_tokens
         )
 
+    def stage_prefix(self, handle, fingerprint, tokens):
+        with self._lock:
+            self._validate_handle(handle)
+            if (handle.backend != "dense" or not self.plan.prefix_shareable
+                    or not self.config.prefix_cache_enabled
+                    or "staged_prefix" in handle.metadata
+                    or any(c.offset != len(tokens) for c in handle.bundle.entries)):
+                return False
+            amount = handle.bundle.allocated_nbytes * 2
+            if amount > self.config.prefix_cache_budget_bytes:
+                handle.metadata["publication_rejections"] = 1
+                return False
+            resources = ExitStack()
+            try:
+                resources.enter_context(self.transient_reservation(amount))
+                snapshot = handle.bundle.snapshot()
+                resources.callback(snapshot.release)
+                import mlx.core as mx
+
+                tensors = []
+                for entry in snapshot.entries:
+                    for value in vars(entry).values():
+                        if getattr(value, "dtype", None) is not None:
+                            tensors.append(value)
+                mx.eval(*tensors)
+                handle.metadata["staged_prefix"] = (fingerprint, tokens, snapshot, resources)
+                return True
+            except BaseException:
+                resources.close()
+                raise
+
+    def publish_staged_prefix(self, handle, *, maximum_entries=None):
+        with self._lock:
+            self._validate_handle(handle)
+            staged = handle.metadata.pop("staged_prefix", None)
+            if staged is None:
+                return False
+            fingerprint, tokens, snapshot, resources = staged
+            try:
+                callback = handle.metadata.get("is_cancelled")
+                if (handle.metadata.get("cancelled") or callable(callback) and callback()
+                        or any(c.offset != len(tokens) for c in snapshot.entries)):
+                    return False
+                stored = self.snapshot_prefix.put((fingerprint,), tokens, snapshot)
+                if stored and maximum_entries is not None:
+                    self.snapshot_prefix.limit_entries(maximum_entries)
+                handle.metadata["prefix_publications"] = int(stored)
+                return stored
+            finally:
+                resources.close()
+
     def publish_prefix(
         self,
         handle: CacheHandle,
@@ -475,6 +535,9 @@ class CacheManager:
             if handle.closed and handle.metadata.get("manager_id") == self._owner_token:
                 return
             self._validate_handle(handle)
+            staged = handle.metadata.pop("staged_prefix", None)
+            if staged is not None:
+                staged[3].close()
             if handle.reservation is not None:
                 self.release_reservation(handle.reservation)
             from mlx_one.engine.reporting import describe_cache

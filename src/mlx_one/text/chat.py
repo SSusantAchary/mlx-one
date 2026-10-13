@@ -50,7 +50,9 @@ class ChatTemplate:
     def render(self, messages: Sequence[ChatMessage], **template_options: Any) -> str:
         _validate_messages(messages)
         if not self.template:
-            return _fallback(self.model_type, messages)
+            return _fallback(self.model_type, messages,
+                             add_generation_prompt=template_options.get(
+                                 "add_generation_prompt", True))
         compiled = self._compile(self.template)
         eos = getattr(self.tokenizer, "eos_token", "") or ""
         bos = getattr(self.tokenizer, "bos_token", "") or ""
@@ -105,22 +107,25 @@ def _validate_messages(messages: Sequence[ChatMessage]) -> None:
     if not messages:
         raise ValueError("messages cannot be empty")
     for message in messages:
-        if message.get("role") not in {"system", "user", "assistant"}:
-            raise ValueError("message role must be system, user, or assistant")
+        if message.get("role") not in {"system", "developer", "user", "assistant"}:
+            raise ValueError("message role must be system, developer, user, or assistant")
         if not isinstance(message.get("content"), str):
             raise ValueError("message content must be text")
 
 
-def _fallback(model_type: str, messages: Sequence[ChatMessage]) -> str:
+def _fallback(model_type: str, messages: Sequence[ChatMessage],
+              *, add_generation_prompt: bool = True) -> str:
     if model_type in {"qwen2", "qwen2_moe", "qwen3", "qwen3_5", "lfm2", "lfm2_moe"}:
         body = "".join(
             f"<|im_start|>{item['role']}\n{item['content']}<|im_end|>\n" for item in messages
         )
-        return body + "<|im_start|>assistant\n"
+        return body + ("<|im_start|>assistant\n" if add_generation_prompt else "")
     if model_type == "openelm":
-        labels = {"system": "System", "user": "User", "assistant": "Assistant"}
+        labels = {"system": "System", "developer": "Developer",
+              "user": "User", "assistant": "Assistant"}
         body = "".join(f"### {labels[item['role']]}:\n{item['content']}\n" for item in messages)
-        return body + "### Assistant:\n"
-    labels = {"system": "System", "user": "User", "assistant": "Assistant"}
+        return body + ("### Assistant:\n" if add_generation_prompt else "")
+    labels = {"system": "System", "developer": "Developer",
+              "user": "User", "assistant": "Assistant"}
     body = "".join(f"{labels[item['role']]}: {item['content']}\n" for item in messages)
-    return body + "Assistant:"
+    return body + ("Assistant:" if add_generation_prompt else "")
