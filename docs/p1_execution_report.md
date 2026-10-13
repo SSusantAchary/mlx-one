@@ -17,3 +17,7 @@ remain. Affected suite: 50 passed; native loading/model parity pending.
 ## PR-02: Qwen3 dense continuous batching
 
 The dense runner now uses the immutable native adapter for eligibility, head layouts and forward execution. CPU instrumented INT8 Qwen3 fixtures cover B1/B2/B4, unequal histories, serial token agreement and handle cleanup. Affected tests: **54 passed** (two existing dependency warnings). Changed-file Ruff passes. Real checkpoint logits and GPU batching remain pending.
+
+## PR-03: chunked scheduling profiles
+
+P1 profiles cover chunks 128/256/512/1024 with five measured repetitions and unchanged budget defaults. A deterministic 8K prefill fixture proves concurrent decoders receive service each iteration within the combined budget. Existing admission, reservation, cancellation and backpressure tests remain in the affected suite: **40 passed**. Native service-limit measurements remain pending.

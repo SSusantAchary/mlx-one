@@ -117,3 +117,36 @@ def test_qwen3_int8_cpu_batch_forwards_and_independent_output(int8_native, size)
     with Engine(int8_native) as oracle:
         expected = [oracle.generate(prompt, max_tokens=8).text for prompt in prompts]
     assert actual == expected
+
+
+@pytest.mark.parametrize("chunk", [128, 256, 512, 1024])
+def test_p1_profiles_preserve_default_budgets_and_precision(chunk):
+    from mlx_one.p1_profiles import profile
+
+    value = profile("qwen3-small", mode="experimental_dense_batch", slots=4,
+                    chunk_tokens=chunk)
+    assert value.repeats == 5 and value.max_scheduled_tokens == 2048
+    assert value.max_prefill_tokens == 1024 and value.cache_type == "f16"
+    assert value.execution_dtype == "float16"
+
+
+def test_8k_prefill_yields_to_decoders_with_bounded_progress():
+    from types import SimpleNamespace
+
+    from mlx_one.engine.batching import BatchingConfig, BatchScheduler
+
+    config = BatchingConfig(max_sequences=4, max_scheduled_tokens=1024,
+                            max_prefill_tokens=512, prefill_chunk_size=512)
+    scheduler = BatchScheduler(config)
+    decoders = [SimpleNamespace(phase="decode", token_ids=(1,), request_id=str(i))
+                for i in range(3)]
+    long = SimpleNamespace(phase="prefill", token_ids=(1,) * 512, request_id="long")
+    committed = {r.request_id: 0 for r in [*decoders, long]}
+    for _ in range(16):
+        groups = scheduler.select([*decoders, long])
+        assert groups[0][0].phase == "decode"
+        assert sum(len(r.token_ids) for g in groups for r in g) <= 1024
+        for group in groups:
+            for request in group:
+                committed[request.request_id] += len(request.token_ids)
+    assert committed == {"0": 16, "1": 16, "2": 16, "long": 8192}

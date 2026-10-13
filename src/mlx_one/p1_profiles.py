@@ -34,3 +34,22 @@ REFERENCE_PINS = {
     "waybarrios/vllm-mlx": "9a939f8b59bddaf98ccab865f4fa7e2fe48c6d65",
     "raullenchai/Rapid-MLX": "b638c2ab6cebe01446ee34b53230b9ef44881453",
 }
+
+
+def profile(checkpoint: str, *, mode: str, prompt_tokens: int = 2048,
+            output_tokens: int = 128, slots: int = 1, chunk_tokens: int = 512,
+            workload: str = "baseline", **settings):
+    """Build matched FP16/INT8 profiles without importing MLX or loading weights."""
+    from mlx_one.inference_baseline import BaselineError, BaselineProfile
+
+    asset = CHECKPOINTS[checkpoint]
+    if mode == "auto":
+        raise BaselineError("P1 measurements require an explicit backend")
+    if prompt_tokens + output_tokens > asset.context_tokens:
+        raise BaselineError("prompt plus output exceeds pinned checkpoint context")
+    if slots not in {1, 2, 4} or chunk_tokens not in {128, 256, 512, 1024}:
+        raise BaselineError("unsupported P1 batch/chunk profile")
+    return BaselineProfile(model_id=asset.model_id, revision=asset.revision,
+        inference_mode=mode, context_tokens=prompt_tokens, output_tokens=output_tokens,
+        slots=slots, repeats=5, execution_dtype="float16", cache_type="f16",
+        chunk_tokens=chunk_tokens, workload=workload, **settings)
