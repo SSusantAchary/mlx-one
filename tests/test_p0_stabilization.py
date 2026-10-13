@@ -163,3 +163,43 @@ def test_bundle_cleanup_attempts_every_layer_and_preserves_corruption():
     assert bundle.closed
     bundle.release()
     assert called == [0, 1]
+
+
+@pytest.mark.parametrize("times,tps,mean", [([], None, None), ([5], None, None),
+                                           ([5, 5.1, 5.3], 2 / .3, 150)])
+def test_request_timing_excludes_prefill_and_first_token(times, tps, mean):
+    from mlx_one.engine.timing import RequestTiming
+
+    timing = RequestTiming(0, trace=True, limit=2)
+    timing.observe({"kind": "forward", "phase": "prefill", "duration_ms": 5000,
+                    "input_tokens": 8192, "batch_size": 1, "logits_dtype": "float16"})
+    for at in times:
+        timing.observe({"kind": "token", "at": at})
+    result = timing.summary()
+    assert result["decode_tokens_per_second"] == pytest.approx(tps) if tps else (
+        result["decode_tokens_per_second"] is None)
+    assert result["inter_token_latency_ms"] == pytest.approx(mean) if mean else (
+        result["inter_token_latency_ms"] is None)
+    assert timing.prefill_tokens == 8192
+    assert len(timing.tokens) <= 2
+
+
+def test_host_admission_does_not_double_count_and_recovers(native, monkeypatch):
+    from mlx_one.engine.cache_errors import CacheCapacityError
+    from mlx_one.engine.cache_manager import CacheManager
+    from mlx_one.engine.pressure import PressureTelemetry
+
+    telemetry = PressureTelemetry(rss_bytes=500, installed_bytes=2000,
+                                  mlx_active_bytes=400, mlx_cached_bytes=100)
+    monkeypatch.setattr("mlx_one.engine.pressure.sample_telemetry", lambda: telemetry)
+    runtime = CacheManager(native)
+    with runtime.transient_reservation(900):
+        assert runtime.stats().reserved_bytes == 900
+    with pytest.raises(CacheCapacityError) as failure, runtime.transient_reservation(1001):
+        pass
+    assert not failure.value.retryable
+    assert runtime.stats().reserved_bytes == 0
+    with runtime.transient_reservation(100):
+        pass
+    assert runtime.capacity_diagnostics["working_set_bytes"] == 500
+    runtime.close()

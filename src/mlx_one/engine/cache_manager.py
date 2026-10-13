@@ -76,6 +76,9 @@ class CacheManager:
         self._allocation_time_ms = 0.0
         self.harness_only = False
         self.pressure = None
+        self._capacity_snapshot = None
+        self._capacity_sampled_at = -float("inf")
+        self.capacity_diagnostics = {"status": "unverified", "reason": "not sampled"}
         parameters = getattr(bundle.model, "parameters", None)
         from mlx_one.engine.cache import array_nbytes
 
@@ -223,6 +226,35 @@ class CacheManager:
             amount += self.plan.bytes_per_token() * self.config.block_size_tokens * 16
         return amount
 
+    def _host_capacity(self, amount, *, transient=False):
+        """Observed working set overlaps owner bytes; use their maximum, never their sum."""
+        from mlx_one.engine.pressure import sample_telemetry
+
+        now = time.monotonic()
+        if self._capacity_snapshot is None or now - self._capacity_sampled_at >= 1:
+            self._capacity_snapshot, self._capacity_sampled_at = sample_telemetry(), now
+        telemetry = self._capacity_snapshot
+        ceilings = [v for v in (int(telemetry.installed_bytes * .75)
+                    if telemetry.installed_bytes else None, telemetry.recommended_bytes)
+                    if v is not None]
+        if not ceilings:
+            self.capacity_diagnostics = {"status": "unverified",
+                "reason": "host ceiling unavailable; configured cache limit only",
+                "cache_limit_bytes": self.config.memory_budget_bytes}
+            return
+        stats = self.stats()
+        ceiling = min(ceilings)
+        allocator = (telemetry.mlx_active_bytes or 0) + (telemetry.mlx_cached_bytes or 0)
+        owner = self.model_bytes + stats.physical_bytes
+        working = max(telemetry.rss_bytes or 0, allocator, owner)
+        self.capacity_diagnostics = {"status": "bounded", "ceiling_bytes": ceiling,
+            "working_set_bytes": working, "owner_bytes": owner,
+            "reserved_bytes": stats.reserved_bytes, "requested_bytes": amount,
+            "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested"}
+        if working + stats.reserved_bytes + amount > ceiling:
+            raise CacheCapacityError("request exceeds conservative host memory headroom",
+                retryable=not transient and self.model_bytes + amount <= ceiling)
+
     def reserve(
         self,
         handle: CacheHandle,
@@ -242,6 +274,7 @@ class CacheManager:
                 amount = self.estimate_growth(handle, prompt_tokens=tokens, max_new_tokens=0)
             if amount < 0:
                 raise ValueError("reserved cache bytes cannot be negative")
+            self._host_capacity(amount)
             if self.pressure is not None:
                 self.pressure.shed(self)
                 stats = self.stats()
@@ -297,6 +330,9 @@ class CacheManager:
     @contextmanager
     def transient_reservation(self, amount: int):
         with self._lock:
+            if amount < 0:
+                raise ValueError("transient bytes cannot be negative")
+            self._host_capacity(amount, transient=True)
             if self.pressure is not None:
                 self.pressure.shed(self)
                 stats = self.stats()
@@ -512,6 +548,8 @@ class CacheManager:
                 if not self.plan.prefix_shareable:
                     return False
                 stored = self.snapshot_prefix.put((fingerprint,), tokens, handle.bundle)
+                handle.metadata["prefix_publications"] = int(stored)
+                handle.metadata["publication_rejections"] = int(not stored)
                 if stored and maximum_entries is not None:
                     self.snapshot_prefix.limit_entries(maximum_entries)
                 return stored

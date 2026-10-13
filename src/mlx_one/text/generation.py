@@ -266,6 +266,7 @@ def _stream_bundle(
     if any(not value for value in stop_tokens):
         raise ValueError("stop sequences must encode to at least one token")
     pending: list[int] = []
+    pending_times: deque[float] = deque()
     generated: list[int] = []
     decoded = ""
     hold = max((len(value) for value in stop_tokens), default=1)
@@ -345,7 +346,7 @@ def _stream_bundle(
                 staged = None
                 try:
                     with ExitStack() as execution:
-                        if _cache_runtime is not None and _cache_runtime.pressure is not None:
+                        if _cache_runtime is not None:
                             from mlx_one.engine.pressure import execution_forecast
 
                             amount = execution_forecast(
@@ -426,8 +427,6 @@ def _stream_bundle(
                 finish_reason = "stop"
                 stopped = True
                 break
-            if on_execution is not None:
-                on_execution({"kind": "token", "at": time.perf_counter()})
             tokens.append(candidate)
             produced += 1
             opened = bool(
@@ -452,6 +451,7 @@ def _stream_bundle(
                     forced_tokens.extend(think_close)
                     closing_reasoning = True
             pending.append(candidate)
+            pending_times.append(time.perf_counter())
             matched = next(
                 (
                     value
@@ -463,12 +463,17 @@ def _stream_bundle(
             )
             if matched is not None:
                 del pending[-len(matched) :]
+                for _ in matched:
+                    pending_times.pop()
                 finish_reason = "stop"
                 stopped = True
                 break
             while len(pending) >= hold:
                 emitted += 1
                 generated.append(pending.pop(0))
+                sampled_at = pending_times.popleft()
+                if on_execution is not None:
+                    on_execution({"kind": "token", "at": sampled_at})
                 current_text = bundle.tokenizer.decode(generated)
                 piece = (
                     current_text[len(decoded) :]
@@ -483,6 +488,9 @@ def _stream_bundle(
         if yield_steps and not step_yielded:
             yield GenerationChunk(None, "", emitted)
     for current_token in pending:
+        sampled_at = pending_times.popleft()
+        if on_execution is not None:
+            on_execution({"kind": "token", "at": sampled_at})
         emitted += 1
         generated.append(current_token)
         current_text = bundle.tokenizer.decode(generated)
