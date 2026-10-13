@@ -52,11 +52,12 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
                        for s in plan.layer_specs)):
             raise ModelCapabilityUnsupported("hybrid batching requires native LFM2 attention/conv")
     if mode == "experimental_dense_batch":
-        if (plan is None or plan.architecture != "qwen2" or not plan.block_compatible
-                or bool(getattr(bundle, "quantization", {}))):
-            raise ModelCapabilityUnsupported(
-                "experimental_dense_batch requires unquantized Qwen2/Qwen2.5")
-        validate_batch_precision(bundle)
+        from mlx_one.engine.adapters import native_adapter
+
+        try:
+            native_adapter(bundle, plan)
+        except (ValueError, AttributeError) as exc:
+            raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_block" and (
         plan is None or plan.architecture != "qwen2" or not plan.block_compatible
         or bool(getattr(bundle, "quantization", {}))

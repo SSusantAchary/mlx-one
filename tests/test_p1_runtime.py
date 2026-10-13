@@ -1,5 +1,8 @@
 """Backend-free P1 contracts and differential runtime regressions."""
 
+import pytest
+from test_dense_batching import native as native
+
 from mlx_one.p1_profiles import CHECKPOINTS, REFERENCE_PINS
 
 
@@ -74,3 +77,43 @@ def test_explicit_float_conversion_preserves_packed_weights(monkeypatch):
     assert module.weight is packed
     assert module.scales.dtype == np.float16
     assert bundle.model._mlx_one_execution_policy["quantized_payload_preserved"]
+
+
+@pytest.fixture
+def int8_native(native):
+    from dataclasses import replace
+    from types import SimpleNamespace
+
+    import numpy as np
+
+    module = SimpleNamespace(weight=np.zeros((2, 16), dtype=np.uint32),
+                             scales=np.ones((2, 1), dtype=np.float16),
+                             biases=np.zeros((2, 1), dtype=np.float16),
+                             bits=8, group_size=64, mode="affine")
+    original = native.model.parameters
+    native.model.named_modules = lambda: [("linear", module)]
+    native.model.parameters = lambda: {**original(), "linear": {
+        name: getattr(module, name) for name in ("weight", "scales", "biases")}}
+    native.model.config.model_type = "qwen3"
+    return replace(native, architecture="qwen3", quantization={"bits": 8, "group_size": 64,
+                                                              "mode": "affine"})
+
+
+@pytest.mark.parametrize("size", [1, 2, 4])
+def test_qwen3_int8_cpu_batch_forwards_and_independent_output(int8_native, size):
+    from mlx_one import BatchingConfig, Engine
+
+    prompts = ["x" * (i + 1) for i in range(size * 2)]
+    with Engine(int8_native, inference_mode="experimental_dense_batch", batching_config=
+                BatchingConfig(max_sequences=size, queue_size=size * 2, prefill_chunk_size=2,
+                               max_prefill_tokens=8, max_scheduled_tokens=16)) as engine:
+        tasks = [engine.submit(prompt, max_tokens=8) for prompt in prompts]
+        actual = [task.result(timeout=5).text for task in tasks]
+        traces = engine.runtime_stats()["scheduler"]["forward_traces"]
+        assert all(t["batch_size"] <= size for t in traces)
+        if size > 1:
+            assert any(t["batch_size"] > 1 and t["phase"] == "decode" for t in traces)
+        assert engine.runtime_stats()["cache_stats"]["active_handles"] == 0
+    with Engine(int8_native) as oracle:
+        expected = [oracle.generate(prompt, max_tokens=8).text for prompt in prompts]
+    assert actual == expected

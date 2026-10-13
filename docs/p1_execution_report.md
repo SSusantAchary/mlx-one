@@ -13,3 +13,7 @@ and remain uncommitted. No push or capability promotion is authorized by readine
 PR-01: affine INT8 loading/conversion and immutable native adapter specification added.
 Explicit FP16 conversion preserves packed uint32 payloads. Existing 4-bit defaults
 remain. Affected suite: 50 passed; native loading/model parity pending.
+
+## PR-02: Qwen3 dense continuous batching
+
+The dense runner now uses the immutable native adapter for eligibility, head layouts and forward execution. CPU instrumented INT8 Qwen3 fixtures cover B1/B2/B4, unequal histories, serial token agreement and handle cleanup. Affected tests: **54 passed** (two existing dependency warnings). Changed-file Ruff passes. Real checkpoint logits and GPU batching remain pending.
