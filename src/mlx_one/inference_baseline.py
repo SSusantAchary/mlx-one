@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from mlx_one.engine.modes import resolve_backend
+from mlx_one.p1_profiles import CHECKPOINTS as P1_CHECKPOINTS
 
 CHECKPOINTS = {
     "qwen": ("Qwen/Qwen2.5-0.5B", "060db6499f32faf8b98477b0a26969ef7d8b9987"),
@@ -25,6 +26,7 @@ CHECKPOINTS = {
 }
 CHECKPOINT_CONTEXTS = {"Qwen/Qwen2.5-0.5B": 32768, "Qwen/Qwen2.5-1.5B": 131072,
                        "Qwen/Qwen2.5-3B": 32768, "mlx-community/LFM2-350M-4bit": 128000}
+CHECKPOINT_CONTEXTS.update({c.model_id: c.context_tokens for c in P1_CHECKPOINTS.values()})
 TOLERANCES = {"float32": (1e-4, 1e-4), "float16": (1e-2, 1e-2), "bfloat16": (5e-2, 1e-2)}
 
 
@@ -80,6 +82,7 @@ class BaselineProfile:
     max_service_gap_ms: float | None = None
     quality_manifest: str | None = None
     quality_dataset_identity: dict | None = None
+    checkpoint_path: str | None = None
 
     def __post_init__(self) -> None:
         if not self.model_id or not re.fullmatch(r"[0-9a-fA-F]{40,64}", self.revision):
@@ -174,7 +177,8 @@ class BaselineProfile:
     @property
     def profile_id(self) -> str:
         payload = asdict(self)
-        new = {"page_tokens": 32, "kv_bits": None, "duration_seconds": None,
+        new = {"checkpoint_path": None, "page_tokens": 32, "kv_bits": None,
+               "duration_seconds": None,
                "shared_prefix_fraction": None, "admission_policy": "deadline",
                "quality_limits": None,
                "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None,

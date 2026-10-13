@@ -448,7 +448,8 @@ def execute(manifest):
     listener = None
     try:
         started = time.perf_counter()
-        bundle = scheduler.execute(lambda: manager.load(profile.model_id, revision=profile.revision,
+        bundle = scheduler.execute(lambda: manager.load(
+            profile.checkpoint_path or profile.model_id, revision=profile.revision,
                                                         offline=True))
         from mlx_one.engine.modes import configure_execution_dtype
 
@@ -518,7 +519,8 @@ def execute(manifest):
             from mlx_one.text import load_text_model
 
             def reload_checkpoint():
-                fresh = load_text_model(profile.model_id, revision=profile.revision, offline=True)
+                fresh = load_text_model(profile.checkpoint_path or profile.model_id,
+                                        revision=profile.revision, offline=True)
                 configure_execution_dtype(fresh, profile.execution_dtype)
                 return fresh
             measured = scheduler.execute(lambda: hybrid_lifecycle(

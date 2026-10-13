@@ -38,7 +38,7 @@ REFERENCE_PINS = {
 
 def profile(checkpoint: str, *, mode: str, prompt_tokens: int = 2048,
             output_tokens: int = 128, slots: int = 1, chunk_tokens: int = 512,
-            workload: str = "baseline", **settings):
+            workload: str = "baseline", checkpoint_path: str | None = None, **settings):
     """Build matched FP16/INT8 profiles without importing MLX or loading weights."""
     from mlx_one.inference_baseline import BaselineError, BaselineProfile
 
@@ -49,7 +49,19 @@ def profile(checkpoint: str, *, mode: str, prompt_tokens: int = 2048,
         raise BaselineError("prompt plus output exceeds pinned checkpoint context")
     if slots not in {1, 2, 4} or chunk_tokens not in {128, 256, 512, 1024}:
         raise BaselineError("unsupported P1 batch/chunk profile")
-    return BaselineProfile(model_id=asset.model_id, revision=asset.revision,
+    revision = asset.revision
+    if asset.conversion_required:
+        from mlx_one.conversion import verify_conversion_manifest
+
+        manifest = verify_conversion_manifest(checkpoint_path) if checkpoint_path else None
+        if not manifest or (manifest["source"], manifest["revision"], manifest["precision"],
+                manifest["group_size"], manifest["floating_dtype"]) != (
+                asset.model_id, asset.revision, "int8-affine", 64, "float16"):
+            raise BaselineError(
+                "SmolLM2 profiles require the verified pinned native INT8 conversion")
+        revision = manifest["artifact_digest"]
+    return BaselineProfile(model_id=asset.model_id, revision=revision,
+        checkpoint_path=checkpoint_path,
         inference_mode=mode, context_tokens=prompt_tokens, output_tokens=output_tokens,
         slots=slots, repeats=5, execution_dtype="float16", cache_type="f16",
         chunk_tokens=chunk_tokens, workload=workload, **settings)

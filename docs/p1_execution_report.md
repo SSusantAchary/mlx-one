@@ -29,3 +29,7 @@ The existing segmented arena and kernels now accept validated Qwen3 INT8 adapter
 ## PR-05: cache identity and INT8 reuse
 
 Compatibility now includes the observed quantized-module map, explicit floating conversion policy and adapter version. INT8 restoration tests verify genuine skipped inputs, token agreement and no active handles after completion. Existing ownership/failure/namespace cases remain covered; **56 affected tests passed**. Checkpoint prefix performance and the inherited 8K gate remain pending.
+
+## PR-06: Llama-compatible INT8 conversion
+
+SmolLM2 uses the same dense adapter, actor and paged runner. Conversion v2 checksums saved tensors and tokenizer/config assets with source revision and policy; local offline workers verify the content-derived revision. Context checks include output tokens. **55 affected tests passed**; Ruff changed files pass. Actual SmolLM2 conversion, 360M/1.7B checkpoint parity and GPU throughput remain pending.

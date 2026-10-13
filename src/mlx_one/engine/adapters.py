@@ -8,7 +8,7 @@ from dataclasses import asdict, dataclass
 
 ADAPTER_VERSION = "native-adapter-v1"
 EXECUTION_POLICY_VERSION = "native-float-execution-v1"
-DENSE_FAMILIES = {"qwen2", "qwen3"}
+DENSE_FAMILIES = {"qwen2", "qwen3", "llama"}
 
 
 def dtype_name(value):

@@ -81,6 +81,11 @@ def load_text_model(
     adapter_path: str | Path | None = None,
 ) -> LoadedTextModel:
     root = _resolve(model, revision=revision, offline=offline, cache_dir=cache_dir)
+    from mlx_one.conversion import verify_conversion_manifest
+
+    converted = verify_conversion_manifest(root)
+    if converted is not None and revision not in {None, converted["artifact_digest"]}:
+        raise TextModelLoadError("local conversion revision differs from artifact digest")
     config_data = _read_json(root / "config.json")
     model_type = str(config_data.get("model_type", ""))
     try:
@@ -131,14 +136,14 @@ def load_text_model(
         if isinstance(exc, TextModelLoadError):
             raise
         raise TextModelLoadError(f"cannot load native {model_type or 'text'} model: {exc}") from exc
-    resolved_revision = revision
+    resolved_revision = converted["artifact_digest"] if converted else revision
     if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
         resolved_revision = root.name
     return LoadedTextModel(
         native,
         tokenizer,
         root,
-        str(model),
+        converted["source"] if converted else str(model),
         resolved_revision,
         architecture=model_type,
         context_length=_context_length(config),

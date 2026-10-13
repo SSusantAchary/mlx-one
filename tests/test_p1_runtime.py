@@ -220,3 +220,43 @@ def test_int8_dense_prefix_reuse_skips_committed_inputs(int8_native):
         assert engine.runtime_stats()["cache_stats"]["prefix_hits"] > 0
         assert sum(shape[0][1] for shape in calls) < len("shared prompt") + 2
         assert engine.runtime_stats()["cache_stats"]["active_handles"] == 0
+
+
+def test_smol_uses_shared_adapter_and_enforces_total_context(int8_native):
+    from dataclasses import replace
+
+    from mlx_one import BatchingConfig, Engine
+    from mlx_one.inference_baseline import BaselineError
+    from mlx_one.p1_profiles import profile
+
+    bundle = replace(int8_native, architecture="llama", context_length=8192)
+    with Engine(bundle, inference_mode="experimental_dense_batch",
+                batching_config=BatchingConfig(max_sequences=2)) as engine:
+        tasks = [engine.submit(s, max_tokens=4) for s in ("short", "longer input")]
+        assert all(t.result(timeout=5).text for t in tasks)
+    with pytest.raises(BaselineError, match="prompt plus output"):
+        profile("smol-small", mode="paged", prompt_tokens=8192, output_tokens=32)
+    with pytest.raises(BaselineError, match="verified pinned"):
+        profile("smol-small", mode="paged", prompt_tokens=8160, output_tokens=32)
+
+
+def test_converted_artifact_identity_is_content_derived(tmp_path):
+    from mlx_one.conversion import (
+        ConversionError,
+        verify_conversion_manifest,
+        write_conversion_manifest,
+    )
+    from mlx_one.p1_profiles import profile
+
+    asset = CHECKPOINTS["smol-small"]
+    (tmp_path / "model.safetensors").write_bytes(b"test payload")
+    manifest = write_conversion_manifest(tmp_path, {"schema_version": 2,
+        "source": asset.model_id, "revision": asset.revision, "precision": "int8-affine",
+        "group_size": 64, "floating_dtype": "float16", "converter": "mlx-one-native-v2"})
+    assert verify_conversion_manifest(tmp_path) == manifest
+    result = profile("smol-small", mode="paged", prompt_tokens=8160, output_tokens=32,
+                     checkpoint_path=str(tmp_path))
+    assert result.revision == manifest["artifact_digest"]
+    (tmp_path / "model.safetensors").write_bytes(b"changed payload")
+    with pytest.raises(ConversionError, match="checksum"):
+        verify_conversion_manifest(tmp_path)
