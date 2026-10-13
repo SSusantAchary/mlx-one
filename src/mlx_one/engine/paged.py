@@ -312,8 +312,10 @@ class PagedRunner(BatchedDenseRunner):
                 output = first.bundle.model(ids, cache=packed, position_ids=positions)
                 logits = []
                 for i, n in enumerate(widths):
-                    result = mx.zeros((1, 1, output.logits.shape[-1]), dtype=output.logits.dtype)
-                    result[...] = output.logits[i:i + 1, n - 1:n]
+                    begin = 0 if requests[i].return_all_logits else n - 1
+                    result = mx.zeros((1, n - begin, output.logits.shape[-1]),
+                                    dtype=output.logits.dtype)
+                    result[...] = output.logits[i:i + 1, begin:n]
                     logits.append(result)
                 mx.eval(*logits)
                 for r, layers in zip(requests, drafts, strict=True):

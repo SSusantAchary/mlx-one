@@ -238,7 +238,18 @@ def quality_run(bundle, engine, profile, output):
                               chunk_size=profile.chunk_tokens, cache_type=profile.cache_type,
                               page_tokens=profile.page_tokens, atol=profile.atol, rtol=profile.rtol,
                               quality_limits=profile.quality_limits)
-    retrieval = retrieval_quality(bundle, profile)
+    if profile.quality_manifest:
+        from mlx_one.quality_dataset import QUALITY_SCHEMA, native_dataset_quality
+
+        held_out, retrieval = native_dataset_quality(bundle, profile)
+        write_json(output / "held-out-quality.json", held_out)
+        parity.update({key: held_out[key] for key in (
+            "max_error", "mean_error", "held_out_nll_mean_delta", "greedy_agreement_fraction",
+            "coverage", "dataset_identity")})
+        parity["quality_kind"] = QUALITY_SCHEMA
+    else:
+        retrieval = retrieval_quality(bundle, profile)
+        parity["quality_kind"] = "synthetic-smoke-test"
     quality = evaluate_quality(parity, retrieval, profile.quality_limits)
     kernel_correctness = None
     if profile.kv_bits:
@@ -268,7 +279,10 @@ def quality_run(bundle, engine, profile, output):
         workload_envelope=workload_envelope(profile), kernel_version=KERNEL_VERSION,
         kernel_correctness_passed=(kernel_correctness is not None
                                    and kernel_correctness["within_tolerance"]),
-        quality_passed=quality["status"] == "passed")
+        quality_passed=quality["status"] == "passed",
+        quality_kind=parity["quality_kind"],
+        quality_coverage_passed=parity.get("coverage", {}).get("eligible", False),
+        dataset_identity=parity.get("dataset_identity"))
     if quality["status"] == "failed":
         raise ValueError("declared quantized quality gates failed")
 

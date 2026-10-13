@@ -51,6 +51,11 @@ def test_auto_and_missing_quality_limits_cannot_qualify():
     assert evaluate_quality(parity, retrieval, None)["status"] == "diagnostic"
     limits = {"max_logit_error": .1, "max_mean_nll_delta": .01,
               "max_retrieval_accuracy_drop": .1}
+    assert evaluate_quality(parity, retrieval, limits)["status"] == "diagnostic"
+    from mlx_one.quality_dataset import QUALITY_SCHEMA
+
+    parity.update(quality_kind=QUALITY_SCHEMA, coverage={"eligible": True})
+    retrieval["min_oracle_accuracy"] = .8
     assert evaluate_quality(parity, retrieval, limits)["status"] == "passed"
     result = evaluate_quality(parity, {**retrieval, "target_accuracy": .5}, limits)
     assert result["status"] == "failed"

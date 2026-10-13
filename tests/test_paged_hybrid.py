@@ -446,6 +446,7 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
              "compatibility_digest": compatibility_digest(runtime),
              "workload_envelope": envelope, "kernel_version": KERNEL_VERSION,
              "quality_passed": True, "kernel_correctness_passed": True,
+             "quality_kind": "native-held-out-quality-v1", "quality_coverage_passed": True,
              "artifacts": [{"uri": str(artifact), "kind": "cpu-fixture",
                             "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest()}]}
     path = tmp_path / "proof.json"

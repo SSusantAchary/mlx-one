@@ -92,11 +92,17 @@ def evaluate_quality(parity, retrieval, limits):
     if limits is None:
         return {"status": "diagnostic", "reason": "explicit quality limits are required",
                 "metrics": metrics}
+    from mlx_one.quality_dataset import QUALITY_SCHEMA
+
+    if (parity.get("quality_kind") != QUALITY_SCHEMA
+            or not parity.get("coverage", {}).get("eligible")):
+        return {"status": "diagnostic", "reason": "held-out dataset coverage is required",
+                "metrics": metrics}
     checks = {"logits": metrics["max_logit_error"] <= limits["max_logit_error"],
               "held_out_nll": metrics["mean_nll_delta"] <= limits["max_mean_nll_delta"],
               "retrieval": (metrics["retrieval_accuracy_drop"]
                             <= limits["max_retrieval_accuracy_drop"]),
-              "valid_oracle": retrieval["oracle_accuracy"] > 0,
+              "valid_oracle": retrieval["oracle_accuracy"] >= retrieval["min_oracle_accuracy"],
               "prefix_isolation": parity.get("prefix_isolation_passed") is True,
               "seeded_rng": parity.get("seeded_rng_isolation") is True,
               "state_isolation": parity.get("cancelled_request_isolated") is not False}
@@ -143,6 +149,8 @@ def load_quality_reference(directory, *, profile, runtime):
                                 "q4_0": "float16,uint8", "q8_0": "float16,uint8"}[
                                     profile.cache_type]
     if (proof.get("quality_passed") is not True
+            or proof.get("quality_kind") != "native-held-out-quality-v1"
+            or proof.get("quality_coverage_passed") is not True
             or proof.get("compatibility_digest") != compatibility_digest(runtime)
             or proof.get("workload_envelope") != workload_envelope(profile)
             or proof.get("scope") != scope):

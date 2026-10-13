@@ -56,6 +56,7 @@ class ForwardRequest:
     cancel: Any = None
     options: Any = None
     deadline: float | None = None
+    return_all_logits: bool = False
 
 
 def request_cancelled(request):

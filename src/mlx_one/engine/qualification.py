@@ -253,7 +253,9 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
                 "comparisons": rows, "prefix_restoration": prefix_rows,
                 "component_comparisons": component_rows,
                 "prefix_isolation": isolation, "prefix_isolation_passed": all(isolation.values()),
-                "held_out_nll_mean_delta": sum(nll_deltas) / len(nll_deltas),
+                "held_out_nll_mean_delta": None,
+                "quality_kind": "synthetic-smoke-test",
+                "synthetic_replay_nll_mean_delta": sum(nll_deltas) / len(nll_deltas),
                 "seeded_rng_isolation": seeded,
                 "cancelled_request_isolated": (all(h.closed for h in handles[1:batch_size])
                                                 if batch_size > 1 else None),

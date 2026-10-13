@@ -104,7 +104,9 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
                 continue
             if feature == "quantized_paged_kv" and (
                     proof.get("quality_passed") is not True
-                    or proof.get("kernel_correctness_passed") is not True):
+                    or proof.get("kernel_correctness_passed") is not True
+                    or proof.get("quality_kind") != "native-held-out-quality-v1"
+                    or proof.get("quality_coverage_passed") is not True):
                 continue
             return {"requested_mode": "auto", "resolved_mode": mode,
                     "reason": "matching checksummed performance qualification",
@@ -153,8 +155,13 @@ def qualification_matches(runtime, feature, *, profile=None, performance=False):
                 and (proof.get("memory_passed") is not True
                      or proof.get("service_passed") is not True))):
             continue
-        if feature == "quantized_paged_kv" and proof.get("kernel_correctness_passed") is not True:
-            continue
+        if feature == "quantized_paged_kv":
+            from mlx_one.quality_dataset import QUALITY_SCHEMA
+
+            if (proof.get("kernel_correctness_passed") is not True
+                    or proof.get("quality_kind") != QUALITY_SCHEMA
+                    or proof.get("quality_coverage_passed") is not True):
+                continue
         return True
     return False
 

@@ -64,6 +64,8 @@ class BaselineProfile:
     leak_budget_bytes: int | None = None
     min_decode_tokens_per_second: float | None = None
     quality_run: str | None = None
+    quality_manifest: str | None = None
+    quality_dataset_identity: dict | None = None
 
     def __post_init__(self) -> None:
         if not self.model_id or not re.fullmatch(r"[0-9a-fA-F]{40,64}", self.revision):
@@ -144,7 +146,8 @@ class BaselineProfile:
         new = {"page_tokens": 32, "kv_bits": None, "duration_seconds": None,
                "shared_prefix_fraction": None, "admission_policy": "deadline",
                "quality_limits": None,
-               "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None}
+               "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None,
+               "quality_manifest": None, "quality_dataset_identity": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
                     or self.workload in {"microbench", "quality", "pressure", "soak", "multi_turn"}
                     or any(payload[k] != v for k, v in new.items()))
@@ -409,6 +412,7 @@ def main(argv=None) -> int:
     parser.add_argument("--shared-prefix-fraction", type=float, choices=(0, .25, .5, .8))
     parser.add_argument("--admission-policy", choices=("deadline", "cache_aware"))
     parser.add_argument("--quality-limits", type=Path)
+    parser.add_argument("--quality-manifest", type=Path)
     parser.add_argument("--leak-budget-bytes", type=int)
     parser.add_argument("--min-decode-tok-s", type=float)
     args = parser.parse_args(argv)
@@ -419,11 +423,19 @@ def main(argv=None) -> int:
                                             workload=args.workload)
     else:
         candidates = profiles(args.inference_mode, models=args.models, workload=args.workload)
+    dataset = None
+    if args.quality_manifest:
+        from mlx_one.quality_dataset import load_quality_manifest
+
+        dataset = load_quality_manifest(args.quality_manifest)
     selected = [replace(p, atol=args.atol, rtol=args.rtol,
                         ttft_budget_ms=args.ttft_budget_ms,
                         decode_gap_budget_ms=args.decode_gap_budget_ms,
                         reference_run=args.reference_run,
                         quality_run=args.quality_run,
+                        quality_manifest=str(args.quality_manifest.resolve())
+                        if args.quality_manifest else None,
+                        quality_dataset_identity=dataset["identity"] if dataset else None,
                         kv_bits=args.kv_bits,
                         cache_type=f"q{args.kv_bits}_0" if args.kv_bits else p.cache_type,
                         quality_limits=(json.loads(args.quality_limits.read_text())

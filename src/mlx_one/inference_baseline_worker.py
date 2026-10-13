@@ -31,7 +31,7 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "gate-f.json", "quality.json", "retrieval.json", "time-series.jsonl",
                  "memory-reconciliation.json", "soak-probes.json", "gate-hybrid-performance.json",
                  "quality-reference.json", "pressure-recovery.json",
-                 "quantized-attention-correctness.json"):
+                 "quantized-attention-correctness.json", "held-out-quality.json"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",

@@ -165,8 +165,10 @@ class HybridRunner(BatchedDenseRunner):
                                             position_ids=positions)
                 logits = []
                 for i, n in enumerate(widths):
-                    compact = mx.zeros((1, 1, output.logits.shape[-1]), dtype=output.logits.dtype)
-                    compact[...] = output.logits[i:i + 1, n - 1:n]
+                    begin = 0 if requests[i].return_all_logits else n - 1
+                    compact = mx.zeros((1, n - begin, output.logits.shape[-1]),
+                                    dtype=output.logits.dtype)
+                    compact[...] = output.logits[i:i + 1, begin:n]
                     logits.append(compact)
                 states = [v for d in drafts for c in d.entries
                           for v in (getattr(c, "keys", None), getattr(c, "values", None))
