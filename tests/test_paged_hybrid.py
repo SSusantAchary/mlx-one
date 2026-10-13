@@ -771,3 +771,29 @@ def test_arena_evaluation_failure_does_not_publish_segment(advanced, monkeypatch
     assert set(arena._blocks) == live
     assert all(arena.segments[sid].state is state for sid, state in before.items())
     runtime.close()
+
+
+def test_cache_aware_age_guard_under_continuous_locality_arrivals(monkeypatch):
+    from collections import deque
+
+    from mlx_one.engine.actor import InferenceActor, _Job
+
+    actor = object.__new__(InferenceActor)
+    actor.config = BatchingConfig(max_sequences=1, admission_policy="cache_aware")
+    actor._condition, actor._active, actor._pending = threading.Condition(), [], deque()
+    now = [0.]
+    monkeypatch.setattr("mlx_one.engine.actor.time.monotonic", lambda: now[0])
+    oldest = _Job(lambda: iter(()), threading.Event(), created_at=0.)
+    actor._pending.append(oldest)
+    selected = None
+    for tick in range(31):
+        now[0] = tick / 10
+        arriving = _Job(lambda: iter(()), threading.Event(), created_at=now[0])
+        arriving.prefix_preview = lambda: 1024
+        actor._pending.append(arriving)
+        actor._admit()
+        if oldest in actor._active:
+            selected = now[0]
+            break
+        actor._active.clear()
+    assert selected is not None and selected <= 2.0

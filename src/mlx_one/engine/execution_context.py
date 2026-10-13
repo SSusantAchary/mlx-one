@@ -1,5 +1,6 @@
 """Actor-local observations shared by adapters without HTTP dependencies."""
 import threading
+from contextvars import ContextVar
 
 _slot_local = threading.local()
 
@@ -18,3 +19,7 @@ class QueueFullError(RuntimeError):
 
 class RequestTimeoutError(TimeoutError):
     pass
+
+
+# Installed only by qualification middleware; ordinary requests leave this empty.
+qualification_request = ContextVar("qualification_request", default=None)

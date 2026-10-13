@@ -40,6 +40,9 @@ class _Job:
     state: SequenceState | None = None
     stalled_at: float | None = None
     deadline: float | None = None
+    trace_id: str | None = None
+    admitted_at: float | None = None
+    blocked_reason: str | None = None
     admitted: bool = False
     retry_at: float = 0
     prefix_preview: Any = None
@@ -68,6 +71,7 @@ class InferenceActor:
         self._finalizer = None
         self._traces = deque(maxlen=4096)
         self._trace_sink = None
+        self._event_sink = None
         self.capture_memory = False
         self._skipped_admissions = 0
         self._counts = dict(submitted=0, completed=0, cancelled=0, failed=0,
@@ -77,6 +81,16 @@ class InferenceActor:
 
     def set_trace_sink(self, sink):
         self._trace_sink = sink
+
+    def set_event_sink(self, sink):
+        self._event_sink = sink
+
+    def _event(self, job, event, **metadata):
+        sink = getattr(self, "_event_sink", None)
+        if sink is not None:
+            sink({"event": event, "time": time.monotonic(),
+                  "request_id": job.trace_id or job.request_id,
+                  "actor_request_id": job.request_id, "model_epoch": self._epoch, **metadata})
 
     def stats(self):
         with self._condition:
@@ -91,17 +105,27 @@ class InferenceActor:
                  prefix_preview=None):
         job = _Job(factory, cancel if cancel is not None else threading.Event(),
                    admission, on_cancel)
+        from mlx_one.engine.execution_context import qualification_request
+
+        context = qualification_request.get() or {}
+        job.trace_id = context.get("request_id")
         job.output = queue.Queue(maxsize=self.config.output_buffer_events)
         job.prefix_preview = prefix_preview or getattr(factory, "prefix_preview", None)
         if self.config.timeout:
             job.deadline = job.created_at + self.config.timeout
+        if context.get("deadline_ms") is not None:
+            deadline = job.created_at + context["deadline_ms"] / 1000
+            job.deadline = min(job.deadline, deadline) if job.deadline is not None else deadline
         with self._condition:
             if self._closed:
                 raise RuntimeError("inference actor is closed")
             if len(self._pending) >= self.config.queue_size:
+                self._event(job, "submitted")
+                self._event(job, "terminal", reason="overload")
                 self._counts["rejected"] += 1
                 raise QueueFullError("generation queue is full")
             self._pending.append(job)
+            self._event(job, "submitted")
             self._counts["submitted"] += 1
             self._condition.notify()
         return job
@@ -191,6 +215,8 @@ class InferenceActor:
             job.state.transition(phase)
         if job in self._active:
             self._active.remove(job)
+        self._event(job, "terminal", phase=phase.value,
+                    reason=type(error).__name__ if error else None)
         key = {Phase.FINISHED: "completed", Phase.CANCELLED: "cancelled",
                Phase.TIMED_OUT: "timed_out", Phase.FAILED: "failed"}[phase]
         self._counts[key] += 1
@@ -215,6 +241,9 @@ class InferenceActor:
                         raise CacheCapacityError(
                             getattr(decision, "reason", "admission rejected"), retryable=False)
                     job.admitted = True
+                if job.admitted_at is None:
+                    job.admitted_at = time.monotonic()
+                    self._event(job, "admitted")
                 _slot_local.queue_ms = (time.monotonic() - job.created_at) * 1000
                 job.iterator = iter(job.factory(job.cancel))
             # One item at a time keeps detokenization and output queues bounded.
@@ -263,6 +292,9 @@ class InferenceActor:
 
     def _defer(self, job):
         self._skipped_admissions += 1
+        reason = "pressure" if self.pressure and self.pressure.state != "normal" else "capacity"
+        job.blocked_reason = reason
+        self._event(job, "blocked", reason=reason)
         job.retry_at = time.monotonic() + .01
         self._active.remove(job)
         with self._condition:
@@ -348,12 +380,18 @@ class InferenceActor:
                                      Phase.TIMED_OUT if timed_out else Phase.CANCELLED)
                 for job in tuple(self._active):
                     if job.output.full():
+                        if job.blocked_reason != "backpressure":
+                            job.blocked_reason = "backpressure"
+                            self._event(job, "blocked", reason="backpressure")
                         job.stalled_at = job.stalled_at or now
                         if now - job.stalled_at >= self.config.output_stall_timeout_s:
                             job.cancel.set()
                             self._finish(job, TimeoutError("generation output consumer stalled"),
                                          Phase.TIMED_OUT)
                     else:
+                        if job.blocked_reason:
+                            self._event(job, "unblocked", reason=job.blocked_reason)
+                            job.blocked_reason = None
                         job.stalled_at = None
                         self._advance(job)
                 ready = [job.request for job in self._active if job.request is not None
@@ -408,6 +446,8 @@ class InferenceActor:
                             if job.cancel.is_set() or job.state.model_epoch != self._epoch:
                                 self._finish(job, phase=Phase.CANCELLED)
                                 continue
+                            self._event(job, "forward", phase=job.request.phase,
+                                        committed_tokens=committed)
                             job.state.commit(committed)
                             job.request = None
                             job.reply = SimpleNamespace(

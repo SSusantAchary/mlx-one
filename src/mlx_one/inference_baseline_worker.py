@@ -31,7 +31,8 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "gate-f.json", "quality.json", "retrieval.json", "time-series.jsonl",
                  "memory-reconciliation.json", "soak-probes.json", "gate-hybrid-performance.json",
                  "quality-reference.json", "pressure-recovery.json",
-                 "quantized-attention-correctness.json", "held-out-quality.json"):
+                 "quantized-attention-correctness.json", "held-out-quality.json", "traffic.json",
+                 "tokenization.json", "actor-events.jsonl", "fairness.json"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",
@@ -73,8 +74,17 @@ def build_messages(bundle, target, *, suffix=""):
     return messages, prompt
 
 
-async def stream_request(client, profile, messages, *, phase, group, index):
+async def stream_request(client, profile, messages, *, phase, group, index, record=None,
+                         principal_token=None):
     started = time.perf_counter()
+    record = record or {}
+    consumer = record.get("consumer", {})
+    paused = False
+    headers = {}
+    if record:
+        headers["X-Qualification-Request-ID"] = f"{group}/{record['request_id']}"
+        if principal_token:
+            headers["Authorization"] = "Bearer " + principal_token
     arrivals = []
     metrics = None
     finished = False
@@ -82,9 +92,10 @@ async def stream_request(client, profile, messages, *, phase, group, index):
     done = False
     text_parts = []
     try:
-        async with client.stream("POST", "/v1/chat/completions", json={
+        async with client.stream("POST", "/v1/chat/completions", headers=headers, json={
             "model": profile.model_id, "messages": messages, "temperature": 0,
-            "seed": profile.seed, "max_tokens": profile.output_tokens, "stream": True,
+            "seed": profile.seed, "max_tokens": record.get("output_tokens", profile.output_tokens),
+            "stream": True,
         }) as response:
             response.raise_for_status()
             async for line in response.aiter_lines():
@@ -93,8 +104,12 @@ async def stream_request(client, profile, messages, *, phase, group, index):
                 if line == "data: [DONE]":
                     done = True
                     break
-                if profile.workload == "slow_consumer" and index == 0:
-                    await asyncio.sleep(.05)
+                if (not paused and consumer.get("pause_ms")
+                        and len(arrivals) >= consumer.get("pause_after_events", 1)):
+                    paused = True
+                    await asyncio.sleep(consumer["pause_ms"] / 1000)
+                if consumer.get("read_delay_ms"):
+                    await asyncio.sleep(consumer["read_delay_ms"] / 1000)
                 event = json.loads(line[6:])
                 if "error" in event:
                     raise BaselineError(json.dumps(event["error"]))
@@ -103,7 +118,10 @@ async def stream_request(client, profile, messages, *, phase, group, index):
                 if delta.get("content") or delta.get("reasoning_content"):
                     text_parts.append(delta.get("content", "") + delta.get("reasoning_content", ""))
                     arrivals.append(time.perf_counter())
-                    if profile.workload == "cancellation" and index == 0 and len(arrivals) == 3:
+                    if ((record.get("cancel_after_events") is not None
+                         and len(arrivals) >= record["cancel_after_events"])
+                            or (profile.workload == "cancellation" and not record
+                                and index == 0 and len(arrivals) == 3)):
                         expected_cancel = True
                         break
                 if "mlx" in event:
@@ -136,6 +154,49 @@ async def stream_request(client, profile, messages, *, phase, group, index):
         return {"status": "failed", "temperature_phase": phase, "group_id": group,
                 "request_index": index, "error": f"{type(exc).__name__}: {exc}",
                 "started": started, "ended": time.perf_counter()}
+
+
+async def replay_group(client, bundle, engine, profile, replay, *, group, phase, token_metadata):
+    from mlx_one.inference_qualification_worker import prefix_messages
+
+    started = time.monotonic()
+    records = replay["requests"][:1] if phase == "warmup" else replay["requests"]
+    async def request(record, index):
+        await asyncio.sleep(max(0, started + record["arrival_ms"] / 1000 - time.monotonic()))
+        if record.get("messages"):
+            messages = record["messages"]
+            prompt = bundle.chat_template.render(messages, enable_thinking=False)
+        else:
+            messages, prompt = prefix_messages(bundle, record["prompt_tokens"],
+                record.get("shared_prefix_fraction", 0), "stable", index)
+        ids = bundle.tokenizer.encode(prompt)
+        if len(ids) + record["output_tokens"] > bundle.context_length:
+            raise BaselineError("replay prompt plus output exceeds checkpoint context")
+        token_metadata.append({"group": group, "index": index,
+            "request_id": record["request_id"], "actual_rendered_tokens": len(ids),
+            "rendered_prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
+            "token_ids_sha256": hashlib.sha256(json.dumps(ids).encode()).hexdigest()})
+        tokens = getattr(engine, "_qualification_principal_tokens", {})
+        operation = stream_request(client, profile, messages, phase=phase, group=group,
+            index=index, record=record, principal_token=tokens.get(record.get("principal_label")))
+        limits = [(record[name], name) for name in ("deadline_ms", "cancel_after_ms")
+                  if record.get(name) is not None]
+        try:
+            if limits:
+                duration, action = min(limits)
+                row = await asyncio.wait_for(operation, duration / 1000)
+            else:
+                row = await operation
+        except asyncio.TimeoutError:
+            status = "deadline_expected" if action == "deadline_ms" else "cancelled_expected"
+            row = {"status": status,
+                   "temperature_phase": phase, "group_id": group, "request_index": index,
+                   "started": started, "ended": time.monotonic()}
+        return {**row, "replay_request_id": record["request_id"],
+                "arrival_ms": record["arrival_ms"],
+                "principal_label": record.get("principal_label"),
+                "consumer": record.get("consumer", {})}
+    return await asyncio.gather(*(request(record, index) for index, record in enumerate(records)))
 
 
 async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
@@ -185,14 +246,35 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
 
             recovery = await pressure_recovery(client, bundle, engine, scheduler, profile, output)
             extra["pressure_recovery_passed"] = recovery["status"] == "passed"
+        replay = getattr(engine, "_qualification_replay", None)
         for group, phase in groups():
+            if replay is not None:
+                group_rows = await replay_group(client, bundle, engine, profile, replay,
+                                                 group=group, phase=phase,
+                                                 token_metadata=token_metadata)
+                rows.extend(group_rows)
+                with (output / "requests.jsonl").open("a") as handle:
+                    for row in group_rows:
+                        handle.write(json.dumps(row) + "\n")
+                runtime = (await client.get("/v1/runtime")).json()
+                cache = runtime.get("cache") or {}
+                extra["peak_physical_bytes"] = max(extra.get("peak_physical_bytes", 0),
+                                                    cache.get("physical_bytes") or 0)
+                with (output / "time-series.jsonl").open("a") as handle:
+                    handle.write(json.dumps({"group": group, "at": time.monotonic(),
+                        "cache": cache, "scheduler": runtime.get("scheduler"),
+                        "pressure": runtime.get("inference", {}).get("memory_pressure")}) + "\n")
+                if any(r["status"] not in {"completed", "cancelled_expected", "deadline_expected"}
+                       for r in group_rows):
+                    break
+                continue
             requests = []
             fanout = (profile.slots * 3 if profile.workload in {
                 "turnover", "mixed", "cancellation", "soak", "pressure", "multi_turn"}
                       else profile.slots)
             for index in range(1 if phase == "warmup" else fanout):
                 suffix = f"\nReturn the project ID. Request {group}-{index}."
-                context = (8192 if profile.workload == "mixed" and index % 3 == 0
+                context = (2048 if profile.workload == "mixed" and index % 2 == 0
                            else profile.context_tokens)
                 messages, prompt = build_messages(bundle, context, suffix=suffix)
                 if profile.workload == "multi_turn":
@@ -243,6 +325,8 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
                           == final_probe["request"].get("output_sha256")
                           and final_probe["request"]["status"] == "completed"})
             write_json(output / "memory-reconciliation.json", extra)
+        token_metadata.sort(key=lambda row: (row["group"], row["index"]))
+        write_json(output / "tokenization.json", token_metadata)
         config["rendered_prompts"] = token_metadata
         write_json(output / "workload.json", config)
     engine._qualification_traffic_stats = extra
@@ -302,6 +386,12 @@ def execute(manifest):
                 with (output / "forward-traces.jsonl").open("a") as handle:
                     handle.write(json.dumps(trace) + "\n")
             scheduler.set_trace_sink(save_trace)
+        if callable(getattr(scheduler, "set_event_sink", None)):
+            event_lock = threading.Lock()
+            def save_event(event):
+                with event_lock, (output / "actor-events.jsonl").open("a") as handle:
+                    handle.write(json.dumps(event) + "\n")
+            scheduler.set_event_sink(save_event)
         write_json(output / "load.json", {"load_seconds": time.perf_counter() - started,
                                           "mlx_peak_bytes": int(mx.get_peak_memory())})
         # Hash exact files, including tokenizer/config, without changing the cache.
@@ -380,13 +470,46 @@ def execute(manifest):
             cache_idle_slots=profile.workload in {"prefix", "multi_turn"},
             cache_type_k=profile.cache_type, cache_type_v=profile.cache_type,
         )
+        from mlx_one.traffic_replay import (
+            QualificationMiddleware,
+            generated_traffic,
+            load_traffic_manifest,
+        )
+
+        replay = None
+        if profile.traffic_manifest:
+            loaded = load_traffic_manifest(profile.traffic_manifest)
+            if loaded["sha256"] != profile.traffic_identity:
+                raise BaselineError("traffic manifest changed after profile creation")
+            replay = loaded["manifest"]
+        elif profile.workload in {"mixed", "turnover", "cancellation", "slow_consumer",
+                                  "multi_turn", "soak"}:
+            replay = generated_traffic(profile)
+        if replay:
+            import secrets
+            from dataclasses import replace
+
+            labels = {r.get("principal_label") for r in replay["requests"]
+                      if r.get("principal_label") is not None}
+            if labels and any(r.get("principal_label") is None for r in replay["requests"]):
+                raise BaselineError(
+                    "authenticated and anonymous traffic require separate server runs")
+            engine._qualification_principal_tokens = {label: secrets.token_hex(32)
+                                                       for label in labels}
+            engine._qualification_replay = replay
+            config = replace(config, api_keys=("qualification-local", *(
+                engine._qualification_principal_tokens.values())) if labels else ())
+            write_json(output / "traffic.json", replay)
+        app = create_app(manager, engine, scheduler=scheduler, config=config)
+        if replay:
+            app = QualificationMiddleware(app, replay)
         # Bind before starting uvicorn to avoid a free-port selection race.
         listener = socket.socket()
         listener.bind(("127.0.0.1", 0))
         listener.listen(128)
         port = listener.getsockname()[1]
         server = uvicorn.Server(uvicorn.Config(
-            create_app(manager, engine, scheduler=scheduler, config=config), log_level="error",
+            app, log_level="error",
             lifespan="on",
         ))
         thread = threading.Thread(target=lambda: server.run(sockets=[listener]), daemon=True)
@@ -415,7 +538,25 @@ def execute(manifest):
                                **{key: scope[key] for key in
                                   ("weight_precision", "cache_precision", "mlx_version")}}
         summary["profile"] = profile.to_dict()
-        summary["starved_requests"] = sum(row["status"] == "failed" for row in rows)
+        from mlx_one.traffic_replay import progress_fairness
+
+        event_path = output / "actor-events.jsonl"
+        events = [json.loads(line) for line in event_path.read_text().splitlines()] if (
+            event_path.exists()) else []
+        fairness = progress_fairness(events, max_queue_wait_ms=profile.max_queue_wait_ms,
+                                     max_service_gap_ms=profile.max_service_gap_ms)
+        write_json(output / "fairness.json", fairness)
+        summary["fairness"] = fairness
+        summary["starved_requests"] = fairness["starved_requests"]
+        from mlx_one.inference_baseline import percentile
+
+        summary["queue_wait_p95_ms"] = percentile([r["metrics"]["queue_ms"] for r in rows
+            if r.get("metrics", {}).get("queue_ms") is not None], .95)
+        rates = summary.get("aggregate_output_tokens_per_second_by_group", [])
+        summary["warm_aggregate_output_tokens_per_second"] = (
+            sum(rates) / len(rates) if rates and all(r is not None for r in rates) else None)
+        summary["prefix_hits"] = engine.cache_stats().get("prefix_hits")
+        summary["prefix_tokens_reused"] = engine.cache_stats().get("prefix_tokens_reused")
         write_json(output / "summary.json", summary)
         if profile.inference_mode == "experimental_dense_batch":
             from mlx_one.engine.qualification import evaluate_gate_c, execution_parity

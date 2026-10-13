@@ -64,6 +64,10 @@ class BaselineProfile:
     leak_budget_bytes: int | None = None
     min_decode_tokens_per_second: float | None = None
     quality_run: str | None = None
+    traffic_manifest: str | None = None
+    traffic_identity: str | None = None
+    max_queue_wait_ms: float | None = None
+    max_service_gap_ms: float | None = None
     quality_manifest: str | None = None
     quality_dataset_identity: dict | None = None
 
@@ -104,6 +108,9 @@ class BaselineProfile:
             raise BaselineError("unsupported admission policy")
         if self.leak_budget_bytes is not None and self.leak_budget_bytes < 0:
             raise BaselineError("leak budget must be nonnegative")
+        for limit in (self.max_queue_wait_ms, self.max_service_gap_ms):
+            if limit is not None and (not math.isfinite(limit) or limit <= 0):
+                raise BaselineError("fairness limits must be finite and positive")
         if self.min_decode_tokens_per_second is not None and (
             not math.isfinite(self.min_decode_tokens_per_second)
             or self.min_decode_tokens_per_second <= 0
@@ -147,7 +154,9 @@ class BaselineProfile:
                "shared_prefix_fraction": None, "admission_policy": "deadline",
                "quality_limits": None,
                "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None,
-               "quality_manifest": None, "quality_dataset_identity": None}
+               "quality_manifest": None, "quality_dataset_identity": None,
+               "traffic_manifest": None, "traffic_identity": None,
+               "max_queue_wait_ms": None, "max_service_gap_ms": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
                     or self.workload in {"microbench", "quality", "pressure", "soak", "multi_turn"}
                     or any(payload[k] != v for k, v in new.items()))
@@ -413,6 +422,9 @@ def main(argv=None) -> int:
     parser.add_argument("--admission-policy", choices=("deadline", "cache_aware"))
     parser.add_argument("--quality-limits", type=Path)
     parser.add_argument("--quality-manifest", type=Path)
+    parser.add_argument("--traffic-manifest", type=Path)
+    parser.add_argument("--max-queue-wait-ms", type=float)
+    parser.add_argument("--max-service-gap-ms", type=float)
     parser.add_argument("--leak-budget-bytes", type=int)
     parser.add_argument("--min-decode-tok-s", type=float)
     args = parser.parse_args(argv)
@@ -423,6 +435,11 @@ def main(argv=None) -> int:
                                             workload=args.workload)
     else:
         candidates = profiles(args.inference_mode, models=args.models, workload=args.workload)
+    replay = None
+    if args.traffic_manifest:
+        from mlx_one.traffic_replay import load_traffic_manifest
+
+        replay = load_traffic_manifest(args.traffic_manifest)
     dataset = None
     if args.quality_manifest:
         from mlx_one.quality_dataset import load_quality_manifest
@@ -433,6 +450,11 @@ def main(argv=None) -> int:
                         decode_gap_budget_ms=args.decode_gap_budget_ms,
                         reference_run=args.reference_run,
                         quality_run=args.quality_run,
+                        traffic_manifest=str(args.traffic_manifest.resolve())
+                        if args.traffic_manifest else None,
+                        traffic_identity=replay["sha256"] if replay else None,
+                        max_queue_wait_ms=args.max_queue_wait_ms,
+                        max_service_gap_ms=args.max_service_gap_ms,
                         quality_manifest=str(args.quality_manifest.resolve())
                         if args.quality_manifest else None,
                         quality_dataset_identity=dataset["identity"] if dataset else None,
