@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import platform
 import statistics
 import subprocess
@@ -34,6 +35,7 @@ class RunSpec:
     parallel: int
     workload: str
     run: int
+    client_concurrency: int = 8
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,7 +55,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--offline", action="store_true", help="Resolve tokenizer assets locally only"
     )
-    parser.add_argument("--contexts", default="2048,8192,16384,32768")
+    parser.add_argument("--contexts", default="2048,8192")
+    parser.add_argument("--allow-long-context", action="store_true")
+    parser.add_argument("--api-key-env", help="Environment variable containing the bearer key")
+    parser.add_argument("--client-concurrency", type=int, default=8)
+    parser.add_argument("--revision", required=True)
+    parser.add_argument("--inference-mode", required=True, choices=(
+        "reference_dense", "experimental_block", "experimental_dense_batch",
+        "paged", "experimental_hybrid_batch"))
     parser.add_argument("--parallel", default="1,2,4,8")
     parser.add_argument("--shared-prefix-ratio", type=float, default=0.90)
     parser.add_argument("--max-new-tokens", type=int, default=128)
@@ -95,46 +104,73 @@ async def runtime(client: httpx.AsyncClient) -> dict[str, Any]:
     return response.json()
 
 
-async def request(
-    client: httpx.AsyncClient,
-    *,
-    model: str,
-    prompt: str,
-    max_tokens: int,
-) -> dict[str, Any]:
+def authentication_headers(variable):
+    if variable is None:
+        return {}
+    value = os.environ.get(variable)
+    if not value:
+        raise SystemExit("API key environment variable is unset or empty")
+    return {"Authorization": "Bearer " + value}
+
+
+def request_messages(prompt):
+    return [{"role": "user", "content": prompt
+             + "\nReturn only the final PROJECT ID, OWNER, and CHECKSUM."}]
+
+
+def exact_prefix_metadata(tokenizer, template, prompts):
+    import hashlib
+
+    arrays = [tuple(tokenizer.encode(template.render(request_messages(p)))) for p in prompts]
+    shared = min(map(len, arrays), default=0)
+    for index in range(shared):
+        if len({ids[index] for ids in arrays}) > 1:
+            shared = index
+            break
+    return {"verified_common_prefix_tokens": shared,
+            "actual_rendered_lengths": [len(ids) for ids in arrays],
+            "rendered_token_sha256": [hashlib.sha256(json.dumps(ids).encode()).hexdigest()
+                                      for ids in arrays]}
+
+
+async def request(client, *, model, prompt, max_tokens):
     started = time.perf_counter()
-    response = await client.post(
-        "/v1/chat/completions",
-        json={
-            "model": model,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                    + "\nReturn only the final PROJECT ID, OWNER, and CHECKSUM.",
-                }
-            ],
-            "temperature": 0,
-            "max_tokens": max_tokens,
-            "stream": False,
-        },
-    )
-    elapsed_ms = (time.perf_counter() - started) * 1000
-    if response.status_code >= 400:
-        return {
-            "status": "unsupported" if response.status_code == 400 else "failed",
-            "http_status": response.status_code,
-            "error": response.text,
-            "client_latency_ms": elapsed_ms,
-        }
-    payload = response.json()
-    metrics = payload.get("mlx", {})
-    return {
-        "status": "completed",
-        "client_latency_ms": elapsed_ms,
-        "response": payload.get("choices", [{}])[0].get("message", {}).get("content", ""),
-        "metrics": metrics,
-    }
+    arrivals, parts, metrics = [], [], {}
+    done = finished = False
+    try:
+        async with client.stream("POST", "/v1/chat/completions", json={
+            "model": model, "messages": request_messages(prompt), "temperature": 0,
+            "max_tokens": max_tokens, "stream": True,
+        }) as response:
+            if response.status_code >= 400:
+                return {"status": "unsupported" if response.status_code == 400 else "failed",
+                        "http_status": response.status_code}
+            async for line in response.aiter_lines():
+                if line == "data: [DONE]":
+                    done = True
+                    break
+                if not line.startswith("data: "):
+                    continue
+                event = json.loads(line[6:])
+                if "error" in event:
+                    return {"status": "failed", "reason": "server streaming error"}
+                choice = event.get("choices", [{}])[0]
+                delta = choice.get("delta", {})
+                text = delta.get("content", "") + delta.get("reasoning_content", "")
+                if text:
+                    arrivals.append(time.perf_counter())
+                    parts.append(text)
+                if event.get("mlx") is not None:
+                    metrics = event["mlx"]
+                finished |= choice.get("finish_reason") is not None
+        return {"status": "completed" if done and finished and metrics else "failed",
+                "client_latency_ms": (time.perf_counter() - started) * 1000,
+                "client_ttft_ms": (arrivals[0] - started) * 1000 if arrivals else None,
+                "sse_delivery_gaps_ms": [(b - a) * 1000 for a, b in
+                                         zip(arrivals, arrivals[1:], strict=False)],
+                "response": "".join(parts), "metrics": metrics}
+    except (httpx.HTTPError, ValueError):
+        return {"status": "failed", "reason": "HTTP transport or stream parsing failure"}
 
 
 async def execute_group(
@@ -143,7 +179,12 @@ async def execute_group(
     spec: RunSpec,
     prompt: str,
     max_tokens: int,
+    tokenizer=None,
+    template=None,
 ) -> dict[str, Any]:
+    prompts = ([prompt + "\nREQUEST-SEED"] if spec.workload == "common_prefix" else [])
+    prompts += [prompt + f"\nREQUEST-{index:02d}" for index in range(spec.client_concurrency)]
+    token_metadata = exact_prefix_metadata(tokenizer, template, prompts) if tokenizer else {}
     if spec.workload == "common_prefix":
         seed = await request(
             client,
@@ -159,7 +200,7 @@ async def execute_group(
                     prompt=prompt + f"\nREQUEST-{index:02d}",
                     max_tokens=max_tokens,
                 )
-                for index in range(7)
+                for index in range(spec.client_concurrency)
             )
         )
         payloads = [seed, *followers]
@@ -172,7 +213,7 @@ async def execute_group(
                     prompt=prompt + f"\nREQUEST-{index:02d}",
                     max_tokens=max_tokens,
                 )
-                for index in range(8)
+                for index in range(spec.client_concurrency)
             )
         )
     completed = [item for item in payloads if item["status"] == "completed"]
@@ -180,9 +221,14 @@ async def execute_group(
     ttft = [item["metrics"].get("time_to_first_token_ms") for item in completed]
     return {
         **asdict(spec),
+        "tokenization": token_metadata,
         "requests": payloads,
         "summary": {
             "completed": len(completed),
+            "actual_prefill_tokens": sum(item["metrics"].get("actual_prefill_tokens", 0)
+                                         or 0 for item in completed),
+            "client_ttft_p95_ms": percentile([item["client_ttft_ms"] for item in completed
+                                             if item.get("client_ttft_ms") is not None], .95),
             "rejected_or_failed": len(payloads) - len(completed),
             "latency_p50_ms": percentile(latencies, 0.50),
             "latency_p95_ms": percentile(latencies, 0.95),
@@ -209,13 +255,30 @@ def percentile(values: list[float], fraction: float) -> float | None:
 
 async def main_async(args: argparse.Namespace) -> dict[str, Any]:
     tokenizer = load_tokenizer(args.tokenizer_source or args.model, offline=args.offline)
+    from mlx_one.text.chat import ChatTemplate
+    from mlx_one.text.loading import _resolve, resolve_text_model_type
+
+    root = _resolve(args.tokenizer_source or args.model, revision=args.revision,
+                    offline=args.offline, cache_dir=None)
+    template = ChatTemplate.from_directory(root, resolve_text_model_type(root, offline=True),
+                                           tokenizer)
     contexts = parse_ints(args.contexts, name="--contexts")
+    if any(v > 8192 for v in contexts) and not args.allow_long_context:
+        raise SystemExit("long contexts require --allow-long-context and safe server admission")
+    if args.runs < 3 or args.client_concurrency < 1:
+        raise SystemExit("require three repetitions and positive client concurrency")
     parallel_values = parse_ints(args.parallel, name="--parallel")
     if not 0 < args.shared_prefix_ratio < 1:
         raise SystemExit("--shared-prefix-ratio must be between zero and one")
     limits = httpx.Timeout(args.timeout)
-    async with httpx.AsyncClient(base_url=args.base_url.rstrip("/"), timeout=limits) as client:
+    async with httpx.AsyncClient(base_url=args.base_url.rstrip("/"), timeout=limits,
+                                 headers=authentication_headers(args.api_key_env)) as client:
         before = await runtime(client)
+        inference = before.get("inference", {})
+        scope = inference.get("scope", {})
+        if (inference.get("engine_mode") != args.inference_mode
+                or scope.get("revision") != args.revision):
+            raise SystemExit("server execution mode or checkpoint revision mismatch")
         configured_parallel = int(before.get("scheduler", {}).get("parallel_slots", 1))
         if any(value != configured_parallel for value in parallel_values):
             raise SystemExit(
@@ -231,17 +294,19 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
                     results.append(
                         await execute_group(
                             client,
-                            spec=RunSpec(args.model, context, parallel, "independent", run),
+                            spec=RunSpec(args.model, context, parallel, "independent", run,
+                                         args.client_concurrency),
                             prompt=independent,
-                            max_tokens=args.max_new_tokens,
+                            max_tokens=args.max_new_tokens, tokenizer=tokenizer, template=template,
                         )
                     )
                     results.append(
                         await execute_group(
                             client,
-                            spec=RunSpec(args.model, context, parallel, "common_prefix", run),
+                            spec=RunSpec(args.model, context, parallel, "common_prefix", run,
+                                         args.client_concurrency),
                             prompt=shared,
-                            max_tokens=args.max_new_tokens,
+                            max_tokens=args.max_new_tokens, tokenizer=tokenizer, template=template,
                         )
                     )
         after = await runtime(client)

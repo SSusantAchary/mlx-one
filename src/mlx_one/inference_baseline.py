@@ -163,7 +163,7 @@ class BaselineProfile:
         if self.workload not in {"baseline", "prefix", "long", "parity", "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
                                  "quality", "pressure", "soak", "multi_turn",
-                                 "lifecycle", "peak_calibration"}:
+                                 "lifecycle", "peak_calibration", "p0_prefix"}:
             raise BaselineError("unknown baseline workload")
         if (self.atol is None) != (self.rtol is None):
             raise BaselineError("override both atol and rtol")
@@ -188,7 +188,7 @@ class BaselineProfile:
                "pressure_test_ceiling_bytes": None, "memory_tolerances": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
                     or self.workload in {"microbench", "quality", "pressure", "soak",
-                                        "multi_turn", "lifecycle", "peak_calibration"}
+                                        "multi_turn", "lifecycle", "peak_calibration", "p0_prefix"}
                     or any(payload[k] != v for k, v in new.items()))
         if not advanced:
             for key in new:
@@ -199,7 +199,7 @@ class BaselineProfile:
     def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "profile_id": self.profile_id, "offline": True,
                 "temperature": 0, "speculation": False,
-                "prefix_reuse": self.workload in {"prefix", "multi_turn", "soak"},
+                "prefix_reuse": self.workload in {"prefix", "multi_turn", "soak", "p0_prefix"},
                 "tolerances": TOLERANCES}
 
 

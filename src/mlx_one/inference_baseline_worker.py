@@ -140,7 +140,7 @@ async def stream_request(client, profile, messages, *, phase, group, index, reco
         if not finished or not done or metrics is None:
             raise BaselineError("stream omitted terminal metrics or completion marker")
         model_times = metrics.get("model_token_times_ms")
-        if model_times is None or metrics.get("execution_observer") != "synchronized-forward-v1":
+        if model_times is None or metrics.get("execution_observer") != "synchronized-forward-v2":
             raise BaselineError("worker did not supply model-token observations")
         ended = time.perf_counter()
         return {
@@ -255,6 +255,15 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
             memory = scheduler.execute(reconcile)
             return {"request": result, "memory": memory}
 
+        if profile.workload == "p0_prefix":
+            from mlx_one.p0_qualification import prefix_checks
+
+            measured = await prefix_checks(client, bundle, engine, scheduler, profile)
+            write_json(output / "p0-prefix.json", measured)
+            write_json(output / "summary.json", measured)
+            if measured["status"] == "failed":
+                raise BaselineError("P0 prefix correctness or warm latency gate failed")
+            return measured["requests"]
         initial_probe = await soak_probe("initial") if profile.duration_seconds else None
         if profile.workload in {"pressure", "soak"}:
             from mlx_one.stress_qualification import bounded_pressure_recovery
@@ -566,8 +575,8 @@ def execute(manifest):
             max_prefill_tokens=profile.max_prefill_tokens,
             admission_policy=profile.admission_policy,
             cache_block_size=profile.page_tokens,
-            cache_prompt=profile.workload in {"prefix", "multi_turn", "soak"},
-            cache_idle_slots=profile.workload in {"prefix", "multi_turn", "soak"},
+            cache_prompt=profile.workload in {"prefix", "multi_turn", "soak", "p0_prefix"},
+            cache_idle_slots=profile.workload in {"prefix", "multi_turn", "soak", "p0_prefix"},
             cache_type_k=profile.cache_type, cache_type_v=profile.cache_type,
             cache_memory_budget_bytes=profile.cache_capacity_bytes,
             prefix_cache_bytes=profile.prefix_cache_budget_bytes,

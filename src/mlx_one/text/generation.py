@@ -473,7 +473,7 @@ def _stream_bundle(
                 generated.append(pending.pop(0))
                 sampled_at = pending_times.popleft()
                 if on_execution is not None:
-                    on_execution({"kind": "token", "at": sampled_at})
+                    on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
                 current_text = bundle.tokenizer.decode(generated)
                 piece = (
                     current_text[len(decoded) :]
@@ -490,7 +490,7 @@ def _stream_bundle(
     for current_token in pending:
         sampled_at = pending_times.popleft()
         if on_execution is not None:
-            on_execution({"kind": "token", "at": sampled_at})
+            on_execution({"kind": "token", "at": sampled_at, "token_id": current_token})
         emitted += 1
         generated.append(current_token)
         current_text = bundle.tokenizer.decode(generated)

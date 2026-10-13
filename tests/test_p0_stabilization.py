@@ -203,3 +203,37 @@ def test_host_admission_does_not_double_count_and_recovers(native, monkeypatch):
         pass
     assert runtime.capacity_diagnostics["working_set_bytes"] == 500
     runtime.close()
+
+
+def test_prefix_gate_requires_native_token_ids_and_actual_skipped_work():
+    from mlx_one.p0_qualification import prefix_gate
+
+    rows = []
+    for phase in ("cold", "warm"):
+        for _ in range(3):
+            rows.append({"status": "completed", "temperature_phase": phase,
+                         "output_token_ids": [1, 2, 3],
+                         "client_ttft_ms": 100 if phase == "cold" else 85,
+                         "metrics": {"actual_prefill_tokens": 8192 if phase == "cold" else 192,
+                                     "reused_prompt_tokens": 0 if phase == "cold" else 8000}})
+    assert prefix_gate(rows, 8000)["status"] == "passed"
+    rows[-1]["metrics"]["actual_prefill_tokens"] = 8192
+    assert not prefix_gate(rows, 8000)["checks"]["actual_skipped_prefill"]
+    rows[-1]["output_token_ids"] = None
+    assert not prefix_gate(rows, 8000)["checks"]["token_id_parity"]
+
+
+def test_http_benchmark_auth_is_not_serialized(monkeypatch):
+    from benchmarks.cache_runtime_bench import authentication_headers, exact_prefix_metadata
+    from mlx_one.text.chat import ChatTemplate
+
+    monkeypatch.setenv("P0_TEST_SECRET", "opaque-secret")
+    assert authentication_headers("P0_TEST_SECRET") == {"Authorization": "Bearer opaque-secret"}
+    assert authentication_headers(None) == {}
+    with pytest.raises(SystemExit, match="unset or empty"):
+        authentication_headers("P0_MISSING_SECRET")
+    tokenizer = SimpleNamespace(encode=lambda text: list(text.encode()))
+    metadata = exact_prefix_metadata(tokenizer, ChatTemplate("qwen2", None, tokenizer),
+                                     ["prefix-A", "prefix-B"])
+    assert metadata["verified_common_prefix_tokens"] > len("prefix-")
+    assert metadata["rendered_token_sha256"][0] != metadata["rendered_token_sha256"][1]

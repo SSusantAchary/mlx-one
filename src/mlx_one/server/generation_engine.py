@@ -443,6 +443,9 @@ class GenerationEngine:
             runtime.commit(handle.reservation, min(handle.bundle.allocated_nbytes, requested))
         with self._lock:
             self._stats = stats
+        sink = getattr(self, "_qualification_token_sink", None)
+        if sink is not None and timings.token_ids is not None:
+            sink(handle.request_id, tuple(timings.token_ids))
         yield GenerationEvent(finish_reason=finish_reason, metrics=stats.to_dict())
 
     def clear_caches(self) -> None:

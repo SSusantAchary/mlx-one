@@ -70,12 +70,19 @@ def write_inventory(output, manifest):
         "readiness.json": hashlib.sha256(raw).hexdigest()}, indent=2))
 
 
-def p0_profiles():
+def p0_profiles(*, include_16k=False, include_32k=False):
     """Initial safe contexts; long-context diagnostics require explicit opt-in."""
     for mode in ("reference_dense", "experimental_block"):
         for profile in profiles(mode, models=("qwen",)):
             if profile.slots == 1:
-                yield replace(profile, cache_type="f16", execution_dtype="float16")
+                for workload in ("baseline", "p0_prefix", "parity"):
+                    yield replace(profile, cache_type="f16", execution_dtype="float16",
+                                  workload=workload)
+        if include_16k or include_32k:
+            seed = next(profiles(mode, models=("qwen",)))
+            for context in ([16384] if include_16k else []) + ([32000] if include_32k else []):
+                yield replace(seed, context_tokens=context, slots=1, workload="long",
+                              cache_type="f16", execution_dtype="float16")
 
 
 def dense_snapshot_parity(bundle, prompt_ids, boundary, *, steps=3, cache_type="f16"):
@@ -134,19 +141,105 @@ def dense_snapshot_parity(bundle, prompt_ids, boundary, *, steps=3, cache_type="
                 cache.release()
 
 
+def prefix_gate(rows, common_prefix, *, threshold=.1):
+    """A cache metric or text-only match cannot establish the P0 warm-prefix gate."""
+    import statistics
+
+    cold = [r for r in rows if r.get("temperature_phase") == "cold"]
+    warm = [r for r in rows if r.get("temperature_phase") == "warm"]
+    enough = len(cold) >= 3 and len(warm) >= 3
+    checks = {"three_paired_repetitions": enough, "exact_prefix": common_prefix > 0,
+              "completed": all(r.get("status") == "completed" for r in rows)}
+    checks["token_id_parity"] = enough and all(
+        a.get("output_token_ids") and a.get("output_token_ids") == b.get("output_token_ids")
+        for a, b in zip(cold, warm, strict=False))
+    checks["actual_skipped_prefill"] = enough and all(
+        b["metrics"].get("reused_prompt_tokens", 0) > 0
+        and a["metrics"].get("actual_prefill_tokens", 0)
+        - b["metrics"].get("actual_prefill_tokens", 0)
+        == b["metrics"].get("reused_prompt_tokens", 0)
+        <= common_prefix for a, b in zip(cold, warm, strict=False))
+    latency = [r.get("client_ttft_ms") for r in cold + warm]
+    improvement = None
+    if enough and all(v is not None and v > 0 for v in latency):
+        improvement = 1 - statistics.median(r["client_ttft_ms"] for r in warm) / (
+            statistics.median(r["client_ttft_ms"] for r in cold))
+    checks["warm_p50_ttft"] = (improvement is not None and improvement >= threshold
+                               if threshold is not None else True)
+    return {"status": "passed" if all(checks.values()) else "failed",
+            "checks": checks, "required_ttft_improvement": threshold,
+            "observed_ttft_improvement": improvement, "qualification_promoted": False}
+
+
+async def prefix_checks(client, bundle, engine, scheduler, profile):
+    from mlx_one.inference_baseline import deterministic_prompt
+    from mlx_one.inference_baseline_worker import stream_request
+
+    content = deterministic_prompt(bundle.tokenizer, max(profile.context_tokens - 160, 32))
+    donor = [{"role": "system", "content": content}, {"role": "user", "content": "suffix A"}]
+    borrower = [donor[0], {"role": "user", "content": "suffix B"}]
+    ids = [tuple(bundle.tokenizer.encode(bundle.chat_template.render(m)))
+           for m in (donor, borrower)]
+    common = 0
+    for a, b in zip(*ids, strict=False):
+        if a != b:
+            break
+        common += 1
+    if max(map(len, ids)) + profile.output_tokens > bundle.context_length:
+        raise ValueError("rendered P0 prefix exceeds checkpoint context")
+    traces, rows = [], []
+    previous = getattr(engine, "_qualification_token_sink", None)
+    engine._qualification_token_sink = lambda request, tokens: traces.append(tokens)
+    async def request(messages, phase, index):
+        start = len(traces)
+        result = await stream_request(client, profile, messages, phase=phase,
+                                      group=f"p0-{index}-{phase}", index=index)
+        result["output_token_ids"] = list(traces[-1]) if len(traces) > start else None
+        rows.append(result)
+    try:
+        await request(borrower, "warmup", -1)
+        for index in range(profile.repeats):
+            scheduler.execute(engine.clear_caches)
+            await request(borrower, "cold", index)
+            scheduler.execute(engine.clear_caches)
+            await request(donor, "donor", index)
+            await request(borrower, "warm", index)
+        gate = prefix_gate(rows, common, threshold=.1 if profile.context_tokens >= 8192 else None)
+        return {**gate, "requests": rows, "exact_shared_tokens": common,
+                "rendered_token_ids": [list(tokens) for tokens in ids],
+                "namespace_class": "authenticated_principal",
+                "threshold_scope": "named rendered-prefix workload"}
+    finally:
+        engine._qualification_token_sink = previous
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--list-profiles", action="store_true")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--run", action="store_true")
+    parser.add_argument("--include-16k", action="store_true")
+    parser.add_argument("--include-32k", action="store_true")
     parser.add_argument("--checkpoint", action="append", default=[], metavar="NAME=LOCAL_PATH")
     parser.add_argument("--tests-log", type=Path)
     parser.add_argument("--probe-metal", action="store_true")
     args = parser.parse_args(argv)
+    items = list(p0_profiles(include_16k=args.include_16k, include_32k=args.include_32k))
     if args.list_profiles:
-        print(json.dumps([asdict(p) for p in p0_profiles()], indent=2))
+        print(json.dumps([asdict(p) for p in items], indent=2))
         return 0
     if args.output is None:
         parser.error("--output is required unless listing profiles")
+    if args.run:
+        from mlx_one.hardware import detect_hardware
+        from mlx_one.inference_baseline import run_profile
+
+        root = Path(__file__).resolve().parents[2]
+        host = detect_hardware().to_dict()
+        provenance = source_provenance(root)
+        outcomes = [run_profile(p, args.output / p.model_id.replace("/", "--") / p.profile_id,
+                                hardware=host, provenance=provenance) for p in items]
+        return int(any(row["status"] != "completed" for row in outcomes))
     checkpoints = []
     for value in args.checkpoint:
         name, separator, path = value.partition("=")

@@ -13,6 +13,7 @@ class RequestTiming:
         self.first = self.last = None
         self.count = 0
         self.tokens = deque(maxlen=limit) if trace else None
+        self.token_ids = deque(maxlen=limit) if trace else None
         self.gaps = deque(maxlen=limit)
         self.batches = deque(maxlen=limit) if trace else None
         self.dtypes = set()
@@ -33,6 +34,7 @@ class RequestTiming:
             self.count += 1
             if self.tokens is not None:
                 self.tokens.append((at - self.started) * 1000)
+                self.token_ids.append(event.get("token_id"))
         elif kind == "forward":
             self.forwards += 1
             self.forward_ms[event["phase"]] += event["duration_ms"]
