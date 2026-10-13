@@ -64,10 +64,14 @@ class BaselineProfile:
     leak_budget_bytes: int | None = None
     min_decode_tokens_per_second: float | None = None
     quality_run: str | None = None
+    pressure_allocation_bytes: int | None = None
+    pressure_test_ceiling_bytes: int | None = None
+    memory_tolerances: dict | None = None
     calibration_phase: str = "decode"
     queue_size: int | None = None
     output_buffer_events: int = 32
     output_stall_timeout_s: float = 30.0
+    prefix_cache_budget_bytes: int = 512 * 1024**2
     cache_capacity_bytes: int | None = None
     pressure_config: dict | None = None
     traffic_manifest: str | None = None
@@ -102,6 +106,12 @@ class BaselineProfile:
             raise BaselineError("soak profiles require 30 or 60 minutes")
         if (self.workload == "soak") != (self.duration_seconds is not None):
             raise BaselineError("soak workload requires an explicit 30/60 minute duration")
+        for bound in (self.pressure_allocation_bytes, self.pressure_test_ceiling_bytes,
+                      self.cache_capacity_bytes, self.queue_size):
+            if bound is not None and (not isinstance(bound, int) or bound < 1):
+                raise BaselineError("memory and queue bounds must be positive integers")
+        if self.output_buffer_events < 1 or self.output_stall_timeout_s <= 0:
+            raise BaselineError("invalid output buffer bounds")
         if self.calibration_phase not in {"decode", "prefill"}:
             raise BaselineError("invalid calibration phase")
         if self.workload == "peak_calibration" and self.inference_mode not in {
@@ -172,7 +182,10 @@ class BaselineProfile:
                "traffic_manifest": None, "traffic_identity": None,
                "max_queue_wait_ms": None, "max_service_gap_ms": None,
                "queue_size": None, "output_buffer_events": 32, "output_stall_timeout_s": 30.,
-               "cache_capacity_bytes": None, "pressure_config": None, "calibration_phase": "decode"}
+               "cache_capacity_bytes": None, "prefix_cache_budget_bytes": 512 * 1024**2,
+               "pressure_config": None, "calibration_phase": "decode",
+               "pressure_allocation_bytes": None,
+               "pressure_test_ceiling_bytes": None, "memory_tolerances": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
                     or self.workload in {"microbench", "quality", "pressure", "soak",
                                         "multi_turn", "lifecycle", "peak_calibration"}
@@ -186,7 +199,8 @@ class BaselineProfile:
     def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "profile_id": self.profile_id, "offline": True,
                 "temperature": 0, "speculation": False,
-                "prefix_reuse": self.workload in {"prefix", "multi_turn"}, "tolerances": TOLERANCES}
+                "prefix_reuse": self.workload in {"prefix", "multi_turn", "soak"},
+                "tolerances": TOLERANCES}
 
 
 def deterministic_prompt(tokenizer: Any, target_tokens: int, *, suffix: str = "") -> str:
@@ -315,7 +329,9 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         aggregate.append(sum(r["generated_tokens"] for r in group) / elapsed if elapsed else None)
     return {
         "completed": len(valid), "failed": sum(
-            r.get("status") not in {"completed", "cancelled_expected"} for r in rows),
+            r.get("status") not in {"completed", "cancelled_expected",
+                                    "deadline_expected", "stalled_expected"}
+            for r in rows),
         "cold_client_ttft_ms": [r.get("client_ttft_ms") for r in valid
                                 if r.get("temperature_phase") == "cold"],
         "warm_client_ttft_p50_ms": percentile([r["client_ttft_ms"] for r in warm
@@ -377,6 +393,12 @@ def run_profile(profile: BaselineProfile, output: Path, *, hardware: dict[str, A
                 "hardware": hardware, "source": provenance, "output": str(output.resolve())}
     request_path = output / "manifest.json"
     request_path.write_text(json.dumps(manifest, indent=2) + "\n")
+    for bound in (profile.pressure_allocation_bytes, profile.pressure_test_ceiling_bytes):
+        if bound is not None and bound > hardware["memory_bytes"] * profile.memory_fraction:
+            outcome = {"status": "rejected_pressure", "reason": "pressure bound exceeds watchdog"}
+            (output / "failure.json").write_text(json.dumps(outcome) + "\n")
+            (output / "supervision.json").write_text(json.dumps(outcome) + "\n")
+            return outcome
     maximum = CHECKPOINT_CONTEXTS.get(profile.model_id)
     if maximum is not None and profile.context_tokens + profile.output_tokens > maximum:
         outcome = {"status": "rejected_context", "checkpoint_limit": maximum,
@@ -400,6 +422,9 @@ def run_profile(profile: BaselineProfile, output: Path, *, hardware: dict[str, A
         if failure_path.exists():
             outcome["worker_failure"] = json.loads(failure_path.read_text())
         failure_path.write_text(json.dumps(outcome, indent=2) + "\n")
+    from mlx_one.inference_qualification import write_integrity
+
+    write_integrity(output)
     return outcome
 
 
@@ -443,11 +468,16 @@ def main(argv=None) -> int:
     parser.add_argument("--traffic-manifest", type=Path)
     parser.add_argument("--max-queue-wait-ms", type=float)
     parser.add_argument("--max-service-gap-ms", type=float)
+    parser.add_argument("--output-tokens", type=int)
+    parser.add_argument("--pressure-allocation-bytes", type=int)
+    parser.add_argument("--pressure-test-ceiling-bytes", type=int)
+    parser.add_argument("--memory-tolerances", type=Path)
     parser.add_argument("--calibration-phase", choices=("decode", "prefill"), default="decode")
     parser.add_argument("--queue-size", type=int)
     parser.add_argument("--output-buffer-events", type=int, default=32)
     parser.add_argument("--output-stall-timeout-s", type=float, default=30.)
     parser.add_argument("--cache-memory-budget-bytes", type=int)
+    parser.add_argument("--prefix-cache-bytes", type=int, default=512 * 1024**2)
     parser.add_argument("--pressure-config", type=Path)
     parser.add_argument("--leak-budget-bytes", type=int)
     parser.add_argument("--min-decode-tok-s", type=float)
@@ -477,11 +507,18 @@ def main(argv=None) -> int:
                         traffic_manifest=str(args.traffic_manifest.resolve())
                         if args.traffic_manifest else None,
                         traffic_identity=replay["sha256"] if replay else None,
+                        context_tokens=args.context_tokens or p.context_tokens,
+                        output_tokens=args.output_tokens or p.output_tokens,
+                        pressure_allocation_bytes=args.pressure_allocation_bytes,
+                        pressure_test_ceiling_bytes=args.pressure_test_ceiling_bytes,
+                        memory_tolerances=json.loads(args.memory_tolerances.read_text())
+                        if args.memory_tolerances else None,
                         calibration_phase=args.calibration_phase,
                         queue_size=args.queue_size,
                         output_buffer_events=args.output_buffer_events,
                         output_stall_timeout_s=args.output_stall_timeout_s,
                         cache_capacity_bytes=args.cache_memory_budget_bytes,
+                        prefix_cache_budget_bytes=args.prefix_cache_bytes,
                         pressure_config=json.loads(args.pressure_config.read_text())
                         if args.pressure_config else None,
                         max_queue_wait_ms=args.max_queue_wait_ms,
@@ -508,6 +545,7 @@ def main(argv=None) -> int:
                      or profile.shared_prefix_fraction == args.shared_prefix_fraction)
                 and (args.admission_policy is None
                      or profile.admission_policy == args.admission_policy)]
+    selected = list({profile.profile_id: profile for profile in selected}.values())
     if not selected:
         parser.error("no profiles match the selected model, workload, or dimensions")
     if args.list_profiles:

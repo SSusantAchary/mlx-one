@@ -127,7 +127,8 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
                 continue
             return {"requested_mode": "auto", "resolved_mode": mode,
                     "reason": "matching checksummed performance qualification",
-                    "evidence_scope": asdict(record.scope)}
+                    "evidence_scope": asdict(record.scope),
+                    "measured_workload": profile["workload"]}
     return fallback
 
 
@@ -223,6 +224,7 @@ def validate_configured_bounds(runtime, batching, envelope):
                 "output_buffer_events": batching.output_buffer_events,
                 "output_stall_timeout_s": batching.output_stall_timeout_s,
                 "cache_capacity_bytes": runtime.config.memory_budget_bytes,
+                "prefix_cache_budget_bytes": runtime.config.prefix_cache_budget_bytes,
                 "pressure": asdict(pressure.config) if pressure is not None else {"enabled": False},
                 "kernel_version": KERNEL_VERSION, "arena_version": ARENA_VERSION}
     profile = envelope.to_dict()

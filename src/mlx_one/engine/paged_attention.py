@@ -96,6 +96,8 @@ def kernel_source(formats, dim, row_count=1):
                 threadgroup_barrier(mem_flags::mem_threadgroup);
             }}
         }}""")
+    if len(names) > 30:
+        raise ValueError("Metal kernel exceeds its buffer binding limit")
     source = """
         uint d = thread_position_in_threadgroup.x;
         uint group = threadgroup_position_in_grid.y;
@@ -144,6 +146,17 @@ def paged_attention(queries, rows, positions, widths, *, scale):
         if cache.pool is not arena:
             raise ValueError("batch spans page arenas")
         cache.page_table.validate(cache._blocks)
+        from mlx_one.engine.paged import KERNEL_VERSION
+
+        if sum(r.block.token_count for r in cache._blocks) != cache.offset:
+            raise ValueError("page table committed length mismatch")
+        for reference in cache._blocks:
+            layout = reference.block.layout
+            if (layout.version != 3 or layout.kernel_version != KERNEL_VERSION
+                    or layout.layer_id != cache.layer_id or layout.page_tokens != cache.block_tokens
+                    or layout.key_dtype != cache.dtype or layout.value_dtype != cache.dtype
+                    or layout.quantization_bits not in {None, cache.bits}):
+                raise ModelCapabilityUnsupported("unsupported arena page layout")
     accum = maximum = normalizer = None
     pos, real_widths = mx.array(positions), mx.array(widths)
     lengths = mx.array([c.offset for c in rows])
@@ -154,7 +167,7 @@ def paged_attention(queries, rows, positions, widths, *, scale):
                           if index // 16 == chunk})
             # 6 common + B tables + at most 24 segment arrays fit Metal's 31 bindings.
             quantized = any(arena.segments[sid].layout.quantization_bits for sid in ids)
-            group_size = max(1, (31 - 6 - batch) // (6 if quantized else 2))
+            group_size = max(1, (30 - 6 - batch) // (6 if quantized else 2))
             for start in range(0, len(ids), group_size):
                 selected = ids[start:start + group_size]
                 segments = [arena.segments[sid] for sid in selected]

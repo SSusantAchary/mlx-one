@@ -223,7 +223,7 @@ def test_segment_identity_validation_and_shared_page_lifetime(advanced):
 
 
 def test_kernel_bindings_are_bounded_and_template_arguments_are_integral():
-    for formats in ((None,) * 8, (4,) * 4, (8, None, 4)):
+    for formats in ((None,) * 8, (4,) * 3, (8, None, 4)):
         names, source = kernel_source(formats, 128)
         assert len(names) <= 31
         assert "threadgroup_barrier" in source
@@ -930,3 +930,41 @@ def test_peak_producer_resets_each_measured_forward_and_records_ragged_scope(adv
                                     "history_lengths": [16, 16], "widths": [16, 16],
                                     "phase": "prefill"}
     assert result["actual_cache_dtypes"] == ["float16"]
+
+
+def test_paged_prefix_cannot_substitute_quantized_layout(advanced):
+    from mlx_one.engine.modes import ModelCapabilityUnsupported
+    from mlx_one.engine.paged import PagedKVCache
+
+    runtime = CacheManager(advanced(), CacheConfig(backend="paged", block_size_tokens=16))
+    donor = runtime.create_handle("float").bundle.entries[0]
+    values = np.ones((1, 1, 16, 4), dtype=np.float16)
+    donor.append(values, values)
+    borrower = PagedKVCache(runtime.block_pool, bits=4)
+    references = tuple(ref.fork() for ref in donor._blocks)
+    with pytest.raises(ModelCapabilityUnsupported, match="precision"):
+        borrower.adopt(references)
+    assert borrower.offset == 0
+    for reference in references:
+        reference.close()
+    runtime.close()
+
+
+def test_held_out_native_fixture_scores_all_input_tokens(advanced, tmp_path):
+    from test_quality_dataset import manifest
+
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+    from mlx_one.quality_dataset import load_quality_manifest, native_dataset_quality
+
+    path = manifest(tmp_path)
+    dataset = load_quality_manifest(path)
+    bundle = replace(advanced(), tokenizer_identity="immutable-cpu-fixture-tokenizer")
+    item = BaselineProfile(*CHECKPOINTS["qwen"], "paged", workload="quality",
+                           cache_type="f16", output_tokens=2, quality_manifest=str(path),
+                           quality_dataset_identity=dataset["identity"])
+    result, retrieval = native_dataset_quality(bundle, item)
+    assert result["scored_tokens"] == len(bundle.tokenizer.encode("Held out text.")) - 1
+    assert result["document_count"] == 1
+    assert abs(result["held_out_nll_mean_delta"]) < .05
+    assert not result["coverage"]["eligible"]
+    assert len(retrieval["fixtures"]) == 1

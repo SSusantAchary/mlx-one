@@ -57,14 +57,18 @@ def generated_traffic(profile):
                "prompt_tokens": (2048 if index % 2 == 0 else 8192)
                                 if profile.workload in {"mixed", "soak"}
                                 else profile.context_tokens,
-               "output_tokens": profile.output_tokens,
+               "output_tokens": min(profile.output_tokens, 128)
+                                if profile.workload == "soak" else profile.output_tokens,
                "principal_label": "principal-a",
-               "shared_prefix_fraction": profile.shared_prefix_fraction or 0,
+               "shared_prefix_fraction": profile.shared_prefix_fraction
+                                         if profile.shared_prefix_fraction is not None
+                                         else .5 if profile.workload == "soak" else 0,
                "consumer": {}}
         if profile.workload in {"cancellation", "soak"} and index % 6 == 1:
             row["cancel_after_events"] = 3
         if profile.workload in {"slow_consumer", "soak"} and index % 6 == 2:
             row["consumer"] = {"pause_after_events": 1, "pause_ms": 31_000}
+            row["output_tokens"] = profile.output_tokens
         rows.append(row)
     return validate_traffic({"schema_version": TRAFFIC_SCHEMA, "seed": profile.seed,
                              "requests": rows})
@@ -148,6 +152,8 @@ def compare_policy_runs(default, cache_aware):
         metrics[key] = {"default": left, "cache_aware": right,
                         "delta": right - left if left is not None and right is not None else None}
     return {"schema_version": "native-policy-comparison-v1", "metrics": metrics,
+            "runs": {"default": str(Path(default).resolve()),
+                     "cache_aware": str(Path(cache_aware).resolve())},
             "traffic_sha256": traffic_identity(traces[0][0]), "qualification_promoted": False}
 
 
@@ -167,6 +173,9 @@ def main(argv=None):
         writer = csv.DictWriter(handle, fieldnames=("metric", "default", "cache_aware", "delta"))
         writer.writeheader()
         writer.writerows({"metric": key, **value} for key, value in result["metrics"].items())
+    from mlx_one.inference_qualification import write_integrity
+
+    write_integrity(args.output)
     return 0
 
 

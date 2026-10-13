@@ -56,7 +56,8 @@ class ComponentContract:
         self.reset()
 
     def validate(self, spec):
-        if self.kind != spec.kind or self.offset < 0:
+        if (self.kind != spec.kind or not isinstance(self.offset, int)
+                or isinstance(self.offset, bool) or self.offset < 0):
             raise ValueError("component kind or committed position mismatch")
         if self.kind in {"full_kv", "sliding_kv"}:
             length = min(self.offset, getattr(self, "max_size", self.offset))

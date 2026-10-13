@@ -160,6 +160,12 @@ class PagedKVCache(BlockKVCache):
         draft.page_table = PersistentPageTable(self.pool)
 
     def adopt(self, references):
+        for reference in references:
+            layout = reference.block.layout
+            if (layout.version != 3 or layout.kernel_version != KERNEL_VERSION
+                    or layout.key_dtype != self.dtype or layout.value_dtype != self.dtype
+                    or layout.quantization_bits != self.bits):
+                raise ModelCapabilityUnsupported("prefix page precision or layout mismatch")
         super().adopt(references)
         for index, reference in enumerate(references):
             self.page_table.update(index, reference)

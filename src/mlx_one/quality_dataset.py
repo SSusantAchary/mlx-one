@@ -159,8 +159,9 @@ def native_dataset_quality(bundle, profile):
                             window, target, b, request_id="quality", return_all_logits=True)
                         right = runner.execute((request,)).logits[0]
                         mx.eval(left, right)
-                        measurements.append(paired_logits_metrics(np.array(left)[0],
-                                                                   np.array(right)[0], expected))
+                        measurements.append(paired_logits_metrics(
+                            np.array(left.astype(mx.float32))[0],
+                            np.array(right.astype(mx.float32))[0], expected))
                 finally:
                     oracle.release(a)
                     target.release(b)

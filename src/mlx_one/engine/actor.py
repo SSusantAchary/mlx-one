@@ -66,6 +66,7 @@ class InferenceActor:
         self._condition = threading.Condition()
         self._pending = deque()
         self._active = []
+        self._paused = []
         self._closed = False
         self._epoch = 0
         self._finalizer = None
@@ -94,7 +95,10 @@ class InferenceActor:
 
     def stats(self):
         with self._condition:
-            return {"parallel_slots": self.config.max_sequences, "active_slots": len(self._active),
+            return {"parallel_slots": self.config.max_sequences,
+                    "active_slots": len(self._active), "paused_slots": len(self._paused),
+                    "queued_output_events": sum(j.output.qsize() for j in
+                                                [*self._active, *self._paused]),
                     "queue_depth": len(self._pending), "queue_capacity": self.config.queue_size,
                     "model_epoch": self._epoch, "execution_mode": self.execution_mode,
                     "forward_traces": list(self._traces),
@@ -119,7 +123,7 @@ class InferenceActor:
         with self._condition:
             if self._closed:
                 raise RuntimeError("inference actor is closed")
-            if len(self._pending) >= self.config.queue_size:
+            if len(self._pending) + len(self._paused) >= self.config.queue_size:
                 self._event(job, "submitted")
                 self._event(job, "terminal", reason="overload")
                 self._counts["rejected"] += 1
@@ -192,7 +196,7 @@ class InferenceActor:
                 return
             self._closed = True
             self._finalizer = finalizer
-            for job in self._active:
+            for job in [*self._active, *self._paused]:
                 job.cancel.set()
             self._condition.notify_all()
         if threading.current_thread() is not self._thread:
@@ -215,6 +219,8 @@ class InferenceActor:
             job.state.transition(phase)
         if job in self._active:
             self._active.remove(job)
+        if job in self._paused:
+            self._paused.remove(job)
         self._event(job, "terminal", phase=phase.value,
                     reason=type(error).__name__ if error else None)
         key = {Phase.FINISHED: "completed", Phase.CANCELLED: "cancelled",
@@ -347,6 +353,9 @@ class InferenceActor:
             else:
                 call = None
         if call is not None:
+            for paused in tuple(getattr(self, "_paused", ())):
+                paused.cancel.set()
+                self._finish(paused, phase=Phase.CANCELLED)
             try:
                 result = call.factory()
                 self._epoch += 1
@@ -357,6 +366,18 @@ class InferenceActor:
     def _run(self):
         try:
             while not self._closed:
+                now = time.monotonic()
+                for paused in tuple(self._paused):
+                    if not paused.output.full():
+                        self._paused.remove(paused)
+                        self._event(paused, "unblocked", reason="backpressure")
+                        paused.blocked_reason, paused.stalled_at = None, None
+                        with self._condition:
+                            self._pending.appendleft(paused)
+                    elif now - paused.stalled_at >= self.config.output_stall_timeout_s:
+                        paused.cancel.set()
+                        self._finish(paused, TimeoutError("generation output consumer stalled"),
+                                     Phase.TIMED_OUT)
                 if self.pressure is not None:
                     self.pressure.poll()
                     runtimes = {id(j.request.runtime): j.request.runtime for j in self._active
@@ -367,7 +388,7 @@ class InferenceActor:
                 now = time.monotonic()
                 with self._condition:
                     pending = [j for j in self._pending if isinstance(j, _Job)]
-                for job in [*self._active, *pending]:
+                for job in [*self._active, *self._paused, *pending]:
                     if job.cancel.is_set() or (job.deadline is not None and now >= job.deadline):
                         if job in pending:
                             with self._condition:
@@ -388,6 +409,9 @@ class InferenceActor:
                             job.cancel.set()
                             self._finish(job, TimeoutError("generation output consumer stalled"),
                                          Phase.TIMED_OUT)
+                        elif job in self._active:
+                            self._active.remove(job)
+                            self._paused.append(job)
                     else:
                         if job.blocked_reason:
                             self._event(job, "unblocked", reason=job.blocked_reason)
@@ -459,7 +483,7 @@ class InferenceActor:
                 with self._condition:
                     self._condition.wait(timeout=0.001 if self._active or self._pending else 0.05)
         finally:
-            for job in tuple(self._active):
+            for job in tuple([*self._active, *self._paused]):
                 self._finish(job, phase=Phase.CANCELLED)
             with self._condition:
                 pending = list(self._pending)

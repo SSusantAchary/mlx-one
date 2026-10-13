@@ -23,6 +23,7 @@ class QualificationEnvelope:
     output_buffer_events: int
     output_stall_timeout_s: float
     cache_capacity_bytes: int | None
+    prefix_cache_budget_bytes: int
     pressure: dict
     kernel_version: str
     arena_version: str
@@ -83,10 +84,11 @@ def profile_envelope(profile):
         profile.max_scheduled_tokens, profile.max_prefill_tokens,
         profile.queue_size or max(profile.slots * 4, 8), profile.timeout_seconds,
         profile.output_buffer_events, profile.output_stall_timeout_s,
-        profile.cache_capacity_bytes,
+        profile.cache_capacity_bytes, profile.prefix_cache_budget_bytes,
         profile.pressure_config or asdict(MemoryPressureConfig()), KERNEL_VERSION, ARENA_VERSION,
         {"name": profile.workload, "traffic_sha256": traffic, "seed": profile.seed,
          "shared_prefix_fraction": profile.shared_prefix_fraction,
+         "prefix_reuse": profile.workload in {"prefix", "multi_turn", "soak"},
          "dataset": profile.quality_dataset_identity},
         profile.ttft_budget_ms, profile.decode_gap_budget_ms,
         profile.max_queue_wait_ms, profile.max_service_gap_ms)

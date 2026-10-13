@@ -133,6 +133,7 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         "layers": layers,
         "arena": (runtime.block_pool.stats()
                   if runtime and runtime.config.backend == "paged" else None),
+        "qualified_workload_envelope": getattr(runtime, "qualified_envelope", None),
         "execution_memory_forecast": getattr(runtime, "last_execution_forecast", None),
         "component_capabilities": component_capabilities(bundle, runtime, selected_mode),
         "configured_cache_precision": runtime.precision_configuration() if runtime else None,

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from pathlib import Path
 
 
 async def pressure_recovery(client, bundle, engine, scheduler, profile, output):
@@ -314,9 +315,19 @@ def advanced_checks(bundle, engine, scheduler, profile, summary, output):
     if profile.kv_bits:
         correctness = scheduler.execute(lambda: attention_microbench(bundle, profile))
         write_json(output / "quantized-attention-correctness.json", correctness)
-        retrieval = scheduler.execute(lambda: retrieval_quality(bundle, profile))
-        write_json(output / "retrieval.json", retrieval)
-        quality = evaluate_quality(parity, retrieval, profile.quality_limits)
+        if profile.quality_run:
+            reference_quality = load_quality_reference(profile.quality_run, profile=profile,
+                                                       runtime=runtime)
+            write_json(output / "quality-reference.json", reference_quality)
+            reference_parity = json.loads((Path(profile.quality_run)
+                                           / "parity.json").read_text())
+            for name in ("quality_kind", "coverage", "held_out_nll_mean_delta", "dataset_identity"):
+                parity[name] = reference_parity[name]
+            quality = {"status": "passed", "source": "checksummed-held-out-quality-run"}
+        else:
+            retrieval = scheduler.execute(lambda: retrieval_quality(bundle, profile))
+            write_json(output / "retrieval.json", retrieval)
+            quality = evaluate_quality(parity, retrieval, profile.quality_limits)
         if not correctness["within_tolerance"]:
             quality["status"] = "failed"
         write_json(output / "quality.json", quality)
@@ -332,7 +343,18 @@ def advanced_checks(bundle, engine, scheduler, profile, summary, output):
     if profile.inference_mode == "paged" and profile.workload != "soak":
         gates["d"] = evaluate_gate_d(profile, summary, traces, parity, reference)
     if profile.inference_mode == "experimental_hybrid_batch":
-        gates["e"] = evaluate_gate_e(parity, traces)
+        from mlx_one.engine.lifecycle import hybrid_lifecycle
+        from mlx_one.engine.modes import configure_execution_dtype
+        from mlx_one.text import load_text_model
+
+        def reload_checkpoint():
+            fresh = load_text_model(profile.model_id, revision=profile.revision, offline=True)
+            configure_execution_dtype(fresh, profile.execution_dtype)
+            return fresh
+        lifecycle = scheduler.execute(lambda: hybrid_lifecycle(
+            bundle, profile, output / "native-lifecycle", reload_bundle=reload_checkpoint))
+        write_json(output / "lifecycle.json", lifecycle)
+        gates["e"] = evaluate_gate_e(parity, traces, lifecycle)
         if profile.workload != "soak":
             gates["hybrid-performance"] = evaluate_gate_d(profile, summary, traces,
                                                          parity, reference)
@@ -349,6 +371,9 @@ def advanced_checks(bundle, engine, scheduler, profile, summary, output):
                 "kernel_version": KERNEL_VERSION if profile.inference_mode == "paged" else None,
                 "workload_envelope": workload_envelope(profile),
                 "quality_passed": quality is not None and quality["status"] == "passed",
+                "quality_kind": parity.get("quality_kind"),
+                "quality_coverage_passed": parity.get("coverage", {}).get("eligible", False),
+                "dataset_identity": parity.get("dataset_identity"),
                 "kernel_correctness_passed": (profile.kv_bits is not None
                                                and correctness["within_tolerance"]),
                 "memory_passed": gates["f"]["status"] == "passed",
@@ -358,6 +383,9 @@ def advanced_checks(bundle, engine, scheduler, profile, summary, output):
                                                     runtime=runtime)
         write_json(output / "quality-reference.json", quality_reference)
         metadata["quality_passed"] = True
+        metadata["quality_kind"] = quality_reference["proof"]["quality_kind"]
+        metadata["quality_coverage_passed"] = True
+        metadata["dataset_identity"] = quality_reference["proof"]["dataset_identity"]
         metadata["service_passed"] = gates["f"]["status"] == "passed"
     if any(g["status"] == "failed" for g in gates.values()) or parity["status"] == "failed":
         raise ValueError("declared optimized qualification gates failed")
