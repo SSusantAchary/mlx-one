@@ -22,6 +22,7 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -254,6 +255,9 @@ def percentile(values: list[float], fraction: float) -> float | None:
 
 
 async def main_async(args: argparse.Namespace) -> dict[str, Any]:
+    endpoint = urlsplit(args.base_url)
+    if endpoint.username or endpoint.password or endpoint.query:
+        raise SystemExit("benchmark URLs must not contain credentials or query parameters")
     tokenizer = load_tokenizer(args.tokenizer_source or args.model, offline=args.offline)
     from mlx_one.text.chat import ChatTemplate
     from mlx_one.text.loading import _resolve, resolve_text_model_type

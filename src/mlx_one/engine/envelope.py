@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 
 ENVELOPE_VERSION = "native-workload-envelope-v2"
-EVIDENCE_VERSION = "native-inference-qualification-v2"
+EVIDENCE_VERSION = "native-inference-qualification-v3"
 
 
 @dataclass(frozen=True)

@@ -81,7 +81,7 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         mlx_version = None
     features = (registry or getattr(runtime, "qualification_registry", None)
                 or InferenceFeatureRegistry())
-    if features.records() and (hardware is None or source_revision is None):
+    if hardware is None or source_revision is None:
         from mlx_one.engine.selection import host_identity, source_identity
 
         hardware = hardware or host_identity()
@@ -126,7 +126,23 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
                  "continuous_batching", "batched_dense_decode", "batched_chunked_prefill",
                  "paged_attention", "paged_prefill", "hybrid_prefix_restore", "hybrid_batching",
                  "quantized_paged_kv", "long_context")
+    qualification = {name: features.report(name, scope) for name in inventory}
+    details = {}
+    for name, claim in qualification.items():
+        available = claim["status"] != "not_implemented"
+        if name in {"quantized_paged_kv", "long_context"}:
+            available = claim.get("hardware_correctness_passed", False)
+        details[name] = {"implemented": True, "available_for_opt_in": bool(available),
+                         "checkpoint_correctness_passed": claim.get(
+                             "checkpoint_correctness_passed", False),
+                         "hardware_correctness_passed": claim.get(
+                             "hardware_correctness_passed", False),
+                         "performance_qualified": claim.get("performance_qualified", False),
+                         "reason": claim.get("validation_reason", "stale native evidence")}
     return {
+        "runtime_schema_version": "native-runtime-v2",
+        "feature_details": details,
+        "weights_identity": getattr(runtime, "weight_identity", None),
         "engine_mode": selected_mode, "configured_execution_dtype": execution_dtype,
         "model_revision": bundle.revision,
         "scope": asdict(scope), "actual_weight_dtypes": weights,
@@ -143,7 +159,7 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
                          "paged_attention": selected_mode == "paged",
                          "hybrid_prefix_restore": selected_mode == "experimental_hybrid_batch"},
         "runner_qualification": runner_features,
-        "qualification": {name: features.report(name, scope) for name in inventory},
+        "qualification": qualification,
         "latency": {"ttft_p95_ms": None, "decode_gap_p95_ms": None},
         "throughput": {"aggregate_decode_tok_s": None},
     }

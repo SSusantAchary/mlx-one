@@ -13,6 +13,7 @@ import time
 from dataclasses import fields
 from pathlib import Path
 
+from mlx_one.engine.selection import host_identity, source_identity
 from mlx_one.inference_baseline import BaselineError, BaselineProfile, summarize, validate_identity
 
 
@@ -34,18 +35,19 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "quantized-attention-correctness.json", "held-out-quality.json", "traffic.json",
                  "tokenization.json", "actor-events.jsonl", "fairness.json", "lifecycle.json",
                  "peak-calibration.json", "direct-stall-probe.json", "pressure-cycles.json",
-                 "shutdown.json", "measurement.json"):
+                 "shutdown.json", "measurement.json", "p0-prefix.json"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",
                                     sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                                     media_type="application/json")
             artifacts.append(reference.to_dict())
-    result = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
+    result = {"schema_version": "native-inference-qualification-v3", "backend": "mlx-one-native",
               "scope": scope, "feature": feature, "status": parity["status"],
               "correctness_passed": parity["status"] == "passed",
               "performance_qualified": gate is not None and gate.get("status") == "passed",
-              "artifacts": artifacts, "qualification_promoted": False, **metadata}
+              "artifacts": artifacts, "qualification_promoted": False,
+              "validation_kind": "native-hardware", **metadata}
     dependency = output / "quality-reference.json"
     if dependency.is_file():
         reference = json.loads(dependency.read_text())
@@ -259,6 +261,11 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
             from mlx_one.p0_qualification import prefix_checks
 
             measured = await prefix_checks(client, bundle, engine, scheduler, profile)
+            runtime = (await client.get("/v1/runtime")).json()
+            validate_identity(profile, runtime)
+            write_json(output / "runtime.json", runtime)
+            write_json(output / "tokenization.json", [
+                {"actual_rendered_tokens": len(ids)} for ids in measured["rendered_token_ids"]])
             write_json(output / "p0-prefix.json", measured)
             write_json(output / "summary.json", measured)
             if measured["status"] == "failed":
@@ -290,8 +297,8 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
                         handle.write(json.dumps(row) + "\n")
                 runtime = (await client.get("/v1/runtime")).json()
                 report = runtime["inference"]
-                report["scope"]["hardware"] = json.dumps(manifest["hardware"], sort_keys=True)
-                report["scope"]["source_revision"] = manifest["source"]["source_sha256"]
+                report["scope"]["hardware"] = host_identity()
+                report["scope"]["source_revision"] = source_identity()
                 validate_identity(profile, runtime)
                 write_json(output / "runtime.json", runtime)
                 cache = runtime.get("cache") or {}
@@ -353,8 +360,8 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
             runtime = (await client.get("/v1/runtime")).json()
             report = runtime["inference"]
             # Fill provenance unavailable to a general-purpose HTTP runtime reporter.
-            report["scope"]["hardware"] = json.dumps(manifest["hardware"], sort_keys=True)
-            report["scope"]["source_revision"] = manifest["source"]["source_sha256"]
+            report["scope"]["hardware"] = host_identity()
+            report["scope"]["source_revision"] = source_identity()
             write_json(output / "runtime.json", runtime)
             validate_identity(profile, runtime)
             with (output / "time-series.jsonl").open("a") as handle:
@@ -539,8 +546,8 @@ def execute(manifest):
                     cache_type=profile.cache_type, page_tokens=profile.page_tokens,
                     atol=profile.atol, rtol=profile.rtol, seed=profile.seed))
                 report = result["runtime"]
-                report["scope"]["hardware"] = json.dumps(manifest["hardware"], sort_keys=True)
-                report["scope"]["source_revision"] = manifest["source"]["source_sha256"]
+                report["scope"]["hardware"] = host_identity()
+                report["scope"]["source_revision"] = source_identity()
                 validate_identity(profile, {"inference": report})
                 write_json(output / "parity.json", result)
                 write_json(output / "cleanup.json", result["cleanup"])

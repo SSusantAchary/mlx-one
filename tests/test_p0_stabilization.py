@@ -237,3 +237,82 @@ def test_http_benchmark_auth_is_not_serialized(monkeypatch):
                                      ["prefix-A", "prefix-B"])
     assert metadata["verified_common_prefix_tokens"] > len("prefix-")
     assert metadata["rendered_token_sha256"][0] != metadata["rendered_token_sha256"][1]
+
+
+@pytest.mark.parametrize("schema,kind", [("native-inference-qualification-v2", "native-hardware"),
+                                        ("native-inference-qualification-v3", "synthetic")])
+def test_unmeasured_or_legacy_evidence_cannot_promote(tmp_path, schema, kind):
+    from dataclasses import asdict
+
+    from mlx_one.engine.selection import load_evidence
+    from mlx_one.registry import InferenceFeatureRegistry, InferenceScope, RegistryError
+
+    scope = InferenceScope("model", "a" * 40, "paged", "topology", "float16", "float16",
+                           "0.32.2", "M4", "source")
+    proof = {"schema_version": schema, "validation_kind": kind, "scope": asdict(scope),
+             "backend": "mlx-one-native", "feature": "paged_attention", "status": "passed",
+             "correctness_passed": True, "performance_qualified": True}
+    path = tmp_path / "proof.json"
+    path.write_text(json.dumps(proof))
+    with pytest.raises(RegistryError):
+        InferenceFeatureRegistry().promote("paged_attention", scope, path, "performance_qualified")
+    if schema.endswith("v2"):
+        assert load_evidence([path]).report("paged_attention", scope)["status"] == "experimental"
+
+
+def test_feature_details_distinguish_implementation_from_validation(native):
+    from mlx_one import Engine
+
+    with Engine(native) as engine:
+        report = engine.runtime_stats()
+        dense = report["feature_details"]["dense_execution"]
+        assert dense["implemented"] and dense["available_for_opt_in"]
+        assert not dense["hardware_correctness_passed"]
+        assert not dense["performance_qualified"]
+        assert not report["feature_details"]["quantized_paged_kv"]["available_for_opt_in"]
+        assert report["selection"]["resolved_mode"] == "reference_dense"
+        assert report["scope"]["source_revision"]
+
+
+@pytest.mark.parametrize("slots", [1, 2, 4, 8])
+def test_p0_concurrency_matrix_preserves_independent_output_and_cleanup(native, slots):
+    from mlx_one import BatchingConfig, Engine
+
+    prompts = ["x" * (i + 1) for i in range(slots * 2)]
+    config = BatchingConfig(max_sequences=slots, queue_size=slots * 2,
+                            prefill_chunk_size=2, max_prefill_tokens=8,
+                            max_scheduled_tokens=16)
+    with Engine(native, inference_mode="experimental_dense_batch",
+                batching_config=config) as engine:
+        tasks = [engine.submit(prompt, max_tokens=5, seed=i) for i, prompt in enumerate(prompts)]
+        actual = [task.result(timeout=5).text for task in tasks]
+        stats = engine.runtime_stats()["cache_stats"]
+        assert stats["active_handles"] == stats["reserved_bytes"] == 0
+    with Engine(native) as reference:
+        expected = [reference.generate(prompt, max_tokens=5, seed=i).text
+                    for i, prompt in enumerate(prompts)]
+    assert actual == expected
+
+
+def test_auto_loads_missing_and_incomplete_evidence_as_unqualified(tmp_path):
+    from mlx_one.engine.selection import load_evidence
+
+    path = tmp_path / "bad.json"
+    path.write_text('{"schema_version":"native-inference-qualification-v3"}')
+    assert not load_evidence([tmp_path / "missing.json", path]).records()
+
+
+def test_model_timing_excludes_buffered_stop_tokens(native):
+    from mlx_one.engine.timing import RequestTiming
+    from mlx_one.text.generation import _stream_bundle
+    from mlx_one.text.schemas import TextGenerationOptions
+
+    stop_ids = native.tokenizer.encode("abc")
+    timing = RequestTiming(0, trace=True)
+    chunks = list(_stream_bundle(native, "x", TextGenerationOptions(max_tokens=4, stop=("abc",)),
+                                 None, _forced_token_ids=(4, *stop_ids),
+                                 on_execution=timing.observe))
+    assert chunks[-1].finish_reason == "stop"
+    assert timing.count == 1
+    assert tuple(timing.token_ids) == (4,)
+    assert timing.summary()["decode_tokens_per_second"] is None

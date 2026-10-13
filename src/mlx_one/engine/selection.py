@@ -15,20 +15,27 @@ from mlx_one.registry import InferenceFeatureStatus
 
 
 def load_evidence(paths):
-    from mlx_one.registry import InferenceFeatureRegistry, InferenceScope
+    from mlx_one.registry import InferenceFeatureRegistry, InferenceScope, RegistryError
 
     registry = InferenceFeatureRegistry()
     for path in paths:
-        proof = json.loads(Path(path).read_text())
+        try:
+            proof = json.loads(Path(path).read_text())
+            scope = InferenceScope(**proof["scope"])
+            feature = proof["feature"]
+        except (OSError, ValueError, TypeError, KeyError):
+            continue
         status = (InferenceFeatureStatus.PERFORMANCE_QUALIFIED if proof.get("performance_qualified")
                   else InferenceFeatureStatus.CORRECTNESS_PASSED)
         from mlx_one.engine.envelope import EVIDENCE_VERSION
 
-        scope = InferenceScope(**proof["scope"])
         if proof.get("schema_version") != EVIDENCE_VERSION:
-            registry.register_experimental(proof["feature"], scope)
+            registry.register_experimental(feature, scope)
             continue
-        registry.promote(proof["feature"], scope, path, status)
+        try:
+            registry.promote(feature, scope, path, status)
+        except (RegistryError, OSError, ValueError, TypeError, KeyError):
+            registry.register_experimental(feature, scope)
     return registry
 
 
@@ -111,7 +118,7 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             if fresh["status"] != InferenceFeatureStatus.PERFORMANCE_QUALIFIED.value:
                 continue
             proof = json.loads(Path(record.evidence[0].uri).read_text())
-            if proof.get("schema_version") != "native-inference-qualification-v2":
+            if proof.get("schema_version") != "native-inference-qualification-v3":
                 continue
             if (proof.get("workload_envelope") != profile
                     or proof.get("compatibility_digest") != compatibility_digest(candidate)):
@@ -168,7 +175,7 @@ def qualification_matches(runtime, feature, *, profile=None, performance=False):
         if status not in accepted:
             continue
         proof = json.loads(Path(record.evidence[0].uri).read_text())
-        if proof.get("schema_version") != "native-inference-qualification-v2":
+        if proof.get("schema_version") != "native-inference-qualification-v3":
             continue
         if proof.get("compatibility_digest") != compatibility_digest(runtime):
             continue

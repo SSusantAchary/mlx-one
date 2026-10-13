@@ -165,7 +165,7 @@ def load_quality_reference(directory, *, profile, runtime):
     scope["cache_precision"] = {"f16": "float16", "bf16": "bfloat16",
                                 "q4_0": "float16,uint8", "q8_0": "float16,uint8"}[
                                     profile.cache_type]
-    if (proof.get("schema_version") != "native-inference-qualification-v2"
+    if (proof.get("schema_version") != "native-inference-qualification-v3"
             or proof.get("quality_passed") is not True
             or proof.get("quality_kind") != "native-held-out-quality-v1"
             or proof.get("quality_coverage_passed") is not True

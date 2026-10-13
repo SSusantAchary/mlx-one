@@ -10,6 +10,7 @@ import subprocess
 import sys
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
+from importlib.metadata import distributions
 from pathlib import Path
 
 from mlx_one.engine.pressure import sample_telemetry
@@ -55,10 +56,15 @@ def inventory(root, *, checkpoints=(), test_log=None, probe=False):
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "source": source_provenance(root),
             "software": asdict(collect_software_provenance()),
+            "environment_packages": dict(sorted((d.metadata["Name"], d.version)
+                                                for d in distributions() if d.metadata["Name"])),
             "host": {"platform": platform.platform(), "telemetry": asdict(sample_telemetry())},
             "assets": assets, "metal": metal, "blockers": blockers,
             "test_output": Path(test_log).read_text() if test_log else None,
-            "hardware_qualification": "pending", "qualification_promoted": False}
+            "hardware_qualification": "pending", "qualification_promoted": False,
+            "pending_matrix": [{"profile": p.to_dict(), "status": "not_run",
+                                "gates": {name: "pending" for name in ("D", "E", "F")}}
+                               for p in p0_profiles()]}
 
 
 def write_inventory(output, manifest):
@@ -237,7 +243,9 @@ def main(argv=None):
         root = Path(__file__).resolve().parents[2]
         host = detect_hardware().to_dict()
         provenance = source_provenance(root)
-        outcomes = [run_profile(p, args.output / p.model_id.replace("/", "--") / p.profile_id,
+        run = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        outcomes = [run_profile(p, args.output / p.model_id.replace("/", "--") /
+                                (run + "-" + p.profile_id),
                                 hardware=host, provenance=provenance) for p in items]
         return int(any(row["status"] != "completed" for row in outcomes))
     checkpoints = []

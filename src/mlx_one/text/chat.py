@@ -122,7 +122,7 @@ def _fallback(model_type: str, messages: Sequence[ChatMessage],
         return body + ("<|im_start|>assistant\n" if add_generation_prompt else "")
     if model_type == "openelm":
         labels = {"system": "System", "developer": "Developer",
-              "user": "User", "assistant": "Assistant"}
+                  "user": "User", "assistant": "Assistant"}
         body = "".join(f"### {labels[item['role']]}:\n{item['content']}\n" for item in messages)
         return body + ("### Assistant:\n" if add_generation_prompt else "")
     labels = {"system": "System", "developer": "Developer",

@@ -483,7 +483,8 @@ class CacheManager:
                 return False
             amount = handle.bundle.allocated_nbytes * 2
             if amount > self.config.prefix_cache_budget_bytes:
-                handle.metadata["publication_rejections"] = 1
+                handle.metadata["publication_rejections"] = (
+                    handle.metadata.get("publication_rejections", 0) + 1)
                 return False
             resources = ExitStack()
             try:
@@ -492,12 +493,13 @@ class CacheManager:
                 resources.callback(snapshot.release)
                 import mlx.core as mx
 
-                tensors = []
-                for entry in snapshot.entries:
-                    for value in vars(entry).values():
-                        if getattr(value, "dtype", None) is not None:
-                            tensors.append(value)
-                mx.eval(*tensors)
+                def tensors(value):
+                    if isinstance(value, dict):
+                        return [t for v in value.values() for t in tensors(v)]
+                    if isinstance(value, (tuple, list)):
+                        return [t for v in value for t in tensors(v)]
+                    return [value] if getattr(value, "dtype", None) is not None else []
+                mx.eval(*(t for entry in snapshot.entries for t in tensors(vars(entry))))
                 handle.metadata["staged_prefix"] = (fingerprint, tokens, snapshot, resources)
                 return True
             except BaseException:
@@ -519,7 +521,8 @@ class CacheManager:
                 stored = self.snapshot_prefix.put((fingerprint,), tokens, snapshot)
                 if stored and maximum_entries is not None:
                     self.snapshot_prefix.limit_entries(maximum_entries)
-                handle.metadata["prefix_publications"] = int(stored)
+                handle.metadata["prefix_publications"] = (
+                    handle.metadata.get("prefix_publications", 0) + int(stored))
                 return stored
             finally:
                 resources.close()
@@ -548,13 +551,18 @@ class CacheManager:
                 if not self.plan.prefix_shareable:
                     return False
                 stored = self.snapshot_prefix.put((fingerprint,), tokens, handle.bundle)
-                handle.metadata["prefix_publications"] = int(stored)
-                handle.metadata["publication_rejections"] = int(not stored)
+                handle.metadata["prefix_publications"] = (
+                    handle.metadata.get("prefix_publications", 0) + int(stored))
+                handle.metadata["publication_rejections"] = (
+                    handle.metadata.get("publication_rejections", 0) + int(not stored))
                 if stored and maximum_entries is not None:
                     self.snapshot_prefix.limit_entries(maximum_entries)
                 return stored
             layers = tuple(cache.full_block_refs for cache in handle.bundle.entries)
-            return self.block_prefix.publish(fingerprint, tokens, layers) > 0
+            stored = self.block_prefix.publish(fingerprint, tokens, layers) > 0
+            handle.metadata["prefix_publications"] = (
+                handle.metadata.get("prefix_publications", 0) + int(stored))
+            return stored
 
     def publish_hybrid_boundary(self, handle, prompt_ids):
         with self._lock:
@@ -575,21 +583,30 @@ class CacheManager:
             if handle.closed and handle.metadata.get("manager_id") == self._owner_token:
                 return
             self._validate_handle(handle)
+            error = None
             staged = handle.metadata.pop("staged_prefix", None)
+            operations = []
             if staged is not None:
-                staged[3].close()
+                operations.append(staged[3].close)
             if handle.reservation is not None:
-                self.release_reservation(handle.reservation)
-            from mlx_one.engine.reporting import describe_cache
+                operations.append(lambda: self.release_reservation(handle.reservation))
+            def observe():
+                from mlx_one.engine.reporting import describe_cache
 
-            self._last_state_observations = describe_cache(handle.bundle.entries, self.plan)
-            self._last_precision_configuration = {
-                "key_type": str(handle.metadata["key_type"]),
-                "value_type": str(handle.metadata["value_type"]),
-            }
+                self._last_state_observations = describe_cache(handle.bundle.entries, self.plan)
+                self._last_precision_configuration = {
+                    "key_type": str(handle.metadata["key_type"]),
+                    "value_type": str(handle.metadata["value_type"])}
+            operations.extend([observe, handle.bundle.release])
+            for operation in operations:
+                try:
+                    operation()
+                except BaseException as exc:
+                    error = error or exc
             handle.closed = True
             self._handles.pop(handle.handle_id, None)
-            handle.bundle.release()
+            if error is not None:
+                raise error
 
     def precision_configuration(self) -> dict[str, str] | None:
         with self._lock:
@@ -675,9 +692,14 @@ class CacheManager:
 
     def clear_prefixes(self) -> None:
         with self._lock:
-            self.snapshot_prefix.clear()
-            self.block_prefix.clear()
-            self.hybrid_prefix.clear()
+            error = None
+            for index in (self.snapshot_prefix, self.block_prefix, self.hybrid_prefix):
+                try:
+                    index.clear()
+                except BaseException as exc:
+                    error = error or exc
+            if error is not None:
+                raise error
 
     def close(self) -> None:
         with self._lock:
