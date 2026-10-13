@@ -47,7 +47,10 @@ class CacheManager:
         self._model_identity = _digest(self.weight_identity + str(id(bundle.model)))
         self.plan = build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens)
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
-        self.block_pool = BlockPool(
+        from mlx_one.engine.arena import SegmentedPageArena
+
+        pool_type = SegmentedPageArena if self.config.backend == "paged" else BlockPool
+        self.block_pool = pool_type(
             capacity,
             block_tokens=self.config.block_size_tokens,
         )

@@ -1,6 +1,6 @@
 """Transactional segmented page storage and direct attention dispatch.
 
-Each physical page is a segment. Launches bind a bounded number of segments;
+Each segment contains 16 pages. Launches bind a bounded number of segments;
 neither appending nor attention constructs a tensor containing the KV history.
 """
 
@@ -10,6 +10,7 @@ import time
 from contextlib import ExitStack
 from dataclasses import replace
 
+from mlx_one.engine.arena import PersistentPageTable, SegmentedPageArena
 from mlx_one.engine.batching import BatchedDenseRunner, request_cancelled
 from mlx_one.engine.block_cache import BlockLayout
 from mlx_one.engine.block_kv import BlockKVCache
@@ -17,7 +18,7 @@ from mlx_one.engine.cache import array_nbytes
 from mlx_one.engine.contracts import BatchPlan, RunnerOutput, ScheduledSequence
 from mlx_one.engine.modes import ModelCapabilityUnsupported
 
-KERNEL_VERSION = "segmented-online-softmax-v1"
+KERNEL_VERSION = "segmented-arena-online-softmax-v2"
 
 
 def quantize_page(value, bits):
@@ -61,6 +62,9 @@ class PagedKVCache(BlockKVCache):
         if dtype not in {"float16", "bfloat16"} or bits not in {None, 4, 8}:
             raise ModelCapabilityUnsupported("unsupported paged storage precision")
         self.dtype, self.bits = dtype, bits
+        if not isinstance(pool, SegmentedPageArena):
+            raise ValueError("paged storage requires a segmented arena")
+        self.page_table = PersistentPageTable(pool)
 
     @property
     def nbytes(self):
@@ -74,6 +78,7 @@ class PagedKVCache(BlockKVCache):
         import mlx.core as mx
 
         result = self.empty()
+        result.page_table = self.page_table.fork()
         try:
             for ref in self._blocks:
                 block = ref.block
@@ -85,6 +90,7 @@ class PagedKVCache(BlockKVCache):
                         dst[...] = src
                     copied = self.pool.allocate_ref(storage, block.token_count, layout=block.layout)
                 result._blocks.append(copied)
+                result.page_table.update(len(result._blocks) - 1, copied)
                 result._offset += block.token_count
             return result
         except BaseException:
@@ -110,7 +116,7 @@ class PagedKVCache(BlockKVCache):
             if tail is None or tail.immutable:
                 shape = (1, keys.shape[1], self.block_tokens, keys.shape[3])
                 storage = tuple(mx.zeros(shape, dtype=keys.dtype) for _ in range(2))
-                layout = BlockLayout(version=2, layer_id=self.layer_id,
+                layout = BlockLayout(version=3, layer_id=self.layer_id,
                                      page_tokens=self.block_tokens,
                                      num_kv_heads=int(keys.shape[1]), head_dim=int(keys.shape[3]),
                                      key_dtype=self.dtype, value_dtype=self.dtype,
@@ -122,12 +128,17 @@ class PagedKVCache(BlockKVCache):
                     raise ValueError("mutable paged tail is shared")
                 start = tail.token_count
             width = min(self.block_tokens - start, keys.shape[2] - cursor)
+            storage = tuple(mx.zeros(x.shape, dtype=x.dtype) for x in tail.state)
+            for dst, src in zip(storage, tail.state, strict=True):
+                dst[...] = src
+            tail.state = storage
             for dst, src in zip(tail.state, (keys, values), strict=True):
                 dst[:, :, start:start + width, :] = src[:, :, cursor:cursor + width, :]
             tail.token_count = start + width
             self._offset += width
             cursor += width
             mx.eval(*tail.state)
+            self.pool.store(tail.block_id)
             if tail.token_count == self.block_tokens:
                 if self.bits is not None:
                     storage = (*quantize_page(tail.state[0], self.bits),
@@ -140,6 +151,22 @@ class PagedKVCache(BlockKVCache):
                     old.close()
                     tail = sealed.block
                 self.pool.seal(tail.block_id)
+            self.page_table.update(len(self._blocks) - 1, self._blocks[-1])
+
+    def replace_from(self, draft):
+        table = draft.page_table
+        super().replace_from(draft)
+        self.page_table = table
+        draft.page_table = PersistentPageTable(self.pool)
+
+    def adopt(self, references):
+        super().adopt(references)
+        for index, reference in enumerate(references):
+            self.page_table.update(index, reference)
+
+    def reset(self):
+        super().reset()
+        self.page_table = PersistentPageTable(self.pool)
 
     def update(self, *_):
         raise ModelCapabilityUnsupported("paged cache requires direct attention dispatch")
@@ -157,6 +184,7 @@ class PagedKVCache(BlockKVCache):
             ref = self._blocks.pop()
             self._offset -= ref.block.token_count
             ref.close()
+        self.page_table.truncate(len(self._blocks))
         return True
 
 
@@ -188,9 +216,7 @@ class PagedRunner(BatchedDenseRunner):
 
     def __init__(self, bundle=None):
         super().__init__(bundle)
-        from mlx_one.engine.block_cache import BlockPool
-
-        self.contract_pool = BlockPool(2**63 - 1)
+        self.contract_pool = SegmentedPageArena(2**63 - 1)
 
     def capabilities(self):
         return replace(super().capabilities(), supports_paged_attention=True,
@@ -258,7 +284,7 @@ class PagedRunner(BatchedDenseRunner):
         dim = int(getattr(first.bundle.model.config, "head_dim", 0)
                   or first.bundle.model.config.hidden_size // heads)
         transient = len(requests) * heads * width * (dim + 2) * 4 * 3
-        transient += sum(array_nbytes(ref.block.state) for r in requests for c in r.cache
+        transient += 16 * sum(array_nbytes(ref.block.state) for r in requests for c in r.cache
                          for ref in c._blocks if not ref.block.immutable)
         from mlx_one.engine.pressure import execution_forecast
 
@@ -302,6 +328,7 @@ class PagedRunner(BatchedDenseRunner):
                 for layers in drafts:
                     for c in layers:
                         c.reset()
+        metrics["arena"] = runtime.block_pool.stats() if runtime is not None else {}
         self.last_trace = {**metrics, "phase": first.phase,
                            "request_ids": [s.request_id for s in plan.sequences],
                            "batch_size": len(requests),

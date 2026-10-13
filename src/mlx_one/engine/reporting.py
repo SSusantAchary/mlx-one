@@ -111,6 +111,8 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         "model_revision": bundle.revision,
         "scope": asdict(scope), "actual_weight_dtypes": weights,
         "layers": layers,
+        "arena": (runtime.block_pool.stats()
+                  if runtime and runtime.config.backend == "paged" else None),
         "execution_memory_forecast": getattr(runtime, "last_execution_forecast", None),
         "component_capabilities": [asdict(replace(s, can_batch=True, can_snapshot=True,
                                                   can_share_prefix=True))

@@ -50,7 +50,7 @@ def advanced(native, monkeypatch):
     import mlx.core as mx
 
     for name in ("pad", "stack", "min", "max", "maximum", "round", "clip", "uint8",
-                 "float32", "where", "repeat", "exp", "abs", "mean", "all"):
+                 "float32", "int32", "where", "repeat", "exp", "abs", "mean", "all"):
         monkeypatch.setattr(mx, name, getattr(np, name), raising=False)
     def softmax(x, axis=-1, precise=True):
         y = np.exp(x.astype(np.float32) - x.max(axis=axis, keepdims=True))
@@ -565,7 +565,7 @@ def test_partitioned_dispatch_mask_gqa_and_partial_pages_match_dense(advanced, m
     rng = np.random.default_rng(12)
     rows = []
     histories = []
-    for length in (147, 37):
+    for length in (259, 37):
         keys = rng.normal(size=(1, 1, length, 4)).astype(np.float16)
         values = rng.normal(size=keys.shape).astype(np.float16)
         cache = PagedKVCache(runtime.block_pool)
@@ -573,13 +573,14 @@ def test_partitioned_dispatch_mask_gqa_and_partial_pages_match_dense(advanced, m
         rows.append(cache)
         histories.append((keys, values))
     query = rng.normal(size=(2, 2, 3, 4)).astype(np.float16)
-    positions = ((144, 145, 146), (36, 37, 38))
+    positions = ((256, 257, 258), (36, 37, 38))
     widths = (3, 1)
     launches = []
-    def kernel(formats, dim):
+    def kernel(formats, dim, row_count):
         def execute(*, inputs, **kwargs):
             launches.append(len(formats))
-            q, starts, pos, real, lengths, scale, *arrays = inputs
+            q, segment_ids, pos, real, lengths, scale, *remaining = inputs
+            tables, arrays = remaining[:row_count], remaining[row_count:]
             partial = np.zeros((*q.shape[:-1], dim + 2), dtype=np.float32)
             partial[..., dim] = -np.inf
             for row in range(q.shape[0]):
@@ -587,14 +588,14 @@ def test_partitioned_dispatch_mask_gqa_and_partial_pages_match_dense(advanced, m
                     for qi in range(real[row]):
                         scores, vals = [], []
                         for i in range(len(formats)):
-                            start = starts[i, row]
-                            if start < 0:
-                                continue
-                            for t in range(min(16, lengths[row] - start)):
-                                if start + t <= pos[row, qi]:
-                                    scores.append(float(q[row, head, qi].astype(np.float32)
-                                                        @ arrays[i * 2][0, 0, t]) * scale[0])
-                                    vals.append(arrays[i * 2 + 1][0, 0, t])
+                            for sid, slot, start, count in tables[row]:
+                                if sid != segment_ids[i]:
+                                    continue
+                                for t in range(min(count, lengths[row] - start)):
+                                    if start + t <= pos[row, qi]:
+                                        scores.append(float(q[row, head, qi].astype(np.float32)
+                                                            @ arrays[i * 2][slot, 0, t]) * scale[0])
+                                        vals.append(arrays[i * 2 + 1][slot, 0, t])
                         if scores:
                             maximum = max(scores)
                             weights = np.exp(np.array(scores) - maximum)
@@ -723,3 +724,49 @@ def test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot(advanced):
         repeated = engine.generate(prompt, max_tokens=2)
         assert repeated.text == original.text
         assert engine.runtime_stats()["cache_stats"]["prefix_hits"] > 0
+
+
+def test_arena_segments_tables_and_leases_are_bounded(advanced):
+    runtime = CacheManager(advanced(), CacheConfig(backend="paged", block_size_tokens=16))
+    cache = runtime.create_handle("arena").bundle.entries[0]
+    values = np.ones((1, 1, 257, 4), dtype=np.float16)
+    cache.append(values, values)
+    assert len(runtime.block_pool.segments) == 2
+    prefix_table = cache.page_table.chunks[0]
+    branch = cache.clone()
+    before = runtime.block_pool.table_update_bytes
+    branch.append(values[:, :, :1], values[:, :, :1])
+    assert branch.page_table.chunks[0] is prefix_table
+    assert runtime.block_pool.table_update_bytes - before == 16 * 4 * 4
+    assert branch._blocks[0].block_id == cache._blocks[0].block_id
+    arena = runtime.block_pool
+    with arena.lease():
+        branch.append(values[:, :, :1], values[:, :, :1])
+        assert arena.stats()["replacement_overlap_bytes"] > 0
+    assert arena.stats()["replacement_overlap_bytes"] == 0
+    assert arena.stats()["table_bytes"] > 0
+    assert arena.stats()["page_payload_bytes"] < arena.stats()["physical_bytes"]
+    branch.reset()
+    runtime.close()
+    assert arena.stats()["physical_bytes"] == 0
+
+
+def test_arena_evaluation_failure_does_not_publish_segment(advanced, monkeypatch):
+    import mlx.core as mx
+
+    runtime = CacheManager(advanced(), CacheConfig(backend="paged", block_size_tokens=16))
+    cache = runtime.create_handle("arena").bundle.entries[0]
+    values = np.ones((1, 1, 16, 4), dtype=np.float16)
+    cache.append(values, values)
+    arena = runtime.block_pool
+    before = {sid: s.state for sid, s in arena.segments.items()}
+    live = set(arena._blocks)
+    def fail(*args):
+        raise MemoryError("injected arena evaluation")
+    monkeypatch.setattr(mx, "eval", fail)
+    with pytest.raises(MemoryError):
+        arena.allocate_ref(tuple(values.copy() for _ in range(2)), 16,
+                           layout=cache._blocks[0].block.layout)
+    assert set(arena._blocks) == live
+    assert all(arena.segments[sid].state is state for sid, state in before.items())
+    runtime.close()
