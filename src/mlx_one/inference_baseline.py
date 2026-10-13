@@ -258,7 +258,11 @@ def profiles(mode: str, *, models=("qwen", "lfm"), workload="baseline"):
 def source_provenance(root: Path) -> dict[str, Any]:
     """Hash working source as well as HEAD, since a baseline may precede a commit."""
     def git(*args):
-        return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
+        try:
+            return subprocess.check_output(
+                ["git", "-C", str(root), *args], text=True, stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.CalledProcessError):
+            return None
 
     digest = hashlib.sha256()
     for parent in (root / "src" / "mlx_one", root / "benchmarks"):
