@@ -45,6 +45,26 @@ def describe_cache(entries, plan) -> list[dict[str, Any]]:
     return layers
 
 
+def component_capabilities(bundle, runtime, mode):
+    if runtime is None:
+        return []
+    specs = runtime.plan.state_specs
+    if mode == "experimental_hybrid_batch":
+        from mlx_one.engine.components import hybrid_components
+
+        components = hybrid_components(bundle, runtime.config.key_type)
+        result = []
+        for spec, component in zip(specs, components, strict=True):
+            caps = component.capabilities()
+            result.append({**asdict(replace(spec, can_batch=caps.can_batch,
+                can_page=caps.can_page, can_snapshot=caps.can_snapshot,
+                can_quantize=caps.can_quantize, can_share_prefix=caps.can_share_prefix)),
+                "component": asdict(caps), "committed_position_semantics": "real_input_tokens"})
+        return result
+    return [asdict(replace(s, can_page=True)) if mode == "paged" and s.kind == "full_kv"
+            else asdict(s) for s in specs]
+
+
 def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
                   source_revision=None, registry=None, mode=None, execution_dtype=None
                   ) -> dict[str, Any]:
@@ -114,14 +134,7 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         "arena": (runtime.block_pool.stats()
                   if runtime and runtime.config.backend == "paged" else None),
         "execution_memory_forecast": getattr(runtime, "last_execution_forecast", None),
-        "component_capabilities": [asdict(replace(s, can_batch=True, can_snapshot=True,
-                                                  can_share_prefix=True))
-                                   if selected_mode == "experimental_hybrid_batch"
-                                   and s.kind in {"full_kv", "sliding_kv", "conv"}
-                                   else asdict(replace(s, can_page=True))
-                                   if selected_mode == "paged" and s.kind == "full_kv"
-                                   else asdict(s)
-                                   for s in plan.state_specs] if plan else [],
+        "component_capabilities": component_capabilities(bundle, runtime, selected_mode),
         "configured_cache_precision": runtime.precision_configuration() if runtime else None,
         "capabilities": {"continuous_batching": selected_mode in {
             "experimental_dense_batch", "paged", "experimental_hybrid_batch"},

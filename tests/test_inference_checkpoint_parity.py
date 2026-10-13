@@ -74,3 +74,17 @@ def test_pinned_direct_page_layout_specializations(page_tokens, cache_type, exec
                               cache_type=cache_type, page_tokens=page_tokens,
                               prompt="Direct page reads across a partial final page. " * 32)
     assert result["status"] == "passed", result
+
+
+def test_pinned_hybrid_serialized_lifecycle_and_checkpoint_reload(tmp_path):
+    from mlx_one.engine.lifecycle import hybrid_lifecycle
+    from mlx_one.inference_baseline import BaselineProfile
+
+    model_id, revision = CHECKPOINTS["lfm"]
+    def load():
+        return load_text_model(model_id, revision=revision, offline=True)
+    item = BaselineProfile(model_id, revision, "experimental_hybrid_batch", workload="lifecycle")
+    result = hybrid_lifecycle(load(), item, tmp_path, reload_bundle=load)
+    assert result["status"] == "passed", result
+    assert all(c["active_handles"] == 0 and c["reserved_bytes"] == 0
+               for c in result["cleanup"])

@@ -32,7 +32,7 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "memory-reconciliation.json", "soak-probes.json", "gate-hybrid-performance.json",
                  "quality-reference.json", "pressure-recovery.json",
                  "quantized-attention-correctness.json", "held-out-quality.json", "traffic.json",
-                 "tokenization.json", "actor-events.jsonl", "fairness.json"):
+                 "tokenization.json", "actor-events.jsonl", "fairness.json", "lifecycle.json"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",
@@ -417,6 +417,22 @@ def execute(manifest):
             write_json(output / "microbench.json", measured)
             if not profile.kv_bits and not measured["within_tolerance"]:
                 raise BaselineError("direct attention microbenchmark parity failed")
+            return
+        if profile.workload == "lifecycle":
+            from mlx_one.engine.lifecycle import hybrid_lifecycle
+            from mlx_one.text import load_text_model
+
+            def reload_checkpoint():
+                fresh = load_text_model(profile.model_id, revision=profile.revision, offline=True)
+                configure_execution_dtype(fresh, profile.execution_dtype)
+                return fresh
+            measured = scheduler.execute(lambda: hybrid_lifecycle(
+                bundle, profile, output, reload_bundle=reload_checkpoint))
+            write_json(output / "lifecycle.json", measured)
+            write_json(output / "summary.json", {"profile": profile.to_dict(),
+                                                  "status": measured["status"]})
+            if measured["status"] == "failed":
+                raise BaselineError("native lifecycle parity failed")
             return
         if profile.workload == "quality":
             from mlx_one.inference_qualification_worker import quality_run

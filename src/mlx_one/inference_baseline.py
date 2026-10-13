@@ -96,6 +96,8 @@ class BaselineProfile:
             raise BaselineError("soak profiles require 30 or 60 minutes")
         if (self.workload == "soak") != (self.duration_seconds is not None):
             raise BaselineError("soak workload requires an explicit 30/60 minute duration")
+        if self.workload == "lifecycle" and self.inference_mode != "experimental_hybrid_batch":
+            raise BaselineError("native lifecycle profiles require explicit hybrid mode")
         if self.workload == "microbench" and self.inference_mode != "paged":
             raise BaselineError("direct attention microbenchmarks require explicit paged mode")
         if self.workload == "quality" and self.inference_mode not in {
@@ -139,7 +141,7 @@ class BaselineProfile:
             raise BaselineError("latency budgets must be finite and positive")
         if self.workload not in {"baseline", "prefix", "long", "parity", "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
-                                 "quality", "pressure", "soak", "multi_turn"}:
+                                 "quality", "pressure", "soak", "multi_turn", "lifecycle"}:
             raise BaselineError("unknown baseline workload")
         if (self.atol is None) != (self.rtol is None):
             raise BaselineError("override both atol and rtol")
@@ -158,7 +160,8 @@ class BaselineProfile:
                "traffic_manifest": None, "traffic_identity": None,
                "max_queue_wait_ms": None, "max_service_gap_ms": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
-                    or self.workload in {"microbench", "quality", "pressure", "soak", "multi_turn"}
+                    or self.workload in {"microbench", "quality", "pressure", "soak",
+                                        "multi_turn", "lifecycle"}
                     or any(payload[k] != v for k, v in new.items()))
         if not advanced:
             for key in new:
@@ -398,7 +401,7 @@ def main(argv=None) -> int:
     parser.add_argument("--workload", choices=("baseline", "prefix", "long", "parity",
                                              "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
-                                 "quality", "pressure", "soak", "multi_turn"),
+                                 "quality", "pressure", "soak", "multi_turn", "lifecycle"),
                         default="baseline")
     parser.add_argument("--output", type=Path, default=Path("qualification/results"))
     parser.add_argument("--list-profiles", action="store_true")

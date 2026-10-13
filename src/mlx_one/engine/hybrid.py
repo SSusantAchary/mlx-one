@@ -126,6 +126,11 @@ class HybridRunner(BatchedDenseRunner):
             expected = tuple(kinds[k] for k in first.bundle.model.config.layer_types)
             if tuple(getattr(c, "kind", None) for c in r.cache) != expected:
                 raise ValueError("hybrid component mapping differs from model topology")
+            from mlx_one.engine.cache_planner import build_cache_plan
+
+            for component, spec in zip(
+                    r.cache, build_cache_plan(r.bundle).state_specs, strict=True):
+                component.validate(spec)
             if r.handle is not None:
                 r.runtime._validate_handle(r.handle)
                 if r.handle.bundle.entries is not r.cache:

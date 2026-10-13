@@ -106,6 +106,7 @@ class LayerStateSpec:
             self.value_head_dim, self.dtype, self.window_tokens,
             quantizable=self.can_quantize, shareable_prefix=self.can_share_prefix,
             trimmable=False, batchable=self.can_batch, block_compatible=False,
+            state_shapes=self.state_shapes, checkpoint_semantics=self.checkpoint_semantics,
         )
 
 

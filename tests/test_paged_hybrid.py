@@ -280,14 +280,14 @@ def test_hybrid_snapshot_round_trip_checksum_and_exact_boundary(advanced, tmp_pa
     requests = _requests(bundle, runtime, [range(16)])
     HybridRunner().execute(tuple(requests))
     identity = {"revision": bundle.revision, "topology": runtime.plan.topology_digest}
-    save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    saved = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
     restored = load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
     assert restored.offset == 16
     np.testing.assert_array_equal(restored.entries[0].values, requests[0].cache[0].values)
     with pytest.raises(ValueError, match="identity"):
         load_snapshot(tmp_path, identity={"revision": "wrong"},
                       expected_specs=runtime.plan.state_specs)
-    (tmp_path / "tensors.npz").write_bytes(b"corrupted")
+    (tmp_path / saved["payload"]).write_bytes(b"corrupted")
     with pytest.raises(ValueError, match="checksum"):
         load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
     restored.release()
@@ -797,3 +797,104 @@ def test_cache_aware_age_guard_under_continuous_locality_arrivals(monkeypatch):
             break
         actor._active.clear()
     assert selected is not None and selected <= 2.0
+
+
+def test_uniform_component_contract_and_atomic_snapshot_failure(advanced, tmp_path, monkeypatch):
+    from mlx_one.engine.components import StateComponent
+
+    runtime = CacheManager(advanced(True), CacheConfig(backend="hybrid"))
+    requests = _requests(runtime.bundle, runtime, [range(32)])
+    HybridRunner().execute(tuple(requests))
+    identity = {"revision": runtime.bundle.revision}
+    first = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    for component, spec in zip(requests[0].cache, runtime.plan.state_specs, strict=True):
+        assert isinstance(component, StateComponent)
+        assert component.capabilities().can_batch
+        assert component.committed_position == 32
+        component.validate(spec)
+    old_manifest = (tmp_path / "state.json").read_bytes()
+    original = __import__("os").replace
+    def fail_commit(source, target):
+        if str(target).endswith("state.json"):
+            raise OSError("injected manifest commit failure")
+        return original(source, target)
+    monkeypatch.setattr("mlx_one.engine.components.os.replace", fail_commit)
+    with pytest.raises(OSError):
+        save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    assert (tmp_path / "state.json").read_bytes() == old_manifest
+    assert (tmp_path / first["payload"]).exists()
+    restored = load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
+    assert restored.offset == 32
+    restored.release()
+    runtime.close()
+
+
+def test_snapshot_atomic_adoption_rejects_cancelled_and_wrong_dtype(advanced, tmp_path):
+    from mlx_one.engine.lifecycle import adopt_snapshot
+
+    runtime = CacheManager(advanced(True), CacheConfig(backend="hybrid"))
+    requests = _requests(runtime.bundle, runtime, [range(32)])
+    HybridRunner().execute(tuple(requests))
+    save_snapshot(tmp_path, requests[0].handle.bundle, identity={"fixture": 1})
+    handle = runtime.create_handle("restored")
+    staged = load_snapshot(tmp_path, identity={"fixture": 1},
+                           expected_specs=runtime.plan.state_specs)
+    cancelled = threading.Event()
+    cancelled.set()
+    assert not adopt_snapshot(runtime, handle, staged, cancel=cancelled)
+    assert handle.bundle.offset == 0 and staged.closed
+    wrong = tuple(replace(s, dtype="float32") for s in runtime.plan.state_specs)
+    with pytest.raises(ValueError, match="shape mismatch|dtype mismatch"):
+        load_snapshot(tmp_path, identity={"fixture": 1}, expected_specs=wrong)
+    runtime.close()
+
+
+def test_hybrid_lifecycle_profile_against_independent_cpu_native_fixture(advanced, tmp_path):
+    from mlx_one.engine.lifecycle import hybrid_lifecycle
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+
+    profile = BaselineProfile(*CHECKPOINTS["lfm"], "experimental_hybrid_batch",
+                              workload="lifecycle", cache_type="f16")
+    result = hybrid_lifecycle(advanced(True), profile, tmp_path,
+                             reload_bundle=lambda: advanced(True))
+    assert result["status"] == "passed", result
+    assert result["checks"]["stale_handle_rejected"]
+    assert all(row["active_handles"] == 0 for row in result["cleanup"])
+
+
+def test_snapshot_reader_waits_for_writer_and_legacy_stays_readable(
+        advanced, tmp_path, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+
+    runtime = CacheManager(advanced(True), CacheConfig(backend="hybrid"))
+    requests = _requests(runtime.bundle, runtime, [range(32)])
+    HybridRunner().execute(tuple(requests))
+    identity = {"fixture": "locking"}
+    first = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    metadata = dict(first, schema_version="hybrid-state-v1")
+    (tmp_path / "tensors.npz").write_bytes((tmp_path / first["payload"]).read_bytes())
+    metadata.pop("payload")
+    (tmp_path / "state.json").write_text(json.dumps(metadata))
+    legacy = load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
+    assert legacy.offset == 32
+    legacy.release()
+    entered, release = threading.Event(), threading.Event()
+    original = __import__("os").replace
+    def paused_commit(source, target):
+        if str(target).endswith("state.json"):
+            entered.set()
+            assert release.wait(3)
+        return original(source, target)
+    monkeypatch.setattr("mlx_one.engine.components.os.replace", paused_commit)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        writer = pool.submit(save_snapshot, tmp_path, requests[0].handle.bundle, identity=identity)
+        assert entered.wait(3)
+        reader = pool.submit(load_snapshot, tmp_path, identity=identity,
+                             expected_specs=runtime.plan.state_specs)
+        assert not reader.done()
+        release.set()
+        writer.result()
+        restored = reader.result()
+        assert restored.offset == 32
+        restored.release()
+    runtime.close()
