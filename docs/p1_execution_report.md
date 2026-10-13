@@ -9,3 +9,7 @@ Metal was unavailable in the P0 sandbox. Hardware validation remains pending.
 Subsequent boundaries append actual changes, commands, failures and validation.
 Generated artifacts belong under benchmarks/results/p1/<host>/<checkpoint>/<run>/
 and remain uncommitted. No push or capability promotion is authorized by readiness.
+
+PR-01: affine INT8 loading/conversion and immutable native adapter specification added.
+Explicit FP16 conversion preserves packed uint32 payloads. Existing 4-bit defaults
+remain. Affected suite: 50 passed; native loading/model parity pending.

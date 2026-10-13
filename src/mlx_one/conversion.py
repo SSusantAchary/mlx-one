@@ -19,6 +19,7 @@ def convert_text_model(
     revision: str | None = None,
     quantize: bool = False,
     group_size: int = 64,
+    bits: int = 4,
     max_shard_size: int = 5 * 1024**3,
 ) -> Path:
     """Convert safetensors to a native BF16 or four-bit affine MLX bundle."""
@@ -30,6 +31,8 @@ def convert_text_model(
         or max_shard_size < 1
     ):
         raise ConversionError("max_shard_size must be a positive integer")
+    if bits not in {4, 8} or isinstance(bits, bool) or bits == 8 and not quantize:
+        raise ConversionError("bits=8 requires quantize=True; supported bits are 4 and 8")
     target = Path(destination)
     if target.exists():
         raise ConversionError(f"conversion destination already exists: {target}")
@@ -42,7 +45,9 @@ def convert_text_model(
 
         bundle = load_text_model(source, revision=revision)
         if quantize:
-            nn.quantize(bundle.model, group_size=group_size, bits=4, mode="affine")
+            if bits == 8:
+                bundle.model.set_dtype(mx.float16)
+            nn.quantize(bundle.model, group_size=group_size, bits=bits, mode="affine")
         parameters = dict(tree_flatten(bundle.model.parameters()))
         if not quantize:
             floating = {mx.float16, mx.float32, mx.bfloat16}
@@ -64,7 +69,7 @@ def convert_text_model(
             config = json.loads(config_path.read_text(encoding="utf-8"))
             if quantize:
                 config["quantization"] = {
-                    "bits": 4,
+                    "bits": bits,
                     "group_size": group_size,
                     "mode": "affine",
                     "quant_method": "mlx",
@@ -83,7 +88,7 @@ def convert_text_model(
                         "schema_version": 1,
                         "source": str(source),
                         "revision": revision,
-                        "precision": "int4-affine" if quantize else "bfloat16",
+                        "precision": f"int{bits}-affine" if quantize else "bfloat16",
                         "group_size": group_size if quantize else None,
                         "converter": "mlx-one-native",
                     },

@@ -282,8 +282,8 @@ def _quantization_config(config: dict[str, Any]) -> dict[str, Any]:
     bits = value.get("bits")
     group_size = value.get("group_size", 64)
     mode = value.get("mode", "affine")
-    if bits != 4:
-        raise ValueError("only MLX 4-bit checkpoints are supported")
+    if isinstance(bits, bool) or bits not in {4, 8}:
+        raise ValueError("only MLX 4-bit or affine 8-bit checkpoints are supported")
     if isinstance(group_size, bool) or not isinstance(group_size, int) or group_size < 1:
         raise ValueError("quantization group_size must be a positive integer")
     if mode not in {"affine", "mxfp4", "nvfp4"}:
@@ -291,7 +291,9 @@ def _quantization_config(config: dict[str, Any]) -> dict[str, Any]:
     method = value.get("quant_method", value.get("method"))
     if method is not None and method not in {"mlx", "affine", "mxfp4", "nvfp4"}:
         raise ValueError(f"unsupported quantization method: {method!r}")
-    return {"bits": 4, "group_size": group_size, "mode": mode}
+    if bits == 8 and mode != "affine":
+        raise ValueError("8-bit checkpoints require native affine quantization")
+    return {"bits": bits, "group_size": group_size, "mode": mode}
 
 
 def _prepare_quantized_model(
@@ -301,11 +303,11 @@ def _prepare_quantized_model(
 
     prefixes = {name.removesuffix(".scales") for name in tensors if name.endswith(".scales")}
     if not prefixes:
-        raise ValueError("4-bit checkpoint has no quantization scale tensors")
+        raise ValueError("quantized checkpoint has no quantization scale tensors")
     nn.quantize(
         model,
         group_size=quantization["group_size"],
-        bits=4,
+        bits=quantization["bits"],
         mode=quantization["mode"],
         class_predicate=lambda path, module: path in prefixes and hasattr(module, "to_quantized"),
     )
@@ -323,6 +325,16 @@ def _validate_quantized_tensors(model: Any, tensors: dict[str, Any]) -> None:
         for name in set(expected) & set(tensors)
         if tuple(expected[name].shape) != tuple(tensors[name].shape)
     )
+    named = getattr(model, "named_modules", lambda: ())
+    for path, module in named():
+        if getattr(module, "mode", None) == "affine" and hasattr(module, "bits"):
+            from mlx_one.engine.adapters import affine_tensor_spec
+
+            prefix = path + "." if path else ""
+            names = [prefix + key for key in ("weight", "scales", "biases")]
+            if all(name in tensors for name in names):
+                affine_tensor_spec(path, *(tensors[name] for name in names), bits=module.bits,
+                                   group_size=module.group_size, mode=module.mode)
     if missing or unexpected or mismatched:
         details = []
         if missing:
@@ -331,7 +343,7 @@ def _validate_quantized_tensors(model: Any, tensors: dict[str, Any]) -> None:
             details.append(f"unexpected={unexpected[:5]}")
         if mismatched:
             details.append(f"shape_mismatch={mismatched[:5]}")
-        raise ValueError("invalid mixed 4-bit checkpoint: " + ", ".join(details))
+        raise ValueError("invalid mixed quantized checkpoint: " + ", ".join(details))
 
 
 def _context_length(config: Any) -> int:

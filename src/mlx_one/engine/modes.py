@@ -71,12 +71,42 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
         return
     if execution_dtype not in {"float16", "bfloat16"}:
         raise ModelCapabilityUnsupported("execution dtype must be float16 or bfloat16")
-    if getattr(bundle, "quantization", {}):
-        raise ModelCapabilityUnsupported("explicit FP16 execution requires unquantized weights")
+    quantized = bool(getattr(bundle, "quantization", {}))
+    if quantized:
+        from mlx_one.engine.adapters import quantized_modules
+
+        try:
+            quantized_modules(bundle)
+        except ValueError as exc:
+            raise ModelCapabilityUnsupported(str(exc)) from exc
     import mlx.core as mx
 
-    bundle.model.set_dtype(getattr(mx, execution_dtype))
+    before = None
+    previous = getattr(bundle.model, "_mlx_one_execution_policy", {})
+    if quantized:
+        from mlx_one.engine.reporting import tensor_dtypes
+
+        before = tensor_dtypes(bundle.model.parameters())
+        packed = [(m, m.weight) for _, m in bundle.model.named_modules() if hasattr(m, "bits")]
+        bundle.model.set_dtype(getattr(mx, execution_dtype), predicate=lambda d:
+                               str(d).rsplit(".", 1)[-1] in {"float16", "bfloat16", "float32"})
+        if any(m.weight is not original for m, original in packed):
+            raise ModelCapabilityUnsupported("floating conversion modified packed weights")
+    else:
+        bundle.model.set_dtype(getattr(mx, execution_dtype))
     mx.eval(bundle.model.parameters())
+    from mlx_one.engine.adapters import EXECUTION_POLICY_VERSION
+
+    bundle.model._mlx_one_execution_policy = {
+        "version": EXECUTION_POLICY_VERSION, "dtype": execution_dtype,
+        "quantized_payload_preserved": quantized,
+        "previous_dtypes": previous.get("previous_dtypes", before)
+        if previous.get("dtype") == execution_dtype else before}
+    named = getattr(bundle.model, "named_modules", None)
+    if callable(named):
+        for _, module in named():
+            if hasattr(module, "q_proj"):
+                module._mlx_one_activation_dtype = execution_dtype
 
 
 def validate_batch_precision(bundle) -> None:
