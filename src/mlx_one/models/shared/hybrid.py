@@ -48,9 +48,15 @@ class LfmAttention(nn.Module):
         queries = apply_rope(queries, offset=offset, theta=self.rope_theta,
                              position_ids=position_ids)
         keys = apply_rope(keys, offset=offset, theta=self.rope_theta, position_ids=position_ids)
+        activation_dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        if activation_dtype:
+            dtype = getattr(mx, activation_dtype)
+            queries, keys, values = (v.astype(dtype) for v in (queries, keys, values))
         if cache is not None and callable(getattr(cache, "attend", None)):
             output = cache.attend(queries, keys, values, scale=self.scale,
                                   position_ids=position_ids)
+            if activation_dtype:
+                output = output.astype(dtype)
             return self.out_proj(output.transpose(0, 2, 1, 3).reshape(batch, length, -1))
         if cache is not None:
             keys, values = cache.update(keys, values)
@@ -63,6 +69,8 @@ class LfmAttention(nn.Module):
             scores = scores + mask
         output = mx.softmax(scores, axis=-1, precise=True) @ values
         output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
+        if activation_dtype:
+            output = output.astype(dtype)
         return self.out_proj(output)
 
 

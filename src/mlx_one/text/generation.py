@@ -317,7 +317,7 @@ def _stream_bundle(
         while start < len(current):
             stop = min(start + width, len(current))
             if (phase == "prefill" and _cache_runtime is not None
-                    and _cache_runtime.config.backend == "hybrid" and stop == len(current)):
+                    and getattr(_cache_runtime, "hybrid_state", False) and stop == len(current)):
                 page = _cache_runtime.config.block_size_tokens
                 boundary = (len(prompt_ids) - 1) // page * page
                 aligned = boundary - cache[0].offset

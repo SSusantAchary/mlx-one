@@ -73,6 +73,8 @@ class DispatchRunner:
                 return "dense"
             if getattr(r.runtime, "mode", None) == "reference_dense":
                 return "reference"
+            if getattr(r.runtime, "hybrid_state", False):
+                return "hybrid"
             return r.runtime.config.backend
         paths = {path(r) for r in requests}
         if len(paths) != 1:

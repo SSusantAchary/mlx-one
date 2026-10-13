@@ -260,3 +260,109 @@ def test_converted_artifact_identity_is_content_derived(tmp_path):
     (tmp_path / "model.safetensors").write_bytes(b"changed payload")
     with pytest.raises(ConversionError, match="checksum"):
         verify_conversion_manifest(tmp_path)
+
+
+@pytest.fixture
+def int8_hybrid(advanced):
+    from dataclasses import replace
+    from types import SimpleNamespace
+
+    import numpy as np
+
+    bundle = advanced(True)
+    module = SimpleNamespace(weight=np.zeros((2, 16), dtype=np.uint32),
+        scales=np.ones((2, 1), dtype=np.float16), biases=np.zeros((2, 1), dtype=np.float16),
+        bits=8, group_size=64, mode="affine")
+    parameters = bundle.model.parameters
+    bundle.model.named_modules = lambda: [("linear", module)]
+    bundle.model.parameters = lambda: {**parameters(), "packed": module.weight}
+    return replace(bundle, quantization={"bits": 8, "group_size": 64, "mode": "affine"})
+
+
+@pytest.mark.parametrize("mode", ["experimental_hybrid_batch", "paged"])
+@pytest.mark.parametrize("size", [1, 2, 4])
+def test_int8_lfm_full_state_ragged_parity_and_cancellation(int8_hybrid, mode, size):
+    import threading
+
+    import numpy as np
+    from test_paged_hybrid import _requests
+
+    from mlx_one import CacheConfig
+    from mlx_one.engine.cache_manager import CacheManager
+    from mlx_one.engine.hybrid import HybridRunner
+
+    runtime = CacheManager(int8_hybrid, CacheConfig(
+        backend="paged" if mode == "paged" else "hybrid", block_size_tokens=16))
+    requests = _requests(int8_hybrid, runtime, [range(i + 1, 20) for i in range(size)])
+    independent = [int8_hybrid.model.make_cache() for _ in requests]
+    runner = HybridRunner()
+    try:
+        for step in range(3):
+            result = runner.execute(tuple(requests))
+            assert int8_hybrid.model.calls[-1][0] == size
+            for i, request in enumerate(requests):
+                expected = int8_hybrid.model(np.array([request.token_ids]), cache=independent[i])
+                np.testing.assert_allclose(result.logits[i], expected.logits[:, -1:],
+                                           atol=.03, rtol=.01)
+                np.testing.assert_array_equal(request.cache[0].values, independent[i][0].values)
+                assert len({c.offset for c in request.cache}) == 1
+                request.phase, request.token_ids = "decode", (step + 9,)
+        if size > 1:
+            offset = requests[0].cache[0].offset
+            requests[0].cancel = threading.Event()
+            int8_hybrid.model.pause = requests[0].cancel.set
+            runner.execute(tuple(requests))
+            assert requests[0].cache[0].offset == offset
+            assert requests[1].cache[0].offset == independent[1][0].offset + 1
+        if mode == "paged":
+            assert runner.last_trace["direct_attention_calls"] == 1
+            assert runner.last_trace["history_materializations"] == 0
+    finally:
+        runtime.close()
+    assert runtime.stats().physical_bytes == 0
+
+
+def test_hybrid_paged_actor_restore_shares_attention_and_copies_carries(int8_hybrid):
+    from mlx_one import BatchingConfig, Engine
+    from mlx_one.engine.pressure import MemoryPressureConfig
+
+    with Engine(int8_hybrid, inference_mode="paged", cache_namespace="principal:test",
+                memory_pressure_config=MemoryPressureConfig(enabled=False),
+                batching_config=BatchingConfig(max_sequences=2, prefill_chunk_size=16)) as engine:
+        prompt = "A repeated prompt with a sealed page. " * 2
+        donor = engine.generate(prompt, max_tokens=5)
+        repeated = engine.generate(prompt, max_tokens=5)
+        assert donor.text == repeated.text
+        stats = engine.runtime_stats()["cache_stats"]
+        assert stats["prefix_hits"] > 0 and stats["active_handles"] == 0
+        engine._cache_manager.clear_prefixes()
+        assert engine.runtime_stats()["cache_stats"]["reserved_bytes"] == 0
+
+
+def test_paged_hybrid_snapshot_restores_full_state(int8_hybrid, tmp_path):
+    import numpy as np
+    from test_paged_hybrid import _requests
+
+    from mlx_one import CacheConfig
+    from mlx_one.engine.cache_manager import CacheManager
+    from mlx_one.engine.components import load_snapshot, save_snapshot
+    from mlx_one.engine.hybrid import HybridRunner
+
+    runtime = CacheManager(int8_hybrid, CacheConfig(backend="paged", block_size_tokens=16))
+    requests = _requests(int8_hybrid, runtime, [range(16)])
+    restored = None
+    try:
+        HybridRunner().execute(tuple(requests))
+        identity = {"topology": runtime.plan.topology_digest, "revision": int8_hybrid.revision}
+        manifest = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+        assert manifest["schema_version"] == "hybrid-state-v3"
+        restored = load_snapshot(tmp_path, identity=identity,
+            expected_specs=runtime.plan.state_specs, page_pool=runtime.block_pool)
+        assert restored.offset == 16 and restored.entries[1].capabilities().can_page
+        np.testing.assert_array_equal(restored.entries[0].values, requests[0].cache[0].values)
+        with pytest.raises(ValueError, match="matching page arena"):
+            load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
+    finally:
+        if restored:
+            restored.release()
+        runtime.close()

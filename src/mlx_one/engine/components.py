@@ -201,17 +201,22 @@ class RecurrentComponent(ComponentContract):
         raise NotImplementedError("native recurrent transition math is not implemented")
 
 
-def hybrid_components(bundle, key_type="f16"):
+def hybrid_components(bundle, key_type="f16", *, pool=None):
     config = bundle.model.config
     dtype = "bfloat16" if key_type == "bf16" else "float16"
     result = []
-    for kind in config.layer_types:
+    for layer_id, kind in enumerate(config.layer_types):
         if kind == "conv":
             result.append(ConvCarryComponent(config.conv_L_cache))
         elif kind == "sliding_attention":
             result.append(SlidingKVComponent(config.sliding_window, dtype))
         elif kind == "full_attention":
-            result.append(FullKVComponent(dtype))
+            if pool is None:
+                result.append(FullKVComponent(dtype))
+            else:
+                from mlx_one.engine.paged import PagedKVComponent
+
+                result.append(PagedKVComponent(pool, layer_id=layer_id, dtype=dtype))
         else:
             raise ValueError("unsupported hybrid component")
     return tuple(result)
@@ -244,12 +249,25 @@ class HybridPrefixIndex:
         if size > self.budget:
             clone.release()
             return False
+        pinned = []
+        try:
+            for component in clone.entries:
+                for ref in getattr(component, "_blocks", ()):
+                    if not ref.block.immutable:
+                        raise ValueError("hybrid prefix contains a mutable page")
+                    ref.pin()
+                    pinned.append(ref)
+        except BaseException:
+            for ref in pinned:
+                ref.unpin()
+            clone.release()
+            raise
         key = (fingerprint, tuple(tokens))
         if key in self.entries:
-            self.entries.pop(key)[0].release()
+            self._release(self.entries.pop(key)[0])
         self.entries[key] = (clone, size)
         while sum(v[1] for v in self.entries.values()) > self.budget:
-            self.entries.popitem(last=False)[1][0].release()
+            self._release(self.entries.popitem(last=False)[1][0])
             self.evictions += 1
         return True
 
@@ -277,9 +295,15 @@ class HybridPrefixIndex:
                 "entries": len(self.entries), "hits": self.hits, "misses": self.misses,
                 "evictions": self.evictions, "tokens_reused": self.tokens_reused}
 
+    def _release(self, bundle):
+        for component in bundle.entries:
+            for ref in getattr(component, "_blocks", ()):
+                ref.unpin()
+        bundle.release()
+
     def clear(self):
         for bundle, _ in self.entries.values():
-            bundle.release()
+            self._release(bundle)
         self.entries.clear()
 
 
@@ -296,8 +320,20 @@ def _snapshot_contents(bundle):
                  "kernel_size": getattr(cache, "kernel_size", None),
                  "window_start": getattr(cache, "window_start", None),
                  "capabilities": asdict(cache.capabilities()), "tensors": {}}
+        paged = hasattr(cache, "page_table")
+        if paged:
+            # Explicit serialization diagnostic only; generation never calls this export.
+            import mlx.core as mx
+
+            layer["storage"] = "paged-fp16-v1"
+            layer["page_tokens"] = cache.block_tokens
+            exported = {name: mx.concatenate([ref.block.state[i][:, :, :ref.block.token_count]
+                for ref in cache._blocks], axis=2) if cache._blocks else None
+                for i, name in enumerate(("keys", "values"))}
+        else:
+            exported = {}
         for name in ("keys", "values"):
-            value = getattr(cache, name, None)
+            value = exported.get(name) if paged else getattr(cache, name, None)
             if value is not None and layer["kind"] == "full_kv":
                 value = value[:, :, :cache.offset, :]
             if value is not None:
@@ -342,7 +378,9 @@ def save_snapshot(directory, bundle, *, identity):
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(temporary, payload)
-            manifest = {"schema_version": "hybrid-state-v2", "identity": identity,
+            manifest = {"schema_version": ("hybrid-state-v3" if any(
+                "storage" in layer for layer in layers) else "hybrid-state-v2"),
+                        "identity": identity,
                         "layers": layers, "payload": payload.name,
                         "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()}
             with tempfile.NamedTemporaryFile(mode="w", dir=root, delete=False) as handle:
@@ -365,12 +403,13 @@ def save_snapshot(directory, bundle, *, identity):
                 temporary.unlink(missing_ok=True)
 
 
-def load_snapshot(directory, *, identity, expected_specs):
+def load_snapshot(directory, *, identity, expected_specs, page_pool=None):
     with _snapshot_lock(Path(directory), exclusive=False):
-        return _load_snapshot(directory, identity=identity, expected_specs=expected_specs)
+        return _load_snapshot(directory, identity=identity, expected_specs=expected_specs,
+                              page_pool=page_pool)
 
 
-def _load_snapshot(directory, *, identity, expected_specs):
+def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
     import mlx.core as mx
     import numpy as np
 
@@ -380,8 +419,9 @@ def _load_snapshot(directory, *, identity, expected_specs):
     if not isinstance(name, str) or Path(name).name != name:
         raise ValueError("invalid snapshot payload path")
     payload = root / name
-    current = manifest.get("schema_version") == "hybrid-state-v2"
-    if (manifest.get("schema_version") not in {"hybrid-state-v1", "hybrid-state-v2"}
+    current = manifest.get("schema_version") in {"hybrid-state-v2", "hybrid-state-v3"}
+    supported = {"hybrid-state-v1", "hybrid-state-v2", "hybrid-state-v3"}
+    if (manifest.get("schema_version") not in supported
             or manifest.get("identity") != identity
             or manifest.get("sha256") != hashlib.sha256(payload.read_bytes()).hexdigest()
             or len(manifest["layers"]) != len(expected_specs)):
@@ -392,7 +432,19 @@ def _load_snapshot(directory, *, identity, expected_specs):
             for layer, spec in zip(manifest["layers"], expected_specs, strict=True):
                 if layer["kind"] != spec.kind or layer["offset"] < 0:
                     raise ValueError("hybrid snapshot layer mismatch")
-                if spec.kind == "conv":
+                paged = layer.get("storage") == "paged-fp16-v1"
+                restored_arrays = {}
+                if layer.get("storage") is not None and not paged:
+                    raise ValueError("unsupported hybrid snapshot storage")
+                if paged:
+                    from mlx_one.engine.paged import PagedKVComponent
+
+                    if (manifest["schema_version"] != "hybrid-state-v3" or page_pool is None
+                            or spec.kind != "full_kv"
+                            or layer["page_tokens"] != page_pool.block_tokens):
+                        raise ValueError("paged snapshot requires a matching page arena")
+                    cache = PagedKVComponent(page_pool, layer_id=spec.layer_id)
+                elif spec.kind == "conv":
                     if (spec.state_shapes and layer["kernel_size"] != spec.state_shapes[0][1] + 1):
                         raise ValueError("convolution kernel mismatch")
                     cache = ConvCarryComponent(layer["kernel_size"])
@@ -433,10 +485,19 @@ def _load_snapshot(directory, *, identity, expected_specs):
                             raise ValueError("hybrid snapshot attention shape mismatch")
                     elif spec.state_shapes and array.shape != spec.state_shapes[0]:
                         raise ValueError("hybrid snapshot carry shape mismatch")
-                    setattr(cache, name, mx.array(array).astype(getattr(mx, meta["dtype"])))
+                    value = mx.array(array).astype(getattr(mx, meta["dtype"]))
+                    if paged:
+                        if meta["dtype"] != "float16":
+                            raise ValueError("hybrid paged snapshots require FP16")
+                        restored_arrays[name] = value
+                    else:
+                        setattr(cache, name, value)
                     if spec.kind in {"full_kv", "sliding_kv"}:
                         cache.storage_dtype = meta["dtype"]
-                if isinstance(cache, RecurrentComponent):
+                if paged:
+                    if layer["offset"]:
+                        cache.append(restored_arrays["keys"], restored_arrays["values"])
+                elif isinstance(cache, RecurrentComponent):
                     cache.offset = layer["offset"]
                 else:
                     cache._offset = layer["offset"]

@@ -93,11 +93,11 @@ class NativeExecutionSpec:
 
 
 class NativeModelAdapter:
-    def __init__(self, bundle, plan, *, allow_bfloat16=False):
+    def __init__(self, bundle, plan, *, allow_bfloat16=False, allow_hybrid=False):
         from mlx_one.engine.reporting import tensor_dtypes
 
         architecture = plan.architecture
-        if architecture not in DENSE_FAMILIES:
+        if architecture not in DENSE_FAMILIES and not (allow_hybrid and architecture == "lfm2"):
             raise ValueError("no supported dense native adapter for " + architecture)
         observed = tensor_dtypes(bundle.model.parameters())
         if bundle.quantization:
@@ -113,16 +113,18 @@ class NativeModelAdapter:
             getattr(config, "head_dim", 0) or config.hidden_size // config.num_attention_heads,
             architecture == "qwen3", tuple(s.kind for s in plan.state_specs),
             quantization_identity(bundle))
-        if not plan.block_compatible:
-            raise ValueError("adapter requires complete attention layer layouts")
+        if not plan.block_compatible and not (allow_hybrid and architecture == "lfm2"
+                and plan.state_specs and all(s.kind in {"full_kv", "sliding_kv", "conv"}
+                                             for s in plan.state_specs)):
+            raise ValueError("adapter requires complete supported layer layouts")
 
     def forward(self, input_ids, *, cache, attention_mask=None, position_ids=None):
         return self.bundle.model(input_ids, cache=cache, attention_mask=attention_mask,
                                  position_ids=position_ids)
 
 
-def native_adapter(bundle, plan=None, *, allow_bfloat16=False):
+def native_adapter(bundle, plan=None, *, allow_bfloat16=False, allow_hybrid=False):
     from mlx_one.engine.cache_planner import build_cache_plan
 
     return NativeModelAdapter(bundle, plan or build_cache_plan(bundle),
-                              allow_bfloat16=allow_bfloat16)
+                              allow_bfloat16=allow_bfloat16, allow_hybrid=allow_hybrid)

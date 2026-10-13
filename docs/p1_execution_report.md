@@ -33,3 +33,7 @@ Compatibility now includes the observed quantized-module map, explicit floating 
 ## PR-06: Llama-compatible INT8 conversion
 
 SmolLM2 uses the same dense adapter, actor and paged runner. Conversion v2 checksums saved tensors and tokenizer/config assets with source revision and policy; local offline workers verify the content-derived revision. Context checks include output tokens. **55 affected tests passed**; Ruff changed files pass. Actual SmolLM2 conversion, 360M/1.7B checkpoint parity and GPU throughput remain pending.
+
+## PR-07: component-aware LFM2 attention paging
+
+The native hybrid adapter keeps carries outside the paged arena, routes paged hybrid topology through HybridRunner and commits page ownership with replace_from. Complete-boundary prefix owners pin immutable pages and copy carries; accounting adds carry storage without recounting arena bytes. Versioned atomic JSON/tensor snapshots can explicitly export and restore paged hybrid state for lifecycle diagnostics. CPU full-state, cancellation, restoration and snapshot fixtures pass (**76 affected tests**). Native LFM2 INT8 and hybrid paging performance remain pending and unqualified.

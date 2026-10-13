@@ -49,10 +49,11 @@ def component_capabilities(bundle, runtime, mode):
     if runtime is None:
         return []
     specs = runtime.plan.state_specs
-    if mode == "experimental_hybrid_batch":
+    if getattr(runtime, "hybrid_state", False):
         from mlx_one.engine.components import hybrid_components
 
-        components = hybrid_components(bundle, runtime.config.key_type)
+        components = hybrid_components(bundle, runtime.config.key_type,
+            pool=runtime.block_pool if mode == "paged" else None)
         result = []
         for spec, component in zip(specs, components, strict=True):
             caps = component.capabilities()

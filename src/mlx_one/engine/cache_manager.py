@@ -48,6 +48,8 @@ class CacheManager:
                                 _digest(self.weight_identity + str(id(bundle.model))))
         self.plan = (_planning.plan if _planning else
                      build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens))
+        self.hybrid_state = (self.config.backend in {"hybrid", "paged"}
+                             and any(s.kind == "conv" for s in self.plan.state_specs))
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
         from mlx_one.engine.arena import SegmentedPageArena
 
@@ -161,7 +163,14 @@ class CacheManager:
                     if not qualification_matches(self, "quantized_paged_kv"):
                         raise KVQuantizationUnsupported(
                             "quantized paged KV requires quality evidence")
-                entries = tuple(PagedKVCache(self.block_pool, layer_id=spec.layer_id,
+                if self.hybrid_state:
+                    from mlx_one.engine.components import hybrid_components
+
+                    if bits is not None or key_type != "f16":
+                        raise KVQuantizationUnsupported("hybrid paging requires FP16 KV")
+                    entries = hybrid_components(self.bundle, key_type, pool=self.block_pool)
+                else:
+                    entries = tuple(PagedKVCache(self.block_pool, layer_id=spec.layer_id,
                                             dtype="bfloat16" if key_type == "bf16" else "float16",
                                             bits=bits) for spec in self.plan.layer_specs)
             elif backend == "block":
@@ -216,7 +225,7 @@ class CacheManager:
             step = 256
             tokens = ((tokens + step - 1) // step) * step
         amount = self.plan.bytes_per_token(key_bits=key_bits, value_bits=value_bits) * tokens
-        if handle.backend == "hybrid":
+        if self.hybrid_state:
             config = self.bundle.model.config
             amount += sum(1 for s in self.plan.layer_specs if s.kind.value == "conv_state") * (
                 config.conv_L_cache - 1) * config.hidden_size * 4
@@ -388,7 +397,7 @@ class CacheManager:
                     raise PrefixReuseUnsupported("multimodal prefix restoration is unavailable")
                 if not self.config.prefix_cache_enabled:
                     return 0
-                if handle.backend == "hybrid":
+                if self.hybrid_state:
                     match = self.hybrid_prefix.lookup(fingerprint, tokens)
                     if match is None or match[0] < minimum_tokens:
                         if match is not None:
@@ -463,7 +472,7 @@ class CacheManager:
     ) -> int:
         if not self.config.prefix_cache_enabled:
             return 0
-        if self.config.backend == "hybrid":
+        if self.hybrid_state:
             length = self.hybrid_prefix.preview(fingerprint, tokens)
             return length if length >= minimum_tokens else 0
         if not self.plan.prefix_shareable:
@@ -548,7 +557,7 @@ class CacheManager:
                     or any(int(cache.offset) != len(tokens) for cache in handle.bundle.entries)):
                 return False
             handle.computed_tokens = len(tokens)
-            if handle.backend == "hybrid":
+            if self.hybrid_state:
                 return self.publish_hybrid_boundary(handle, tokens)
             if handle.backend == "dense":
                 if not self.plan.prefix_shareable:
@@ -573,7 +582,7 @@ class CacheManager:
             callback = handle.metadata.get("is_cancelled")
             offset = handle.bundle.offset
             fp = handle.metadata.get("fingerprint")
-            if (handle.backend != "hybrid" or not self.config.prefix_cache_enabled or fp is None
+            if (not self.hybrid_state or not self.config.prefix_cache_enabled or fp is None
                     or fp.multimodal_identity is not None or not offset
                     or offset % self.config.block_size_tokens or offset > len(prompt_ids)
                     or (callable(callback) and callback()) or handle.metadata.get("cancelled")
@@ -652,6 +661,20 @@ class CacheManager:
                 prefix = self.block_prefix.stats()
                 physical = blocks["physical_bytes"]
                 pinned = blocks["pinned_bytes"]
+                if self.hybrid_state:
+                    from mlx_one.engine.cache import cache_allocated_nbytes
+
+                    prefix = self.hybrid_prefix.stats()
+                    live_carries = sum(cache_allocated_nbytes(c) for h in handles
+                                       for c in h.bundle.entries
+                                       if getattr(c, "kind", None) == "conv")
+                    prefix_carries = sum(cache_allocated_nbytes(c)
+                        for b, _ in self.hybrid_prefix.entries.values() for c in b.entries
+                        if getattr(c, "kind", None) == "conv")
+                    physical += live_carries + prefix_carries
+                    pinned += prefix_carries
+                    blocks["live_bytes"] += live_carries + prefix_carries
+                    prefix = {**prefix, "bytes": pinned}
             else:
                 blocks = {
                     "block_total": 0,

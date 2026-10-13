@@ -41,16 +41,22 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
         from mlx_one.engine.adapters import native_adapter
 
         try:
-            adapter = native_adapter(bundle, plan, allow_bfloat16=True)
+            adapter = native_adapter(bundle, plan, allow_bfloat16=True, allow_hybrid=True)
+            if adapter.spec.hybrid and "sliding_kv" in adapter.spec.state_kinds:
+                raise ValueError("hybrid paging does not support sliding attention")
             if adapter.spec.head_dim > 256:
                 raise ValueError("paged head dimensions must be at most 256")
         except (ValueError, AttributeError) as exc:
             raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_hybrid_batch":
-        if (plan is None or plan.architecture != "lfm2" or not plan.layer_specs
-                or any(s.kind.value not in {"attention_kv", "conv_state", "rotating_kv"}
-                       for s in plan.layer_specs)):
-            raise ModelCapabilityUnsupported("hybrid batching requires native LFM2 attention/conv")
+        from mlx_one.engine.adapters import native_adapter
+
+        try:
+            adapter = native_adapter(bundle, plan, allow_hybrid=True, allow_bfloat16=True)
+            if adapter.spec.architecture != "lfm2":
+                raise ValueError("hybrid batching requires native LFM2 attention/conv")
+        except (ValueError, AttributeError) as exc:
+            raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_dense_batch":
         from mlx_one.engine.adapters import native_adapter
 
