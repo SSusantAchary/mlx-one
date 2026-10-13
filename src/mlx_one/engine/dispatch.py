@@ -24,9 +24,11 @@ class ReferenceRunner:
                 if runtime is not None and runtime.pressure is not None:
                     from mlx_one.engine.pressure import execution_forecast
 
-                    amount = CacheBundle(request.cache).allocated_nbytes + execution_forecast(
+                    amount = execution_forecast(
                         runtime, request.bundle.model.config, batch=1,
-                        chunk=len(request.token_ids), history=request.cache[0].offset)["bytes"]
+                        chunk=len(request.token_ids), history=request.cache[0].offset,
+                        explicit_bytes=CacheBundle(request.cache).allocated_nbytes,
+                        phase=request.phase)["bytes"]
                     stack.enter_context(runtime.transient_reservation(amount))
                 draft = CacheBundle(request.cache).clone()
                 try:

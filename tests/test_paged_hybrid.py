@@ -50,7 +50,7 @@ def advanced(native, monkeypatch):
     import mlx.core as mx
 
     for name in ("pad", "stack", "min", "max", "maximum", "round", "clip", "uint8",
-                 "float32", "where", "repeat", "exp", "abs", "mean", "all"):
+                 "float32", "int32", "where", "repeat", "exp", "abs", "mean", "all"):
         monkeypatch.setattr(mx, name, getattr(np, name), raising=False)
     def softmax(x, axis=-1, precise=True):
         y = np.exp(x.astype(np.float32) - x.max(axis=axis, keepdims=True))
@@ -223,7 +223,7 @@ def test_segment_identity_validation_and_shared_page_lifetime(advanced):
 
 
 def test_kernel_bindings_are_bounded_and_template_arguments_are_integral():
-    for formats in ((None,) * 8, (4,) * 4, (8, None, 4)):
+    for formats in ((None,) * 8, (4,) * 3, (8, None, 4)):
         names, source = kernel_source(formats, 128)
         assert len(names) <= 31
         assert "threadgroup_barrier" in source
@@ -280,14 +280,14 @@ def test_hybrid_snapshot_round_trip_checksum_and_exact_boundary(advanced, tmp_pa
     requests = _requests(bundle, runtime, [range(16)])
     HybridRunner().execute(tuple(requests))
     identity = {"revision": bundle.revision, "topology": runtime.plan.topology_digest}
-    save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    saved = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
     restored = load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
     assert restored.offset == 16
     np.testing.assert_array_equal(restored.entries[0].values, requests[0].cache[0].values)
     with pytest.raises(ValueError, match="identity"):
         load_snapshot(tmp_path, identity={"revision": "wrong"},
                       expected_specs=runtime.plan.state_specs)
-    (tmp_path / "tensors.npz").write_bytes(b"corrupted")
+    (tmp_path / saved["payload"]).write_bytes(b"corrupted")
     with pytest.raises(ValueError, match="checksum"):
         load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
     restored.release()
@@ -430,9 +430,14 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
     runtime = CacheManager(bundle, CacheConfig(key_type=cache_type, value_type=cache_type))
     runtime.mode = "paged"
     config = BatchingConfig(max_sequences=2)
-    envelope = {"context_tokens": 2048, "output_tokens": 128, "slots": 2, "chunk_tokens": 512,
-                "page_tokens": 32, "cache_type": cache_type, "admission_policy": "deadline",
-                "ttft_budget_ms": 1000, "decode_gap_budget_ms": 100}
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+    from mlx_one.inference_qualification import workload_envelope
+
+    envelope = workload_envelope(BaselineProfile(*CHECKPOINTS["qwen"], "paged", slots=2,
+        cache_type=cache_type, kv_bits=4 if cache_type == "q4_0" else None,
+        ttft_budget_ms=1000, decode_gap_budget_ms=100))
+    runtime.batching_config = config
+    runtime.pressure = MemoryPressureController()
     runtime.qualification_profile = envelope
     scope = native_report(bundle, runtime, mode="paged", hardware="fixture-host",
                           source_revision="fixture-source")["scope"]
@@ -440,12 +445,13 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
     feature = "quantized_paged_kv" if cache_type == "q4_0" else "paged_attention"
     artifact = tmp_path / "measured.json"
     artifact.write_text('{"fixture": true}')
-    proof = {"schema_version": "native-inference-qualification-v1", "backend": "mlx-one-native",
+    proof = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
              "feature": feature, "scope": scope, "status": "passed",
              "correctness_passed": True, "performance_qualified": True,
              "compatibility_digest": compatibility_digest(runtime),
              "workload_envelope": envelope, "kernel_version": KERNEL_VERSION,
              "quality_passed": True, "kernel_correctness_passed": True,
+             "quality_kind": "native-held-out-quality-v1", "quality_coverage_passed": True,
              "artifacts": [{"uri": str(artifact), "kind": "cpu-fixture",
                             "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest()}]}
     path = tmp_path / "proof.json"
@@ -565,7 +571,7 @@ def test_partitioned_dispatch_mask_gqa_and_partial_pages_match_dense(advanced, m
     rng = np.random.default_rng(12)
     rows = []
     histories = []
-    for length in (147, 37):
+    for length in (259, 37):
         keys = rng.normal(size=(1, 1, length, 4)).astype(np.float16)
         values = rng.normal(size=keys.shape).astype(np.float16)
         cache = PagedKVCache(runtime.block_pool)
@@ -573,13 +579,14 @@ def test_partitioned_dispatch_mask_gqa_and_partial_pages_match_dense(advanced, m
         rows.append(cache)
         histories.append((keys, values))
     query = rng.normal(size=(2, 2, 3, 4)).astype(np.float16)
-    positions = ((144, 145, 146), (36, 37, 38))
+    positions = ((256, 257, 258), (36, 37, 38))
     widths = (3, 1)
     launches = []
-    def kernel(formats, dim):
+    def kernel(formats, dim, row_count):
         def execute(*, inputs, **kwargs):
             launches.append(len(formats))
-            q, starts, pos, real, lengths, scale, *arrays = inputs
+            q, segment_ids, pos, real, lengths, scale, *remaining = inputs
+            tables, arrays = remaining[:row_count], remaining[row_count:]
             partial = np.zeros((*q.shape[:-1], dim + 2), dtype=np.float32)
             partial[..., dim] = -np.inf
             for row in range(q.shape[0]):
@@ -587,14 +594,14 @@ def test_partitioned_dispatch_mask_gqa_and_partial_pages_match_dense(advanced, m
                     for qi in range(real[row]):
                         scores, vals = [], []
                         for i in range(len(formats)):
-                            start = starts[i, row]
-                            if start < 0:
-                                continue
-                            for t in range(min(16, lengths[row] - start)):
-                                if start + t <= pos[row, qi]:
-                                    scores.append(float(q[row, head, qi].astype(np.float32)
-                                                        @ arrays[i * 2][0, 0, t]) * scale[0])
-                                    vals.append(arrays[i * 2 + 1][0, 0, t])
+                            for sid, slot, start, count in tables[row]:
+                                if sid != segment_ids[i]:
+                                    continue
+                                for t in range(min(count, lengths[row] - start)):
+                                    if start + t <= pos[row, qi]:
+                                        scores.append(float(q[row, head, qi].astype(np.float32)
+                                                            @ arrays[i * 2][slot, 0, t]) * scale[0])
+                                        vals.append(arrays[i * 2 + 1][slot, 0, t])
                         if scores:
                             maximum = max(scores)
                             weights = np.exp(np.array(scores) - maximum)
@@ -673,11 +680,13 @@ def test_activation_calibration_requires_exact_dimensions_identity_and_freshness
                           source_revision="fixture-source")["scope"]
     scope["cache_precision"] = "float16"
     path = tmp_path / "peak.json"
-    proof = {"schema_version": "native-inference-qualification-v1", "backend": "mlx-one-native",
+    proof = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
              "scope": scope, "feature": "activation_peak", "status": "passed",
              "correctness_passed": True, "compatibility_digest": compatibility_digest(runtime),
-             "activation_peak": {"dimensions": {"batch": 2, "chunk": 4, "history": 5},
-                                 "incremental_bytes": 4096}}
+             "kernel_version": KERNEL_VERSION, "arena_version": "segmented-arena-v1",
+             "activation_peak": {"dimensions": {"batch": 2, "chunk": 4, "history": 5,
+                "history_lengths": [5, 5], "widths": [4, 4], "phase": "prefill"},
+                "policy": "activation-peak-v1-margin20", "incremental_bytes": 4096}}
     path.write_text(json.dumps(proof))
     registry = InferenceFeatureRegistry()
     registry.promote("activation_peak", InferenceScope(**scope), path,
@@ -723,3 +732,239 @@ def test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot(advanced):
         repeated = engine.generate(prompt, max_tokens=2)
         assert repeated.text == original.text
         assert engine.runtime_stats()["cache_stats"]["prefix_hits"] > 0
+
+
+def test_arena_segments_tables_and_leases_are_bounded(advanced):
+    runtime = CacheManager(advanced(), CacheConfig(backend="paged", block_size_tokens=16))
+    cache = runtime.create_handle("arena").bundle.entries[0]
+    values = np.ones((1, 1, 257, 4), dtype=np.float16)
+    cache.append(values, values)
+    assert len(runtime.block_pool.segments) == 2
+    prefix_table = cache.page_table.chunks[0]
+    branch = cache.clone()
+    before = runtime.block_pool.table_update_bytes
+    branch.append(values[:, :, :1], values[:, :, :1])
+    assert branch.page_table.chunks[0] is prefix_table
+    assert runtime.block_pool.table_update_bytes - before == 16 * 4 * 4
+    assert branch._blocks[0].block_id == cache._blocks[0].block_id
+    arena = runtime.block_pool
+    with arena.lease():
+        branch.append(values[:, :, :1], values[:, :, :1])
+        assert arena.stats()["replacement_overlap_bytes"] > 0
+    assert arena.stats()["replacement_overlap_bytes"] == 0
+    assert arena.stats()["table_bytes"] > 0
+    assert arena.stats()["page_payload_bytes"] < arena.stats()["physical_bytes"]
+    branch.reset()
+    runtime.close()
+    assert arena.stats()["physical_bytes"] == 0
+
+
+def test_arena_evaluation_failure_does_not_publish_segment(advanced, monkeypatch):
+    import mlx.core as mx
+
+    runtime = CacheManager(advanced(), CacheConfig(backend="paged", block_size_tokens=16))
+    cache = runtime.create_handle("arena").bundle.entries[0]
+    values = np.ones((1, 1, 16, 4), dtype=np.float16)
+    cache.append(values, values)
+    arena = runtime.block_pool
+    before = {sid: s.state for sid, s in arena.segments.items()}
+    live = set(arena._blocks)
+    def fail(*args):
+        raise MemoryError("injected arena evaluation")
+    monkeypatch.setattr(mx, "eval", fail)
+    with pytest.raises(MemoryError):
+        arena.allocate_ref(tuple(values.copy() for _ in range(2)), 16,
+                           layout=cache._blocks[0].block.layout)
+    assert set(arena._blocks) == live
+    assert all(arena.segments[sid].state is state for sid, state in before.items())
+    runtime.close()
+
+
+def test_cache_aware_age_guard_under_continuous_locality_arrivals(monkeypatch):
+    from collections import deque
+
+    from mlx_one.engine.actor import InferenceActor, _Job
+
+    actor = object.__new__(InferenceActor)
+    actor.config = BatchingConfig(max_sequences=1, admission_policy="cache_aware")
+    actor._condition, actor._active, actor._pending = threading.Condition(), [], deque()
+    now = [0.]
+    monkeypatch.setattr("mlx_one.engine.actor.time.monotonic", lambda: now[0])
+    oldest = _Job(lambda: iter(()), threading.Event(), created_at=0.)
+    actor._pending.append(oldest)
+    selected = None
+    for tick in range(31):
+        now[0] = tick / 10
+        arriving = _Job(lambda: iter(()), threading.Event(), created_at=now[0])
+        arriving.prefix_preview = lambda: 1024
+        actor._pending.append(arriving)
+        actor._admit()
+        if oldest in actor._active:
+            selected = now[0]
+            break
+        actor._active.clear()
+    assert selected is not None and selected <= 2.0
+
+
+def test_uniform_component_contract_and_atomic_snapshot_failure(advanced, tmp_path, monkeypatch):
+    from mlx_one.engine.components import StateComponent
+
+    runtime = CacheManager(advanced(True), CacheConfig(backend="hybrid"))
+    requests = _requests(runtime.bundle, runtime, [range(32)])
+    HybridRunner().execute(tuple(requests))
+    identity = {"revision": runtime.bundle.revision}
+    first = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    for component, spec in zip(requests[0].cache, runtime.plan.state_specs, strict=True):
+        assert isinstance(component, StateComponent)
+        assert component.capabilities().can_batch
+        assert component.committed_position == 32
+        component.validate(spec)
+    old_manifest = (tmp_path / "state.json").read_bytes()
+    original = __import__("os").replace
+    def fail_commit(source, target):
+        if str(target).endswith("state.json"):
+            raise OSError("injected manifest commit failure")
+        return original(source, target)
+    monkeypatch.setattr("mlx_one.engine.components.os.replace", fail_commit)
+    with pytest.raises(OSError):
+        save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    assert (tmp_path / "state.json").read_bytes() == old_manifest
+    assert (tmp_path / first["payload"]).exists()
+    restored = load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
+    assert restored.offset == 32
+    restored.release()
+    runtime.close()
+
+
+def test_snapshot_atomic_adoption_rejects_cancelled_and_wrong_dtype(advanced, tmp_path):
+    from mlx_one.engine.lifecycle import adopt_snapshot
+
+    runtime = CacheManager(advanced(True), CacheConfig(backend="hybrid"))
+    requests = _requests(runtime.bundle, runtime, [range(32)])
+    HybridRunner().execute(tuple(requests))
+    save_snapshot(tmp_path, requests[0].handle.bundle, identity={"fixture": 1})
+    handle = runtime.create_handle("restored")
+    staged = load_snapshot(tmp_path, identity={"fixture": 1},
+                           expected_specs=runtime.plan.state_specs)
+    cancelled = threading.Event()
+    cancelled.set()
+    assert not adopt_snapshot(runtime, handle, staged, cancel=cancelled)
+    assert handle.bundle.offset == 0 and staged.closed
+    wrong = tuple(replace(s, dtype="float32") for s in runtime.plan.state_specs)
+    with pytest.raises(ValueError, match="shape mismatch|dtype mismatch"):
+        load_snapshot(tmp_path, identity={"fixture": 1}, expected_specs=wrong)
+    runtime.close()
+
+
+def test_hybrid_lifecycle_profile_against_independent_cpu_native_fixture(advanced, tmp_path):
+    from mlx_one.engine.lifecycle import hybrid_lifecycle
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+
+    profile = BaselineProfile(*CHECKPOINTS["lfm"], "experimental_hybrid_batch",
+                              workload="lifecycle", cache_type="f16")
+    result = hybrid_lifecycle(advanced(True), profile, tmp_path,
+                             reload_bundle=lambda: advanced(True))
+    assert result["status"] == "passed", result
+    assert result["checks"]["stale_handle_rejected"]
+    assert all(row["active_handles"] == 0 for row in result["cleanup"])
+
+
+def test_snapshot_reader_waits_for_writer_and_legacy_stays_readable(
+        advanced, tmp_path, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+
+    runtime = CacheManager(advanced(True), CacheConfig(backend="hybrid"))
+    requests = _requests(runtime.bundle, runtime, [range(32)])
+    HybridRunner().execute(tuple(requests))
+    identity = {"fixture": "locking"}
+    first = save_snapshot(tmp_path, requests[0].handle.bundle, identity=identity)
+    metadata = dict(first, schema_version="hybrid-state-v1")
+    (tmp_path / "tensors.npz").write_bytes((tmp_path / first["payload"]).read_bytes())
+    metadata.pop("payload")
+    (tmp_path / "state.json").write_text(json.dumps(metadata))
+    legacy = load_snapshot(tmp_path, identity=identity, expected_specs=runtime.plan.state_specs)
+    assert legacy.offset == 32
+    legacy.release()
+    entered, release = threading.Event(), threading.Event()
+    original = __import__("os").replace
+    def paused_commit(source, target):
+        if str(target).endswith("state.json"):
+            entered.set()
+            assert release.wait(3)
+        return original(source, target)
+    monkeypatch.setattr("mlx_one.engine.components.os.replace", paused_commit)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        writer = pool.submit(save_snapshot, tmp_path, requests[0].handle.bundle, identity=identity)
+        assert entered.wait(3)
+        reader = pool.submit(load_snapshot, tmp_path, identity=identity,
+                             expected_specs=runtime.plan.state_specs)
+        assert not reader.done()
+        release.set()
+        writer.result()
+        restored = reader.result()
+        assert restored.offset == 32
+        restored.release()
+    runtime.close()
+
+
+def test_peak_producer_resets_each_measured_forward_and_records_ragged_scope(advanced, monkeypatch):
+    import mlx.core as mx
+
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+    from mlx_one.peak_calibration import native_peak_calibration
+
+    resets = []
+    for name, value in (("synchronize", lambda: None),
+                        ("reset_peak_memory", lambda: resets.append(True)),
+                        ("get_peak_memory", lambda: 100_000),
+                        ("get_active_memory", lambda: 10_000),
+                        ("get_cache_memory", lambda: 100), ("clear_cache", lambda: None)):
+        monkeypatch.setattr(mx, name, value, raising=False)
+    item = BaselineProfile(*CHECKPOINTS["qwen"], "paged", context_tokens=32,
+                           chunk_tokens=16, slots=2, workload="peak_calibration",
+                           calibration_phase="prefill", cache_type="f16")
+    result = native_peak_calibration(advanced(), item)
+    assert len(resets) == 6
+    assert result["status"] == "passed"
+    assert result["dimensions"] == {"batch": 2, "chunk": 16, "history": 16,
+                                    "history_lengths": [16, 16], "widths": [16, 16],
+                                    "phase": "prefill"}
+    assert result["actual_cache_dtypes"] == ["float16"]
+
+
+def test_paged_prefix_cannot_substitute_quantized_layout(advanced):
+    from mlx_one.engine.modes import ModelCapabilityUnsupported
+    from mlx_one.engine.paged import PagedKVCache
+
+    runtime = CacheManager(advanced(), CacheConfig(backend="paged", block_size_tokens=16))
+    donor = runtime.create_handle("float").bundle.entries[0]
+    values = np.ones((1, 1, 16, 4), dtype=np.float16)
+    donor.append(values, values)
+    borrower = PagedKVCache(runtime.block_pool, bits=4)
+    references = tuple(ref.fork() for ref in donor._blocks)
+    with pytest.raises(ModelCapabilityUnsupported, match="precision"):
+        borrower.adopt(references)
+    assert borrower.offset == 0
+    for reference in references:
+        reference.close()
+    runtime.close()
+
+
+def test_held_out_native_fixture_scores_all_input_tokens(advanced, tmp_path):
+    from test_quality_dataset import manifest
+
+    from mlx_one.inference_baseline import CHECKPOINTS, BaselineProfile
+    from mlx_one.quality_dataset import load_quality_manifest, native_dataset_quality
+
+    path = manifest(tmp_path)
+    dataset = load_quality_manifest(path)
+    bundle = replace(advanced(), tokenizer_identity="immutable-cpu-fixture-tokenizer")
+    item = BaselineProfile(*CHECKPOINTS["qwen"], "paged", workload="quality",
+                           cache_type="f16", output_tokens=2, quality_manifest=str(path),
+                           quality_dataset_identity=dataset["identity"])
+    result, retrieval = native_dataset_quality(bundle, item)
+    assert result["scored_tokens"] == len(bundle.tokenizer.encode("Held out text.")) - 1
+    assert result["document_count"] == 1
+    assert abs(result["held_out_nll_mean_delta"]) < .05
+    assert not result["coverage"]["eligible"]
+    assert len(retrieval["fixtures"]) == 1

@@ -16,7 +16,7 @@ def page_bindings(rows):
         for index, ref in enumerate(cache._blocks):
             block = ref.block  # validates epoch/generation and owning reference
             layout = block.layout
-            if (ref.pool is not cache.pool or layout is None or layout.version != 2
+            if (ref.pool is not cache.pool or layout is None or layout.version != 3
                     or layout.layer_id != cache.layer_id
                     or layout.page_tokens != cache.block_tokens
                     or layout.key_dtype != cache.dtype or layout.value_dtype != cache.dtype
@@ -59,20 +59,26 @@ def _read_expression(name, bits, dim):
     return f"(float({encoded}) * float({name}s[{group}]) + float({name}b[{group}]))"
 
 
-def kernel_source(formats, dim):
-    """Pure source builder, also exercised by backend-free signature tests."""
-    names, blocks = ["q", "starts", "positions", "widths", "lengths", "scale"], []
+def kernel_source(formats, dim, row_count=1):
+    """Bounded segment tensors plus persistent per-row table chunks."""
+    names = ["q", "segment_ids", "positions", "widths", "lengths", "scale"]
+    names.extend(f"table{i}" for i in range(row_count))
+    table = "table0"
+    for i in range(1, row_count):
+        table = f"(row == {i} ? table{i} : {table})"
+    blocks = []
     for i, bits in enumerate(formats):
         for name in (f"k{i}", f"v{i}"):
             names.extend([name] if bits is None else [name, name + "s", name + "b"])
-        k = _read_expression(f"k{i}", bits, dim)
-        v = _read_expression(f"v{i}", bits, dim)
+        k = _read_expression(f"k{i}", bits, dim).replace("kh * P", "(slot * HK + kh) * P")
+        v = _read_expression(f"v{i}", bits, dim).replace("kh * P", "(slot * HK + kh) * P")
         blocks.append(f"""
-        int start{i} = starts[{i} * B + row];
-        if (start{i} >= 0 && qi < widths[row]) {{
-            for (uint t = 0; t < P; ++t) {{
-                if (start{i} + int(t) >= lengths[row]
-                        || start{i} + int(t) > positions[row * Q + qi]) break;
+        for (uint page = 0; page < 16; ++page) {{
+            int sid = table[page * 4], slot = table[page * 4 + 1];
+            int start = table[page * 4 + 2], count = table[page * 4 + 3];
+            if (sid != segment_ids[{i}] || qi >= widths[row]) continue;
+            for (int t = 0; t < count; ++t) {{
+                if (start + t >= lengths[row] || start + t > positions[row * Q + qi]) break;
                 float kval = d < D ? {k} : 0.0f;
                 dot[d] = d < D ? float(q[((row * H + head) * Q + qi) * D + d]) * kval : 0;
                 threadgroup_barrier(mem_flags::mem_threadgroup);
@@ -90,6 +96,8 @@ def kernel_source(formats, dim):
                 threadgroup_barrier(mem_flags::mem_threadgroup);
             }}
         }}""")
+    if len(names) > 30:
+        raise ValueError("Metal kernel exceeds its buffer binding limit")
     source = """
         uint d = thread_position_in_threadgroup.x;
         uint group = threadgroup_position_in_grid.y;
@@ -97,7 +105,7 @@ def kernel_source(formats, dim):
         uint kh = head / (H / HK);
         threadgroup float dot[256];
         float m = -INFINITY, l = 0.0f, acc = 0.0f;
-    """ + "\n".join(blocks) + """
+    """ + f"\n        auto table = {table};\n" + "\n".join(blocks) + """
         uint base = ((row * H + head) * Q + qi) * (D + 2);
         if (d < D) out[base + d] = acc;
         if (d == 0) { out[base + D] = m; out[base + D + 1] = l; }
@@ -106,12 +114,12 @@ def kernel_source(formats, dim):
 
 
 @lru_cache(maxsize=64)
-def _kernel(formats, dim):
+def _kernel(formats, dim, rows=1):
     import mlx.core as mx
 
-    names, source = kernel_source(formats, dim)
+    names, source = kernel_source(formats, dim, rows)
     tag = "".join(str(bits or 0) for bits in formats)
-    return mx.fast.metal_kernel(name=f"segmented_attention_{dim}_{tag}", input_names=names,
+    return mx.fast.metal_kernel(name=f"arena_attention_{dim}_{rows}_{tag}", input_names=names,
                                output_names=["out"], source=source,
                                ensure_row_contiguous=True)
 
@@ -127,46 +135,75 @@ def paged_attention(queries, rows, positions, widths, *, scale):
             or any(w < 1 or w > length for w in widths)
             or any(not c._blocks or c.offset < w for c, w in zip(rows, widths, strict=True))):
         raise ValueError("invalid paged query row mapping")
+    if batch > 8:
+        raise ModelCapabilityUnsupported("paged attention supports at most eight rows")
     if dim < 1 or dim > 256 or heads % rows[0]._blocks[0].block.layout.num_kv_heads:
         raise ModelCapabilityUnsupported("paged attention supports GQA head dimensions 1..256")
     if not hasattr(mx, "fast") or not hasattr(mx.fast, "metal_kernel"):
         raise ModelCapabilityUnsupported("paged attention requires MLX Metal custom kernels")
-    pages, starts = page_bindings(rows)
-    if any(p.layout.head_dim != dim or p.layout.num_kv_heads != pages[0].layout.num_kv_heads
-           or p.layout.page_tokens != pages[0].layout.page_tokens for p in pages):
-        raise ModelCapabilityUnsupported("paged attention requires one compatible layer layout")
+    arena = rows[0].pool
+    for cache in rows:
+        if cache.pool is not arena:
+            raise ValueError("batch spans page arenas")
+        cache.page_table.validate(cache._blocks)
+        from mlx_one.engine.paged import KERNEL_VERSION
+
+        if sum(r.block.token_count for r in cache._blocks) != cache.offset:
+            raise ValueError("page table committed length mismatch")
+        for reference in cache._blocks:
+            layout = reference.block.layout
+            if (layout.version != 3 or layout.kernel_version != KERNEL_VERSION
+                    or layout.layer_id != cache.layer_id or layout.page_tokens != cache.block_tokens
+                    or layout.key_dtype != cache.dtype or layout.value_dtype != cache.dtype
+                    or layout.quantization_bits not in {None, cache.bits}):
+                raise ModelCapabilityUnsupported("unsupported arena page layout")
     accum = maximum = normalizer = None
-    # Four quantized segments or eight floating segments fit a bounded argument list.
-    group_size = 4 if any(p.layout.quantization_bits for p in pages) else 8
     pos, real_widths = mx.array(positions), mx.array(widths)
     lengths = mx.array([c.offset for c in rows])
-    for start in range(0, len(pages), group_size):
-        part = pages[start:start + group_size]
-        formats = tuple(page.layout.quantization_bits for page in part)
-        inputs = [queries, mx.array(starts[start:start + group_size]), pos, real_widths, lengths,
-                  mx.array([scale], dtype=mx.float32)]
-        for page in part:
-            inputs.extend(page.state)
-        warp = 1 << max(5, (dim - 1).bit_length())
-        template = [("B", batch), ("H", heads), ("HK", part[0].layout.num_kv_heads),
-                    ("Q", length), ("D", dim), ("P", rows[0].block_tokens),
-                    ("W", warp)]
-        partial = _kernel(formats, dim)(
-            inputs=inputs, template=template,
-            grid=(warp, batch * heads * length, 1), threadgroup=(warp, 1, 1),
-            output_shapes=[(batch, heads, length, dim + 2)], output_dtypes=[mx.float32])[0]
-        pm, pl, pa = partial[..., dim:dim + 1], partial[..., dim + 1:], partial[..., :dim]
-        if accum is None:
-            maximum, normalizer, accum = pm, pl, pa
-        else:
-            new_max = mx.maximum(maximum, pm)
-            # Masked padded queries have no valid scores in any partition.
-            center = mx.where(normalizer + pl > 0, new_max, 0)
-            a = mx.exp(mx.where(normalizer > 0, maximum, -float("inf")) - center)
-            b = mx.exp(mx.where(pl > 0, pm, -float("inf")) - center)
-            accum, normalizer = accum * a + pa * b, normalizer * a + pl * b
-            maximum = new_max
-    return (accum / mx.maximum(normalizer, 1e-20)).astype(queries.dtype)
+    empty = mx.array([[-1, -1, 0, 0]] * 16, dtype=mx.int32)
+    with arena.lease():
+        for chunk in sorted({key for c in rows for key in c.page_table.chunks}):
+            ids = sorted({entry[0] for c in rows for index, entry in c.page_table.entries.items()
+                          if index // 16 == chunk})
+            # 6 common + B tables + at most 24 segment arrays fit Metal's 31 bindings.
+            quantized = any(arena.segments[sid].layout.quantization_bits for sid in ids)
+            group_size = max(1, (30 - 6 - batch) // (6 if quantized else 2))
+            for start in range(0, len(ids), group_size):
+                selected = ids[start:start + group_size]
+                segments = [arena.segments[sid] for sid in selected]
+                formats = tuple(s.layout.quantization_bits for s in segments)
+                inputs = [queries, mx.array(selected), pos, real_widths, lengths,
+                          mx.array([scale], dtype=mx.float32)]
+                inputs.extend(c.page_table.chunks.get(chunk, empty) for c in rows)
+                for segment in segments:
+                    inputs.extend(segment.state)
+                warp = 1 << max(5, (dim - 1).bit_length())
+                layout = segments[0].layout
+                if any((s.layout.head_dim, s.layout.num_kv_heads, s.layout.page_tokens)
+                       != (dim, layout.num_kv_heads, rows[0].block_tokens) for s in segments):
+                    raise ModelCapabilityUnsupported("incompatible arena segment layouts")
+                template = [("B", batch), ("H", heads), ("HK", layout.num_kv_heads),
+                            ("Q", length), ("D", dim), ("P", rows[0].block_tokens), ("W", warp)]
+                partial = _kernel(formats, dim, batch)(
+                    inputs=inputs, template=template,
+                    grid=(warp, batch * heads * length, 1), threadgroup=(warp, 1, 1),
+                    output_shapes=[(batch, heads, length, dim + 2)], output_dtypes=[mx.float32])[0]
+                pm = partial[..., dim:dim + 1]
+                pl, pa = partial[..., dim + 1:], partial[..., :dim]
+                if accum is None:
+                    maximum, normalizer, accum = pm, pl, pa
+                else:
+                    new_max = mx.maximum(maximum, pm)
+                    center = mx.where(normalizer + pl > 0, new_max, 0)
+                    a = mx.exp(mx.where(normalizer > 0, maximum, -float("inf")) - center)
+                    b = mx.exp(mx.where(pl > 0, pm, -float("inf")) - center)
+                    accum, normalizer = accum * a + pa * b, normalizer * a + pl * b
+                    maximum = new_max
+                # Bound partial-result lifetime instead of retaining all partitions.
+                mx.eval(accum, normalizer, maximum)
+        result = (accum / mx.maximum(normalizer, 1e-20)).astype(queries.dtype)
+        mx.eval(result)
+        return result
 
 
 def numpy_paged_attention(queries, rows, positions, widths, *, scale):

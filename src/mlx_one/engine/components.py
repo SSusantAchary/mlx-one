@@ -4,15 +4,85 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import tempfile
+import uuid
 from collections import OrderedDict
-from dataclasses import dataclass
+from contextlib import contextmanager
+from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Protocol, runtime_checkable
 
 from mlx_one.core.cache import ConvCache, KVCache
 from mlx_one.engine.cache import CacheBundle, array_nbytes
 
 
-class FullKVComponent(KVCache):
+@dataclass(frozen=True)
+class ComponentCapabilities:
+    can_batch: bool = False
+    can_page: bool = False
+    can_snapshot: bool = False
+    can_quantize: bool = False
+    can_share_prefix: bool = False
+    can_trim: bool = False
+    transition_math: bool = False
+
+
+@runtime_checkable
+class StateComponent(Protocol):
+    kind: str
+
+    @property
+    def committed_position(self) -> int: ...
+    def capabilities(self) -> ComponentCapabilities: ...
+    def validate(self, spec) -> None: ...
+    def clone(self): ...
+    def snapshot(self): ...
+    def dispose(self) -> None: ...
+
+
+class ComponentContract:
+    @property
+    def committed_position(self):
+        return self.offset
+
+    def capabilities(self):
+        implemented = self.kind in {"full_kv", "sliding_kv", "conv"}
+        return ComponentCapabilities(can_batch=implemented, can_snapshot=True,
+            can_share_prefix=implemented, can_trim=self.kind == "full_kv",
+            transition_math=implemented)
+
+    def dispose(self):
+        self.reset()
+
+    def validate(self, spec):
+        if (self.kind != spec.kind or not isinstance(self.offset, int)
+                or isinstance(self.offset, bool) or self.offset < 0):
+            raise ValueError("component kind or committed position mismatch")
+        if self.kind in {"full_kv", "sliding_kv"}:
+            length = min(self.offset, getattr(self, "max_size", self.offset))
+            if self.kind == "sliding_kv" and self.max_size != spec.window_tokens:
+                raise ValueError("component sliding-window layout mismatch")
+            for value in (self.keys, self.values):
+                if value is None:
+                    if self.offset:
+                        raise ValueError("component is missing committed KV")
+                    continue
+                dtype = str(value.dtype).rsplit(".", 1)[-1]
+                if (value.shape[:2] != (1, spec.num_kv_heads)
+                        or value.shape[2] < length or value.shape[3] != spec.key_head_dim
+                        or dtype != self.storage_dtype or spec.dtype and dtype != spec.dtype):
+                    raise ValueError("component attention layout or dtype mismatch")
+        elif self.values is not None:
+            if spec.state_shapes and tuple(self.values.shape) != spec.state_shapes[0]:
+                raise ValueError("component carry shape mismatch")
+            if spec.dtype and str(self.values.dtype).rsplit(".", 1)[-1] != spec.dtype:
+                raise ValueError("component carry dtype mismatch")
+        elif self.offset:
+            raise ValueError("component is missing committed carry")
+
+
+class FullKVComponent(ComponentContract, KVCache):
     kind = "full_kv"
 
     def __init__(self, dtype="float16"):
@@ -34,7 +104,7 @@ class FullKVComponent(KVCache):
     snapshot = clone
 
 
-class SlidingKVComponent(KVCache):
+class SlidingKVComponent(ComponentContract, KVCache):
     kind = "sliding_kv"
 
     def __init__(self, window, dtype="float16"):
@@ -83,7 +153,7 @@ class SlidingKVComponent(KVCache):
         return True
 
 
-class ConvCarryComponent(ConvCache):
+class ConvCarryComponent(ComponentContract, ConvCache):
     kind = "conv"
 
     def clone(self):
@@ -100,7 +170,7 @@ class ConvCarryComponent(ConvCache):
 
 
 @dataclass
-class RecurrentComponent:
+class RecurrentComponent(ComponentContract):
     """Lifecycle contract only; no native SSM/DeltaNet math is registered."""
 
     values: object = None
@@ -213,17 +283,19 @@ class HybridPrefixIndex:
         self.entries.clear()
 
 
-def save_snapshot(directory, bundle, *, identity):
+def _snapshot_contents(bundle):
     """Local JSON+NPZ, SHA256 checked. BF16 is losslessly encoded as FP32."""
     import numpy as np
 
-    root = Path(directory)
-    root.mkdir(parents=True, exist_ok=True)
+    if len({cache.offset for cache in bundle.entries}) > 1:
+        raise ValueError("snapshot components are not at one committed boundary")
     tensors, layers = {}, []
     for index, cache in enumerate(bundle.entries):
         layer = {"kind": getattr(cache, "kind", "unknown"), "offset": cache.offset,
                  "window": getattr(cache, "max_size", None),
-                 "kernel_size": getattr(cache, "kernel_size", None), "tensors": {}}
+                 "kernel_size": getattr(cache, "kernel_size", None),
+                 "window_start": getattr(cache, "window_start", None),
+                 "capabilities": asdict(cache.capabilities()), "tensors": {}}
         for name in ("keys", "values"):
             value = getattr(cache, name, None)
             if value is not None and layer["kind"] == "full_kv":
@@ -238,22 +310,78 @@ def save_snapshot(directory, bundle, *, identity):
                 tensors[key] = np.array(value)
                 layer["tensors"][name] = {"key": key, "shape": list(value.shape), "dtype": dtype}
         layers.append(layer)
-    payload = root / "tensors.npz"
-    np.savez(payload, **tensors)
-    manifest = {"schema_version": "hybrid-state-v1", "identity": identity, "layers": layers,
-                "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()}
-    (root / "state.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
-    return manifest
+    return tensors, layers
+
+
+@contextmanager
+def _snapshot_lock(root, *, exclusive):
+    import fcntl
+
+    root.mkdir(parents=True, exist_ok=True)
+    with (root / ".state.lock").open("a+b") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
+def save_snapshot(directory, bundle, *, identity):
+    """Immutable payload generation; atomic manifest is the commit point."""
+    import numpy as np
+
+    root = Path(directory)
+    with _snapshot_lock(root, exclusive=True):
+        tensors, layers = _snapshot_contents(bundle)
+        payload = root / f"tensors-{uuid.uuid4().hex}.npz"
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=root, delete=False) as handle:
+                temporary = Path(handle.name)
+                np.savez(handle, **tensors)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, payload)
+            manifest = {"schema_version": "hybrid-state-v2", "identity": identity,
+                        "layers": layers, "payload": payload.name,
+                        "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()}
+            with tempfile.NamedTemporaryFile(mode="w", dir=root, delete=False) as handle:
+                temporary = Path(handle.name)
+                handle.write(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, root / "state.json")
+            directory_fd = os.open(root, os.O_RDONLY)
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
+            for old in root.glob("tensors-*.npz"):
+                if old != payload:
+                    old.unlink()
+            return manifest
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
 
 
 def load_snapshot(directory, *, identity, expected_specs):
+    with _snapshot_lock(Path(directory), exclusive=False):
+        return _load_snapshot(directory, identity=identity, expected_specs=expected_specs)
+
+
+def _load_snapshot(directory, *, identity, expected_specs):
     import mlx.core as mx
     import numpy as np
 
     root = Path(directory)
     manifest = json.loads((root / "state.json").read_text())
-    payload = root / "tensors.npz"
-    if (manifest.get("schema_version") != "hybrid-state-v1"
+    name = manifest.get("payload", "tensors.npz")
+    if not isinstance(name, str) or Path(name).name != name:
+        raise ValueError("invalid snapshot payload path")
+    payload = root / name
+    current = manifest.get("schema_version") == "hybrid-state-v2"
+    if (manifest.get("schema_version") not in {"hybrid-state-v1", "hybrid-state-v2"}
             or manifest.get("identity") != identity
             or manifest.get("sha256") != hashlib.sha256(payload.read_bytes()).hexdigest()
             or len(manifest["layers"]) != len(expected_specs)):
@@ -278,6 +406,11 @@ def load_snapshot(directory, *, identity, expected_specs):
                     cache = RecurrentComponent()
                 else:
                     raise ValueError("unsupported checkpoint state")
+                if current and (layer.get("capabilities") != asdict(cache.capabilities())
+                        or layer.get("window_start") != (
+                            max(layer["offset"] - spec.window_tokens, 0)
+                            if spec.kind == "sliding_kv" else None)):
+                    raise ValueError("snapshot component capabilities or window position mismatch")
                 staged.append(cache)
                 required = ({"keys", "values"} if spec.kind in {"full_kv", "sliding_kv"}
                             else {"values"})
@@ -295,7 +428,8 @@ def load_snapshot(directory, *, identity, expected_specs):
                         length = (min(layer["offset"], spec.window_tokens)
                                   if spec.kind == "sliding_kv" else layer["offset"])
                         expected = (1, spec.num_kv_heads, length, spec.key_head_dim)
-                        if array.shape != expected:
+                        if (array.shape != expected or meta["dtype"] not in {"float16", "bfloat16"}
+                                or spec.dtype and meta["dtype"] != spec.dtype):
                             raise ValueError("hybrid snapshot attention shape mismatch")
                     elif spec.state_shapes and array.shape != spec.state_shapes[0]:
                         raise ValueError("hybrid snapshot carry shape mismatch")
@@ -306,6 +440,8 @@ def load_snapshot(directory, *, identity, expected_specs):
                     cache.offset = layer["offset"]
                 else:
                     cache._offset = layer["offset"]
+            for cache, spec in zip(staged, expected_specs, strict=True):
+                cache.validate(spec)
             if len({c.offset for c in staged}) != 1:
                 raise ValueError("hybrid snapshot component boundaries differ")
             mx.eval(*(v for c in staged for v in (getattr(c, "keys", None),

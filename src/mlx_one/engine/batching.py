@@ -56,6 +56,7 @@ class ForwardRequest:
     cancel: Any = None
     options: Any = None
     deadline: float | None = None
+    return_all_logits: bool = False
 
 
 def request_cancelled(request):
@@ -231,6 +232,12 @@ class BatchedDenseRunner(CausalLMRunner):
             if len(runtimes) > 1:
                 raise ValueError("batch spans cache managers")
             for runtime in runtimes.values():
+                from mlx_one.engine.pressure import execution_forecast
+
+                transient = execution_forecast(runtime, config, batch=count, chunk=width,
+                    history=history, explicit_bytes=transient,
+                    history_lengths=[r.cache[0].offset for r in requests],
+                    widths=[len(r.token_ids) for r in requests], phase=first.phase)["bytes"]
                 stack.enter_context(runtime.transient_reservation(transient))
             ids = [[*r.token_ids, *([0] * (width - len(r.token_ids)))] for r in requests]
             positions = [[r.cache[0].offset + i for i in range(width)] for r in requests]

@@ -47,7 +47,10 @@ class CacheManager:
         self._model_identity = _digest(self.weight_identity + str(id(bundle.model)))
         self.plan = build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens)
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
-        self.block_pool = BlockPool(
+        from mlx_one.engine.arena import SegmentedPageArena
+
+        pool_type = SegmentedPageArena if self.config.backend == "paged" else BlockPool
+        self.block_pool = pool_type(
             capacity,
             block_tokens=self.config.block_size_tokens,
         )
@@ -190,7 +193,7 @@ class CacheManager:
         key_bits = _cache_bits(key_type)
         value_bits = _cache_bits(value_type)
         if handle.backend in {"block", "paged"}:
-            width = self.config.block_size_tokens
+            width = self.config.block_size_tokens * (16 if handle.backend == "paged" else 1)
             tokens = ((tokens + width - 1) // width) * width
         elif tokens:
             step = 256
@@ -206,7 +209,7 @@ class CacheManager:
                 ((dim + 31) // 32) * (32 * key_bits // 8 + 4)
                 for dim in (s.key_head_dim or 0, s.value_head_dim or s.key_head_dim or 0))
                 for s in self.plan.layer_specs)
-            amount += self.plan.bytes_per_token() * self.config.block_size_tokens * 3
+            amount += self.plan.bytes_per_token() * self.config.block_size_tokens * 16
         return amount
 
     def reserve(

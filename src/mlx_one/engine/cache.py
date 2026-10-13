@@ -40,6 +40,13 @@ def cache_allocated_nbytes(cache: Any) -> int:
 
 
 def cache_capabilities(cache: Any) -> CacheCapabilities:
+    explicit = getattr(cache, "capabilities", None)
+    if callable(explicit):
+        caps = explicit()
+        return CacheCapabilities(batchable=caps.can_batch, trimmable=caps.can_trim,
+                                 quantizable=caps.can_quantize,
+                                 sliding_window=bool(getattr(cache, "max_size", None)),
+                                 block_compatible=caps.can_page)
     name = type(cache).__name__.lower()
     attention = "kvcache" in name or "attention" in name
     recurrent = "linear" in name or "conv" in name

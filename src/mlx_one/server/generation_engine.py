@@ -535,6 +535,8 @@ class GenerationEngine:
             self._cache_runtime = None
             self._cache_bundle = None
             runtime = CacheManager(bundle, self._cache_config)
+            runtime.pressure = self._pressure
+            runtime.batching_config = self._actor.config if self._actor is not None else None
             try:
                 if self._converted_bundle is not bundle:
                     configure_execution_dtype(bundle, self._execution_dtype)

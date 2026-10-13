@@ -64,6 +64,22 @@ class BaselineProfile:
     leak_budget_bytes: int | None = None
     min_decode_tokens_per_second: float | None = None
     quality_run: str | None = None
+    pressure_allocation_bytes: int | None = None
+    pressure_test_ceiling_bytes: int | None = None
+    memory_tolerances: dict | None = None
+    calibration_phase: str = "decode"
+    queue_size: int | None = None
+    output_buffer_events: int = 32
+    output_stall_timeout_s: float = 30.0
+    prefix_cache_budget_bytes: int = 512 * 1024**2
+    cache_capacity_bytes: int | None = None
+    pressure_config: dict | None = None
+    traffic_manifest: str | None = None
+    traffic_identity: str | None = None
+    max_queue_wait_ms: float | None = None
+    max_service_gap_ms: float | None = None
+    quality_manifest: str | None = None
+    quality_dataset_identity: dict | None = None
 
     def __post_init__(self) -> None:
         if not self.model_id or not re.fullmatch(r"[0-9a-fA-F]{40,64}", self.revision):
@@ -90,6 +106,19 @@ class BaselineProfile:
             raise BaselineError("soak profiles require 30 or 60 minutes")
         if (self.workload == "soak") != (self.duration_seconds is not None):
             raise BaselineError("soak workload requires an explicit 30/60 minute duration")
+        for bound in (self.pressure_allocation_bytes, self.pressure_test_ceiling_bytes,
+                      self.cache_capacity_bytes, self.queue_size):
+            if bound is not None and (not isinstance(bound, int) or bound < 1):
+                raise BaselineError("memory and queue bounds must be positive integers")
+        if self.output_buffer_events < 1 or self.output_stall_timeout_s <= 0:
+            raise BaselineError("invalid output buffer bounds")
+        if self.calibration_phase not in {"decode", "prefill"}:
+            raise BaselineError("invalid calibration phase")
+        if self.workload == "peak_calibration" and self.inference_mode not in {
+                "paged", "experimental_hybrid_batch", "experimental_dense_batch"}:
+            raise BaselineError("peak calibration requires explicit optimized execution")
+        if self.workload == "lifecycle" and self.inference_mode != "experimental_hybrid_batch":
+            raise BaselineError("native lifecycle profiles require explicit hybrid mode")
         if self.workload == "microbench" and self.inference_mode != "paged":
             raise BaselineError("direct attention microbenchmarks require explicit paged mode")
         if self.workload == "quality" and self.inference_mode not in {
@@ -102,6 +131,9 @@ class BaselineProfile:
             raise BaselineError("unsupported admission policy")
         if self.leak_budget_bytes is not None and self.leak_budget_bytes < 0:
             raise BaselineError("leak budget must be nonnegative")
+        for limit in (self.max_queue_wait_ms, self.max_service_gap_ms):
+            if limit is not None and (not math.isfinite(limit) or limit <= 0):
+                raise BaselineError("fairness limits must be finite and positive")
         if self.min_decode_tokens_per_second is not None and (
             not math.isfinite(self.min_decode_tokens_per_second)
             or self.min_decode_tokens_per_second <= 0
@@ -130,7 +162,8 @@ class BaselineProfile:
             raise BaselineError("latency budgets must be finite and positive")
         if self.workload not in {"baseline", "prefix", "long", "parity", "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
-                                 "quality", "pressure", "soak", "multi_turn"}:
+                                 "quality", "pressure", "soak", "multi_turn",
+                                 "lifecycle", "peak_calibration"}:
             raise BaselineError("unknown baseline workload")
         if (self.atol is None) != (self.rtol is None):
             raise BaselineError("override both atol and rtol")
@@ -144,9 +177,18 @@ class BaselineProfile:
         new = {"page_tokens": 32, "kv_bits": None, "duration_seconds": None,
                "shared_prefix_fraction": None, "admission_policy": "deadline",
                "quality_limits": None,
-               "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None}
+               "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None,
+               "quality_manifest": None, "quality_dataset_identity": None,
+               "traffic_manifest": None, "traffic_identity": None,
+               "max_queue_wait_ms": None, "max_service_gap_ms": None,
+               "queue_size": None, "output_buffer_events": 32, "output_stall_timeout_s": 30.,
+               "cache_capacity_bytes": None, "prefix_cache_budget_bytes": 512 * 1024**2,
+               "pressure_config": None, "calibration_phase": "decode",
+               "pressure_allocation_bytes": None,
+               "pressure_test_ceiling_bytes": None, "memory_tolerances": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
-                    or self.workload in {"microbench", "quality", "pressure", "soak", "multi_turn"}
+                    or self.workload in {"microbench", "quality", "pressure", "soak",
+                                        "multi_turn", "lifecycle", "peak_calibration"}
                     or any(payload[k] != v for k, v in new.items()))
         if not advanced:
             for key in new:
@@ -157,7 +199,8 @@ class BaselineProfile:
     def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "profile_id": self.profile_id, "offline": True,
                 "temperature": 0, "speculation": False,
-                "prefix_reuse": self.workload in {"prefix", "multi_turn"}, "tolerances": TOLERANCES}
+                "prefix_reuse": self.workload in {"prefix", "multi_turn", "soak"},
+                "tolerances": TOLERANCES}
 
 
 def deterministic_prompt(tokenizer: Any, target_tokens: int, *, suffix: str = "") -> str:
@@ -286,7 +329,9 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         aggregate.append(sum(r["generated_tokens"] for r in group) / elapsed if elapsed else None)
     return {
         "completed": len(valid), "failed": sum(
-            r.get("status") not in {"completed", "cancelled_expected"} for r in rows),
+            r.get("status") not in {"completed", "cancelled_expected",
+                                    "deadline_expected", "stalled_expected"}
+            for r in rows),
         "cold_client_ttft_ms": [r.get("client_ttft_ms") for r in valid
                                 if r.get("temperature_phase") == "cold"],
         "warm_client_ttft_p50_ms": percentile([r["client_ttft_ms"] for r in warm
@@ -348,6 +393,12 @@ def run_profile(profile: BaselineProfile, output: Path, *, hardware: dict[str, A
                 "hardware": hardware, "source": provenance, "output": str(output.resolve())}
     request_path = output / "manifest.json"
     request_path.write_text(json.dumps(manifest, indent=2) + "\n")
+    for bound in (profile.pressure_allocation_bytes, profile.pressure_test_ceiling_bytes):
+        if bound is not None and bound > hardware["memory_bytes"] * profile.memory_fraction:
+            outcome = {"status": "rejected_pressure", "reason": "pressure bound exceeds watchdog"}
+            (output / "failure.json").write_text(json.dumps(outcome) + "\n")
+            (output / "supervision.json").write_text(json.dumps(outcome) + "\n")
+            return outcome
     maximum = CHECKPOINT_CONTEXTS.get(profile.model_id)
     if maximum is not None and profile.context_tokens + profile.output_tokens > maximum:
         outcome = {"status": "rejected_context", "checkpoint_limit": maximum,
@@ -371,6 +422,9 @@ def run_profile(profile: BaselineProfile, output: Path, *, hardware: dict[str, A
         if failure_path.exists():
             outcome["worker_failure"] = json.loads(failure_path.read_text())
         failure_path.write_text(json.dumps(outcome, indent=2) + "\n")
+    from mlx_one.inference_qualification import write_integrity
+
+    write_integrity(output)
     return outcome
 
 
@@ -386,7 +440,8 @@ def main(argv=None) -> int:
     parser.add_argument("--workload", choices=("baseline", "prefix", "long", "parity",
                                              "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
-                                 "quality", "pressure", "soak", "multi_turn"),
+                                 "quality", "pressure", "soak", "multi_turn",
+                                 "lifecycle", "peak_calibration"),
                         default="baseline")
     parser.add_argument("--output", type=Path, default=Path("qualification/results"))
     parser.add_argument("--list-profiles", action="store_true")
@@ -409,6 +464,21 @@ def main(argv=None) -> int:
     parser.add_argument("--shared-prefix-fraction", type=float, choices=(0, .25, .5, .8))
     parser.add_argument("--admission-policy", choices=("deadline", "cache_aware"))
     parser.add_argument("--quality-limits", type=Path)
+    parser.add_argument("--quality-manifest", type=Path)
+    parser.add_argument("--traffic-manifest", type=Path)
+    parser.add_argument("--max-queue-wait-ms", type=float)
+    parser.add_argument("--max-service-gap-ms", type=float)
+    parser.add_argument("--output-tokens", type=int)
+    parser.add_argument("--pressure-allocation-bytes", type=int)
+    parser.add_argument("--pressure-test-ceiling-bytes", type=int)
+    parser.add_argument("--memory-tolerances", type=Path)
+    parser.add_argument("--calibration-phase", choices=("decode", "prefill"), default="decode")
+    parser.add_argument("--queue-size", type=int)
+    parser.add_argument("--output-buffer-events", type=int, default=32)
+    parser.add_argument("--output-stall-timeout-s", type=float, default=30.)
+    parser.add_argument("--cache-memory-budget-bytes", type=int)
+    parser.add_argument("--prefix-cache-bytes", type=int, default=512 * 1024**2)
+    parser.add_argument("--pressure-config", type=Path)
     parser.add_argument("--leak-budget-bytes", type=int)
     parser.add_argument("--min-decode-tok-s", type=float)
     args = parser.parse_args(argv)
@@ -419,11 +489,43 @@ def main(argv=None) -> int:
                                             workload=args.workload)
     else:
         candidates = profiles(args.inference_mode, models=args.models, workload=args.workload)
+    replay = None
+    if args.traffic_manifest:
+        from mlx_one.traffic_replay import load_traffic_manifest
+
+        replay = load_traffic_manifest(args.traffic_manifest)
+    dataset = None
+    if args.quality_manifest:
+        from mlx_one.quality_dataset import load_quality_manifest
+
+        dataset = load_quality_manifest(args.quality_manifest)
     selected = [replace(p, atol=args.atol, rtol=args.rtol,
                         ttft_budget_ms=args.ttft_budget_ms,
                         decode_gap_budget_ms=args.decode_gap_budget_ms,
                         reference_run=args.reference_run,
                         quality_run=args.quality_run,
+                        traffic_manifest=str(args.traffic_manifest.resolve())
+                        if args.traffic_manifest else None,
+                        traffic_identity=replay["sha256"] if replay else None,
+                        context_tokens=args.context_tokens or p.context_tokens,
+                        output_tokens=args.output_tokens or p.output_tokens,
+                        pressure_allocation_bytes=args.pressure_allocation_bytes,
+                        pressure_test_ceiling_bytes=args.pressure_test_ceiling_bytes,
+                        memory_tolerances=json.loads(args.memory_tolerances.read_text())
+                        if args.memory_tolerances else None,
+                        calibration_phase=args.calibration_phase,
+                        queue_size=args.queue_size,
+                        output_buffer_events=args.output_buffer_events,
+                        output_stall_timeout_s=args.output_stall_timeout_s,
+                        cache_capacity_bytes=args.cache_memory_budget_bytes,
+                        prefix_cache_budget_bytes=args.prefix_cache_bytes,
+                        pressure_config=json.loads(args.pressure_config.read_text())
+                        if args.pressure_config else None,
+                        max_queue_wait_ms=args.max_queue_wait_ms,
+                        max_service_gap_ms=args.max_service_gap_ms,
+                        quality_manifest=str(args.quality_manifest.resolve())
+                        if args.quality_manifest else None,
+                        quality_dataset_identity=dataset["identity"] if dataset else None,
                         kv_bits=args.kv_bits,
                         cache_type=f"q{args.kv_bits}_0" if args.kv_bits else p.cache_type,
                         quality_limits=(json.loads(args.quality_limits.read_text())
@@ -443,6 +545,7 @@ def main(argv=None) -> int:
                      or profile.shared_prefix_fraction == args.shared_prefix_fraction)
                 and (args.admission_policy is None
                      or profile.admission_policy == args.admission_policy)]
+    selected = list({profile.profile_id: profile for profile in selected}.values())
     if not selected:
         parser.error("no profiles match the selected model, workload, or dimensions")
     if args.list_profiles:

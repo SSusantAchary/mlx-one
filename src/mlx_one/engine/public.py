@@ -100,6 +100,15 @@ class Engine:
             if callable(getattr(self._bundle.model, "make_cache", None))
             else None
         )
+        self._pressure = None
+        if memory_pressure_config is not None or self._requested_mode in {
+            "paged", "experimental_hybrid_batch", "auto"
+        }:
+            self._pressure = MemoryPressureController(memory_pressure_config)
+            if self._cache_manager is not None:
+                self._cache_manager.pressure = self._pressure
+        if self._cache_manager is not None:
+            self._cache_manager.batching_config = self._batching_config
         self._selection = {"requested_mode": inference_mode,
                            "resolved_mode": inference_mode or resolved_mode(backend),
                            "reason": "explicit configuration", "evidence_scope": None}
@@ -112,13 +121,6 @@ class Engine:
             self._inference_mode = inference_mode
             backend = resolve_backend(inference_mode, None)
             self._cache_manager.config = replace(config, backend=backend)
-        self._pressure = None
-        if memory_pressure_config is not None or self._requested_mode in {
-            "paged", "experimental_hybrid_batch", "auto"
-        }:
-            self._pressure = MemoryPressureController(memory_pressure_config)
-            if self._cache_manager is not None:
-                self._cache_manager.pressure = self._pressure
         if self._cache_manager is not None:
             self._cache_manager.mode = inference_mode
             self._cache_manager.requested_mode = self._requested_mode

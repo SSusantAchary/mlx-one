@@ -18,12 +18,16 @@ def qualification_profiles(mode, *, models, workload):
         if mode == "experimental_dense_batch" and hybrid:
             continue
         model, revision = CHECKPOINTS[key]
-        long_context = 127872 if hybrid else 130944
+        output_tokens = 4096 if workload in {"slow_consumer", "soak"} else 128
+        long_context = (128000 if hybrid else 131072) - output_tokens
         contexts = ((long_context,) if workload == "long" else ((8192, long_context)
                     if workload in {"quality", "soak"} else
-                    ((2048, 8192, 16384, 32640) if workload == "baseline" else (8192,))))
-        pages = (16, 32, 64, 128) if mode == "paged" and workload == "baseline" else (32,)
-        chunks = ((512, 1024, 2048, 4096) if workload in {"baseline", "batching"} else (512,))
+                    ((2048, 8192, 16384, 32640)
+                     if workload in {"baseline", "peak_calibration"} else (8192,))))
+        pages = ((16, 32, 64, 128) if mode == "paged"
+                 and workload in {"baseline", "peak_calibration"} else (32,))
+        chunks = ((512, 1024, 2048, 4096)
+                  if workload in {"baseline", "batching", "peak_calibration"} else (512,))
         ratios = (0, .25, .5, .8) if workload == "multi_turn" else (None,)
         policies = (("deadline", "cache_aware")
                     if workload == "multi_turn" and mode != "reference_dense" else ("deadline",))
@@ -37,6 +41,7 @@ def qualification_profiles(mode, *, models, workload):
                                 for duration in durations:
                                     yield BaselineProfile(
                                         model, revision, mode, context, slots, workload=workload,
+                                        output_tokens=output_tokens,
                                         cache_type="bf16" if hybrid else "f16",
                                         execution_dtype=None if hybrid else "float16",
                                         page_tokens=page, chunk_tokens=chunk,
@@ -48,11 +53,9 @@ def qualification_profiles(mode, *, models, workload):
 
 
 def workload_envelope(profile):
-    return {"context_tokens": profile.context_tokens, "slots": profile.slots,
-            "chunk_tokens": profile.chunk_tokens, "ttft_budget_ms": profile.ttft_budget_ms,
-            "decode_gap_budget_ms": profile.decode_gap_budget_ms,
-            "output_tokens": profile.output_tokens, "page_tokens": profile.page_tokens,
-            "cache_type": profile.cache_type, "admission_policy": profile.admission_policy}
+    from mlx_one.engine.envelope import profile_envelope
+
+    return profile_envelope(profile).to_dict()
 
 
 def qualified_active_decoders(rows, profile):
@@ -92,11 +95,17 @@ def evaluate_quality(parity, retrieval, limits):
     if limits is None:
         return {"status": "diagnostic", "reason": "explicit quality limits are required",
                 "metrics": metrics}
+    from mlx_one.quality_dataset import QUALITY_SCHEMA
+
+    if (parity.get("quality_kind") != QUALITY_SCHEMA
+            or not parity.get("coverage", {}).get("eligible")):
+        return {"status": "diagnostic", "reason": "held-out dataset coverage is required",
+                "metrics": metrics}
     checks = {"logits": metrics["max_logit_error"] <= limits["max_logit_error"],
               "held_out_nll": metrics["mean_nll_delta"] <= limits["max_mean_nll_delta"],
               "retrieval": (metrics["retrieval_accuracy_drop"]
                             <= limits["max_retrieval_accuracy_drop"]),
-              "valid_oracle": retrieval["oracle_accuracy"] > 0,
+              "valid_oracle": retrieval["oracle_accuracy"] >= retrieval["min_oracle_accuracy"],
               "prefix_isolation": parity.get("prefix_isolation_passed") is True,
               "seeded_rng": parity.get("seeded_rng_isolation") is True,
               "state_isolation": parity.get("cancelled_request_isolated") is not False}
@@ -127,6 +136,20 @@ def load_reference(directory):
     return {"profile": summary["profile"], "identity": summary["identity"], "summary": summary}
 
 
+def matching_quality_bounds(left, right):
+    from mlx_one.engine.envelope import QualificationEnvelope
+
+    try:
+        a = QualificationEnvelope.from_mapping(left)
+        b = QualificationEnvelope.from_mapping(right)
+        keys = ("context_tokens", "slots", "cache_type", "page_tokens", "kernel_version",
+                "arena_version")
+        return (all(getattr(a, k) == getattr(b, k) for k in keys)
+                and a.output_tokens >= b.output_tokens)
+    except ValueError:
+        return False
+
+
 def load_quality_reference(directory, *, profile, runtime):
     from mlx_one.engine.reporting import native_report
     from mlx_one.engine.selection import compatibility_digest, host_identity, source_identity
@@ -142,9 +165,13 @@ def load_quality_reference(directory, *, profile, runtime):
     scope["cache_precision"] = {"f16": "float16", "bf16": "bfloat16",
                                 "q4_0": "float16,uint8", "q8_0": "float16,uint8"}[
                                     profile.cache_type]
-    if (proof.get("quality_passed") is not True
+    if (proof.get("schema_version") != "native-inference-qualification-v2"
+            or proof.get("quality_passed") is not True
+            or proof.get("quality_kind") != "native-held-out-quality-v1"
+            or proof.get("quality_coverage_passed") is not True
             or proof.get("compatibility_digest") != compatibility_digest(runtime)
-            or proof.get("workload_envelope") != workload_envelope(profile)
+            or not matching_quality_bounds(
+                proof.get("workload_envelope"), workload_envelope(profile))
             or proof.get("scope") != scope):
         raise ValueError("long-context quality evidence does not match execution identity/envelope")
     return {"path": str((root / name).resolve()),
@@ -161,18 +188,24 @@ def write_integrity(output):
 
 
 def evaluate_gate_d(profile, summary, traces, parity, reference=None):
-    if profile.kv_bits and profile.quality_limits is None:
+    if profile.kv_bits and (profile.quality_limits is None
+                            or parity.get("quality_kind") != "native-held-out-quality-v1"
+                            or not parity.get("coverage", {}).get("eligible")):
         return {"status": "diagnostic",
                 "reason": "quantized execution requires declared quality limits"}
     if profile.ttft_budget_ms is None or profile.decode_gap_budget_ms is None:
         return {"status": "diagnostic", "reason": "declare TTFT and model-token gap limits"}
     if reference is None:
         return {"status": "pending", "reason": "checksummed matched reference is required"}
+    if profile.max_queue_wait_ms is None or profile.max_service_gap_ms is None:
+        return {"status": "diagnostic", "reason": "declare queue-wait and runnable-service limits"}
     if reference["summary"].get("failed") != 0:
         raise ValueError("reference run has failures or incomplete failure metadata")
     for field in ("model_id", "revision", "context_tokens", "slots", "output_tokens", "repeats",
                   "seed", "workload", "execution_dtype", "chunk_tokens",
-                  "shared_prefix_fraction"):
+                  "shared_prefix_fraction", "traffic_identity", "max_scheduled_tokens",
+                  "max_prefill_tokens", "queue_size", "output_buffer_events",
+                  "output_stall_timeout_s", "cache_capacity_bytes", "pressure_config"):
         if reference["profile"].get(field) != getattr(profile, field):
             raise ValueError(f"reference mismatch in {field}")
     if reference["profile"].get("inference_mode") not in {
@@ -193,16 +226,22 @@ def evaluate_gate_d(profile, summary, traces, parity, reference=None):
     speed = (len(measured) == len(baseline) == profile.repeats
              and all(a is not None and b is not None and a > b
                      for a, b in zip(measured, baseline, strict=True)))
-    memory = summary.get("peak_cache_bytes")
-    old_memory = reference["summary"].get("peak_cache_bytes")
+    memory = summary.get("measured_peak_active_bytes")
+    old_memory = reference["summary"].get("measured_peak_active_bytes")
     memory_win = memory is not None and old_memory is not None and memory < old_memory
     ttft, gap = summary.get("warm_client_ttft_p95_ms"), summary.get("model_token_gap_p95_ms")
     direct = profile.inference_mode == "paged"
+    memberships = [set(t.get("request_ids", ())) for t in traces if t.get("phase") == "decode"]
+    dynamic = any(a != b and bool(a & b)
+                  for a, b in zip(memberships, memberships[1:], strict=False))
     checks = {"direct_attention" if direct else "batched_hybrid_execution": (
         any(t.get("direct_attention_calls", 0) > 0 for t in traces) if direct else
         any(t.get("batch_size", 1) > 1 and "conv" in t.get("component_kinds", ()) for t in traces)),
               "configured_batch_demonstrated": profile.slots == 1 or any(
                   t.get("phase") == "decode" and t.get("batch_size", 1) > 1 for t in traces),
+              "dynamic_membership": profile.slots == 1 or dynamic,
+              "context_coverage": summary.get("observed_prompt_max_tokens", 0)
+                                  >= .9 * profile.context_tokens,
               "no_materialization": (bool(traces) and all(t.get("history_materializations") == 0
                                                           for t in traces)) if direct else True,
               "parity_or_quality": parity.get("status") == "passed",
@@ -211,15 +250,19 @@ def evaluate_gate_d(profile, summary, traces, parity, reference=None):
                                 and gap <= profile.decode_gap_budget_ms,
               "measured_advantage": speed or memory_win,
               "no_failures": summary.get("failed") == 0,
-              "no_starvation": summary.get("starved_requests") == 0}
-    return {"status": "passed" if all(checks.values()) else "failed", "checks": checks,
+              "no_starvation": summary.get("fairness", {}).get("status") == "passed"}
+    return {"schema_version": "native-gate-v2",
+            "status": "passed" if all(checks.values()) else "failed", "checks": checks,
             "throughput_improved_each_repetition": speed, "cache_memory_improved": memory_win,
             "throughput_by_repetition": measured, "reference_throughput_by_repetition": baseline,
             "qualification_promoted": False}
 
 
-def evaluate_gate_e(parity, traces):
-    checks = {"logits_and_state_parity": parity.get("status") == "passed",
+def evaluate_gate_e(parity, traces, lifecycle=None):
+    checks = {"native_lifecycle": lifecycle is not None
+              and lifecycle.get("schema_version") == "native-hybrid-lifecycle-v1"
+              and lifecycle.get("status") == "passed",
+              "logits_and_state_parity": parity.get("status") == "passed",
               "request_isolation": parity.get("cancelled_request_isolated") is True,
               "seeded_rng": parity.get("seeded_rng_isolation") is True,
               "batched_carries": any(t.get("batch_size", 1) > 1
@@ -227,31 +270,45 @@ def evaluate_gate_e(parity, traces):
               "actual_prefix_restore": bool(parity.get("prefix_restoration")) and all(
                   r["reused_tokens"] > 0 and r["within_tolerance"]
                   for r in parity.get("prefix_restoration", []))}
-    return {"status": "passed" if all(checks.values()) else "pending", "checks": checks,
+    return {"schema_version": "native-gate-v2",
+            "status": "passed" if all(checks.values()) else "pending", "checks": checks,
             "qualification_promoted": False}
 
 
 def evaluate_gate_f(profile, summary, cleanup):
     if profile.workload != "soak" or profile.ttft_budget_ms is None:
         return {"status": "diagnostic", "reason": "soak and explicit service budgets are required"}
-    initial = summary.get("soak_initial_active_bytes")
-    final = summary.get("soak_final_active_bytes")
-    if initial is None or final is None or profile.leak_budget_bytes is None:
-        return {"status": "pending",
-                "reason": "memory reconciliation and declared leak budget required"}
+    if profile.max_queue_wait_ms is None or profile.max_service_gap_ms is None:
+        return {"status": "pending", "reason": "declared fairness limits are required"}
+    reconciliation = summary.get("memory_reconciliation", {})
+    coverage = summary.get("stress_coverage", {})
+    shutdown = summary.get("shutdown", {})
+    if (reconciliation.get("status") in {None, "pending"} or not shutdown
+            or not coverage.get("real_pressure_cycles") or not coverage.get("direct_stall_probe")):
+        return {"schema_version": "native-gate-v2", "status": "pending",
+                "reason": "full reconciliation, shutdown, pressure and stall evidence required"}
     ttft, gap = summary.get("warm_client_ttft_p95_ms"), summary.get("model_token_gap_p95_ms")
     checks = {"duration": summary.get("soak_elapsed_seconds", 0) >= profile.duration_seconds,
-              "no_failures": summary.get("failed") == 0,
+              "no_failures": summary.get("failed") == 0 and not summary.get("worker_failed"),
               "all_requests_disposed": cleanup.get("active_handles") == 0
                                        and cleanup.get("reserved_bytes") == 0,
-              "memory_reconciled": final - initial <= profile.leak_budget_bytes,
+              "memory_reconciled": reconciliation.get("status") == "passed",
+              "shutdown": shutdown.get("actor_alive") is False
+                          and shutdown.get("server_alive") is False,
+              "combined_traffic": all(coverage.get(k) for k in (
+                  "mixed_lengths", "shared_prefixes", "arrivals", "cancellation",
+                  "http_stall_observed", "direct_stall_probe")),
+              "repeated_pressure": coverage.get("real_pressure_cycles", 0) >= 2,
               "recovery_parity": summary.get("recovery_output_matches") is True,
               "pressure_recovery": summary.get("pressure_recovery_passed") is True,
+              "no_starvation": summary.get("fairness", {}).get("status") == "passed",
               "no_false_prefix_hits": summary.get("prefix_isolation_passed") is True,
               "service_limits": ttft is not None and gap is not None
                                 and ttft <= profile.ttft_budget_ms
                                 and gap <= profile.decode_gap_budget_ms}
-    return {"status": "passed" if all(checks.values()) else "failed", "checks": checks,
+    return {"schema_version": "native-gate-v2",
+            "status": "passed" if all(checks.values()) else "failed", "checks": checks,
+            "pressure_scope": "bounded-worker-rss", "full_device_os_swap_stress": "not_tested",
             "qualification_promoted": False}
 
 
@@ -281,7 +338,12 @@ def export_matrix(results, output):
                "model_gap_p95_ms": summary.get("model_token_gap_p95_ms"),
                "sse_gap_p95_ms": summary.get("sse_delivery_gap_p95_ms"),
                "qualified_active_decoders": summary.get("qualified_active_decoders"),
-               "failures": summary.get("failed"), "regressions": []}
+               "failures": summary.get("failed"), "regressions": [],
+               "throughput_tok_s": summary.get("warm_aggregate_output_tokens_per_second"),
+               "measured_peak_active_bytes": summary.get("measured_peak_active_bytes"),
+               "peak_physical_bytes": summary.get("peak_physical_bytes"),
+               "stress_coverage": summary.get("stress_coverage"),
+               "fairness": summary.get("fairness"), "gate_reasons": {}}
         for gate in ("d", "e", "f"):
             path = directory / f"gate-{gate}.json"
             row[f"gate_{gate}"] = "pending"
@@ -290,6 +352,18 @@ def export_matrix(results, output):
                     validate_integrity(directory, required={"manifest.json", "summary.json",
                                                             path.name})
                     result = json.loads(path.read_text())
+                    measurement_path = directory / "measurement.json"
+                    if result.get("status") == "passed":
+                        validate_integrity(directory,
+                                           required={"measurement.json", "supervision.json"})
+                        measurement = json.loads(measurement_path.read_text())
+                        if (result.get("schema_version") != "native-gate-v2"
+                                or not result.get("checks") or not all(result["checks"].values())
+                                or status != "completed"
+                                or measurement.get("backend") != "mlx-metal"
+                                or measurement.get("metal_available") is not True):
+                            raise ValueError("measured current gate evidence is required")
+                    row["gate_reasons"][gate] = result.get("reason")
                     row[f"gate_{gate}"] = result.get("status", "pending")
                     row["regressions"].extend(f"{gate}:{name}" for name, passed in
                                              result.get("checks", {}).items()
@@ -306,18 +380,84 @@ def export_matrix(results, output):
     with (target / "matrix.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns)
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows({k: json.dumps(v, sort_keys=True) if isinstance(v, (dict, list)) else v
+                          for k, v in row.items()} for row in rows)
     readable = ["# Native inference qualification", "",
-                "| Model | Revision | Chip | Mode | Context | Slots | Status | D / E / F |",
-                "|---|---|---|---|---:|---:|---|---|"]
+                "| Model | Revision | Chip | Mode | Context | Slots | Status | D / E / F "
+                "| tok/s | TTFT p95 ms | Model gap ms | SSE gap ms | Failures | Regressions |",
+                "|---|---|---|---|---:|---:|---|---|---:|---:|---:|---:|---:|---|"]
     for row in rows:
         readable.append("| " + " | ".join(str(row.get(k) or "pending").replace("|", "\\|")
                                          for k in ("model", "revision", "chip", "mode",
                                                    "context_tokens",
                                                    "slots", "status")) + " | "
-                        + " / ".join(row[f"gate_{g}"] for g in "def") + " |")
+                        + " / ".join(row[f"gate_{g}"] for g in "def") + " | "
+                        + " | ".join("pending" if row.get(k) is None else str(row[k])
+                            for k in ("throughput_tok_s", "ttft_p95_ms", "model_gap_p95_ms",
+                                      "sse_gap_p95_ms", "failures", "regressions")) + " |")
+    comparisons = []
+    for path in root.rglob("policy-comparison.json"):
+        try:
+            from mlx_one.traffic_replay import compare_policy_runs
+
+            validate_integrity(path.parent, required={path.name})
+            recorded = json.loads(path.read_text())
+            current = compare_policy_runs(recorded["runs"]["default"],
+                                          recorded["runs"]["cache_aware"])
+            if current != recorded:
+                raise ValueError("policy comparison is stale")
+            comparisons.append({"status": "completed", **current})
+        except (OSError, ValueError, KeyError) as exc:
+            comparisons.append({"status": "pending", "path": str(path), "reason": str(exc)})
+    (target / "policy-comparisons.json").write_text(json.dumps(comparisons, indent=2) + "\n")
     (target / "matrix.md").write_text("\n".join(readable) + "\n")
     return rows
+
+
+def finalize_shutdown(output, profile, scheduler, server_thread):
+    """Finish Gate F and evidence checksums only after actual thread shutdown."""
+    import sys
+
+    root = Path(output)
+    actor = getattr(scheduler, "_thread", None)
+    shutdown = {"actor_alive": actor.is_alive() if actor else False,
+                "server_alive": server_thread.is_alive() if server_thread else False}
+    (root / "shutdown.json").write_text(json.dumps(shutdown, indent=2) + "\n")
+    failed = sys.exc_info()[0] is not None or any(shutdown.values())
+    path = root / "summary.json"
+    summary = json.loads(path.read_text()) if path.exists() else {}
+    if summary:
+        summary["shutdown"], summary["worker_failed"] = shutdown, failed
+        path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    gate = None
+    if profile.workload == "soak" and summary:
+        cleanup_path = root / "cleanup.json"
+        cleanup = json.loads(cleanup_path.read_text()) if cleanup_path.exists() else {}
+        gate = evaluate_gate_f(profile, summary, cleanup)
+        (root / "gate-f.json").write_text(json.dumps(gate, indent=2) + "\n")
+    proofs = list(root.glob("evidence-*.json"))
+    for proof_path in proofs:
+        proof = json.loads(proof_path.read_text())
+        if failed:
+            proof.update(status="failed", correctness_passed=False, performance_qualified=False)
+        if gate is not None:
+            proof["memory_passed"] = gate["status"] == "passed"
+        artifacts = proof.setdefault("artifacts", [])
+        if not any(Path(a["uri"]).name == "shutdown.json" for a in artifacts):
+            artifacts.append({"uri": str((root / "shutdown.json").resolve()),
+                              "kind": "native-inference-result", "sha256": ""})
+        for artifact in artifacts:
+            target = Path(artifact["uri"])
+            if target.parent.resolve() == root.resolve() and target.exists():
+                artifact["sha256"] = hashlib.sha256(target.read_bytes()).hexdigest()
+        proof_path.write_text(json.dumps(proof, indent=2, sort_keys=True) + "\n")
+        if (gate and gate["status"] == "passed" and proof.get("quality_passed") is True
+                and proof.get("correctness_passed") is True
+                and profile.context_tokens + profile.output_tokens >= 128000
+                and proof["feature"] in {"paged_attention", "hybrid_prefix_restore"}):
+            proof.update(feature="long_context", service_passed=True, performance_qualified=True)
+            (root / "evidence-long_context.json").write_text(
+                json.dumps(proof, indent=2, sort_keys=True) + "\n")
 
 
 def main(argv=None):

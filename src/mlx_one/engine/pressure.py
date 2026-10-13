@@ -228,9 +228,14 @@ def activation_forecast(config, *, batch, chunk, history, calibrated_peak=None):
     return {"bytes": amount, "source": "conservative-analytical", "measured": False}
 
 
-def execution_forecast(runtime, config, *, batch, chunk, history):
+def execution_forecast(runtime, config, *, batch, chunk, history, explicit_bytes=0,
+                       history_lengths=None, widths=None, phase=None):
     """Use only a fresh calibration with identical execution identity and dimensions."""
     calibrated = None
+    dimensions = {"batch": batch, "chunk": chunk, "history": history,
+                  "history_lengths": list(history_lengths or [history] * batch),
+                  "widths": list(widths or [chunk] * batch),
+                  "phase": phase or ("decode" if chunk == 1 else "prefill")}
     registry = getattr(runtime, "qualification_registry", None)
     if registry is not None:
         import json
@@ -252,15 +257,25 @@ def execution_forecast(runtime, config, *, batch, chunk, history):
                 continue
             proof = json.loads(Path(record.evidence[0].uri).read_text())
             peak = proof.get("activation_peak", {})
-            if (proof.get("compatibility_digest") == compatibility_digest(runtime)
-                    and peak.get("dimensions") == {"batch": batch, "chunk": chunk,
-                                                  "history": history}
+            from mlx_one.engine.arena import ARENA_VERSION
+            from mlx_one.engine.envelope import EVIDENCE_VERSION
+            from mlx_one.engine.paged import KERNEL_VERSION
+            from mlx_one.peak_calibration import CALIBRATION_POLICY
+
+            if (proof.get("schema_version") == EVIDENCE_VERSION
+                    and proof.get("compatibility_digest") == compatibility_digest(runtime)
+                    and proof.get("kernel_version") == KERNEL_VERSION
+                    and proof.get("arena_version") == ARENA_VERSION
+                    and peak.get("policy") == CALIBRATION_POLICY
+                    and peak.get("dimensions") == dimensions
                     and isinstance(peak.get("incremental_bytes"), int)
                     and peak["incremental_bytes"] >= 0):
                 calibrated = peak["incremental_bytes"]
                 break
     result = activation_forecast(config, batch=batch, chunk=chunk, history=history,
                                  calibrated_peak=calibrated)
+    result["bytes"] = (max(result["bytes"], explicit_bytes) if calibrated is not None
+                       else result["bytes"] + explicit_bytes)
     if runtime is not None:
         runtime.last_execution_forecast = result
     return result
