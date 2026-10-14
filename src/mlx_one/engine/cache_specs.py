@@ -38,6 +38,8 @@ class LayerCacheSpec:
     block_compatible: bool = False
     state_shapes: tuple[tuple[int, ...], ...] = ()
     checkpoint_semantics: str | None = None
+    num_query_heads: int | None = None
+    position_policy: str = "rope"
 
     def bytes_per_token(self, *, key_bits: int = 16, value_bits: int = 16) -> int:
         if self.kind not in {

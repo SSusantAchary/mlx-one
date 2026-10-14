@@ -198,17 +198,9 @@ class HybridRunner(BatchedDenseRunner):
                           for v in (getattr(c, "keys", None), getattr(c, "values", None))
                           if v is not None]
                 mx.eval(*logits, *states)
-                for r, draft in zip(requests, drafts, strict=True):
-                    if request_cancelled(r):
-                        continue
-                    for original, replacement in zip(r.cache, draft.entries, strict=True):
-                        if isinstance(original, PagedKVCache):
-                            original.replace_from(replacement)
-                        else:
-                            original.__dict__.update(replacement.__dict__)
-                    if r.handle is not None:
-                        r.handle.computed_tokens = r.cache[0].offset
-                        runtime.reconcile(r.handle)
+                from mlx_one.engine.transactions import commit_evaluated
+
+                commit_evaluated(requests, drafts)
                 # Prefix retention is optional and occurs after the entire batch is committed.
                 if first.phase == "prefill" and runtime is not None:
                     for r in requests:
@@ -220,8 +212,9 @@ class HybridRunner(BatchedDenseRunner):
                                 pass
             finally:
                 # Committed arrays are owned by originals; reset only draft attributes.
-                for draft in drafts:
-                    draft.release()
+                from mlx_one.engine.transactions import release_all
+
+                release_all(drafts)
         self.last_trace = {**metrics, "phase": first.phase,
                            "request_ids": [s.request_id for s in plan.sequences],
                            "batch_size": len(requests),

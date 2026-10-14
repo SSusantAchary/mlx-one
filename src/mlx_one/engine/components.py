@@ -63,14 +63,15 @@ class ComponentContract:
             length = min(self.offset, getattr(self, "max_size", self.offset))
             if self.kind == "sliding_kv" and self.max_size != spec.window_tokens:
                 raise ValueError("component sliding-window layout mismatch")
-            for value in (self.keys, self.values):
+            for value, dimension in zip((self.keys, self.values),
+                    (spec.key_head_dim, spec.value_head_dim), strict=True):
                 if value is None:
                     if self.offset:
                         raise ValueError("component is missing committed KV")
                     continue
                 dtype = str(value.dtype).rsplit(".", 1)[-1]
                 if (value.shape[:2] != (1, spec.num_kv_heads)
-                        or value.shape[2] < length or value.shape[3] != spec.key_head_dim
+                        or value.shape[2] < length or value.shape[3] != dimension
                         or dtype != self.storage_dtype or spec.dtype and dtype != spec.dtype):
                     raise ValueError("component attention layout or dtype mismatch")
         elif self.values is not None:
@@ -512,3 +513,69 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
         for cache in staged:
             cache.reset()
         raise
+
+
+class CrossKVComponent(FullKVComponent):
+    """Immutable encoder KV plus a separate committed decoder position."""
+    kind = 'cross_kv'
+
+    def __init__(self, encoder_identity, dtype='float32'):
+        super().__init__(dtype)
+        if not encoder_identity:
+            raise ValueError('cross attention requires encoder identity')
+        self.encoder_identity, self.encoder_tokens = encoder_identity, 0
+
+    def capabilities(self):
+        return ComponentCapabilities(can_snapshot=True)
+
+    def bind(self, keys, values):
+        import mlx.core as mx
+
+        if self.keys is not None or keys.shape[:3] != values.shape[:3]:
+            raise ValueError('cross KV is immutable and requires aligned encoder shapes')
+        owned = []
+        for value in (keys, values):
+            copy = mx.zeros(value.shape, dtype=getattr(mx, self.storage_dtype))
+            copy[...] = value
+            owned.append(copy)
+        mx.eval(*owned)
+        self.keys, self.values = owned
+        self.encoder_tokens = keys.shape[2]
+
+    def advance_decoder(self, count):
+        if count < 1 or self.keys is None:
+            raise ValueError('decoder advance requires bound encoder KV and real tokens')
+        self._offset += count
+
+    def update(self, *_):
+        raise ValueError('cross KV uses immutable encoder binding, not decoder append')
+
+    def state(self):
+        return self.keys, self.values
+
+    def validate(self, spec):
+        if spec.kind != self.kind or self.offset < 0:
+            raise ValueError('cross KV component or decoder position mismatch')
+        for value, width in zip(self.state(),(spec.key_head_dim,spec.value_head_dim),strict=True):
+            if value is None:
+                if self.encoder_tokens or self.offset:
+                    raise ValueError('missing encoder KV')
+            elif (value.shape != (1,spec.num_kv_heads,self.encoder_tokens,width)
+                  or str(value.dtype).rsplit('.',1)[-1] != self.storage_dtype
+                  or spec.dtype and spec.dtype != self.storage_dtype):
+                raise ValueError('cross KV encoder layout or dtype mismatch')
+
+    def clone(self):
+        result = CrossKVComponent(self.encoder_identity,self.storage_dtype)
+        if self.keys is not None:
+            result.bind(self.keys,self.values)
+        result._offset = self.offset
+        return result
+
+    snapshot = clone
+
+    def reset(self):
+        super().reset()
+        self.encoder_tokens = 0
+
+    release = reset

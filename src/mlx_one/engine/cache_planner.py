@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any
 
 from mlx_one.engine.cache_specs import CacheKind, CachePlan, LayerCacheSpec
+from mlx_one.engine.contracts import LayerExecutionSpec
 
 
 def build_cache_plan(bundle: Any, *, block_size_tokens: int = 32) -> CachePlan:
@@ -19,6 +21,20 @@ def build_cache_plan(bundle: Any, *, block_size_tokens: int = 32) -> CachePlan:
     config = getattr(model, "config", None)
     text = getattr(config, "text_config", config)
     specs = tuple(_layer_spec(index, cache, text) for index, cache in enumerate(prototype))
+    declared = getattr(model, "layer_execution_specs", None)
+    if callable(declared):
+        layouts = declared()
+        if (not isinstance(layouts, tuple) or len(layouts) != len(specs)
+                or any(not isinstance(s, LayerExecutionSpec) or s.layer_id != i
+                       for i, s in enumerate(layouts))):
+            raise ValueError("model layer execution specifications must align with cache topology")
+        kinds = {"full_kv": CacheKind.ATTENTION_KV, "sliding_kv": CacheKind.ROTATING_KV,
+                 "conv": CacheKind.CONV_STATE, "recurrent": CacheKind.RECURRENT_STATE,
+                 "cross_kv": CacheKind.CROSS_ATTENTION}
+        specs = tuple(replace(old, kind=kinds[new.state_kind], num_query_heads=new.query_heads,
+            num_kv_heads=new.kv_heads, key_head_dim=new.key_dim, value_head_dim=new.value_dim,
+            max_window_tokens=new.window_tokens, position_policy=new.position_policy)
+            for old, new in zip(specs, layouts, strict=True))
     return CachePlan(
         model_id=str(bundle.model_id),
         revision=bundle.revision,
@@ -76,6 +92,9 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
                        _per_layer_int(config, index, "hidden_size") or 0),)
         if kind is CacheKind.CONV_STATE and hasattr(cache, "kernel_size") else (),
         checkpoint_semantics="exact_committed_boundary" if kind is CacheKind.CONV_STATE else None,
+        num_query_heads=_per_layer_int(config, index, "num_attention_heads", "num_query_heads",
+                                      "n_head") if attention else None,
+        position_policy="learned" if getattr(config, "model_type", None) == "gpt2" else "rope",
     )
 
 

@@ -147,3 +147,10 @@ git log -1 --oneline
 git show --stat HEAD
 git status --short
 ```
+
+PR-05 adds authoritative model-provided per-layer execution layouts, per-layer
+dense packing and independent K/V widths. Evaluated component ownership swaps
+roll back all layers and reservation counters if reconciliation fails. Cross-KV
+tracks encoder identity/length separately from decoder position; generic recurrent
+math remains unavailable. 93 affected CPU tests pass. Native expanded-layout
+qualification remains pending.

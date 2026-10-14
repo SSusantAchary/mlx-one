@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import time
 from contextlib import ExitStack
 from dataclasses import dataclass
@@ -221,9 +222,9 @@ class BatchedDenseRunner(CausalLMRunner):
                                             request.cache[0].offset, len(request.token_ids)))
         plan = BatchPlan(tuple(slots), sum(len(r.token_ids) for r in requests))
         config = getattr(first.bundle.model.config, "text_config", first.bundle.model.config)
-        heads = self.adapter.spec.kv_heads
+        specs = self.adapter.plan.layer_specs
         dim = self.adapter.spec.head_dim
-        per_token = len(first.cache) * heads * dim * 4
+        per_token = self.adapter.plan.bytes_per_token()
         replacement_tokens = sum(((r.cache[0].offset + len(r.token_ids) + 255) // 256) * 256
                                  for r in requests)
         transient = per_token * (count * (history + width) + replacement_tokens)
@@ -255,8 +256,11 @@ class BatchedDenseRunner(CausalLMRunner):
             mask = [[0] * (history - r.cache[0].offset) + [1] * r.cache[0].offset
                     + [1] * len(r.token_ids) + [0] * (width - len(r.token_ids)) for r in requests]
             for layer in range(len(first.cache)):
-                shape = (count, heads, history + width, dim)
-                keys, values = mx.zeros(shape, dtype=mx.float16), mx.zeros(shape, dtype=mx.float16)
+                spec = specs[layer]
+                key_shape = (count, spec.num_kv_heads, history + width, spec.key_head_dim)
+                value_shape = (count, spec.num_kv_heads, history + width, spec.value_head_dim)
+                keys = mx.zeros(key_shape, dtype=mx.float16)
+                values = mx.zeros(value_shape, dtype=mx.float16)
                 for row, request in enumerate(requests):
                     old_keys, old_values = _state(request.cache[layer])
                     length = request.cache[layer].offset
@@ -278,9 +282,8 @@ class BatchedDenseRunner(CausalLMRunner):
                     length = request.cache[0].offset
                     real = length + len(request.token_ids)
                     for original, cache in zip(request.cache, packed, strict=True):
-                        replacement = (QuantizedKVCache(None, None)
-                                       if isinstance(original, QuantizedKVCache)
-                                       else KVCache())
+                        replacement = copy.copy(original)
+                        replacement.reset()
                         layers.append(replacement)
                         start, stop = history - length, history + len(request.token_ids)
                         selected_keys = cache.keys[row:row + 1, :, start:stop, :]
@@ -301,14 +304,14 @@ class BatchedDenseRunner(CausalLMRunner):
                     for cache in layers:
                         cache.reset()
                 raise
-            for request, layers in zip(requests, staged, strict=True):
-                if request_cancelled(request):
-                    continue
-                for original, replacement in zip(request.cache, layers, strict=True):
-                    original.__dict__.update(replacement.__dict__)
-                if request.handle is not None:
-                    request.handle.computed_tokens = request.cache[0].offset
-                    request.runtime.reconcile(request.handle)
+            from mlx_one.engine.cache import CacheBundle
+            from mlx_one.engine.transactions import commit_evaluated, release_all
+
+            drafts = tuple(CacheBundle(tuple(layers)) for layers in staged)
+            try:
+                commit_evaluated(requests, drafts)
+            finally:
+                release_all(drafts)
         self.last_trace = {"phase": first.phase, "request_ids": [r.request_id for r in requests],
                            "batch_size": count,
                            "history_lengths": [s.start_pos for s in plan.sequences],
