@@ -120,8 +120,10 @@ zero new findings. Raw logits and before/after artifacts stay local.
 PYTHONPATH=src python benchmarks/p1_native_qualification.py prefix-parity
 ```
 
-Next ordered boundary: PR-03 device ownership, residency leases and single-flight
-model loading. No later PR is included in these commits.
+PR-03 adds a bounded fair `DeviceExecutor` and single-flight `ModelPool` with
+model epochs, leases, pinning, TTL/LRU eviction and draining unload. Seven CPU
+ownership tests pass, including a red-before/green-after disposal/reload race.
+Native multi-model stress remains pending. PR-04 connects these owners to serving.
 
 Checksummed inventory and run metadata stay local under
 `benchmarks/results/p1/<host>/runtime-baseline/<run>/`; native logits, comparisons,
