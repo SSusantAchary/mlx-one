@@ -78,13 +78,29 @@ original scope; the 2,592-configuration performance matrix remains unexecuted.
 
 ## Artifacts and delivery
 
+PR-01 adds lazy, versioned runtime bindings for all 27 registrations, canonical
+tasks/stages, task-neutral lifecycle with a legacy text mapping, explicit per-layer
+descriptors, compatibility keys, task-cost work items and task-specific adapter
+protocols. These are migration contracts, not implemented shared-service runners.
+Metadata providers import no MLX; missing adapters fail explicitly. Unregistered
+extensions cannot inherit a runtime binding. Registry ASR aliases normalize to
+transcription; alignment and multi-vector tasks remain distinct.
+
+PR-01 validation: 56 affected tests passed; full suite **824 passed, 24 skipped**
+with the same two warnings. Ruff on `src tests benchmarks` retains exactly 65
+baseline findings. A repository-root scan additionally reports 19 inherited
+findings in unrelated local `proofcart_starter/`, which remains untouched.
+Native PR-00 evidence retains its original source identity and failed status.
+PR-02's fresh-full-prefill parity gate remains required before later PRs.
+
 Checksummed inventory and run metadata stay local under
 `benchmarks/results/p1/<host>/runtime-baseline/<run>/`; native logits, comparisons,
 supervision and failure artifacts stay under
 `benchmarks/results/p1/<host>/qwen3-small/<run>/prefix-diagnostic/`.
 `--process-ceiling-bytes` can lower the watchdog ceiling, including GPU preflight.
 
-The PR-00 commit includes only inventory/diagnostic tooling, tests and this summary.
+PR-00/01 commits include only scoped contracts/inventory/diagnostic code, tests
+and this summary.
 Existing UI/document edits and generated artifacts remain local. No push or
 capability promotion is authorized by implementation readiness.
 

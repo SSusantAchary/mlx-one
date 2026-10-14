@@ -289,5 +289,9 @@ def register_builtin_models() -> None:
             tasks=frozenset({"asr"}),
         ),
     )
+    from mlx_one.engine.adapter_registry import register_runtime
+    from mlx_one.engine.runtime_specs import builtin_runtime
+
     for registration in registrations:
         register_model(registration)
+        register_runtime(builtin_runtime(registration))

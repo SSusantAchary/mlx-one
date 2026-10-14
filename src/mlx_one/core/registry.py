@@ -19,6 +19,16 @@ class ModelRegistration:
     loader_path: str | None = None
     tasks: frozenset[str] = frozenset()
 
+    def __post_init__(self) -> None:
+        if not self.model_type or not self.modality:
+            raise ValueError("model registration requires architecture and modality")
+        for path in (self.config_path, self.model_path, self.sanitizer_path,
+                     self.weight_contract_path, self.loader_path):
+            if path is not None:
+                validate_import_path(path)
+        if not isinstance(self.tasks, frozenset) or not isinstance(self.capabilities, frozenset):
+            raise ValueError("registration tasks and capabilities must be immutable")
+
     def config_class(self) -> type[Any]:
         return _resolve(self.config_path)
 
@@ -82,8 +92,15 @@ def _resolve(path: str) -> type[Any]:
     return _resolve_attribute(path)
 
 
-def _resolve_attribute(path: str) -> Any:
-    module_name, _, attribute = path.partition(":")
-    if not module_name or not attribute:
+def validate_import_path(path: str) -> None:
+    """Validate lazy references without importing even an unselected local plugin."""
+    module_name, separator, attribute = path.partition(":")
+    if (not separator or not all(part.isidentifier() for part in module_name.split("."))
+            or not attribute.isidentifier()):
         raise ValueError(f"invalid registry import path: {path}")
+
+
+def _resolve_attribute(path: str) -> Any:
+    validate_import_path(path)
+    module_name, _, attribute = path.partition(":")
     return getattr(importlib.import_module(module_name), attribute)

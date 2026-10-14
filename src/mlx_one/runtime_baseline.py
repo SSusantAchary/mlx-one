@@ -103,6 +103,7 @@ def diagnostic_outcome(supervision, result):
 
 
 def run_baseline(output, *, native=False, configured_ceiling=None, worker_output=None):
+    from mlx_one.engine.adapter_registry import runtime_coverage
     from mlx_one.engine.pressure import _command, sample_telemetry
     from mlx_one.native_qualification import preflight, supervised_command, write
 
@@ -123,6 +124,7 @@ def run_baseline(output, *, native=False, configured_ceiling=None, worker_output
     telemetry = asdict(sample_telemetry())
     snapshot = {"schema_version": INVENTORY_VERSION, "base_sha": BASE_SHA, "source": source,
         "dependencies": dependencies, "test_files": tests, "registry": registry_inventory(),
+        "runtime_contracts": runtime_coverage(),
         "hardware": {"platform": platform.platform(), "architecture": platform.machine(),
             "chip": _command(["sysctl", "-n", "machdep.cpu.brand_string"]),
             "telemetry": telemetry}, "native_preflight": "not_run",
