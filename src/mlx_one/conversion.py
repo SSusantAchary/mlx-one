@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -19,9 +20,10 @@ def convert_text_model(
     revision: str | None = None,
     quantize: bool = False,
     group_size: int = 64,
+    bits: int = 4,
     max_shard_size: int = 5 * 1024**3,
 ) -> Path:
-    """Convert safetensors to a native BF16 or four-bit affine MLX bundle."""
+    """Convert safetensors to a native BF16 or affine INT4/INT8 MLX bundle."""
     if isinstance(group_size, bool) or not isinstance(group_size, int) or group_size < 1:
         raise ConversionError("group_size must be a positive integer")
     if (
@@ -30,6 +32,8 @@ def convert_text_model(
         or max_shard_size < 1
     ):
         raise ConversionError("max_shard_size must be a positive integer")
+    if bits not in {4, 8} or isinstance(bits, bool) or bits == 8 and not quantize:
+        raise ConversionError("bits=8 requires quantize=True; supported bits are 4 and 8")
     target = Path(destination)
     if target.exists():
         raise ConversionError(f"conversion destination already exists: {target}")
@@ -42,7 +46,9 @@ def convert_text_model(
 
         bundle = load_text_model(source, revision=revision)
         if quantize:
-            nn.quantize(bundle.model, group_size=group_size, bits=4, mode="affine")
+            if bits == 8:
+                bundle.model.set_dtype(mx.float16)
+            nn.quantize(bundle.model, group_size=group_size, bits=bits, mode="affine")
         parameters = dict(tree_flatten(bundle.model.parameters()))
         if not quantize:
             floating = {mx.float16, mx.float32, mx.bfloat16}
@@ -64,7 +70,7 @@ def convert_text_model(
             config = json.loads(config_path.read_text(encoding="utf-8"))
             if quantize:
                 config["quantization"] = {
-                    "bits": 4,
+                    "bits": bits,
                     "group_size": group_size,
                     "mode": "affine",
                     "quant_method": "mlx",
@@ -77,22 +83,13 @@ def convert_text_model(
                 json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8"
             )
             _save_shards(mx, staging, parameters, max_shard_size)
-            (staging / "mlx-one-conversion.json").write_text(
-                json.dumps(
-                    {
-                        "schema_version": 1,
-                        "source": str(source),
-                        "revision": revision,
-                        "precision": "int4-affine" if quantize else "bfloat16",
-                        "group_size": group_size if quantize else None,
-                        "converter": "mlx-one-native",
-                    },
-                    indent=2,
-                    sort_keys=True,
-                )
-                + "\n",
-                encoding="utf-8",
-            )
+            policy = {"schema_version": 2, "source": getattr(bundle, "model_id", str(source)),
+                "revision": getattr(bundle, "revision", revision),
+                "precision": f"int{bits}-affine" if quantize else "bfloat16",
+                "group_size": group_size if quantize else None,
+                "converter": "mlx-one-native-v2",
+                "floating_dtype": "float16" if bits == 8 else None}
+            write_conversion_manifest(staging, policy)
             staging.replace(target)
         except Exception:
             shutil.rmtree(staging, ignore_errors=True)
@@ -140,3 +137,46 @@ def _save_shards(
         + "\n",
         encoding="utf-8",
     )
+
+
+def _file_digest(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def write_conversion_manifest(root, policy):
+    """Bind saved weights and tokenizer/config assets to the conversion policy."""
+    root = Path(root)
+    manifest = {**policy, "files": {p.name: _file_digest(p) for p in sorted(root.iterdir())
+        if p.is_file() and p.name != "mlx-one-conversion.json"}}
+    manifest["artifact_digest"] = hashlib.sha256(json.dumps(manifest, sort_keys=True,
+        separators=(",", ":")).encode()).hexdigest()
+    (root / "mlx-one-conversion.json").write_text(json.dumps(manifest, sort_keys=True, indent=2))
+    return manifest
+
+
+def verify_conversion_manifest(root):
+    root = Path(root)
+    path = root / "mlx-one-conversion.json"
+    if not path.exists():
+        return None
+    manifest = json.loads(path.read_text())
+    if manifest.get("schema_version") != 2:
+        return None  # historical conversion records remain diagnostic
+    payload = {k: v for k, v in manifest.items() if k != "artifact_digest"}
+    expected = hashlib.sha256(json.dumps(payload, sort_keys=True,
+        separators=(",", ":")).encode()).hexdigest()
+    if expected != manifest.get("artifact_digest"):
+        raise ConversionError("conversion identity checksum mismatch")
+    files = manifest.get("files", {})
+    actual = {p.name for p in root.iterdir() if p.is_file()
+              and p.name != "mlx-one-conversion.json"}
+    if not files or set(files) != actual:
+        raise ConversionError("conversion asset inventory mismatch")
+    for name, checksum in files.items():
+        if Path(name).name != name or _file_digest(root / name) != checksum:
+            raise ConversionError("conversion asset checksum mismatch")
+    return manifest

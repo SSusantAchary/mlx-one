@@ -8,6 +8,9 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Literal
 
+CacheBackend = Literal["dense", "block", "paged", "hybrid"]
+CACHE_BACKENDS = ("dense", "block", "paged", "hybrid")
+
 
 class CacheKind(str, Enum):
     ATTENTION_KV = "attention_kv"
@@ -152,7 +155,7 @@ class CachePlan:
 
 @dataclass(frozen=True)
 class CacheConfig:
-    backend: Literal["dense", "block", "paged", "hybrid"] = "dense"
+    backend: CacheBackend = "dense"
     memory_budget_bytes: int | None = None
     prefix_cache_enabled: bool = True
     prefix_cache_budget_bytes: int = 512 * 1024**2
@@ -161,8 +164,8 @@ class CacheConfig:
     value_type: str = "f16"
 
     def __post_init__(self) -> None:
-        if self.backend not in {"dense", "block", "paged", "hybrid"}:
-            raise ValueError("cache backend must be dense or block")
+        if self.backend not in CACHE_BACKENDS:
+            raise ValueError("cache backend must be " + ", ".join(CACHE_BACKENDS))
         if self.memory_budget_bytes is not None and self.memory_budget_bytes < 1:
             raise ValueError("cache memory budget must be positive")
         if self.prefix_cache_budget_bytes < 0:
@@ -192,6 +195,7 @@ class CacheFingerprint:
     special_tokens_identity: str = ""
     rendering_identity: str = ""
     multimodal_identity: str | None = None
+    execution_identity: str = ""
 
     @property
     def digest(self) -> str:
@@ -225,7 +229,7 @@ class CacheHandle:
     sequence_id: str
     plan: CachePlan
     bundle: Any
-    backend: Literal["dense", "block"]
+    backend: CacheBackend
     token_count: int = 0
     computed_tokens: int = 0
     prefix_tokens_reused: int = 0

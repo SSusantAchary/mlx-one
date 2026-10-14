@@ -190,10 +190,13 @@ def test_native_evidence_is_exact_scoped_checksummed_and_revalidated(tmp_path):
     identity = scope()
     path = tmp_path / "result.json"
     path.write_text(json.dumps({
-        "schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
+        "schema_version": "native-inference-qualification-v4", "backend": "mlx-one-native",
         "scope": asdict(identity), "feature": "dense_execution", "status": "passed",
         "correctness_passed": True,
     }))
+    from native_evidence import attach_provenance
+
+    path.write_text(json.dumps(attach_provenance(json.loads(path.read_text()), tmp_path)))
     registry.promote("dense_execution", identity, path, InferenceFeatureStatus.CORRECTNESS_PASSED)
     assert registry.report("dense_execution", identity)["status"] == "correctness_passed"
     assert registry.report("dense_execution", replace(identity, mlx_version="new"))[
@@ -398,6 +401,9 @@ def test_native_qualification_rechecks_backing_artifacts(tmp_path):
     qualification_evidence(tmp_path, feature="batched_dense_decode", scope=asdict(scope),
                            parity={"status": "passed"})
     result = tmp_path / "evidence-batched_dense_decode.json"
+    from native_evidence import attach_provenance
+
+    result.write_text(json.dumps(attach_provenance(json.loads(result.read_text()), tmp_path)))
     artifact = json.loads(result.read_text())["artifacts"][0]
     assert artifact["sha256"] == hashlib.sha256(payload.read_bytes()).hexdigest()
     registry = InferenceFeatureRegistry()

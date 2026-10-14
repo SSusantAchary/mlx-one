@@ -16,7 +16,6 @@ from mlx_one.engine.modes import (
     InferenceMode,
     configure_execution_dtype,
     resolve_backend,
-    validate_mode,
 )
 from mlx_one.engine.reporting import native_report
 from mlx_one.server.model_manager import ModelManager
@@ -62,6 +61,16 @@ class RuntimeStats:
     cache_lookup_time_ms: float | None = None
     cache_allocation_time_ms: float | None = None
     avoided_prefill_tokens: int | None = None
+    server_text_ttft_ms: float | None = None
+    model_token_count: int | None = None
+    model_token_gap_p50_ms: float | None = None
+    model_token_gap_p95_ms: float | None = None
+    timing_samples_truncated: bool = False
+    actual_prefill_tokens: int | None = None
+    eligible_prefix_tokens: int | None = None
+    matched_prefix_tokens: int | None = None
+    prefix_publications: int | None = None
+    publication_rejections: int | None = None
     queue_ms: float | None = None
     tokenization_ms: float | None = None
     prefill_ms: float | None = None
@@ -222,18 +231,15 @@ class GenerationEngine:
             raise RuntimeError("loaded model has no chat template")
         if reasoning == "on" and "enable_thinking" not in (bundle.chat_template.template or ""):
             raise ValueError("loaded chat template does not support explicit reasoning control")
-        rendered_messages, prompt = _fit_messages(
-            bundle,
-            messages,
-            options.max_tokens,
-            context_length or bundle.context_length,
-            context_shift,
-            reasoning,
-            reasoning_budget,
-            reasoning_preserve,
-        )
+        from mlx_one.engine.prompts import prepare_chat
+
         tokenization_started = time.perf_counter()
-        prompt_ids = tuple(bundle.tokenizer.encode(prompt))
+        prepared = prepare_chat(
+            bundle, messages, options.max_tokens, context_length or bundle.context_length,
+            context_shift=context_shift, rendering_options=_reasoning_template_options(
+                reasoning, reasoning_budget, reasoning_preserve))
+        rendered_messages, prompt = list(prepared.messages), prepared.text
+        prompt_ids = prepared.token_ids
         tokenization_ms = (time.perf_counter() - tokenization_started) * 1000
         prompt_tokens = len(prompt_ids)
         runtime = self._cache_manager_for(bundle)
@@ -247,6 +253,11 @@ class GenerationEngine:
             value_type=cache_type_v,
         )
         handle.metadata["is_cancelled"] = cancel.is_set
+        handle.metadata["prepared_prompt"] = prepared
+        handle.metadata["semantic_boundary"] = (
+            prepared.semantic_boundary if cache_prompt and runtime.config.backend == "dense"
+            and runtime.plan.prefix_shareable else 0)
+        handle.metadata["maximum_prefix_entries"] = cache_entries
         lifecycle.update({"runtime": runtime, "handle": handle})
         cached_ids: tuple[int, ...] = ()
         fingerprint = runtime.fingerprint(
@@ -286,7 +297,9 @@ class GenerationEngine:
             start_in_reasoning=prompt.rstrip().endswith("<think>"),
         )
         speculative_stats = {"drafted_tokens": 0, "accepted_draft_tokens": 0}
-        observations: list[dict[str, Any]] = []
+        from mlx_one.engine.timing import RequestTiming
+
+        timings = RequestTiming(started, trace=self._collect_execution_metrics)
         iterator = stream_chat(
             bundle,
             rendered_messages,
@@ -315,7 +328,7 @@ class GenerationEngine:
             speculative_stats=speculative_stats,
             reasoning_budget=reasoning_budget,
             yield_steps=True,
-            **({"on_execution": observations.append} if self._collect_execution_metrics else {}),
+            on_execution=timings.observe,
             _cooperative=self._actor is not None,
             _prefill_chunk_size=self._prefill_chunk_size,
             _cache_runtime=runtime, _cache_handle=handle,
@@ -359,15 +372,9 @@ class GenerationEngine:
         except Exception:
             pass
         cache_snapshot = runtime.stats()
-        token_times = tuple(
-            (o["at"] - started) * 1000 for o in observations if o["kind"] == "token"
-        )
-        prefill_ms = sum(o["duration_ms"] for o in observations
-                         if o["kind"] == "forward" and o["phase"] == "prefill")
-        decode_ms = sum(o["duration_ms"] for o in observations
-                        if o["kind"] == "forward" and o["phase"] == "decode")
-        observed_tokenization = sum(o["duration_ms"] for o in observations
-                                    if o["kind"] == "tokenization")
+        token_times = tuple(timings.tokens) if timings.tokens is not None else None
+        prefill_ms, decode_ms = timings.forward_ms["prefill"], timings.forward_ms["decode"]
+        observed_tokenization = timings.tokenization_ms
         mx = sys.modules.get("mlx.core")
         cached_memory = getattr(mx, "get_cache_memory", None)
         from mlx_one.engine.reporting import describe_cache
@@ -375,22 +382,26 @@ class GenerationEngine:
         stats = RuntimeStats(
             queue_ms=queue_ms,
             tokenization_ms=tokenization_ms + observed_tokenization,
-            prefill_ms=prefill_ms if observations else None,
-            decode_ms=decode_ms if observations else None,
-            model_token_times_ms=token_times if observations else None,
-            model_generation_started_at=started if observations else None,
-            model_forward_batch_sizes=tuple(o["batch_size"] for o in observations
-                                           if o["kind"] == "forward") if observations else None,
-            execution_observer="synchronized-forward-v1" if observations else None,
-            actual_logits_dtypes=(tuple(sorted({o["logits_dtype"] for o in observations
-                                                if o["kind"] == "forward"}))
-                                  if observations else None),
+            prefill_ms=prefill_ms if timings.forwards else None,
+            decode_ms=decode_ms if timings.forwards else None,
+            model_token_times_ms=token_times,
+            model_generation_started_at=started if token_times is not None else None,
+            model_forward_batch_sizes=(tuple(timings.batches)
+                                       if timings.batches is not None else None),
+            execution_observer="synchronized-forward-v2" if timings.forwards else None,
+            actual_logits_dtypes=tuple(sorted(timings.dtypes)) if timings.forwards else None,
+            actual_prefill_tokens=timings.prefill_tokens if timings.forwards else None,
+            eligible_prefix_tokens=prepared.semantic_boundary,
+            matched_prefix_tokens=len(cached_ids),
+            prefix_publications=int(handle.metadata.get("prefix_publications", 0)),
+            publication_rejections=int(handle.metadata.get("publication_rejections", 0)),
+            **timings.summary(),
+            server_text_ttft_ms=(first_at - started) * 1000 if first_at is not None else None,
             mlx_cached_bytes=int(cached_memory()) if callable(cached_memory) else None,
             cache_layers=tuple(describe_cache(handle.bundle.entries, runtime.plan)),
             prompt_tokens=prompt_tokens,
             generated_tokens=generated,
             tokens_per_second=generated / elapsed if elapsed > 0 else None,
-            time_to_first_token_ms=(first_at - started) * 1000 if first_at else None,
             generation_latency_ms=elapsed * 1000,
             context_used=prompt_tokens + generated,
             memory_used_bytes=memory_used,
@@ -414,12 +425,6 @@ class GenerationEngine:
             prompt_tokens_per_second=(
                 (prompt_tokens - len(cached_ids)) * 1000 / prefill_ms if prefill_ms else None
             ),
-            decode_tokens_per_second=(
-                (len(token_times) - 1) * 1000 / (token_times[-1] - token_times[0])
-                if len(token_times) > 1 and token_times[-1] > token_times[0]
-                else None
-            ) if observations else (generated / elapsed if elapsed > 0 else None),
-            inter_token_latency_ms=(elapsed * 1000 / generated if generated else None),
             cache_bytes=cache_snapshot.physical_bytes,
             cache_backend=handle.backend,
             cache_logical_bytes=handle.bundle.nbytes,
@@ -438,6 +443,9 @@ class GenerationEngine:
             runtime.commit(handle.reservation, min(handle.bundle.allocated_nbytes, requested))
         with self._lock:
             self._stats = stats
+        sink = getattr(self, "_qualification_token_sink", None)
+        if sink is not None and timings.token_ids is not None:
+            sink(handle.request_id, tuple(timings.token_ids))
         yield GenerationEvent(finish_reason=finish_reason, metrics=stats.to_dict())
 
     def clear_caches(self) -> None:
@@ -461,7 +469,12 @@ class GenerationEngine:
         runtime = self._cache_runtime if self._cache_bundle is bundle else None
         report = native_report(bundle, runtime, backend=self._cache_config.backend,
                                mode=self._inference_mode, execution_dtype=self._execution_dtype)
+        from mlx_one.engine.timing import METRIC_DEFINITIONS
+
         report["selection"] = self._selection
+        report["metric_definitions"] = METRIC_DEFINITIONS
+        report["latest_completed_request"] = self.stats.to_dict()
+        report["aggregate_metric_scope"] = "latest_completed_request"
         report["memory_pressure"] = self._pressure.stats() if self._pressure else None
         return report
 
@@ -484,7 +497,7 @@ class GenerationEngine:
                     "block_kv": block_supported,
                     "prefix_block_cache": block_supported,
                     "sliding_block_kv": False,
-                    "hybrid_prefix_restore": self._inference_mode == "experimental_hybrid_batch",
+                    "hybrid_prefix_restore": runtime.hybrid_state,
                     "continuous_batching": self._inference_mode in {
                         "experimental_dense_batch", "paged", "experimental_hybrid_batch"},
                 },
@@ -534,45 +547,24 @@ class GenerationEngine:
                 self._cache_runtime.close()
             self._cache_runtime = None
             self._cache_bundle = None
-            runtime = CacheManager(bundle, self._cache_config)
-            runtime.pressure = self._pressure
-            runtime.batching_config = self._actor.config if self._actor is not None else None
+            if self._converted_bundle is not bundle:
+                configure_execution_dtype(bundle, self._execution_dtype)
+                self._converted_bundle = bundle
+            from mlx_one.engine.construction import construct_runtime
+
+            runtime, selection = construct_runtime(
+                bundle, self._cache_config, self._requested_mode,
+                batching=self._actor.config if self._actor is not None else None,
+                pressure=self._pressure, registry=self._qualification_registry,
+                profile=self._qualification_profile)
             try:
-                if self._converted_bundle is not bundle:
-                    configure_execution_dtype(bundle, self._execution_dtype)
-                    self._converted_bundle = bundle
-                if self._requested_mode == "auto":
-                    from mlx_one.engine.selection import select_auto_mode
-
-                    self._selection = select_auto_mode(bundle, runtime,
-                                                       self._qualification_registry,
-                                                       self._qualification_profile)
-                    self._inference_mode = self._selection["resolved_mode"]
-                    from dataclasses import replace
-
-                    runtime.config = replace(runtime.config, backend=resolve_backend(
-                        self._inference_mode, None))
-                validate_mode(bundle, runtime.plan, self._inference_mode)
-                runtime.mode = self._inference_mode
-                runtime.requested_mode = self._requested_mode
-                runtime.pressure = self._pressure
                 if self._pressure is not None:
                     self._pressure.start()
-                runtime.qualification_registry = self._qualification_registry
-                runtime.qualification_profile = self._qualification_profile
-                runtime.batching_config = self._actor.config if self._actor is not None else None
-                if self._qualification_profile and (
-                    self._requested_mode == "auto" and self._selection.get("evidence_scope")
-                    or runtime.config.key_type in {"q4_0", "q8_0"}
-                ):
-                    from mlx_one.engine.selection import validate_execution_envelope
-
-                    if self._actor is None:
-                        raise ValueError("qualified actor execution requires a bound scheduler")
-                    validate_execution_envelope(runtime, self._actor.config, required=True)
+                self._selection = selection
+                self._inference_mode = selection["resolved_mode"]
                 if self._actor is not None:
                     self._actor.execution_mode = self._inference_mode
-            except Exception:
+            except BaseException:
                 runtime.close()
                 raise
             self._cache_runtime = runtime
@@ -583,15 +575,18 @@ class GenerationEngine:
                         context_shift=False, reasoning="auto", reasoning_budget=-1,
                         reasoning_preserve=False, minimum_tokens=1):
         bundle = self.manager.current_model()
-        _, prompt = _fit_messages(bundle, messages, options.max_tokens, context_length,
-                                  context_shift, reasoning, reasoning_budget, reasoning_preserve)
+        from mlx_one.engine.prompts import prepare_chat
+
+        prepared = prepare_chat(bundle, messages, options.max_tokens, context_length,
+                                context_shift=context_shift,
+                                rendering_options=_reasoning_template_options(
+                                    reasoning, reasoning_budget, reasoning_preserve))
         runtime = self._cache_manager_for(bundle)
         fingerprint = runtime.fingerprint(
-            namespace=namespace, context_tokens=context_length,
+            namespace=namespace, context_tokens=prepared.context_tokens,
             key_type=runtime.config.key_type, value_type=runtime.config.value_type,
-            rendering_options=_reasoning_template_options(
-                reasoning, reasoning_budget, reasoning_preserve))
-        return runtime.preview_prefix(fingerprint, tuple(bundle.tokenizer.encode(prompt)),
+            rendering_options=prepared.rendering_options)
+        return runtime.preview_prefix(fingerprint, prepared.token_ids,
                                       minimum_tokens=minimum_tokens)
 
 
@@ -619,26 +614,13 @@ def _fit_messages(
     reasoning_budget: int = -1,
     reasoning_preserve: bool = False,
 ) -> tuple[list[dict[str, str]], str]:
-    if max_tokens >= context_length:
-        raise ValueError("max_tokens leaves no room inside the configured context")
-    selected = list(messages)
-    template_options = _reasoning_template_options(
-        reasoning, reasoning_budget, reasoning_preserve
-    )
-    while True:
-        prompt = bundle.chat_template.render(selected, **template_options)
-        if len(bundle.tokenizer.encode(prompt)) + max_tokens <= context_length:
-            return selected, prompt
-        if not context_shift:
-            raise ValueError("messages and requested output exceed the configured context")
-        start = 1 if selected and selected[0]["role"] == "system" else 0
-        if len(selected) - start <= 1:
-            raise ValueError("the system message or newest turn cannot fit in the context")
-        # Remove the oldest complete user/assistant turn while retaining the system message.
-        end = start + 1
-        while end < len(selected) and selected[end]["role"] == "assistant":
-            end += 1
-        del selected[start:end]
+    from mlx_one.engine.prompts import prepare_chat
+
+    prepared = prepare_chat(bundle, messages, max_tokens, context_length,
+                            context_shift=context_shift,
+                            rendering_options=_reasoning_template_options(
+                                reasoning, reasoning_budget, reasoning_preserve))
+    return list(prepared.messages), prepared.text
 
 
 class _ReasoningParser:

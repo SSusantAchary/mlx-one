@@ -97,14 +97,20 @@ class CacheBundle:
     snapshot = clone
 
     def reset(self) -> None:
+        error = None
         for entry in self.entries:
-            entry.reset()
+            try:
+                entry.reset()
+            except BaseException as exc:
+                error = error or exc
+        if error is not None:
+            raise error
 
     def release(self) -> None:
         if self.closed:
             return
-        self.reset()
         self.closed = True
+        self.reset()
 
     def trim(self, count: int) -> bool:
         if self.closed:

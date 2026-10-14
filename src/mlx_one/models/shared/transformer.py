@@ -127,10 +127,16 @@ class GroupedQueryAttention(nn.Module):
             mrope_section=self.mrope_section,
             scaling_factor=self.rope_scaling_factor,
         )
+        execution_dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        if execution_dtype is not None:
+            dtype = getattr(mx, execution_dtype)
+            queries, keys, values = (t.astype(dtype) for t in (queries, keys, values))
         if cache is not None and callable(getattr(cache, "attend", None)):
             output = cache.attend(queries, keys, values, scale=self.scale,
                                   position_ids=position_ids)
             output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
+            if execution_dtype is not None:
+                output = output.astype(getattr(mx, execution_dtype))
             return self.o_proj(output)
         if cache is not None:
             keys, values = cache.update(keys, values)
@@ -143,6 +149,8 @@ class GroupedQueryAttention(nn.Module):
         probabilities = mx.softmax(scores, axis=-1, precise=True)
         output = probabilities @ values
         output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
+        if execution_dtype is not None:
+            output = output.astype(getattr(mx, execution_dtype))
         return self.o_proj(output)
 
 

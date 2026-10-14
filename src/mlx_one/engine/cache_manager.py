@@ -7,7 +7,7 @@ import json
 import threading
 import time
 import uuid
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -38,14 +38,18 @@ from mlx_one.engine.prefix_cache import BlockPrefixIndex, PrefixCache
 class CacheManager:
     """Model-scoped owner of all cache state and capacity decisions."""
 
-    def __init__(self, bundle: Any, config: CacheConfig | None = None) -> None:
+    def __init__(self, bundle: Any, config: CacheConfig | None = None, *, _planning=None) -> None:
         self.bundle = bundle
         self._last_state_observations: list[dict[str, Any]] = []
         self._last_precision_configuration: dict[str, str] | None = None
         self.config = config or CacheConfig()
-        self.weight_identity = _model_identity(bundle)
-        self._model_identity = _digest(self.weight_identity + str(id(bundle.model)))
-        self.plan = build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens)
+        self.weight_identity = _planning.weight_identity if _planning else _model_identity(bundle)
+        self._model_identity = (_planning._model_identity if _planning else
+                                _digest(self.weight_identity + str(id(bundle.model))))
+        self.plan = (_planning.plan if _planning else
+                     build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens))
+        self.hybrid_state = (self.config.backend in {"hybrid", "paged"}
+                             and any(s.kind == "conv" for s in self.plan.state_specs))
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
         from mlx_one.engine.arena import SegmentedPageArena
 
@@ -74,6 +78,9 @@ class CacheManager:
         self._allocation_time_ms = 0.0
         self.harness_only = False
         self.pressure = None
+        self._capacity_snapshot = None
+        self._capacity_sampled_at = -float("inf")
+        self.capacity_diagnostics = {"status": "unverified", "reason": "not sampled"}
         parameters = getattr(bundle.model, "parameters", None)
         from mlx_one.engine.cache import array_nbytes
 
@@ -89,6 +96,9 @@ class CacheManager:
         rendering_options: dict[str, Any] | None = None,
         multimodal_identity: str | None = None,
     ) -> CacheFingerprint:
+        from mlx_one.engine.adapters import ADAPTER_VERSION, quantization_identity
+        from mlx_one.engine.reporting import tensor_dtypes
+
         config = getattr(self.bundle.model, "config", None)
         rope = {
             name: getattr(getattr(config, "text_config", config), name, None)
@@ -114,10 +124,19 @@ class CacheManager:
             special_tokens_identity=_digest(json.dumps({
                 name: getattr(self.bundle.tokenizer, name, None)
                 for name in ("bos_token_id", "eos_token_id", "pad_token_id", "special_tokens_map",
-                             "added_tokens_decoder")}, sort_keys=True, default=str)),
+                             "added_tokens_decoder", "special_tokens")},
+                sort_keys=True, default=str)),
             rendering_identity=_digest(json.dumps(
                 rendering_options or {}, sort_keys=True, default=str)),
             multimodal_identity=multimodal_identity,
+            execution_identity=_digest(json.dumps({
+                "mode": getattr(self, "mode", None),
+                "weight_dtypes": tensor_dtypes(self.bundle.model.parameters())
+                    if callable(getattr(self.bundle.model, "parameters", None)) else (),
+                "eos": getattr(self.bundle, "eos_token_ids", ()),
+                "native_adapter": ADAPTER_VERSION,
+                "weight_quantization": quantization_identity(self.bundle),
+            }, sort_keys=True)),
         )
 
     def create_handle(
@@ -144,7 +163,14 @@ class CacheManager:
                     if not qualification_matches(self, "quantized_paged_kv"):
                         raise KVQuantizationUnsupported(
                             "quantized paged KV requires quality evidence")
-                entries = tuple(PagedKVCache(self.block_pool, layer_id=spec.layer_id,
+                if self.hybrid_state:
+                    from mlx_one.engine.components import hybrid_components
+
+                    if bits is not None or key_type != "f16":
+                        raise KVQuantizationUnsupported("hybrid paging requires FP16 KV")
+                    entries = hybrid_components(self.bundle, key_type, pool=self.block_pool)
+                else:
+                    entries = tuple(PagedKVCache(self.block_pool, layer_id=spec.layer_id,
                                             dtype="bfloat16" if key_type == "bf16" else "float16",
                                             bits=bits) for spec in self.plan.layer_specs)
             elif backend == "block":
@@ -199,7 +225,7 @@ class CacheManager:
             step = 256
             tokens = ((tokens + step - 1) // step) * step
         amount = self.plan.bytes_per_token(key_bits=key_bits, value_bits=value_bits) * tokens
-        if handle.backend == "hybrid":
+        if self.hybrid_state:
             config = self.bundle.model.config
             amount += sum(1 for s in self.plan.layer_specs if s.kind.value == "conv_state") * (
                 config.conv_L_cache - 1) * config.hidden_size * 4
@@ -211,6 +237,35 @@ class CacheManager:
                 for s in self.plan.layer_specs)
             amount += self.plan.bytes_per_token() * self.config.block_size_tokens * 16
         return amount
+
+    def _host_capacity(self, amount, *, transient=False):
+        """Observed working set overlaps owner bytes; use their maximum, never their sum."""
+        from mlx_one.engine.pressure import sample_telemetry
+
+        now = time.monotonic()
+        if self._capacity_snapshot is None or now - self._capacity_sampled_at >= 1:
+            self._capacity_snapshot, self._capacity_sampled_at = sample_telemetry(), now
+        telemetry = self._capacity_snapshot
+        ceilings = [v for v in (int(telemetry.installed_bytes * .75)
+                    if telemetry.installed_bytes else None, telemetry.recommended_bytes)
+                    if v is not None]
+        if not ceilings:
+            self.capacity_diagnostics = {"status": "unverified",
+                "reason": "host ceiling unavailable; configured cache limit only",
+                "cache_limit_bytes": self.config.memory_budget_bytes}
+            return
+        stats = self.stats()
+        ceiling = min(ceilings)
+        allocator = (telemetry.mlx_active_bytes or 0) + (telemetry.mlx_cached_bytes or 0)
+        owner = self.model_bytes + stats.physical_bytes
+        working = max(telemetry.rss_bytes or 0, allocator, owner)
+        self.capacity_diagnostics = {"status": "bounded", "ceiling_bytes": ceiling,
+            "working_set_bytes": working, "owner_bytes": owner,
+            "reserved_bytes": stats.reserved_bytes, "requested_bytes": amount,
+            "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested"}
+        if working + stats.reserved_bytes + amount > ceiling:
+            raise CacheCapacityError("request exceeds conservative host memory headroom",
+                retryable=not transient and self.model_bytes + amount <= ceiling)
 
     def reserve(
         self,
@@ -231,6 +286,7 @@ class CacheManager:
                 amount = self.estimate_growth(handle, prompt_tokens=tokens, max_new_tokens=0)
             if amount < 0:
                 raise ValueError("reserved cache bytes cannot be negative")
+            self._host_capacity(amount)
             if self.pressure is not None:
                 self.pressure.shed(self)
                 stats = self.stats()
@@ -286,6 +342,9 @@ class CacheManager:
     @contextmanager
     def transient_reservation(self, amount: int):
         with self._lock:
+            if amount < 0:
+                raise ValueError("transient bytes cannot be negative")
+            self._host_capacity(amount, transient=True)
             if self.pressure is not None:
                 self.pressure.shed(self)
                 stats = self.stats()
@@ -338,7 +397,7 @@ class CacheManager:
                     raise PrefixReuseUnsupported("multimodal prefix restoration is unavailable")
                 if not self.config.prefix_cache_enabled:
                     return 0
-                if handle.backend == "hybrid":
+                if self.hybrid_state:
                     match = self.hybrid_prefix.lookup(fingerprint, tokens)
                     if match is None or match[0] < minimum_tokens:
                         if match is not None:
@@ -413,7 +472,7 @@ class CacheManager:
     ) -> int:
         if not self.config.prefix_cache_enabled:
             return 0
-        if self.config.backend == "hybrid":
+        if self.hybrid_state:
             length = self.hybrid_prefix.preview(fingerprint, tokens)
             return length if length >= minimum_tokens else 0
         if not self.plan.prefix_shareable:
@@ -425,6 +484,60 @@ class CacheManager:
         return self.snapshot_prefix.longest_prefix_tokens(
             (fingerprint,), tokens, minimum_tokens=minimum_tokens
         )
+
+    def stage_prefix(self, handle, fingerprint, tokens):
+        with self._lock:
+            self._validate_handle(handle)
+            if (handle.backend != "dense" or not self.plan.prefix_shareable
+                    or not self.config.prefix_cache_enabled
+                    or "staged_prefix" in handle.metadata
+                    or any(c.offset != len(tokens) for c in handle.bundle.entries)):
+                return False
+            amount = handle.bundle.allocated_nbytes * 2
+            if amount > self.config.prefix_cache_budget_bytes:
+                handle.metadata["publication_rejections"] = (
+                    handle.metadata.get("publication_rejections", 0) + 1)
+                return False
+            resources = ExitStack()
+            try:
+                resources.enter_context(self.transient_reservation(amount))
+                snapshot = handle.bundle.snapshot()
+                resources.callback(snapshot.release)
+                import mlx.core as mx
+
+                def tensors(value):
+                    if isinstance(value, dict):
+                        return [t for v in value.values() for t in tensors(v)]
+                    if isinstance(value, (tuple, list)):
+                        return [t for v in value for t in tensors(v)]
+                    return [value] if getattr(value, "dtype", None) is not None else []
+                mx.eval(*(t for entry in snapshot.entries for t in tensors(vars(entry))))
+                handle.metadata["staged_prefix"] = (fingerprint, tokens, snapshot, resources)
+                return True
+            except BaseException:
+                resources.close()
+                raise
+
+    def publish_staged_prefix(self, handle, *, maximum_entries=None):
+        with self._lock:
+            self._validate_handle(handle)
+            staged = handle.metadata.pop("staged_prefix", None)
+            if staged is None:
+                return False
+            fingerprint, tokens, snapshot, resources = staged
+            try:
+                callback = handle.metadata.get("is_cancelled")
+                if (handle.metadata.get("cancelled") or callable(callback) and callback()
+                        or any(c.offset != len(tokens) for c in snapshot.entries)):
+                    return False
+                stored = self.snapshot_prefix.put((fingerprint,), tokens, snapshot)
+                if stored and maximum_entries is not None:
+                    self.snapshot_prefix.limit_entries(maximum_entries)
+                handle.metadata["prefix_publications"] = (
+                    handle.metadata.get("prefix_publications", 0) + int(stored))
+                return stored
+            finally:
+                resources.close()
 
     def publish_prefix(
         self,
@@ -444,17 +557,24 @@ class CacheManager:
                     or any(int(cache.offset) != len(tokens) for cache in handle.bundle.entries)):
                 return False
             handle.computed_tokens = len(tokens)
-            if handle.backend == "hybrid":
+            if self.hybrid_state:
                 return self.publish_hybrid_boundary(handle, tokens)
             if handle.backend == "dense":
                 if not self.plan.prefix_shareable:
                     return False
                 stored = self.snapshot_prefix.put((fingerprint,), tokens, handle.bundle)
+                handle.metadata["prefix_publications"] = (
+                    handle.metadata.get("prefix_publications", 0) + int(stored))
+                handle.metadata["publication_rejections"] = (
+                    handle.metadata.get("publication_rejections", 0) + int(not stored))
                 if stored and maximum_entries is not None:
                     self.snapshot_prefix.limit_entries(maximum_entries)
                 return stored
             layers = tuple(cache.full_block_refs for cache in handle.bundle.entries)
-            return self.block_prefix.publish(fingerprint, tokens, layers) > 0
+            stored = self.block_prefix.publish(fingerprint, tokens, layers) > 0
+            handle.metadata["prefix_publications"] = (
+                handle.metadata.get("prefix_publications", 0) + int(stored))
+            return stored
 
     def publish_hybrid_boundary(self, handle, prompt_ids):
         with self._lock:
@@ -462,7 +582,7 @@ class CacheManager:
             callback = handle.metadata.get("is_cancelled")
             offset = handle.bundle.offset
             fp = handle.metadata.get("fingerprint")
-            if (handle.backend != "hybrid" or not self.config.prefix_cache_enabled or fp is None
+            if (not self.hybrid_state or not self.config.prefix_cache_enabled or fp is None
                     or fp.multimodal_identity is not None or not offset
                     or offset % self.config.block_size_tokens or offset > len(prompt_ids)
                     or (callable(callback) and callback()) or handle.metadata.get("cancelled")
@@ -475,18 +595,30 @@ class CacheManager:
             if handle.closed and handle.metadata.get("manager_id") == self._owner_token:
                 return
             self._validate_handle(handle)
+            error = None
+            staged = handle.metadata.pop("staged_prefix", None)
+            operations = []
+            if staged is not None:
+                operations.append(staged[3].close)
             if handle.reservation is not None:
-                self.release_reservation(handle.reservation)
-            from mlx_one.engine.reporting import describe_cache
+                operations.append(lambda: self.release_reservation(handle.reservation))
+            def observe():
+                from mlx_one.engine.reporting import describe_cache
 
-            self._last_state_observations = describe_cache(handle.bundle.entries, self.plan)
-            self._last_precision_configuration = {
-                "key_type": str(handle.metadata["key_type"]),
-                "value_type": str(handle.metadata["value_type"]),
-            }
-            handle.bundle.release()
+                self._last_state_observations = describe_cache(handle.bundle.entries, self.plan)
+                self._last_precision_configuration = {
+                    "key_type": str(handle.metadata["key_type"]),
+                    "value_type": str(handle.metadata["value_type"])}
+            operations.extend([observe, handle.bundle.release])
+            for operation in operations:
+                try:
+                    operation()
+                except BaseException as exc:
+                    error = error or exc
             handle.closed = True
             self._handles.pop(handle.handle_id, None)
+            if error is not None:
+                raise error
 
     def precision_configuration(self) -> dict[str, str] | None:
         with self._lock:
@@ -529,6 +661,20 @@ class CacheManager:
                 prefix = self.block_prefix.stats()
                 physical = blocks["physical_bytes"]
                 pinned = blocks["pinned_bytes"]
+                if self.hybrid_state:
+                    from mlx_one.engine.cache import cache_allocated_nbytes
+
+                    prefix = self.hybrid_prefix.stats()
+                    live_carries = sum(cache_allocated_nbytes(c) for h in handles
+                                       for c in h.bundle.entries
+                                       if getattr(c, "kind", None) == "conv")
+                    prefix_carries = sum(cache_allocated_nbytes(c)
+                        for b, _ in self.hybrid_prefix.entries.values() for c in b.entries
+                        if getattr(c, "kind", None) == "conv")
+                    physical += live_carries + prefix_carries
+                    pinned += prefix_carries
+                    blocks["live_bytes"] += live_carries + prefix_carries
+                    prefix = {**prefix, "bytes": pinned}
             else:
                 blocks = {
                     "block_total": 0,
@@ -572,19 +718,29 @@ class CacheManager:
 
     def clear_prefixes(self) -> None:
         with self._lock:
-            self.snapshot_prefix.clear()
-            self.block_prefix.clear()
-            self.hybrid_prefix.clear()
+            error = None
+            for index in (self.snapshot_prefix, self.block_prefix, self.hybrid_prefix):
+                try:
+                    index.clear()
+                except BaseException as exc:
+                    error = error or exc
+            if error is not None:
+                raise error
 
     def close(self) -> None:
         with self._lock:
             if self._closed:
                 return
-            for handle in tuple(self._handles.values()):
-                self.release(handle)
-            self.clear_prefixes()
-            self.block_pool.clear()
+            error = None
+            for operation in [*(lambda h=h: self.release(h) for h in self._handles.values()),
+                              self.clear_prefixes, self.block_pool.clear]:
+                try:
+                    operation()
+                except BaseException as exc:
+                    error = error or exc
             self._closed = True
+            if error is not None:
+                raise error
 
     def _validate_block_backend(self, key_type: str, value_type: str) -> None:
         if key_type != "f16" or value_type != "f16":

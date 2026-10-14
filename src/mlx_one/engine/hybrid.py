@@ -103,6 +103,9 @@ class HybridRunner(BatchedDenseRunner):
         from mlx_one.engine.modes import validate_mode
 
         validate_mode(bundle, build_cache_plan(bundle), "experimental_hybrid_batch")
+        from mlx_one.engine.adapters import native_adapter
+
+        self.adapter = native_adapter(bundle, allow_hybrid=True, allow_bfloat16=True)
 
     def execute(self, requests):
         import mlx.core as mx
@@ -136,13 +139,24 @@ class HybridRunner(BatchedDenseRunner):
                 if r.handle.bundle.entries is not r.cache:
                     raise ValueError("hybrid request does not own its cache mapping")
         config = first.bundle.model.config
-        heads, dim = config.num_key_value_heads, config.hidden_size // config.num_attention_heads
+        heads, dim = self.adapter.spec.kv_heads, self.adapter.spec.head_dim
         width = max(widths)
         history = max(c.offset for r in requests for c in r.cache)
         transient = len(requests) * len(first.cache) * heads * dim * (history + width) * 16
         transient += len(requests) * config.hidden_size * config.conv_L_cache * 8
         from mlx_one.engine.pressure import execution_forecast
 
+        metrics = {"direct_attention_calls": 0, "history_materializations": 0,
+                   "conversion_bytes": 0, "synchronized_kernel_dispatch_ms": 0.0}
+        from mlx_one.engine.paged import PagedBatchCache, PagedKVCache
+
+        paged = any(isinstance(c, PagedKVCache) for c in first.cache)
+        if paged:
+            transient = (len(requests) * heads * dim * width * 16
+                         + len(requests) * heads * dim * 4 * 16
+                         * next(c.block_tokens for c in first.cache if isinstance(c, PagedKVCache))
+                         * sum(isinstance(c, PagedKVCache) for c in first.cache)
+                         + len(requests) * config.hidden_size * config.conv_L_cache * 8)
         transient = execution_forecast(first.runtime, config, batch=len(requests), chunk=width,
                                          history=history, explicit_bytes=transient,
                                          history_lengths=[r.cache[0].offset for r in requests],
@@ -162,13 +176,16 @@ class HybridRunner(BatchedDenseRunner):
                     rows = tuple(d.entries[layer] for d in drafts)
                     wrapper = (_ConvRows if isinstance(rows[0], ConvCarryComponent)
                                else _AttentionRows)
-                    packed.append(wrapper(rows, widths))
+                    if isinstance(rows[0], PagedKVCache):
+                        packed.append(PagedBatchCache(rows, widths, metrics))
+                    else:
+                        packed.append(wrapper(rows, widths))
                 ids = mx.array([list(r.token_ids) + [0] * (width - len(r.token_ids))
                                 for r in requests])
                 mask = mx.array([[1] * n + [0] * (width - n) for n in widths])
                 positions = mx.array([list(range(r.cache[0].offset, r.cache[0].offset + width))
                                       for r in requests])
-                output = first.bundle.model(ids, cache=tuple(packed), attention_mask=mask,
+                output = self.adapter.forward(ids, cache=tuple(packed), attention_mask=mask,
                                             position_ids=positions)
                 logits = []
                 for i, n in enumerate(widths):
@@ -185,7 +202,10 @@ class HybridRunner(BatchedDenseRunner):
                     if request_cancelled(r):
                         continue
                     for original, replacement in zip(r.cache, draft.entries, strict=True):
-                        original.__dict__.update(replacement.__dict__)
+                        if isinstance(original, PagedKVCache):
+                            original.replace_from(replacement)
+                        else:
+                            original.__dict__.update(replacement.__dict__)
                     if r.handle is not None:
                         r.handle.computed_tokens = r.cache[0].offset
                         runtime.reconcile(r.handle)
@@ -202,7 +222,7 @@ class HybridRunner(BatchedDenseRunner):
                 # Committed arrays are owned by originals; reset only draft attributes.
                 for draft in drafts:
                     draft.release()
-        self.last_trace = {"phase": first.phase,
+        self.last_trace = {**metrics, "phase": first.phase,
                            "request_ids": [s.request_id for s in plan.sequences],
                            "batch_size": len(requests),
                            "history_lengths": [s.start_pos for s in slots],

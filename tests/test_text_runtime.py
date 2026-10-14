@@ -111,8 +111,7 @@ def test_quantization_metadata_is_strict() -> None:
         "group_size": 64,
         "mode": "affine",
     }
-    with pytest.raises(ValueError, match="only MLX 4-bit"):
-        _quantization_config({"quantization": {"bits": 8}})
+    assert _quantization_config({"quantization": {"bits": 8}})["bits"] == 8
     with pytest.raises(ValueError, match="only MLX 4-bit"):
         _quantization_config({"quantization_config": {"quant_method": "bitsandbytes"}})
     with pytest.raises(ValueError, match="unsupported quantization method"):

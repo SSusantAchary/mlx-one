@@ -49,10 +49,11 @@ def component_capabilities(bundle, runtime, mode):
     if runtime is None:
         return []
     specs = runtime.plan.state_specs
-    if mode == "experimental_hybrid_batch":
+    if getattr(runtime, "hybrid_state", False):
         from mlx_one.engine.components import hybrid_components
 
-        components = hybrid_components(bundle, runtime.config.key_type)
+        components = hybrid_components(bundle, runtime.config.key_type,
+            pool=runtime.block_pool if mode == "paged" else None)
         result = []
         for spec, component in zip(specs, components, strict=True):
             caps = component.capabilities()
@@ -81,7 +82,7 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         mlx_version = None
     features = (registry or getattr(runtime, "qualification_registry", None)
                 or InferenceFeatureRegistry())
-    if features.records() and (hardware is None or source_revision is None):
+    if hardware is None or source_revision is None:
         from mlx_one.engine.selection import host_identity, source_identity
 
         hardware = hardware or host_identity()
@@ -119,14 +120,39 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
                 features.register_experimental(name, scope)
     added_features = {"paged": ("paged_attention", "paged_prefill"),
                       "experimental_hybrid_batch": ("hybrid_prefix_restore", "hybrid_batching")}
-    for name in added_features.get(selected_mode, ()):
+    names = added_features.get(selected_mode, ())
+    if getattr(runtime, "hybrid_state", False):
+        names = (*names, "hybrid_prefix_restore", "hybrid_batching")
+    for name in names:
         if features.find(name, scope) is None:
             features.register_experimental(name, scope)
     inventory = ("dense_execution", "block_storage", "block_prefix_reuse",
                  "continuous_batching", "batched_dense_decode", "batched_chunked_prefill",
                  "paged_attention", "paged_prefill", "hybrid_prefix_restore", "hybrid_batching",
                  "quantized_paged_kv", "long_context")
+    qualification = {name: features.report(name, scope) for name in inventory}
+    details = {}
+    for name, claim in qualification.items():
+        available = claim["status"] != "not_implemented"
+        if name in {"quantized_paged_kv", "long_context"}:
+            available = claim.get("hardware_correctness_passed", False)
+        details[name] = {"implemented": True, "available_for_opt_in": bool(available),
+                         "checkpoint_correctness_passed": claim.get(
+                             "checkpoint_correctness_passed", False),
+                         "hardware_correctness_passed": claim.get(
+                             "hardware_correctness_passed", False),
+                         "performance_qualified": claim.get("performance_qualified", False),
+                         "reason": claim.get("validation_reason", "stale native evidence")}
+    from mlx_one.engine.adapters import execution_contract
+    from mlx_one.engine.selection import compatibility_digest
+
+    contract = execution_contract(bundle, plan, selected_mode) if plan else None
     return {
+        "execution_contract": contract,
+        "compatibility_digest": compatibility_digest(runtime) if runtime else None,
+        "runtime_schema_version": "native-runtime-v2",
+        "feature_details": details,
+        "weights_identity": getattr(runtime, "weight_identity", None),
         "engine_mode": selected_mode, "configured_execution_dtype": execution_dtype,
         "model_revision": bundle.revision,
         "scope": asdict(scope), "actual_weight_dtypes": weights,
@@ -134,15 +160,16 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         "arena": (runtime.block_pool.stats()
                   if runtime and runtime.config.backend == "paged" else None),
         "qualified_workload_envelope": getattr(runtime, "qualified_envelope", None),
+        "memory_admission": getattr(runtime, "capacity_diagnostics", None),
         "execution_memory_forecast": getattr(runtime, "last_execution_forecast", None),
         "component_capabilities": component_capabilities(bundle, runtime, selected_mode),
         "configured_cache_precision": runtime.precision_configuration() if runtime else None,
         "capabilities": {"continuous_batching": selected_mode in {
             "experimental_dense_batch", "paged", "experimental_hybrid_batch"},
                          "paged_attention": selected_mode == "paged",
-                         "hybrid_prefix_restore": selected_mode == "experimental_hybrid_batch"},
+                         "hybrid_prefix_restore": bool(getattr(runtime, "hybrid_state", False))},
         "runner_qualification": runner_features,
-        "qualification": {name: features.report(name, scope) for name in inventory},
+        "qualification": qualification,
         "latency": {"ttft_p95_ms": None, "decode_gap_p95_ms": None},
         "throughput": {"aggregate_decode_tok_s": None},
     }

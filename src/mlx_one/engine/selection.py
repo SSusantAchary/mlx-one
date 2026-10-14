@@ -15,20 +15,27 @@ from mlx_one.registry import InferenceFeatureStatus
 
 
 def load_evidence(paths):
-    from mlx_one.registry import InferenceFeatureRegistry, InferenceScope
+    from mlx_one.registry import InferenceFeatureRegistry, InferenceScope, RegistryError
 
     registry = InferenceFeatureRegistry()
     for path in paths:
-        proof = json.loads(Path(path).read_text())
+        try:
+            proof = json.loads(Path(path).read_text())
+            scope = InferenceScope(**proof["scope"])
+            feature = proof["feature"]
+        except (OSError, ValueError, TypeError, KeyError):
+            continue
         status = (InferenceFeatureStatus.PERFORMANCE_QUALIFIED if proof.get("performance_qualified")
                   else InferenceFeatureStatus.CORRECTNESS_PASSED)
         from mlx_one.engine.envelope import EVIDENCE_VERSION
 
-        scope = InferenceScope(**proof["scope"])
         if proof.get("schema_version") != EVIDENCE_VERSION:
-            registry.register_experimental(proof["feature"], scope)
+            registry.register_experimental(feature, scope)
             continue
-        registry.promote(proof["feature"], scope, path, status)
+        try:
+            registry.promote(feature, scope, path, status)
+        except (RegistryError, OSError, ValueError, TypeError, KeyError):
+            registry.register_experimental(feature, scope)
     return registry
 
 
@@ -88,6 +95,8 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
     if (profile["cache_type"] != runtime.config.key_type
             or profile["page_tokens"] != runtime.config.block_size_tokens):
         return {**fallback, "reason": "configured cache layout does not match workload envelope"}
+    from mlx_one.engine.adapters import execution_contract
+
     candidates = {"paged": "paged_attention", "experimental_hybrid_batch": "hybrid_prefix_restore",
                   "experimental_dense_batch": "continuous_batching"}
     if runtime.config.key_type in {"q4_0", "q8_0"}:
@@ -97,7 +106,8 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             validate_mode(bundle, runtime.plan, mode)
         except ValueError:
             continue
-        scope = native_report(bundle, runtime, mode=mode, hardware=hardware,
+        candidate = runtime.for_mode(mode) if hasattr(runtime, "for_mode") else runtime
+        scope = native_report(bundle, candidate, mode=mode, hardware=hardware,
                               source_revision=source)["scope"]
         scope["cache_precision"] = precision
         from mlx_one.registry import InferenceScope
@@ -110,10 +120,12 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             if fresh["status"] != InferenceFeatureStatus.PERFORMANCE_QUALIFIED.value:
                 continue
             proof = json.loads(Path(record.evidence[0].uri).read_text())
-            if proof.get("schema_version") != "native-inference-qualification-v2":
+            if proof.get("schema_version") != "native-inference-qualification-v4":
+                continue
+            if proof.get("execution_contract") != execution_contract(bundle, runtime.plan, mode):
                 continue
             if (proof.get("workload_envelope") != profile
-                    or proof.get("compatibility_digest") != compatibility_digest(runtime)):
+                    or proof.get("compatibility_digest") != compatibility_digest(candidate)):
                 continue
             from mlx_one.engine.paged import KERNEL_VERSION
 
@@ -167,7 +179,12 @@ def qualification_matches(runtime, feature, *, profile=None, performance=False):
         if status not in accepted:
             continue
         proof = json.loads(Path(record.evidence[0].uri).read_text())
-        if proof.get("schema_version") != "native-inference-qualification-v2":
+        if proof.get("schema_version") != "native-inference-qualification-v4":
+            continue
+        from mlx_one.engine.adapters import execution_contract
+
+        if proof.get("execution_contract") != execution_contract(
+                runtime.bundle, runtime.plan, mode):
             continue
         if proof.get("compatibility_digest") != compatibility_digest(runtime):
             continue

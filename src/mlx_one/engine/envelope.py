@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 
-ENVELOPE_VERSION = "native-workload-envelope-v2"
-EVIDENCE_VERSION = "native-inference-qualification-v2"
+ENVELOPE_VERSION = "native-workload-envelope-v3"
+EVIDENCE_VERSION = "native-inference-qualification-v4"
 
 
 @dataclass(frozen=True)
@@ -32,10 +32,15 @@ class QualificationEnvelope:
     decode_gap_budget_ms: float | None
     max_queue_wait_ms: float | None
     max_service_gap_ms: float | None
+    adapter_version: str = "native-adapter-v1"
+    execution_policy_version: str = "native-float-execution-v1"
     schema_version: str = ENVELOPE_VERSION
 
     def __post_init__(self):
-        if self.schema_version != ENVELOPE_VERSION:
+        from mlx_one.engine.adapters import ADAPTER_VERSION, EXECUTION_POLICY_VERSION
+
+        if (self.schema_version != ENVELOPE_VERSION or self.adapter_version != ADAPTER_VERSION
+                or self.execution_policy_version != EXECUTION_POLICY_VERSION):
             raise ValueError("legacy envelopes are diagnostic only")
         for name in ("context_tokens", "output_tokens", "slots", "chunk_tokens", "page_tokens",
                      "max_scheduled_tokens", "max_prefill_tokens", "queue_size",
@@ -88,7 +93,7 @@ def profile_envelope(profile):
         profile.pressure_config or asdict(MemoryPressureConfig()), KERNEL_VERSION, ARENA_VERSION,
         {"name": profile.workload, "traffic_sha256": traffic, "seed": profile.seed,
          "shared_prefix_fraction": profile.shared_prefix_fraction,
-         "prefix_reuse": profile.workload in {"prefix", "multi_turn", "soak"},
+         "prefix_reuse": profile.to_dict()["prefix_reuse"],
          "dataset": profile.quality_dataset_identity},
         profile.ttft_budget_ms, profile.decode_gap_budget_ms,
         profile.max_queue_wait_ms, profile.max_service_gap_ms)

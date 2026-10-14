@@ -20,6 +20,7 @@ def main() -> None:
         revision=request["revision"],
         quantize=bool(request["quantize"]),
         group_size=64,
+        bits=request.get("bits", 4),
     )
 
 

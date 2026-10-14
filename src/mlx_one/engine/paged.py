@@ -194,6 +194,37 @@ class PagedKVCache(BlockKVCache):
         return True
 
 
+class PagedKVComponent(PagedKVCache):
+    """Hybrid attention owner; carries stay outside the arena."""
+    kind = "full_kv"
+
+    @property
+    def committed_position(self):
+        return self.offset
+
+    def capabilities(self):
+        from mlx_one.engine.components import ComponentCapabilities
+
+        return ComponentCapabilities(can_batch=True, can_page=True, can_snapshot=True,
+                                     can_share_prefix=True, can_trim=True, transition_math=True)
+
+    def empty(self):
+        return PagedKVComponent(self.pool, layer_id=self.layer_id, dtype=self.dtype)
+
+    def dispose(self):
+        self.reset()
+
+    def validate(self, spec):
+        if spec.kind != self.kind or spec.layer_id != self.layer_id or self.offset < 0:
+            raise ValueError("hybrid page topology mismatch")
+        for ref in self._blocks:
+            layout = ref.block.layout
+            if (layout.num_kv_heads != spec.num_kv_heads
+                    or layout.head_dim != spec.key_head_dim or layout.key_dtype != self.dtype
+                    or spec.dtype and self.dtype != spec.dtype or self.bits is not None):
+                raise ValueError("hybrid page layout or precision mismatch")
+
+
 class PagedBatchCache:
     def __init__(self, rows, widths, metrics):
         self.rows, self.widths, self.metrics = rows, widths, metrics
@@ -232,7 +263,8 @@ class PagedRunner(BatchedDenseRunner):
         from mlx_one.engine.cache import CacheBundle
         from mlx_one.engine.reporting import tensor_dtypes
 
-        dtype = tensor_dtypes(self.bundle.model.parameters())[0]
+        dtype = next(d for d in tensor_dtypes(self.bundle.model.parameters())
+                     if d in {"float16", "bfloat16"})
         return CacheBundle(tuple(PagedKVCache(self.contract_pool, layer_id=i, dtype=dtype)
                                  for i in range(self.bundle.model.config.num_hidden_layers)))
 
@@ -250,6 +282,9 @@ class PagedRunner(BatchedDenseRunner):
         from mlx_one.engine.modes import validate_mode
 
         validate_mode(bundle, build_cache_plan(bundle), "paged")
+        from mlx_one.engine.adapters import native_adapter
+
+        self.adapter = native_adapter(bundle, allow_bfloat16=True)
 
     def execute(self, requests):
         import mlx.core as mx
@@ -321,7 +356,7 @@ class PagedRunner(BatchedDenseRunner):
                                 for r in requests])
                 positions = mx.array([list(range(r.cache[0].offset, r.cache[0].offset + width))
                                       for r in requests])
-                output = first.bundle.model(ids, cache=packed, position_ids=positions)
+                output = self.adapter.forward(ids, cache=packed, position_ids=positions)
                 logits = []
                 for i, n in enumerate(widths):
                     begin = 0 if requests[i].return_all_logits else n - 1

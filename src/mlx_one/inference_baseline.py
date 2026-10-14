@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from mlx_one.engine.modes import resolve_backend
+from mlx_one.p1_profiles import CHECKPOINTS as P1_CHECKPOINTS
 
 CHECKPOINTS = {
     "qwen": ("Qwen/Qwen2.5-0.5B", "060db6499f32faf8b98477b0a26969ef7d8b9987"),
@@ -25,6 +26,7 @@ CHECKPOINTS = {
 }
 CHECKPOINT_CONTEXTS = {"Qwen/Qwen2.5-0.5B": 32768, "Qwen/Qwen2.5-1.5B": 131072,
                        "Qwen/Qwen2.5-3B": 32768, "mlx-community/LFM2-350M-4bit": 128000}
+CHECKPOINT_CONTEXTS.update({c.model_id: c.context_tokens for c in P1_CHECKPOINTS.values()})
 TOLERANCES = {"float32": (1e-4, 1e-4), "float16": (1e-2, 1e-2), "bfloat16": (5e-2, 1e-2)}
 
 
@@ -80,6 +82,12 @@ class BaselineProfile:
     max_service_gap_ms: float | None = None
     quality_manifest: str | None = None
     quality_dataset_identity: dict | None = None
+    checkpoint_path: str | None = None
+    qualification_track: str | None = None
+    serial_run: str | None = None
+    b1_run: str | None = None
+    no_prefix_run: str | None = None
+    reuse_prefix: bool | None = None
 
     def __post_init__(self) -> None:
         if not self.model_id or not re.fullmatch(r"[0-9a-fA-F]{40,64}", self.revision):
@@ -117,7 +125,8 @@ class BaselineProfile:
         if self.workload == "peak_calibration" and self.inference_mode not in {
                 "paged", "experimental_hybrid_batch", "experimental_dense_batch"}:
             raise BaselineError("peak calibration requires explicit optimized execution")
-        if self.workload == "lifecycle" and self.inference_mode != "experimental_hybrid_batch":
+        if self.workload == "lifecycle" and self.inference_mode not in {
+                "experimental_hybrid_batch", "paged"}:
             raise BaselineError("native lifecycle profiles require explicit hybrid mode")
         if self.workload == "microbench" and self.inference_mode != "paged":
             raise BaselineError("direct attention microbenchmarks require explicit paged mode")
@@ -163,7 +172,7 @@ class BaselineProfile:
         if self.workload not in {"baseline", "prefix", "long", "parity", "batching", "turnover",
                                  "mixed", "cancellation", "slow_consumer", "microbench",
                                  "quality", "pressure", "soak", "multi_turn",
-                                 "lifecycle", "peak_calibration"}:
+                                 "lifecycle", "peak_calibration", "p0_prefix"}:
             raise BaselineError("unknown baseline workload")
         if (self.atol is None) != (self.rtol is None):
             raise BaselineError("override both atol and rtol")
@@ -174,7 +183,10 @@ class BaselineProfile:
     @property
     def profile_id(self) -> str:
         payload = asdict(self)
-        new = {"page_tokens": 32, "kv_bits": None, "duration_seconds": None,
+        new = {"qualification_track": None, "serial_run": None, "b1_run": None,
+               "no_prefix_run": None, "reuse_prefix": None,
+               "checkpoint_path": None, "page_tokens": 32, "kv_bits": None,
+               "duration_seconds": None,
                "shared_prefix_fraction": None, "admission_policy": "deadline",
                "quality_limits": None,
                "leak_budget_bytes": None, "min_decode_tokens_per_second": None, "quality_run": None,
@@ -188,7 +200,7 @@ class BaselineProfile:
                "pressure_test_ceiling_bytes": None, "memory_tolerances": None}
         advanced = (self.inference_mode in {"paged", "experimental_hybrid_batch"}
                     or self.workload in {"microbench", "quality", "pressure", "soak",
-                                        "multi_turn", "lifecycle", "peak_calibration"}
+                                        "multi_turn", "lifecycle", "peak_calibration", "p0_prefix"}
                     or any(payload[k] != v for k, v in new.items()))
         if not advanced:
             for key in new:
@@ -199,7 +211,8 @@ class BaselineProfile:
     def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "profile_id": self.profile_id, "offline": True,
                 "temperature": 0, "speculation": False,
-                "prefix_reuse": self.workload in {"prefix", "multi_turn", "soak"},
+                "prefix_reuse": self.reuse_prefix if self.reuse_prefix is not None else
+                    self.workload in {"prefix", "multi_turn", "soak", "p0_prefix"},
                 "tolerances": TOLERANCES}
 
 
@@ -258,7 +271,11 @@ def profiles(mode: str, *, models=("qwen", "lfm"), workload="baseline"):
 def source_provenance(root: Path) -> dict[str, Any]:
     """Hash working source as well as HEAD, since a baseline may precede a commit."""
     def git(*args):
-        return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
+        try:
+            return subprocess.check_output(
+                ["git", "-C", str(root), *args], text=True, stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.CalledProcessError):
+            return None
 
     digest = hashlib.sha256()
     for parent in (root / "src" / "mlx_one", root / "benchmarks"):
@@ -301,10 +318,31 @@ def validate_identity(profile: BaselineProfile, runtime: dict[str, Any]) -> None
         raise BaselineError("continuous batching capability differs from explicit mode")
     if (bool(caps.get("paged_attention")) != (profile.inference_mode == "paged")
             or bool(caps.get("hybrid_prefix_restore"))
-            != (profile.inference_mode == "experimental_hybrid_batch")):
+            != (profile.inference_mode == "experimental_hybrid_batch"
+                or profile.inference_mode == "paged" and any(c.get("kind") == "conv"
+                    for c in report.get("component_capabilities", [])))):
         raise BaselineError("capability differs from selected explicit execution path")
-    if profile.execution_dtype and scope["weight_precision"] != profile.execution_dtype:
-        raise BaselineError("actual weight precision differs from explicit execution dtype")
+    if profile.qualification_track == "p1":
+        contract = report.get("execution_contract", {})
+        quantization = contract.get("quantization", {})
+        modules = contract.get("modules", [])
+        policy = contract.get("floating_policy") or {}
+        if (quantization.get("bits") != 8 or quantization.get("group_size") != 64
+                or quantization.get("mode", "affine") != "affine" or not modules
+                or any(m.get("bits") != 8 or m.get("group_size") != 64
+                       or m.get("mode") != "affine" or m.get("scale_dtype") != "float16"
+                       for m in modules)
+                or policy.get("dtype") != "float16"
+                or policy.get("quantized_payload_preserved") is not True):
+            raise BaselineError(
+                "P1 requires observed affine INT8/group64 with explicit FP16 policy")
+    if profile.execution_dtype:
+        contract = report.get("execution_contract", {})
+        expected_weights = (",".join(sorted((profile.execution_dtype, "uint32")))
+                            if contract.get("quantization", {}).get("bits") == 8
+                            else profile.execution_dtype)
+        if scope["weight_precision"] != expected_weights:
+            raise BaselineError("actual weight precision differs from explicit execution dtype")
 
 
 def percentile(values, fraction):
@@ -324,10 +362,24 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     for row in warm:
         wall_groups.setdefault(row["group_id"], []).append(row)
     aggregate = []
+    decode_aggregate = []
     for group in wall_groups.values():
         elapsed = max(r["ended"] for r in group) - min(r["started"] for r in group)
         aggregate.append(sum(r["generated_tokens"] for r in group) / elapsed if elapsed else None)
+        spans = []
+        for row in group:
+            metrics = row.get("metrics", {})
+            times = metrics.get("model_token_times_ms") or ()
+            started = metrics.get("model_generation_started_at")
+            if started is None or len(times) < 2:
+                spans = []
+                break
+            spans.append((started + times[0] / 1000, started + times[-1] / 1000, len(times) - 1))
+        duration = max((s[1] for s in spans), default=0) - min(
+            (s[0] for s in spans), default=0)
+        decode_aggregate.append(sum(s[2] for s in spans) / duration if duration > 0 else None)
     return {
+        "aggregate_decode_tokens_per_second_by_group": decode_aggregate,
         "completed": len(valid), "failed": sum(
             r.get("status") not in {"completed", "cancelled_expected",
                                     "deadline_expected", "stalled_expected"}

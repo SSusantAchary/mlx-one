@@ -65,7 +65,7 @@ def test_native_conversion_emits_shard_index_and_provenance(monkeypatch, tmp_pat
     assert config["torch_dtype"] == "bfloat16"
     assert "quantization" not in config
     assert index["weight_map"] == {"model.weight": "model-00001-of-00001.safetensors"}
-    assert provenance["converter"] == "mlx-one-native"
+    assert provenance["converter"] == "mlx-one-native-v2"
     assert saved
 
 

@@ -13,6 +13,7 @@ import time
 from dataclasses import fields
 from pathlib import Path
 
+from mlx_one.engine.selection import host_identity, source_identity
 from mlx_one.inference_baseline import BaselineError, BaselineProfile, summarize, validate_identity
 
 
@@ -34,18 +35,42 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "quantized-attention-correctness.json", "held-out-quality.json", "traffic.json",
                  "tokenization.json", "actor-events.jsonl", "fairness.json", "lifecycle.json",
                  "peak-calibration.json", "direct-stall-probe.json", "pressure-cycles.json",
-                 "shutdown.json", "measurement.json"):
+                 "shutdown.json", "measurement.json", "p0-prefix.json", "gate-p1.json"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",
                                     sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                                     media_type="application/json")
             artifacts.append(reference.to_dict())
-    result = {"schema_version": "native-inference-qualification-v2", "backend": "mlx-one-native",
+    contract = metadata.pop("execution_contract", None)
+    runtime_path = output / "runtime.json"
+    if contract is None and runtime_path.is_file():
+        runtime = json.loads(runtime_path.read_text())
+        observed = runtime.get("inference", runtime)
+        contract = observed.get("execution_contract")
+        metadata.setdefault("compatibility_digest", observed.get("compatibility_digest"))
+    manifest_path = output / "manifest.json"
+    if manifest_path.is_file():
+        from mlx_one.inference_qualification import workload_envelope
+
+        config = json.loads(manifest_path.read_text())["profile"]
+        item = BaselineProfile(**{f.name: config[f.name] for f in fields(BaselineProfile)
+                                  if f.name in config})
+        metadata.setdefault("workload_envelope", workload_envelope(item))
+    p1 = output / "gate-p1.json"
+    p1_passed = p1.is_file() and json.loads(p1.read_text()).get("status") == "passed"
+    int8 = (contract or {}).get("quantization", {}).get("bits") == 8
+    result = {"execution_contract": contract,
+              "schema_version": "native-inference-qualification-v4", "backend": "mlx-one-native",
               "scope": scope, "feature": feature, "status": parity["status"],
               "correctness_passed": parity["status"] == "passed",
-              "performance_qualified": gate is not None and gate.get("status") == "passed",
-              "artifacts": artifacts, "qualification_promoted": False, **metadata}
+              "performance_qualified": (gate is not None and gate.get("status") == "passed"
+                                        and (not int8 or p1_passed)),
+              "artifacts": artifacts, "qualification_promoted": False,
+              "validation_kind": "native-hardware", **metadata}
+    if p1.is_file():
+        for reference in json.loads(p1.read_text()).get("reference_artifacts", []):
+            artifacts.append(reference)
     dependency = output / "quality-reference.json"
     if dependency.is_file():
         reference = json.loads(dependency.read_text())
@@ -140,7 +165,7 @@ async def stream_request(client, profile, messages, *, phase, group, index, reco
         if not finished or not done or metrics is None:
             raise BaselineError("stream omitted terminal metrics or completion marker")
         model_times = metrics.get("model_token_times_ms")
-        if model_times is None or metrics.get("execution_observer") != "synchronized-forward-v1":
+        if model_times is None or metrics.get("execution_observer") != "synchronized-forward-v2":
             raise BaselineError("worker did not supply model-token observations")
         ended = time.perf_counter()
         return {
@@ -255,6 +280,20 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
             memory = scheduler.execute(reconcile)
             return {"request": result, "memory": memory}
 
+        if profile.workload == "p0_prefix":
+            from mlx_one.p0_qualification import prefix_checks
+
+            measured = await prefix_checks(client, bundle, engine, scheduler, profile)
+            runtime = (await client.get("/v1/runtime")).json()
+            validate_identity(profile, runtime)
+            write_json(output / "runtime.json", runtime)
+            write_json(output / "tokenization.json", [
+                {"actual_rendered_tokens": len(ids)} for ids in measured["rendered_token_ids"]])
+            write_json(output / "p0-prefix.json", measured)
+            write_json(output / "summary.json", measured)
+            if measured["status"] == "failed":
+                raise BaselineError("P0 prefix correctness or warm latency gate failed")
+            return measured["requests"]
         initial_probe = await soak_probe("initial") if profile.duration_seconds else None
         if profile.workload in {"pressure", "soak"}:
             from mlx_one.stress_qualification import bounded_pressure_recovery
@@ -281,8 +320,8 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
                         handle.write(json.dumps(row) + "\n")
                 runtime = (await client.get("/v1/runtime")).json()
                 report = runtime["inference"]
-                report["scope"]["hardware"] = json.dumps(manifest["hardware"], sort_keys=True)
-                report["scope"]["source_revision"] = manifest["source"]["source_sha256"]
+                report["scope"]["hardware"] = host_identity()
+                report["scope"]["source_revision"] = source_identity()
                 validate_identity(profile, runtime)
                 write_json(output / "runtime.json", runtime)
                 cache = runtime.get("cache") or {}
@@ -344,8 +383,8 @@ async def traffic(url, bundle, engine, scheduler, manifest, profile, output):
             runtime = (await client.get("/v1/runtime")).json()
             report = runtime["inference"]
             # Fill provenance unavailable to a general-purpose HTTP runtime reporter.
-            report["scope"]["hardware"] = json.dumps(manifest["hardware"], sort_keys=True)
-            report["scope"]["source_revision"] = manifest["source"]["source_sha256"]
+            report["scope"]["hardware"] = host_identity()
+            report["scope"]["source_revision"] = source_identity()
             write_json(output / "runtime.json", runtime)
             validate_identity(profile, runtime)
             with (output / "time-series.jsonl").open("a") as handle:
@@ -432,7 +471,8 @@ def execute(manifest):
     listener = None
     try:
         started = time.perf_counter()
-        bundle = scheduler.execute(lambda: manager.load(profile.model_id, revision=profile.revision,
+        bundle = scheduler.execute(lambda: manager.load(
+            profile.checkpoint_path or profile.model_id, revision=profile.revision,
                                                         offline=True))
         from mlx_one.engine.modes import configure_execution_dtype
 
@@ -486,6 +526,8 @@ def execute(manifest):
                 scope["cache_precision"] = ",".join(measured["actual_cache_dtypes"])
                 qualification_evidence(output, feature="activation_peak", scope=scope,
                     parity={"status": "passed"}, activation_peak=measured,
+                    execution_contract=native_report(bundle, runtime_owner,
+                        mode=profile.inference_mode)["execution_contract"],
                     compatibility_digest=compatibility_digest(runtime_owner),
                     kernel_version=KERNEL_VERSION, arena_version=ARENA_VERSION)
             return
@@ -502,7 +544,8 @@ def execute(manifest):
             from mlx_one.text import load_text_model
 
             def reload_checkpoint():
-                fresh = load_text_model(profile.model_id, revision=profile.revision, offline=True)
+                fresh = load_text_model(profile.checkpoint_path or profile.model_id,
+                                        revision=profile.revision, offline=True)
                 configure_execution_dtype(fresh, profile.execution_dtype)
                 return fresh
             measured = scheduler.execute(lambda: hybrid_lifecycle(
@@ -530,8 +573,8 @@ def execute(manifest):
                     cache_type=profile.cache_type, page_tokens=profile.page_tokens,
                     atol=profile.atol, rtol=profile.rtol, seed=profile.seed))
                 report = result["runtime"]
-                report["scope"]["hardware"] = json.dumps(manifest["hardware"], sort_keys=True)
-                report["scope"]["source_revision"] = manifest["source"]["source_sha256"]
+                report["scope"]["hardware"] = host_identity()
+                report["scope"]["source_revision"] = source_identity()
                 validate_identity(profile, {"inference": report})
                 write_json(output / "parity.json", result)
                 write_json(output / "cleanup.json", result["cleanup"])
@@ -566,8 +609,8 @@ def execute(manifest):
             max_prefill_tokens=profile.max_prefill_tokens,
             admission_policy=profile.admission_policy,
             cache_block_size=profile.page_tokens,
-            cache_prompt=profile.workload in {"prefix", "multi_turn", "soak"},
-            cache_idle_slots=profile.workload in {"prefix", "multi_turn", "soak"},
+            cache_prompt=profile.to_dict()["prefix_reuse"],
+            cache_idle_slots=profile.to_dict()["prefix_reuse"],
             cache_type_k=profile.cache_type, cache_type_v=profile.cache_type,
             cache_memory_budget_bytes=profile.cache_capacity_bytes,
             prefix_cache_bytes=profile.prefix_cache_budget_bytes,
@@ -679,6 +722,11 @@ def execute(manifest):
         rates = summary.get("aggregate_output_tokens_per_second_by_group", [])
         summary["warm_aggregate_output_tokens_per_second"] = (
             sum(rates) / len(rates) if rates and all(r is not None for r in rates) else None)
+        from mlx_one.engine.adapters import execution_contract
+
+        observed_contract = execution_contract(bundle, runtime_owner.plan, profile.inference_mode)
+        summary["identity"].update({"quantization_digest": observed_contract["quantization_digest"],
+            "floating_policy": observed_contract["floating_policy"]})
         summary["prefix_hits"] = engine.cache_stats().get("prefix_hits")
         summary["prefix_tokens_reused"] = engine.cache_stats().get("prefix_tokens_reused")
         write_json(output / "summary.json", summary)
@@ -704,7 +752,7 @@ def execute(manifest):
             write_json(output / "summary.json", summary)
             gate = evaluate_gate_c(profile, summary, traces, parity, reference)
             write_json(output / "gate-c.json", gate)
-            if gate["status"] == "failed":
+            if gate["status"] == "failed" and profile.qualification_track != "p1":
                 raise BaselineError("declared Gate C acceptance failed")
             if parity["status"] != "passed":
                 raise BaselineError("batched logits parity failed")
@@ -724,6 +772,28 @@ def execute(manifest):
         write_json(output / "cleanup.json", cleanup)
         if cleanup.get("active_handles") or cleanup.get("reserved_bytes"):
             raise BaselineError("baseline leaked live handles or reservations")
+        summary["cleanup_passed"] = not (cleanup.get("active_handles")
+                                            or cleanup.get("reserved_bytes"))
+        if profile.qualification_track == "p1":
+            from mlx_one.engine.qualification import execution_parity
+            from mlx_one.inference_qualification import load_reference
+            from mlx_one.p1_qualification import evaluate_p1
+
+            parity = scheduler.execute(lambda: execution_parity(bundle,
+                mode=profile.inference_mode, batch_size=profile.slots, count=32,
+                chunk_size=profile.chunk_tokens, page_tokens=profile.page_tokens)) if (
+                profile.inference_mode != "reference_dense") else {"status": "pending"}
+            write_json(output / "parity.json", parity)
+            trace_path = output / "forward-traces.jsonl"
+            traces = [json.loads(line) for line in trace_path.read_text().splitlines()] if (
+                trace_path.exists()) else []
+            summary["max_runnable_service_gap_ms"] = fairness.get("max_runnable_service_gap_ms")
+            p1_gate = evaluate_p1(profile, summary, traces, parity,
+                serial=load_reference(profile.serial_run) if profile.serial_run else None,
+                b1=load_reference(profile.b1_run) if profile.b1_run else None,
+                no_prefix=load_reference(profile.no_prefix_run) if profile.no_prefix_run else None)
+            write_json(output / "gate-p1.json", p1_gate)
+            write_json(output / "summary.json", summary)
         if profile.inference_mode in {"paged", "experimental_hybrid_batch"}:
             from mlx_one.inference_qualification_worker import advanced_checks
 
@@ -747,10 +817,12 @@ def execute(manifest):
                                        parity=parity, **metadata)
         if profile.inference_mode == "experimental_dense_batch":
             feature = "batched_dense_decode" if profile.slots > 1 else "dense_execution"
-            qualification_evidence(output, feature=feature, scope=scope, parity=parity, gate=gate)
-            if gate["status"] == "passed":
+            final_gate = p1_gate if profile.qualification_track == "p1" else gate
+            qualification_evidence(output, feature=feature, scope=scope,
+                                   parity=parity, gate=final_gate)
+            if final_gate["status"] == "passed":
                 qualification_evidence(output, feature="continuous_batching", scope=scope,
-                                       parity=parity, gate=gate)
+                                       parity=parity, gate=final_gate)
     finally:
         if server is not None:
             server.should_exit = True

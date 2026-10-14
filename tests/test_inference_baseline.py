@@ -147,7 +147,7 @@ def test_sse_metrics_and_terminal_failures_without_network():
     from mlx_one.inference_baseline_worker import stream_request
 
     metrics = {"model_token_times_ms": [10, 20, 40],
-               "execution_observer": "synchronized-forward-v1", "generated_tokens": 3}
+               "execution_observer": "synchronized-forward-v2", "generated_tokens": 3}
     events = [
         {"choices": [{"delta": {"content": "hello"}, "finish_reason": None}]},
         {"choices": [{"delta": {"content": " world"}, "finish_reason": None}]},

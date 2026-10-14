@@ -149,6 +149,9 @@ class BatchedDenseRunner(CausalLMRunner):
         from mlx_one.engine.modes import validate_mode
 
         validate_mode(bundle, build_cache_plan(bundle), "experimental_dense_batch")
+        from mlx_one.engine.adapters import native_adapter
+
+        self.adapter = native_adapter(bundle)
         self._validated_bundle = bundle
 
     def make_cache(self):
@@ -185,7 +188,8 @@ class BatchedDenseRunner(CausalLMRunner):
         from mlx_one.engine.contracts import RequestKind
 
         return RunnerCapabilities(frozenset({RequestKind.TEXT}), batchable=True,
-                                  chunked_prefill=True, family="qwen2",
+                                  chunked_prefill=True, family=(self.adapter.spec.architecture
+                                      if hasattr(self, "adapter") else "native"),
                                   supported_state_kinds=("full_kv",),
                                   supports_batched_decode=True, supports_batched_prefill=True)
 
@@ -217,9 +221,8 @@ class BatchedDenseRunner(CausalLMRunner):
                                             request.cache[0].offset, len(request.token_ids)))
         plan = BatchPlan(tuple(slots), sum(len(r.token_ids) for r in requests))
         config = getattr(first.bundle.model.config, "text_config", first.bundle.model.config)
-        heads = int(config.num_key_value_heads)
-        dim = int(getattr(config, "head_dim", 0)
-                  or config.hidden_size // config.num_attention_heads)
+        heads = self.adapter.spec.kv_heads
+        dim = self.adapter.spec.head_dim
         per_token = len(first.cache) * heads * dim * 4
         replacement_tokens = sum(((r.cache[0].offset + len(r.token_ids) + 255) // 256) * 256
                                  for r in requests)
@@ -255,7 +258,7 @@ class BatchedDenseRunner(CausalLMRunner):
                         values[row:row + 1, :, history - length:history, :] = (
                             old_values[:, :, :length, :])
                 packed.append(_PackedCache(keys, values, history))
-            output = first.bundle.model(mx.array(ids), cache=tuple(packed),
+            output = self.adapter.forward(mx.array(ids), cache=tuple(packed),
                                         attention_mask=mx.array(mask),
                                         position_ids=mx.array(positions))
             mx.eval(output.logits)
@@ -305,6 +308,9 @@ class BatchedDenseRunner(CausalLMRunner):
                            "padded_tokens": count * width,
                            "padding_efficiency": plan.total_scheduled_tokens / (count * width),
                            "transient_reserved_bytes": transient,
+                           "packed_history_bytes": per_token * count * history,
+                           "replacement_cache_bytes": per_token * replacement_tokens,
+                           "adapter_version": self.adapter.spec.adapter_version,
                            "duration_ms": (time.perf_counter() - started) * 1000}
         return RunnerOutput(tuple(r.request_id for r in requests),
                             tuple(compact_logits),

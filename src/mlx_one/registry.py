@@ -259,7 +259,7 @@ class InferenceFeatureRegistry:
         source = Path(result_path)
         raw = source.read_bytes()
         result = json.loads(raw)
-        if (result.get("schema_version") != "native-inference-qualification-v2"
+        if (result.get("schema_version") != "native-inference-qualification-v4"
                 or result.get("backend") != "mlx-one-native"
                 or result.get("scope") != asdict(scope)
                 or result.get("feature") != feature
@@ -282,9 +282,105 @@ class InferenceFeatureRegistry:
                 raise RegistryError("native qualification backing artifact checksum mismatch")
             evidence.append(ArtifactRef(uri=str(path), kind=artifact["kind"], sha256=digest,
                                         media_type=artifact.get("media_type")))
+        from mlx_one.engine.adapters import ADAPTER_VERSION
+
+        contract = result.get("execution_contract") or {}
+        if (contract.get("adapter_version") != ADAPTER_VERSION
+                or contract.get("topology_digest") != scope.topology_digest
+                or contract.get("execution_mode") != scope.execution_path
+                or not contract.get("quantization_digest") or not contract.get("components")):
+            raise RegistryError("current observed native execution contract is required")
+        self._validate_native_provenance(result, scope, evidence)
+        if (status is InferenceFeatureStatus.PERFORMANCE_QUALIFIED
+                or feature in {"quantized_paged_kv", "long_context"}):
+            from mlx_one.engine.envelope import QualificationEnvelope
+
+            try:
+                QualificationEnvelope.from_mapping(result.get("workload_envelope"))
+            except ValueError as exc:
+                raise RegistryError("current complete workload envelope is required") from exc
         record = InferenceFeatureRecord(feature, scope, status, tuple(evidence))
         self._records[(feature, scope)] = record
         return record
+
+    @staticmethod
+    def _validate_native_provenance(result, scope, evidence):
+        """Synthetic and legacy artifacts cannot stand in for checkpoint/hardware proof."""
+        import re
+
+        documents = {}
+        origin = Path(evidence[0].uri).parent
+        for artifact in evidence[1:]:
+            name = Path(artifact.uri).name
+            if name in {"measurement.json", "checkpoint.json", "manifest.json", "gate-c.json",
+                        "gate-d.json", "gate-hybrid-performance.json", "gate-e.json",
+                        "held-out-quality.json", "retrieval.json", "lifecycle.json",
+                        "gate-p1.json"}:
+                if (name not in {"held-out-quality.json", "retrieval.json"}
+                        and Path(artifact.uri).parent != origin):
+                    continue
+                document = json.loads(Path(artifact.uri).read_text())
+                if name in documents and documents[name] != document:
+                    raise RegistryError("duplicate native provenance artifact")
+                documents[name] = document
+        measurement = documents.get("measurement.json", {})
+        checkpoint = documents.get("checkpoint.json", {})
+        manifest = documents.get("manifest.json", {})
+        profile = manifest.get("profile", {})
+        expected_precision = {"f16": "float16", "bf16": "bfloat16",
+                              "q4_0": "float16,uint8", "q8_0": "float16,uint8"}.get(
+                                  profile.get("cache_type"))
+        files = checkpoint.get("files", {})
+        native = (result.get("validation_kind") == "native-hardware"
+                  and measurement.get("backend") == "mlx-metal"
+                  and measurement.get("metal_available") is True
+                  and checkpoint.get("revision") == scope.revision
+                  and profile.get("model_id") == scope.model_id
+                  and profile.get("revision") == scope.revision
+                  and profile.get("inference_mode") == scope.execution_path
+                  and expected_precision == scope.cache_precision
+                  and bool(files) and any(n.endswith(".safetensors") for n in files)
+                  and all(re.fullmatch(r"[0-9a-f]{64}", v) for v in files.values())
+                  and bool(re.fullmatch(r"[0-9a-f]{40}",
+                          manifest.get("source", {}).get("git_revision", "")))
+                  and bool(manifest.get("hardware", {}).get("chip"))
+                  and (manifest.get("hardware", {}).get("memory_bytes") or 0) > 0)
+        if not native:
+            raise RegistryError("native checkpoint and Metal provenance artifacts are required")
+        if (result.get("performance_qualified") is True and
+                result.get("execution_contract", {}).get("quantization", {}).get("bits") == 8):
+            from mlx_one.p1_qualification import P1_CHECKS, P1_GATE_VERSION
+
+            p1 = documents.get("gate-p1.json", {})
+            if (p1.get("schema_version") != P1_GATE_VERSION
+                    or not P1_CHECKS <= p1.get("checks", {}).keys()
+                    or p1.get("status") != "passed" or not p1.get("checks")
+                    or not all(p1["checks"].values())):
+                raise RegistryError("INT8 performance qualification requires measured P1 gates")
+        if result.get("performance_qualified") is True:
+            gates = [documents.get(name, {}) for name in (
+                "gate-c.json", "gate-d.json", "gate-hybrid-performance.json", "gate-p1.json")]
+            if not any(g.get("status") == "passed" and g.get("checks")
+                       and all(g["checks"].values()) for g in gates):
+                raise RegistryError("performance qualification requires measured gate artifacts")
+        if result.get("feature") in {"quantized_paged_kv", "long_context"}:
+            from mlx_one.quality_dataset import quality_coverage
+
+            held_out = documents.get("held-out-quality.json", {})
+            retrieval = documents.get("retrieval.json", {})
+            context = profile.get("context_tokens", 0)
+            if (result.get("quality_kind") != "native-held-out-quality-v1"
+                    or result.get("quality_passed") is not True
+                    or not held_out.get("dataset_identity")
+                    or not quality_coverage(held_out, retrieval, context)["eligible"]):
+                raise RegistryError("public KV/context qualification requires held-out quality")
+        if result.get("feature") == "hybrid_prefix_restore":
+            lifecycle = documents.get("lifecycle.json", {})
+            gate = documents.get("gate-e.json", {})
+            if (lifecycle.get("status") != "passed" or gate.get("status") != "passed"
+                    or not gate.get("checks") or not all(gate["checks"].values())):
+                raise RegistryError("hybrid restoration requires native lifecycle Gate E")
+
 
     def report(self, feature: str, scope: InferenceScope) -> dict[str, object]:
         record = self.find(feature, scope)
@@ -299,6 +395,18 @@ class InferenceFeatureRegistry:
                 valid = False
             if not valid:
                 return {
-                    **record.to_dict(), "status": "experimental", "stale_evidence": True
+                    **record.to_dict(), "status": "experimental", "stale_evidence": True,
+                    "implemented": True, "checkpoint_correctness_passed": False,
+                    "hardware_correctness_passed": False, "performance_qualified": False,
+                    "validation_reason": "native evidence missing or checksum changed"
                 }
-        return record.to_dict()
+        report = record.to_dict()
+        qualified = record.status in {InferenceFeatureStatus.CORRECTNESS_PASSED,
+                                      InferenceFeatureStatus.PERFORMANCE_QUALIFIED}
+        return {**report, "implemented": record.status != InferenceFeatureStatus.NOT_IMPLEMENTED,
+                "checkpoint_correctness_passed": qualified,
+                "hardware_correctness_passed": qualified,
+                "performance_qualified": (
+                    record.status == InferenceFeatureStatus.PERFORMANCE_QUALIFIED),
+                "validation_reason": "matching checksummed native evidence" if qualified else
+                                     "native checkpoint and hardware validation pending"}

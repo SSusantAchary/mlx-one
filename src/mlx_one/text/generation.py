@@ -133,7 +133,10 @@ def stream_chat(
 ) -> Iterator[GenerationChunk]:
     if model.chat_template is None:
         raise ValueError("loaded model has no chat-template layer")
-    prompt = model.chat_template.render(messages, **dict(template_options or {}))
+    prepared = (_cache_handle.metadata.get("prepared_prompt")
+                if _cache_handle is not None else None)
+    prompt = (prepared.text if prepared is not None else
+              model.chat_template.render(messages, **dict(template_options or {})))
     yield from _stream_bundle(
         model,
         prompt,
@@ -243,7 +246,10 @@ def _stream_bundle(
 
     cancelled = is_cancelled or (lambda: False)
     tokenization_started = time.perf_counter()
-    prompt_ids = bundle.tokenizer.encode(prompt)
+    prepared = (_cache_handle.metadata.get("prepared_prompt")
+                if _cache_handle is not None else None)
+    prompt_ids = (list(prepared.token_ids) if prepared is not None else
+                  bundle.tokenizer.encode(prompt))
     if on_execution is not None:
         on_execution({"kind": "tokenization", "duration_ms":
                       (time.perf_counter() - tokenization_started) * 1000})
@@ -260,6 +266,7 @@ def _stream_bundle(
     if any(not value for value in stop_tokens):
         raise ValueError("stop sequences must encode to at least one token")
     pending: list[int] = []
+    pending_times: deque[float] = deque()
     generated: list[int] = []
     decoded = ""
     hold = max((len(value) for value in stop_tokens), default=1)
@@ -310,12 +317,17 @@ def _stream_bundle(
         while start < len(current):
             stop = min(start + width, len(current))
             if (phase == "prefill" and _cache_runtime is not None
-                    and _cache_runtime.config.backend == "hybrid" and stop == len(current)):
+                    and getattr(_cache_runtime, "hybrid_state", False) and stop == len(current)):
                 page = _cache_runtime.config.block_size_tokens
                 boundary = (len(prompt_ids) - 1) // page * page
                 aligned = boundary - cache[0].offset
                 if 0 < aligned < stop - start:
                     stop = start + aligned
+            boundary = (_cache_handle.metadata.get("semantic_boundary", 0)
+                        if _cache_handle is not None and phase == "prefill" else 0)
+            relative = boundary - len(cached)
+            if start < relative < stop:
+                stop = relative
             part = tuple(current[start:stop])
             start = stop
             forward_started = time.perf_counter()
@@ -334,7 +346,7 @@ def _stream_bundle(
                 staged = None
                 try:
                     with ExitStack() as execution:
-                        if _cache_runtime is not None and _cache_runtime.pressure is not None:
+                        if _cache_runtime is not None:
                             from mlx_one.engine.pressure import execution_forecast
 
                             amount = execution_forecast(
@@ -359,6 +371,11 @@ def _stream_bundle(
             if _cache_handle is not None:
                 _cache_handle.computed_tokens = cache[0].offset
                 _cache_runtime.reconcile(_cache_handle)
+                if boundary and cache[0].offset == boundary and not cancelled():
+                    fingerprint = _cache_handle.metadata.get("fingerprint")
+                    if fingerprint is not None:
+                        _cache_runtime.stage_prefix(_cache_handle, fingerprint,
+                                                    tuple(prompt_ids[:boundary]))
             if on_execution is not None:
                 elapsed_ms = (time.perf_counter() - forward_started) * 1000
                 on_execution({"kind": "forward", "phase": phase,
@@ -369,7 +386,11 @@ def _stream_bundle(
         if cancelled():
             return
         if on_cache_update is not None and produced == 0 and not prompt_cache_published:
-            on_cache_update(tuple(prompt_ids), cache)
+            staged = (_cache_runtime.publish_staged_prefix(
+                _cache_handle, maximum_entries=_cache_handle.metadata.get("maximum_prefix_entries"))
+                if _cache_handle is not None else False)
+            if not staged:
+                on_cache_update(tuple(prompt_ids), cache)
             prompt_cache_published = True
         logits = output.logits[0, -1]
         using_forced = bool(forced_tokens)
@@ -406,8 +427,6 @@ def _stream_bundle(
                 finish_reason = "stop"
                 stopped = True
                 break
-            if on_execution is not None:
-                on_execution({"kind": "token", "at": time.perf_counter()})
             tokens.append(candidate)
             produced += 1
             opened = bool(
@@ -432,6 +451,7 @@ def _stream_bundle(
                     forced_tokens.extend(think_close)
                     closing_reasoning = True
             pending.append(candidate)
+            pending_times.append(time.perf_counter())
             matched = next(
                 (
                     value
@@ -443,12 +463,17 @@ def _stream_bundle(
             )
             if matched is not None:
                 del pending[-len(matched) :]
+                for _ in matched:
+                    pending_times.pop()
                 finish_reason = "stop"
                 stopped = True
                 break
             while len(pending) >= hold:
                 emitted += 1
                 generated.append(pending.pop(0))
+                sampled_at = pending_times.popleft()
+                if on_execution is not None:
+                    on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
                 current_text = bundle.tokenizer.decode(generated)
                 piece = (
                     current_text[len(decoded) :]
@@ -463,6 +488,9 @@ def _stream_bundle(
         if yield_steps and not step_yielded:
             yield GenerationChunk(None, "", emitted)
     for current_token in pending:
+        sampled_at = pending_times.popleft()
+        if on_execution is not None:
+            on_execution({"kind": "token", "at": sampled_at, "token_id": current_token})
         emitted += 1
         generated.append(current_token)
         current_text = bundle.tokenizer.decode(generated)

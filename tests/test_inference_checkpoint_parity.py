@@ -88,3 +88,15 @@ def test_pinned_hybrid_serialized_lifecycle_and_checkpoint_reload(tmp_path):
     assert result["status"] == "passed", result
     assert all(c["active_handles"] == 0 and c["reserved_bytes"] == 0
                for c in result["cleanup"])
+
+
+def test_p0_pinned_dense_restoration_oracle():
+    from mlx_one.engine.modes import configure_execution_dtype
+    from mlx_one.p0_qualification import dense_snapshot_parity
+
+    model_id, revision = CHECKPOINTS["qwen"]
+    bundle = load_text_model(model_id, revision=revision, offline=True)
+    configure_execution_dtype(bundle, "float16")
+    tokens = bundle.tokenizer.encode("A stable system prefix. " * 16 + "A divergent suffix.")
+    result = dense_snapshot_parity(bundle, tokens, len(tokens) // 2)
+    assert result["passed"], result
