@@ -379,8 +379,10 @@ def export_matrix(results, output):
                         validate_integrity(directory,
                                            required={"measurement.json", "supervision.json"})
                         measurement = json.loads(measurement_path.read_text())
+                        from mlx_one.p1_qualification import P1_GATE_VERSION
+
                         if (result.get("schema_version") != (
-                                "native-p1-gate-v1" if gate == "p1" else "native-gate-v2")
+                                P1_GATE_VERSION if gate == "p1" else "native-gate-v2")
                                 or not result.get("checks") or not all(result["checks"].values())
                                 or status != "completed"
                                 or measurement.get("backend") != "mlx-metal"

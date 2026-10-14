@@ -306,6 +306,8 @@ def test_optimized_parity_profiles_with_cpu_math(native, mode, monkeypatch):
                               count=6, chunk_size=7)
     assert result["status"] == "passed", result
     assert all(row["reused_tokens"] > 0 for row in result["prefix_restoration"])
+    assert all(row["cached_single_request"]["within_tolerance"]
+               for row in result["prefix_restoration"])
     assert result["seeded_rng_isolation"]
 
 

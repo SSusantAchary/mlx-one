@@ -1,5 +1,7 @@
 """Opt-in native P1 checkpoints and existing Metal specializations, offline only."""
+import json
 import os
+from pathlib import Path
 
 import pytest
 
@@ -34,6 +36,12 @@ def test_native_p1_serial_dense_paged_full_state(checkpoint, size, page, paged):
         assert attention.q_norm is not None and attention.k_norm is not None
     result = execution_parity(bundle, mode=mode, batch_size=size, count=32,
         page_tokens=page, prompt="Native INT8 shared prefix and divergent suffixes. " * 32)
+    output = os.environ.get("MLX_ONE_P1_RESULTS_DIR")
+    if output:
+        directory = Path(output)
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / f"parity-{checkpoint}-{paged}-{page}-{size}.json").write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n")
     assert result["status"] == "passed", result
     assert result["prefix_isolation_passed"] and result["seeded_rng_isolation"]
     assert result["cleanup"]["active_handles"] == result["cleanup"]["reserved_bytes"] == 0

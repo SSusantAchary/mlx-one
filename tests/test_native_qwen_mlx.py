@@ -205,3 +205,22 @@ def test_qwen2_vl_shapes_positions_and_feature_insertion() -> None:
     assert output.vision_hidden_states.shape == (4, config.vision_config.embed_dim)
     assert output.position_ids.shape == (3, 1, 3)
     assert output.rope_deltas.shape == (1, 1)
+
+
+def test_explicit_fp16_decode_is_invariant_to_neutral_padding_mask():
+    mx.random.seed(37)
+    config = qwen3_config(hidden_size=128, intermediate_size=256, head_dim=128,
+                          num_attention_heads=2, num_key_value_heads=1)
+    model = Qwen3ForCausalLM(config)
+    model.set_dtype(mx.float16)
+    for layer in model.model.layers:
+        layer.self_attn._mlx_one_activation_dtype = "float16"
+    caches = [model.make_cache() for _ in range(2)]
+    prefix = mx.array([[1, 2, 3, 4, 5]])
+    for cache in caches:
+        mx.eval(model(prefix, cache=cache).logits)
+    ids = mx.array([[6]])
+    a = model(ids, cache=caches[0]).logits
+    b = model(ids, cache=caches[1], attention_mask=mx.ones((1, 6), dtype=mx.int32)).logits
+    mx.eval(a, b)
+    assert bool(mx.allclose(a, b, atol=1e-4, rtol=1e-4).item())

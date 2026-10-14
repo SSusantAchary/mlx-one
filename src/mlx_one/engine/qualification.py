@@ -196,6 +196,13 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
         published = target.publish_prefix(donor, fp, ids)
         if target.hybrid_state:
             published = target.hybrid_prefix.preview(fp, ids + tuple(fixture[:3])) > 0
+        dense_donor = None
+        if not target.hybrid_state:
+            dense_donor = oracle.create_handle("independent-prefix-donor",
+                key_type="bf16" if cache_type == "bf16" else "f16",
+                value_type="bf16" if cache_type == "bf16" else "f16")
+            references.append(dense_donor)
+            mx.eval(bundle.model(mx.array([ids]), cache=dense_donor.bundle.entries).logits)
         prefix_rows = []
         for suffix in ((), tuple(fixture[:3])):
             full = ids + suffix
@@ -209,9 +216,27 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
             expected = bundle.model(mx.array([full]), cache=expected_cache.bundle.entries)
             logits = forward([ForwardRequest(bundle, full[reused:], borrower.bundle.entries,
                                              "prefill", full, request_id="prefix-borrower")])[0]
-            prefix_rows.append({"reused_tokens": reused, "avoided_prefill_tokens": reused,
-                                **compare_logits(expected.logits[:, -1:, :], logits,
-                                                 atol=atol, rtol=rtol)})
+            comparison = {"reused_tokens": reused, "avoided_prefill_tokens": reused,
+                          **compare_logits(expected.logits[:, -1:, :], logits,
+                                           atol=atol, rtol=rtol)}
+            if dense_donor is not None:
+                # Distinguish ownership/restore errors from shape-dependent native
+                # full-prefill versus cached-forward arithmetic. The full oracle
+                # comparison above remains the acceptance gate.
+                staged = dense_donor.bundle.clone()
+                try:
+                    if not staged.trim(len(ids) - reused):
+                        raise ValueError("independent dense snapshot cannot trim")
+                    cached = bundle.model(mx.array([full[reused:]]), cache=staged.entries)
+                    mx.eval(cached.logits)
+                    comparison["cached_single_request"] = compare_logits(
+                        cached.logits[:, -1:, :], logits, atol=atol, rtol=rtol)
+                    comparison["full_vs_cached_single_request"] = compare_logits(
+                        expected.logits[:, -1:, :], cached.logits[:, -1:, :],
+                        atol=atol, rtol=rtol)
+                finally:
+                    staged.release()
+            prefix_rows.append(comparison)
             target.release(borrower)
         isolation = {}
         for field in ("namespace", "model_identity", "adapter_identity", "tokenizer_identity",

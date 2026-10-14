@@ -35,7 +35,8 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
                  "quantized-attention-correctness.json", "held-out-quality.json", "traffic.json",
                  "tokenization.json", "actor-events.jsonl", "fairness.json", "lifecycle.json",
                  "peak-calibration.json", "direct-stall-probe.json", "pressure-cycles.json",
-                 "shutdown.json", "measurement.json", "p0-prefix.json", "gate-p1.json"):
+                 "shutdown.json", "measurement.json", "p0-prefix.json", "gate-p1.json",
+                 "controlled-decode.json", "native-tokens.jsonl"):
         path = output / name
         if path.is_file():
             reference = ArtifactRef(uri=str(path.resolve()), kind="native-inference-result",
@@ -506,15 +507,23 @@ def execute(manifest):
             engine.bind_actor(scheduler)
         runtime_owner = scheduler.execute(lambda: engine._cache_manager_for(bundle))
         runtime_owner.harness_only = True
+        native_tokens = []
+        if profile.qualification_track == "p1":
+            def capture_tokens(request_id, tokens):
+                handle = next((h for h in runtime_owner._handles.values()
+                               if h.request_id == request_id), None)
+                prepared = handle.metadata.get("prepared_prompt") if handle else None
+                row = {"request_id": request_id, "generated_token_ids": list(tokens),
+                       "rendered_token_ids": list(prepared.token_ids) if prepared else None}
+                native_tokens.append(row)
+                with (output / "native-tokens.jsonl").open("a") as stream:
+                    stream.write(json.dumps(row) + "\n")
+            engine._qualification_token_sink = capture_tokens
         if profile.workload == "peak_calibration":
             from mlx_one.engine.arena import ARENA_VERSION
             from mlx_one.engine.paged import KERNEL_VERSION
             from mlx_one.engine.reporting import native_report
-            from mlx_one.engine.selection import (
-                compatibility_digest,
-                host_identity,
-                source_identity,
-            )
+            from mlx_one.engine.selection import compatibility_digest
             from mlx_one.peak_calibration import native_peak_calibration
 
             measured = scheduler.execute(lambda: native_peak_calibration(bundle, profile))
@@ -577,6 +586,7 @@ def execute(manifest):
                 report["scope"]["source_revision"] = source_identity()
                 validate_identity(profile, {"inference": report})
                 write_json(output / "parity.json", result)
+                write_json(output / "runtime.json", report)
                 write_json(output / "cleanup.json", result["cleanup"])
                 feature = {"experimental_block": "block_prefix_reuse", "paged": "paged_attention",
                            "experimental_hybrid_batch": "hybrid_prefix_restore"}.get(
@@ -715,6 +725,7 @@ def execute(manifest):
             "real_pressure_cycles": sum(c.get("status") == "passed"
                                          for c in summary.get("pressure_cycles", []))}
         summary["starved_requests"] = fairness["starved_requests"]
+        summary["max_admission_wait_ms"] = fairness["max_admission_wait_ms"]
         from mlx_one.inference_baseline import percentile
 
         summary["queue_wait_p95_ms"] = percentile([r["metrics"]["queue_ms"] for r in rows
@@ -777,7 +788,22 @@ def execute(manifest):
         if profile.qualification_track == "p1":
             from mlx_one.engine.qualification import execution_parity
             from mlx_one.inference_qualification import load_reference
+            from mlx_one.p1_decode import native_decode
             from mlx_one.p1_qualification import evaluate_p1
+
+            controlled = scheduler.execute(lambda: native_decode(bundle, profile))
+            write_json(output / "controlled-decode.json", controlled)
+            summary["controlled_decode"] = controlled
+            summary["comparison_inputs"] = {
+                "traffic_identity": profile.traffic_identity,
+                "rendered_tokens_sha256": hashlib.sha256(json.dumps(
+                    sorted(rendered, key=lambda r: (str(r.get("group")), r.get("index", 0))),
+                    sort_keys=True).encode()).hexdigest(),
+                "generated_tokens_sha256": hashlib.sha256(json.dumps(sorted(
+                    [(r["rendered_token_ids"], r["generated_token_ids"]) for r in native_tokens],
+                    key=lambda r: json.dumps(r)), sort_keys=True).encode()).hexdigest()
+                    if native_tokens and all(r["rendered_token_ids"] is not None
+                                             for r in native_tokens) else None}
 
             parity = scheduler.execute(lambda: execution_parity(bundle,
                 mode=profile.inference_mode, batch_size=profile.slots, count=32,

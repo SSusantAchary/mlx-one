@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
 
-[**Quickstart**](#quick-start) | [**Installation**](#installation) | [**Model guides**](#model-specific-documentation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
+[**Quickstart**](#quick-start) | [**Installation**](#installation) | [**Architecture**](#architecture) | [**Repository summary**](docs/REPOSITORY_SUMMARY.md) | [**Model guides**](#model-specific-documentation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
 
 > [!IMPORTANT]
 > mlx-one is under active development. Native architecture support and model
@@ -34,29 +34,42 @@ MLX is an excellent foundation for machine learning on Apple Silicon, but model
 workflows are often split across separate packages and incompatible task APIs.
 mlx-one is building those pieces as one coherent stack:
 
-```text
-Python API + CLI
-       ↓
-Tasks: generation · embeddings · VLM · ASR · segmentation · tracking · training
-       ↓
-Native model families + shared processors + safe loading
-       ↓
-Evaluation · benchmarking · evidence · qualification
-       ↓
-MLX on Apple Silicon
-```
+The project owns its supported model math directly. Hugging Face supplies
+configuration, tokenizer/processor assets and safe `safetensors` checkpoints.
+
+## Architecture
 
 <p align="center">
-  <a href="mlx-one-stack.png">
-    <img src="mlx-one-stack.png" alt="mlx-one current and target architecture stack" width="1100">
+  <a href="mlx-one_arch.png">
+    <img src="mlx-one_arch.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
   </a>
 </p>
 
-Click the architecture diagram to view it at full resolution.
+Click the diagram to view it at full resolution. It shows current and planned
+architecture: MTP, CPT and RL labels do not establish implemented or qualified
+workflows. Checkpoint, task, precision and device validation are tracked separately.
 
-The project owns its supported model math directly. Hugging Face is used as the
-artifact ecosystem for configuration, tokenizer/processor assets, and safe
-`safetensors` checkpoints—not as a remote-code execution runtime.
+The native text inference path is:
+
+```text
+Python Engine / HTTP + SSE / CLI
+                 ↓
+Prepared prompt + identity + resolved execution plan
+                 ↓
+Reference execution or InferenceActor + BatchScheduler
+                 ↓
+Native model adapter → dense / paged / hybrid runner
+                 ↓
+CacheManager → transactional ownership, prefix index, page arena, hybrid state
+                 ↓
+MLX + Metal + unified memory
+```
+
+The actor owns request state, sampling, cancellation and execution barriers.
+Token budgets and chunked prefill coordinate active requests. Cache reservations
+and live memory-pressure telemetry govern admission; matching evidence governs
+qualified backend selection before cache storage is constructed. Native model
+implementations remain within mlx-one.
 
 ## Native inference engine
 
@@ -74,33 +87,69 @@ with Engine(model="mlx-community/LFM2-350M-4bit") as engine:
         print(chunk.text, end="", flush=True)
 ```
 
-The internal runtime includes explicit request/state/runner contracts, typed
-cache bundles, byte-bounded prefix caching, token-budget scheduling policy,
-unified-memory admission forecasting, and experimental block-cache allocation.
-Continuous dense batching and paged attention stay capability-gated until their
-correctness and M4 performance gates pass. See the
-[native inference-engine roadmap](mlx-one_inference_engine.md).
+The runtime includes typed sequence/runner contracts, isolated request RNG,
+bounded output queues, transactional caches, byte-bounded prefix sharing and
+explicit execution modes. HTTP prefix namespaces derive from authenticated
+principals; anonymous requests remain private. Python callers can supply an
+explicit cache namespace.
+
+| Mode | Execution and availability |
+|---|---|
+| `reference_dense` | Existing single-request dense execution; cooperative server slots use separate B=1 forwards. |
+| `experimental_block` | Materialized block-cache path for supported unquantized Qwen2/Qwen2.5; experimental. |
+| `experimental_dense_batch` | Actor-driven dense batching for supported native adapters; experimental and not production-qualified. |
+| `paged` | Direct page-backed attention using the segmented arena and existing Metal kernels; supported contracts only, qualification pending. |
+| `experimental_hybrid_batch` | Native LFM2 attention and request-local convolution state; qualification pending. |
+| `auto` | Opt-in selection from matching performance-qualified evidence; otherwise reference dense with a reported reason. |
+
+Omitting the mode preserves existing behavior. The default active-sequence limit
+remains one; larger batches require explicit configuration. Unsupported explicit
+optimized modes raise capability errors. Native affine INT8 loading and floating
+FP16 conversion preserve packed weight payloads; optimized P1 profiles use FP16 KV.
+Quantized paged KV and 128K-class admission remain evidence-gated.
+
+See the [repository summary](docs/REPOSITORY_SUMMARY.md) for current validation,
+layout and benchmark status, and the
+[native inference-engine roadmap](mlx-one_inference_engine.md) for broader plans.
 
 ## Cache runtime qualification
 
-The current [M4/32 GB cache qualification report](docs/cache-benchmark-m4-32gb.md)
-is a partial result; dense APC and block APC are not yet qualified.
+Latest P1 validation, **2026-10-14**, on Apple M4 / 32 GiB with MLX 0.32.2:
 
-- The backend-free cache, server, scheduler, allocator, and lifecycle suite
-  passed: `357 passed, 14 skipped`.
-- Native dense Qwen testing passed at approximately 2K and 8K context, passed
-  with a memory limitation at 16K, and failed cleanly at approximately 32K after
-  reaching about 28.2 GB peak MLX memory at 16K.
-- The initial APC run produced four prefix misses, zero reused tokens, and zero
-  avoided prefill tokens because the published snapshot boundary does not yet
-  match the intended shared prompt prefix.
-- Qwen block execution passed a basic smoke test, but token parity, shared-block
-  ownership, and block APC remain unqualified.
-- LFM2 hybrid block requests are explicitly rejected as unsupported; dense,
-  parallel, and cancellation qualification remains pending.
+- Backend-free suite: **773 passed, 24 skipped**, with two inherited dependency
+  warnings. Ruff reports **65 inherited findings and zero new findings**.
+- Native GPU execution, RSS supervision and MLX memory telemetry passed.
+  Pinned Qwen3-0.6B INT8 serial parity and five tiny native Qwen tests passed.
+- Dense B1 forced continuation matched all **33 logits and 1,848 KV comparisons**
+  exactly. Restored execution also matched an independently restored native cache.
+- Restored-prefix logits still differ from fresh full-prompt execution beyond the
+  unchanged FP16 tolerance: **maximum error 0.064453125**. Greedy agreement and
+  zero active handles/reservations after cleanup do not waive this failed gate.
+- Expansion stopped before dense B2/B4, paged execution, other P1 checkpoints and
+  service/performance runs. The **2,592 optimized legal configurations** are
+  enumerated by the harness; their performance measurements remain unrun.
 
-Dense remains the recommended backend until the APC prompt-prefix boundary and
-the remaining native Metal matrix pass.
+No P1 optimized backend is production-qualified. Throughput gains, 8K prefix
+speedup, hybrid lifecycle and pressure recovery remain pending. Defaults and
+public capability qualification have not been promoted.
+
+Qualification uses offline workers, explicit warm-up, matched precision and
+traffic, token/logit comparisons, memory watchdogs and checksummed provenance.
+Model-token timing and prepared-history decode throughput are reported separately
+from HTTP/SSE delivery. Generated artifacts remain local under
+`benchmarks/results/p1/<host>/<checkpoint>/<run>/`.
+
+```bash
+# Enumerate the staged matrix without loading a model.
+PYTHONPATH=src python benchmarks/p1_native_qualification.py manifest
+
+# Opt-in native correctness; requires pinned assets and native Metal/RSS access.
+PYTHONPATH=src:.:tests python benchmarks/p1_native_qualification.py correctness \
+  --checkpoints qwen3-small
+```
+
+The [earlier M4 cache report](docs/cache-benchmark-m4-32gb.md) records historical
+dense/block diagnostics. It does not qualify the current P1 implementation.
 
 ## What is implemented
 
@@ -126,7 +175,7 @@ the remaining native Metal matrix pass.
 - Native offline Parakeet TDT v2/v3, strict float32 loading and isolated v2 NeMo
   conversion. Both English transcript gates and v3 French/German gates pass;
   original v2 NeMo parity, timestamps and broader qualification remain WIP.
-- Unified native text loading, tokenizer/chat templates, MLX 4-bit checkpoints,
+- Unified native text loading, tokenizer/chat templates, affine 4-bit/8-bit checkpoints,
   cached greedy and seeded sampling, stop sequences, token streaming, and serving
   for GPT-2, Qwen2/Qwen3, LFM2, OpenELM, and text-only Qwen3.5 families.
 - Native Qwen3 embedding and reranking with byte-level BPE, safe loading,

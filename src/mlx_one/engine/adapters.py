@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict, dataclass
 
 ADAPTER_VERSION = "native-adapter-v1"
-EXECUTION_POLICY_VERSION = "native-float-execution-v1"
+EXECUTION_POLICY_VERSION = "native-float-execution-v2"
 DENSE_FAMILIES = {"qwen2", "qwen3", "llama"}
 
 
