@@ -154,3 +154,9 @@ roll back all layers and reservation counters if reconciliation fails. Cross-KV
 tracks encoder identity/length separately from decoder position; generic recurrent
 math remains unavailable. 93 affected CPU tests pass. Native expanded-layout
 qualification remains pending.
+
+PR-06 registers native GPT-2/Llama/Qwen2/Qwen3 causal adapters, validated work
+packing/result mappings and per-layer head descriptions. GPT-2 learned positions
+use real row positions rather than padded extent; unsupported paging fails early.
+109 affected CPU tests and 12 tiny native B1/B2/B4 cases plus one legal-context
+boundary passed. Other sizes/checkpoints and performance remain unqualified.

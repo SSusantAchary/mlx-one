@@ -32,6 +32,13 @@ def registry_inventory(registrations=None):
                      [get_registration(name) for name in registered_model_types()])
     rows = []
     for entry in sorted(registrations, key=lambda r: r.model_type):
+        from mlx_one.engine.adapter_registry import get_runtime_registration
+
+        try:
+            binding = (get_runtime_registration(entry.model_type)
+                       if get_registration(entry.model_type) == entry else None)
+        except KeyError:
+            binding = None
         component = entry.model_type == "sam3_tracker_video"
         kind = ("component_only" if component else "architecture_only" if not entry.loader_path
                 and not entry.tasks else "task_unavailable" if not entry.loader_path
@@ -51,7 +58,9 @@ def registry_inventory(registrations=None):
             "declared_tasks": sorted(entry.tasks),
             "integration_kind": kind, "reason": reason, "task_status": tasks,
             "parent_model_type": "sam3_video" if component else None,
-            "architecture_status": "registered", "shared_service_integrated": False,
+            "architecture_status": "registered", "shared_service_integrated": bool(binding
+                and binding.integration_status == "integrated"),
+            "runtime_contract_version": binding.contract_version if binding else None,
             "correctness_validation": "not_run", "performance_qualification": "not_run",
             "pinned_recipe_keys": [k for k, c in CHECKPOINTS.items()
                                    if c.architecture == entry.model_type]})

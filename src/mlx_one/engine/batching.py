@@ -221,7 +221,7 @@ class BatchedDenseRunner(CausalLMRunner):
             slots.append(ScheduledSequence(request.request_id, request.phase,
                                             request.cache[0].offset, len(request.token_ids)))
         plan = BatchPlan(tuple(slots), sum(len(r.token_ids) for r in requests))
-        config = getattr(first.bundle.model.config, "text_config", first.bundle.model.config)
+        config = self.adapter.activation_config
         specs = self.adapter.plan.layer_specs
         dim = self.adapter.spec.head_dim
         per_token = self.adapter.plan.bytes_per_token()
@@ -252,7 +252,8 @@ class BatchedDenseRunner(CausalLMRunner):
                     widths=[len(r.token_ids) for r in requests], phase=first.phase)["bytes"]
                 stack.enter_context(runtime.transient_reservation(transient))
             ids = [[*r.token_ids, *([0] * (width - len(r.token_ids)))] for r in requests]
-            positions = [[r.cache[0].offset + i for i in range(width)] for r in requests]
+            positions = [[r.cache[0].offset + i if i < len(r.token_ids) else 0
+                          for i in range(width)] for r in requests]
             mask = [[0] * (history - r.cache[0].offset) + [1] * r.cache[0].offset
                     + [1] * len(r.token_ids) + [0] * (width - len(r.token_ids)) for r in requests]
             for layer in range(len(first.cache)):

@@ -446,6 +446,7 @@ class WorkItem:
     output_bound: int
     estimated_transient_bytes: int
     cost_unit: Literal["tokens", "samples", "pixels", "frames", "service_us"]
+    payload: Any = field(default=None, compare=False, hash=False)
 
     def __post_init__(self) -> None:
         if not self.request_id:

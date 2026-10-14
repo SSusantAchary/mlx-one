@@ -39,8 +39,11 @@ def test_int8_metadata_and_module_layout_validation():
                              head_dim=128, hidden_size=1024)
     bundle = SimpleNamespace(model=SimpleNamespace(config=config,
         parameters=lambda: {"weight": np.ones(1, dtype=np.float16)}), quantization={})
-    plan = SimpleNamespace(architecture="qwen3", block_compatible=True,
-                           topology_digest="topology", state_specs=[])
+    from mlx_one.engine.cache_specs import CacheKind, CachePlan, LayerCacheSpec
+
+    plan = CachePlan("qwen3", None, "qwen3",
+        (LayerCacheSpec(0, CacheKind.ATTENTION_KV, 8, 128, 128,
+                        block_compatible=True, num_query_heads=16),), 128)
     assert native_adapter(bundle, plan).spec.head_dim == 128
 
 

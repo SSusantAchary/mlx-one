@@ -29,10 +29,14 @@ def test_all_architectures_have_explicit_truthful_runtime_records():
     assert 'vision-language-generation' in rows['qwen3_5']['declared_tasks']
     assert rows['whisper']['tasks'] == rows['qwen3_asr']['tasks'] == ('transcription',)
     assert rows['qwen3_forced_aligner']['tasks'] == ('alignment',)
-    assert all(not row['shared_service_integrated'] and not row['correctness_qualified']
-               and not row['performance_qualified'] for row in rows.values())
+    from mlx_one.engine.runtime_specs import BUILTIN_ADAPTERS
+
+    assert {name for name,row in rows.items() if row['shared_service_integrated']} == set(
+        BUILTIN_ADAPTERS)
+    assert all(not row['correctness_qualified'] and not row['performance_qualified']
+               for row in rows.values())
     with pytest.raises(ValueError, match='unavailable'):
-        get_runtime_registration('qwen3').adapter()
+        get_runtime_registration('lfm2_audio').adapter()
 
 
 def test_coverage_is_lazy_in_fresh_interpreter():
@@ -49,7 +53,7 @@ assert not any(n.startswith('mlx_one.models.') and n.endswith('.model') for n in
 
 def test_contract_version_is_checked_before_selected_adapter_import():
     runtime=get_runtime_registration('gpt2', contract_version=RUNTIME_CONTRACT_VERSION)
-    assert runtime.adapter_path is None
+    assert runtime.adapter_path.endswith(':GPT2Adapter')
     with pytest.raises(ValueError, match='version'):
         get_runtime_registration('gpt2', contract_version='registry-runtime-v0')
     with pytest.raises(ValueError, match='already registered'):
@@ -69,7 +73,7 @@ def test_invalid_lazy_paths_rejected_without_import(path):
 def test_component_and_integration_claims_require_complete_contract():
     runtime=get_runtime_registration('gpt2')
     with pytest.raises(ValueError, match='adapter'):
-        replace(runtime, integration_status='integrated')
+        replace(runtime, integration_status='integrated', adapter_path=None)
     with pytest.raises(ValueError, match='component'):
         replace(runtime, component_only=True)
     with pytest.raises(ValueError, match='version'):

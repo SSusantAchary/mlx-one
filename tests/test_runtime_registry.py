@@ -21,7 +21,9 @@ def test_inventory_accounts_for_every_registration_without_promoting_declaration
     assert rows["sam3_tracker_video"]["parent_model_type"] == "sam3_video"
     assert rows["qwen3_5"]["task_status"]["vision-language-generation"] == "unavailable"
     for row in rows.values():
-        assert row["shared_service_integrated"] is False
+        from mlx_one.engine.runtime_specs import BUILTIN_ADAPTERS
+
+        assert row["shared_service_integrated"] == (row["model_type"] in BUILTIN_ADAPTERS)
         assert row["correctness_validation"] == row["performance_qualification"] == "not_run"
     assert report["qualification_promoted"] is False
 

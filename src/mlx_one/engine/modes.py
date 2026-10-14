@@ -42,6 +42,8 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
 
         try:
             adapter = native_adapter(bundle, plan, allow_bfloat16=True, allow_hybrid=True)
+            if not adapter.supports_paging:
+                raise ValueError("adapter has no direct paged attention dispatch")
             if (adapter.spec.hybrid and bundle.quantization
                     and bundle.quantization.get("bits") != 8):
                 raise ValueError("paged hybrid execution requires native affine INT8 weights")
@@ -123,7 +125,7 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
     named = getattr(bundle.model, "named_modules", None)
     if callable(named):
         for _, module in named():
-            if hasattr(module, "q_proj"):
+            if any(hasattr(module, name) for name in ("q_proj", "c_attn", "qkv_proj")):
                 module._mlx_one_activation_dtype = execution_dtype
 
 

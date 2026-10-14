@@ -1,6 +1,10 @@
-"""Built-in declaration bridge. No new service integration or tensor capability."""
+"""Lazy built-in bindings; integration and checkpoint qualification remain distinct."""
 from mlx_one.engine.adapter_registry import RUNTIME_CONTRACT_VERSION, RuntimeRegistration
 from mlx_one.engine.contracts import StageKind, TaskKind, TaskSpec, canonical_task
+
+BUILTIN_ADAPTERS = {name: "mlx_one.engine.native_adapters:" + adapter for name, adapter in (
+    ("gpt2", "GPT2Adapter"), ("llama", "LlamaAdapter"),
+    ("qwen2", "Qwen2Adapter"), ("qwen3", "Qwen3Adapter"))}
 
 
 def builtin_runtime(entry):
@@ -8,14 +12,18 @@ def builtin_runtime(entry):
     status = ("component_only" if component else "architecture_only" if not entry.loader_path
               and not entry.tasks else "not_integrated" if not entry.loader_path
               else "loader_declared")
-    return RuntimeRegistration(entry.model_type, None,
+    adapter = BUILTIN_ADAPTERS.get(entry.model_type)
+    if adapter is not None:
+        status = "integrated"
+    reason = ("Native causal service adapter; checkpoint qualification is separate" if adapter
+              else "Nested video tracker; no standalone task loader" if component
+              else "Architecture only; loader and task integration required"
+              if status == "architecture_only" else "Shared task-service integration unavailable")
+    return RuntimeRegistration(entry.model_type, adapter,
         "mlx_one.engine.runtime_specs:task_specs", "mlx_one.engine.runtime_specs:state_specs",
         RUNTIME_CONTRACT_VERSION, component_only=component, integration_status=status,
         parent_model_type="sam3_video" if component else None,
-        reason="Nested video tracker; no standalone task loader" if component else
-            "Architecture only; loader and task integration required"
-            if status == "architecture_only"
-            else "Native loader declaration does not establish shared task-service integration")
+        reason=reason)
 
 
 def task_specs(entry):

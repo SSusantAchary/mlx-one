@@ -5,8 +5,11 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict, dataclass
+from types import SimpleNamespace
 
-ADAPTER_VERSION = "native-adapter-v1"
+from mlx_one.engine.contracts import LayerExecutionSpec
+
+ADAPTER_VERSION = "native-adapter-v2"
 EXECUTION_POLICY_VERSION = "native-float-execution-v3"
 DENSE_FAMILIES = {"qwen2", "qwen3", "llama"}
 
@@ -88,6 +91,7 @@ class NativeExecutionSpec:
     adapter_version: str = ADAPTER_VERSION
     model_id: str | None = None
     revision: str | None = None
+    layers: tuple[LayerExecutionSpec, ...] = ()
 
     @property
     def hybrid(self):
@@ -95,11 +99,15 @@ class NativeExecutionSpec:
 
 
 class NativeModelAdapter:
+    supported_architectures = frozenset(DENSE_FAMILIES)
+    supports_paging = True
+
     def __init__(self, bundle, plan, *, allow_bfloat16=False, allow_hybrid=False):
         from mlx_one.engine.reporting import tensor_dtypes
 
         architecture = plan.architecture
-        if architecture not in DENSE_FAMILIES and not (allow_hybrid and architecture == "lfm2"):
+        if (architecture not in self.supported_architectures
+                and not (allow_hybrid and architecture == "lfm2")):
             raise ValueError("no supported dense native adapter for " + architecture)
         observed = tensor_dtypes(bundle.model.parameters())
         legacy_hybrid = (allow_hybrid and architecture == "lfm2"
@@ -116,22 +124,44 @@ class NativeModelAdapter:
                 raise ValueError("INT8 batching requires explicit FP16 floating execution")
         elif observed != ("float16",) and not (allow_bfloat16 and observed == ("bfloat16",)):
             raise ValueError("dense batching requires observed FP16 weights")
-        config = bundle.model.config
-        query_heads, kv_heads = config.num_attention_heads, config.num_key_value_heads
-        if min(query_heads, kv_heads) < 1:
-            raise ValueError("invalid native head counts")
-        head_dim = getattr(config, "head_dim", 0) or config.hidden_size // query_heads
-        if min(query_heads, kv_heads, head_dim) < 1 or query_heads % kv_heads or head_dim % 2:
-            raise ValueError("invalid native head layout")
-        if architecture in DENSE_FAMILIES and any(s.kind != "full_kv" for s in plan.state_specs):
+        config = getattr(bundle.model.config, "text_config", bundle.model.config)
+        layers = []
+        for layer, state in zip(plan.layer_specs, plan.state_specs, strict=True):
+            attention = state.kind in {"full_kv", "sliding_kv", "cross_kv"}
+            query_heads = layer.num_query_heads if attention else None
+            if attention and query_heads is None:
+                query_heads = getattr(config, "num_attention_heads",
+                                      getattr(config, "n_head", None))
+            layout = LayerExecutionSpec(layer.layer_id, state.kind, query_heads,
+                layer.num_kv_heads, layer.key_head_dim, layer.value_head_dim,
+                layer.position_policy, layer.max_window_tokens)
+            if attention and layout.position_policy == "rope" and layout.key_dim % 2:
+                raise ValueError("invalid native RoPE head dimension")
+            layers.append(layout)
+        attention_layers = [layer for layer in layers
+                            if layer.state_kind in {"full_kv", "sliding_kv"}]
+        if not attention_layers:
+            raise ValueError("adapter requires supported attention layout")
+        first = attention_layers[0]
+        query_heads, kv_heads, head_dim = first.query_heads, first.kv_heads, first.key_dim
+        if architecture in self.supported_architectures and any(
+                s.kind != "full_kv" for s in plan.state_specs):
             raise ValueError("dense adapter requires full-attention components")
+        hidden = getattr(config, "hidden_size", getattr(config, "n_embd",
+                         getattr(config, "model_dim", 0)))
+        self.activation_config = SimpleNamespace(hidden_size=hidden,
+            num_attention_heads=max(layer.query_heads for layer in attention_layers),
+            intermediate_size=getattr(config, "intermediate_size", getattr(config, "inner_dim",
+                                       max(getattr(config, "ffn_dims", (hidden * 4,))))),
+            vocab_size=getattr(config, "vocab_size", 0))
         self.bundle, self.plan = bundle, plan
         self.activation_dtype = None if legacy_hybrid else next(
             dtype for dtype in observed if dtype in {"float16", "bfloat16"})
         self.spec = NativeExecutionSpec(architecture, plan.topology_digest,
             query_heads, kv_heads, head_dim, architecture in {"qwen3", "lfm2"},
             tuple(s.kind for s in plan.state_specs), quantization_identity(bundle),
-            model_id=getattr(bundle, "model_id", None), revision=getattr(bundle, "revision", None))
+            model_id=getattr(bundle, "model_id", None), revision=getattr(bundle, "revision", None),
+            layers=tuple(layers))
         if not plan.block_compatible and not (allow_hybrid and architecture == "lfm2"
                 and plan.state_specs and all(s.kind in {"full_kv", "sliding_kv", "conv"}
                                              for s in plan.state_specs)):
@@ -153,7 +183,7 @@ class NativeModelAdapter:
         try:
             if self.activation_dtype:
                 for _, module in getattr(self.bundle.model, "named_modules", lambda: ())():
-                    if hasattr(module, "q_proj"):
+                    if any(hasattr(module, name) for name in ("q_proj", "c_attn", "qkv_proj")):
                         existed = hasattr(module, "_mlx_one_activation_dtype")
                         restored.append((module, existed,
                                          getattr(module, "_mlx_one_activation_dtype", None)))
@@ -169,9 +199,13 @@ class NativeModelAdapter:
 
 
 def native_adapter(bundle, plan=None, *, allow_bfloat16=False, allow_hybrid=False):
+    from mlx_one.engine.adapter_registry import get_runtime_registration
     from mlx_one.engine.cache_planner import build_cache_plan
 
-    return NativeModelAdapter(bundle, plan or build_cache_plan(bundle),
+    plan = plan or build_cache_plan(bundle)
+    binding = get_runtime_registration(plan.architecture)
+    adapter = binding.adapter() if binding.adapter_path is not None else NativeModelAdapter
+    return adapter(bundle, plan,
                               allow_bfloat16=allow_bfloat16, allow_hybrid=allow_hybrid)
 
 
