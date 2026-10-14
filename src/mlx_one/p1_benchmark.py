@@ -33,6 +33,10 @@ def main(argv=None):
     parser.add_argument("--decode-gap-budget-ms", type=float)
     parser.add_argument("--max-queue-wait-ms", type=float)
     parser.add_argument("--max-service-gap-ms", type=float)
+    parser.add_argument("--reference-run")
+    parser.add_argument("--queue-size", type=int)
+    parser.add_argument("--max-scheduled-tokens", type=int, default=2048)
+    parser.add_argument("--max-prefill-tokens", type=int, default=1024)
     parser.add_argument("--serial-run")
     parser.add_argument("--b1-run")
     parser.add_argument("--no-prefix-run")
@@ -88,6 +92,9 @@ def main(argv=None):
                                 max_queue_wait_ms=args.max_queue_wait_ms,
                                 max_service_gap_ms=args.max_service_gap_ms,
                                 serial_run=args.serial_run, b1_run=args.b1_run,
+                                reference_run=args.reference_run, queue_size=args.queue_size,
+                                max_scheduled_tokens=args.max_scheduled_tokens,
+                                max_prefill_tokens=args.max_prefill_tokens,
                                 no_prefix_run=args.no_prefix_run,
                                 reuse_prefix=False if args.disable_prefix_reuse
                                 else None, **traffic))

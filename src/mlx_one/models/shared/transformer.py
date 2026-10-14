@@ -144,6 +144,10 @@ class GroupedQueryAttention(nn.Module):
         keys = _repeat_kv(keys, repeats)
         values = _repeat_kv(values, repeats)
         scores = (queries @ keys.transpose(0, 1, 3, 2)) * self.scale
+        if execution_dtype is not None:
+            # A neutral FP32 padding mask must not change softmax/value arithmetic.
+            # Promote scores without allocating FP32 copies of the KV history.
+            scores = scores.astype(mx.float32)
         if mask is not None:
             scores = scores + mask
         probabilities = mx.softmax(scores, axis=-1, precise=True)

@@ -372,6 +372,7 @@ def test_p1_gate_requires_targets_and_complete_native_observations():
     from copy import deepcopy
     from dataclasses import asdict
 
+    from mlx_one.p1_decode import DECODE_VERSION
     from mlx_one.p1_profiles import profile
     from mlx_one.p1_qualification import evaluate_p1
 
@@ -380,12 +381,18 @@ def test_p1_gate_requires_targets_and_complete_native_observations():
     identity = {key: "unit-test" for key in ("hardware", "source", "weight_precision",
         "cache_precision", "mlx_version", "quantization_digest", "floating_policy")}
     summary = {"identity": identity, "aggregate_decode_tokens_per_second_by_group": [125] * 5,
+        "controlled_decode": {"schema_version": DECODE_VERSION, "input_identity": "tokens",
+                              "rates": [125] * 5},
+        "comparison_inputs": {"traffic_identity": "traffic", "rendered_tokens_sha256": "tokens",
+                              "generated_tokens_sha256": "output"},
         "failed": 0, "cleanup_passed": True, "starved_requests": 0, "queue_wait_p95_ms": 10,
+        "max_admission_wait_ms": 10,
         "max_runnable_service_gap_ms": 10, "warm_client_ttft_p95_ms": 100,
         "model_token_gap_p95_ms": 15}
     serial = {"native_execution": True,
         "profile": {**asdict(item), "slots": 1, "inference_mode": "reference_dense"},
         "identity": identity, "summary": {**summary,
+        "controlled_decode": {**summary["controlled_decode"], "rates": [100] * 5},
         "aggregate_decode_tokens_per_second_by_group": [100] * 5}}
     b1 = {**serial, "profile": {**serial["profile"], "inference_mode": "paged"},
           "summary": {**serial["summary"], "model_token_gap_p95_ms": 10}}
@@ -395,12 +402,12 @@ def test_p1_gate_requires_targets_and_complete_native_observations():
     parity = {"status": "passed"}
     assert evaluate_p1(item, summary, traces, parity, serial=serial, b1=b1)["status"] == "passed"
     bad = deepcopy(summary)
-    bad["aggregate_decode_tokens_per_second_by_group"][-1] = 124.9
+    bad["controlled_decode"]["rates"][-1] = 124.9
     result = evaluate_p1(item, bad, traces, parity, serial=serial, b1=b1)
     assert result["status"] == "failed" and not result["checks"]["decode_target"]
     assert evaluate_p1(item, summary, traces, parity)["status"] == "pending"
     bad = deepcopy(b1)
-    bad["summary"]["aggregate_decode_tokens_per_second_by_group"][-1] = 94.9
+    bad["summary"]["controlled_decode"]["rates"][-1] = 94.9
     assert not evaluate_p1(item, summary, traces, parity, serial=serial, b1=bad)[
         "checks"]["b1_regression"]
 

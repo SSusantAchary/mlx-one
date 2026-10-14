@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 
+from mlx_one.engine.adapters import ADAPTER_VERSION, EXECUTION_POLICY_VERSION
+
 ENVELOPE_VERSION = "native-workload-envelope-v3"
 EVIDENCE_VERSION = "native-inference-qualification-v4"
 
@@ -32,13 +34,11 @@ class QualificationEnvelope:
     decode_gap_budget_ms: float | None
     max_queue_wait_ms: float | None
     max_service_gap_ms: float | None
-    adapter_version: str = "native-adapter-v1"
-    execution_policy_version: str = "native-float-execution-v1"
+    adapter_version: str = ADAPTER_VERSION
+    execution_policy_version: str = EXECUTION_POLICY_VERSION
     schema_version: str = ENVELOPE_VERSION
 
     def __post_init__(self):
-        from mlx_one.engine.adapters import ADAPTER_VERSION, EXECUTION_POLICY_VERSION
-
         if (self.schema_version != ENVELOPE_VERSION or self.adapter_version != ADAPTER_VERSION
                 or self.execution_policy_version != EXECUTION_POLICY_VERSION):
             raise ValueError("legacy envelopes are diagnostic only")
@@ -55,7 +55,8 @@ class QualificationEnvelope:
     def from_mapping(cls, value):
         if isinstance(value, cls):
             return value
-        if not isinstance(value, dict) or value.get("schema_version") != ENVELOPE_VERSION:
+        if (not isinstance(value, dict) or value.get("schema_version") != ENVELOPE_VERSION
+                or not {"adapter_version", "execution_policy_version"} <= value.keys()):
             raise ValueError("current complete workload envelope is required")
         try:
             return cls(**value)

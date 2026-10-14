@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from statistics import median
 
-P1_GATE_VERSION = "native-p1-gate-v1"
+P1_GATE_VERSION = "native-p1-gate-v2"
 P1_CHECKS = {"native_parity", "five_repetitions", "matched_serial", "actual_batch",
              "dynamic_membership", "decode_target", "b1_regression", "relative_token_gap",
              "absolute_service", "bounded_progress", "cleanup", "direct_execution"}
@@ -24,7 +24,12 @@ def evaluate_p1(profile, summary, traces, parity, *, serial=None, b1=None, no_pr
             continue
         expected = run["profile"]
         for key in ("model_id", "revision", "context_tokens", "output_tokens", "cache_type",
-                    "execution_dtype", "chunk_tokens", "seed", "workload"):
+                    "execution_dtype", "chunk_tokens", "seed", "workload",
+                    "traffic_identity", "max_scheduled_tokens", "max_prefill_tokens",
+                    "queue_size", "output_buffer_events", "output_stall_timeout_s",
+                    "cache_capacity_bytes", "prefix_cache_budget_bytes", "pressure_config",
+                    "timeout_seconds", "ttft_budget_ms", "decode_gap_budget_ms",
+                    "max_queue_wait_ms", "max_service_gap_ms"):
             if expected.get(key) != getattr(profile, key):
                 raise ValueError("P1 reference mismatch: " + key)
         for key in ("hardware", "source", "weight_precision", "cache_precision", "mlx_version",
@@ -35,13 +40,26 @@ def evaluate_p1(profile, summary, traces, parity, *, serial=None, b1=None, no_pr
         matched &= (run.get("native_execution") is True and expected.get("slots") == 1
                     and expected.get("repeats", 0) >= 5
                     and run["summary"].get("failed") == 0)
+        inputs = summary.get("comparison_inputs")
+        if (not inputs or not inputs.get("traffic_identity")
+                or not inputs.get("rendered_tokens_sha256")
+                or not inputs.get("generated_tokens_sha256")
+                or inputs != run["summary"].get("comparison_inputs")):
+            matched = False
     matched &= serial["profile"].get("inference_mode") == "reference_dense"
     if b1 is not None:
         matched &= b1["profile"].get("inference_mode") == profile.inference_mode
-    rates = summary.get("aggregate_decode_tokens_per_second_by_group", [])
-    old = serial["summary"].get("aggregate_decode_tokens_per_second_by_group", [])
+    from mlx_one.p1_decode import DECODE_VERSION
+
     b1_summary = b1["summary"] if b1 else summary
-    b1_rates = b1_summary.get("aggregate_decode_tokens_per_second_by_group", [])
+    controlled = [s.get("controlled_decode", {}) for s in (summary, serial["summary"], b1_summary)]
+    if any(c.get("schema_version") != DECODE_VERSION for c in controlled):
+        return {"schema_version": P1_GATE_VERSION, "status": "pending",
+                "reason": "prepared-history decode measurements are required"}
+    if (not controlled[0].get("input_identity") or any(
+            c.get("input_identity") != controlled[0]["input_identity"] for c in controlled[1:])):
+        raise ValueError("P1 controlled decode input mismatch")
+    rates, old, b1_rates = [c.get("rates", []) for c in controlled]
     complete = (len(rates) == len(old) == len(b1_rates) == profile.repeats == 5
                 and all(v is not None and v > 0 for v in [*rates, *old, *b1_rates]))
     ratios = [a / b for a, b in zip(rates, old, strict=False)] if complete else []
@@ -63,15 +81,21 @@ def evaluate_p1(profile, summary, traces, parity, *, serial=None, b1=None, no_pr
         "absolute_service": ttft is not None and gap is not None
                               and ttft <= limits[0] and gap <= limits[1],
         "bounded_progress": summary.get("starved_requests") == 0
-            and summary.get("queue_wait_p95_ms") is not None
-            and summary["queue_wait_p95_ms"] <= limits[2]
+            and summary.get("max_admission_wait_ms") is not None
+            and summary["max_admission_wait_ms"] <= limits[2]
             and summary.get("max_runnable_service_gap_ms") is not None
             and summary["max_runnable_service_gap_ms"] <= limits[3],
         "cleanup": summary.get("failed") == 0 and summary.get("cleanup_passed") is True,
         "direct_execution": profile.inference_mode != "paged" or bool(traces) and all(
             t.get("history_materializations") == 0 for t in traces) and any(
                 t.get("direct_attention_calls", 0) for t in traces)}
-    if profile.context_tokens >= 8192 and profile.workload in {"prefix", "multi_turn"}:
+    from mlx_one.p1_profiles import CHECKPOINTS
+
+    smol_maximum = any(c.architecture == "llama" and c.model_id == profile.model_id
+        and profile.context_tokens + profile.output_tokens == c.context_tokens
+        for c in CHECKPOINTS.values())
+    if (profile.context_tokens >= 8192 or smol_maximum) and profile.workload in {
+            "prefix", "multi_turn"}:
         warm = summary.get("warm_client_ttft_p50_ms")
         cold = (no_prefix or {}).get("summary", {}).get("warm_client_ttft_p50_ms")
         valid_prefix_reference = bool(no_prefix and no_prefix.get("native_measurement")
