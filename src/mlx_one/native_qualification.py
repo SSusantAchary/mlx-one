@@ -322,7 +322,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=(
         "manifest", "preflight", "correctness", "performance", "report",
-        "inventory", "prefix-diagnostic"))
+        "inventory", "prefix-diagnostic", "prefix-parity"))
     parser.add_argument("--checkpoints", nargs="+", choices=CHECKPOINTS, default=list(CHECKPOINTS))
     parser.add_argument("--output", type=Path, default=Path("benchmarks/results/p1"))
     parser.add_argument("--correctness-report", type=Path)
@@ -331,13 +331,14 @@ def main(argv=None):
                         help="Lower the PR-00 native diagnostic watchdog ceiling")
     args = parser.parse_args(argv)
     stamp = str(time.time_ns())
-    if args.stage in {"inventory", "prefix-diagnostic"}:
+    if args.stage in {"inventory", "prefix-diagnostic", "prefix-parity"}:
         from mlx_one.runtime_baseline import run_baseline
 
         if args.process_ceiling_bytes is not None and args.process_ceiling_bytes < 1:
             parser.error("process ceiling must be positive")
         root = args.output / socket.gethostname() / "runtime-baseline" / stamp
-        result = run_baseline(root, native=args.stage == "prefix-diagnostic",
+        result = run_baseline(root, native=args.stage != "inventory",
+            require_parity=args.stage == "prefix-parity",
             configured_ceiling=args.process_ceiling_bytes,
             worker_output=args.output / socket.gethostname() / "qwen3-small" / stamp
                 / "prefix-diagnostic")

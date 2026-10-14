@@ -69,11 +69,11 @@ results include greedy IDs, forced IDs, component positions/shapes/dtypes, state
 comparisons at initial/final boundaries and cleanup. Missing assets/hardware stay
 not-run; watchdog or worker failures cannot establish reproduction.
 
-The native failure signature is reproduced, while qualification remains **failed**.
+PR-00 reproduced the native failure; its historical qualification remains **failed**.
 PR-00 changes observation/tooling only; it does not repair attention arithmetic,
-change generation interfaces/defaults, or promote capabilities. PR-01 contracts
-come next. PR-02 must repair fresh-full-prefill parity without relaxing tolerances
-before later PRs merge. Historical P1 serial/continuation passes retain their
+change generation interfaces/defaults, or promote capabilities. Subsequent PR-01
+contracts and PR-02 repair are recorded below. Historical P1 serial/continuation
+passes retain their
 original scope; the 2,592-configuration performance matrix remains unexecuted.
 
 ## Artifacts and delivery
@@ -91,7 +91,37 @@ with the same two warnings. Ruff on `src tests benchmarks` retains exactly 65
 baseline findings. A repository-root scan additionally reports 19 inherited
 findings in unrelated local `proofcart_starter/`, which remains untouched.
 Native PR-00 evidence retains its original source identity and failed status.
-PR-02's fresh-full-prefill parity gate remains required before later PRs.
+At PR-01, the fresh-full-prefill gate remained blocked on PR-02.
+
+PR-02 isolates shape-dependent INT8 projection and attention reductions. Explicit
+FP16 affine INT8 shared decoder arithmetic now uses existing MLX gathered
+matrix-vector rows and FP32 attention accumulation. Activations/KV stay FP16 and
+packed uint32 weights are preserved. Omitted-policy reference dispatch stays
+unchanged. Execution policy is version 3, invalidating older arithmetic evidence;
+extra FP32/gather scratch receives a conservative reservation and trace counter.
+No new Metal kernels or external engines were introduced.
+
+The supervised `prefix-parity` stage requires success against fresh full-prefill,
+not merely reproduction. On M4/32 GiB under the 21.33 GiB watchdog ceiling, the
+two original 353/356-token cases reused 352/353 tokens. All four paths over 32
+forced steps had **zero measured logits/state error**, exact greedy agreement,
+aligned positions and zero live handles/reservations after cleanup. Tolerances
+remain `atol=rtol=1e-2`. Before the repair this regression test failed; after it,
+the test passed on frozen source. This is narrowly scoped checkpoint correctness,
+not performance, B2/B4, paged, other-checkpoint or public capability qualification.
+Those gates and the 8K prefix TTFT target remain pending.
+
+PR-02 validation: **104 affected tests**, **834 passed / 24 skipped** in the full
+backend-free suite, the same two warnings, **7 tiny native tests** and **1 pinned
+native regression test** passed. Scoped Ruff remains the same 65 findings with
+zero new findings. Raw logits and before/after artifacts stay local.
+
+```sh
+PYTHONPATH=src python benchmarks/p1_native_qualification.py prefix-parity
+```
+
+Next ordered boundary: PR-03 device ownership, residency leases and single-flight
+model loading. No later PR is included in these commits.
 
 Checksummed inventory and run metadata stay local under
 `benchmarks/results/p1/<host>/runtime-baseline/<run>/`; native logits, comparisons,
@@ -99,7 +129,7 @@ supervision and failure artifacts stay under
 `benchmarks/results/p1/<host>/qwen3-small/<run>/prefix-diagnostic/`.
 `--process-ceiling-bytes` can lower the watchdog ceiling, including GPU preflight.
 
-PR-00/01 commits include only scoped contracts/inventory/diagnostic code, tests
+PR-00/01/02 commits include only scoped contracts/runtime/diagnostic code, tests
 and this summary.
 Existing UI/document edits and generated artifacts remain local. No push or
 capability promotion is authorized by implementation readiness.

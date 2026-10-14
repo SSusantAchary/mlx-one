@@ -17,6 +17,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.qwen3.config import Qwen3Config
+from mlx_one.models.shared.execution import project
 from mlx_one.models.shared.transformer import DecoderLayer, causal_mask
 
 
@@ -88,9 +89,9 @@ class Qwen3ForCausalLM(nn.Module):
 
     def __call__(self, input_ids: Any, **kwargs: Any) -> ModelOutput:
         hidden, cache, states = self.model(input_ids, **kwargs)
-        logits = (
-            self.model.embed_tokens.as_linear(hidden)
-            if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
-        )
+        execution_dtype = getattr(self.model.layers[0].self_attn,
+                                  "_mlx_one_activation_dtype", None)
+        logits = project(self.model.embed_tokens if self.config.tie_word_embeddings
+                         else self.lm_head, hidden, execution_dtype=execution_dtype,
+                         as_linear=self.config.tie_word_embeddings)
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

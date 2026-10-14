@@ -227,6 +227,14 @@ class BatchedDenseRunner(CausalLMRunner):
         replacement_tokens = sum(((r.cache[0].offset + len(r.token_ids) + 255) // 256) * 256
                                  for r in requests)
         transient = per_token * (count * (history + width) + replacement_tokens)
+        arithmetic_scratch = 0
+        if (getattr(first.bundle, "quantization", {}).get("bits") == 8
+                and self.adapter.activation_dtype == "float16"):
+            from mlx_one.models.shared.execution import attention_scratch_bound
+
+            arithmetic_scratch = attention_scratch_bound(batch=count,
+                heads=self.adapter.spec.query_heads, head_dim=dim, chunk=width, history=history)
+            transient += arithmetic_scratch
         packed = []
         staged = []
         started = time.perf_counter()
@@ -308,6 +316,7 @@ class BatchedDenseRunner(CausalLMRunner):
                            "padded_tokens": count * width,
                            "padding_efficiency": plan.total_scheduled_tokens / (count * width),
                            "transient_reserved_bytes": transient,
+                           "arithmetic_scratch_bound_bytes": arithmetic_scratch,
                            "packed_history_bytes": per_token * count * history,
                            "replacement_cache_bytes": per_token * replacement_tokens,
                            "adapter_version": self.adapter.spec.adapter_version,

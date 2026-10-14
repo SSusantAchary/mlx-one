@@ -96,13 +96,19 @@ def diagnostic_outcome(supervision, result):
     reproduced = bool(completed and result.get("status") == "failed"
                       and result.get("failure_reproduced")
                       and result.get("cleanup_passed"))
+    passed = bool(completed and result.get("status") == "passed" and result.get("cleanup_passed"))
+    qualification = result.get("status", "not_run") if completed else "not_run"
+    if qualification == "passed" and not passed:
+        qualification = "failed"
     return {"status": "COMPLETED" if completed else "FAIL",
-            "readiness": "reproduced" if reproduced else "not_reproduced",
-            "qualification": result.get("status", "not_run") if completed else "not_run",
+            "readiness": "parity_passed" if passed else "reproduced" if reproduced
+                else "not_reproduced",
+            "qualification": qualification,
             "qualification_promoted": False, "worker_status": supervision.get("status")}
 
 
-def run_baseline(output, *, native=False, configured_ceiling=None, worker_output=None):
+def run_baseline(output, *, native=False, configured_ceiling=None, worker_output=None,
+                 require_parity=False):
     from mlx_one.engine.adapter_registry import runtime_coverage
     from mlx_one.engine.pressure import _command, sample_telemetry
     from mlx_one.native_qualification import preflight, supervised_command, write
@@ -139,6 +145,7 @@ def run_baseline(output, *, native=False, configured_ceiling=None, worker_output
         "checkpoint": "qwen3-small", "asset": assets.get("qwen3-small"),
         "configuration": {"execution_dtype": "float16", "key_type": "f16", "value_type": "f16",
             "mode": "experimental_dense_batch", "forced_steps": 32,
+            "require_fresh_full_prefill_parity": require_parity,
             "configured_process_ceiling_bytes": configured_ceiling},
         "qualification_promoted": False}
     write(output / "manifest.json", manifest)
@@ -178,7 +185,8 @@ def run_baseline(output, *, native=False, configured_ceiling=None, worker_output
     outcome.update(artifact=str(destination.resolve()), process_ceiling_bytes=ceiling)
     write(output / "diagnostic.json", outcome)
     write_integrity(output)
-    return 0 if outcome["readiness"] == "reproduced" else 1
+    accepted = {"parity_passed"} if require_parity else {"reproduced", "parity_passed"}
+    return 0 if outcome["readiness"] in accepted else 1
 
 
 def validate_prefix_manifest(manifest):

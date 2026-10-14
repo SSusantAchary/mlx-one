@@ -110,6 +110,14 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
     bundle.model._mlx_one_execution_policy = {
         "version": EXECUTION_POLICY_VERSION, "dtype": execution_dtype,
         "quantized_payload_preserved": quantized,
+        "affine_int8_fp16_arithmetic": {
+            "shared_attention_swiglu_projections": "rowwise-gather-qmm-v1",
+            "shared_dense_attention": "rowwise-fp32-gather-mm-v1",
+            "qwen3_logits": "rowwise-gather-qmm-v1"
+                if getattr(bundle, "architecture", None) == "qwen3" else "native",
+            "activation_dtype": "float16", "kv_dtype": "float16"}
+        if execution_dtype == "float16" and quantized
+            and getattr(bundle, "architecture", None) in {"qwen2", "qwen3", "llama"} else None,
         "previous_dtypes": previous.get("previous_dtypes", before)
         if previous.get("dtype") == execution_dtype else before}
     named = getattr(bundle.model, "named_modules", None)
