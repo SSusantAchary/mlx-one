@@ -366,3 +366,212 @@ def test_paged_hybrid_snapshot_restores_full_state(int8_hybrid, tmp_path):
         if restored:
             restored.release()
         runtime.close()
+
+
+def test_p1_gate_requires_targets_and_complete_native_observations():
+    from copy import deepcopy
+    from dataclasses import asdict
+
+    from mlx_one.p1_profiles import profile
+    from mlx_one.p1_qualification import evaluate_p1
+
+    item = profile("qwen3-small", mode="paged", slots=4, ttft_budget_ms=1000,
+                   decode_gap_budget_ms=100, max_queue_wait_ms=2000, max_service_gap_ms=100)
+    identity = {key: "unit-test" for key in ("hardware", "source", "weight_precision",
+        "cache_precision", "mlx_version", "quantization_digest", "floating_policy")}
+    summary = {"identity": identity, "aggregate_decode_tokens_per_second_by_group": [125] * 5,
+        "failed": 0, "cleanup_passed": True, "starved_requests": 0, "queue_wait_p95_ms": 10,
+        "max_runnable_service_gap_ms": 10, "warm_client_ttft_p95_ms": 100,
+        "model_token_gap_p95_ms": 15}
+    serial = {"native_execution": True,
+        "profile": {**asdict(item), "slots": 1, "inference_mode": "reference_dense"},
+        "identity": identity, "summary": {**summary,
+        "aggregate_decode_tokens_per_second_by_group": [100] * 5}}
+    b1 = {**serial, "profile": {**serial["profile"], "inference_mode": "paged"},
+          "summary": {**serial["summary"], "model_token_gap_p95_ms": 10}}
+    traces = [{"phase": "decode", "batch_size": len(ids), "request_ids": ids,
+               "direct_attention_calls": 1, "history_materializations": 0}
+              for ids in (["a", "b", "c", "d"], ["b", "c", "d", "e"])]
+    parity = {"status": "passed"}
+    assert evaluate_p1(item, summary, traces, parity, serial=serial, b1=b1)["status"] == "passed"
+    bad = deepcopy(summary)
+    bad["aggregate_decode_tokens_per_second_by_group"][-1] = 124.9
+    result = evaluate_p1(item, bad, traces, parity, serial=serial, b1=b1)
+    assert result["status"] == "failed" and not result["checks"]["decode_target"]
+    assert evaluate_p1(item, summary, traces, parity)["status"] == "pending"
+    bad = deepcopy(b1)
+    bad["summary"]["aggregate_decode_tokens_per_second_by_group"][-1] = 94.9
+    assert not evaluate_p1(item, summary, traces, parity, serial=serial, b1=bad)[
+        "checks"]["b1_regression"]
+
+
+def test_p1_profile_cli_is_backend_free_and_keeps_native_pending(capsys):
+    import json
+    import sys
+
+    from mlx_one.p1_benchmark import main
+
+    assert main(["profiles", "--prompt-tokens", "128", "--output-tokens", "32",
+                 "--slots", "1", "2", "4"]) == 0
+    value = json.loads(capsys.readouterr().out)
+    assert len(value["profiles"]) == 3 and value["native_qualification"] == "pending"
+    assert all(p["repeats"] == 5 and p["qualification_track"] == "p1" for p in value["profiles"])
+    assert "mlx.core" not in sys.modules or not hasattr(sys.modules["mlx.core"], "metal")
+
+
+def test_p1_decode_aggregation_excludes_prefill_and_first_tokens():
+    from mlx_one.inference_baseline import summarize
+
+    rows = [{"status": "completed", "temperature_phase": "warm", "group_id": "0",
+             "started": 0, "ended": 100, "generated_tokens": 3,
+             "metrics": {"model_generation_started_at": 0,
+                         "model_token_times_ms": [10000, 11000, 12000]}}]
+    value = summarize(rows)
+    assert value["aggregate_output_tokens_per_second_by_group"] == [.03]
+    assert value["aggregate_decode_tokens_per_second_by_group"] == [1]
+
+
+def test_paged_hybrid_lifecycle_resume_fork_cancel_reload(int8_hybrid, tmp_path):
+    from mlx_one.engine.lifecycle import hybrid_lifecycle
+    from mlx_one.inference_baseline import BaselineProfile
+
+    item = BaselineProfile(int8_hybrid.model_id, int8_hybrid.revision, "paged",
+                           workload="lifecycle", cache_type="f16", page_tokens=16)
+    result = hybrid_lifecycle(int8_hybrid, item, tmp_path, reload_bundle=lambda: int8_hybrid)
+    assert result["status"] == "passed", result
+    assert all(c["active_handles"] == c["reserved_bytes"] == 0 for c in result["cleanup"])
+
+
+def test_int8_performance_cannot_promote_without_p1_gate(int8_native, tmp_path):
+    import json
+
+    from native_evidence import attach_provenance
+
+    from mlx_one.engine.cache_manager import CacheManager
+    from mlx_one.engine.reporting import native_report
+    from mlx_one.registry import (
+        InferenceFeatureRegistry,
+        InferenceFeatureStatus,
+        InferenceScope,
+        RegistryError,
+    )
+
+    runtime = CacheManager(int8_native)
+    try:
+        report = native_report(int8_native, runtime, mode="experimental_dense_batch")
+        scope = {**report["scope"], "cache_precision": "float16"}
+        proof = {"schema_version": "native-inference-qualification-v4", "backend": "mlx-one-native",
+            "feature": "continuous_batching", "scope": scope, "status": "passed",
+            "correctness_passed": True, "performance_qualified": True,
+            "execution_contract": report["execution_contract"]}
+        path = tmp_path / "proof.json"
+        path.write_text(json.dumps(attach_provenance(proof, tmp_path)))
+        registry = InferenceFeatureRegistry()
+        with pytest.raises(RegistryError, match="measured P1 gates"):
+            registry.promote("continuous_batching", InferenceScope(**scope), path,
+                             InferenceFeatureStatus.PERFORMANCE_QUALIFIED)
+        proof["schema_version"] = "native-inference-qualification-v3"
+        path.write_text(json.dumps(proof))
+        from mlx_one.engine.selection import load_evidence
+
+        legacy = load_evidence([path])
+        assert legacy.records()[0].status.value == "experimental"
+    finally:
+        runtime.close()
+
+
+def test_qwen3_int8_dense_one_b4_forward_with_unequal_histories(int8_native):
+    import numpy as np
+    from test_paged_hybrid import _requests
+
+    from mlx_one.engine.batching import BatchedDenseRunner
+    from mlx_one.engine.cache_manager import CacheManager
+
+    runtime = CacheManager(int8_native)
+    requests = _requests(int8_native, runtime, [(1,), (2, 3), (4, 5, 6), (7, 8, 9, 10)])
+    references = [int8_native.model.make_cache() for _ in requests]
+    runner = BatchedDenseRunner()
+    try:
+        for request, cache in zip(requests, references, strict=True):
+            runner.execute((request,))
+            int8_native.model(np.array([request.token_ids]), cache=cache)
+            request.phase, request.token_ids = "decode", (11,)
+        result = runner.execute(tuple(requests))
+        assert int8_native.model.calls[-1][0][0] == 4
+        assert runner.last_trace["history_lengths"] == [1, 2, 3, 4]
+        for logits, cache in zip(result.logits, references, strict=True):
+            expected = int8_native.model(np.array([[11]]), cache=cache).logits[:, -1:]
+            np.testing.assert_array_equal(logits, expected)
+    finally:
+        runtime.close()
+    assert runtime.stats().reserved_bytes == runtime.stats().active_handles == 0
+
+
+@pytest.mark.parametrize("architecture", ["qwen3", "llama"])
+def test_int8_http_streaming_batching_and_principal_isolation(int8_native, architecture):
+    from dataclasses import replace
+
+    from test_dense_batching import test_http_batched_requests_principal_isolation_and_sse
+
+    test_http_batched_requests_principal_isolation_and_sse(
+        replace(int8_native, architecture=architecture))
+
+
+def test_existing_affine_int4_hybrid_omitted_policy_is_preserved(int8_hybrid):
+    from dataclasses import replace
+
+    import numpy as np
+
+    from mlx_one import Engine
+
+    module = int8_hybrid.model.named_modules()[0][1]
+    module.bits = 4
+    module.weight = np.zeros((2, 8), dtype=np.uint32)
+    bundle = replace(int8_hybrid, quantization={"bits": 4, "group_size": 64, "mode": "affine"})
+    with Engine(bundle, inference_mode="experimental_hybrid_batch") as engine:
+        actual = engine.generate("Legacy hybrid path", max_tokens=4)
+    with Engine(bundle) as reference:
+        assert actual.text == reference.generate("Legacy hybrid path", max_tokens=4).text
+    assert not hasattr(bundle.model, "_mlx_one_execution_policy")
+
+
+def test_p1_harness_rejects_precision_substitution_and_records_pressure():
+    from test_inference_baseline import identity
+
+    from mlx_one.inference_baseline import BaselineError, validate_identity
+    from mlx_one.p1_profiles import profile
+
+    item = profile("qwen3-small", mode="experimental_dense_batch")
+    runtime = identity(item)
+    runtime["inference"]["capabilities"]["continuous_batching"] = True
+    runtime["inference"]["scope"]["cache_precision"] = "float16"
+    with pytest.raises(BaselineError, match="observed affine INT8"):
+        validate_identity(item, runtime)
+    runtime["inference"]["scope"]["weight_precision"] = "float16,uint32"
+    runtime["inference"]["execution_contract"] = {
+        "quantization": {"bits": 8, "group_size": 64, "mode": "affine"},
+        "modules": [{"bits": 8, "group_size": 64, "mode": "affine", "scale_dtype": "float16"}],
+        "floating_policy": {"dtype": "float16", "quantized_payload_preserved": True}}
+    validate_identity(item, runtime)
+    assert item.pressure_config["enabled"] is True
+
+
+def test_optimized_activation_policy_does_not_persist_on_reference(int8_native, monkeypatch):
+    from types import SimpleNamespace
+
+    import numpy as np
+
+    from mlx_one.engine.adapters import native_adapter
+
+    attention = SimpleNamespace(q_proj=object())
+    modules = int8_native.model.named_modules()
+    int8_native.model.named_modules = lambda: [*modules, ("attention", attention)]
+    model_type = type(int8_native.model)
+    original = model_type.__call__
+    def forward(model, *args, **kwargs):
+        assert attention._mlx_one_activation_dtype == "float16"
+        return original(model, *args, **kwargs)
+    monkeypatch.setattr(model_type, "__call__", forward)
+    adapter = native_adapter(int8_native)
+    adapter.forward(np.array([[1]]), cache=int8_native.model.make_cache())
+    assert not hasattr(attention, "_mlx_one_activation_dtype")

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 
 @dataclass(frozen=True)
@@ -43,6 +43,10 @@ def profile(checkpoint: str, *, mode: str, prompt_tokens: int = 2048,
     from mlx_one.inference_baseline import BaselineError, BaselineProfile
 
     asset = CHECKPOINTS[checkpoint]
+    supported = {"reference_dense", "paged", "experimental_hybrid_batch"
+                 if asset.architecture == "lfm2" else "experimental_dense_batch"}
+    if mode != "auto" and mode not in supported:
+        raise BaselineError("unsupported explicit P1 architecture/mode combination")
     if mode == "auto":
         raise BaselineError("P1 measurements require an explicit backend")
     if prompt_tokens + output_tokens > asset.context_tokens:
@@ -60,8 +64,56 @@ def profile(checkpoint: str, *, mode: str, prompt_tokens: int = 2048,
             raise BaselineError(
                 "SmolLM2 profiles require the verified pinned native INT8 conversion")
         revision = manifest["artifact_digest"]
+    from mlx_one.engine.pressure import MemoryPressureConfig
+
+    settings.setdefault("pressure_config", asdict(MemoryPressureConfig()))
     return BaselineProfile(model_id=asset.model_id, revision=revision,
         checkpoint_path=checkpoint_path,
         inference_mode=mode, context_tokens=prompt_tokens, output_tokens=output_tokens,
         slots=slots, repeats=5, execution_dtype="float16", cache_type="f16",
+        qualification_track="p1",
         chunk_tokens=chunk_tokens, workload=workload, **settings)
+
+
+def asset_inventory():
+    """Inspect local pinned asset headers without downloading or importing MLX."""
+    import json
+    import struct
+    from pathlib import Path
+
+    from huggingface_hub import snapshot_download
+
+    result = {}
+    for name, asset in CHECKPOINTS.items():
+        try:
+            root = Path(snapshot_download(asset.model_id, revision=asset.revision,
+                                           local_files_only=True))
+            files = sorted(root.glob("*.safetensors"))
+            config = json.loads((root / "config.json").read_text())
+            tensors = {}
+            for path in files:
+                with path.open("rb") as stream:
+                    length = struct.unpack("<Q", stream.read(8))[0]
+                    if length > 100 * 1024**2:
+                        raise ValueError("oversized safetensors header")
+                    tensors.update(json.loads(stream.read(length)))
+            packed = {k: v for k, v in tensors.items()
+                      if k.endswith(".weight") and v.get("dtype") == "U32"}
+            layouts = []
+            for key, meta in packed.items():
+                scales, biases = (tensors.get(key[:-6] + suffix) for suffix in ("scales", "biases"))
+                shape = meta["shape"]
+                valid = (len(shape) == 2 and scales is not None and biases is not None
+                         and scales["shape"] == biases["shape"] == [shape[0], shape[1] * 4 // 64]
+                         and shape[1] * 4 % 64 == 0
+                         and scales["dtype"] == biases["dtype"]
+                         and scales["dtype"] in {"F16", "BF16", "F32"})
+                layouts.append({"tensor": key, "int8_group64_layout": valid})
+            result[name] = {"status": "local_headers_only" if files else "missing_weights",
+                "revision": asset.revision, "quantization": config.get("quantization"),
+                "packed_layouts": layouts, "conversion_required": asset.conversion_required,
+                "checkpoint_execution_validated": False, "native_qualification": "pending"}
+        except (OSError, ValueError) as exc:
+            result[name] = {"status": "missing_or_invalid_assets", "revision": asset.revision,
+                            "reason": str(exc), "native_qualification": "pending"}
+    return result

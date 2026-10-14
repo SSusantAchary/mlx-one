@@ -6,6 +6,10 @@ import json
 
 def attach_provenance(proof, directory):
     scope = proof["scope"]
+    if not proof.get("execution_contract"):
+        proof["execution_contract"] = {"adapter_version": "native-adapter-v1",
+        "topology_digest": scope["topology_digest"], "execution_mode": scope["execution_path"],
+        "quantization_digest": "unit-test-only", "components": [{"kind": "full_kv"}]}
     cache_type = {"float16": "f16", "bfloat16": "bf16",
                   "float16,uint8": "q4_0"}[scope["cache_precision"]]
     payloads = {

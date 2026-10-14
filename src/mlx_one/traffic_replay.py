@@ -54,7 +54,8 @@ def generated_traffic(profile):
     count = profile.slots * 3
     for index in range(count):
         row = {"request_id": f"request-{index:04}", "arrival_ms": index * 20,
-               "prompt_tokens": (2048 if index % 2 == 0 else 8192)
+               "prompt_tokens": (min(2048, profile.context_tokens) if index % 2 == 0
+                                 else min(8192, profile.context_tokens))
                                 if profile.workload in {"mixed", "soak"}
                                 else profile.context_tokens,
                "output_tokens": min(profile.output_tokens, 128)
@@ -77,6 +78,7 @@ def generated_traffic(profile):
 def progress_fairness(events, *, max_queue_wait_ms, max_service_gap_ms):
     """Measure runnable intervals; terminal failures are not a starvation proxy."""
     jobs = {}
+    service_gaps, queue_waits = [], []
     violations, exclusions = [], {"backpressure": 0, "pressure": 0, "overload": 0}
     for event in sorted(events, key=lambda x: x["time"]):
         identity = event["request_id"]
@@ -97,11 +99,13 @@ def progress_fairness(events, *, max_queue_wait_ms, max_service_gap_ms):
         elif kind == "admitted":
             row["admitted"], row["last"] = now, now
             wait = (now - row["submitted"] - row["excluded_wait"]) * 1000
+            queue_waits.append(wait)
             if max_queue_wait_ms is not None and wait > max_queue_wait_ms:
                 violations.append({"request_id": identity, "kind": "admission", "ms": wait})
         elif kind == "forward":
             if row["last"] is not None and row["blocked"] is None:
                 gap = (now - row["last"]) * 1000
+                service_gaps.append(gap)
                 if max_service_gap_ms is not None and gap > max_service_gap_ms:
                     violations.append({"request_id": identity, "kind": "service", "ms": gap})
             row["last"] = now
@@ -110,6 +114,7 @@ def progress_fairness(events, *, max_queue_wait_ms, max_service_gap_ms):
                 exclusions["overload"] += 1
             if row["last"] is not None and row["blocked"] is None:
                 gap = (now - row["last"]) * 1000
+                service_gaps.append(gap)
                 if max_service_gap_ms is not None and gap > max_service_gap_ms:
                     violations.append({"request_id": identity, "kind": "service", "ms": gap})
             if row["admitted"] is None and row["blocked"] is None:
@@ -118,6 +123,8 @@ def progress_fairness(events, *, max_queue_wait_ms, max_service_gap_ms):
                     violations.append({"request_id": identity, "kind": "admission", "ms": wait})
     return {"status": "diagnostic" if max_queue_wait_ms is None or max_service_gap_ms is None
             else "passed" if events and not violations else "failed",
+            "max_runnable_service_gap_ms": max(service_gaps) if service_gaps else None,
+            "max_admission_wait_ms": max(queue_waits) if queue_waits else None,
             "violations": violations,
             "starved_requests": len({v["request_id"] for v in violations}),
             "exclusions": exclusions, "observed_requests": len(jobs)}

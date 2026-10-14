@@ -18,3 +18,19 @@ Source inspection establishes design relevance, not performance qualification.
 P0 CPU baseline: 704 passed, 23 skipped; hardware acceptance remains unmeasured.
 Confirmed blockers: 4-bit-only native loader/converter; Qwen2-only dense/paged
 eligibility; no shared execution adapter; dense-only hybrid attention components.
+
+## Resulting decisions
+
+Adopt ownership and exact-boundary lifecycle principles through the existing
+mlx-one owner/index, not another cache implementation. Adapt scheduling patterns
+through BatchScheduler and InferenceActor; the references' external BatchGenerator
+delegation is not mlx-one's execution path. Keep direct attention in the existing
+segmented arena/kernel implementation. Adapt native adapter gating and full hybrid
+state validation. Defer SSD tiers, speculation and MTP. Reject external engines as
+runtime backends. Shared ancestry is shared design history, not independent
+validation of the targets.
+
+Source/module inspection is separate from checkpoint execution. All six P1 pins
+are missing from the local offline cache at delivery; native execution, packed
+checkpoint validation and performance remain pending. Synthetic runtime fixtures
+exercise ownership and scheduling contracts without establishing checkpoint math.

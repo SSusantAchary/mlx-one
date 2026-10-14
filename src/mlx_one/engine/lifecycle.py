@@ -47,7 +47,11 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
     import mlx.core as mx
 
     dtype = "bfloat16" if profile.cache_type == "bf16" else "float16"
-    config = CacheConfig(backend="hybrid", prefix_cache_enabled=False,
+    from mlx_one.inference_baseline import TOLERANCES
+
+    atol, rtol = TOLERANCES[dtype] if profile.atol is None else (profile.atol, profile.rtol)
+    config = CacheConfig(backend="paged" if profile.inference_mode == "paged" else "hybrid",
+                         prefix_cache_enabled=False,
                          key_type=profile.cache_type, value_type=profile.cache_type,
                          block_size_tokens=profile.page_tokens)
     runtime = CacheManager(bundle, config)
@@ -77,6 +81,26 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
         for index, (a, b) in enumerate(zip(actual.entries, expected.entries, strict=True)):
             if a.offset != b.offset:
                 checks[f"{name}_positions"] = False
+            if hasattr(a, "_blocks"):
+                if hasattr(b, "_blocks"):
+                    blocks = [r.block.state for r in b._blocks]
+                    expected_values = tuple(mx.concatenate([v[i] for v in blocks], axis=2)
+                                            for i in range(2))
+                elif hasattr(b, "_keys"):
+                    expected_values = (b._materialize(b._keys, b.key_bits, b.offset),
+                                       b._materialize(b._values, b.value_bits, b.offset))
+                else:
+                    expected_values = (b.keys, b.values)
+                start = 0
+                for ref in a._blocks:
+                    block = ref.block
+                    for i, value in enumerate(block.state):
+                        comparisons.append({"stage": name, "layer": index, "page": start,
+                            **compare_logits(value[:, :, :block.token_count],
+                                expected_values[i][:, :, start:start + block.token_count],
+                                atol=atol, rtol=rtol)})
+                    start += block.token_count
+                continue
             for attr in ("keys", "values"):
                 left, right = getattr(a, attr, None), getattr(b, attr, None)
                 if right is None and hasattr(b, "_keys"):
@@ -89,8 +113,7 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
                     n = min(a.offset, getattr(a, "max_size", a.offset))
                     left, right = left[:, :, :n], right[:, :, :b.offset][:, :, -n:]
                 comparisons.append({"stage": name, "layer": index, "tensor": attr,
-                    **compare_logits(left, right, atol=profile.atol or .05,
-                                     rtol=profile.rtol or .01)})
+                    **compare_logits(left, right, atol=atol, rtol=rtol)})
     try:
         requests = tuple(forward(runtime, h,
                                  prefix if i == 0 else prefix[:max(1, len(prefix)//2)],
@@ -99,11 +122,13 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
         for i, request in enumerate(requests):
             expected = independent(request.request_id, request.token_ids)
             comparisons.append({"stage": "initial", **compare_logits(
-                outputs.logits[i], expected, atol=.05, rtol=.01)})
+                outputs.logits[i], expected, atol=atol, rtol=rtol)})
         save_snapshot(Path(output) / "snapshot", handles[0].bundle, identity=identity)
         specs = tuple(replace(s, dtype=dtype) if s.kind in {"full_kv", "sliding_kv"} else s
                       for s in runtime.plan.state_specs)
-        restored = load_snapshot(Path(output) / "snapshot", identity=identity, expected_specs=specs)
+        restored = load_snapshot(Path(output) / "snapshot", identity=identity, expected_specs=specs,
+                                 page_pool=(runtime.block_pool
+                                            if config.backend == "paged" else None))
         checks["pause_resume"] = adopt_snapshot(runtime, handles[0], restored)
         fork = runtime.create_handle("fork", key_type=profile.cache_type,
                                      value_type=profile.cache_type)
@@ -116,7 +141,7 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
             for index, (h, token) in enumerate(zip((handles[0], fork), tokens, strict=True)):
                 expected = independent(h.request_id, (token,))
                 comparisons.append({"stage": "resumed_fork", **compare_logits(
-                    result.logits[index], expected, atol=.05, rtol=.01)})
+                    result.logits[index], expected, atol=atol, rtol=rtol)})
                 compare_state(h.bundle, references[h.request_id].bundle, "resumed_fork")
         cancel = threading.Event()
         before = handles[0].bundle.clone()
@@ -135,7 +160,7 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
         compare_state(handles[0].bundle, before, "cancelled")
         expected = independent("peer", (seed[-1],))
         comparisons.append({"stage": "peer_continues", **compare_logits(
-            result.logits[1], expected, atol=.05, rtol=.01)})
+            result.logits[1], expected, atol=atol, rtol=rtol)})
         checks["cancellation_isolation"] = handles[0].bundle.offset == before.offset
         before.release()
         stale = handles[0]
@@ -159,12 +184,13 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
                                          value_type=profile.cache_type)
             adopt_snapshot(fresh, handle, load_snapshot(
                 Path(output) / "snapshot", identity=identity,
-                                                       expected_specs=specs))
+                expected_specs=specs, page_pool=fresh.block_pool
+                if config.backend == "paged" else None))
             result = runner.execute((forward(fresh, handle, (seed[-2],)),)).logits[0]
             independent("reloaded", prefix)
             expected = independent("reloaded", (seed[-2],))
             comparisons.append({"stage": "reloaded", **compare_logits(result, expected,
-                                                                        atol=.05, rtol=.01)})
+                                                                        atol=atol, rtol=rtol)})
     finally:
         for owner in runtimes:
             owner.close()

@@ -240,7 +240,7 @@ def test_http_benchmark_auth_is_not_serialized(monkeypatch):
 
 
 @pytest.mark.parametrize("schema,kind", [("native-inference-qualification-v2", "native-hardware"),
-                                        ("native-inference-qualification-v3", "synthetic")])
+                                        ("native-inference-qualification-v4", "synthetic")])
 def test_unmeasured_or_legacy_evidence_cannot_promote(tmp_path, schema, kind):
     from dataclasses import asdict
 
@@ -298,7 +298,7 @@ def test_auto_loads_missing_and_incomplete_evidence_as_unqualified(tmp_path):
     from mlx_one.engine.selection import load_evidence
 
     path = tmp_path / "bad.json"
-    path.write_text('{"schema_version":"native-inference-qualification-v3"}')
+    path.write_text('{"schema_version":"native-inference-qualification-v4"}')
     assert not load_evidence([tmp_path / "missing.json", path]).records()
 
 

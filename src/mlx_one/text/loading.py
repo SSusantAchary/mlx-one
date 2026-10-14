@@ -81,9 +81,12 @@ def load_text_model(
     adapter_path: str | Path | None = None,
 ) -> LoadedTextModel:
     root = _resolve(model, revision=revision, offline=offline, cache_dir=cache_dir)
-    from mlx_one.conversion import verify_conversion_manifest
+    from mlx_one.conversion import ConversionError, verify_conversion_manifest
 
-    converted = verify_conversion_manifest(root)
+    try:
+        converted = verify_conversion_manifest(root)
+    except (ConversionError, ValueError, OSError) as exc:
+        raise TextModelLoadError(f"invalid converted checkpoint: {exc}") from exc
     if converted is not None and revision not in {None, converted["artifact_digest"]}:
         raise TextModelLoadError("local conversion revision differs from artifact digest")
     config_data = _read_json(root / "config.json")

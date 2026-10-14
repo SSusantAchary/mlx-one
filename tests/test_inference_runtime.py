@@ -190,7 +190,7 @@ def test_native_evidence_is_exact_scoped_checksummed_and_revalidated(tmp_path):
     identity = scope()
     path = tmp_path / "result.json"
     path.write_text(json.dumps({
-        "schema_version": "native-inference-qualification-v3", "backend": "mlx-one-native",
+        "schema_version": "native-inference-qualification-v4", "backend": "mlx-one-native",
         "scope": asdict(identity), "feature": "dense_execution", "status": "passed",
         "correctness_passed": True,
     }))

@@ -276,6 +276,7 @@ def quality_run(bundle, engine, profile, output):
     qualification_evidence(
         output, feature="quantized_paged_kv" if profile.kv_bits else "long_context_quality",
         scope=scope, parity=parity,
+        execution_contract=parity["runtime"]["execution_contract"],
         compatibility_digest=compatibility_digest(engine._cache_runtime),
         workload_envelope=workload_envelope(profile), kernel_version=KERNEL_VERSION,
         kernel_correctness_passed=(kernel_correctness is not None
@@ -342,13 +343,14 @@ def advanced_checks(bundle, engine, scheduler, profile, summary, output):
     gates = {}
     if profile.inference_mode == "paged" and profile.workload != "soak":
         gates["d"] = evaluate_gate_d(profile, summary, traces, parity, reference)
-    if profile.inference_mode == "experimental_hybrid_batch":
+    if runtime.hybrid_state:
         from mlx_one.engine.lifecycle import hybrid_lifecycle
         from mlx_one.engine.modes import configure_execution_dtype
         from mlx_one.text import load_text_model
 
         def reload_checkpoint():
-            fresh = load_text_model(profile.model_id, revision=profile.revision, offline=True)
+            fresh = load_text_model(profile.checkpoint_path or profile.model_id,
+                                    revision=profile.revision, offline=True)
             configure_execution_dtype(fresh, profile.execution_dtype)
             return fresh
         lifecycle = scheduler.execute(lambda: hybrid_lifecycle(

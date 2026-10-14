@@ -120,7 +120,10 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
                 features.register_experimental(name, scope)
     added_features = {"paged": ("paged_attention", "paged_prefill"),
                       "experimental_hybrid_batch": ("hybrid_prefix_restore", "hybrid_batching")}
-    for name in added_features.get(selected_mode, ()):
+    names = added_features.get(selected_mode, ())
+    if getattr(runtime, "hybrid_state", False):
+        names = (*names, "hybrid_prefix_restore", "hybrid_batching")
+    for name in names:
         if features.find(name, scope) is None:
             features.register_experimental(name, scope)
     inventory = ("dense_execution", "block_storage", "block_prefix_reuse",
@@ -140,7 +143,13 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
                              "hardware_correctness_passed", False),
                          "performance_qualified": claim.get("performance_qualified", False),
                          "reason": claim.get("validation_reason", "stale native evidence")}
+    from mlx_one.engine.adapters import execution_contract
+    from mlx_one.engine.selection import compatibility_digest
+
+    contract = execution_contract(bundle, plan, selected_mode) if plan else None
     return {
+        "execution_contract": contract,
+        "compatibility_digest": compatibility_digest(runtime) if runtime else None,
         "runtime_schema_version": "native-runtime-v2",
         "feature_details": details,
         "weights_identity": getattr(runtime, "weight_identity", None),
@@ -158,7 +167,7 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
         "capabilities": {"continuous_batching": selected_mode in {
             "experimental_dense_batch", "paged", "experimental_hybrid_batch"},
                          "paged_attention": selected_mode == "paged",
-                         "hybrid_prefix_restore": selected_mode == "experimental_hybrid_batch"},
+                         "hybrid_prefix_restore": bool(getattr(runtime, "hybrid_state", False))},
         "runner_qualification": runner_features,
         "qualification": qualification,
         "latency": {"ttft_p95_ms": None, "decode_gap_p95_ms": None},

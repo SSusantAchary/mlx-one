@@ -51,6 +51,8 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
 
     runner = ({"paged": PagedRunner, "experimental_hybrid_batch": HybridRunner}.get(
         mode, BatchedDenseRunner))()
+    if target.hybrid_state:
+        runner = HybridRunner()
     prompts = [tuple(bundle.tokenizer.encode(prompt + ("\nMore." * i))) for i in range(batch_size)]
     fixture = bundle.tokenizer.encode(" A deterministic continuation.")
     forced = tuple(fixture[i % len(fixture)] for i in range(count))
@@ -66,7 +68,7 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
             for request in requests:
                 request.runtime = target
                 request.handle = next(h for h in handles if h.bundle.entries is request.cache)
-            if mode == "experimental_hybrid_batch" and requests[0].phase == "prefill":
+            if target.hybrid_state and requests[0].phase == "prefill":
                 results = [None] * len(requests)
                 for start in range(0, max(len(r.token_ids) for r in requests), page_tokens):
                     active, indices = [], []
@@ -192,7 +194,7 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
         forward([ForwardRequest(bundle, ids, donor.bundle.entries, "prefill", ids,
                                 request_id="prefix-donor")])
         published = target.publish_prefix(donor, fp, ids)
-        if mode == "experimental_hybrid_batch":
+        if target.hybrid_state:
             published = target.hybrid_prefix.preview(fp, ids + tuple(fixture[:3])) > 0
         prefix_rows = []
         for suffix in ((), tuple(fixture[:3])):

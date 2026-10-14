@@ -58,6 +58,8 @@ def native_peak_calibration(bundle, profile):
                 prefix_cache_enabled=False, block_size_tokens=profile.page_tokens,
                 key_type=profile.cache_type, value_type=profile.cache_type,
                 memory_budget_bytes=profile.cache_capacity_bytes))
+            if runtime.hybrid_state and backend == "paged":
+                runner = HybridRunner()
             runtime.harness_only, runtime.mode = True, profile.inference_mode
             handles = [runtime.create_handle(str(i), key_type=profile.cache_type,
                         value_type=profile.cache_type) for i in range(profile.slots)]

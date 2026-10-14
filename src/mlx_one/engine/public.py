@@ -171,7 +171,8 @@ class Engine:
                 "block_kv": block_supported,
                 "prefix_block_cache": block_supported,
                 "sliding_block_kv": False,
-                "hybrid_prefix_restore": self._inference_mode == "experimental_hybrid_batch",
+                "hybrid_prefix_restore": bool(self._cache_manager
+                                             and self._cache_manager.hybrid_state),
                 "continuous_batching": self._inference_mode in ACTOR_MODES,
             },
         }

@@ -133,7 +133,29 @@ def load_reference(directory):
     summary = json.loads((root / "summary.json").read_text())
     if not str(manifest.get("schema_version", "")).startswith("native-baseline-"):
         raise ValueError("reference must use native execution")
-    return {"profile": summary["profile"], "identity": summary["identity"], "summary": summary}
+    native = measured = False
+    references = []
+    try:
+        required = {"manifest.json", "summary.json", "runtime.json", "requests.jsonl",
+                    "measurement.json", "supervision.json"}
+        checksums = validate_integrity(root, required=required)
+        measurement = json.loads((root / "measurement.json").read_text())
+        supervision = json.loads((root / "supervision.json").read_text())
+        rows = [json.loads(line) for line in (root / "requests.jsonl").read_text().splitlines()]
+        batches = [size for row in rows for size in row.get("metrics", {}).get(
+            "model_forward_batch_sizes", [])]
+        measured = (measurement.get("backend") == "mlx-metal"
+                  and measurement.get("metal_available") is True
+                  and supervision.get("status") == "completed"
+                  and bool(batches))
+        native = measured and all(size == 1 for size in batches)
+        references = [{"uri": str((root / name).resolve()), "kind": "p1-native-reference",
+                       "sha256": checksums[name]} for name in sorted(required)]
+    except (OSError, ValueError):
+        pass
+    return {"profile": summary["profile"], "identity": summary["identity"], "summary": summary,
+            "native_execution": native, "native_measurement": measured,
+            "reference_artifacts": references}
 
 
 def matching_quality_bounds(left, right):
@@ -165,7 +187,7 @@ def load_quality_reference(directory, *, profile, runtime):
     scope["cache_precision"] = {"f16": "float16", "bf16": "bfloat16",
                                 "q4_0": "float16,uint8", "q8_0": "float16,uint8"}[
                                     profile.cache_type]
-    if (proof.get("schema_version") != "native-inference-qualification-v3"
+    if (proof.get("schema_version") != "native-inference-qualification-v4"
             or proof.get("quality_passed") is not True
             or proof.get("quality_kind") != "native-held-out-quality-v1"
             or proof.get("quality_coverage_passed") is not True
@@ -344,7 +366,7 @@ def export_matrix(results, output):
                "peak_physical_bytes": summary.get("peak_physical_bytes"),
                "stress_coverage": summary.get("stress_coverage"),
                "fairness": summary.get("fairness"), "gate_reasons": {}}
-        for gate in ("d", "e", "f"):
+        for gate in ("d", "e", "f", "p1"):
             path = directory / f"gate-{gate}.json"
             row[f"gate_{gate}"] = "pending"
             if path.exists():
@@ -357,7 +379,8 @@ def export_matrix(results, output):
                         validate_integrity(directory,
                                            required={"measurement.json", "supervision.json"})
                         measurement = json.loads(measurement_path.read_text())
-                        if (result.get("schema_version") != "native-gate-v2"
+                        if (result.get("schema_version") != (
+                                "native-p1-gate-v1" if gate == "p1" else "native-gate-v2")
                                 or not result.get("checks") or not all(result["checks"].values())
                                 or status != "completed"
                                 or measurement.get("backend") != "mlx-metal"
@@ -369,7 +392,9 @@ def export_matrix(results, output):
                                              result.get("checks", {}).items()
                                              if passed is False and name in {
                                                  "service_limits", "measured_advantage",
-                                                 "memory_reconciled", "pressure_recovery"})
+                                                 "memory_reconciled", "pressure_recovery",
+                                                 "decode_target",
+                                                 "b1_regression", "relative_token_gap"})
                 except (OSError, ValueError, KeyError):
                     row[f"gate_{gate}"] = "pending"
                     row["status"] = "stale_or_incomplete_evidence"
@@ -383,7 +408,7 @@ def export_matrix(results, output):
         writer.writerows({k: json.dumps(v, sort_keys=True) if isinstance(v, (dict, list)) else v
                           for k, v in row.items()} for row in rows)
     readable = ["# Native inference qualification", "",
-                "| Model | Revision | Chip | Mode | Context | Slots | Status | D / E / F "
+                "| Model | Revision | Chip | Mode | Context | Slots | Status | D / E / F / P1 "
                 "| tok/s | TTFT p95 ms | Model gap ms | SSE gap ms | Failures | Regressions |",
                 "|---|---|---|---|---:|---:|---|---|---:|---:|---:|---:|---:|---|"]
     for row in rows:
@@ -391,7 +416,7 @@ def export_matrix(results, output):
                                          for k in ("model", "revision", "chip", "mode",
                                                    "context_tokens",
                                                    "slots", "status")) + " | "
-                        + " / ".join(row[f"gate_{g}"] for g in "def") + " | "
+                        + " / ".join(row[f"gate_{g}"] for g in ("d", "e", "f", "p1")) + " | "
                         + " | ".join("pending" if row.get(k) is None else str(row[k])
                             for k in ("throughput_tok_s", "ttft_p95_ms", "model_gap_p95_ms",
                                       "sse_gap_p95_ms", "failures", "regressions")) + " |")

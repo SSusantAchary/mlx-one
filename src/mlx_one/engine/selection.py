@@ -95,6 +95,8 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
     if (profile["cache_type"] != runtime.config.key_type
             or profile["page_tokens"] != runtime.config.block_size_tokens):
         return {**fallback, "reason": "configured cache layout does not match workload envelope"}
+    from mlx_one.engine.adapters import execution_contract
+
     candidates = {"paged": "paged_attention", "experimental_hybrid_batch": "hybrid_prefix_restore",
                   "experimental_dense_batch": "continuous_batching"}
     if runtime.config.key_type in {"q4_0", "q8_0"}:
@@ -118,7 +120,9 @@ def select_auto_mode(bundle, runtime, registry, profile, *, hardware=None, sourc
             if fresh["status"] != InferenceFeatureStatus.PERFORMANCE_QUALIFIED.value:
                 continue
             proof = json.loads(Path(record.evidence[0].uri).read_text())
-            if proof.get("schema_version") != "native-inference-qualification-v3":
+            if proof.get("schema_version") != "native-inference-qualification-v4":
+                continue
+            if proof.get("execution_contract") != execution_contract(bundle, runtime.plan, mode):
                 continue
             if (proof.get("workload_envelope") != profile
                     or proof.get("compatibility_digest") != compatibility_digest(candidate)):
@@ -175,7 +179,12 @@ def qualification_matches(runtime, feature, *, profile=None, performance=False):
         if status not in accepted:
             continue
         proof = json.loads(Path(record.evidence[0].uri).read_text())
-        if proof.get("schema_version") != "native-inference-qualification-v3":
+        if proof.get("schema_version") != "native-inference-qualification-v4":
+            continue
+        from mlx_one.engine.adapters import execution_contract
+
+        if proof.get("execution_contract") != execution_contract(
+                runtime.bundle, runtime.plan, mode):
             continue
         if proof.get("compatibility_digest") != compatibility_digest(runtime):
             continue

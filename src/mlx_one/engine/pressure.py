@@ -257,12 +257,15 @@ def execution_forecast(runtime, config, *, batch, chunk, history, explicit_bytes
                 continue
             proof = json.loads(Path(record.evidence[0].uri).read_text())
             peak = proof.get("activation_peak", {})
+            from mlx_one.engine.adapters import execution_contract
             from mlx_one.engine.arena import ARENA_VERSION
             from mlx_one.engine.envelope import EVIDENCE_VERSION
             from mlx_one.engine.paged import KERNEL_VERSION
             from mlx_one.peak_calibration import CALIBRATION_POLICY
 
             if (proof.get("schema_version") == EVIDENCE_VERSION
+                    and proof.get("execution_contract") == execution_contract(
+                        runtime.bundle, runtime.plan, runtime.mode)
                     and proof.get("compatibility_digest") == compatibility_digest(runtime)
                     and proof.get("kernel_version") == KERNEL_VERSION
                     and proof.get("arena_version") == ARENA_VERSION

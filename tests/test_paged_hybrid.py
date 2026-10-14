@@ -445,7 +445,7 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
     feature = "quantized_paged_kv" if cache_type == "q4_0" else "paged_attention"
     artifact = tmp_path / "measured.json"
     artifact.write_text('{"fixture": true}')
-    proof = {"schema_version": "native-inference-qualification-v3", "backend": "mlx-one-native",
+    proof = {"schema_version": "native-inference-qualification-v4", "backend": "mlx-one-native",
              "feature": feature, "scope": scope, "status": "passed",
              "correctness_passed": True, "performance_qualified": True,
              "compatibility_digest": compatibility_digest(runtime),
@@ -457,6 +457,9 @@ def test_auto_exact_evidence_expiry_and_envelope(advanced, tmp_path, monkeypatch
     path = tmp_path / "proof.json"
     from native_evidence import attach_provenance
 
+    from mlx_one.engine.adapters import execution_contract
+
+    proof["execution_contract"] = execution_contract(runtime.bundle, runtime.plan, runtime.mode)
     path.write_text(json.dumps(attach_provenance(proof, tmp_path)))
     registry = InferenceFeatureRegistry()
     registry.promote(feature, InferenceScope(**scope), path,
@@ -682,7 +685,7 @@ def test_activation_calibration_requires_exact_dimensions_identity_and_freshness
                           source_revision="fixture-source")["scope"]
     scope["cache_precision"] = "float16"
     path = tmp_path / "peak.json"
-    proof = {"schema_version": "native-inference-qualification-v3", "backend": "mlx-one-native",
+    proof = {"schema_version": "native-inference-qualification-v4", "backend": "mlx-one-native",
              "scope": scope, "feature": "activation_peak", "status": "passed",
              "correctness_passed": True, "compatibility_digest": compatibility_digest(runtime),
              "kernel_version": KERNEL_VERSION, "arena_version": "segmented-arena-v1",
@@ -691,6 +694,9 @@ def test_activation_calibration_requires_exact_dimensions_identity_and_freshness
                 "policy": "activation-peak-v1-margin20", "incremental_bytes": 4096}}
     from native_evidence import attach_provenance
 
+    from mlx_one.engine.adapters import execution_contract
+
+    proof["execution_contract"] = execution_contract(runtime.bundle, runtime.plan, runtime.mode)
     path.write_text(json.dumps(attach_provenance(proof, tmp_path)))
     registry = InferenceFeatureRegistry()
     registry.promote("activation_peak", InferenceScope(**scope), path,

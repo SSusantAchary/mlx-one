@@ -42,6 +42,9 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
 
         try:
             adapter = native_adapter(bundle, plan, allow_bfloat16=True, allow_hybrid=True)
+            if (adapter.spec.hybrid and bundle.quantization
+                    and bundle.quantization.get("bits") != 8):
+                raise ValueError("paged hybrid execution requires native affine INT8 weights")
             if adapter.spec.hybrid and "sliding_kv" in adapter.spec.state_kinds:
                 raise ValueError("hybrid paging does not support sliding attention")
             if adapter.spec.head_dim > 256:
@@ -117,12 +120,9 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
 
 
 def validate_batch_precision(bundle) -> None:
-    from mlx_one.engine.reporting import tensor_dtypes
+    from mlx_one.engine.adapters import native_adapter
 
-    parameters = getattr(bundle.model, "parameters", None)
-    observed = tensor_dtypes(parameters()) if callable(parameters) else ()
-    if not observed or any(dtype != "float16" for dtype in observed):
-        raise ModelCapabilityUnsupported(
-            "experimental_dense_batch requires observed FP16 weights; "
-            "select execution_dtype=float16"
-        )
+    try:
+        native_adapter(bundle)
+    except (ValueError, AttributeError) as exc:
+        raise ModelCapabilityUnsupported(str(exc)) from exc

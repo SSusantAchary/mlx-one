@@ -497,7 +497,7 @@ class GenerationEngine:
                     "block_kv": block_supported,
                     "prefix_block_cache": block_supported,
                     "sliding_block_kv": False,
-                    "hybrid_prefix_restore": self._inference_mode == "experimental_hybrid_batch",
+                    "hybrid_prefix_restore": runtime.hybrid_state,
                     "continuous_batching": self._inference_mode in {
                         "experimental_dense_batch", "paged", "experimental_hybrid_batch"},
                 },

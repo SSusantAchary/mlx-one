@@ -259,7 +259,7 @@ class InferenceFeatureRegistry:
         source = Path(result_path)
         raw = source.read_bytes()
         result = json.loads(raw)
-        if (result.get("schema_version") != "native-inference-qualification-v3"
+        if (result.get("schema_version") != "native-inference-qualification-v4"
                 or result.get("backend") != "mlx-one-native"
                 or result.get("scope") != asdict(scope)
                 or result.get("feature") != feature
@@ -282,7 +282,23 @@ class InferenceFeatureRegistry:
                 raise RegistryError("native qualification backing artifact checksum mismatch")
             evidence.append(ArtifactRef(uri=str(path), kind=artifact["kind"], sha256=digest,
                                         media_type=artifact.get("media_type")))
+        from mlx_one.engine.adapters import ADAPTER_VERSION
+
+        contract = result.get("execution_contract") or {}
+        if (contract.get("adapter_version") != ADAPTER_VERSION
+                or contract.get("topology_digest") != scope.topology_digest
+                or contract.get("execution_mode") != scope.execution_path
+                or not contract.get("quantization_digest") or not contract.get("components")):
+            raise RegistryError("current observed native execution contract is required")
         self._validate_native_provenance(result, scope, evidence)
+        if (status is InferenceFeatureStatus.PERFORMANCE_QUALIFIED
+                or feature in {"quantized_paged_kv", "long_context"}):
+            from mlx_one.engine.envelope import QualificationEnvelope
+
+            try:
+                QualificationEnvelope.from_mapping(result.get("workload_envelope"))
+            except ValueError as exc:
+                raise RegistryError("current complete workload envelope is required") from exc
         record = InferenceFeatureRecord(feature, scope, status, tuple(evidence))
         self._records[(feature, scope)] = record
         return record
@@ -298,7 +314,8 @@ class InferenceFeatureRegistry:
             name = Path(artifact.uri).name
             if name in {"measurement.json", "checkpoint.json", "manifest.json", "gate-c.json",
                         "gate-d.json", "gate-hybrid-performance.json", "gate-e.json",
-                        "held-out-quality.json", "retrieval.json", "lifecycle.json"}:
+                        "held-out-quality.json", "retrieval.json", "lifecycle.json",
+                        "gate-p1.json"}:
                 if (name not in {"held-out-quality.json", "retrieval.json"}
                         and Path(artifact.uri).parent != origin):
                     continue
@@ -330,9 +347,19 @@ class InferenceFeatureRegistry:
                   and (manifest.get("hardware", {}).get("memory_bytes") or 0) > 0)
         if not native:
             raise RegistryError("native checkpoint and Metal provenance artifacts are required")
+        if (result.get("performance_qualified") is True and
+                result.get("execution_contract", {}).get("quantization", {}).get("bits") == 8):
+            from mlx_one.p1_qualification import P1_CHECKS, P1_GATE_VERSION
+
+            p1 = documents.get("gate-p1.json", {})
+            if (p1.get("schema_version") != P1_GATE_VERSION
+                    or not P1_CHECKS <= p1.get("checks", {}).keys()
+                    or p1.get("status") != "passed" or not p1.get("checks")
+                    or not all(p1["checks"].values())):
+                raise RegistryError("INT8 performance qualification requires measured P1 gates")
         if result.get("performance_qualified") is True:
             gates = [documents.get(name, {}) for name in (
-                "gate-c.json", "gate-d.json", "gate-hybrid-performance.json")]
+                "gate-c.json", "gate-d.json", "gate-hybrid-performance.json", "gate-p1.json")]
             if not any(g.get("status") == "passed" and g.get("checks")
                        and all(g["checks"].values()) for g in gates):
                 raise RegistryError("performance qualification requires measured gate artifacts")
