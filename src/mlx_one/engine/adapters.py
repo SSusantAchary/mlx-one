@@ -176,6 +176,18 @@ class NativeModelAdapter:
             "carry_bytes": sum(k == "conv" for k in self.spec.state_kinds)
                 * getattr(config, "hidden_size", 0) * (getattr(config, "conv_L_cache", 1) - 1) * 2}
 
+    def additional_transient_bytes(self, *, batch, chunk):
+        config = getattr(self.bundle.model.config, "text_config", self.bundle.model.config)
+        experts = int(getattr(config, "num_experts", 0))
+        if not experts:
+            return 0
+        hidden = self.activation_config.hidden_size
+        intermediate = int(getattr(config, "moe_intermediate_size", hidden * 4))
+        layers = len(self.plan.layer_specs)
+        # Native StackedExperts evaluates all expert outputs; active parameters
+        # cannot be substituted for either resident weights or this scratch bound.
+        return batch * chunk * experts * (2 * intermediate + hidden + layers * 2) * 4
+
     def forward(self, input_ids, *, cache, attention_mask=None, position_ids=None):
         # Cast RoPE/QK outputs within explicit optimized execution, without changing
         # weights or leaving a policy behind on a shared reference model.

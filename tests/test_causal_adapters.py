@@ -57,3 +57,14 @@ def test_odd_learned_head_dimension_is_legal_and_paging_unavailable(native):
     assert adapter.spec.head_dim==3 and adapter.spec.layers[0].position_policy=='learned'
     with pytest.raises(ModelCapabilityUnsupported,match='paged'):
         validate_mode(bundle,build_cache_plan(bundle),'paged')
+
+
+def test_moe_forecast_counts_all_expert_outputs(native):
+    bundle=replace(native,architecture='qwen2_moe')
+    bundle.model.config.num_experts=8
+    bundle.model.config.moe_intermediate_size=16
+    bundle.model.config.num_experts_per_tok=2
+    adapter=native_adapter(bundle)
+    bound=adapter.additional_transient_bytes(batch=4,chunk=512)
+    assert bound>4*512*2*(2*16+2)*4
+    assert adapter.memory_estimate(4)['model_storage_bytes']==native.model.weights.nbytes

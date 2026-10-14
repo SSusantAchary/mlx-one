@@ -92,3 +92,12 @@ class Qwen2Adapter(CausalArchitectureAdapter):
 
 class Qwen3Adapter(CausalArchitectureAdapter):
     supported_architectures = frozenset({'qwen3'})
+
+
+class OpenELMAdapter(CausalArchitectureAdapter):
+    supported_architectures = frozenset({'openelm'})
+    supports_paging = False
+
+
+class Qwen2MoeAdapter(CausalArchitectureAdapter):
+    supported_architectures = frozenset({'qwen2_moe'})

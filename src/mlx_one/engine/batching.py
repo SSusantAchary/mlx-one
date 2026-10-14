@@ -236,6 +236,8 @@ class BatchedDenseRunner(CausalLMRunner):
             arithmetic_scratch = attention_scratch_bound(batch=count,
                 heads=self.adapter.spec.query_heads, head_dim=dim, chunk=width, history=history)
             transient += arithmetic_scratch
+        adapter_scratch = self.adapter.additional_transient_bytes(batch=count, chunk=width)
+        transient += adapter_scratch
         packed = []
         staged = []
         started = time.perf_counter()
@@ -321,6 +323,7 @@ class BatchedDenseRunner(CausalLMRunner):
                            "padding_efficiency": plan.total_scheduled_tokens / (count * width),
                            "transient_reserved_bytes": transient,
                            "arithmetic_scratch_bound_bytes": arithmetic_scratch,
+                           "adapter_transient_bound_bytes": adapter_scratch,
                            "packed_history_bytes": per_token * count * history,
                            "replacement_cache_bytes": per_token * replacement_tokens,
                            "adapter_version": self.adapter.spec.adapter_version,

@@ -160,3 +160,10 @@ packing/result mappings and per-layer head descriptions. GPT-2 learned positions
 use real row positions rather than padded extent; unsupported paging fails early.
 109 affected CPU tests and 12 tiny native B1/B2/B4 cases plus one legal-context
 boundary passed. Other sizes/checkpoints and performance remain unqualified.
+
+PR-07 adds OpenELM varying-layer and Qwen2-MoE adapters, explicit mask/position
+handling, padding-aware router auxiliary statistics and conservative all-expert
+scratch forecasts. 105 affected CPU tests and six tiny FP16 native B1/B2/B4
+cases pass, including per-layer KV and real-token router parity. Native forward
+traces and allocator/RSS observations stay local; no large-checkpoint or
+performance qualification is inferred.
