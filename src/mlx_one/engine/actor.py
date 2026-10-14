@@ -21,6 +21,7 @@ from mlx_one.engine.batching import (
 )
 from mlx_one.engine.cache_errors import CacheCapacityError
 from mlx_one.engine.contracts import EngineRequest, Phase, RequestKind, SequenceState
+from mlx_one.engine.device_executor import DeviceExecutor
 from mlx_one.engine.execution_context import QueueFullError, RequestTimeoutError, _slot_local
 
 
@@ -58,6 +59,7 @@ class _Call:
 
 class InferenceActor:
     def __init__(self, config: BatchingConfig | None = None, *, runner=None, pressure=None):
+        self.device_executor = DeviceExecutor.shared()
         self.config = config or BatchingConfig()
         self.policy = BatchScheduler(self.config)
         self.runner = runner or BatchedDenseRunner()
@@ -203,6 +205,8 @@ class InferenceActor:
             self._thread.join()
 
     def _finish(self, job, error=None, phase=Phase.FINISHED):
+        if not self.device_executor.is_owner:
+            return self.device_executor.call(id(self), lambda: self._finish(job, error, phase))
         if job.terminal.done():
             return
         try:
@@ -232,6 +236,8 @@ class InferenceActor:
             job.terminal.set_result(None)
 
     def _advance_one(self, job):
+        if not self.device_executor.is_owner:
+            return self.device_executor.call(id(self), lambda: self._advance_one(job))
         if job.request is not None or job.output.full():
             return
         try:
@@ -357,7 +363,7 @@ class InferenceActor:
                 paused.cancel.set()
                 self._finish(paused, phase=Phase.CANCELLED)
             try:
-                result = call.factory()
+                result = self.device_executor.call(id(self), call.factory)
                 self._epoch += 1
                 call.result.set_result(result)
             except BaseException as exc:
@@ -437,7 +443,8 @@ class InferenceActor:
                     jobs = [next(j for j in self._active if j.request is request)
                             for request in group]
                     try:
-                        output = self.runner.execute(group)
+                        output = self.device_executor.call(id(group[0].bundle),
+                            lambda batch=group: self.runner.execute(batch))
                         if output.request_ids != tuple(j.request_id for j in jobs):
                             raise ValueError("runner output mapping mismatch")
                         trace = dict(self.runner.last_trace)
@@ -494,4 +501,4 @@ class InferenceActor:
                 else:
                     self._finish(work, RuntimeError("inference actor stopped"), Phase.CANCELLED)
             if self._finalizer is not None:
-                self._finalizer()
+                self.device_executor.call(id(self), self._finalizer)

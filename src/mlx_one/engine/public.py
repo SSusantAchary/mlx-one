@@ -14,6 +14,7 @@ from typing import Any
 
 from mlx_one.engine.batching import BatchingConfig
 from mlx_one.engine.cache_specs import CacheConfig
+from mlx_one.engine.device_executor import DeviceExecutor, device_iterator
 from mlx_one.engine.modes import (
     ACTOR_MODES,
     InferenceMode,
@@ -73,21 +74,23 @@ class Engine:
         qualification_registry: Any = None,
         qualification_profile: dict[str, Any] | None = None,
     ) -> None:
+        self._device = DeviceExecutor.shared()
         backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
         config = (replace(cache_config, backend=backend)
                   if cache_config else CacheConfig(backend=backend))
         self._bundle = (
             model
             if isinstance(model, LoadedTextModel)
-            else load_text_model(
+            else self._device.call(str(model), lambda: load_text_model(
                 model,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
-            )
+            ))
         )
-        configure_execution_dtype(self._bundle, execution_dtype)
+        self._device.call(id(self),
+            lambda: configure_execution_dtype(self._bundle, execution_dtype))
         self._requested_mode = inference_mode
         self._inference_mode = inference_mode
         self._execution_dtype = execution_dtype
@@ -106,10 +109,11 @@ class Engine:
         if callable(getattr(self._bundle.model, "make_cache", None)):
             from mlx_one.engine.construction import construct_runtime
 
-            self._cache_manager, self._selection = construct_runtime(
+            self._cache_manager, self._selection = self._device.call(id(self),
+                lambda: construct_runtime(
                 self._bundle, config, inference_mode, batching=self._batching_config,
                 pressure=self._pressure, registry=qualification_registry,
-                profile=qualification_profile)
+                profile=qualification_profile))
             inference_mode = self._selection["resolved_mode"]
             self._inference_mode = inference_mode
             backend = self._cache_manager.config.backend
@@ -123,7 +127,7 @@ class Engine:
                 self._pressure.start()
         except Exception:
             if self._cache_manager is not None:
-                self._cache_manager.close()
+                self._device.call(id(self), self._cache_manager.close)
             if self._pressure is not None:
                 self._pressure.close()
             raise
@@ -204,7 +208,8 @@ class Engine:
     ) -> GenerationResult:
         resolved = _options(options, settings)
         if self._cache_manager is None:
-            result = generate(self.model, prompt, options=resolved)
+            result = self._device.call(id(self),
+                lambda: generate(self.model, prompt, options=resolved))
             if not isinstance(result, GenerationResult):
                 raise RuntimeError("single-prompt generation returned a batch")
             with self._lock:
@@ -231,9 +236,9 @@ class Engine:
             if event.is_set() and (latest is None or latest.finish_reason is None):
                 yield GenerationChunk(None, "", latest.generated_tokens if latest else 0, "stop")
         else:
-            yield from stream_generate(
+            yield from device_iterator(self._device, id(self), stream_generate(
                 self.model, prompt, options=resolved, is_cancelled=event.is_set,
-                _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace)
+                _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace))
 
     def _batch_factory(self, prompt, options):
         cfg = self._batching_config
@@ -317,14 +322,14 @@ class Engine:
             self._actor.close()
         self._executor.shutdown(wait=True, cancel_futures=True)
         if self._cache_manager is not None:
-            self._cache_manager.close()
+            self._device.call(id(self), self._cache_manager.close)
         if self._pressure is not None:
             self._pressure.close()
         gc.collect()
         try:
             mx = sys.modules.get("mlx.core")
             if mx is not None:
-                mx.clear_cache()
+                self._device.call(id(self), mx.clear_cache)
         except Exception:
             pass
 

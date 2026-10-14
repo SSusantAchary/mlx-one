@@ -125,6 +125,12 @@ model epochs, leases, pinning, TTL/LRU eviction and draining unload. Seven CPU
 ownership tests pass, including a red-before/green-after disposal/reload race.
 Native multi-model stress remains pending. PR-04 connects these owners to serving.
 
+PR-04 bridges existing Engine and HTTP execution to the shared device owner and
+adds `InferenceService` with residency leases. Live server streams prevent model
+unload; reference slots remain separate B=1 forwards. Public signatures, result
+types and SSE framing are preserved. 59 affected tests pass with two inherited
+warnings. Native cross-model service stress remains pending.
+
 Checksummed inventory and run metadata stay local under
 `benchmarks/results/p1/<host>/runtime-baseline/<run>/`; native logits, comparisons,
 supervision and failure artifacts stay under

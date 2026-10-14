@@ -9,6 +9,7 @@ from pathlib import Path
 from threading import RLock
 from typing import TYPE_CHECKING, Any
 
+from mlx_one.engine.model_pool import ModelPool
 from mlx_one.text import LoadedTextModel, load_text_model
 
 if TYPE_CHECKING:
@@ -34,6 +35,10 @@ class ModelManager:
     """Own exactly one model bundle for the lifetime of a server process."""
 
     def __init__(self, *, alias: str | None = None, context_length: int | None = None) -> None:
+        self._pool = ModelPool()
+        self._bundle_lease = None
+        self._bundle_key = None
+        self._unloading = False
         self._bundle: LoadedTextModel | None = None
         self._draft_bundle: LoadedTextModel | None = None
         self._transcription_bundle: LoadedWhisper | None = None
@@ -52,21 +57,25 @@ class ModelManager:
         tokenizer_source: str | Path | None = None,
     ) -> LoadedTextModel:
         with self._lock:
-            if self._bundle is not None:
-                raise RuntimeError("a model is already loaded")
-            self._bundle = load_text_model(
+            if self._bundle is not None or self._unloading:
+                raise RuntimeError("a model is already loaded or draining")
+            self._bundle_key = str(model_id) + "@" + str(revision)
+            self._bundle_lease = self._pool.acquire(self._bundle_key, lambda: load_text_model(
                 model_id,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
-            )
+            ))
+            self._bundle = self._bundle_lease.runtime.value
             if (
                 self._context_length is not None
                 and self._context_length > self._bundle.context_length
             ):
                 native = self._bundle.context_length
                 self._bundle = None
+                self._bundle_lease.release()
+                self._pool.unload(self._bundle_key)
                 raise ValueError(
                     f"context length {self._context_length} exceeds model maximum {native}"
                 )
@@ -88,13 +97,13 @@ class ModelManager:
                 raise RuntimeError("load the primary model before its draft model")
             if self._draft_bundle is not None:
                 raise RuntimeError("a draft model is already loaded")
-            draft = load_text_model(
+            draft = self._pool.executor.call(id(self), lambda: load_text_model(
                 model_id,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
-            )
+            ))
             if _tokenizer_fingerprint(draft.tokenizer) != _tokenizer_fingerprint(
                 self._bundle.tokenizer
             ):
@@ -106,15 +115,27 @@ class ModelManager:
 
     def unload(self) -> None:
         with self._lock:
-            self._transcription_bundle = None
-            self._transcription_bytes = 0
-            self._draft_bundle = None
-            self._bundle = None
+            if self._unloading:
+                raise RuntimeError("model is already draining")
+            self._unloading = True
+            lease, key = self._bundle_lease, self._bundle_key
+        try:
+            if lease is not None:
+                lease.release()
+                self._pool.unload(key)
+        finally:
+            with self._lock:
+                self._transcription_bundle = None
+                self._transcription_bytes = 0
+                self._draft_bundle = None
+                self._bundle = None
+                self._bundle_lease = None
+                self._unloading = False
         gc.collect()
         try:
             mx = sys.modules.get("mlx.core")
             if mx is not None:
-                mx.clear_cache()
+                self._pool.executor.call(id(self), mx.clear_cache)
         except Exception:
             pass
 
@@ -123,6 +144,13 @@ class ModelManager:
             if self._bundle is None:
                 raise RuntimeError("no model is loaded")
             return self._bundle
+
+    def model_lease(self):
+        with self._lock:
+            if self._unloading:
+                raise RuntimeError("model is draining")
+            bundle = self.current_model()
+            return self._pool.acquire(self._bundle_key, lambda: bundle)
 
     def draft_model(self) -> LoadedTextModel | None:
         with self._lock:
@@ -146,12 +174,12 @@ class ModelManager:
             if self._transcription_bundle is not None:
                 raise RuntimeError("a transcription model is already loaded")
             before = _active_memory()
-            bundle = load_whisper(
+            bundle = self._pool.executor.call(id(self), lambda: load_whisper(
                 model_id,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
-            )
+            ))
             self._transcription_bundle = bundle
             after = _active_memory()
             if before is not None and after is not None:

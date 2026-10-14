@@ -25,6 +25,7 @@ class _Resident:
     leases: int = 0
     pinned: bool = False
     used_at: float = 0
+    drain: object = None
 
 
 class ModelLease:
@@ -94,6 +95,11 @@ class ModelPool:
         error = None
         for entry in entries:
             try:
+                if entry.drain is not None:
+                    entry.drain(entry.runtime.value)
+            except BaseException as exc:
+                error = error or exc
+            try:
                 self.executor.call(entry.runtime.key, lambda e=entry: e.dispose(e.runtime.value))
             except BaseException as exc:
                 error = error or exc
@@ -105,7 +111,7 @@ class ModelPool:
             raise error
 
     def acquire(self, key, loader, *, estimated_bytes=0, dispose=lambda value: None,
-                evaluate=None, measure=None, pinned=False):
+                evaluate=None, measure=None, pinned=False, drain=None):
         if not key or not isinstance(estimated_bytes, int) or estimated_bytes < 0:
             raise ValueError("model requires identity and a nonnegative byte estimate")
         with self._condition:
@@ -159,7 +165,7 @@ class ModelPool:
                     epoch = self._epochs.get(key, 0) + 1
                     self._epochs[key] = epoch
                     entry = _Resident(ModelRuntime(key, epoch, value, observed), dispose,
-                                      leases=1, pinned=pinned, used_at=self.clock())
+                                      leases=1, pinned=pinned, used_at=self.clock(), drain=drain)
                     self._entries[key] = entry
                     del self._loading[key]
                     self._condition.notify_all()
@@ -167,6 +173,11 @@ class ModelPool:
                 return ModelLease(self, entry)
             except BaseException as exc:
                 if value is not None:
+                    try:
+                        if drain is not None:
+                            drain(value)
+                    except BaseException as cleanup_error:
+                        exc.__context__ = cleanup_error
                     try:
                         self.executor.call(key, lambda: dispose(value))
                     except BaseException as cleanup_error:

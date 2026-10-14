@@ -166,6 +166,8 @@ class GenerationEngine:
         spec_draft_n_max: int = 3,
     ) -> Iterator[GenerationEvent]:
         lifecycle: dict[str, Any] = {}
+        acquire = getattr(self.manager, "model_lease", None)
+        lease = acquire() if callable(acquire) else None
         try:
             yield from self._stream_request(
                 model=model,
@@ -192,12 +194,13 @@ class GenerationEngine:
         finally:
             runtime = lifecycle.get("runtime")
             handle = lifecycle.get("handle")
-            if (
-                isinstance(runtime, CacheManager)
-                and isinstance(handle, CacheHandle)
-                and not handle.closed
-            ):
-                runtime.release(handle)
+            try:
+                if (isinstance(runtime, CacheManager) and isinstance(handle, CacheHandle)
+                        and not handle.closed):
+                    runtime.release(handle)
+            finally:
+                if lease is not None:
+                    lease.release()
 
     def _stream_request(
         self,
@@ -540,6 +543,7 @@ class GenerationEngine:
 
     def _cache_manager_for(self, bundle: Any) -> CacheManager:
         if (self._actor is not None and threading.current_thread() is not self._actor._thread
+                and not self._actor.device_executor.is_owner
                 and (self._cache_runtime is None or self._cache_bundle is not bundle)):
             return self._actor.execute(lambda: self._cache_manager_for(bundle))
         if self._cache_runtime is None or self._cache_bundle is not bundle:

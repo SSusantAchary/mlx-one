@@ -95,3 +95,22 @@ class DeviceExecutor:
             self._condition.notify_all()
         if not self.is_owner:
             self._thread.join()
+
+
+def device_iterator(executor, model_key, iterator):
+    """Keep lazy reference generation and its disposal on the device owner."""
+    def step():
+        try:
+            return True, next(iterator)
+        except StopIteration:
+            return False, None
+    try:
+        while True:
+            more, value = executor.call(model_key, step)
+            if not more:
+                return
+            yield value
+    finally:
+        close = getattr(iterator, "close", None)
+        if callable(close):
+            executor.call(model_key, close)
