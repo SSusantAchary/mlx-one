@@ -49,7 +49,7 @@ class CacheManager:
         self.plan = (_planning.plan if _planning else
                      build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens))
         self.hybrid_state = (self.config.backend in {"hybrid", "paged"}
-                             and any(s.kind == "conv" for s in self.plan.state_specs))
+                             and any(s.kind in {"conv","recurrent"} for s in self.plan.state_specs))
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
         from mlx_one.engine.arena import SegmentedPageArena
 
@@ -404,9 +404,10 @@ class CacheManager:
                             match[1].release()
                         return 0
                     reused, replacement = match
-                    old = handle.bundle
-                    handle.bundle = replacement
-                    old.release()
+                    from mlx_one.engine.lifecycle import adopt_snapshot
+
+                    if not adopt_snapshot(self,handle,replacement):
+                        return 0
                 elif handle.backend == "dense":
                     if not self.plan.prefix_shareable:
                         raise PrefixReuseUnsupported(

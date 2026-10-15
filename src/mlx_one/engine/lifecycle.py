@@ -26,15 +26,27 @@ def adopt_snapshot(runtime, handle, staged, *, cancel=None):
             raise ValueError("snapshot topology or component positions mismatch")
         for component, spec in zip(staged.entries, specs, strict=True):
             component.validate(spec)
-        mx.eval(*(v for c in staged.entries for v in (getattr(c, "keys", None),
-                                                      getattr(c, "values", None)) if v is not None))
+        from mlx_one.engine.transactions import component_tensors
+
+        mx.eval(*(v for c in staged.entries for v in component_tensors(c)))
         runtime._validate_handle(handle)
-        if cancel is not None and cancel.is_set():
+        callback = handle.metadata.get("is_cancelled")
+        if ((cancel is not None and cancel.is_set())
+                or callable(callback) and callback() or handle.metadata.get("cancelled")):
             return False
         old = handle.bundle
+        computed,reserved = handle.computed_tokens,handle.reserved_bytes
+        committed = handle.reservation.committed_bytes if handle.reservation else None
         handle.bundle = staged
         handle.computed_tokens = staged.offset
-        runtime.reconcile(handle)
+        try:
+            runtime.reconcile(handle)
+        except BaseException:
+            handle.bundle = old
+            handle.computed_tokens,handle.reserved_bytes = computed,reserved
+            if handle.reservation is not None:
+                handle.reservation.committed_bytes = committed
+            raise
         old.release()
         return True
     finally:

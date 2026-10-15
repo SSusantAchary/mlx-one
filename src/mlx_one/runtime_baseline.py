@@ -50,6 +50,8 @@ def registry_inventory(registrations=None):
         reason = ("Nested native video tracker; no standalone loader" if component else
                   "No registered task loader" if not entry.loader_path else
                   "Declared loader; shared-service integration and qualification not established")
+        if binding is not None and binding.integration_status == "integrated":
+            reason = binding.reason
         rows.append({"model_type": entry.model_type, "modality": entry.modality,
             "config_path": entry.config_path, "model_path": entry.model_path,
             "loader_path": entry.loader_path, "sanitizer_path": entry.sanitizer_path,

@@ -103,7 +103,16 @@ class BatchScheduler:
                 selected_prefill.append(request)
                 prefill_budget -= len(request.token_ids)
         self._prefill_cursor += max(len(selected_prefill), 1)
-        return tuple(tuple(group) for group in (selected_decode, selected_prefill) if group)
+        groups = []
+        for phase in (selected_decode,selected_prefill):
+            buckets = {}
+            for request in phase:
+                key = tuple(component.batch_key(len(request.token_ids))
+                            if callable(getattr(component,"batch_key",None)) else None
+                            for component in getattr(request,"cache",()))
+                buckets.setdefault(key,[]).append(request)
+            groups.extend(tuple(group) for group in buckets.values())
+        return tuple(groups)
 
 
 class _PackedCache:
@@ -261,7 +270,8 @@ class BatchedDenseRunner(CausalLMRunner):
             for layer in range(len(first.cache)):
                 spec = specs[layer]
                 key_shape = (count, spec.num_kv_heads, history + width, spec.key_head_dim)
-                value_shape = (count, spec.num_kv_heads, history + width, spec.value_head_dim)
+                value_shape = (count, spec.num_kv_heads, history + width,
+                               spec.value_head_dim or spec.key_head_dim)
                 keys = mx.zeros(key_shape, dtype=mx.float16)
                 values = mx.zeros(value_shape, dtype=mx.float16)
                 for row, request in enumerate(requests):
@@ -312,7 +322,7 @@ class BatchedDenseRunner(CausalLMRunner):
 
             drafts = tuple(CacheBundle(tuple(layers)) for layers in staged)
             try:
-                commit_evaluated(requests, drafts)
+                commit_evaluated(requests, drafts, specs=self.adapter.plan.state_specs)
             finally:
                 release_all(drafts)
         self.last_trace = {"phase": first.phase, "request_ids": [r.request_id for r in requests],

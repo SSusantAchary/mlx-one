@@ -6,7 +6,8 @@ BUILTIN_ADAPTERS = {name: "mlx_one.engine.native_adapters:" + adapter for name, 
     ("gpt2", "GPT2Adapter"), ("llama", "LlamaAdapter"),
     ("qwen2", "Qwen2Adapter"), ("qwen3", "Qwen3Adapter"),
     ("openelm", "OpenELMAdapter"), ("qwen2_moe", "Qwen2MoeAdapter"),
-    ("lfm2", "LFM2Adapter"), ("lfm2_moe", "LFM2MoeAdapter"))}
+    ("lfm2", "LFM2Adapter"), ("lfm2_moe", "LFM2MoeAdapter"),
+    ("qwen3_5", "Qwen35Adapter"))}
 
 
 def builtin_runtime(entry):

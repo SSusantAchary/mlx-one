@@ -74,6 +74,9 @@ class ComponentContract:
                         or value.shape[2] < length or value.shape[3] != dimension
                         or dtype != self.storage_dtype or spec.dtype and dtype != spec.dtype):
                     raise ValueError("component attention layout or dtype mismatch")
+        elif (self.kind == "recurrent" and spec.checkpoint_semantics is not None
+              and getattr(self,"checkpoint_semantics",None) != spec.checkpoint_semantics):
+            raise ValueError("recurrent transition identity mismatch")
         elif self.values is not None:
             if spec.state_shapes and tuple(self.values.shape) != spec.state_shapes[0]:
                 raise ValueError("component carry shape mismatch")
@@ -203,6 +206,9 @@ class RecurrentComponent(ComponentContract):
 
 
 def hybrid_components(bundle, key_type="f16", *, pool=None):
+    provider = getattr(bundle.model,"make_state_components",None)
+    if callable(provider):
+        return provider(key_type,pool=pool)
     config = bundle.model.config
     dtype = "bfloat16" if key_type == "bf16" else "float16"
     result = []
@@ -239,9 +245,9 @@ class HybridPrefixIndex:
         try:
             import mlx.core as mx
 
-            arrays = [v for c in clone.entries
-                      for v in (getattr(c, "keys", None), getattr(c, "values", None))
-                      if v is not None]
+            from mlx_one.engine.transactions import component_tensors
+
+            arrays = [v for c in clone.entries for v in component_tensors(c)]
             mx.eval(*arrays)
         except BaseException:
             clone.release()
@@ -321,6 +327,11 @@ def _snapshot_contents(bundle):
                  "kernel_size": getattr(cache, "kernel_size", None),
                  "window_start": getattr(cache, "window_start", None),
                  "capabilities": asdict(cache.capabilities()), "tensors": {}}
+        compound = getattr(cache,"checkpoint_semantics",None) == "qwen35-gated-delta-v1"
+        names = ("conv_state","recurrent_state") if compound else ("keys","values")
+        if compound:
+            layer["compound"] = {"version":cache.checkpoint_semantics,
+                "state_shapes":cache.state_shapes,"state_dtypes":cache.state_dtypes}
         paged = hasattr(cache, "page_table")
         if paged:
             # Explicit serialization diagnostic only; generation never calls this export.
@@ -333,7 +344,7 @@ def _snapshot_contents(bundle):
                 for i, name in enumerate(("keys", "values"))}
         else:
             exported = {}
-        for name in ("keys", "values"):
+        for name in names:
             value = exported.get(name) if paged else getattr(cache, name, None)
             if value is not None and layer["kind"] == "full_kv":
                 value = value[:, :, :cache.offset, :]
@@ -372,6 +383,7 @@ def save_snapshot(directory, bundle, *, identity):
         tensors, layers = _snapshot_contents(bundle)
         payload = root / f"tensors-{uuid.uuid4().hex}.npz"
         temporary = None
+        published = False
         try:
             with tempfile.NamedTemporaryFile(dir=root, delete=False) as handle:
                 temporary = Path(handle.name)
@@ -379,7 +391,9 @@ def save_snapshot(directory, bundle, *, identity):
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(temporary, payload)
-            manifest = {"schema_version": ("hybrid-state-v3" if any(
+            manifest = {"schema_version": ("hybrid-state-v4"
+                if any("compound" in layer for layer in layers)
+                else "hybrid-state-v3" if any(
                 "storage" in layer for layer in layers) else "hybrid-state-v2"),
                         "identity": identity,
                         "layers": layers, "payload": payload.name,
@@ -390,6 +404,7 @@ def save_snapshot(directory, bundle, *, identity):
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(temporary, root / "state.json")
+            published = True
             directory_fd = os.open(root, os.O_RDONLY)
             try:
                 os.fsync(directory_fd)
@@ -402,6 +417,8 @@ def save_snapshot(directory, bundle, *, identity):
         finally:
             if temporary is not None:
                 temporary.unlink(missing_ok=True)
+            if not published:
+                payload.unlink(missing_ok=True)
 
 
 def load_snapshot(directory, *, identity, expected_specs, page_pool=None):
@@ -420,8 +437,9 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
     if not isinstance(name, str) or Path(name).name != name:
         raise ValueError("invalid snapshot payload path")
     payload = root / name
-    current = manifest.get("schema_version") in {"hybrid-state-v2", "hybrid-state-v3"}
-    supported = {"hybrid-state-v1", "hybrid-state-v2", "hybrid-state-v3"}
+    current = manifest.get("schema_version") in {
+        "hybrid-state-v2", "hybrid-state-v3", "hybrid-state-v4"}
+    supported = {"hybrid-state-v1", "hybrid-state-v2", "hybrid-state-v3", "hybrid-state-v4"}
     if (manifest.get("schema_version") not in supported
             or manifest.get("identity") != identity
             or manifest.get("sha256") != hashlib.sha256(payload.read_bytes()).hexdigest()
@@ -433,14 +451,29 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
             for layer, spec in zip(manifest["layers"], expected_specs, strict=True):
                 if layer["kind"] != spec.kind or layer["offset"] < 0:
                     raise ValueError("hybrid snapshot layer mismatch")
+                compound = layer.get("compound")
+                if spec.checkpoint_semantics == "qwen35-gated-delta-v1" and compound is None:
+                    raise ValueError("snapshot lacks complete native recurrent state")
                 paged = layer.get("storage") == "paged-fp16-v1"
                 restored_arrays = {}
                 if layer.get("storage") is not None and not paged:
                     raise ValueError("unsupported hybrid snapshot storage")
-                if paged:
+                if compound is not None:
+                    from mlx_one.engine.compound import COMPOUND_VERSION, CompoundLinearComponent
+
+                    if (manifest["schema_version"] != "hybrid-state-v4"
+                            or compound.get("version") != COMPOUND_VERSION
+                            or spec.checkpoint_semantics != COMPOUND_VERSION
+                            or compound.get("state_shapes") != [list(s) for s in spec.state_shapes]
+                            or compound.get("state_dtypes") != list(spec.state_dtypes)):
+                        raise ValueError("compound snapshot layout or transition identity mismatch")
+                    cache = CompoundLinearComponent(layer["kernel_size"],spec.state_shapes,
+                                                    spec.state_dtypes)
+                elif paged:
                     from mlx_one.engine.paged import PagedKVComponent
 
-                    if (manifest["schema_version"] != "hybrid-state-v3" or page_pool is None
+                    if (manifest["schema_version"] not in {"hybrid-state-v3","hybrid-state-v4"}
+                            or page_pool is None
                             or spec.kind != "full_kv"
                             or layer["page_tokens"] != page_pool.block_tokens):
                         raise ValueError("paged snapshot requires a matching page arena")
@@ -465,13 +498,14 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
                             if spec.kind == "sliding_kv" else None)):
                     raise ValueError("snapshot component capabilities or window position mismatch")
                 staged.append(cache)
-                required = ({"keys", "values"} if spec.kind in {"full_kv", "sliding_kv"}
+                required = ({"conv_state","recurrent_state"} if compound is not None else
+                            {"keys", "values"} if spec.kind in {"full_kv", "sliding_kv"}
                             else {"values"})
                 if layer["offset"] and set(layer["tensors"]) != required:
                     raise ValueError("hybrid snapshot is missing required state tensors")
                 for name, meta in layer["tensors"].items():
                     array = tensors[meta["key"]]
-                    if (name not in {"keys", "values"} or list(array.shape) != meta["shape"]
+                    if (name not in required or list(array.shape) != meta["shape"]
                             or meta["dtype"] not in {"float16", "float32", "bfloat16"}):
                         raise ValueError("hybrid snapshot tensor mismatch")
                     storage_dtype = "float32" if meta["dtype"] == "bfloat16" else meta["dtype"]
@@ -484,6 +518,11 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
                         if (array.shape != expected or meta["dtype"] not in {"float16", "bfloat16"}
                                 or spec.dtype and meta["dtype"] != spec.dtype):
                             raise ValueError("hybrid snapshot attention shape mismatch")
+                    elif compound is not None:
+                        index = ("conv_state","recurrent_state").index(name)
+                        if (array.shape != spec.state_shapes[index]
+                                or meta["dtype"] != spec.state_dtypes[index]):
+                            raise ValueError("compound tensor shape or dtype mismatch")
                     elif spec.state_shapes and array.shape != spec.state_shapes[0]:
                         raise ValueError("hybrid snapshot carry shape mismatch")
                     value = mx.array(array).astype(getattr(mx, meta["dtype"]))
@@ -506,8 +545,9 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
                 cache.validate(spec)
             if len({c.offset for c in staged}) != 1:
                 raise ValueError("hybrid snapshot component boundaries differ")
-            mx.eval(*(v for c in staged for v in (getattr(c, "keys", None),
-                                                  getattr(c, "values", None)) if v is not None))
+            from mlx_one.engine.transactions import component_tensors
+
+            mx.eval(*(v for c in staged for v in component_tensors(c)))
         return CacheBundle(tuple(staged))
     except BaseException:
         for cache in staged:

@@ -95,7 +95,7 @@ class NativeExecutionSpec:
 
     @property
     def hybrid(self):
-        return any(kind == "conv" for kind in self.state_kinds)
+        return any(kind in {"conv","recurrent"} for kind in self.state_kinds)
 
 
 class NativeModelAdapter:
@@ -133,7 +133,7 @@ class NativeModelAdapter:
                 query_heads = getattr(config, "num_attention_heads",
                                       getattr(config, "n_head", None))
             layout = LayerExecutionSpec(layer.layer_id, state.kind, query_heads,
-                layer.num_kv_heads, layer.key_head_dim, layer.value_head_dim,
+                layer.num_kv_heads, layer.key_head_dim, layer.value_head_dim or layer.key_head_dim,
                 layer.position_policy, layer.max_window_tokens)
             if attention and layout.position_policy == "rope" and layout.key_dim % 2:
                 raise ValueError("invalid native RoPE head dimension")
@@ -155,10 +155,12 @@ class NativeModelAdapter:
                                        max(getattr(config, "ffn_dims", (hidden * 4,))))),
             vocab_size=getattr(config, "vocab_size", 0))
         self.bundle, self.plan = bundle, plan
+        self.text_config = config
         self.activation_dtype = None if legacy_hybrid else next(
             dtype for dtype in observed if dtype in {"float16", "bfloat16"})
         self.spec = NativeExecutionSpec(architecture, plan.topology_digest,
-            query_heads, kv_heads, head_dim, architecture in {"qwen3", "lfm2"},
+            query_heads, kv_heads, head_dim, bool(getattr(self,"qk_normalization",
+                getattr(config,"normalize_qk_projections",False))),
             tuple(s.kind for s in plan.state_specs), quantization_identity(bundle),
             model_id=getattr(bundle, "model_id", None), revision=getattr(bundle, "revision", None),
             layers=tuple(layers))
@@ -194,7 +196,8 @@ class NativeModelAdapter:
         try:
             if self.activation_dtype:
                 for _, module in getattr(self.bundle.model, "named_modules", lambda: ())():
-                    if any(hasattr(module, name) for name in ("q_proj", "c_attn", "qkv_proj")):
+                    if any(hasattr(module, name) for name in
+                           ("q_proj", "c_attn", "qkv_proj", "in_proj_qkv")):
                         existed = hasattr(module, "_mlx_one_activation_dtype")
                         restored.append((module, existed,
                                          getattr(module, "_mlx_one_activation_dtype", None)))

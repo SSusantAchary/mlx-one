@@ -175,3 +175,12 @@ private storage now preserves immutable weight metadata and inspection propertie
 144 affected CPU tests, 13 native hybrid/legacy tests and eight final greedy/state
 checks pass. Prefix hits skip 16/32 real tokens with namespace isolation. Real
 checkpoint Gate E and performance remain pending; new MoE paging stays disabled.
+
+PR-09 integrates text-only Qwen3.5 compound convolution/gated-delta state. Equal-
+offset/width buckets prevent padding from advancing recurrence; FP16 convolution
+and FP32 recurrent tensors are cloned and atomically committed together. Versioned
+v4 snapshots reject missing tensors, incompatible transitions and dtypes, and
+failed writes preserve the previous generation. 134 affected CPU tests and eight
+tiny native/legacy tests pass, including B1/B2/B4, evaluated cancellation, prefix
+restoration, serialization and divergent continuation. Real Qwen3.5 checkpoint,
+VLM serving, MTP and performance qualification remain pending or later milestones.

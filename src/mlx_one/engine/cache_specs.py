@@ -40,6 +40,7 @@ class LayerCacheSpec:
     checkpoint_semantics: str | None = None
     num_query_heads: int | None = None
     position_policy: str = "rope"
+    state_dtypes: tuple[str, ...] = ()
 
     def bytes_per_token(self, *, key_bits: int = 16, value_bits: int = 16) -> int:
         if self.kind not in {
@@ -74,6 +75,7 @@ class LayerStateSpec:
     can_snapshot: bool = False
     can_quantize: bool = False
     can_share_prefix: bool = False
+    state_dtypes: tuple[str, ...] = ()
 
     @classmethod
     def from_cache_spec(cls, spec: LayerCacheSpec) -> LayerStateSpec:
@@ -89,8 +91,9 @@ class LayerStateSpec:
         kind = kinds.get(spec.kind, "unknown")
         return cls(
             spec.layer_id, kind, spec.num_kv_heads, spec.key_head_dim,
-            spec.value_head_dim, None, spec.max_window_tokens,
+            spec.value_head_dim or spec.key_head_dim, None, spec.max_window_tokens,
             state_shapes=spec.state_shapes, checkpoint_semantics=spec.checkpoint_semantics,
+            state_dtypes=spec.state_dtypes,
             can_batch=spec.batchable and kind == "full_kv",
             can_snapshot=spec.shareable_prefix and kind == "full_kv",
             can_quantize=spec.quantizable and kind == "full_kv",
@@ -112,6 +115,7 @@ class LayerStateSpec:
             quantizable=self.can_quantize, shareable_prefix=self.can_share_prefix,
             trimmable=False, batchable=self.can_batch, block_compatible=False,
             state_shapes=self.state_shapes, checkpoint_semantics=self.checkpoint_semantics,
+            state_dtypes=self.state_dtypes,
         )
 
 

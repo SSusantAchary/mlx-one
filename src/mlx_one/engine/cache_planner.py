@@ -90,8 +90,11 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
         block_compatible=attention and heads is not None and head_dim is not None,
         state_shapes=((1, int(cache.kernel_size) - 1,
                        _per_layer_int(config, index, "hidden_size") or 0),)
-        if kind is CacheKind.CONV_STATE and hasattr(cache, "kernel_size") else (),
-        checkpoint_semantics="exact_committed_boundary" if kind is CacheKind.CONV_STATE else None,
+        if kind is CacheKind.CONV_STATE and hasattr(cache, "kernel_size")
+        else tuple(getattr(cache,"state_shapes",())),
+        checkpoint_semantics="exact_committed_boundary" if kind is CacheKind.CONV_STATE
+        else getattr(cache,"checkpoint_semantics",None),
+        state_dtypes=tuple(getattr(cache,"state_dtypes",())),
         num_query_heads=_per_layer_int(config, index, "num_attention_heads", "num_query_heads",
                                       "n_head") if attention else None,
         position_policy="learned" if getattr(config, "model_type", None) == "gpt2" else "rope",

@@ -27,7 +27,7 @@ def release_all(bundles):
         raise error
 
 
-def commit_evaluated(requests, drafts):
+def commit_evaluated(requests, drafts, *, specs=None):
     """Drafts receive old ownership after success; caller releases every draft.
 
     Component object identities stay stable for existing generation iterators.
@@ -47,7 +47,8 @@ def commit_evaluated(requests, drafts):
                 or request.phase != first.phase or not request.cache
                 or len({c.offset for c in request.cache}) != 1):
             raise ValueError('transaction execution identity or boundary mismatch')
-        if len(request.cache) != len(draft.entries):
+        if len(request.cache) != len(draft.entries) or (
+                specs is not None and len(specs) != len(draft.entries)):
             raise ValueError('transaction layer mapping mismatch')
         expected = request.cache[0].offset + len(request.token_ids)
         if any(c.offset != expected for c in draft.entries):
@@ -56,16 +57,31 @@ def commit_evaluated(requests, drafts):
             request.runtime._validate_handle(request.handle)
             if request.handle.bundle.entries is not request.cache:
                 raise ValueError('transaction cache ownership mismatch')
-        for original, replacement in zip(request.cache, draft.entries, strict=True):
+        for layer, (original, replacement) in enumerate(
+                zip(request.cache, draft.entries, strict=True)):
             if type(original) is not type(replacement):
                 raise ValueError('transaction component type mismatch')
+            if specs is not None:
+                spec = specs[layer]
+                validate = getattr(replacement,"validate",None)
+                if callable(validate):
+                    validate(spec)
+                elif spec.kind == "full_kv":
+                    tensors = component_tensors(replacement)
+                    for tensor,dimension in zip(tensors,
+                            (spec.key_head_dim,spec.value_head_dim),strict=True):
+                        if (tensor.shape[:2] != (1,spec.num_kv_heads)
+                                or tensor.shape[2] < expected or tensor.shape[3] != dimension):
+                            raise ValueError("transaction attention layout mismatch")
             if not hasattr(original, '__dict__'):
                 raise ValueError('component lacks transactional adoption contract')
         mx.eval(*(tensor for c in draft.entries for tensor in component_tensors(c)))
     # Recheck cancellation and epochs after evaluation, before any adoption.
+    active = []
     for request, draft in zip(requests, drafts, strict=True):
         if request_cancelled(request):
             continue
+        active.append(request)
         if request.handle is not None:
             request.runtime._validate_handle(request.handle)
             handle = request.handle
@@ -78,8 +94,8 @@ def commit_evaluated(requests, drafts):
         for original, replacement in journal:
             original.__dict__, replacement.__dict__ = replacement.__dict__, original.__dict__
             swapped += 1
-        for request in requests:
-            if request.handle is not None and not request_cancelled(request):
+        for request in active:
+            if request.handle is not None:
                 request.handle.computed_tokens = request.cache[0].offset
                 request.runtime.reconcile(request.handle)
     except BaseException:

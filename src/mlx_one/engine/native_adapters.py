@@ -94,6 +94,7 @@ class Qwen2Adapter(CausalArchitectureAdapter):
 
 
 class Qwen3Adapter(CausalArchitectureAdapter):
+    qk_normalization = True
     supported_architectures = frozenset({'qwen3'})
 
 
@@ -107,6 +108,7 @@ class Qwen2MoeAdapter(CausalArchitectureAdapter):
 
 
 class LFM2Adapter(CausalArchitectureAdapter):
+    qk_normalization = True
     supported_architectures = frozenset({'lfm2'})
     supported_states = frozenset({'full_kv','sliding_kv','conv'})
 
@@ -128,3 +130,27 @@ class LFM2Adapter(CausalArchitectureAdapter):
 class LFM2MoeAdapter(LFM2Adapter):
     supports_paging = False
     supported_architectures = frozenset({'lfm2_moe'})
+
+
+class Qwen35Adapter(LFM2Adapter):
+    supported_architectures = frozenset({'qwen3_5'})
+    supported_states = frozenset({'full_kv','recurrent'})
+    supports_paging = False
+
+    def __init__(self,bundle,plan,*,allow_bfloat16=False,allow_hybrid=False):
+        super().__init__(bundle,plan,allow_bfloat16=False,allow_hybrid=allow_hybrid)
+
+    def prepare(self,payload):
+        if any(name in payload.payload for name in ('images','pixel_values','video','audio')):
+            raise ValueError('Qwen3.5 compound adapter currently supports text only')
+        return super().prepare(payload)
+
+    def additional_transient_bytes(self,*,batch,chunk):
+        import math
+
+        carries = sum(math.prod(shape)*4 for spec in self.plan.state_specs
+                      if spec.kind=='recurrent' for shape in spec.state_shapes)
+        config=self.text_config
+        width=2*config.linear_num_key_heads*config.linear_key_head_dim
+        width+=config.linear_num_value_heads*config.linear_value_head_dim
+        return batch*(carries*3+chunk*width*16)

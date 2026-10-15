@@ -125,7 +125,8 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
     named = getattr(bundle.model, "named_modules", None)
     if callable(named):
         for _, module in named():
-            if any(hasattr(module, name) for name in ("q_proj", "c_attn", "qkv_proj")):
+            if any(hasattr(module, name) for name in
+                   ("q_proj", "c_attn", "qkv_proj", "in_proj_qkv")):
                 module._mlx_one_activation_dtype = execution_dtype
 
 

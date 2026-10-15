@@ -20,6 +20,7 @@ import mlx.nn as nn
 
 from mlx_one.core.cache import KVCache
 from mlx_one.core.outputs import VisionLanguageModelOutput
+from mlx_one.engine.compound import CompoundLinearComponent, compound_layout
 from mlx_one.models.shared.transformer import causal_mask
 from mlx_one.models.shared.vision import VisionAttention, vision_position_ids
 from mlx_one.models.vision_language.qwen2_vl.model import (
@@ -63,82 +64,13 @@ class Qwen3_5GatedRMSNorm(nn.Module):
         return (normalized * self.weight * _silu(gate.astype(mx.float32))).astype(value.dtype)
 
 
-class Qwen3_5LinearCache:
-    def __init__(self, kernel_size: int) -> None:
-        self.kernel_size = kernel_size
-        self.conv_state: Any | None = None
-        self.recurrent_state: Any | None = None
-        self._offset = 0
-
-    @property
-    def offset(self) -> int:
-        return self._offset
-
-    @property
-    def nbytes(self) -> int:
-        return sum(
-            int(value.nbytes)
-            for value in (self.conv_state, self.recurrent_state)
-            if value is not None
-        )
-
-    def prefix(self, values: Any) -> Any:
-        width = self.kernel_size - 1
-        if self.conv_state is None:
-            prefix = mx.zeros((values.shape[0], width, values.shape[2]), dtype=values.dtype)
-        else:
-            prefix = self.conv_state
-        combined = mx.concatenate((prefix, values), axis=1)
-        self.conv_state = combined[:, -width:, :] if width else combined[:, :0, :]
-        self._offset += int(values.shape[1])
-        return combined
-
-    def reset(self) -> None:
-        self.conv_state = None
-        self.recurrent_state = None
-        self._offset = 0
-
-    def clone(self) -> Qwen3_5LinearCache:
-        result = Qwen3_5LinearCache(self.kernel_size)
-        result.conv_state = self.conv_state
-        result.recurrent_state = self.recurrent_state
-        result._offset = self._offset
-        return result
-
-    snapshot = clone
-
-    def batch_select(self, indices: tuple[int, ...]) -> Qwen3_5LinearCache:
-        result = self.clone()
-        if result.conv_state is not None:
-            result.conv_state = result.conv_state[list(indices)]
-        if result.recurrent_state is not None:
-            result.recurrent_state = result.recurrent_state[list(indices)]
-        return result
-
-    @classmethod
-    def merge(
-        cls, caches: tuple[Qwen3_5LinearCache, ...]
-    ) -> Qwen3_5LinearCache:
-        if not caches or len({(cache.kernel_size, cache.offset) for cache in caches}) != 1:
-            raise ValueError("Qwen3.5 recurrent caches are incompatible")
-        result = cls(caches[0].kernel_size)
-        if caches[0].conv_state is not None:
-            result.conv_state = mx.concatenate(
-                tuple(cache.conv_state for cache in caches), axis=0
-            )
-        if caches[0].recurrent_state is not None:
-            result.recurrent_state = mx.concatenate(
-                tuple(cache.recurrent_state for cache in caches), axis=0
-            )
-        result._offset = caches[0].offset
-        return result
-
-    release = reset
+class Qwen3_5LinearCache(CompoundLinearComponent):
+    """Compatibility name for independent compound convolution/recurrent state."""
 
 
-def make_qwen3_5_caches(config: Qwen3_5TextConfig) -> tuple[Any, ...]:
+def make_qwen3_5_caches(config: Qwen3_5TextConfig, dtype="float32") -> tuple[Any, ...]:
     return tuple(
-        Qwen3_5LinearCache(config.linear_conv_kernel_dim)
+        Qwen3_5LinearCache(config.linear_conv_kernel_dim,*compound_layout(config,dtype))
         if kind == "linear_attention"
         else KVCache()
         for kind in config.layer_types
@@ -237,7 +169,9 @@ class Qwen3_5GatedDeltaNet(nn.Module):
         core = mx.stack(outputs, axis=1)
         z = self.in_proj_z(hidden).reshape(batch, length, self.num_v_heads, self.head_v_dim)
         core = self.norm(core, z)
-        return self.out_proj(core.reshape(batch, length, self.value_dim))
+        result = self.out_proj(core.reshape(batch, length, self.value_dim))
+        dtype = getattr(self,"_mlx_one_activation_dtype",None)
+        return result.astype(getattr(mx,dtype)) if dtype is not None else result
 
 
 def _rotate_half(value: Any) -> Any:
@@ -313,17 +247,26 @@ class Qwen3_5Attention(nn.Module):
         value = value.transpose(0, 2, 1, 3)
         query = _partial_mrope(query, position_ids, self.config)
         key = _partial_mrope(key, position_ids, self.config)
-        if cache is not None:
-            key, value = cache.update(key, value)
-        repeats = self.config.num_attention_heads // self.config.num_key_value_heads
-        key = mx.repeat(key, repeats, axis=1)
-        value = mx.repeat(value, repeats, axis=1)
-        scores = (query @ key.transpose(0, 1, 3, 2)) * self.config.head_dim**-0.5
-        if mask is not None:
-            scores = scores + mask
-        attended = mx.softmax(scores, axis=-1, precise=True) @ value
+        dtype = getattr(self,"_mlx_one_activation_dtype",None)
+        if dtype is not None:
+            query,key,value = (v.astype(getattr(mx,dtype)) for v in (query,key,value))
+        if cache is not None and callable(getattr(cache,"attend",None)):
+            attended = cache.attend(query,key,value,scale=self.config.head_dim**-0.5,
+                                    position_ids=position_ids)
+        else:
+            if cache is not None:
+                key, value = cache.update(key, value)
+            repeats = self.config.num_attention_heads // self.config.num_key_value_heads
+            key = mx.repeat(key, repeats, axis=1)
+            value = mx.repeat(value, repeats, axis=1)
+            scores = (query @ key.transpose(0, 1, 3, 2)) * self.config.head_dim**-0.5
+            if mask is not None:
+                scores = scores + mask
+            attended = mx.softmax(scores, axis=-1, precise=True) @ value
         attended = attended.transpose(0, 2, 1, 3)
         attended = attended * mx.sigmoid(gate)
+        if dtype is not None:
+            attended = attended.astype(getattr(mx,dtype))
         return self.o_proj(attended.reshape(batch, length, -1))
 
 
@@ -646,7 +589,19 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
         )
 
     def make_cache(self) -> tuple[Any, ...]:
-        return make_qwen3_5_caches(self.config.text_config)
+        embedding = self.language_model.embed_tokens
+        weight = embedding.scales if hasattr(embedding, "bits") else embedding.weight
+        dtype = str(weight.dtype).rsplit(".",1)[-1]
+        return make_qwen3_5_caches(self.config.text_config,dtype)
+
+    def make_state_components(self, key_type, pool=None):
+        from mlx_one.engine.components import FullKVComponent
+
+        if pool is not None:
+            raise ValueError("Qwen3.5 hybrid paging is unavailable")
+        dtype = "bfloat16" if key_type == "bf16" else "float16"
+        return tuple(cache if isinstance(cache,CompoundLinearComponent) else FullKVComponent(dtype)
+                     for cache in self.make_cache())
 
     def __call__(
         self,
@@ -658,6 +613,7 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
         video_grid_thw: Sequence[Sequence[int]] | None = None,
         mm_token_type_ids: Any | None = None,
         attention_mask: Any | None = None,
+        position_ids: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
     ) -> VisionLanguageModelOutput:
@@ -682,7 +638,12 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
             mm_token_type_ids = mx.where(
                 input_ids == self.config.video_token_id, 2, mm_token_type_ids
             )
-        if mm_token_type_ids is None:
+        if position_ids is not None:
+            if mm_token_type_ids is not None or vision_states:
+                raise ValueError("explicit text positions cannot replace multimodal positions")
+            positions = position_ids
+            deltas = mx.zeros((input_ids.shape[0],1),dtype=mx.int32)
+        elif mm_token_type_ids is None:
             offset = 0 if cache is None else cache[0].offset
             base = mx.arange(offset, offset + input_ids.shape[1])[None, :]
             positions = mx.stack((base, base, base), axis=0)
