@@ -316,3 +316,18 @@ all real positions now pass. 68 CPU and seven native tests pass, including
 unequal histories, real B2 verification, disagreement and cancellation recovery.
 Stochastic speculation, paged/hybrid external verification and production
 speculative qualification remain unavailable.
+
+### PR-19 — registry-derived task qualification tooling
+
+benchmarks/native_tasks.py discovers all 27 entries without Metal initialization,
+validates pinned local profiles/checksummed fixtures, and launches one fresh
+offline worker under native preflight and the existing RSS watchdog. Workers
+record independent oracles, actual forward batches/components, warm-up and five
+repetitions, task completion timing, memory, parity and task anchors. JSON/CSV/
+readable matrices retain missing, failed and component-only rows. Existing HTTP
+P1 profiles remain the source of model-token/SSE service measurements; task
+completion throughput is separately labeled. Task evidence extends the existing
+feature registry and rejects incomplete/stale/synthetic promotion. Corpus
+coverage, full task lifecycle and performance traffic gates remain pending when
+not measured. 84 affected CPU tests pass (two inherited warnings); the isolated
+native task-worker smoke passes and explicitly cannot qualify any capability.

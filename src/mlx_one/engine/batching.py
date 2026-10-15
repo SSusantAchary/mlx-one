@@ -33,10 +33,11 @@ class BatchingConfig:
     output_stall_timeout_s: float = 30.0
     admission_age_s: float = 2.0
     admission_policy: str = "deadline"
+    task_transient_budget_bytes: int = 256*1024**2
 
     def __post_init__(self):
         for name in ("max_sequences", "queue_size", "prefill_chunk_size", "max_scheduled_tokens",
-                     "max_prefill_tokens", "output_buffer_events"):
+                     "max_prefill_tokens", "output_buffer_events", "task_transient_budget_bytes"):
             if getattr(self, name) < 1:
                 raise ValueError(f"{name} must be positive")
         if self.timeout < 0 or self.output_stall_timeout_s <= 0 or self.admission_age_s < 0:

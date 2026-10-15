@@ -92,9 +92,10 @@ def _next_stage(iterator):
 
 
 class TaskMicrobatches:
-    def __init__(self, actor, *, transient_budget_bytes=256*1024**2):
+    def __init__(self, actor, *, transient_budget_bytes=None):
         self.actor=actor
-        self.budget=transient_budget_bytes
+        self.budget=(actor.config.task_transient_budget_bytes
+                     if transient_budget_bytes is None else transient_budget_bytes)
         self.condition=threading.Condition()
         self.pending=deque()
         self.active=[]
