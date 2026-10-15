@@ -290,3 +290,15 @@ pinned Qwen3-small INT8 dense restoration against fresh FP16 full-prefill.
 A too-small staging test configuration was retained as a rejection and rerun
 with an explicit 256-MiB allowance. Tiny hybrid/compound lifecycle parity passes;
 checkpoint-scale hybrid/paged persistence and performance remain pending.
+
+### PR-17 — actor-owned single-request native MTP
+
+Explicit Engine spec_type="draft-mtp" runs complete Qwen3.5 predictors through
+the existing bounded actor/device owner. Greedy reference-dense only, one
+active request; unsupported selections raise. Verification owns isolated
+state, checks every position, and commits only accepted computed tokens after
+stop/EOS/limit handling. Compound rejection uses evaluated replay, not unsafe
+trimming. Reservations and all predictor/verification caches release on errors
+and cancellation. 65 CPU and five tiny native actor/parity tests pass.
+Predictor checkpoint quality and actual speed benefit remain unmeasured; the
+tiny initialized predictor is implementation validation, not qualification.

@@ -73,6 +73,8 @@ class Engine:
         memory_pressure_config: MemoryPressureConfig | None = None,
         qualification_registry: Any = None,
         qualification_profile: dict[str, Any] | None = None,
+        spec_type: str = "none",
+        spec_draft_n_max: int = 3,
     ) -> None:
         self._device = DeviceExecutor.shared()
         backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
@@ -96,6 +98,16 @@ class Engine:
         self._execution_dtype = execution_dtype
         self._cache_namespace = cache_namespace
         self._batching_config = batching_config or BatchingConfig()
+        if spec_type not in {"none","draft-mtp"} or spec_draft_n_max<1:
+            raise ValueError("unsupported speculation policy or draft budget")
+        self._spec_type,self._spec_draft_n_max=spec_type,spec_draft_n_max
+        if spec_type!="none":
+            from mlx_one.engine.speculation import validate_mtp
+
+            validate_mtp(self._bundle)
+            if (self._batching_config.max_sequences!=1 or backend!="dense"
+                    or inference_mode not in {None,"reference_dense"}):
+                raise ValueError("native MTP requires single-request reference dense execution")
         self._actor = None
         self._cache_manager = None
         self._pressure = None
@@ -132,7 +144,8 @@ class Engine:
                 self._pressure.close()
             raise
         self._backend = backend
-        if inference_mode in ACTOR_MODES or self._requested_mode == "auto":
+        if (inference_mode in ACTOR_MODES or self._requested_mode == "auto"
+                or self._spec_type!="none"):
             from mlx_one.engine.actor import InferenceActor
             from mlx_one.engine.dispatch import DispatchRunner
 
@@ -188,6 +201,8 @@ class Engine:
         if self._actor is not None:
             report["scheduler"] = self._actor.stats()
         report["selection"] = self._selection
+        report["speculation"]={"policy":self._spec_type,"draft_limit":self._spec_draft_n_max,
+                               "production_qualified":False}
         report["memory_pressure"] = self._pressure.stats() if self._pressure else None
         report["cache_stats"] = (
             self._cache_manager.stats().to_dict() if self._cache_manager else None
@@ -209,6 +224,8 @@ class Engine:
         **settings: Any,
     ) -> GenerationResult:
         resolved = _options(options, settings)
+        if self._spec_type!="none" and resolved.temperature!=0:
+            raise ValueError("native MTP requires greedy decoding")
         if self._cache_manager is None:
             result = self._device.call(id(self),
                 lambda: generate(self.model, prompt, options=resolved))
@@ -228,6 +245,8 @@ class Engine:
         **settings: Any,
     ) -> Iterator[GenerationChunk]:
         resolved = _options(options, settings)
+        if self._spec_type!="none" and resolved.temperature!=0:
+            raise ValueError("native MTP requires greedy decoding")
         event = cancel or threading.Event()
         if self._actor is not None:
             latest = None
@@ -251,7 +270,8 @@ class Engine:
             return stream_generate(
                 bundle, prompt, options=options, is_cancelled=cancel.is_set,
                 _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace,
-                _cooperative=True, _prefill_chunk_size=chunk)
+                _cooperative=self._spec_type=="none", _prefill_chunk_size=chunk,
+                _spec_type=self._spec_type,_spec_draft_n_max=self._spec_draft_n_max)
         if self._cache_namespace is not None:
             factory.prefix_preview = lambda: self._cache_manager.preview_prefix(
                 self._cache_manager.fingerprint(namespace=self._cache_namespace,
@@ -270,6 +290,8 @@ class Engine:
         self._ensure_open()
         cancel = threading.Event()
         resolved = _options(options, settings)
+        if self._spec_type!="none" and resolved.temperature!=0:
+            raise ValueError("native MTP requires greedy decoding")
         if self._actor is not None:
             job = self._actor._enqueue(self._batch_factory(prompt, resolved), cancel=cancel)
             future = self._executor.submit(
