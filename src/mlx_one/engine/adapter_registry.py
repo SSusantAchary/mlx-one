@@ -21,6 +21,7 @@ class RuntimeRegistration:
     integration_status: str = "not_integrated"
     reason: str = "Task service integration has not been implemented"
     parent_model_type: str | None = None
+    task_adapters: tuple[tuple[object, str], ...] = ()
 
     def __post_init__(self) -> None:
         if not self.model_type or not self.contract_version or not self.reason:
@@ -28,6 +29,11 @@ class RuntimeRegistration:
         for path in (self.adapter_path, self.task_specs_path, self.state_specs_path):
             if path is not None:
                 validate_import_path(path)
+        if len({task for task,_ in self.task_adapters})!=len(self.task_adapters):
+            raise ValueError("duplicate task adapter bindings")
+        for task,path in self.task_adapters:
+            canonical_task(task)
+            validate_import_path(path)
         statuses = {"not_integrated", "loader_declared", "architecture_only", "component_only",
                     "integrated"}
         if self.integration_status not in statuses:
@@ -38,7 +44,11 @@ class RuntimeRegistration:
                 self.component_only != (self.parent_model_type is not None)):
             raise ValueError("nested component requires explicit parent and component-only status")
 
-    def adapter(self):
+    def adapter(self,task=None):
+        if task is not None:
+            selected=dict(self.task_adapters).get(canonical_task(task))
+            if selected:
+                return _resolve(selected)
         if self.adapter_path is None:
             raise ValueError(f"{self.model_type} task-service adapter unavailable: {self.reason}")
         return _resolve(self.adapter_path)

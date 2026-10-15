@@ -225,10 +225,15 @@ class InferenceActor:
             return
         try:
             close = getattr(job.iterator, "close", None)
-            if callable(close):
-                close()
-            if job.on_cancel is not None:
-                job.on_cancel()
+            cleanup_error = None
+            for operation in (close,job.on_cancel):
+                if callable(operation):
+                    try:
+                        operation()
+                    except BaseException as exc:
+                        cleanup_error = cleanup_error or exc
+            if cleanup_error is not None:
+                raise cleanup_error
         except BaseException as cleanup_error:
             error = error or cleanup_error
             phase = Phase.FAILED

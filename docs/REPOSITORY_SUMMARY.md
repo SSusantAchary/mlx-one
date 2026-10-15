@@ -225,3 +225,16 @@ learned positions require right padding (reproduced and fixed in the existing AP
 reranker loading now returns its canonical registry identity. 71 affected CPU
 tests and 19 tiny native/legacy tests pass. Checkpoint quality, cross-task service
 performance and the earlier paged INT8 failure remain unqualified.
+
+### PR-12 — native vision task bridge
+
+Qwen2-VL, Qwen2.5-VL, Qwen3.5 and explicitly native-format LFM2-VL
+now have static-image task adapters. Qwen3.5 retains its separate text adapter.
+Strict processor/layout metadata, bounded private media leases and evaluated
+complete-state decoding preserve multimodal RoPE offsets and hybrid carries.
+Decoders remain cooperative singleton forwards; no VLM GPU batching claim.
+Publisher-format LFM assets without a native conversion contract fail closed.
+56 focused CPU tests, 12 supervised tiny native tests and the full backend-free
+suite (891 passed, 30 skipped, two inherited warnings) pass. The first native
+fixture failure is retained locally; its continuation mask was corrected.
+Real checkpoint processor/quality/performance gates remain pending.

@@ -16,10 +16,10 @@ def test_inventory_accounts_for_every_registration_without_promoting_declaration
     assert report["registration_count"] == 27
     rows = {r["model_type"]: r for r in report["registrations"]}
     assert {k for k, r in rows.items() if r["integration_kind"] == "architecture_only"} == {
-        "lfm2_vl", "qwen2_5_vl", "lfm2_audio"}
+        "lfm2_audio"}
     assert rows["sam3_tracker_video"]["integration_kind"] == "component_only"
     assert rows["sam3_tracker_video"]["parent_model_type"] == "sam3_video"
-    assert rows["qwen3_5"]["task_status"]["vision-language-generation"] == "unavailable"
+    assert rows["qwen3_5"]["task_status"]["vision-language-generation"] == "loader_declared"
     for row in rows.values():
         from mlx_one.engine.runtime_specs import BUILTIN_ADAPTERS
 

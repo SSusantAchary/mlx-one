@@ -145,6 +145,12 @@ class Lfm2VLForConditionalGeneration(nn.Module):
                 config.text_config.hidden_size, config.text_config.vocab_size, bias=False
             )
 
+    def make_cache(self):
+        from mlx_one.core.cache import make_hybrid_caches
+
+        return make_hybrid_caches(self.config.text_config.layer_types,
+                                  self.config.text_config.conv_L_cache)
+
     def __call__(
         self,
         input_ids: Any,

@@ -20,6 +20,9 @@ class NativeTaskAdapter:
     family=None
     supported_tasks=()
 
+    def dispose_prepared(self,prepared):
+        pass
+
     def describe(self,bundle):
         if bundle is not self.bundle:
             raise ValueError('task adapter is bound to another runtime')

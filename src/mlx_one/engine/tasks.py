@@ -69,6 +69,23 @@ class _TaskJob:
                 self.prepared.task,self.prepared.semantic_key)
 
 
+@dataclass(frozen=True)
+class TaskControl:
+    cancel: object
+    deadline: float | None
+
+    def cancelled(self):
+        return self.cancel.is_set() or (self.deadline is not None
+                                       and time.monotonic()>=self.deadline)
+
+
+def _next_stage(iterator):
+    try:
+        return False,next(iterator)
+    except StopIteration as stopped:
+        return True,stopped.value
+
+
 class TaskMicrobatches:
     def __init__(self, actor, *, transient_budget_bytes=256*1024**2):
         self.actor=actor
@@ -106,7 +123,10 @@ class TaskMicrobatches:
                 self.condition.notify()
             return handle
         except BaseException:
-            lease.release()
+            try:
+                adapter.dispose_prepared(prepared)
+            finally:
+                lease.release()
             raise
 
     def _finish(self,job,output=None,error=None):
@@ -124,7 +144,10 @@ class TaskMicrobatches:
                     job.handle.future.set_result(TaskResult(job.handle.request_id,job.prepared.task,
                         output,{'model_epoch':job.lease.runtime.epoch,'qualification':'unqualified'}))
         finally:
-            job.lease.release()
+            try:
+                job.adapter.dispose_prepared(job.prepared)
+            finally:
+                job.lease.release()
 
     def _error(self,job):
         if self.closed or job.handle.cancel_event.is_set():
@@ -163,9 +186,23 @@ class TaskMicrobatches:
                 try:
                     for job in live:
                         job.handle.transition(RequestPhase.RUNNING)
-                    result=self.actor.device_executor.call(live[0].lease.runtime.key,
-                        lambda jobs=tuple(live):jobs[0].adapter.run_batch(
-                            tuple(j.prepared for j in jobs)))
+                    adapter=live[0].adapter
+                    prepared=tuple(j.prepared for j in live)
+                    if callable(getattr(adapter,"run_steps",None)):
+                        controls=tuple(TaskControl(j.handle.cancel_event,j.deadline) for j in live)
+                        iterator=adapter.run_steps(prepared,controls)
+                        try:
+                            while True:
+                                done,result=self.actor.device_executor.call(
+                                    live[0].lease.runtime.key,
+                                    lambda stream=iterator: _next_stage(stream))
+                                if done:
+                                    break
+                        finally:
+                            self.actor.device_executor.call(live[0].lease.runtime.key,iterator.close)
+                    else:
+                        result=self.actor.device_executor.call(live[0].lease.runtime.key,
+                            lambda selected=adapter,inputs=prepared:selected.run_batch(inputs))
                     if len(result)!=len(live):
                         raise ValueError('task result mapping mismatch')
                     for job,output in zip(live,result,strict=True):

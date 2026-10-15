@@ -239,6 +239,7 @@ def _stream_bundle(
     _cache_runtime: object | None = None,
     _cache_handle: object | None = None,
     _forced_token_ids: tuple[int, ...] = (),
+    _prepared_input_ids: tuple[int, ...] | None = None,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
@@ -248,7 +249,8 @@ def _stream_bundle(
     tokenization_started = time.perf_counter()
     prepared = (_cache_handle.metadata.get("prepared_prompt")
                 if _cache_handle is not None else None)
-    prompt_ids = (list(prepared.token_ids) if prepared is not None else
+    prompt_ids = (list(_prepared_input_ids) if _prepared_input_ids is not None else
+                  list(prepared.token_ids) if prepared is not None else
                   bundle.tokenizer.encode(prompt))
     if on_execution is not None:
         on_execution({"kind": "tokenization", "duration_ms":

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,6 +38,7 @@ class LoadedVLM:
     architecture: str
     quantization: dict[str, Any]
     chat_template: ChatTemplate | None = None
+    processor_identity: str | None = None
 
 
 def load_vlm_model(
@@ -48,10 +51,12 @@ def load_vlm_model(
     try:
         root = _resolve(model, revision=revision, offline=offline, cache_dir=cache_dir)
         payload = _read_json(root / "config.json")
-        model_type = str(payload.get("model_type", ""))
+        model_type = str(payload.get("model_type", "")).replace("-","_")
         registration = get_registration(model_type)
         if registration.modality != "vision-language" or not registration.loader_path:
             raise ValueError(f"model type {model_type!r} has no native VLM task loader")
+        if model_type == "lfm2_vl" and payload.get("mlx_one_native_format") != "lfm2-vl-v1":
+            raise ValueError("LFM2-VL requires an explicit native-format tensor manifest")
         config = registration.config_class().from_dict(payload)
         tokenizer = HFTokenizerAdapter.from_directory(root)
         tensors = registration.sanitizer()(_read_safetensors(root), config)
@@ -64,7 +69,18 @@ def load_vlm_model(
             registration.weight_contract()(config).validate(tensors)
         native.load_weights(list(tensors.items()), strict=True)
         native.eval()
-        processor = QwenImageProcessor(tokenizer, config)
+        metadata_path = root / "preprocessor_config.json"
+        metadata = _read_json(metadata_path) if metadata_path.is_file() else None
+        if model_type != "qwen2_vl" and metadata is None:
+            raise ValueError("multimodal loading requires exact processor assets")
+        if model_type == "lfm2_vl":
+            from mlx_one.vision.lfm_processing import LFMImageProcessor
+
+            processor = LFMImageProcessor(tokenizer,config,metadata)
+        else:
+            processor = QwenImageProcessor(tokenizer, config,metadata=metadata)
+        processor_identity = hashlib.sha256(json.dumps(metadata or {
+            "legacy":"qwen2-vl-static-v1"},sort_keys=True).encode()).hexdigest()
         template = ChatTemplate.from_directory(root, model_type, tokenizer)
     except Exception as exc:
         if isinstance(exc, VLMModelLoadError):
@@ -83,4 +99,5 @@ def load_vlm_model(
         model_type,
         quantization,
         template,
+        processor_identity,
     )

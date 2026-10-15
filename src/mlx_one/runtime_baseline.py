@@ -45,8 +45,6 @@ def registry_inventory(registrations=None):
                 else "reference_loader_declared")
         tasks = {task: "loader_declared" if entry.loader_path else "unavailable"
                  for task in sorted(entry.tasks)}
-        if entry.model_type == "qwen3_5":
-            tasks["vision-language-generation"] = "unavailable"
         reason = ("Nested native video tracker; no standalone loader" if component else
                   "No registered task loader" if not entry.loader_path else
                   "Declared loader; shared-service integration and qualification not established")

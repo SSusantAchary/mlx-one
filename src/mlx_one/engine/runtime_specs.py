@@ -14,6 +14,11 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.retrieval:"+adapter f
     ("qwen3_embedding","Qwen3EmbeddingAdapter"),("qwen3_reranker","Qwen3RerankAdapter"),
     ("lfm2_colbert","LFM2ColBERTAdapter"))})
 
+VISION_ADAPTERS={name:"mlx_one.engine.task_runners.multimodal:"+adapter for name,adapter in (
+    ("qwen2_vl","Qwen2VLAdapter"),("qwen2_5_vl","Qwen25VLAdapter"),
+    ("lfm2_vl","LFM2VLAdapter"),("qwen3_5","Qwen35VisionAdapter"))}
+BUILTIN_ADAPTERS.update({k:v for k,v in VISION_ADAPTERS.items() if k!="qwen3_5"})
+
 
 def builtin_runtime(entry):
     component = entry.model_type == "sam3_tracker_video"
@@ -31,14 +36,13 @@ def builtin_runtime(entry):
         "mlx_one.engine.runtime_specs:task_specs", "mlx_one.engine.runtime_specs:state_specs",
         RUNTIME_CONTRACT_VERSION, component_only=component, integration_status=status,
         parent_model_type="sam3_video" if component else None,
-        reason=reason)
+        reason=reason,task_adapters=((TaskKind.VISION_LANGUAGE,VISION_ADAPTERS[entry.model_type]),)
+        if entry.model_type in VISION_ADAPTERS else ())
 
 
 def task_specs(entry):
     tasks = {canonical_task(task) for task in entry.tasks}
     # The text loader cannot establish multimodal preparation or outputs.
-    if entry.model_type == "qwen3_5":
-        tasks.discard(TaskKind.VISION_LANGUAGE)
     if entry.model_type == "lfm2_colbert":
         tasks.discard(TaskKind.EMBEDDING)
     recipes = {

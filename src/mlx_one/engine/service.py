@@ -55,7 +55,7 @@ class InferenceService:
                 raise ValueError("service is closed or model alias is already registered")
             self._task_models[name]=(model,loader,estimated_bytes,dict(settings))
 
-    def submit_task(self,name,task,payload,*,cancel=None,deadline=None):
+    def _prepare_task(self,name,task,payload):
         from mlx_one.engine.actor import InferenceActor
         from mlx_one.engine.adapter_registry import get_runtime_registration
         from mlx_one.engine.cache import array_nbytes
@@ -70,9 +70,14 @@ class InferenceService:
                 self._task_actor=InferenceActor(self._batching_config)
             actor=self._task_actor
         if loader is None and not hasattr(model,"model"):
-            from mlx_one.retrieval.loading import load_retrieval_model
+            if task.value == "vision-language-generation":
+                from mlx_one.vision.loading import load_vlm_model
 
-            loader=load_retrieval_model
+                loader=load_vlm_model
+            else:
+                from mlx_one.retrieval.loading import load_retrieval_model
+
+                loader=load_retrieval_model
         lease=self.pool.acquire(name,lambda:loader(model,**settings) if loader else model,
             estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters()))
         try:
@@ -80,12 +85,33 @@ class InferenceService:
             tasks,_=binding.specifications()
             if task not in {s.task for s in tasks}:
                 raise ValueError("task has no registered native execution contract")
-            adapter=binding.adapter()(lease.runtime.value)
+            adapter=binding.adapter(task)(lease.runtime.value)
             prepared=adapter.prepare(task,payload)
         except BaseException:
             lease.release()
             raise
+        return actor,adapter,prepared,lease
+
+    def submit_task(self,name,task,payload,*,cancel=None,deadline=None):
+        actor,adapter,prepared,lease=self._prepare_task(name,task,payload)
         return actor.submit_task(adapter,prepared,lease,cancel=cancel,deadline=deadline)
+
+    def stream_task(self,name,task,payload,*,cancel=None):
+        actor,adapter,prepared,lease=self._prepare_task(name,task,payload)
+        def release():
+            try:
+                adapter.dispose_prepared(prepared)
+            finally:
+                lease.release()
+        try:
+            if not callable(getattr(adapter,"stream",None)):
+                raise ValueError("task has no native stream contract")
+            job=actor._enqueue(lambda event:adapter.stream(prepared,event),
+                cancel=cancel,on_cancel=release)
+        except BaseException:
+            release()
+            raise
+        yield from actor.read_sync(job)
 
     def run_task(self,name,task,payload,**settings):
         return self.submit_task(name,task,payload,**settings).result()

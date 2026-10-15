@@ -22,10 +22,10 @@ def test_all_architectures_have_explicit_truthful_runtime_records():
     assert len(rows) == 27
     assert {name for name, row in rows.items()
             if row['integration_status']=='architecture_only'} == {
-        'lfm2_vl', 'qwen2_5_vl', 'lfm2_audio'}
+        'lfm2_audio'}
     assert rows['sam3_tracker_video']['component_only']
     assert rows['sam3_tracker_video']['parent_model_type'] == 'sam3_video'
-    assert rows['qwen3_5']['tasks'] == ('text-generation',)
+    assert set(rows['qwen3_5']['tasks']) == {'text-generation','vision-language-generation'}
     assert 'vision-language-generation' in rows['qwen3_5']['declared_tasks']
     assert rows['whisper']['tasks'] == rows['qwen3_asr']['tasks'] == ('transcription',)
     assert rows['qwen3_forced_aligner']['tasks'] == ('alignment',)
