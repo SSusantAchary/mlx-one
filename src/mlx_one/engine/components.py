@@ -374,20 +374,27 @@ def _snapshot_lock(root, *, exclusive):
             fcntl.flock(lock, fcntl.LOCK_UN)
 
 
-def save_snapshot(directory, bundle, *, identity):
+def save_snapshot(directory, bundle, *, identity, tensor_format="npz"):
+    if tensor_format not in {"npz","safetensors"}:
+        raise ValueError("unsupported snapshot tensor format")
     """Immutable payload generation; atomic manifest is the commit point."""
     import numpy as np
 
     root = Path(directory)
     with _snapshot_lock(root, exclusive=True):
         tensors, layers = _snapshot_contents(bundle)
-        payload = root / f"tensors-{uuid.uuid4().hex}.npz"
+        payload = root / f"tensors-{uuid.uuid4().hex}.{tensor_format}"
         temporary = None
         published = False
         try:
             with tempfile.NamedTemporaryFile(dir=root, delete=False) as handle:
                 temporary = Path(handle.name)
-                np.savez(handle, **tensors)
+                if tensor_format == "npz":
+                    np.savez(handle, **tensors)
+                else:
+                    from safetensors.numpy import save
+
+                    handle.write(save({k:np.ascontiguousarray(v) for k,v in tensors.items()}))
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(temporary, payload)
@@ -396,7 +403,7 @@ def save_snapshot(directory, bundle, *, identity):
                 else "hybrid-state-v3" if any(
                 "storage" in layer for layer in layers) else "hybrid-state-v2"),
                         "identity": identity,
-                        "layers": layers, "payload": payload.name,
+                        "layers": layers, "payload": payload.name, "tensor_format": tensor_format,
                         "sha256": hashlib.sha256(payload.read_bytes()).hexdigest()}
             with tempfile.NamedTemporaryFile(mode="w", dir=root, delete=False) as handle:
                 temporary = Path(handle.name)
@@ -410,7 +417,7 @@ def save_snapshot(directory, bundle, *, identity):
                 os.fsync(directory_fd)
             finally:
                 os.close(directory_fd)
-            for old in root.glob("tensors-*.npz"):
+            for old in (*root.glob("tensors-*.npz"),*root.glob("tensors-*.safetensors")):
                 if old != payload:
                     old.unlink()
             return manifest
@@ -421,6 +428,21 @@ def save_snapshot(directory, bundle, *, identity):
                 payload.unlink(missing_ok=True)
 
 
+@contextmanager
+def _snapshot_tensors(payload,tensor_format):
+    if tensor_format == "npz":
+        import numpy as np
+
+        with np.load(payload,allow_pickle=False) as tensors:
+            yield tensors
+    elif tensor_format == "safetensors":
+        from safetensors.numpy import load_file
+
+        yield load_file(payload)
+    else:
+        raise ValueError("unsupported snapshot tensor format")
+
+
 def load_snapshot(directory, *, identity, expected_specs, page_pool=None):
     with _snapshot_lock(Path(directory), exclusive=False):
         return _load_snapshot(directory, identity=identity, expected_specs=expected_specs,
@@ -429,8 +451,6 @@ def load_snapshot(directory, *, identity, expected_specs, page_pool=None):
 
 def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
     import mlx.core as mx
-    import numpy as np
-
     root = Path(directory)
     manifest = json.loads((root / "state.json").read_text())
     name = manifest.get("payload", "tensors.npz")
@@ -447,7 +467,7 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
         raise ValueError("hybrid snapshot identity, checksum or schema mismatch")
     staged = []
     try:
-        with np.load(payload, allow_pickle=False) as tensors:
+        with _snapshot_tensors(payload,manifest.get("tensor_format","npz")) as tensors:
             for layer, spec in zip(manifest["layers"], expected_specs, strict=True):
                 if layer["kind"] != spec.kind or layer["offset"] < 0:
                     raise ValueError("hybrid snapshot layer mismatch")

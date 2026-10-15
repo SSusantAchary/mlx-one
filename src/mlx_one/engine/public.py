@@ -192,6 +192,8 @@ class Engine:
         report["cache_stats"] = (
             self._cache_manager.stats().to_dict() if self._cache_manager else None
         )
+        report["cold_prefix"]=(self._cache_manager.cold_prefix.stats()
+            if self._cache_manager and self._cache_manager.cold_prefix else None)
         return report
 
     @property

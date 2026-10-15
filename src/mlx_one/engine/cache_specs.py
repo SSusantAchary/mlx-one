@@ -178,8 +178,16 @@ class CacheConfig:
     block_size_tokens: int = 32
     key_type: str = "f16"
     value_type: str = "f16"
+    ssd_cache_directory: str | None = None
+    ssd_cache_budget_bytes: int = 0
+    ssd_staging_budget_bytes: int = 256 * 1024**2
+    ssd_max_entries: int = 128
 
     def __post_init__(self) -> None:
+        if (self.ssd_cache_budget_bytes<0 or self.ssd_staging_budget_bytes<1
+                or self.ssd_max_entries<1 or bool(self.ssd_cache_directory) !=
+                (self.ssd_cache_budget_bytes>0)):
+            raise ValueError("SSD prefixes require explicit directory and positive budgets")
         if self.backend not in CACHE_BACKENDS:
             raise ValueError("cache backend must be " + ", ".join(CACHE_BACKENDS))
         if self.memory_budget_bytes is not None and self.memory_budget_bytes < 1:

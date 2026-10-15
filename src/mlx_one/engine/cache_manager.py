@@ -67,6 +67,14 @@ class CacheManager:
 
         self.hybrid_prefix = HybridPrefixIndex(self.config.prefix_cache_budget_bytes,
                                               self.config.block_size_tokens)
+        self.cold_prefix = None
+        if self.config.ssd_cache_directory:
+            from mlx_one.engine.cold_prefix import ColdPrefixStore
+
+            self.cold_prefix=ColdPrefixStore(self.config.ssd_cache_directory,
+                budget_bytes=self.config.ssd_cache_budget_bytes,
+                staging_bytes=self.config.ssd_staging_budget_bytes,
+                max_entries=self.config.ssd_max_entries)
         self._handles: dict[str, CacheHandle] = {}
         self._reservations: dict[str, CacheReservation] = {}
         self._lock = threading.RLock()
@@ -400,7 +408,7 @@ class CacheManager:
                     if match is None or match[0] < minimum_tokens:
                         if match is not None:
                             match[1].release()
-                        return 0
+                        return self._adopt_cold(handle,fingerprint,tokens,minimum_tokens)
                     reused, replacement = match
                     from mlx_one.engine.lifecycle import adopt_snapshot
 
@@ -415,7 +423,7 @@ class CacheManager:
                         (fingerprint,), tokens, minimum_tokens=minimum_tokens
                     )
                     if match is None:
-                        return 0
+                        return self._adopt_cold(handle,fingerprint,tokens,minimum_tokens)
                     matched_tokens, bundle = match
                     handle.bundle.release()
                     handle.bundle = bundle
@@ -425,7 +433,7 @@ class CacheManager:
                         fingerprint, tokens, minimum_tokens=minimum_tokens
                     )
                     if match is None:
-                        return 0
+                        return self._adopt_cold(handle,fingerprint,tokens,minimum_tokens)
                     if len(match.layer_references) != len(handle.bundle.entries):
                         for layer in match.layer_references:
                             for reference in layer:
@@ -462,27 +470,84 @@ class CacheManager:
                 if self._handles.get(handle.handle_id) is handle:
                     handle.metadata["prefix_lookup_time_ms"] = elapsed
 
-    def preview_prefix(
-        self,
-        fingerprint: CacheFingerprint,
-        tokens: tuple[int, ...],
-        *,
-        minimum_tokens: int = 1,
-    ) -> int:
-        if not self.config.prefix_cache_enabled:
+    def _adopt_cold(self,handle,fingerprint,tokens,minimum):
+        if self.cold_prefix is None:
+            return 0
+        from mlx_one.engine.lifecycle import adopt_snapshot
+
+        with self.transient_reservation(self.cold_prefix.staging):
+            match=self.cold_prefix.lookup(fingerprint,tokens,self.plan.state_specs,minimum=minimum)
+            if match is None:
+                return 0
+            count,canonical=match
+            staged=canonical
+            try:
+                if handle.backend in {"block","paged"}:
+                    # Cold restoration is an explicitly measured conversion, outside attention.
+                    entries=[]
+                    staged=CacheBundle(())
+                    for target,source in zip(handle.bundle.entries,canonical.entries,strict=True):
+                        if hasattr(target,"_blocks"):
+                            component=target.empty() if hasattr(target,"empty") else BlockKVCache(
+                                self.block_pool,layer_id=target.layer_id)
+                            entries.append(component)
+                            staged.entries=tuple(entries)
+                            if source.offset:
+                                if hasattr(component,"page_table"):
+                                    component.append(source.keys,source.values)
+                                else:
+                                    component.update(source.keys,source.values)
+                        else:
+                            entries.append(source.clone())
+                            staged.entries=tuple(entries)
+                    canonical.release()
+                if not adopt_snapshot(self,handle,staged):
+                    return 0
+                handle.prefix_tokens_reused=count
+                handle.metadata["prefix_storage_tier"]="ssd"
+                return count
+            finally:
+                if handle.bundle is not staged:
+                    staged.release()
+                if canonical is not staged:
+                    canonical.release()
+
+    def _publish_cold(self,handle,fingerprint,tokens,*,snapshot=None):
+        if (self.cold_prefix is None or (not self.plan.prefix_shareable and not self.hybrid_state)
+                or handle.metadata.get("key_type")!="f16"
+                or handle.metadata.get("value_type")!="f16"):
+            return False
+        callback=handle.metadata.get("is_cancelled")
+        def cancelled():
+            return (self._closed or handle.closed or handle.metadata.get("cancelled")
+                or callable(callback) and callback()
+                or self._handles.get(handle.handle_id) is not handle)
+        owned=snapshot if snapshot is not None else handle.bundle
+        amount=owned.allocated_nbytes*4+len(tokens)*16+65536
+        if amount>self.cold_prefix.staging:
+            self.cold_prefix.rejections+=1
+            return False
+        with self.transient_reservation(amount):
+            return self.cold_prefix.put(fingerprint,tokens,owned,self.plan.state_specs,
+                page_tokens=self.config.block_size_tokens if handle.backend in {"block","paged"}
+                else 0,cancelled=cancelled)
+
+    def preview_prefix(self,fingerprint,tokens,*,minimum_tokens=1):
+        if not self.config.prefix_cache_enabled or fingerprint.multimodal_identity is not None:
             return 0
         if self.hybrid_state:
-            length = self.hybrid_prefix.preview(fingerprint, tokens)
-            return length if length >= minimum_tokens else 0
-        if not self.plan.prefix_shareable:
+            count=self.hybrid_prefix.preview(fingerprint,tokens)
+        elif not self.plan.prefix_shareable:
             return 0
-        if self.config.backend in {"block", "paged"}:
-            return self.block_prefix.longest_prefix_tokens(
-                fingerprint, tokens, minimum_tokens=minimum_tokens
-            )
-        return self.snapshot_prefix.longest_prefix_tokens(
-            (fingerprint,), tokens, minimum_tokens=minimum_tokens
-        )
+        elif self.config.backend in {"block","paged"}:
+            count=self.block_prefix.longest_prefix_tokens(
+                fingerprint,tokens,minimum_tokens=minimum_tokens)
+        else:
+            count=self.snapshot_prefix.longest_prefix_tokens(
+                (fingerprint,),tokens,minimum_tokens=minimum_tokens)
+        cold=(self.cold_prefix.preview(fingerprint,tokens,minimum=minimum_tokens)
+              if self.cold_prefix is not None else 0)
+        return max(count,cold) if max(count,cold)>=minimum_tokens else 0
 
     def stage_prefix(self, handle, fingerprint, tokens):
         with self._lock:
@@ -530,6 +595,7 @@ class CacheManager:
                         or any(c.offset != len(tokens) for c in snapshot.entries)):
                     return False
                 stored = self.snapshot_prefix.put((fingerprint,), tokens, snapshot)
+                stored = self._publish_cold(handle,fingerprint,tokens,snapshot=snapshot) or stored
                 if stored and maximum_entries is not None:
                     self.snapshot_prefix.limit_entries(maximum_entries)
                 handle.metadata["prefix_publications"] = (
@@ -568,12 +634,12 @@ class CacheManager:
                     handle.metadata.get("publication_rejections", 0) + int(not stored))
                 if stored and maximum_entries is not None:
                     self.snapshot_prefix.limit_entries(maximum_entries)
-                return stored
+                return self._publish_cold(handle,fingerprint,tokens) or stored
             layers = tuple(cache.full_block_refs for cache in handle.bundle.entries)
             stored = self.block_prefix.publish(fingerprint, tokens, layers) > 0
             handle.metadata["prefix_publications"] = (
                 handle.metadata.get("prefix_publications", 0) + int(stored))
-            return stored
+            return self._publish_cold(handle,fingerprint,tokens) or stored
 
     def publish_hybrid_boundary(self, handle, prompt_ids):
         with self._lock:
@@ -587,7 +653,9 @@ class CacheManager:
                     or (callable(callback) and callback()) or handle.metadata.get("cancelled")
                     or any(c.offset != offset for c in handle.bundle.entries)):
                 return False
-            return self.hybrid_prefix.put(fp, tuple(prompt_ids[:offset]), handle.bundle)
+            tokens=tuple(prompt_ids[:offset])
+            stored=self.hybrid_prefix.put(fp,tokens,handle.bundle)
+            return self._publish_cold(handle,fp,tokens) or stored
 
     def release(self, handle: CacheHandle) -> None:
         with self._lock:

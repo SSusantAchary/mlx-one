@@ -276,3 +276,17 @@ native image features; task bridges remain singleton, not claimed GPU batches.
 pass, and ten supervised native video/workflow tests pass. Real SAM3 masks,
 checkpoint accuracy and service performance remain pending; fake tracker
 fixtures establish lifecycle correctness only.
+
+### PR-16 — opt-in cold prefix tier
+
+Existing RAM owners/indexes now have an optional SSD safetensors tier configured
+through CacheConfig. Immutable generations and atomically checksummed JSON
+indexes enforce compatibility/namespace identity, quotas, complete hybrid state
+and bounded staged restoration. Default caches stay RAM-only; persisted files
+survive runtime close. FP16 manager integration is supported; quantized KV and
+multimodal prefixes remain excluded. Restored prefixes leave a token to execute.
+66 affected CPU tests and 18 distinct supervised native tests pass, including
+pinned Qwen3-small INT8 dense restoration against fresh FP16 full-prefill.
+A too-small staging test configuration was retained as a rejection and rerun
+with an explicit 256-MiB allowance. Tiny hybrid/compound lifecycle parity passes;
+checkpoint-scale hybrid/paged persistence and performance remain pending.

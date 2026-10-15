@@ -25,7 +25,20 @@ def adopt_snapshot(runtime, handle, staged, *, cancel=None):
         if len(staged.entries) != len(specs) or len({c.offset for c in staged.entries}) != 1:
             raise ValueError("snapshot topology or component positions mismatch")
         for component, spec in zip(staged.entries, specs, strict=True):
-            component.validate(spec)
+            if callable(getattr(component,"validate",None)):
+                component.validate(spec)
+            elif hasattr(component,"_blocks") and spec.kind=="full_kv":
+                if component.layer_id!=spec.layer_id:
+                    raise ValueError("block snapshot layer mismatch")
+                for reference in component._blocks:
+                    page=reference.block
+                    for tensor,dimension in zip(page.state,
+                            (spec.key_head_dim,spec.value_head_dim),strict=True):
+                        if (tensor.shape[:2]!=(1,spec.num_kv_heads)
+                                or tensor.shape[-1]!=dimension or tensor.dtype!=mx.float16):
+                            raise ValueError("block snapshot layout mismatch")
+            else:
+                raise ValueError("snapshot component validation unavailable")
         from mlx_one.engine.transactions import component_tensors
 
         mx.eval(*(v for c in staged.entries for v in component_tensors(c)))
