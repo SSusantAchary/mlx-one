@@ -290,9 +290,16 @@ class InferenceFeatureRegistry:
                 or contract.get("execution_mode") != scope.execution_path
                 or not contract.get("quantization_digest") or not contract.get("components")):
             raise RegistryError("current observed native execution contract is required")
-        self._validate_native_provenance(result, scope, evidence)
-        if (status is InferenceFeatureStatus.PERFORMANCE_QUALIFIED
-                or feature in {"quantized_paged_kv", "long_context"}):
+        if feature.startswith("task:"):
+            from mlx_one.task_qualification import validate_task_evidence
+
+            validate_task_evidence(result,scope,evidence,
+                performance=status is InferenceFeatureStatus.PERFORMANCE_QUALIFIED)
+        else:
+            self._validate_native_provenance(result, scope, evidence)
+        if (not feature.startswith("task:") and (
+                status is InferenceFeatureStatus.PERFORMANCE_QUALIFIED
+                or feature in {"quantized_paged_kv", "long_context"})):
             from mlx_one.engine.envelope import QualificationEnvelope
 
             try:

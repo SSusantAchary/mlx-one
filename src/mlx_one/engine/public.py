@@ -14,6 +14,7 @@ from typing import Any
 
 from mlx_one.engine.batching import BatchingConfig
 from mlx_one.engine.cache_specs import CacheConfig
+from mlx_one.engine.device_executor import DeviceExecutor, device_iterator
 from mlx_one.engine.modes import (
     ACTOR_MODES,
     InferenceMode,
@@ -72,27 +73,59 @@ class Engine:
         memory_pressure_config: MemoryPressureConfig | None = None,
         qualification_registry: Any = None,
         qualification_profile: dict[str, Any] | None = None,
+        spec_type: str = "none",
+        spec_draft_n_max: int = 3,
+        draft_model: LoadedTextModel | None = None,
     ) -> None:
+        self._device = DeviceExecutor.shared()
         backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
         config = (replace(cache_config, backend=backend)
                   if cache_config else CacheConfig(backend=backend))
         self._bundle = (
             model
             if isinstance(model, LoadedTextModel)
-            else load_text_model(
+            else self._device.call(str(model), lambda: load_text_model(
                 model,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
-            )
+            ))
         )
-        configure_execution_dtype(self._bundle, execution_dtype)
+        self._device.call(id(self),
+            lambda: configure_execution_dtype(self._bundle, execution_dtype))
         self._requested_mode = inference_mode
         self._inference_mode = inference_mode
         self._execution_dtype = execution_dtype
         self._cache_namespace = cache_namespace
         self._batching_config = batching_config or BatchingConfig()
+        if spec_type not in {"none","draft-mtp","draft-model"} or spec_draft_n_max<1:
+            raise ValueError("unsupported speculation policy or draft budget")
+        self._spec_type,self._spec_draft_n_max=spec_type,spec_draft_n_max
+        self._draft_bundle=draft_model
+        if spec_type=="draft-mtp":
+            from mlx_one.engine.speculation import validate_mtp
+
+            validate_mtp(self._bundle)
+            if (self._batching_config.max_sequences!=1 or backend!="dense"
+                    or inference_mode not in {None,"reference_dense"}):
+                raise ValueError("native MTP requires single-request reference dense execution")
+        elif spec_type=="draft-model":
+            from mlx_one.engine.speculation import validate_external
+
+            if not isinstance(draft_model,LoadedTextModel):
+                raise ValueError("external draft requires an explicitly loaded native bundle")
+            self._device.call(id(draft_model),
+                lambda:configure_execution_dtype(draft_model,execution_dtype))
+            validate_external(self._bundle,draft_model)
+            cfg=self._batching_config
+            quantum=min(cfg.prefill_chunk_size,cfg.max_prefill_tokens,
+                        max(cfg.max_scheduled_tokens//2,1))
+            if (backend!="dense" or inference_mode not in {None,"reference_dense",
+                    "experimental_dense_batch"} or spec_draft_n_max+1>quantum):
+                raise ValueError("external verification requires compatible dense token budgets")
+        elif draft_model is not None:
+            raise ValueError("draft_model requires explicit spec_type=draft-model")
         self._actor = None
         self._cache_manager = None
         self._pressure = None
@@ -106,10 +139,11 @@ class Engine:
         if callable(getattr(self._bundle.model, "make_cache", None)):
             from mlx_one.engine.construction import construct_runtime
 
-            self._cache_manager, self._selection = construct_runtime(
+            self._cache_manager, self._selection = self._device.call(id(self),
+                lambda: construct_runtime(
                 self._bundle, config, inference_mode, batching=self._batching_config,
                 pressure=self._pressure, registry=qualification_registry,
-                profile=qualification_profile)
+                profile=qualification_profile))
             inference_mode = self._selection["resolved_mode"]
             self._inference_mode = inference_mode
             backend = self._cache_manager.config.backend
@@ -123,18 +157,23 @@ class Engine:
                 self._pressure.start()
         except Exception:
             if self._cache_manager is not None:
-                self._cache_manager.close()
+                self._device.call(id(self), self._cache_manager.close)
             if self._pressure is not None:
                 self._pressure.close()
             raise
         self._backend = backend
-        if inference_mode in ACTOR_MODES or self._requested_mode == "auto":
+        if (inference_mode in ACTOR_MODES or self._requested_mode == "auto"
+                or self._spec_type!="none"):
             from mlx_one.engine.actor import InferenceActor
             from mlx_one.engine.dispatch import DispatchRunner
 
             self._actor = InferenceActor(self._batching_config, runner=DispatchRunner(),
                                          pressure=self._pressure)
             self._actor.execution_mode = inference_mode
+        if self._draft_bundle is not None and self._draft_bundle.model is not self._bundle.model:
+            from mlx_one.engine.cache import array_nbytes
+
+            self._cache_manager.model_bytes+=array_nbytes(self._draft_bundle.model.parameters())
         workers = (self._batching_config.max_sequences + self._batching_config.queue_size
                    if self._actor is not None else 1)
         self._executor = ThreadPoolExecutor(
@@ -184,10 +223,14 @@ class Engine:
         if self._actor is not None:
             report["scheduler"] = self._actor.stats()
         report["selection"] = self._selection
+        report["speculation"]={"policy":self._spec_type,"draft_limit":self._spec_draft_n_max,
+                               "production_qualified":False}
         report["memory_pressure"] = self._pressure.stats() if self._pressure else None
         report["cache_stats"] = (
             self._cache_manager.stats().to_dict() if self._cache_manager else None
         )
+        report["cold_prefix"]=(self._cache_manager.cold_prefix.stats()
+            if self._cache_manager and self._cache_manager.cold_prefix else None)
         return report
 
     @property
@@ -203,8 +246,11 @@ class Engine:
         **settings: Any,
     ) -> GenerationResult:
         resolved = _options(options, settings)
+        if self._spec_type!="none" and resolved.temperature!=0:
+            raise ValueError("native MTP requires greedy decoding")
         if self._cache_manager is None:
-            result = generate(self.model, prompt, options=resolved)
+            result = self._device.call(id(self),
+                lambda: generate(self.model, prompt, options=resolved))
             if not isinstance(result, GenerationResult):
                 raise RuntimeError("single-prompt generation returned a batch")
             with self._lock:
@@ -221,6 +267,8 @@ class Engine:
         **settings: Any,
     ) -> Iterator[GenerationChunk]:
         resolved = _options(options, settings)
+        if self._spec_type!="none" and resolved.temperature!=0:
+            raise ValueError("native MTP requires greedy decoding")
         event = cancel or threading.Event()
         if self._actor is not None:
             latest = None
@@ -231,9 +279,9 @@ class Engine:
             if event.is_set() and (latest is None or latest.finish_reason is None):
                 yield GenerationChunk(None, "", latest.generated_tokens if latest else 0, "stop")
         else:
-            yield from stream_generate(
+            yield from device_iterator(self._device, id(self), stream_generate(
                 self.model, prompt, options=resolved, is_cancelled=event.is_set,
-                _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace)
+                _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace))
 
     def _batch_factory(self, prompt, options):
         cfg = self._batching_config
@@ -244,7 +292,9 @@ class Engine:
             return stream_generate(
                 bundle, prompt, options=options, is_cancelled=cancel.is_set,
                 _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace,
-                _cooperative=True, _prefill_chunk_size=chunk)
+                _cooperative=self._spec_type!="draft-mtp", _prefill_chunk_size=chunk,
+                _spec_type=self._spec_type,_spec_draft_n_max=self._spec_draft_n_max,
+                _draft_bundle=self._draft_bundle)
         if self._cache_namespace is not None:
             factory.prefix_preview = lambda: self._cache_manager.preview_prefix(
                 self._cache_manager.fingerprint(namespace=self._cache_namespace,
@@ -263,6 +313,8 @@ class Engine:
         self._ensure_open()
         cancel = threading.Event()
         resolved = _options(options, settings)
+        if self._spec_type!="none" and resolved.temperature!=0:
+            raise ValueError("native MTP requires greedy decoding")
         if self._actor is not None:
             job = self._actor._enqueue(self._batch_factory(prompt, resolved), cancel=cancel)
             future = self._executor.submit(
@@ -317,14 +369,14 @@ class Engine:
             self._actor.close()
         self._executor.shutdown(wait=True, cancel_futures=True)
         if self._cache_manager is not None:
-            self._cache_manager.close()
+            self._device.call(id(self), self._cache_manager.close)
         if self._pressure is not None:
             self._pressure.close()
         gc.collect()
         try:
             mx = sys.modules.get("mlx.core")
             if mx is not None:
-                mx.clear_cache()
+                self._device.call(id(self), mx.clear_cache)
         except Exception:
             pass
 

@@ -33,16 +33,24 @@ class LfmSparseMoe(nn.Module):
             config.hidden_size, config.moe_intermediate_size, config.num_experts
         )
         self.expert_bias = mx.zeros((config.num_experts,)) if config.use_expert_bias else None
-        self.router_logits: Any | None = None
-        self.top_indices: Any | None = None
+        self._router_logits: Any | None = None
+        self._top_indices: Any | None = None
+
+    @property
+    def router_logits(self):
+        return self._router_logits
+
+    @property
+    def top_indices(self):
+        return self._top_indices
 
     def __call__(self, value: Any) -> Any:
-        self.router_logits = self.gate(value)
+        self._router_logits = self.gate(value)
         probabilities = mx.softmax(self.router_logits, axis=-1, precise=True)
         routed = probabilities
         if self.expert_bias is not None:
             routed = routed + self.expert_bias
-        self.top_indices = mx.stop_gradient(
+        self._top_indices = mx.stop_gradient(
             mx.argpartition(-routed, kth=self.top_k - 1, axis=-1)[..., : self.top_k]
         )
         scores = mx.take_along_axis(routed, self.top_indices, axis=-1)
@@ -80,8 +88,11 @@ class Lfm2MoeForCausalLM(nn.Module):
     def make_cache(self) -> tuple[Any, ...]:
         return make_hybrid_caches(tuple(self.config.layer_types), self.config.conv_L_cache)
 
-    def __call__(self, input_ids: Any, *, cache: tuple[Any, ...] | None = None) -> ModelOutput:
-        hidden, cache, _ = self.model(input_ids, cache=cache)
+    def __call__(self, input_ids: Any, *, cache: tuple[Any, ...] | None = None,
+                 attention_mask: Any | None = None, position_ids: Any | None = None,
+                 output_hidden_states: bool = False) -> ModelOutput:
+        hidden, cache, states = self.model(input_ids, cache=cache, attention_mask=attention_mask,
+            position_ids=position_ids, output_hidden_states=output_hidden_states)
         logits = (
             self.model.embed_tokens.as_linear(hidden)
             if self.config.tie_embedding
@@ -94,9 +105,11 @@ class Lfm2MoeForCausalLM(nn.Module):
         aux_loss = None
         if self.config.router_aux_loss_coef and all_routers:
             aux_loss = self.config.router_aux_loss_coef * router_auxiliary_loss(
-                all_routers, self.config.num_experts, self.config.num_experts_per_tok
+                all_routers, self.config.num_experts, self.config.num_experts_per_tok,
+                attention_mask=attention_mask
             )
         routers = all_routers if self.config.output_router_logits else None
         return ModelOutput(
-            logits, hidden, cache=cache, router_logits=routers, router_aux_loss=aux_loss
+            logits, hidden, cache=cache, hidden_states=states,
+            router_logits=routers, router_aux_loss=aux_loss
         )

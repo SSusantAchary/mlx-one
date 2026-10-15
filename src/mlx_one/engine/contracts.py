@@ -291,3 +291,210 @@ class EngineRuntime(Protocol):
     def cancel(self, request_id: str) -> bool: ...
 
     def close(self) -> None: ...
+
+
+class TaskKind(str, Enum):
+    """Canonical service tasks; registry aliases remain available in introspection."""
+
+    TEXT_GENERATION = "text-generation"
+    VISION_LANGUAGE = "vision-language-generation"
+    EMBEDDING = "embedding"
+    LATE_INTERACTION = "late-interaction"
+    RERANKING = "reranking"
+    TRANSCRIPTION = "transcription"
+    ALIGNMENT = "alignment"
+    AUDIO_LANGUAGE = "audio-language"
+    IMAGE_SEGMENTATION = "image-segmentation"
+    MASK_GENERATION = "mask-generation"
+    VIDEO_SEGMENTATION = "video-segmentation"
+
+
+def canonical_task(task: str | TaskKind) -> TaskKind:
+    return TaskKind({"asr": "transcription", "transcribe": "transcription",
+                     "align": "alignment"}.get(task, task))
+
+
+class StageKind(str, Enum):
+    ENCODE = "encode"
+    PREFILL = "prefill"
+    DECODE = "decode"
+    ALIGN = "align"
+    SCORE = "score"
+    FRAME = "frame"
+    CODEC = "codec"
+    PREDICT = "predict"
+    JOINT = "joint"
+
+
+class RequestPhase(str, Enum):
+    """Task-neutral lifecycle, distinct from task-local execution stages."""
+
+    QUEUED = "queued"
+    PREPARING = "preparing"
+    ADMITTED = "admitted"
+    RUNNING = "running"
+    PAUSED = "paused"
+    FINISHED = "finished"
+    CANCELLED = "cancelled"
+    TIMED_OUT = "timed_out"
+    FAILED = "failed"
+
+    @property
+    def terminal(self) -> bool:
+        return self in {self.FINISHED, self.CANCELLED, self.TIMED_OUT, self.FAILED}
+
+    def validate_transition(self, target: RequestPhase) -> None:
+        if self == target:
+            return
+        allowed = {self.QUEUED: {self.PREPARING}, self.PREPARING: {self.ADMITTED},
+                   self.ADMITTED: {self.RUNNING}, self.RUNNING: {self.PAUSED, self.FINISHED},
+                   self.PAUSED: {self.RUNNING}}
+        failures = {self.CANCELLED, self.TIMED_OUT, self.FAILED}
+        if self.terminal or target not in allowed.get(self, set()) | failures:
+            raise ValueError(f"invalid request transition: {self.value} -> {target.value}")
+
+
+def request_phase(phase: Phase) -> RequestPhase:
+    """Compatibility mapping: existing generation events and Phase values stay intact."""
+    legacy = {Phase.WAITING: RequestPhase.QUEUED, Phase.PREFILL: RequestPhase.RUNNING,
+              Phase.DECODE: RequestPhase.RUNNING}
+    return legacy[phase] if phase in legacy else RequestPhase(phase.value)
+
+
+@dataclass(frozen=True)
+class TaskSpec:
+    task: TaskKind
+    runner_key: str
+    stage_kinds: tuple[StageKind, ...]
+    batch_policy: str
+    output_schema: str
+    speculation_modes: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.task, TaskKind):
+            raise ValueError("task must be canonical")
+        if not self.runner_key or not self.batch_policy or not self.output_schema:
+            raise ValueError("task requires runner, batching and output schema identities")
+        if not isinstance(self.stage_kinds, tuple) or not self.stage_kinds or any(
+                not isinstance(stage, StageKind) for stage in self.stage_kinds):
+            raise ValueError("task requires immutable typed stages")
+        if len(set(self.stage_kinds)) != len(self.stage_kinds):
+            raise ValueError("duplicate task stages")
+        if not isinstance(self.speculation_modes, tuple) or (
+                len(set(self.speculation_modes)) != len(self.speculation_modes)):
+            raise ValueError("speculation modes must be an immutable unique tuple")
+
+
+@dataclass(frozen=True)
+class LayerExecutionSpec:
+    layer_id: int
+    state_kind: str
+    query_heads: int | None
+    kv_heads: int | None
+    key_dim: int | None
+    value_dim: int | None
+    position_policy: str
+    window_tokens: int | None = None
+
+    def __post_init__(self) -> None:
+        kinds = {"full_kv", "sliding_kv", "cross_kv", "conv", "recurrent", "encoder_features",
+                 "predictor", "tracking", "codec"}
+        if self.layer_id < 0 or self.state_kind not in kinds or not self.position_policy:
+            raise ValueError("invalid layer identity, state kind or position policy")
+        dimensions = (self.query_heads, self.kv_heads, self.key_dim, self.value_dim)
+        if any(d is not None and (not isinstance(d, int) or isinstance(d, bool) or d < 1)
+               for d in dimensions):
+            raise ValueError("layer dimensions must be positive integers")
+        if self.state_kind in {"full_kv", "sliding_kv", "cross_kv"}:
+            if any(d is None for d in dimensions):
+                raise ValueError("attention requires explicit per-layer head dimensions")
+            if self.query_heads % self.kv_heads:
+                raise ValueError("query heads must be divisible by KV heads")
+        if (self.state_kind == "sliding_kv" and self.window_tokens is None) or (
+                self.window_tokens is not None and self.window_tokens < 1):
+            raise ValueError("sliding state requires a positive window")
+
+
+@dataclass(frozen=True)
+class BatchCompatibilityKey:
+    """All execution-altering identity; RNG and output limits remain request-local."""
+
+    model_instance: str
+    model_epoch: int
+    adapter_version: str
+    task: TaskKind
+    stage: StageKind
+    precision_policy: str
+    state_schema: str
+    position_policy: str
+    computation_identity: str
+
+    def __post_init__(self) -> None:
+        if self.model_epoch < 0 or not all((self.model_instance, self.adapter_version,
+                self.precision_policy, self.state_schema, self.position_policy,
+                self.computation_identity)):
+            raise ValueError("batch compatibility requires complete versioned identity")
+        if not isinstance(self.task, TaskKind) or not isinstance(self.stage, StageKind):
+            raise ValueError("batch compatibility requires canonical task and stage")
+
+
+@dataclass(frozen=True)
+class WorkItem:
+    request_id: str
+    compatibility: BatchCompatibilityKey
+    real_input_cost: int
+    output_bound: int
+    estimated_transient_bytes: int
+    cost_unit: Literal["tokens", "samples", "pixels", "frames", "service_us"]
+    payload: Any = field(default=None, compare=False, hash=False)
+
+    def __post_init__(self) -> None:
+        if not self.request_id:
+            raise ValueError("work requires request ownership")
+        if any(not isinstance(value, int) or isinstance(value, bool) or value < 0 for value in (
+                self.real_input_cost, self.output_bound, self.estimated_transient_bytes)):
+            raise ValueError("work costs must be nonnegative integers")
+        if self.cost_unit not in {"tokens", "samples", "pixels", "frames", "service_us"}:
+            raise ValueError("invalid task cost unit")
+
+
+@runtime_checkable
+class ExecutionAdapter(Protocol):
+    """Shared description, costing and ownership; no task is forced to decode."""
+
+    def describe(self, bundle: object) -> object: ...
+    def prepare(self, payload: object) -> object: ...
+    def estimate(self, prepared: object, plan: object) -> object: ...
+    def pack(self, work: tuple[WorkItem, ...]) -> object: ...
+    def execute(self, packed: object, state: object) -> object: ...
+    def unpack(self, output: object) -> tuple[object, ...]: ...
+
+
+class CausalAdapter(ExecutionAdapter, Protocol):
+    def prefill(self, packed: object, state: object) -> object: ...
+    def decode(self, packed: object, state: object) -> object: ...
+
+
+class EncoderAdapter(ExecutionAdapter, Protocol):
+    def encode(self, packed: object) -> object: ...
+
+
+class EncoderDecoderAdapter(EncoderAdapter, Protocol):
+    def decode(self, packed: object, state: object, encoded: object) -> object: ...
+
+
+class TransducerAdapter(EncoderAdapter, Protocol):
+    def predict(self, packed: object, state: object) -> object: ...
+    def joint(self, encoded: object, predicted: object) -> object: ...
+
+
+class AlignmentAdapter(ExecutionAdapter, Protocol):
+    def align(self, packed: object) -> object: ...
+
+
+class MultimodalAdapter(CausalAdapter, Protocol):
+    def encode_media(self, prepared: object) -> object: ...
+
+
+class TrackingAdapter(ExecutionAdapter, Protocol):
+    def frame(self, packed: object, state: object) -> object: ...

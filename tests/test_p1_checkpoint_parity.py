@@ -1,6 +1,8 @@
 """Opt-in native P1 checkpoints and existing Metal specializations, offline only."""
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -45,3 +47,28 @@ def test_native_p1_serial_dense_paged_full_state(checkpoint, size, page, paged):
     assert result["status"] == "passed", result
     assert result["prefix_isolation_passed"] and result["seeded_rng_isolation"]
     assert result["cleanup"]["active_handles"] == result["cleanup"]["reserved_bytes"] == 0
+
+
+def test_pr00_prefix_diagnostic_supervised():
+    """Record reproduced failure or repaired parity without promoting capabilities."""
+    command = [sys.executable, "benchmarks/p1_native_qualification.py", "prefix-diagnostic"]
+    process = subprocess.run(command, text=True, capture_output=True, timeout=700,
+                             env={**os.environ, "HF_HUB_OFFLINE": "1"})
+    assert process.returncode == 0, process.stdout + process.stderr
+    directory = Path(process.stdout.strip().splitlines()[-1])
+    report = json.loads((directory / "diagnostic.json").read_text())
+    assert (report["readiness"], report["qualification"]) in {
+        ("reproduced", "failed"), ("parity_passed", "passed")}
+    assert report["qualification_promoted"] is False
+
+
+def test_prefix_full_prefill_fp16_gate_supervised():
+    """Fresh full-prefill is the oracle; restored-copy agreement alone cannot pass."""
+    process = subprocess.run([sys.executable, "benchmarks/p1_native_qualification.py",
+                              "prefix-parity"], text=True, capture_output=True, timeout=700,
+                             env={**os.environ, "HF_HUB_OFFLINE": "1"})
+    assert process.returncode == 0, process.stdout + process.stderr
+    directory = Path(process.stdout.strip().splitlines()[-1])
+    report = json.loads((directory / "diagnostic.json").read_text())
+    assert report["readiness"] == "parity_passed" and report["qualification"] == "passed"
+    assert report["qualification_promoted"] is False

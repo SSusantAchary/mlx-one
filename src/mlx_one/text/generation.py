@@ -31,6 +31,9 @@ def stream_generate(
     _cache_namespace: str | None = None,
     _cooperative: bool = False,
     _prefill_chunk_size: int = 512,
+    _spec_type: str = "none",
+    _spec_draft_n_max: int = 3,
+    _draft_bundle: object | None = None,
 ) -> Iterator[GenerationChunk]:
     """Yield native generation chunks for one prompt."""
 
@@ -50,7 +53,8 @@ def stream_generate(
     )
     resolved = options or TextGenerationOptions()
     if _cache_manager is None:
-        yield from _stream_bundle(bundle, prompt, resolved, is_cancelled)
+        yield from _stream_bundle(bundle, prompt, resolved, is_cancelled,
+            spec_type=_spec_type,spec_draft_n_max=_spec_draft_n_max,_draft_bundle=_draft_bundle)
         return
     from mlx_one.engine.cache_errors import PrefixReuseUnsupported
     from mlx_one.engine.cache_manager import CacheManager
@@ -93,6 +97,8 @@ def stream_generate(
             cached_prompt_ids=token_ids[:reused],
             _cooperative=_cooperative, _prefill_chunk_size=_prefill_chunk_size,
             _cache_runtime=_cache_manager, _cache_handle=handle,
+            spec_type=_spec_type,spec_draft_n_max=_spec_draft_n_max,
+            _draft_bundle=_draft_bundle,
             on_cache_update=lambda tokens, _: _cache_manager.publish_prefix(
                 handle, fingerprint, tokens
             ),
@@ -239,16 +245,29 @@ def _stream_bundle(
     _cache_runtime: object | None = None,
     _cache_handle: object | None = None,
     _forced_token_ids: tuple[int, ...] = (),
+    _prepared_input_ids: tuple[int, ...] | None = None,
+    _draft_bundle: object | None = None,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
     from mlx_one.core.cache import configure_kv_caches
 
     cancelled = is_cancelled or (lambda: False)
+    if spec_type not in {"none","draft-mtp","draft-model"} or spec_draft_n_max<1:
+        raise ValueError("unsupported speculation policy or draft budget")
+    if spec_type=="draft-mtp":
+        from mlx_one.engine.speculation import validate_mtp
+
+        validate_mtp(bundle,temperature=options.temperature)
+    if spec_type=="draft-model":
+        from mlx_one.engine.speculation import validate_external
+
+        validate_external(bundle,_draft_bundle,temperature=options.temperature)
     tokenization_started = time.perf_counter()
     prepared = (_cache_handle.metadata.get("prepared_prompt")
                 if _cache_handle is not None else None)
-    prompt_ids = (list(prepared.token_ids) if prepared is not None else
+    prompt_ids = (list(_prepared_input_ids) if _prepared_input_ids is not None else
+                  list(prepared.token_ids) if prepared is not None else
                   bundle.tokenizer.encode(prompt))
     if on_execution is not None:
         on_execution({"kind": "tokenization", "duration_ms":
@@ -335,7 +354,8 @@ def _stream_bundle(
                 from mlx_one.engine.batching import ForwardRequest
 
                 output = yield ForwardRequest(bundle, part, cache, phase, tuple(prompt_ids),
-                                              _cache_runtime, _cache_handle, options=options)
+                                              _cache_runtime, _cache_handle, options=options,
+                                              generated_ids=tuple(tokens[len(prompt_ids):]))
             else:
                 from contextlib import ExitStack
 
@@ -401,88 +421,135 @@ def _stream_bundle(
         )
         candidates = [token]
         step_yielded = False
-        if (
-            spec_type == "draft-mtp"
-            and options.temperature == 0
-            and hasattr(bundle.model, "mtp")
-            and produced + 1 < maximum
-            and not forced_tokens
-            and not (reasoning_active and reasoning_budget >= 0)
-        ):
-            candidates, cache, drafted, accepted = _speculative_candidates(
-                bundle.model,
-                cache,
-                token,
-                output.last_hidden_state[:, -1:],
-                min(spec_draft_n_max, maximum - produced - 1),
-                options,
-                randomizer,
+        proposal=None
+        step_events=[]
+        if spec_type not in {"none","draft-mtp","draft-model"}:
+            raise ValueError("unsupported speculation policy")
+        if spec_type=="draft-mtp":
+            from mlx_one.engine.speculation import SpeculativeProposal, validate_mtp
+
+            validate_mtp(bundle,temperature=options.temperature)
+            if (produced+1<maximum and not forced_tokens
+                    and not (reasoning_active and reasoning_budget>=0)):
+                proposal=SpeculativeProposal(bundle,cache,runtime=_cache_runtime,
+                    handle=_cache_handle,cancelled=cancelled,observer=on_execution)
+                proposal.propose_mtp(token,output.last_hidden_state[:,-1:],
+                                    min(spec_draft_n_max,maximum-produced-1))
+                if cancelled():
+                    proposal.close()
+                    return
+                candidates=proposal.candidates or [token]
+                if speculative_stats is not None:
+                    for key,value in (("drafted_tokens",proposal.drafted),
+                                      ("accepted_draft_tokens",proposal.accepted)):
+                        speculative_stats[key]=speculative_stats.get(key,0)+value
+        if (spec_type=="draft-model" and produced+1<maximum and not forced_tokens
+                and not (reasoning_active and reasoning_budget>=0)):
+            from mlx_one.engine.speculation import (
+                SpeculativeProposal,
+                accept_verification,
+                prepare_external,
             )
-            if speculative_stats is not None:
-                speculative_stats["drafted_tokens"] += drafted
-                speculative_stats["accepted_draft_tokens"] += accepted
-        stopped = False
-        for candidate in candidates[: maximum - produced]:
-            if candidate in eos_token_ids:
-                finish_reason = "stop"
-                stopped = True
-                break
-            tokens.append(candidate)
-            produced += 1
-            opened = bool(
-                think_open and tuple(tokens[-len(think_open) :]) == think_open
-            )
-            closed = bool(
-                think_close and tuple(tokens[-len(think_close) :]) == think_close
-            )
-            if opened:
-                reasoning_active = True
-                reasoning_count = 0
-            elif closed:
-                reasoning_active = False
-                closing_reasoning = False
-            elif reasoning_active and not using_forced:
-                reasoning_count += 1
-                if (
-                    reasoning_budget >= 0
-                    and reasoning_count >= reasoning_budget
-                    and not closing_reasoning
-                ):
-                    forced_tokens.extend(think_close)
-                    closing_reasoning = True
-            pending.append(candidate)
-            pending_times.append(time.perf_counter())
-            matched = next(
-                (
-                    value
-                    for value in stop_tokens
-                    if len(pending) >= len(value)
-                    and tuple(pending[-len(value) :]) == value
-                ),
-                None,
-            )
-            if matched is not None:
-                del pending[-len(matched) :]
-                for _ in matched:
-                    pending_times.pop()
-                finish_reason = "stop"
-                stopped = True
-                break
-            while len(pending) >= hold:
-                emitted += 1
-                generated.append(pending.pop(0))
-                sampled_at = pending_times.popleft()
-                if on_execution is not None:
-                    on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
-                current_text = bundle.tokenizer.decode(generated)
-                piece = (
-                    current_text[len(decoded) :]
-                    if current_text.startswith(decoded)
-                    else current_text
+
+            proposal=SpeculativeProposal(bundle,cache,runtime=_cache_runtime,
+                handle=_cache_handle,cancelled=cancelled,observer=on_execution)
+            try:
+                ids=prepare_external(proposal,_draft_bundle,tuple(tokens),token,
+                                     min(spec_draft_n_max,maximum-produced-1))
+                if cancelled():
+                    proposal.close()
+                    return
+                if _cooperative:
+                    from mlx_one.engine.batching import ForwardRequest
+
+                    verified=yield ForwardRequest(bundle,ids,proposal.verified.entries,'prefill',
+                        tuple(prompt_ids),return_all_logits=True,staged_verification=True)
+                else:
+                    verified=proposal._forward(ids,proposal.verified.entries,'verify')
+                accept_verification(proposal,verified.logits)
+                candidates=proposal.candidates
+            except BaseException:
+                proposal.close()
+                raise
+        before_produced=produced
+        try:
+            stopped = False
+            for candidate in candidates[: maximum - produced]:
+                if candidate in eos_token_ids:
+                    finish_reason = "stop"
+                    stopped = True
+                    break
+                tokens.append(candidate)
+                produced += 1
+                opened = bool(
+                    think_open and tuple(tokens[-len(think_open) :]) == think_open
                 )
-                decoded = current_text
-                step_yielded = True
-                yield GenerationChunk(generated[-1], piece, emitted)
+                closed = bool(
+                    think_close and tuple(tokens[-len(think_close) :]) == think_close
+                )
+                if opened:
+                    reasoning_active = True
+                    reasoning_count = 0
+                elif closed:
+                    reasoning_active = False
+                    closing_reasoning = False
+                elif reasoning_active and not using_forced:
+                    reasoning_count += 1
+                    if (
+                        reasoning_budget >= 0
+                        and reasoning_count >= reasoning_budget
+                        and not closing_reasoning
+                    ):
+                        forced_tokens.extend(think_close)
+                        closing_reasoning = True
+                pending.append(candidate)
+                pending_times.append(time.perf_counter())
+                matched = next(
+                    (
+                        value
+                        for value in stop_tokens
+                        if len(pending) >= len(value)
+                        and tuple(pending[-len(value) :]) == value
+                    ),
+                    None,
+                )
+                if matched is not None:
+                    del pending[-len(matched) :]
+                    for _ in matched:
+                        pending_times.pop()
+                    finish_reason = "stop"
+                    stopped = True
+                    break
+                while len(pending) >= hold:
+                    emitted += 1
+                    generated.append(pending.pop(0))
+                    sampled_at = pending_times.popleft()
+                    if on_execution is not None:
+                        on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
+                    current_text = bundle.tokenizer.decode(generated)
+                    piece = (
+                        current_text[len(decoded) :]
+                        if current_text.startswith(decoded)
+                        else current_text
+                    )
+                    decoded = current_text
+                    step_yielded = True
+                    event=GenerationChunk(generated[-1],piece,emitted)
+                    if proposal is not None:
+                        step_events.append(event)
+                    else:
+                        yield event
+            if proposal is not None:
+                proposal.commit(produced-before_produced)
+        finally:
+            if proposal is not None:
+                proposal.close()
+        if _cooperative and proposal is not None:
+            from mlx_one.engine.batching import GenerationProgress
+
+            yield GenerationProgress(tuple(tokens[len(prompt_ids):]),cache[0].offset)
+        for event in step_events:
+            yield event
         if stopped:
             break
         if yield_steps and not step_yielded:
@@ -498,53 +565,6 @@ def _stream_bundle(
         decoded = current_text
         yield GenerationChunk(current_token, piece, emitted)
     yield GenerationChunk(None, "", emitted, finish_reason)
-
-
-def _speculative_candidates(
-    model: object,
-    cache: tuple[object, ...],
-    first: int,
-    hidden: object,
-    maximum: int,
-    options: TextGenerationOptions,
-    randomizer: random.Random,
-) -> tuple[list[int], tuple[object, ...], int, int]:
-    import mlx.core as mx
-
-    from mlx_one.core.cache import clone_caches
-
-    drafts: list[int] = []
-    mtp_cache = model.make_mtp_cache()
-    mtp_hidden = hidden
-    previous = first
-    position_offset = cache[0].offset
-    for _ in range(maximum):
-        mtp_hidden = model.mtp(
-            model.language_model.embed_tokens(mx.array([[previous]])),
-            mtp_hidden,
-            cache=mtp_cache,
-            position_offset=position_offset,
-        )
-        logits = (
-            model.language_model.embed_tokens.as_linear(mtp_hidden)
-            if model.config.tie_word_embeddings
-            else model.lm_head(mtp_hidden)
-        )
-        previous = select_token(logits[0, -1], options, randomizer)
-        drafts.append(previous)
-    verification = clone_caches(cache)
-    verified = model(mx.array([[first, *drafts]]), cache=verification)
-    accepted: list[int] = []
-    for index, draft in enumerate(drafts):
-        actual = select_token(verified.logits[0, index], options, randomizer)
-        if actual != draft:
-            corrected = [first, *accepted, actual]
-            committed = clone_caches(cache)
-            model(mx.array([corrected[:-1]]), cache=committed)
-            return corrected, committed, len(drafts), len(accepted)
-        accepted.append(draft)
-    bonus = select_token(verified.logits[0, len(drafts)], options, randomizer)
-    return [first, *drafts, bonus], verification, len(drafts), len(drafts)
 
 
 def _legacy_context_length(bundle: LoadedTextModel) -> int:

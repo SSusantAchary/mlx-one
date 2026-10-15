@@ -42,13 +42,21 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
 
         try:
             adapter = native_adapter(bundle, plan, allow_bfloat16=True, allow_hybrid=True)
+            if not adapter.supports_paging:
+                raise ValueError("adapter has no direct paged attention dispatch")
             if (adapter.spec.hybrid and bundle.quantization
                     and bundle.quantization.get("bits") != 8):
                 raise ValueError("paged hybrid execution requires native affine INT8 weights")
             if adapter.spec.hybrid and "sliding_kv" in adapter.spec.state_kinds:
                 raise ValueError("hybrid paging does not support sliding attention")
-            if adapter.spec.head_dim > 256:
-                raise ValueError("paged head dimensions must be at most 256")
+            for layer in adapter.spec.layers:
+                if layer.state_kind not in {"full_kv","sliding_kv"}:
+                    continue
+                if (not 1 <= layer.key_dim <= 256 or layer.key_dim != layer.value_dim
+                        or not layer.kv_heads or not layer.query_heads
+                        or layer.query_heads % layer.kv_heads):
+                    raise ValueError(
+                        "paged layers require equal K/V dimensions 1..256 and valid GQA")
         except (ValueError, AttributeError) as exc:
             raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_hybrid_batch":
@@ -56,8 +64,8 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
 
         try:
             adapter = native_adapter(bundle, plan, allow_hybrid=True, allow_bfloat16=True)
-            if adapter.spec.architecture != "lfm2":
-                raise ValueError("hybrid batching requires native LFM2 attention/conv")
+            if not adapter.spec.hybrid:
+                raise ValueError("hybrid batching requires a supported compound-state adapter")
         except (ValueError, AttributeError) as exc:
             raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_dense_batch":
@@ -110,12 +118,22 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
     bundle.model._mlx_one_execution_policy = {
         "version": EXECUTION_POLICY_VERSION, "dtype": execution_dtype,
         "quantized_payload_preserved": quantized,
+        "affine_int8_fp16_arithmetic": {
+            "shared_attention_swiglu_projections": "rowwise-gather-qmm-v1",
+            "shared_dense_attention": "rowwise-fp32-gather-mm-v1",
+            "ragged_attention_reduction": "compact-real-row-v1",
+            "qwen3_logits": "rowwise-gather-qmm-v1"
+                if getattr(bundle, "architecture", None) == "qwen3" else "native",
+            "activation_dtype": "float16", "kv_dtype": "float16"}
+        if execution_dtype == "float16" and quantized
+            and getattr(bundle, "architecture", None) in {"qwen2", "qwen3", "llama"} else None,
         "previous_dtypes": previous.get("previous_dtypes", before)
         if previous.get("dtype") == execution_dtype else before}
     named = getattr(bundle.model, "named_modules", None)
     if callable(named):
         for _, module in named():
-            if hasattr(module, "q_proj"):
+            if any(hasattr(module, name) for name in
+                   ("q_proj", "c_attn", "qkv_proj", "in_proj_qkv")):
                 module._mlx_one_activation_dtype = execution_dtype
 
 

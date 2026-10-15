@@ -31,9 +31,33 @@ class QwenImageProcessor:
         *,
         min_pixels: int = 56 * 56,
         max_pixels: int = 28 * 28 * 1280,
+        metadata: dict | None = None,
     ) -> None:
         self.tokenizer = tokenizer
         self.config = config
+        if metadata is not None:
+            import math
+
+            mean,std=metadata.get("image_mean"),metadata.get("image_std")
+            if (not isinstance(mean,list) or not isinstance(std,list) or len(mean)!=3 or len(std)!=3
+                    or any(not isinstance(v,(int,float)) or not math.isfinite(v) for v in mean+std)
+                    or any(v<=0 for v in std) or metadata.get("resample",3)!=3
+                    or any(metadata.get(k,True) is not True for k in
+                           ("do_normalize","do_resize","do_rescale"))
+                    or metadata.get("rescale_factor",1/255)!=1/255):
+                raise ValueError("unsupported Qwen processor normalization or resize policy")
+            vision=config.vision_config
+            for name,actual in (("patch_size",vision.patch_size),
+                ("temporal_patch_size",vision.temporal_patch_size),
+                ("merge_size",vision.spatial_merge_size)):
+                if name in metadata and metadata[name]!=actual:
+                    raise ValueError("processor patch layout differs from model")
+            self._MEAN,self._STD=tuple(mean),tuple(std)
+            size=metadata.get("size",{})
+            min_pixels=metadata.get("min_pixels",size.get("shortest_edge",min_pixels))
+            max_pixels=metadata.get("max_pixels",size.get("longest_edge",max_pixels))
+        if not 0<min_pixels<=max_pixels:
+            raise ValueError("invalid image pixel bounds")
         self.min_pixels = min_pixels
         self.max_pixels = max_pixels
 

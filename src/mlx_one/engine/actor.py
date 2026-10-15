@@ -18,9 +18,11 @@ from mlx_one.engine.batching import (
     BatchingConfig,
     BatchScheduler,
     ForwardRequest,
+    GenerationProgress,
 )
 from mlx_one.engine.cache_errors import CacheCapacityError
 from mlx_one.engine.contracts import EngineRequest, Phase, RequestKind, SequenceState
+from mlx_one.engine.device_executor import DeviceExecutor
 from mlx_one.engine.execution_context import QueueFullError, RequestTimeoutError, _slot_local
 
 
@@ -58,6 +60,7 @@ class _Call:
 
 class InferenceActor:
     def __init__(self, config: BatchingConfig | None = None, *, runner=None, pressure=None):
+        self.device_executor = DeviceExecutor.shared()
         self.config = config or BatchingConfig()
         self.policy = BatchScheduler(self.config)
         self.runner = runner or BatchedDenseRunner()
@@ -68,6 +71,7 @@ class InferenceActor:
         self._active = []
         self._paused = []
         self._closed = False
+        self._task_work = None
         self._epoch = 0
         self._finalizer = None
         self._traces = deque(maxlen=4096)
@@ -190,6 +194,17 @@ class InferenceActor:
         timeout = self.config.timeout if apply_timeout and self.config.timeout else None
         return call.result.result(timeout)
 
+    def submit_task(self, adapter, prepared, lease, **settings):
+        from mlx_one.engine.tasks import TaskMicrobatches
+
+        with self._condition:
+            if self._closed:
+                lease.release()
+                raise RuntimeError("inference actor is closed")
+            if self._task_work is None:
+                self._task_work = TaskMicrobatches(self)
+            return self._task_work.submit(adapter,prepared,lease,**settings)
+
     def close(self, finalizer=None):
         with self._condition:
             if self._closed:
@@ -199,18 +214,27 @@ class InferenceActor:
             for job in [*self._active, *self._paused]:
                 job.cancel.set()
             self._condition.notify_all()
+        if self._task_work is not None:
+            self._task_work.close()
         if threading.current_thread() is not self._thread:
             self._thread.join()
 
     def _finish(self, job, error=None, phase=Phase.FINISHED):
+        if not self.device_executor.is_owner:
+            return self.device_executor.call(id(self), lambda: self._finish(job, error, phase))
         if job.terminal.done():
             return
         try:
             close = getattr(job.iterator, "close", None)
-            if callable(close):
-                close()
-            if job.on_cancel is not None:
-                job.on_cancel()
+            cleanup_error = None
+            for operation in (close,job.on_cancel):
+                if callable(operation):
+                    try:
+                        operation()
+                    except BaseException as exc:
+                        cleanup_error = cleanup_error or exc
+            if cleanup_error is not None:
+                raise cleanup_error
         except BaseException as cleanup_error:
             error = error or cleanup_error
             phase = Phase.FAILED
@@ -232,6 +256,8 @@ class InferenceActor:
             job.terminal.set_result(None)
 
     def _advance_one(self, job):
+        if not self.device_executor.is_owner:
+            return self.device_executor.call(id(self), lambda: self._advance_one(job))
         if job.request is not None or job.output.full():
             return
         try:
@@ -277,9 +303,19 @@ class InferenceActor:
                                               cancel=job.cancel, model_epoch=self._epoch,
                                               deadline_ns=(int(job.deadline * 1e9)
                                                            if job.deadline else None))
-                if item.phase == "decode":
+                if not item.staged_verification and item.generated_ids is not None:
+                    job.state.generated_ids=list(item.generated_ids)
+                    job.state.computed_len=item.cache[0].offset
+                if item.phase == "decode" and not item.staged_verification:
                     job.state.transition(Phase.DECODE)
-                    job.state.generated_ids.append(item.token_ids[-1])
+                    if item.generated_ids is None:
+                        job.state.generated_ids.append(item.token_ids[-1])
+            elif isinstance(item,GenerationProgress):
+                if job.state is None or not 0<=item.computed_len<= (
+                        job.state.prompt_len+len(item.generated_ids)):
+                    raise ValueError("invalid speculative progress boundary")
+                job.state.generated_ids=list(item.generated_ids)
+                job.state.computed_len=item.computed_len
             else:
                 job.output.put_nowait(item)
         except StopIteration:
@@ -357,7 +393,7 @@ class InferenceActor:
                 paused.cancel.set()
                 self._finish(paused, phase=Phase.CANCELLED)
             try:
-                result = call.factory()
+                result = self.device_executor.call(id(self), call.factory)
                 self._epoch += 1
                 call.result.set_result(result)
             except BaseException as exc:
@@ -437,10 +473,13 @@ class InferenceActor:
                     jobs = [next(j for j in self._active if j.request is request)
                             for request in group]
                     try:
-                        output = self.runner.execute(group)
+                        output = self.device_executor.call(id(group[0].bundle),
+                            lambda batch=group: self.runner.execute(batch))
                         if output.request_ids != tuple(j.request_id for j in jobs):
                             raise ValueError("runner output mapping mismatch")
                         trace = dict(self.runner.last_trace)
+                        trace["staged_verification_rows"]=[r.request_id for r in group
+                                                           if r.staged_verification]
                         trace["queue_age_ms"] = [(now - j.created_at) * 1000 for j in jobs]
                         trace["prefix_preview_tokens"] = [j.preview_tokens for j in jobs]
                         trace["prefix_preview_lookup_ms"] = [j.preview_lookup_ms for j in jobs]
@@ -472,7 +511,8 @@ class InferenceActor:
                                 continue
                             self._event(job, "forward", phase=job.request.phase,
                                         committed_tokens=committed)
-                            job.state.commit(committed)
+                            if not job.request.staged_verification:
+                                job.state.commit(committed)
                             job.request = None
                             job.reply = SimpleNamespace(
                                 logits=logits, batch_size=trace["batch_size"],
@@ -494,4 +534,4 @@ class InferenceActor:
                 else:
                     self._finish(work, RuntimeError("inference actor stopped"), Phase.CANCELLED)
             if self._finalizer is not None:
-                self._finalizer()
+                self.device_executor.call(id(self), self._finalizer)

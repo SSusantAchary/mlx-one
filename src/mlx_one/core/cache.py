@@ -33,29 +33,27 @@ class KVCache:
     def update(self, keys: Any, values: Any) -> tuple[Any, Any]:
         import mlx.core as mx
 
-        if keys.shape != values.shape:
-            raise ValueError("cache keys and values must have identical shapes")
+        if keys.ndim != 4 or values.ndim != 4 or keys.shape[:3] != values.shape[:3]:
+            raise ValueError("cache keys and values must have matching batch/head/token shapes")
         previous = self._offset
         if self.keys is not None:
-            if keys.shape[:2] != self.keys.shape[:2] or keys.shape[3:] != self.keys.shape[3:]:
+            if (keys.shape[:2] != self.keys.shape[:2] or keys.shape[3:] != self.keys.shape[3:]
+                    or values.shape[3:] != self.values.shape[3:]):
                 raise ValueError("cache update shape is incompatible with existing state")
         required = previous + int(keys.shape[2])
+        new_keys, new_values = self.keys, self.values
         if self.keys is None or required > int(self.keys.shape[2]):
-            chunks = (int(keys.shape[2]) + self.step - 1) // self.step
-            shape = (*keys.shape[:2], chunks * self.step, *keys.shape[3:])
-            new_keys = mx.zeros(shape, dtype=keys.dtype)
-            new_values = mx.zeros(shape, dtype=values.dtype)
-            if self.keys is None:
-                self.keys, self.values = new_keys, new_values
-            else:
-                if previous % self.step:
-                    self.keys = self.keys[:, :, :previous, :]
-                    self.values = self.values[:, :, :previous, :]
-                self.keys = mx.concatenate((self.keys, new_keys), axis=2)
-                self.values = mx.concatenate((self.values, new_values), axis=2)
-        self._offset = required
-        self.keys[:, :, previous:required, :] = keys
-        self.values[:, :, previous:required, :] = values
+            capacity = ((required + self.step - 1) // self.step) * self.step
+            new_keys = mx.zeros((*keys.shape[:2], capacity, keys.shape[3]), dtype=keys.dtype)
+            new_values = mx.zeros((*values.shape[:2], capacity, values.shape[3]),
+                                  dtype=values.dtype)
+            if previous:
+                new_keys[:, :, :previous] = self.keys[:, :, :previous]
+                new_values[:, :, :previous] = self.values[:, :, :previous]
+        # Writes within retained capacity affect only the uncommitted private tail.
+        new_keys[:, :, previous:required, :] = keys
+        new_values[:, :, previous:required, :] = values
+        self.keys, self.values, self._offset = new_keys, new_values, required
         return self.keys[:, :, :required, :], self.values[:, :, :required, :]
 
     def state(self) -> tuple[Any | None, Any | None]:
@@ -169,21 +167,22 @@ class QuantizedKVCache:
         return _tree_nbytes((self._keys, self._values))
 
     def update(self, keys: Any, values: Any) -> tuple[Any, Any]:
-        if keys.shape != values.shape:
-            raise ValueError("cache keys and values must have identical shapes")
+        if keys.ndim != 4 or values.ndim != 4 or keys.shape[:3] != values.shape[:3]:
+            raise ValueError("cache keys and values must have matching batch/head/token shapes")
         if (self.key_bits is not None or self.value_bits is not None) and (
-            keys.shape[-1] % self.group_size
+            keys.shape[-1] % self.group_size or values.shape[-1] % self.group_size
         ):
             raise ValueError(
                 f"KV head dimension must be divisible by quantization group {self.group_size}"
             )
         previous = self._offset
-        self._keys = self._append_component(
+        new_keys = self._append_component(
             self._keys, keys, self.key_bits, self.key_dtype, previous
         )
-        self._values = self._append_component(
+        new_values = self._append_component(
             self._values, values, self.value_bits, self.value_dtype, previous
         )
+        self._keys, self._values = new_keys, new_values
         self._offset += int(keys.shape[2])
         return self._materialize(self._keys, self.key_bits, self._offset), self._materialize(
             self._values, self.value_bits, self._offset

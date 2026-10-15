@@ -163,6 +163,11 @@ class Qwen2_5_VLForConditionalGeneration(nn.Module):
         if not config.tie_word_embeddings:
             self.lm_head = nn.Linear(text.hidden_size, text.vocab_size, bias=False)
 
+    def make_cache(self):
+        from mlx_one.core.cache import make_kv_caches
+
+        return make_kv_caches(self.config.text_config.num_hidden_layers)
+
     def __call__(
         self,
         input_ids: Any,
@@ -173,6 +178,7 @@ class Qwen2_5_VLForConditionalGeneration(nn.Module):
         video_grid_thw: Sequence[Sequence[int]] | None = None,
         mm_token_type_ids: Any | None = None,
         attention_mask: Any | None = None,
+        position_ids: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
     ) -> VisionLanguageModelOutput:
@@ -197,7 +203,11 @@ class Qwen2_5_VLForConditionalGeneration(nn.Module):
             mm_token_type_ids = mx.where(
                 input_ids == self.config.video_token_id, 2, mm_token_type_ids
             )
-        if mm_token_type_ids is None:
+        if position_ids is not None:
+            if vision_states:
+                raise ValueError("explicit decode positions cannot replace media positions")
+            rope_deltas = mx.zeros((input_ids.shape[0],1),dtype=mx.int32)
+        elif mm_token_type_ids is None:
             offset = 0 if cache is None else cache[0].offset
             base = mx.arange(offset, offset + input_ids.shape[1])[None, :]
             position_ids = mx.stack((base, base, base), axis=0)

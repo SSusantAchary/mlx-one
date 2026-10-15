@@ -1,4 +1,4 @@
-"""Component-aware ragged LFM2 execution with isolated convolution carries."""
+"""Component-aware hybrid execution with isolated convolution/recurrent carries."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from dataclasses import replace
 from mlx_one.engine.batching import BatchedDenseRunner, request_cancelled
 from mlx_one.engine.cache import CacheBundle
 from mlx_one.engine.components import ConvCarryComponent
+from mlx_one.engine.compound import CompoundLinearComponent
 from mlx_one.engine.contracts import BatchPlan, RunnerOutput, ScheduledSequence
 
 
@@ -83,9 +84,13 @@ class _ConvRows:
 
 class HybridRunner(BatchedDenseRunner):
     def capabilities(self):
-        return replace(super().capabilities(), family="lfm2",
-                       supported_cache_backends=("hybrid",),
-                       supported_state_kinds=("full_kv", "sliding_kv", "conv"),
+        return replace(super().capabilities(), family=self.adapter.spec.architecture
+                       if hasattr(self, "adapter") else "hybrid",
+                       supports_paged_attention=getattr(self,"_paged_execution",False),
+                       supported_cache_backends=("hybrid","paged")
+                       if getattr(self,"_paged_execution",False) else ("hybrid",),
+                       supported_state_kinds=tuple(dict.fromkeys(self.adapter.spec.state_kinds))
+                       if hasattr(self,"adapter") else ("full_kv", "sliding_kv", "conv"),
                        supports_exact_prefix_restore=True)
 
     def make_cache(self):
@@ -94,7 +99,7 @@ class HybridRunner(BatchedDenseRunner):
         return CacheBundle(hybrid_components(self.bundle))
 
     def _resolve(self, plan, phase):
-        if plan.execution_mode not in {"dense", "hybrid"}:
+        if plan.execution_mode not in {"dense", "hybrid", "paged"}:
             raise ValueError("incompatible hybrid execution plan")
         return super()._resolve(replace(plan, execution_mode="dense"), phase)
 
@@ -125,8 +130,9 @@ class HybridRunner(BatchedDenseRunner):
                     or r.model_epoch != first.model_epoch or len(r.cache) != len(first.cache)
                     or len({c.offset for c in r.cache}) != 1):
                 raise ValueError("incompatible hybrid mappings")
-            kinds = {"full_attention": "full_kv", "sliding_attention": "sliding_kv", "conv": "conv"}
-            expected = tuple(kinds[k] for k in first.bundle.model.config.layer_types)
+            kinds = {"full_attention": "full_kv", "sliding_attention": "sliding_kv",
+                     "conv": "conv", "linear_attention": "recurrent"}
+            expected = tuple(kinds[k] for k in self.adapter.text_config.layer_types)
             if tuple(getattr(c, "kind", None) for c in r.cache) != expected:
                 raise ValueError("hybrid component mapping differs from model topology")
             from mlx_one.engine.cache_planner import build_cache_plan
@@ -138,12 +144,16 @@ class HybridRunner(BatchedDenseRunner):
                 r.runtime._validate_handle(r.handle)
                 if r.handle.bundle.entries is not r.cache:
                     raise ValueError("hybrid request does not own its cache mapping")
-        config = first.bundle.model.config
+        config = self.adapter.text_config
         heads, dim = self.adapter.spec.kv_heads, self.adapter.spec.head_dim
         width = max(widths)
         history = max(c.offset for r in requests for c in r.cache)
         transient = len(requests) * len(first.cache) * heads * dim * (history + width) * 16
-        transient += len(requests) * config.hidden_size * config.conv_L_cache * 8
+        carry_width = getattr(config,"conv_L_cache",getattr(config,"linear_conv_kernel_dim",0))
+        transient += len(requests) * config.hidden_size * carry_width * 8
+        adapter_scratch = self.adapter.additional_transient_bytes(
+            batch=len(requests), chunk=width)
+        transient += adapter_scratch
         from mlx_one.engine.pressure import execution_forecast
 
         metrics = {"direct_attention_calls": 0, "history_materializations": 0,
@@ -151,12 +161,15 @@ class HybridRunner(BatchedDenseRunner):
         from mlx_one.engine.paged import PagedBatchCache, PagedKVCache
 
         paged = any(isinstance(c, PagedKVCache) for c in first.cache)
+        self._paged_execution = paged
         if paged:
             transient = (len(requests) * heads * dim * width * 16
                          + len(requests) * heads * dim * 4 * 16
                          * next(c.block_tokens for c in first.cache if isinstance(c, PagedKVCache))
                          * sum(isinstance(c, PagedKVCache) for c in first.cache)
-                         + len(requests) * config.hidden_size * config.conv_L_cache * 8)
+                         + len(requests) * config.hidden_size * carry_width * 8)
+        if paged:
+            transient += adapter_scratch
         transient = execution_forecast(first.runtime, config, batch=len(requests), chunk=width,
                                          history=history, explicit_bytes=transient,
                                          history_lengths=[r.cache[0].offset for r in requests],
@@ -176,17 +189,28 @@ class HybridRunner(BatchedDenseRunner):
                     rows = tuple(d.entries[layer] for d in drafts)
                     wrapper = (_ConvRows if isinstance(rows[0], ConvCarryComponent)
                                else _AttentionRows)
-                    if isinstance(rows[0], PagedKVCache):
+                    if isinstance(rows[0],CompoundLinearComponent):
+                        if len(set(widths)) != 1:
+                            raise ValueError("compound prefill requires equal-width buckets")
+                        packed.append(type(rows[0]).merge(rows))
+                    elif isinstance(rows[0], PagedKVCache):
                         packed.append(PagedBatchCache(rows, widths, metrics))
                     else:
                         packed.append(wrapper(rows, widths))
                 ids = mx.array([list(r.token_ids) + [0] * (width - len(r.token_ids))
                                 for r in requests])
                 mask = mx.array([[1] * n + [0] * (width - n) for n in widths])
+                if any(isinstance(c,CompoundLinearComponent) for c in packed):
+                    mask = mx.ones((len(requests),history+width),dtype=mx.int32)
                 positions = mx.array([list(range(r.cache[0].offset, r.cache[0].offset + width))
                                       for r in requests])
                 output = self.adapter.forward(ids, cache=tuple(packed), attention_mask=mask,
                                             position_ids=positions)
+                for layer, component in enumerate(packed):
+                    if isinstance(component,CompoundLinearComponent):
+                        for row,draft in enumerate(drafts):
+                            selected=component.batch_select((row,))
+                            draft.entries[layer].__dict__=selected.__dict__
                 logits = []
                 for i, n in enumerate(widths):
                     begin = 0 if requests[i].return_all_logits else n - 1
@@ -198,17 +222,9 @@ class HybridRunner(BatchedDenseRunner):
                           for v in (getattr(c, "keys", None), getattr(c, "values", None))
                           if v is not None]
                 mx.eval(*logits, *states)
-                for r, draft in zip(requests, drafts, strict=True):
-                    if request_cancelled(r):
-                        continue
-                    for original, replacement in zip(r.cache, draft.entries, strict=True):
-                        if isinstance(original, PagedKVCache):
-                            original.replace_from(replacement)
-                        else:
-                            original.__dict__.update(replacement.__dict__)
-                    if r.handle is not None:
-                        r.handle.computed_tokens = r.cache[0].offset
-                        runtime.reconcile(r.handle)
+                from mlx_one.engine.transactions import commit_evaluated
+
+                commit_evaluated(requests, drafts, specs=self.adapter.plan.state_specs)
                 # Prefix retention is optional and occurs after the entire batch is committed.
                 if first.phase == "prefill" and runtime is not None:
                     for r in requests:
@@ -220,8 +236,9 @@ class HybridRunner(BatchedDenseRunner):
                                 pass
             finally:
                 # Committed arrays are owned by originals; reset only draft attributes.
-                for draft in drafts:
-                    draft.release()
+                from mlx_one.engine.transactions import release_all
+
+                release_all(drafts)
         self.last_trace = {**metrics, "phase": first.phase,
                            "request_ids": [s.request_id for s in plan.sequences],
                            "batch_size": len(requests),
@@ -229,6 +246,7 @@ class HybridRunner(BatchedDenseRunner):
                            "real_tokens": sum(widths), "padded_tokens": len(requests) * width,
                            "padding_efficiency": sum(widths) / (len(requests) * width),
                            "transient_reserved_bytes": transient,
+                           "adapter_transient_bound_bytes": adapter_scratch,
                            "component_kinds": [getattr(c, "kind", "unknown") for c in first.cache],
                            "duration_ms": (time.perf_counter() - started) * 1000}
         return RunnerOutput(tuple(r.request_id for r in requests), tuple(logits), widths)

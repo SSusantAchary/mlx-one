@@ -34,7 +34,8 @@ def describe_cache(entries, plan) -> list[dict[str, Any]]:
         else:
             attributes = vars(cache) if hasattr(cache, "__dict__") else {}
             tensors = {key: value for key, value in attributes.items()
-                       if key in {"keys", "values", "_keys", "_values", "state"}}
+                       if key in {"keys", "values", "_keys", "_values", "state",
+                                  "conv_state", "recurrent_state"}}
         layers.append({
             "layer_id": spec.layer_id, "kind": spec.kind,
             "actual_dtypes": tensor_dtypes(tensors),

@@ -57,7 +57,8 @@ class SparseMoeBlock(nn.Module):
         return sparse_output + shared_output, router_logits, indices
 
 
-def router_auxiliary_loss(router_logits: tuple[Any, ...], num_experts: int, top_k: int) -> Any:
+def router_auxiliary_loss(router_logits: tuple[Any, ...], num_experts: int, top_k: int,
+                          attention_mask: Any | None = None) -> Any:
     if not router_logits:
         return mx.array(0.0)
     losses = []
@@ -67,7 +68,13 @@ def router_auxiliary_loss(router_logits: tuple[Any, ...], num_experts: int, top_
         assignment = (
             mx.sum(indices[..., None] == mx.arange(num_experts)[None, None, :], axis=1) / top_k
         )
-        losses.append(
-            num_experts * mx.sum(mx.mean(probabilities, axis=0) * mx.mean(assignment, axis=0))
-        )
+        if attention_mask is None:
+            probability_mean = mx.mean(probabilities, axis=0)
+            assignment_mean = mx.mean(assignment, axis=0)
+        else:
+            valid = attention_mask[:, -logits.shape[1]:].reshape(-1, 1).astype(mx.float32)
+            denominator = mx.maximum(mx.sum(valid), 1)
+            probability_mean = mx.sum(probabilities * valid, axis=0) / denominator
+            assignment_mean = mx.sum(assignment * valid, axis=0) / denominator
+        losses.append(num_experts * mx.sum(probability_mean * assignment_mean))
     return mx.mean(mx.stack(losses))

@@ -18,6 +18,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.openelm.config import OpenELMConfig
+from mlx_one.models.shared.execution import attention_matmul, project
 from mlx_one.models.shared.transformer import apply_rope, causal_mask
 
 
@@ -50,7 +51,8 @@ class OpenELMAttention(nn.Module):
         position_ids: Any | None,
     ) -> Any:
         batch, length, _ = hidden.shape
-        projected = self.qkv_proj(hidden).reshape(
+        dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        projected = project(self.qkv_proj, hidden, execution_dtype=dtype).reshape(
             batch,
             length,
             self.num_query_heads + 2 * self.num_kv_heads,
@@ -80,19 +82,30 @@ class OpenELMAttention(nn.Module):
             theta=self.rope_theta,
             position_ids=position_ids,
         )
-        if cache is not None:
-            keys, values = cache.update(keys, values)
-        repeats = self.num_query_heads // self.num_kv_heads
-        if repeats != 1:
-            keys = mx.repeat(keys, repeats, axis=1)
-            values = mx.repeat(values, repeats, axis=1)
-        scores = (queries @ keys.transpose(0, 1, 3, 2)) * self.scale
-        if mask is not None:
-            scores = scores + mask
-        probabilities = mx.softmax(scores, axis=-1, precise=True)
-        attended = probabilities @ values
+        if dtype is not None:
+            queries, keys, values = (t.astype(getattr(mx, dtype)) for t in (queries, keys, values))
+        if cache is not None and callable(getattr(cache,"attend",None)):
+            attended=cache.attend(queries,keys,values,scale=self.scale,position_ids=position_ids)
+        else:
+            if cache is not None:
+                keys, values = cache.update(keys, values)
+            repeats = self.num_query_heads // self.num_kv_heads
+            if repeats != 1:
+                keys = mx.repeat(keys, repeats, axis=1)
+                values = mx.repeat(values, repeats, axis=1)
+            stable = dtype == "float16" and getattr(self.qkv_proj, "bits", None) == 8
+            scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable
+                      else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
+            if dtype is not None:
+                scores = scores.astype(mx.float32)
+            if mask is not None:
+                scores = scores + mask
+            probabilities = mx.softmax(scores, axis=-1, precise=True)
+            attended = attention_matmul(probabilities, values) if stable else probabilities @ values
         attended = attended.transpose(0, 2, 1, 3).reshape(batch, length, -1)
-        return self.out_proj(attended)
+        if dtype is not None:
+            attended = attended.astype(getattr(mx, dtype))
+        return project(self.out_proj, attended, execution_dtype=dtype)
 
 
 class OpenELMFeedForwardNetwork(nn.Module):
@@ -104,14 +117,14 @@ class OpenELMFeedForwardNetwork(nn.Module):
         self.proj_1 = nn.Linear(config.model_dim, first_output, bias=False)
         self.proj_2 = nn.Linear(self.intermediate_dim, config.model_dim, bias=False)
 
-    def __call__(self, value: Any) -> Any:
-        projected = self.proj_1(value)
+    def __call__(self, value: Any, *, execution_dtype: str | None = None) -> Any:
+        projected = project(self.proj_1, value, execution_dtype=execution_dtype)
         if self.ffn_with_glu:
             gate, projected = mx.split(projected, 2, axis=-1)
             projected = (gate * mx.sigmoid(gate)) * projected
         else:
             projected = projected * mx.sigmoid(projected)
-        return self.proj_2(projected)
+        return project(self.proj_2, projected, execution_dtype=execution_dtype)
 
 
 class OpenELMDecoderLayer(nn.Module):
@@ -136,7 +149,8 @@ class OpenELMDecoderLayer(nn.Module):
             cache=cache,
             position_ids=position_ids,
         )
-        return hidden + self.ffn(self.ffn_norm(hidden))
+        return hidden + self.ffn(self.ffn_norm(hidden),
+            execution_dtype=getattr(self.attn, "_mlx_one_activation_dtype", None))
 
 
 class OpenELMModel(nn.Module):
@@ -155,6 +169,7 @@ class OpenELMModel(nn.Module):
         *,
         cache: tuple[Any, ...] | None = None,
         input_embeddings: Any | None = None,
+        attention_mask: Any | None = None,
         position_ids: Any | None = None,
         output_hidden_states: bool = False,
     ) -> tuple[Any, tuple[Any, ...] | None, tuple[Any, ...] | None]:
@@ -165,6 +180,14 @@ class OpenELMModel(nn.Module):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
         mask = causal_mask(hidden.shape[1], offset)
+        if attention_mask is not None:
+            if attention_mask.shape != (hidden.shape[0], offset + hidden.shape[1]):
+                raise ValueError("attention_mask must cover complete cached sequence")
+            if position_ids is None:
+                positions = mx.maximum(mx.cumsum(attention_mask, axis=-1) - 1, 0)
+                position_ids = positions[:, -hidden.shape[1]:]
+            padding = mx.where(attention_mask[:, None, None, :] != 0, 0.0, -1e9)
+            mask = padding if mask is None else mask + padding
         states = [hidden] if output_hidden_states else None
         for layer, layer_cache in zip(
             self.layers, cache or (None,) * len(self.layers), strict=True
@@ -196,9 +219,8 @@ class OpenELMForCausalLM(nn.Module):
 
     def __call__(self, input_ids: Any, **kwargs: Any) -> ModelOutput:
         hidden, cache, states = self.transformer(input_ids, **kwargs)
-        logits = (
-            self.transformer.token_embeddings.as_linear(hidden)
-            if self.config.share_input_output_layers
-            else self.lm_head(hidden)
-        )
+        logits = project(self.transformer.token_embeddings if self.config.share_input_output_layers
+                         else self.lm_head, hidden, execution_dtype=getattr(
+                             self.transformer.layers[0].attn, "_mlx_one_activation_dtype", None),
+                         as_linear=self.config.share_input_output_layers)
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

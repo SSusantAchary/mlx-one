@@ -233,7 +233,10 @@ class Decoder(nn.Module):
         self.decoder_projector = nn.Linear(config.decoder_hidden_size, config.decoder_hidden_size)
 
     def __call__(self, token, state=None):
-        x, state = self.lstm(self.embedding(mx.array([token])), state)
+        tokens=mx.array([token]) if isinstance(token,int) else token
+        if tokens.ndim!=1:
+            raise ValueError("TDT predictor tokens require one ID per row")
+        x, state = self.lstm(self.embedding(tokens), state)
         return self.decoder_projector(x), state
 
 

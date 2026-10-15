@@ -74,7 +74,8 @@ def embed(
             bundle.tokenizer.encode(value, add_special_tokens=True, max_length=max_length)
             for value in formatted[start : start + batch_size]
         ]
-        ids, masks = bundle.tokenizer.pad(sequences, padding_side="left")
+        ids, masks = bundle.tokenizer.pad(sequences,
+            padding_side="right" if bundle.architecture == "bert" else "left")
         arguments = {"attention_mask": mx.array(masks)}
         if hasattr(bundle.model.config, "validate_dimensions"):
             arguments["dimensions"] = size
@@ -141,7 +142,8 @@ def rerank(
         for document in batch:
             core = f"<Instruct>: {task}\n<Query>: {query}\n<Document>: {document}"
             sequences.append(prefix + bundle.tokenizer.encode(core)[:capacity] + suffix)
-        ids, masks = bundle.tokenizer.pad(sequences, padding_side="left")
+        ids, masks = bundle.tokenizer.pad(sequences,
+            padding_side="right" if bundle.architecture == "bert" else "left")
         output = bundle.model(
             mx.array(ids),
             attention_mask=mx.array(masks),

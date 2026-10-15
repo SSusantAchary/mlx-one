@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.core.cache import make_kv_caches
@@ -71,6 +72,7 @@ class Qwen2MoeModel(nn.Module):
         *,
         cache: tuple[Any, ...] | None = None,
         position_ids: Any | None = None,
+        attention_mask: Any | None = None,
         output_hidden_states: bool = False,
     ) -> tuple[Any, tuple[Any, ...] | None, tuple[Any, ...] | None, tuple[Any, ...]]:
         hidden = self.embed_tokens(input_ids)
@@ -78,6 +80,14 @@ class Qwen2MoeModel(nn.Module):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
         mask = causal_mask(hidden.shape[1], offset)
+        if attention_mask is not None:
+            if attention_mask.shape != (hidden.shape[0], offset + hidden.shape[1]):
+                raise ValueError("attention_mask must cover complete cached sequence")
+            if position_ids is None:
+                positions = mx.maximum(mx.cumsum(attention_mask, axis=-1) - 1, 0)
+                position_ids = positions[:, -hidden.shape[1]:]
+            padding = mx.where(attention_mask[:, None, None, :] != 0, 0.0, -1e9)
+            mask = padding if mask is None else mask + padding
         states = [hidden] if output_hidden_states else None
         router_logits = []
         for layer, layer_cache in zip(
@@ -123,7 +133,8 @@ class Qwen2MoeForCausalLM(nn.Module):
         )
         exposed = routers if self.config.output_router_logits else None
         auxiliary = (
-            router_auxiliary_loss(routers, self.config.num_experts, self.config.num_experts_per_tok)
+            router_auxiliary_loss(routers, self.config.num_experts, self.config.num_experts_per_tok,
+                                  attention_mask=kwargs.get("attention_mask"))
             * self.config.router_aux_loss_coef
             if self.config.output_router_logits
             else None

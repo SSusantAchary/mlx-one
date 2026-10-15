@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from mlx_one.engine.cache_errors import CacheCapacityError
+from mlx_one.engine.device_executor import DeviceExecutor
 from mlx_one.engine.execution_context import (
     QueueFullError,
     RequestTimeoutError,
@@ -51,6 +52,7 @@ class GenerationScheduler:
     def __init__(self, max_pending: int = 8, *, parallel: int = 1, timeout: float = 0) -> None:
         if max_pending < 1 or parallel < 1 or timeout < 0:
             raise ValueError("invalid scheduler capacity or timeout")
+        self.device_executor = DeviceExecutor.shared()
         self._jobs: queue.Queue[_Job | _Call | None] = queue.Queue(maxsize=max_pending)
         self._closed = threading.Event()
         self._active: _Job | None = None
@@ -218,7 +220,7 @@ class GenerationScheduler:
                     try:
                         if work.deadline is not None and time.monotonic() >= work.deadline:
                             raise RequestTimeoutError("request timed out in the task queue")
-                        work.result.set_result(work.factory())
+                        work.result.set_result(self.device_executor.call(id(self), work.factory))
                     except BaseException as exc:
                         work.result.set_exception(exc)
                     continue
@@ -229,7 +231,7 @@ class GenerationScheduler:
                     try:
                         if work.deadline is not None and time.monotonic() >= work.deadline:
                             raise RequestTimeoutError("request timed out in the task queue")
-                        work.result.set_result(work.factory())
+                        work.result.set_result(self.device_executor.call(id(self), work.factory))
                     except BaseException as exc:
                         work.result.set_exception(exc)
                     continue
@@ -237,7 +239,7 @@ class GenerationScheduler:
                 self._active_jobs.append(work)
         finally:
             if self._finalizer is not None:
-                self._finalizer()
+                self.device_executor.call(id(self), self._finalizer)
 
     def _fill_active(self) -> None:
         if self._deferred_call is not None:
@@ -262,6 +264,8 @@ class GenerationScheduler:
         work.slot_id = next(index for index in range(self._parallel) if index not in used)
 
     def _step(self, work: _Job) -> bool:
+        if not self.device_executor.is_owner:
+            return self.device_executor.call(id(self), lambda: self._step(work))
         try:
             _slot_local.value = work.slot_id or 0
             if work.cancel.is_set():

@@ -136,7 +136,7 @@ def supervised_command(command, output, *, ceiling, timeout=600, env=None):
     return result
 
 
-def preflight(output):
+def preflight(output, *, configured_ceiling=None):
     """Actually execute GPU work and supervise a live child before loading weights."""
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
@@ -153,6 +153,11 @@ def preflight(output):
             "hardware": {"chip": chip, "memory_bytes": ram}, "reason": "declared host mismatch"})
         write_integrity(output)
         raise RuntimeError("qualification requires the declared Apple M4 / 32 GiB host")
+    if configured_ceiling is not None and (
+            not isinstance(configured_ceiling, int) or isinstance(configured_ceiling, bool)
+            or configured_ceiling < 1):
+        raise ValueError("configured process ceiling must be a positive integer")
+    smoke_ceiling = min(int(ram * .75), configured_ceiling or int(ram * .75))
     command = [sys.executable, "-c", '''import json,time
 import mlx.core as mx
 mx.set_default_device(mx.gpu)
@@ -162,7 +167,7 @@ print(json.dumps({"device":str(mx.default_device()),"metal":mx.metal.is_availabl
  "result":y.item(),"active_bytes":mx.get_active_memory(),"cached_bytes":mx.get_cache_memory(),
  "peak_bytes":mx.get_peak_memory(),"device_info":mx.device_info()}),flush=True)
 time.sleep(.5)''']
-    result = supervised_command(command, output / "gpu-smoke", ceiling=int(ram * .75))
+    result = supervised_command(command, output / "gpu-smoke", ceiling=smoke_ceiling)
     observed = {}
     for line in (output / "gpu-smoke/worker.log").read_text().splitlines():
         try:
@@ -178,8 +183,8 @@ time.sleep(.5)''']
             and bool(result["rss_samples"])
             and all(s["rss_bytes"] is not None for s in result["rss_samples"]))
     recommended = observed.get("device_info", {}).get("max_recommended_working_set_size")
-    ceiling = min(int(ram * .75), recommended) if isinstance(recommended, int) and (
-        recommended > 0) else int(ram * .75)
+    ceiling = min(smoke_ceiling, recommended) if isinstance(recommended, int) and (
+        recommended > 0) else smoke_ceiling
     report = {"status": "PASS" if good else "BLOCKED", "hardware": {"chip": chip,
         "memory_bytes": ram}, "gpu_smoke": observed, "source": qualification_source(),
         "disk_free_bytes": shutil.disk_usage(output).free, "process_ceiling_bytes": ceiling}
@@ -316,13 +321,29 @@ def execute_manifest(manifest, output, hardware, *, checkpoint_paths=None, runne
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=(
-        "manifest", "preflight", "correctness", "performance", "report"))
+        "manifest", "preflight", "correctness", "performance", "report",
+        "inventory", "prefix-diagnostic", "prefix-parity"))
     parser.add_argument("--checkpoints", nargs="+", choices=CHECKPOINTS, default=list(CHECKPOINTS))
     parser.add_argument("--output", type=Path, default=Path("benchmarks/results/p1"))
     parser.add_argument("--correctness-report", type=Path)
     parser.add_argument("--checkpoint-paths", type=Path)
+    parser.add_argument("--process-ceiling-bytes", type=int,
+                        help="Lower the PR-00 native diagnostic watchdog ceiling")
     args = parser.parse_args(argv)
     stamp = str(time.time_ns())
+    if args.stage in {"inventory", "prefix-diagnostic", "prefix-parity"}:
+        from mlx_one.runtime_baseline import run_baseline
+
+        if args.process_ceiling_bytes is not None and args.process_ceiling_bytes < 1:
+            parser.error("process ceiling must be positive")
+        root = args.output / socket.gethostname() / "runtime-baseline" / stamp
+        result = run_baseline(root, native=args.stage != "inventory",
+            require_parity=args.stage == "prefix-parity",
+            configured_ceiling=args.process_ceiling_bytes,
+            worker_output=args.output / socket.gethostname() / "qwen3-small" / stamp
+                / "prefix-diagnostic")
+        print(root)
+        return result
     root = args.output / socket.gethostname() / "qualification" / stamp
     if args.stage == "report":
         export_matrix(args.output, args.output / "matrix")

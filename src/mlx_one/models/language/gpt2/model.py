@@ -18,6 +18,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.gpt2.config import GPT2Config
+from mlx_one.models.shared.execution import attention_matmul, project
 from mlx_one.models.shared.transformer import causal_mask
 
 
@@ -43,22 +44,37 @@ class GPT2Attention(nn.Module):
         mask: Any | None,
         cache: Any | None,
         output_attentions: bool,
+        position_ids: Any | None = None,
     ) -> tuple[Any, Any | None]:
         batch, length, hidden_size = hidden.shape
-        query, key, value = mx.split(self.c_attn(hidden), 3, axis=-1)
+        dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        projected = project(self.c_attn, hidden, execution_dtype=dtype)
+        query, key, value = mx.split(projected, 3, axis=-1)
         shape = (batch, length, self.n_head, self.head_dim)
         query = query.reshape(shape).transpose(0, 2, 1, 3)
         key = key.reshape(shape).transpose(0, 2, 1, 3)
         value = value.reshape(shape).transpose(0, 2, 1, 3)
-        if cache is not None:
-            key, value = cache.update(key, value)
-        scores = (query @ key.transpose(0, 1, 3, 2)) * self.scale
-        if mask is not None:
-            scores = scores + mask
-        probabilities = self.attn_dropout(mx.softmax(scores, axis=-1, precise=True))
-        attended = probabilities @ value
+        if cache is not None and callable(getattr(cache,"attend",None)):
+            if output_attentions:
+                raise ValueError("paged attention does not materialize attention probabilities")
+            attended=cache.attend(query,key,value,scale=self.scale,position_ids=position_ids)
+            probabilities=None
+        else:
+            if cache is not None:
+                key, value = cache.update(key, value)
+            stable = dtype == "float16" and getattr(self.c_attn, "bits", None) == 8
+            scores = (attention_matmul(query, key.transpose(0, 1, 3, 2)) if stable else
+                      query @ key.transpose(0, 1, 3, 2)) * self.scale
+            if dtype is not None:
+                scores = scores.astype(mx.float32)
+            if mask is not None:
+                scores = scores + mask
+            probabilities = self.attn_dropout(mx.softmax(scores, axis=-1, precise=True))
+            attended = attention_matmul(probabilities, value) if stable else probabilities @ value
         attended = attended.transpose(0, 2, 1, 3).reshape(batch, length, hidden_size)
-        output = self.resid_dropout(self.c_proj(attended))
+        if dtype is not None:
+            attended = attended.astype(getattr(mx, dtype))
+        output = self.resid_dropout(project(self.c_proj, attended, execution_dtype=dtype))
         return output, probabilities if output_attentions else None
 
 
@@ -69,8 +85,10 @@ class GPT2MLP(nn.Module):
         self.c_proj = nn.Linear(config.inner_dim, config.n_embd, bias=True)
         self.dropout = nn.Dropout(config.resid_pdrop)
 
-    def __call__(self, hidden: Any) -> Any:
-        return self.dropout(self.c_proj(gelu_new(self.c_fc(hidden))))
+    def __call__(self, hidden: Any, *, execution_dtype: str | None = None) -> Any:
+        intermediate = project(self.c_fc, hidden, execution_dtype=execution_dtype)
+        return self.dropout(project(self.c_proj, gelu_new(intermediate),
+                                    execution_dtype=execution_dtype))
 
 
 class GPT2Block(nn.Module):
@@ -88,15 +106,18 @@ class GPT2Block(nn.Module):
         mask: Any | None,
         cache: Any | None,
         output_attentions: bool,
+        position_ids: Any | None = None,
     ) -> tuple[Any, Any | None]:
         attended, weights = self.attn(
             self.ln_1(hidden),
             mask=mask,
             cache=cache,
             output_attentions=output_attentions,
+            position_ids=position_ids,
         )
         hidden = hidden + attended
-        return hidden + self.mlp(self.ln_2(hidden)), weights
+        return hidden + self.mlp(self.ln_2(hidden),
+            execution_dtype=getattr(self.attn, "_mlx_one_activation_dtype", None)), weights
 
 
 class GPT2Model(nn.Module):
@@ -125,12 +146,14 @@ class GPT2Model(nn.Module):
             raise ValueError("cache count must match GPT-2 layer count")
         offset = 0 if cache is None else cache[0].offset
         length = input_ids.shape[1]
-        if offset + length > self.config.n_positions:
+        if position_ids is None and offset + length > self.config.n_positions:
             raise ValueError("GPT-2 sequence exceeds n_positions")
         if position_ids is None:
             position_ids = mx.arange(offset, offset + length)[None, :]
         if position_ids.shape not in {(1, length), input_ids.shape}:
             raise ValueError("position_ids must have shape [1, sequence] or match input_ids")
+        if bool(mx.any((position_ids < 0) | (position_ids >= self.config.n_positions)).item()):
+            raise ValueError("GPT-2 logical positions exceed n_positions")
         hidden = self.drop(self.wte(input_ids) + self.wpe(position_ids))
         mask = causal_mask(length, offset)
         if attention_mask is not None:
@@ -147,6 +170,7 @@ class GPT2Model(nn.Module):
                 mask=mask,
                 cache=None if cache is None else cache[index],
                 output_attentions=output_attentions,
+                position_ids=position_ids,
             )
             if states is not None:
                 states.append(hidden)
@@ -175,7 +199,8 @@ class GPT2LMHeadModel(nn.Module):
         cache = kwargs.get("cache")
         hidden, states, attentions = self.transformer(input_ids, **kwargs)
         return ModelOutput(
-            self.transformer.wte.as_linear(hidden),
+            project(self.transformer.wte, hidden, execution_dtype=getattr(
+                self.transformer.h[0].attn, "_mlx_one_activation_dtype", None), as_linear=True),
             hidden,
             cache=cache,
             hidden_states=states,

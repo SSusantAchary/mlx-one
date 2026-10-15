@@ -95,6 +95,7 @@ class Qwen2VLForConditionalGeneration(nn.Module):
         video_grid_thw: Sequence[Sequence[int]] | None = None,
         mm_token_type_ids: Any | None = None,
         attention_mask: Any | None = None,
+        position_ids: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
     ) -> VisionLanguageModelOutput:
@@ -125,7 +126,11 @@ class Qwen2VLForConditionalGeneration(nn.Module):
                 input_ids == self.config.video_token_id, 2, mm_token_type_ids
             )
         offset = 0 if cache is None else cache[0].offset
-        if offset and not vision_states:
+        if position_ids is not None:
+            if vision_states:
+                raise ValueError("explicit decode positions cannot replace media positions")
+            rope_deltas = mx.zeros((input_ids.shape[0],1),dtype=mx.int32)
+        elif offset and not vision_states:
             base = mx.arange(offset, offset + input_ids.shape[1])[None, :]
             position_ids = mx.broadcast_to(base, (3, input_ids.shape[0], input_ids.shape[1]))
             rope_deltas = mx.zeros((input_ids.shape[0], 1), mx.int32)

@@ -10,6 +10,7 @@ if os.environ.get("MLX_ONE_RUN_MLX_TESTS") != "1":
     pytest.skip("set MLX_ONE_RUN_MLX_TESTS=1 on a Metal host", allow_module_level=True)
 
 import mlx.core as mx
+import mlx.nn as nn
 
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.models.language.qwen2.config import Qwen2Config
@@ -224,3 +225,48 @@ def test_explicit_fp16_decode_is_invariant_to_neutral_padding_mask():
     b = model(ids, cache=caches[1], attention_mask=mx.ones((1, 6), dtype=mx.int32)).logits
     mx.eval(a, b)
     assert bool(mx.allclose(a, b, atol=1e-4, rtol=1e-4).item())
+
+
+def test_explicit_int8_projection_is_invariant_to_token_row_count():
+    from mlx_one.models.shared.execution import project
+
+    mx.random.seed(19)
+    layer = nn.QuantizedLinear.from_linear(nn.Linear(128, 256), group_size=64, bits=8)
+    layer.set_dtype(mx.float16, predicate=lambda dtype: dtype != mx.uint32)
+    values = mx.random.normal((2, 33, 128)).astype(mx.float16)
+    full = project(layer, values, execution_dtype="float16")
+    for index in (0, 16, 32):
+        single = project(layer, values[:, index:index + 1], execution_dtype="float16")
+        mx.eval(full, single)
+        assert bool(mx.array_equal(full[:, index:index + 1], single).item())
+    assert layer.weight.dtype == mx.uint32 and full.dtype == mx.float16
+
+
+def test_explicit_int8_qwen3_full_vs_split_state():
+    from mlx_one.models.shared.execution import project
+
+    mx.random.seed(23)
+    config = qwen3_config(hidden_size=128, intermediate_size=256, head_dim=64,
+                          num_attention_heads=2, num_key_value_heads=1)
+    model = Qwen3ForCausalLM(config)
+    nn.quantize(model, group_size=64, bits=8)
+    model.set_dtype(mx.float16, predicate=lambda dtype: dtype != mx.uint32)
+    for layer in model.model.layers:
+        layer.self_attn._mlx_one_activation_dtype = "float16"
+    caches = [model.make_cache() for _ in range(2)]
+    ids = mx.array([[i % 64 for i in range(33)]])
+    full = model(ids, cache=caches[0]).logits[:, -1:]
+    mx.eval(model(ids[:, :-1], cache=caches[1]).logits)
+    split = model(ids[:, -1:], cache=caches[1]).logits
+    mx.eval(full, split)
+    assert bool(mx.allclose(full, split, atol=.01, rtol=.01).item())
+    for a, b in zip(*caches, strict=True):
+        assert a.offset == b.offset == 33
+        for x, y in zip(a.state(), b.state(), strict=True):
+            assert x.dtype == y.dtype == mx.float16
+            assert bool(mx.allclose(x, y, atol=.01, rtol=.01).item())
+    # Also exercise tied affine INT8 output projection through the shared primitive.
+    hidden = model.model(ids)[0]
+    tied = project(model.model.embed_tokens, hidden, execution_dtype="float16", as_linear=True)
+    mx.eval(tied)
+    assert tied.dtype == mx.float16

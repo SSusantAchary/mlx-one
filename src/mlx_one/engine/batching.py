@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import time
 from contextlib import ExitStack
 from dataclasses import dataclass
 from typing import Any
 
 from mlx_one.core.cache import KVCache, QuantizedKVCache
+from mlx_one.engine.cache import CacheBundle
 from mlx_one.engine.contracts import (
     BatchPlan,
     Phase,
@@ -16,6 +18,7 @@ from mlx_one.engine.contracts import (
     ScheduledSequence,
 )
 from mlx_one.engine.runners import CausalLMRunner
+from mlx_one.engine.transactions import commit_evaluated, release_all
 
 
 @dataclass(frozen=True)
@@ -30,10 +33,11 @@ class BatchingConfig:
     output_stall_timeout_s: float = 30.0
     admission_age_s: float = 2.0
     admission_policy: str = "deadline"
+    task_transient_budget_bytes: int = 256*1024**2
 
     def __post_init__(self):
         for name in ("max_sequences", "queue_size", "prefill_chunk_size", "max_scheduled_tokens",
-                     "max_prefill_tokens", "output_buffer_events"):
+                     "max_prefill_tokens", "output_buffer_events", "task_transient_budget_bytes"):
             if getattr(self, name) < 1:
                 raise ValueError(f"{name} must be positive")
         if self.timeout < 0 or self.output_stall_timeout_s <= 0 or self.admission_age_s < 0:
@@ -57,6 +61,14 @@ class ForwardRequest:
     options: Any = None
     deadline: float | None = None
     return_all_logits: bool = False
+    staged_verification: bool = False
+    generated_ids: tuple[int, ...] | None = None
+
+
+@dataclass(frozen=True)
+class GenerationProgress:
+    generated_ids: tuple[int, ...]
+    computed_len: int
 
 
 def request_cancelled(request):
@@ -102,14 +114,73 @@ class BatchScheduler:
                 selected_prefill.append(request)
                 prefill_budget -= len(request.token_ids)
         self._prefill_cursor += max(len(selected_prefill), 1)
-        return tuple(tuple(group) for group in (selected_decode, selected_prefill) if group)
+        return (*execution_groups(selected_decode),*execution_groups(selected_prefill))
+
+
+def execution_groups(requests):
+    """Partition state transition buckets without changing request ownership."""
+    buckets = {}
+    for request in requests:
+        key = tuple(component.batch_key(len(request.token_ids))
+                    if callable(getattr(component,"batch_key",None)) else None
+                    for component in getattr(request,"cache",()))
+        buckets.setdefault(key,[]).append(request)
+    return tuple(tuple(rows) for rows in buckets.values())
+
+
+def execute_compatible(runner, requests):
+    """Qualification helpers use the same state buckets as actor scheduling."""
+    if not requests or len({r.request_id for r in requests}) != len(requests):
+        raise ValueError("execution buckets require unique nonempty request mappings")
+    outputs = {}
+    for group in execution_groups(requests):
+        result=runner.execute(group)
+        if result.request_ids != tuple(r.request_id for r in group):
+            raise ValueError("execution bucket result mapping mismatch")
+        for request_id,logits,count in zip(result.request_ids,result.logits,
+                result.committed_token_counts,strict=True):
+            if request_id in outputs:
+                raise ValueError("duplicate execution bucket request")
+            outputs[request_id]=(logits,count)
+    return RunnerOutput(tuple(r.request_id for r in requests),
+        tuple(outputs[r.request_id][0] for r in requests),
+        tuple(outputs[r.request_id][1] for r in requests))
 
 
 class _PackedCache:
     """Exact temporary buffers; offset is physical padded history, not model position."""
 
-    def __init__(self, keys, values, offset):
+    def __init__(self, keys, values, offset, *, lengths=(), widths=(), compact_attention=False):
         self.keys, self.values, self.offset = keys, values, offset
+        self.lengths,self.widths=lengths,widths
+        if compact_attention:
+            self.attend=self._attend_compact
+
+    def _attend_compact(self,queries,keys,values,*,scale,position_ids):
+        """Keep each INT8 row's reduction width identical to independent execution.
+
+        QKV/MLP still execute in one batched model call. Only attention reductions
+        exclude physical padding, whose zeros otherwise change FP32 reduction trees.
+        """
+        import mlx.core as mx
+
+        from mlx_one.models.shared.execution import attention_matmul
+
+        history=self.offset
+        self.update(keys,values)
+        output=mx.zeros(queries.shape,dtype=queries.dtype)
+        repeats=queries.shape[1]//keys.shape[1]
+        for row,(old,width) in enumerate(zip(self.lengths,self.widths,strict=True)):
+            begin,end=history-old,history+width
+            k,v=(mx.repeat(t[row:row+1,:,begin:end],repeats,axis=1)
+                 for t in (self.keys,self.values))
+            q=queries[row:row+1,:,:width]
+            scores=attention_matmul(q,k.transpose(0,1,3,2))*scale
+            allowed=mx.arange(old+width)[None,:] <= old+mx.arange(width)[:,None]
+            scores=scores+mx.where(allowed,0.0,-float("inf"))
+            probabilities=mx.softmax(scores,axis=-1,precise=True)
+            output[row:row+1,:,:width]=attention_matmul(probabilities,v).astype(queries.dtype)
+        return output
 
     def update(self, keys, values):
         import mlx.core as mx
@@ -220,13 +291,23 @@ class BatchedDenseRunner(CausalLMRunner):
             slots.append(ScheduledSequence(request.request_id, request.phase,
                                             request.cache[0].offset, len(request.token_ids)))
         plan = BatchPlan(tuple(slots), sum(len(r.token_ids) for r in requests))
-        config = getattr(first.bundle.model.config, "text_config", first.bundle.model.config)
-        heads = self.adapter.spec.kv_heads
+        config = self.adapter.activation_config
+        specs = self.adapter.plan.layer_specs
         dim = self.adapter.spec.head_dim
-        per_token = len(first.cache) * heads * dim * 4
+        per_token = self.adapter.plan.bytes_per_token()
         replacement_tokens = sum(((r.cache[0].offset + len(r.token_ids) + 255) // 256) * 256
                                  for r in requests)
         transient = per_token * (count * (history + width) + replacement_tokens)
+        arithmetic_scratch = 0
+        if (getattr(first.bundle, "quantization", {}).get("bits") == 8
+                and self.adapter.activation_dtype == "float16"):
+            from mlx_one.models.shared.execution import attention_scratch_bound
+
+            arithmetic_scratch = attention_scratch_bound(batch=count,
+                heads=self.adapter.spec.query_heads, head_dim=dim, chunk=width, history=history)
+            transient += arithmetic_scratch
+        adapter_scratch = self.adapter.additional_transient_bytes(batch=count, chunk=width)
+        transient += adapter_scratch
         packed = []
         staged = []
         started = time.perf_counter()
@@ -243,12 +324,17 @@ class BatchedDenseRunner(CausalLMRunner):
                     widths=[len(r.token_ids) for r in requests], phase=first.phase)["bytes"]
                 stack.enter_context(runtime.transient_reservation(transient))
             ids = [[*r.token_ids, *([0] * (width - len(r.token_ids)))] for r in requests]
-            positions = [[r.cache[0].offset + i for i in range(width)] for r in requests]
+            positions = [[r.cache[0].offset + i if i < len(r.token_ids) else 0
+                          for i in range(width)] for r in requests]
             mask = [[0] * (history - r.cache[0].offset) + [1] * r.cache[0].offset
                     + [1] * len(r.token_ids) + [0] * (width - len(r.token_ids)) for r in requests]
             for layer in range(len(first.cache)):
-                shape = (count, heads, history + width, dim)
-                keys, values = mx.zeros(shape, dtype=mx.float16), mx.zeros(shape, dtype=mx.float16)
+                spec = specs[layer]
+                key_shape = (count, spec.num_kv_heads, history + width, spec.key_head_dim)
+                value_shape = (count, spec.num_kv_heads, history + width,
+                               spec.value_head_dim or spec.key_head_dim)
+                keys = mx.zeros(key_shape, dtype=mx.float16)
+                values = mx.zeros(value_shape, dtype=mx.float16)
                 for row, request in enumerate(requests):
                     old_keys, old_values = _state(request.cache[layer])
                     length = request.cache[layer].offset
@@ -257,7 +343,11 @@ class BatchedDenseRunner(CausalLMRunner):
                             old_keys[:, :, :length, :])
                         values[row:row + 1, :, history - length:history, :] = (
                             old_values[:, :, :length, :])
-                packed.append(_PackedCache(keys, values, history))
+                packed.append(_PackedCache(keys, values, history,
+                    lengths=tuple(r.cache[0].offset for r in requests),
+                    widths=tuple(len(r.token_ids) for r in requests),
+                    compact_attention=bool(arithmetic_scratch)
+                        and self.adapter.spec.architecture in {"qwen2","qwen3","llama"}))
             output = self.adapter.forward(mx.array(ids), cache=tuple(packed),
                                         attention_mask=mx.array(mask),
                                         position_ids=mx.array(positions))
@@ -270,9 +360,8 @@ class BatchedDenseRunner(CausalLMRunner):
                     length = request.cache[0].offset
                     real = length + len(request.token_ids)
                     for original, cache in zip(request.cache, packed, strict=True):
-                        replacement = (QuantizedKVCache(None, None)
-                                       if isinstance(original, QuantizedKVCache)
-                                       else KVCache())
+                        replacement = copy.copy(original)
+                        replacement.reset()
                         layers.append(replacement)
                         start, stop = history - length, history + len(request.token_ids)
                         selected_keys = cache.keys[row:row + 1, :, start:stop, :]
@@ -283,24 +372,22 @@ class BatchedDenseRunner(CausalLMRunner):
                         mx.eval(new_keys, new_values)
                 compact_logits = []
                 for row, request in enumerate(requests):
-                    logits = mx.zeros((1, 1, output.logits.shape[-1]), dtype=output.logits.dtype)
                     last = len(request.token_ids)
-                    logits[...] = output.logits[row:row + 1, last - 1:last]
+                    begin=0 if request.return_all_logits else last-1
+                    logits = mx.zeros((1,last-begin,output.logits.shape[-1]),
+                                      dtype=output.logits.dtype)
+                    logits[...] = output.logits[row:row+1,begin:last]
                     mx.eval(logits)
                     compact_logits.append(logits)
             except BaseException:
-                for layers in staged:
-                    for cache in layers:
-                        cache.reset()
+                release_all(tuple(CacheBundle(tuple(layers)) for layers in staged))
                 raise
-            for request, layers in zip(requests, staged, strict=True):
-                if request_cancelled(request):
-                    continue
-                for original, replacement in zip(request.cache, layers, strict=True):
-                    original.__dict__.update(replacement.__dict__)
-                if request.handle is not None:
-                    request.handle.computed_tokens = request.cache[0].offset
-                    request.runtime.reconcile(request.handle)
+
+            drafts = tuple(CacheBundle(tuple(layers)) for layers in staged)
+            try:
+                commit_evaluated(requests, drafts, specs=self.adapter.plan.state_specs)
+            finally:
+                release_all(drafts)
         self.last_trace = {"phase": first.phase, "request_ids": [r.request_id for r in requests],
                            "batch_size": count,
                            "history_lengths": [s.start_pos for s in plan.sequences],
@@ -308,6 +395,11 @@ class BatchedDenseRunner(CausalLMRunner):
                            "padded_tokens": count * width,
                            "padding_efficiency": plan.total_scheduled_tokens / (count * width),
                            "transient_reserved_bytes": transient,
+                           "arithmetic_scratch_bound_bytes": arithmetic_scratch,
+                           "attention_reduction": "compact-real-row" if any(
+                               callable(getattr(c,"attend",None)) for c in packed)
+                               else "padded-batch",
+                           "adapter_transient_bound_bytes": adapter_scratch,
                            "packed_history_bytes": per_token * count * history,
                            "replacement_cache_bytes": per_token * replacement_tokens,
                            "adapter_version": self.adapter.spec.adapter_version,

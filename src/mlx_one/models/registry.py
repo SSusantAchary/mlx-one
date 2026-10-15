@@ -122,6 +122,10 @@ def register_builtin_models() -> None:
             "mlx_one.models.vision_language.lfm2_vl.model:Lfm2VLForConditionalGeneration",
             "vision-language",
             frozenset({"forward", "cache", "image"}),
+            "mlx_one.models.vision_language.lfm2_vl.weights:sanitize_weights",
+            "mlx_one.models.vision_language.lfm2_vl.weights:weight_contract",
+            loader_path="mlx_one.vision.loading:load_vlm_model",
+            tasks=frozenset({"vision-language-generation"}),
         ),
         ModelRegistration(
             "lfm2_colbert",
@@ -233,6 +237,10 @@ def register_builtin_models() -> None:
             "mlx_one.models.vision_language.qwen2_5_vl.model:Qwen2_5_VLForConditionalGeneration",
             "vision-language",
             frozenset({"forward", "cache", "image", "video"}),
+            "mlx_one.models.vision_language.qwen2_5_vl.weights:sanitize_weights",
+            "mlx_one.models.vision_language.qwen2_5_vl.weights:weight_contract",
+            loader_path="mlx_one.vision.loading:load_vlm_model",
+            tasks=frozenset({"vision-language-generation"}),
         ),
         ModelRegistration(
             "qwen3_5",
@@ -289,5 +297,9 @@ def register_builtin_models() -> None:
             tasks=frozenset({"asr"}),
         ),
     )
+    from mlx_one.engine.adapter_registry import register_runtime
+    from mlx_one.engine.runtime_specs import builtin_runtime
+
     for registration in registrations:
         register_model(registration)
+        register_runtime(builtin_runtime(registration))

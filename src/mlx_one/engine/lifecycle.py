@@ -5,7 +5,7 @@ import threading
 from dataclasses import replace
 from pathlib import Path
 
-from mlx_one.engine.batching import ForwardRequest
+from mlx_one.engine.batching import ForwardRequest, execute_compatible
 from mlx_one.engine.cache_manager import CacheManager
 from mlx_one.engine.cache_specs import CacheConfig
 from mlx_one.engine.components import load_snapshot, save_snapshot
@@ -25,16 +25,41 @@ def adopt_snapshot(runtime, handle, staged, *, cancel=None):
         if len(staged.entries) != len(specs) or len({c.offset for c in staged.entries}) != 1:
             raise ValueError("snapshot topology or component positions mismatch")
         for component, spec in zip(staged.entries, specs, strict=True):
-            component.validate(spec)
-        mx.eval(*(v for c in staged.entries for v in (getattr(c, "keys", None),
-                                                      getattr(c, "values", None)) if v is not None))
+            if callable(getattr(component,"validate",None)):
+                component.validate(spec)
+            elif hasattr(component,"_blocks") and spec.kind=="full_kv":
+                if component.layer_id!=spec.layer_id:
+                    raise ValueError("block snapshot layer mismatch")
+                for reference in component._blocks:
+                    page=reference.block
+                    for tensor,dimension in zip(page.state,
+                            (spec.key_head_dim,spec.value_head_dim),strict=True):
+                        if (tensor.shape[:2]!=(1,spec.num_kv_heads)
+                                or tensor.shape[-1]!=dimension or tensor.dtype!=mx.float16):
+                            raise ValueError("block snapshot layout mismatch")
+            else:
+                raise ValueError("snapshot component validation unavailable")
+        from mlx_one.engine.transactions import component_tensors
+
+        mx.eval(*(v for c in staged.entries for v in component_tensors(c)))
         runtime._validate_handle(handle)
-        if cancel is not None and cancel.is_set():
+        callback = handle.metadata.get("is_cancelled")
+        if ((cancel is not None and cancel.is_set())
+                or callable(callback) and callback() or handle.metadata.get("cancelled")):
             return False
         old = handle.bundle
+        computed,reserved = handle.computed_tokens,handle.reserved_bytes
+        committed = handle.reservation.committed_bytes if handle.reservation else None
         handle.bundle = staged
         handle.computed_tokens = staged.offset
-        runtime.reconcile(handle)
+        try:
+            runtime.reconcile(handle)
+        except BaseException:
+            handle.bundle = old
+            handle.computed_tokens,handle.reserved_bytes = computed,reserved
+            if handle.reservation is not None:
+                handle.reservation.committed_bytes = committed
+            raise
         old.release()
         return True
     finally:
@@ -101,7 +126,9 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
                                 atol=atol, rtol=rtol)})
                     start += block.token_count
                 continue
-            for attr in ("keys", "values"):
+            attrs = (("conv_state","recurrent_state")
+                     if getattr(a,"checkpoint_semantics",None) is not None else ("keys","values"))
+            for attr in attrs:
                 left, right = getattr(a, attr, None), getattr(b, attr, None)
                 if right is None and hasattr(b, "_keys"):
                     stored = b._keys if attr == "keys" else b._values
@@ -118,7 +145,7 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
         requests = tuple(forward(runtime, h,
                                  prefix if i == 0 else prefix[:max(1, len(prefix)//2)],
                                  phase="prefill") for i, h in enumerate(handles))
-        outputs = runner.execute(requests)
+        outputs = execute_compatible(runner,requests)
         for i, request in enumerate(requests):
             expected = independent(request.request_id, request.token_ids)
             comparisons.append({"stage": "initial", **compare_logits(
@@ -136,7 +163,7 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
         independent("fork", prefix)
         for step in range(3):
             tokens = [seed[len(prefix) + step], seed[len(prefix) + step + 4]]
-            result = runner.execute(tuple(forward(runtime, h, (token,))
+            result = execute_compatible(runner,tuple(forward(runtime, h, (token,))
                 for h, token in zip((handles[0], fork), tokens, strict=True)))
             for index, (h, token) in enumerate(zip((handles[0], fork), tokens, strict=True)):
                 expected = independent(h.request_id, (token,))
@@ -155,8 +182,9 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
                 return result
         wrapped = replace(bundle, model=CancelAtEvaluation())
         # Both requests share the wrapped bundle; only the donor is cancelled.
-        result = runner.execute(tuple(forward(runtime, h, (seed[-1],), cancel=cancel if i == 0
-            else None, active_bundle=wrapped) for i, h in enumerate(handles)))
+        result = execute_compatible(runner,tuple(forward(runtime, h, (seed[-1],),
+            cancel=cancel if i == 0 else None, active_bundle=wrapped)
+            for i, h in enumerate(handles)))
         compare_state(handles[0].bundle, before, "cancelled")
         expected = independent("peer", (seed[-1],))
         comparisons.append({"stage": "peer_continues", **compare_logits(
@@ -186,7 +214,7 @@ def hybrid_lifecycle(bundle, profile, output, *, reload_bundle=None):
                 Path(output) / "snapshot", identity=identity,
                 expected_specs=specs, page_pool=fresh.block_pool
                 if config.backend == "paged" else None))
-            result = runner.execute((forward(fresh, handle, (seed[-2],)),)).logits[0]
+            result = execute_compatible(runner,(forward(fresh, handle, (seed[-2],)),)).logits[0]
             independent("reloaded", prefix)
             expected = independent("reloaded", (seed[-2],))
             comparisons.append({"stage": "reloaded", **compare_logits(result, expected,

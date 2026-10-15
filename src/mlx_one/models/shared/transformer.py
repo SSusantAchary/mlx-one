@@ -7,6 +7,8 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.models.shared.execution import attention_matmul, project
+
 
 def causal_mask(length: int, offset: int = 0) -> Any | None:
     if length <= 1 and offset > 0:
@@ -101,9 +103,13 @@ class GroupedQueryAttention(nn.Module):
         position_ids: Any | None = None,
     ) -> Any:
         batch, length, _ = hidden_states.shape
-        queries = self.q_proj(hidden_states).reshape(batch, length, self.num_heads, self.head_dim)
-        keys = self.k_proj(hidden_states).reshape(batch, length, self.num_kv_heads, self.head_dim)
-        values = self.v_proj(hidden_states).reshape(batch, length, self.num_kv_heads, self.head_dim)
+        execution_dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        queries = project(self.q_proj, hidden_states, execution_dtype=execution_dtype).reshape(
+            batch, length, self.num_heads, self.head_dim)
+        keys = project(self.k_proj, hidden_states, execution_dtype=execution_dtype).reshape(
+            batch, length, self.num_kv_heads, self.head_dim)
+        values = project(self.v_proj, hidden_states, execution_dtype=execution_dtype).reshape(
+            batch, length, self.num_kv_heads, self.head_dim)
         if self.q_norm is not None:
             queries = self.q_norm(queries)
             keys = self.k_norm(keys)
@@ -127,7 +133,6 @@ class GroupedQueryAttention(nn.Module):
             mrope_section=self.mrope_section,
             scaling_factor=self.rope_scaling_factor,
         )
-        execution_dtype = getattr(self, "_mlx_one_activation_dtype", None)
         if execution_dtype is not None:
             dtype = getattr(mx, execution_dtype)
             queries, keys, values = (t.astype(dtype) for t in (queries, keys, values))
@@ -137,13 +142,15 @@ class GroupedQueryAttention(nn.Module):
             output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
             if execution_dtype is not None:
                 output = output.astype(getattr(mx, execution_dtype))
-            return self.o_proj(output)
+            return project(self.o_proj, output, execution_dtype=execution_dtype)
         if cache is not None:
             keys, values = cache.update(keys, values)
         repeats = self.num_heads // self.num_kv_heads
         keys = _repeat_kv(keys, repeats)
         values = _repeat_kv(values, repeats)
-        scores = (queries @ keys.transpose(0, 1, 3, 2)) * self.scale
+        stable_int8 = execution_dtype == "float16" and getattr(self.q_proj, "bits", None) == 8
+        scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable_int8
+                  else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
         if execution_dtype is not None:
             # A neutral FP32 padding mask must not change softmax/value arithmetic.
             # Promote scores without allocating FP32 copies of the KV history.
@@ -151,11 +158,12 @@ class GroupedQueryAttention(nn.Module):
         if mask is not None:
             scores = scores + mask
         probabilities = mx.softmax(scores, axis=-1, precise=True)
-        output = probabilities @ values
+        output = (attention_matmul(probabilities, values) if stable_int8
+                  else probabilities @ values)
         output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
         if execution_dtype is not None:
             output = output.astype(getattr(mx, execution_dtype))
-        return self.o_proj(output)
+        return project(self.o_proj, output, execution_dtype=execution_dtype)
 
 
 class SwiGLU(nn.Module):
@@ -165,9 +173,11 @@ class SwiGLU(nn.Module):
         self.up_proj = nn.Linear(hidden_size, intermediate_size, bias=False)
         self.down_proj = nn.Linear(intermediate_size, hidden_size, bias=False)
 
-    def __call__(self, value: Any) -> Any:
-        gate = self.gate_proj(value)
-        return self.down_proj((gate * mx.sigmoid(gate)) * self.up_proj(value))
+    def __call__(self, value: Any, *, execution_dtype: str | None = None) -> Any:
+        gate = project(self.gate_proj, value, execution_dtype=execution_dtype)
+        up = project(self.up_proj, value, execution_dtype=execution_dtype)
+        return project(self.down_proj, (gate * mx.sigmoid(gate)) * up,
+                       execution_dtype=execution_dtype)
 
 
 class DecoderLayer(nn.Module):
@@ -204,7 +214,8 @@ class DecoderLayer(nn.Module):
             position_ids=position_ids,
         )
         hidden_states = hidden_states + attended
-        return hidden_states + self.mlp(self.post_attention_layernorm(hidden_states))
+        return hidden_states + self.mlp(self.post_attention_layernorm(hidden_states),
+            execution_dtype=getattr(self.self_attn, "_mlx_one_activation_dtype", None))
 
 
 def quick_gelu(value: Any) -> Any:
