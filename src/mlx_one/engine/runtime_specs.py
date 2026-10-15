@@ -5,7 +5,8 @@ from mlx_one.engine.contracts import StageKind, TaskKind, TaskSpec, canonical_ta
 BUILTIN_ADAPTERS = {name: "mlx_one.engine.native_adapters:" + adapter for name, adapter in (
     ("gpt2", "GPT2Adapter"), ("llama", "LlamaAdapter"),
     ("qwen2", "Qwen2Adapter"), ("qwen3", "Qwen3Adapter"),
-    ("openelm", "OpenELMAdapter"), ("qwen2_moe", "Qwen2MoeAdapter"))}
+    ("openelm", "OpenELMAdapter"), ("qwen2_moe", "Qwen2MoeAdapter"),
+    ("lfm2", "LFM2Adapter"), ("lfm2_moe", "LFM2MoeAdapter"))}
 
 
 def builtin_runtime(entry):

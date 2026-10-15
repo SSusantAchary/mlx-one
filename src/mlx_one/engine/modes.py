@@ -58,8 +58,8 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
 
         try:
             adapter = native_adapter(bundle, plan, allow_hybrid=True, allow_bfloat16=True)
-            if adapter.spec.architecture != "lfm2":
-                raise ValueError("hybrid batching requires native LFM2 attention/conv")
+            if not adapter.spec.hybrid:
+                raise ValueError("hybrid batching requires a supported compound-state adapter")
         except (ValueError, AttributeError) as exc:
             raise ModelCapabilityUnsupported(str(exc)) from exc
     if mode == "experimental_dense_batch":

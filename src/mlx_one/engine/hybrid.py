@@ -83,7 +83,8 @@ class _ConvRows:
 
 class HybridRunner(BatchedDenseRunner):
     def capabilities(self):
-        return replace(super().capabilities(), family="lfm2",
+        return replace(super().capabilities(), family=self.adapter.spec.architecture
+                       if hasattr(self, "adapter") else "hybrid",
                        supported_cache_backends=("hybrid",),
                        supported_state_kinds=("full_kv", "sliding_kv", "conv"),
                        supports_exact_prefix_restore=True)
@@ -144,6 +145,9 @@ class HybridRunner(BatchedDenseRunner):
         history = max(c.offset for r in requests for c in r.cache)
         transient = len(requests) * len(first.cache) * heads * dim * (history + width) * 16
         transient += len(requests) * config.hidden_size * config.conv_L_cache * 8
+        adapter_scratch = self.adapter.additional_transient_bytes(
+            batch=len(requests), chunk=width)
+        transient += adapter_scratch
         from mlx_one.engine.pressure import execution_forecast
 
         metrics = {"direct_attention_calls": 0, "history_materializations": 0,
@@ -157,6 +161,8 @@ class HybridRunner(BatchedDenseRunner):
                          * next(c.block_tokens for c in first.cache if isinstance(c, PagedKVCache))
                          * sum(isinstance(c, PagedKVCache) for c in first.cache)
                          + len(requests) * config.hidden_size * config.conv_L_cache * 8)
+        if paged:
+            transient += adapter_scratch
         transient = execution_forecast(first.runtime, config, batch=len(requests), chunk=width,
                                          history=history, explicit_bytes=transient,
                                          history_lengths=[r.cache[0].offset for r in requests],
@@ -222,6 +228,7 @@ class HybridRunner(BatchedDenseRunner):
                            "real_tokens": sum(widths), "padded_tokens": len(requests) * width,
                            "padding_efficiency": sum(widths) / (len(requests) * width),
                            "transient_reserved_bytes": transient,
+                           "adapter_transient_bound_bytes": adapter_scratch,
                            "component_kinds": [getattr(c, "kind", "unknown") for c in first.cache],
                            "duration_ms": (time.perf_counter() - started) * 1000}
         return RunnerOutput(tuple(r.request_id for r in requests), tuple(logits), widths)

@@ -101,13 +101,13 @@ class NativeExecutionSpec:
 class NativeModelAdapter:
     supported_architectures = frozenset(DENSE_FAMILIES)
     supports_paging = True
+    supported_states = frozenset({"full_kv"})
 
     def __init__(self, bundle, plan, *, allow_bfloat16=False, allow_hybrid=False):
         from mlx_one.engine.reporting import tensor_dtypes
 
         architecture = plan.architecture
-        if (architecture not in self.supported_architectures
-                and not (allow_hybrid and architecture == "lfm2")):
+        if architecture not in self.supported_architectures:
             raise ValueError("no supported dense native adapter for " + architecture)
         observed = tensor_dtypes(bundle.model.parameters())
         legacy_hybrid = (allow_hybrid and architecture == "lfm2"
@@ -144,8 +144,8 @@ class NativeModelAdapter:
             raise ValueError("adapter requires supported attention layout")
         first = attention_layers[0]
         query_heads, kv_heads, head_dim = first.query_heads, first.kv_heads, first.key_dim
-        if architecture in self.supported_architectures and any(
-                s.kind != "full_kv" for s in plan.state_specs):
+        if any(s.kind not in self.supported_states for s in plan.state_specs) or (
+                not allow_hybrid and any(s.kind != "full_kv" for s in plan.state_specs)):
             raise ValueError("dense adapter requires full-attention components")
         hidden = getattr(config, "hidden_size", getattr(config, "n_embd",
                          getattr(config, "model_dim", 0)))
@@ -162,9 +162,8 @@ class NativeModelAdapter:
             tuple(s.kind for s in plan.state_specs), quantization_identity(bundle),
             model_id=getattr(bundle, "model_id", None), revision=getattr(bundle, "revision", None),
             layers=tuple(layers))
-        if not plan.block_compatible and not (allow_hybrid and architecture == "lfm2"
-                and plan.state_specs and all(s.kind in {"full_kv", "sliding_kv", "conv"}
-                                             for s in plan.state_specs)):
+        if not plan.block_compatible and not (allow_hybrid and plan.state_specs
+                and all(s.kind in self.supported_states for s in plan.state_specs)):
             raise ValueError("adapter requires complete supported layer layouts")
 
     def memory_estimate(self, tokens):

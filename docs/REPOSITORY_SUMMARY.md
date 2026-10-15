@@ -167,3 +167,11 @@ scratch forecasts. 105 affected CPU tests and six tiny FP16 native B1/B2/B4
 cases pass, including per-layer KV and real-token router parity. Native forward
 traces and allocator/RSS observations stay local; no large-checkpoint or
 performance qualification is inferred.
+
+PR-08 binds LFM2/LFM2-MoE to component-aware hybrid execution. Ragged rows
+retain private carries and absolute sliding positions; adoption uses the shared
+transaction. Native testing exposed router scratch entering MLX parameters;
+private storage now preserves immutable weight metadata and inspection properties.
+144 affected CPU tests, 13 native hybrid/legacy tests and eight final greedy/state
+checks pass. Prefix hits skip 16/32 real tokens with namespace isolation. Real
+checkpoint Gate E and performance remain pending; new MoE paging stays disabled.

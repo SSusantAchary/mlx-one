@@ -50,8 +50,6 @@ class CausalArchitectureAdapter(NativeModelAdapter):
         return requests
 
     def execute(self, packed, state):
-        from mlx_one.engine.batching import BatchedDenseRunner
-
         if not isinstance(state, BatchPlan) or tuple(r.request_id for r in packed) != tuple(
                 row.request_id for row in state.sequences):
             raise ValueError('adapter execution requires aligned batch plan')
@@ -59,7 +57,12 @@ class CausalArchitectureAdapter(NativeModelAdapter):
             if (request.cache[0].offset != row.start_pos or request.phase != row.phase
                     or len(request.token_ids) != row.input_token_count):
                 raise ValueError('adapter scheduled boundary mismatch')
-        return BatchedDenseRunner(self.bundle).execute(packed)
+        return self._runner_for_execution().execute(packed)
+
+    def _runner_for_execution(self):
+        from mlx_one.engine.batching import BatchedDenseRunner
+
+        return BatchedDenseRunner(self.bundle)
 
     def unpack(self, output):
         return tuple(CausalRowOutput(request_id, logits, count) for request_id, logits, count in
@@ -101,3 +104,27 @@ class OpenELMAdapter(CausalArchitectureAdapter):
 
 class Qwen2MoeAdapter(CausalArchitectureAdapter):
     supported_architectures = frozenset({'qwen2_moe'})
+
+
+class LFM2Adapter(CausalArchitectureAdapter):
+    supported_architectures = frozenset({'lfm2'})
+    supported_states = frozenset({'full_kv','sliding_kv','conv'})
+
+    def prepare(self, payload):
+        from mlx_one.engine.cache import CacheBundle
+        from mlx_one.engine.components import hybrid_components
+
+        state=super().prepare(payload)
+        state.cache.release()
+        state.cache=CacheBundle(hybrid_components(self.bundle))
+        return state
+
+    def _runner_for_execution(self):
+        from mlx_one.engine.hybrid import HybridRunner
+
+        return HybridRunner()
+
+
+class LFM2MoeAdapter(LFM2Adapter):
+    supports_paging = False
+    supported_architectures = frozenset({'lfm2_moe'})
