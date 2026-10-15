@@ -46,7 +46,7 @@ def test_adapter_family_binding_rejects_wrong_checkpoint(native):
         Qwen3Adapter(native,build_cache_plan(native))
 
 
-def test_odd_learned_head_dimension_is_legal_and_paging_unavailable(native):
+def test_odd_learned_head_dimension_is_legal_and_paging_validated(native):
     from mlx_one.engine.cache_planner import build_cache_plan
     from mlx_one.engine.modes import ModelCapabilityUnsupported, validate_mode
 
@@ -55,7 +55,9 @@ def test_odd_learned_head_dimension_is_legal_and_paging_unavailable(native):
     bundle.model.config.head_dim=3
     adapter=native_adapter(bundle)
     assert adapter.spec.head_dim==3 and adapter.spec.layers[0].position_policy=='learned'
-    with pytest.raises(ModelCapabilityUnsupported,match='paged'):
+    validate_mode(bundle,build_cache_plan(bundle),'paged')
+    bundle.model.config.head_dim=257
+    with pytest.raises(ModelCapabilityUnsupported,match='dimensions'):
         validate_mode(bundle,build_cache_plan(bundle),'paged')
 
 

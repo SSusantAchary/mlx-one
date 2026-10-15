@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from mlx_one.core.cache import KVCache, QuantizedKVCache
+from mlx_one.engine.cache import CacheBundle
 from mlx_one.engine.contracts import (
     BatchPlan,
     Phase,
@@ -17,6 +18,7 @@ from mlx_one.engine.contracts import (
     ScheduledSequence,
 )
 from mlx_one.engine.runners import CausalLMRunner
+from mlx_one.engine.transactions import commit_evaluated, release_all
 
 
 @dataclass(frozen=True)
@@ -103,23 +105,73 @@ class BatchScheduler:
                 selected_prefill.append(request)
                 prefill_budget -= len(request.token_ids)
         self._prefill_cursor += max(len(selected_prefill), 1)
-        groups = []
-        for phase in (selected_decode,selected_prefill):
-            buckets = {}
-            for request in phase:
-                key = tuple(component.batch_key(len(request.token_ids))
-                            if callable(getattr(component,"batch_key",None)) else None
-                            for component in getattr(request,"cache",()))
-                buckets.setdefault(key,[]).append(request)
-            groups.extend(tuple(group) for group in buckets.values())
-        return tuple(groups)
+        return (*execution_groups(selected_decode),*execution_groups(selected_prefill))
+
+
+def execution_groups(requests):
+    """Partition state transition buckets without changing request ownership."""
+    buckets = {}
+    for request in requests:
+        key = tuple(component.batch_key(len(request.token_ids))
+                    if callable(getattr(component,"batch_key",None)) else None
+                    for component in getattr(request,"cache",()))
+        buckets.setdefault(key,[]).append(request)
+    return tuple(tuple(rows) for rows in buckets.values())
+
+
+def execute_compatible(runner, requests):
+    """Qualification helpers use the same state buckets as actor scheduling."""
+    if not requests or len({r.request_id for r in requests}) != len(requests):
+        raise ValueError("execution buckets require unique nonempty request mappings")
+    outputs = {}
+    for group in execution_groups(requests):
+        result=runner.execute(group)
+        if result.request_ids != tuple(r.request_id for r in group):
+            raise ValueError("execution bucket result mapping mismatch")
+        for request_id,logits,count in zip(result.request_ids,result.logits,
+                result.committed_token_counts,strict=True):
+            if request_id in outputs:
+                raise ValueError("duplicate execution bucket request")
+            outputs[request_id]=(logits,count)
+    return RunnerOutput(tuple(r.request_id for r in requests),
+        tuple(outputs[r.request_id][0] for r in requests),
+        tuple(outputs[r.request_id][1] for r in requests))
 
 
 class _PackedCache:
     """Exact temporary buffers; offset is physical padded history, not model position."""
 
-    def __init__(self, keys, values, offset):
+    def __init__(self, keys, values, offset, *, lengths=(), widths=(), compact_attention=False):
         self.keys, self.values, self.offset = keys, values, offset
+        self.lengths,self.widths=lengths,widths
+        if compact_attention:
+            self.attend=self._attend_compact
+
+    def _attend_compact(self,queries,keys,values,*,scale,position_ids):
+        """Keep each INT8 row's reduction width identical to independent execution.
+
+        QKV/MLP still execute in one batched model call. Only attention reductions
+        exclude physical padding, whose zeros otherwise change FP32 reduction trees.
+        """
+        import mlx.core as mx
+
+        from mlx_one.models.shared.execution import attention_matmul
+
+        history=self.offset
+        self.update(keys,values)
+        output=mx.zeros(queries.shape,dtype=queries.dtype)
+        repeats=queries.shape[1]//keys.shape[1]
+        for row,(old,width) in enumerate(zip(self.lengths,self.widths,strict=True)):
+            begin,end=history-old,history+width
+            k,v=(mx.repeat(t[row:row+1,:,begin:end],repeats,axis=1)
+                 for t in (self.keys,self.values))
+            q=queries[row:row+1,:,:width]
+            scores=attention_matmul(q,k.transpose(0,1,3,2))*scale
+            allowed=mx.arange(old+width)[None,:] <= old+mx.arange(width)[:,None]
+            scores=scores+mx.where(allowed,0.0,-float("inf"))
+            probabilities=mx.softmax(scores,axis=-1,precise=True)
+            output[row:row+1,:,:width]=attention_matmul(probabilities,v).astype(queries.dtype)
+        return output
 
     def update(self, keys, values):
         import mlx.core as mx
@@ -282,7 +334,11 @@ class BatchedDenseRunner(CausalLMRunner):
                             old_keys[:, :, :length, :])
                         values[row:row + 1, :, history - length:history, :] = (
                             old_values[:, :, :length, :])
-                packed.append(_PackedCache(keys, values, history))
+                packed.append(_PackedCache(keys, values, history,
+                    lengths=tuple(r.cache[0].offset for r in requests),
+                    widths=tuple(len(r.token_ids) for r in requests),
+                    compact_attention=bool(arithmetic_scratch)
+                        and self.adapter.spec.architecture in {"qwen2","qwen3","llama"}))
             output = self.adapter.forward(mx.array(ids), cache=tuple(packed),
                                         attention_mask=mx.array(mask),
                                         position_ids=mx.array(positions))
@@ -313,12 +369,8 @@ class BatchedDenseRunner(CausalLMRunner):
                     mx.eval(logits)
                     compact_logits.append(logits)
             except BaseException:
-                for layers in staged:
-                    for cache in layers:
-                        cache.reset()
+                release_all(tuple(CacheBundle(tuple(layers)) for layers in staged))
                 raise
-            from mlx_one.engine.cache import CacheBundle
-            from mlx_one.engine.transactions import commit_evaluated, release_all
 
             drafts = tuple(CacheBundle(tuple(layers)) for layers in staged)
             try:
@@ -333,6 +385,9 @@ class BatchedDenseRunner(CausalLMRunner):
                            "padding_efficiency": plan.total_scheduled_tokens / (count * width),
                            "transient_reserved_bytes": transient,
                            "arithmetic_scratch_bound_bytes": arithmetic_scratch,
+                           "attention_reduction": "compact-real-row" if any(
+                               callable(getattr(c,"attend",None)) for c in packed)
+                               else "padded-batch",
                            "adapter_transient_bound_bytes": adapter_scratch,
                            "packed_history_bytes": per_token * count * history,
                            "replacement_cache_bytes": per_token * replacement_tokens,

@@ -84,3 +84,23 @@ def test_dense_kv_keeps_independent_key_and_value_widths(native):
     a,b=cache.update(keys,values)
     assert a.shape==(1,2,3,4) and b.shape==(1,2,3,6)
     cache.clone().release()
+
+
+def test_failed_clone_attempts_all_staged_cleanup():
+    from mlx_one.engine.cache_errors import CacheCorruptionError
+
+    released=[]
+    class Entry:
+        def __init__(self,name):
+            self.name=name
+        def clone(self):
+            if self.name=='allocation':
+                raise MemoryError('staging allocation failed')
+            return self
+        def reset(self):
+            released.append(self.name)
+            if self.name=='corrupt':
+                raise CacheCorruptionError('cleanup corruption')
+    with pytest.raises(CacheCorruptionError,match='cleanup corruption'):
+        CacheBundle(tuple(Entry(name) for name in ('corrupt','healthy','allocation'))).clone()
+    assert released==['corrupt','healthy']

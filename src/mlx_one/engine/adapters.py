@@ -10,7 +10,7 @@ from types import SimpleNamespace
 from mlx_one.engine.contracts import LayerExecutionSpec
 
 ADAPTER_VERSION = "native-adapter-v2"
-EXECUTION_POLICY_VERSION = "native-float-execution-v3"
+EXECUTION_POLICY_VERSION = "native-float-execution-v4"
 DENSE_FAMILIES = {"qwen2", "qwen3", "llama"}
 
 
@@ -171,11 +171,9 @@ class NativeModelAdapter:
     def memory_estimate(self, tokens):
         from mlx_one.engine.cache import array_nbytes
 
-        config = self.bundle.model.config
         return {"model_storage_bytes": array_nbytes(self.bundle.model.parameters()),
             "fp16_kv_bytes": self.plan.bytes_per_token() * tokens,
-            "carry_bytes": sum(k == "conv" for k in self.spec.state_kinds)
-                * getattr(config, "hidden_size", 0) * (getattr(config, "conv_L_cache", 1) - 1) * 2}
+            "carry_bytes": self.plan.carry_bytes()}
 
     def additional_transient_bytes(self, *, batch, chunk):
         config = getattr(self.bundle.model.config, "text_config", self.bundle.model.config)
@@ -238,6 +236,6 @@ def execution_contract(bundle, plan, mode):
             if callable(getattr(bundle.model, "parameters", None)) else (),
         "components": [{**asdict(s), "storage": (
             "segmented-arena" if mode == "paged" and s.kind == "full_kv" else
-            "request-local-carry" if s.kind == "conv" else "dense")}
+            "request-local-carry" if s.kind in {"conv","recurrent"} else "dense")}
             for s in plan.state_specs]}
     return json.loads(json.dumps(payload, sort_keys=True))

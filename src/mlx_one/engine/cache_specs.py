@@ -146,6 +146,16 @@ class CachePlan:
             for item in self.layer_specs
         )
 
+    def carry_bytes(self) -> int:
+        """Declared private carry storage; unknown floating types use FP32 bounds."""
+        import math
+
+        return sum(math.prod(shape) * (2 if index < len(spec.state_dtypes)
+                   and spec.state_dtypes[index] in {"float16","bfloat16"} else 4)
+                   for spec in self.layer_specs
+                   if spec.kind in {CacheKind.CONV_STATE,CacheKind.RECURRENT_STATE}
+                   for index,shape in enumerate(spec.state_shapes))
+
     @property
     def topology_digest(self) -> str:
         payload = {

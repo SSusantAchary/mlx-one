@@ -21,6 +21,11 @@ hybrid runners, transactional cache ownership, prefix indexes, segmented arenas,
 memory reservations and checksummed evidence. Optimized modes remain gated;
 omitted-mode behavior and public generation/HTTP/SSE interfaces are preserved.
 `auto` requires matching qualification evidence, otherwise reference dense.
+PR-03 through PR-10 are implemented as ordered experimental review boundaries.
+Latest validation: 875 backend-free tests, 129 native tests and four pinned dense/
+prefix regressions pass. **Pinned Qwen3-small INT8 paged B2 still fails FP16 logits
+qualification**; greedy agreement does not override that failure. No production
+or performance promotion follows from these changes.
 
 ## PR-00: registry baseline and prefix-failure reproduction
 
@@ -184,3 +189,30 @@ failed writes preserve the previous generation. 134 affected CPU tests and eight
 tiny native/legacy tests pass, including B1/B2/B4, evaluated cancellation, prefix
 restoration, serialization and divergent continuation. Real Qwen3.5 checkpoint,
 VLM serving, MTP and performance qualification remain pending or later milestones.
+
+PR-10 expands direct segmented paging through the same per-layer adapters for
+GPT-2, Llama, Qwen2/3, OpenELM, Qwen2-MoE, LFM2/MoE and Qwen3.5 text attention.
+Convolution/recurrent tensors remain private; sliding-window paging is explicitly
+rejected. Existing kernels/layouts are reused. Layout/position validation and
+reversible multi-row adoption prevent partial reconciliation; cleanup attempts all
+staged releases. Forecasts and diagnostics include both compound tensors. The
+lifecycle/parity harness uses the scheduler's state buckets and compares complete
+compound state, including serialized resume/fork/cancellation/reload.
+
+Native checkpoint tests exposed padded INT8 attention changing reduction widths.
+Compact real-row reductions repair dense B2/B4 while retaining one batched model
+call. Floating execution policy v4 invalidates older arithmetic evidence; omitted
+policy dispatch remains unchanged. Final pinned Qwen3-small dense B1/B2/B4 and
+fresh-full-prefill prefix checks pass with zero measured logits error. The paged
+B2/page-16 checkpoint comparison remains **failed** at unchanged FP16 tolerances
+(maximum logits error 0.033203125; greedy agreement 1.0). It has no repaired or
+qualified replacement; further paged checkpoint expansion is stopped.
+
+Final validation: **875 passed, 28 skipped**, two inherited warnings; **129 native
+regressions** and **four pinned dense/prefix tests** pass under Metal/RSS preflight
+and the 21.33 GiB watchdog. Ruff retains exactly **65 inherited findings**, with
+zero new findings. The 28 opt-in skips in the backend-free run are not native
+passes. Other real checkpoints, multi-model stress, paged INT8 correctness and
+performance/service gates remain unqualified. All 55 pre-existing local file
+states are preserved. Generated runs, failures, source/test checksums and CPU
+logs remain local under `benchmarks/results/p1/<host>/`; none are committed.

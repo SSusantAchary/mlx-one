@@ -11,10 +11,10 @@ from contextlib import ExitStack
 from dataclasses import replace
 
 from mlx_one.engine.arena import PersistentPageTable, SegmentedPageArena
-from mlx_one.engine.batching import BatchedDenseRunner, request_cancelled
+from mlx_one.engine.batching import BatchedDenseRunner
 from mlx_one.engine.block_cache import BlockLayout
 from mlx_one.engine.block_kv import BlockKVCache
-from mlx_one.engine.cache import array_nbytes
+from mlx_one.engine.cache import CacheBundle, array_nbytes
 from mlx_one.engine.contracts import BatchPlan, RunnerOutput, ScheduledSequence
 from mlx_one.engine.modes import ModelCapabilityUnsupported
 
@@ -153,6 +153,18 @@ class PagedKVCache(BlockKVCache):
                 self.pool.seal(tail.block_id)
             self.page_table.update(len(self._blocks) - 1, self._blocks[-1])
 
+    def validate(self, spec):
+        if (spec.kind != "full_kv" or spec.layer_id != self.layer_id or self.offset < 0
+                or spec.key_head_dim != spec.value_head_dim):
+            raise ValueError("paged component topology mismatch")
+        self.page_table.validate(self._blocks)
+        for ref in self._blocks:
+            layout=ref.block.layout
+            if (layout.num_kv_heads != spec.num_kv_heads or layout.head_dim != spec.key_head_dim
+                    or layout.key_dtype != self.dtype or layout.value_dtype != self.dtype
+                    or layout.layer_id != self.layer_id or layout.kernel_version != KERNEL_VERSION):
+                raise ValueError("paged component layout mismatch")
+
     def replace_from(self, draft):
         table = draft.page_table
         super().replace_from(draft)
@@ -235,6 +247,13 @@ class PagedBatchCache:
 
         from mlx_one.engine.paged_attention import paged_attention
 
+        if position_ids is not None:
+            if position_ids.shape != (len(self.rows),queries.shape[2]):
+                raise ValueError("paged query position shape mismatch")
+            for row,(cache,width) in enumerate(zip(self.rows,self.widths,strict=True)):
+                if not bool(mx.all(position_ids[row,:width]
+                                   == mx.arange(cache.offset,cache.offset+width)).item()):
+                    raise ValueError("paged query logical positions mismatch")
         positions = []
         for i, (cache, width) in enumerate(zip(self.rows, self.widths, strict=True)):
             positions.append(tuple(range(cache.offset, cache.offset + queries.shape[2])))
@@ -266,7 +285,7 @@ class PagedRunner(BatchedDenseRunner):
         dtype = next(d for d in tensor_dtypes(self.bundle.model.parameters())
                      if d in {"float16", "bfloat16"})
         return CacheBundle(tuple(PagedKVCache(self.contract_pool, layer_id=i, dtype=dtype)
-                                 for i in range(self.bundle.model.config.num_hidden_layers)))
+                                 for i in range(len(self.adapter.plan.layer_specs))))
 
     def _resolve(self, plan, phase):
         if plan.execution_mode not in {"dense", "paged"}:
@@ -305,12 +324,22 @@ class PagedRunner(BatchedDenseRunner):
             if (not r.cache or any(not isinstance(c, PagedKVCache) for c in r.cache)
                     or len({c.offset for c in r.cache}) != 1
                     or any(c.layer_id != i for i, c in enumerate(r.cache))
-                    or len(r.cache) != first.bundle.model.config.num_hidden_layers):
+                    or len(r.cache) != len(self.adapter.spec.layers)):
                 raise ValueError("invalid paged layer mappings")
             if r.handle is not None:
                 r.runtime._validate_handle(r.handle)
                 if r.handle.bundle.entries is not r.cache:
                     raise ValueError("paged request does not own its cache mapping")
+        for request in requests:
+            for cache, layout in zip(request.cache,self.adapter.spec.layers,strict=True):
+                if cache.dtype != self.adapter.activation_dtype:
+                    raise ModelCapabilityUnsupported(
+                        "paged storage differs from execution precision")
+                for reference in cache._blocks:
+                    stored=reference.block.layout
+                    if (stored.num_kv_heads != layout.kv_heads or stored.head_dim != layout.key_dim
+                            or stored.layer_id != layout.layer_id):
+                        raise ValueError("paged layer layout differs from native adapter")
         if len({(id(c.pool), c.dtype, c.bits) for r in requests for c in r.cache}) != 1:
             raise ValueError("incompatible paged pools or precision")
         widths = tuple(len(r.token_ids) for r in requests)
@@ -321,18 +350,18 @@ class PagedRunner(BatchedDenseRunner):
                    "synchronized_kernel_dispatch_ms": 0.0, "gpu_timestamp_latency_ms": None}
         drafts = []
         runtime = first.runtime
-        heads = int(first.bundle.model.config.num_attention_heads)
-        dim = int(getattr(first.bundle.model.config, "head_dim", 0)
-                  or first.bundle.model.config.hidden_size // heads)
-        transient = len(requests) * heads * width * (dim + 2) * 4 * 3
-        transient += (len(requests) * len(first.cache) * dim
-                      * first.bundle.model.config.num_key_value_heads
-                      * first.cache[0].block_tokens * 16 * 4)
+        transient = sum(len(requests) * layer.query_heads * width
+                        * (layer.key_dim + 2) * 4 * 3 for layer in self.adapter.spec.layers)
+        transient += sum(len(requests) * layer.kv_heads * layer.key_dim
+                         * first.cache[0].block_tokens * 16 * 4
+                         for layer in self.adapter.spec.layers)
+        adapter_scratch=self.adapter.additional_transient_bytes(batch=len(requests),chunk=width)
+        transient += adapter_scratch
         transient += 16 * sum(array_nbytes(ref.block.state) for r in requests for c in r.cache
                          for ref in c._blocks if not ref.block.immutable)
         from mlx_one.engine.pressure import execution_forecast
 
-        transient = execution_forecast(first.runtime, first.bundle.model.config,
+        transient = execution_forecast(first.runtime, self.adapter.activation_config,
                                         batch=len(requests),
                                         chunk=width, history=max(r.cache[0].offset
                                                                  for r in requests),
@@ -354,8 +383,9 @@ class PagedRunner(BatchedDenseRunner):
                                for layer in range(len(first.cache)))
                 ids = mx.array([list(r.token_ids) + [0] * (width - len(r.token_ids))
                                 for r in requests])
-                positions = mx.array([list(range(r.cache[0].offset, r.cache[0].offset + width))
-                                      for r in requests])
+                positions = mx.array([list(range(r.cache[0].offset,
+                                                r.cache[0].offset + len(r.token_ids)))
+                                      + [0] * (width-len(r.token_ids)) for r in requests])
                 output = self.adapter.forward(ids, cache=packed, position_ids=positions)
                 logits = []
                 for i, n in enumerate(widths):
@@ -365,18 +395,14 @@ class PagedRunner(BatchedDenseRunner):
                     result[...] = output.logits[i:i + 1, begin:n]
                     logits.append(result)
                 mx.eval(*logits)
-                for r, layers in zip(requests, drafts, strict=True):
-                    if request_cancelled(r):
-                        continue
-                    for original, draft in zip(r.cache, layers, strict=True):
-                        original.replace_from(draft)
-                    if r.handle is not None:
-                        r.handle.computed_tokens = r.cache[0].offset
-                        runtime.reconcile(r.handle)
+                from mlx_one.engine.transactions import commit_evaluated
+
+                commit_evaluated(requests,tuple(CacheBundle(tuple(row)) for row in drafts),
+                                 specs=self.adapter.plan.state_specs)
             finally:
-                for layers in drafts:
-                    for c in layers:
-                        c.reset()
+                from mlx_one.engine.transactions import release_all
+
+                release_all(tuple(CacheBundle(tuple(row)) for row in drafts))
         metrics["arena"] = runtime.block_pool.stats() if runtime is not None else {}
         self.last_trace = {**metrics, "phase": first.phase,
                            "request_ids": [s.request_id for s in plan.sequences],
@@ -385,5 +411,7 @@ class PagedRunner(BatchedDenseRunner):
                            "real_tokens": sum(widths), "padded_tokens": len(requests) * width,
                            "padding_efficiency": sum(widths) / (len(requests) * width),
                            "transient_reserved_bytes": transient,
+                           "layer_layouts": [vars(layer) for layer in self.adapter.spec.layers],
+                           "adapter_transient_bound_bytes": adapter_scratch,
                            "duration_ms": (time.perf_counter() - started) * 1000}
         return RunnerOutput(tuple(r.request_id for r in requests), tuple(logits), widths)

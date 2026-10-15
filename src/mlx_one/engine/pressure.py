@@ -220,8 +220,16 @@ def activation_forecast(config, *, batch, chunk, history, calibrated_peak=None):
         if calibrated_peak < 0:
             raise ValueError("negative calibrated peak")
         return {"bytes": calibrated_peak, "source": "matching-measured-peak"}
-    hidden, heads = int(config.hidden_size), int(config.num_attention_heads)
-    intermediate = int(getattr(config, "intermediate_size", hidden * 4))
+    config = getattr(config,"text_config",config)
+    hidden = int(getattr(config,"hidden_size",getattr(config,"n_embd",
+                 getattr(config,"model_dim",0))))
+    heads = getattr(config,"num_attention_heads",getattr(config,"n_head",
+                    getattr(config,"num_query_heads",0)))
+    heads = max(heads) if isinstance(heads,(tuple,list)) else int(heads)
+    if min(hidden,heads) < 1:
+        raise ValueError("activation forecast requires declared model dimensions")
+    intermediate = int(getattr(config,"intermediate_size",getattr(config,"inner_dim",
+                       max(getattr(config,"ffn_dims",(hidden*4,))))) or hidden*4)
     vocab = int(getattr(config, "vocab_size", 0))
     amount = batch * chunk * (hidden * 12 + intermediate * 4 + vocab * 4)
     amount += batch * heads * chunk * (history + chunk) * 4

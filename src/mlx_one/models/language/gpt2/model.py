@@ -44,6 +44,7 @@ class GPT2Attention(nn.Module):
         mask: Any | None,
         cache: Any | None,
         output_attentions: bool,
+        position_ids: Any | None = None,
     ) -> tuple[Any, Any | None]:
         batch, length, hidden_size = hidden.shape
         dtype = getattr(self, "_mlx_one_activation_dtype", None)
@@ -53,17 +54,23 @@ class GPT2Attention(nn.Module):
         query = query.reshape(shape).transpose(0, 2, 1, 3)
         key = key.reshape(shape).transpose(0, 2, 1, 3)
         value = value.reshape(shape).transpose(0, 2, 1, 3)
-        if cache is not None:
-            key, value = cache.update(key, value)
-        stable = dtype == "float16" and getattr(self.c_attn, "bits", None) == 8
-        scores = (attention_matmul(query, key.transpose(0, 1, 3, 2)) if stable else
-                  query @ key.transpose(0, 1, 3, 2)) * self.scale
-        if dtype is not None:
-            scores = scores.astype(mx.float32)
-        if mask is not None:
-            scores = scores + mask
-        probabilities = self.attn_dropout(mx.softmax(scores, axis=-1, precise=True))
-        attended = attention_matmul(probabilities, value) if stable else probabilities @ value
+        if cache is not None and callable(getattr(cache,"attend",None)):
+            if output_attentions:
+                raise ValueError("paged attention does not materialize attention probabilities")
+            attended=cache.attend(query,key,value,scale=self.scale,position_ids=position_ids)
+            probabilities=None
+        else:
+            if cache is not None:
+                key, value = cache.update(key, value)
+            stable = dtype == "float16" and getattr(self.c_attn, "bits", None) == 8
+            scores = (attention_matmul(query, key.transpose(0, 1, 3, 2)) if stable else
+                      query @ key.transpose(0, 1, 3, 2)) * self.scale
+            if dtype is not None:
+                scores = scores.astype(mx.float32)
+            if mask is not None:
+                scores = scores + mask
+            probabilities = self.attn_dropout(mx.softmax(scores, axis=-1, precise=True))
+            attended = attention_matmul(probabilities, value) if stable else probabilities @ value
         attended = attended.transpose(0, 2, 1, 3).reshape(batch, length, hidden_size)
         if dtype is not None:
             attended = attended.astype(getattr(mx, dtype))
@@ -99,12 +106,14 @@ class GPT2Block(nn.Module):
         mask: Any | None,
         cache: Any | None,
         output_attentions: bool,
+        position_ids: Any | None = None,
     ) -> tuple[Any, Any | None]:
         attended, weights = self.attn(
             self.ln_1(hidden),
             mask=mask,
             cache=cache,
             output_attentions=output_attentions,
+            position_ids=position_ids,
         )
         hidden = hidden + attended
         return hidden + self.mlp(self.ln_2(hidden),
@@ -161,6 +170,7 @@ class GPT2Model(nn.Module):
                 mask=mask,
                 cache=None if cache is None else cache[index],
                 output_attentions=output_attentions,
+                position_ids=position_ids,
             )
             if states is not None:
                 states.append(hidden)

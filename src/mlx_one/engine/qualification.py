@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 from dataclasses import replace
 
-from mlx_one.engine.batching import BatchedDenseRunner, ForwardRequest
+from mlx_one.engine.batching import BatchedDenseRunner, ForwardRequest, execute_compatible
 from mlx_one.engine.cache import CacheBundle
 from mlx_one.engine.cache_manager import CacheManager
 from mlx_one.engine.cache_specs import CacheConfig
@@ -77,11 +77,11 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
                         if part:
                             active.append(replace(request, token_ids=part))
                             indices.append(i)
-                    for index, logits in zip(indices, runner.execute(tuple(active)).logits,
-                                             strict=True):
+                    batch_result=execute_compatible(runner,tuple(active))
+                    for index, logits in zip(indices,batch_result.logits,strict=True):
                         results[index] = logits
                 return tuple(results)
-            return runner.execute(tuple(requests)).logits
+            return execute_compatible(runner,tuple(requests)).logits
         request = requests[0]
         staged = CacheBundle(request.cache).clone()
         try:
@@ -121,6 +121,12 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
                             **compare_logits(right[:, :, start:start + block.token_count],
                                              left[:, :, :block.token_count], atol=atol, rtol=rtol)})
                     start += block.token_count
+            elif getattr(actual_cache,"checkpoint_semantics",None) is not None:
+                for name in ("conv_state","recurrent_state"):
+                    component_rows.append({"request":index,"layer":layer,"kind":"recurrent",
+                        "tensor":name,"committed_position":actual_cache.offset,
+                        **compare_logits(getattr(reference_cache,name),getattr(actual_cache,name),
+                                         atol=atol,rtol=rtol)})
             elif hasattr(actual_cache, "kernel_size"):
                 component_rows.append({"request": index, "layer": layer, "kind": "conv",
                     "committed_position": actual_cache.offset,

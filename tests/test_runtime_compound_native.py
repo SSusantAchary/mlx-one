@@ -1,7 +1,9 @@
 """Opt-in tiny Qwen3.5 compound-state correctness, never checkpoint qualification."""
+import json
 import os
 import threading
 from dataclasses import replace
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -135,3 +137,28 @@ def test_native_compound_snapshot_prefix_fork(tmp_path):
         runtime.close()
     runtime.close()
     assert runtime.stats().active_handles == runtime.stats().reserved_bytes == 0
+
+
+@pytest.mark.parametrize('mode',['experimental_hybrid_batch','paged'])
+def test_native_compound_lifecycle_profile(mode,tmp_path):
+    from mlx_one.engine.lifecycle import hybrid_lifecycle
+
+    mx.random.seed(67)
+    bundle=compound_bundle(tmp_path)
+    bundle.tokenizer.encode=lambda text:[1+ord(c)%50 for c in text]
+    def reload_bundle():
+        mx.random.seed(67)
+        return compound_bundle(tmp_path)
+    profile=SimpleNamespace(inference_mode=mode,cache_type='f16',page_tokens=16,atol=None,rtol=None)
+    result=hybrid_lifecycle(bundle,profile,tmp_path/'lifecycle',reload_bundle=reload_bundle)
+    assert result['status']=='passed',result
+    assert {'conv_state','recurrent_state'} <= {r.get('tensor') for r in result['comparisons']}
+    assert all(c['active_handles']==c['reserved_bytes']==0 for c in result['cleanup'])
+
+    destination=os.environ.get('MLX_ONE_NATIVE_RESULTS_DIR')
+    if destination:
+        directory=Path(destination)
+        directory.mkdir(parents=True,exist_ok=True)
+        (directory/f'compound-lifecycle-{mode}.json').write_text(json.dumps({
+            **result,'scope':'tiny native correctness only','qualification_promoted':False},
+            indent=2)+'\n')

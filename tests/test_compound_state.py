@@ -105,3 +105,20 @@ def test_compound_failed_publication_preserves_snapshot(advanced,tmp_path,monkey
     assert restored.entries[0].offset==8
     original.release()
     restored.release()
+
+
+def test_bucketed_execution_restores_original_result_order(native):
+    from mlx_one.engine.batching import execute_compatible
+    from mlx_one.engine.contracts import RunnerOutput
+
+    requests=[]
+    for i,offset in enumerate((0,3,0)):
+        c=component()
+        c._offset=offset
+        requests.append(ForwardRequest(native,(i+1,),(c,),'decode',(),request_id=str(i)))
+    class Runner:
+        def execute(self,group):
+            return RunnerOutput(tuple(r.request_id for r in group),
+                                tuple(r.token_ids[0] for r in group),tuple(1 for _ in group))
+    result=execute_compatible(Runner(),tuple(requests))
+    assert result.request_ids==('0','1','2') and result.logits==(1,2,3)

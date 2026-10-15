@@ -49,13 +49,16 @@ from mlx_one.engine.selection import (
 def advanced(native, monkeypatch):
     import mlx.core as mx
 
-    for name in ("pad", "stack", "min", "max", "maximum", "round", "clip", "uint8",
+    for name in ("arange", "pad", "stack", "min", "max", "maximum", "round", "clip", "uint8",
                  "float32", "int32", "where", "repeat", "exp", "abs", "mean", "all"):
         monkeypatch.setattr(mx, name, getattr(np, name), raising=False)
     def softmax(x, axis=-1, precise=True):
         y = np.exp(x.astype(np.float32) - x.max(axis=axis, keepdims=True))
         return (y / y.sum(axis=axis, keepdims=True)).astype(x.dtype)
     monkeypatch.setattr(mx, "softmax", softmax, raising=False)
+    def gather_mm(left,right,*,lhs_indices,rhs_indices):
+        return np.stack([left[i]@right[j] for i,j in zip(lhs_indices,rhs_indices,strict=True)])
+    monkeypatch.setattr(mx,"gather_mm",gather_mm,raising=False)
     monkeypatch.setattr("mlx_one.engine.paged_attention.paged_attention", numpy_paged_attention)
 
     class Model:

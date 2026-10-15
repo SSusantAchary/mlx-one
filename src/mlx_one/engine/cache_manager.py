@@ -226,9 +226,7 @@ class CacheManager:
             tokens = ((tokens + step - 1) // step) * step
         amount = self.plan.bytes_per_token(key_bits=key_bits, value_bits=value_bits) * tokens
         if self.hybrid_state:
-            config = self.bundle.model.config
-            amount += sum(1 for s in self.plan.layer_specs if s.kind.value == "conv_state") * (
-                config.conv_L_cache - 1) * config.hidden_size * 4
+            amount += self.plan.carry_bytes()
         if handle.backend == "paged" and key_bits < 16:
             # FP16 scales+biases per 32 scalars plus floating tails and sealing overlap.
             amount = sum((s.num_kv_heads or 0) * tokens * sum(
@@ -668,10 +666,10 @@ class CacheManager:
                     prefix = self.hybrid_prefix.stats()
                     live_carries = sum(cache_allocated_nbytes(c) for h in handles
                                        for c in h.bundle.entries
-                                       if getattr(c, "kind", None) == "conv")
+                                       if getattr(c, "kind", None) in {"conv","recurrent"})
                     prefix_carries = sum(cache_allocated_nbytes(c)
                         for b, _ in self.hybrid_prefix.entries.values() for c in b.entries
-                        if getattr(c, "kind", None) == "conv")
+                        if getattr(c, "kind", None) in {"conv","recurrent"})
                     physical += live_carries + prefix_carries
                     pinned += prefix_carries
                     blocks["live_bytes"] += live_carries + prefix_carries

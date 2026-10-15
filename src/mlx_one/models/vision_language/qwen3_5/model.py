@@ -596,12 +596,12 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
 
     def make_state_components(self, key_type, pool=None):
         from mlx_one.engine.components import FullKVComponent
+        from mlx_one.engine.paged import PagedKVComponent
 
-        if pool is not None:
-            raise ValueError("Qwen3.5 hybrid paging is unavailable")
         dtype = "bfloat16" if key_type == "bf16" else "float16"
-        return tuple(cache if isinstance(cache,CompoundLinearComponent) else FullKVComponent(dtype)
-                     for cache in self.make_cache())
+        return tuple(cache if isinstance(cache,CompoundLinearComponent) else
+                     PagedKVComponent(pool,layer_id=i,dtype=dtype) if pool is not None
+                     else FullKVComponent(dtype) for i,cache in enumerate(self.make_cache()))
 
     def __call__(
         self,

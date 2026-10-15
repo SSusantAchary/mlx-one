@@ -123,3 +123,33 @@ def test_scratch_bound_covers_casts_and_index_overlap():
     assert bound>=observed
     with pytest.raises(ValueError,match='dimensions'):
         attention_scratch_bound(batch=1,heads=1,head_dim=8,chunk=0,history=0)
+
+
+def test_compact_ragged_attention_excludes_padding_from_reduction_width(core):
+    from mlx_one.engine.batching import _PackedCache
+
+    core.float16=np.float16
+    core.where=np.where
+    def softmax(x,axis=-1,precise=True):
+        y=np.exp(x-x.max(axis=axis,keepdims=True))
+        return y/y.sum(axis=axis,keepdims=True)
+    core.softmax=softmax
+    rng=np.random.default_rng(71)
+    keys=rng.normal(size=(2,1,10,4)).astype(np.float16)
+    values=rng.normal(size=keys.shape).astype(np.float16)
+    # The short row's five left-padding slots must never enter a reduction.
+    keys[1,:,:5]=values[1,:,:5]=1000
+    q=rng.normal(size=(2,2,3,4)).astype(np.float16)
+    k=rng.normal(size=(2,1,3,4)).astype(np.float16)
+    v=rng.normal(size=k.shape).astype(np.float16)
+    cache=_PackedCache(keys,values,7,lengths=(7,2),widths=(3,1),compact_attention=True)
+    result=cache.attend(q,k,v,scale=.5,position_ids=None)
+    for row,(old,width) in enumerate(((7,3),(2,1))):
+        rk,rv=(np.repeat(t[row:row+1,:,7-old:7+width],2,axis=1).astype(np.float32)
+               for t in (cache.keys,cache.values))
+        scores=q[row:row+1,:,:width].astype(np.float32)@rk.transpose(0,1,3,2)*.5
+        valid=np.arange(old+width)[None,:] <= old+np.arange(width)[:,None]
+        expected=softmax(np.where(valid,scores,-np.inf))@rv
+        np.testing.assert_array_equal(result[row:row+1,:,:width],expected.astype(np.float16))
+    assert [call[1].shape[-1] for call in core.calls[::2]]==[10,3]
+    assert not np.any(result[1,:,1:])

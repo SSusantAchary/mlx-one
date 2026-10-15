@@ -319,7 +319,7 @@ def validate_identity(profile: BaselineProfile, runtime: dict[str, Any]) -> None
     if (bool(caps.get("paged_attention")) != (profile.inference_mode == "paged")
             or bool(caps.get("hybrid_prefix_restore"))
             != (profile.inference_mode == "experimental_hybrid_batch"
-                or profile.inference_mode == "paged" and any(c.get("kind") == "conv"
+                or profile.inference_mode == "paged" and any(c.get("kind") in {"conv","recurrent"}
                     for c in report.get("component_capabilities", [])))):
         raise BaselineError("capability differs from selected explicit execution path")
     if profile.qualification_track == "p1":

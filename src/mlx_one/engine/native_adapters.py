@@ -57,11 +57,14 @@ class CausalArchitectureAdapter(NativeModelAdapter):
             if (request.cache[0].offset != row.start_pos or request.phase != row.phase
                     or len(request.token_ids) != row.input_token_count):
                 raise ValueError('adapter scheduled boundary mismatch')
-        return self._runner_for_execution().execute(packed)
+        return self._runner_for_execution(packed).execute(packed)
 
-    def _runner_for_execution(self):
+    def _runner_for_execution(self,packed=()):
         from mlx_one.engine.batching import BatchedDenseRunner
+        from mlx_one.engine.paged import PagedKVCache, PagedRunner
 
+        if packed and isinstance(packed[0].cache[0],PagedKVCache):
+            return PagedRunner(self.bundle)
         return BatchedDenseRunner(self.bundle)
 
     def unpack(self, output):
@@ -82,7 +85,6 @@ class CausalArchitectureAdapter(NativeModelAdapter):
 
 class GPT2Adapter(CausalArchitectureAdapter):
     supported_architectures = frozenset({'gpt2'})
-    supports_paging = False
 
 
 class LlamaAdapter(CausalArchitectureAdapter):
@@ -100,7 +102,6 @@ class Qwen3Adapter(CausalArchitectureAdapter):
 
 class OpenELMAdapter(CausalArchitectureAdapter):
     supported_architectures = frozenset({'openelm'})
-    supports_paging = False
 
 
 class Qwen2MoeAdapter(CausalArchitectureAdapter):
@@ -121,21 +122,19 @@ class LFM2Adapter(CausalArchitectureAdapter):
         state.cache=CacheBundle(hybrid_components(self.bundle))
         return state
 
-    def _runner_for_execution(self):
+    def _runner_for_execution(self,packed=()):
         from mlx_one.engine.hybrid import HybridRunner
 
         return HybridRunner()
 
 
 class LFM2MoeAdapter(LFM2Adapter):
-    supports_paging = False
     supported_architectures = frozenset({'lfm2_moe'})
 
 
 class Qwen35Adapter(LFM2Adapter):
     supported_architectures = frozenset({'qwen3_5'})
     supported_states = frozenset({'full_kv','recurrent'})
-    supports_paging = False
 
     def __init__(self,bundle,plan,*,allow_bfloat16=False,allow_hybrid=False):
         super().__init__(bundle,plan,allow_bfloat16=False,allow_hybrid=allow_hybrid)

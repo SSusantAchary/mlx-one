@@ -84,21 +84,24 @@ class OpenELMAttention(nn.Module):
         )
         if dtype is not None:
             queries, keys, values = (t.astype(getattr(mx, dtype)) for t in (queries, keys, values))
-        if cache is not None:
-            keys, values = cache.update(keys, values)
-        repeats = self.num_query_heads // self.num_kv_heads
-        if repeats != 1:
-            keys = mx.repeat(keys, repeats, axis=1)
-            values = mx.repeat(values, repeats, axis=1)
-        stable = dtype == "float16" and getattr(self.qkv_proj, "bits", None) == 8
-        scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable
-                  else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
-        if dtype is not None:
-            scores = scores.astype(mx.float32)
-        if mask is not None:
-            scores = scores + mask
-        probabilities = mx.softmax(scores, axis=-1, precise=True)
-        attended = attention_matmul(probabilities, values) if stable else probabilities @ values
+        if cache is not None and callable(getattr(cache,"attend",None)):
+            attended=cache.attend(queries,keys,values,scale=self.scale,position_ids=position_ids)
+        else:
+            if cache is not None:
+                keys, values = cache.update(keys, values)
+            repeats = self.num_query_heads // self.num_kv_heads
+            if repeats != 1:
+                keys = mx.repeat(keys, repeats, axis=1)
+                values = mx.repeat(values, repeats, axis=1)
+            stable = dtype == "float16" and getattr(self.qkv_proj, "bits", None) == 8
+            scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable
+                      else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
+            if dtype is not None:
+                scores = scores.astype(mx.float32)
+            if mask is not None:
+                scores = scores + mask
+            probabilities = mx.softmax(scores, axis=-1, precise=True)
+            attended = attention_matmul(probabilities, values) if stable else probabilities @ values
         attended = attended.transpose(0, 2, 1, 3).reshape(batch, length, -1)
         if dtype is not None:
             attended = attended.astype(getattr(mx, dtype))

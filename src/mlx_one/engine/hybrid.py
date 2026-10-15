@@ -1,4 +1,4 @@
-"""Component-aware ragged LFM2 execution with isolated convolution carries."""
+"""Component-aware hybrid execution with isolated convolution/recurrent carries."""
 
 from __future__ import annotations
 
@@ -86,7 +86,9 @@ class HybridRunner(BatchedDenseRunner):
     def capabilities(self):
         return replace(super().capabilities(), family=self.adapter.spec.architecture
                        if hasattr(self, "adapter") else "hybrid",
-                       supported_cache_backends=("hybrid",),
+                       supports_paged_attention=getattr(self,"_paged_execution",False),
+                       supported_cache_backends=("hybrid","paged")
+                       if getattr(self,"_paged_execution",False) else ("hybrid",),
                        supported_state_kinds=tuple(dict.fromkeys(self.adapter.spec.state_kinds))
                        if hasattr(self,"adapter") else ("full_kv", "sliding_kv", "conv"),
                        supports_exact_prefix_restore=True)
@@ -97,7 +99,7 @@ class HybridRunner(BatchedDenseRunner):
         return CacheBundle(hybrid_components(self.bundle))
 
     def _resolve(self, plan, phase):
-        if plan.execution_mode not in {"dense", "hybrid"}:
+        if plan.execution_mode not in {"dense", "hybrid", "paged"}:
             raise ValueError("incompatible hybrid execution plan")
         return super()._resolve(replace(plan, execution_mode="dense"), phase)
 
@@ -159,6 +161,7 @@ class HybridRunner(BatchedDenseRunner):
         from mlx_one.engine.paged import PagedBatchCache, PagedKVCache
 
         paged = any(isinstance(c, PagedKVCache) for c in first.cache)
+        self._paged_execution = paged
         if paged:
             transient = (len(requests) * heads * dim * width * 16
                          + len(requests) * heads * dim * 4 * 16

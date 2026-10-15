@@ -90,8 +90,7 @@ class CacheBundle:
                 entries.append(entry.clone())
             return CacheBundle(tuple(entries))
         except BaseException:
-            for entry in entries:
-                entry.reset()
+            CacheBundle(tuple(entries)).release()
             raise
 
     snapshot = clone
