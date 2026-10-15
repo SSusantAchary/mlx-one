@@ -60,6 +60,14 @@ class ForwardRequest:
     options: Any = None
     deadline: float | None = None
     return_all_logits: bool = False
+    staged_verification: bool = False
+    generated_ids: tuple[int, ...] | None = None
+
+
+@dataclass(frozen=True)
+class GenerationProgress:
+    generated_ids: tuple[int, ...]
+    computed_len: int
 
 
 def request_cancelled(request):
@@ -363,9 +371,11 @@ class BatchedDenseRunner(CausalLMRunner):
                         mx.eval(new_keys, new_values)
                 compact_logits = []
                 for row, request in enumerate(requests):
-                    logits = mx.zeros((1, 1, output.logits.shape[-1]), dtype=output.logits.dtype)
                     last = len(request.token_ids)
-                    logits[...] = output.logits[row:row + 1, last - 1:last]
+                    begin=0 if request.return_all_logits else last-1
+                    logits = mx.zeros((1,last-begin,output.logits.shape[-1]),
+                                      dtype=output.logits.dtype)
+                    logits[...] = output.logits[row:row+1,begin:last]
                     mx.eval(logits)
                     compact_logits.append(logits)
             except BaseException:

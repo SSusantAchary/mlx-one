@@ -18,6 +18,7 @@ from mlx_one.engine.batching import (
     BatchingConfig,
     BatchScheduler,
     ForwardRequest,
+    GenerationProgress,
 )
 from mlx_one.engine.cache_errors import CacheCapacityError
 from mlx_one.engine.contracts import EngineRequest, Phase, RequestKind, SequenceState
@@ -302,9 +303,19 @@ class InferenceActor:
                                               cancel=job.cancel, model_epoch=self._epoch,
                                               deadline_ns=(int(job.deadline * 1e9)
                                                            if job.deadline else None))
-                if item.phase == "decode":
+                if not item.staged_verification and item.generated_ids is not None:
+                    job.state.generated_ids=list(item.generated_ids)
+                    job.state.computed_len=item.cache[0].offset
+                if item.phase == "decode" and not item.staged_verification:
                     job.state.transition(Phase.DECODE)
-                    job.state.generated_ids.append(item.token_ids[-1])
+                    if item.generated_ids is None:
+                        job.state.generated_ids.append(item.token_ids[-1])
+            elif isinstance(item,GenerationProgress):
+                if job.state is None or not 0<=item.computed_len<= (
+                        job.state.prompt_len+len(item.generated_ids)):
+                    raise ValueError("invalid speculative progress boundary")
+                job.state.generated_ids=list(item.generated_ids)
+                job.state.computed_len=item.computed_len
             else:
                 job.output.put_nowait(item)
         except StopIteration:
@@ -467,6 +478,8 @@ class InferenceActor:
                         if output.request_ids != tuple(j.request_id for j in jobs):
                             raise ValueError("runner output mapping mismatch")
                         trace = dict(self.runner.last_trace)
+                        trace["staged_verification_rows"]=[r.request_id for r in group
+                                                           if r.staged_verification]
                         trace["queue_age_ms"] = [(now - j.created_at) * 1000 for j in jobs]
                         trace["prefix_preview_tokens"] = [j.preview_tokens for j in jobs]
                         trace["prefix_preview_lookup_ms"] = [j.preview_lookup_ms for j in jobs]
@@ -498,7 +511,8 @@ class InferenceActor:
                                 continue
                             self._event(job, "forward", phase=job.request.phase,
                                         committed_tokens=committed)
-                            job.state.commit(committed)
+                            if not job.request.staged_verification:
+                                job.state.commit(committed)
                             job.request = None
                             job.reply = SimpleNamespace(
                                 logits=logits, batch_size=trace["batch_size"],

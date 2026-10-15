@@ -75,6 +75,7 @@ class Engine:
         qualification_profile: dict[str, Any] | None = None,
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
+        draft_model: LoadedTextModel | None = None,
     ) -> None:
         self._device = DeviceExecutor.shared()
         backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
@@ -98,16 +99,33 @@ class Engine:
         self._execution_dtype = execution_dtype
         self._cache_namespace = cache_namespace
         self._batching_config = batching_config or BatchingConfig()
-        if spec_type not in {"none","draft-mtp"} or spec_draft_n_max<1:
+        if spec_type not in {"none","draft-mtp","draft-model"} or spec_draft_n_max<1:
             raise ValueError("unsupported speculation policy or draft budget")
         self._spec_type,self._spec_draft_n_max=spec_type,spec_draft_n_max
-        if spec_type!="none":
+        self._draft_bundle=draft_model
+        if spec_type=="draft-mtp":
             from mlx_one.engine.speculation import validate_mtp
 
             validate_mtp(self._bundle)
             if (self._batching_config.max_sequences!=1 or backend!="dense"
                     or inference_mode not in {None,"reference_dense"}):
                 raise ValueError("native MTP requires single-request reference dense execution")
+        elif spec_type=="draft-model":
+            from mlx_one.engine.speculation import validate_external
+
+            if not isinstance(draft_model,LoadedTextModel):
+                raise ValueError("external draft requires an explicitly loaded native bundle")
+            self._device.call(id(draft_model),
+                lambda:configure_execution_dtype(draft_model,execution_dtype))
+            validate_external(self._bundle,draft_model)
+            cfg=self._batching_config
+            quantum=min(cfg.prefill_chunk_size,cfg.max_prefill_tokens,
+                        max(cfg.max_scheduled_tokens//2,1))
+            if (backend!="dense" or inference_mode not in {None,"reference_dense",
+                    "experimental_dense_batch"} or spec_draft_n_max+1>quantum):
+                raise ValueError("external verification requires compatible dense token budgets")
+        elif draft_model is not None:
+            raise ValueError("draft_model requires explicit spec_type=draft-model")
         self._actor = None
         self._cache_manager = None
         self._pressure = None
@@ -152,6 +170,10 @@ class Engine:
             self._actor = InferenceActor(self._batching_config, runner=DispatchRunner(),
                                          pressure=self._pressure)
             self._actor.execution_mode = inference_mode
+        if self._draft_bundle is not None and self._draft_bundle.model is not self._bundle.model:
+            from mlx_one.engine.cache import array_nbytes
+
+            self._cache_manager.model_bytes+=array_nbytes(self._draft_bundle.model.parameters())
         workers = (self._batching_config.max_sequences + self._batching_config.queue_size
                    if self._actor is not None else 1)
         self._executor = ThreadPoolExecutor(
@@ -270,8 +292,9 @@ class Engine:
             return stream_generate(
                 bundle, prompt, options=options, is_cancelled=cancel.is_set,
                 _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace,
-                _cooperative=self._spec_type=="none", _prefill_chunk_size=chunk,
-                _spec_type=self._spec_type,_spec_draft_n_max=self._spec_draft_n_max)
+                _cooperative=self._spec_type!="draft-mtp", _prefill_chunk_size=chunk,
+                _spec_type=self._spec_type,_spec_draft_n_max=self._spec_draft_n_max,
+                _draft_bundle=self._draft_bundle)
         if self._cache_namespace is not None:
             factory.prefix_preview = lambda: self._cache_manager.preview_prefix(
                 self._cache_manager.fingerprint(namespace=self._cache_namespace,

@@ -33,6 +33,7 @@ def stream_generate(
     _prefill_chunk_size: int = 512,
     _spec_type: str = "none",
     _spec_draft_n_max: int = 3,
+    _draft_bundle: object | None = None,
 ) -> Iterator[GenerationChunk]:
     """Yield native generation chunks for one prompt."""
 
@@ -53,7 +54,7 @@ def stream_generate(
     resolved = options or TextGenerationOptions()
     if _cache_manager is None:
         yield from _stream_bundle(bundle, prompt, resolved, is_cancelled,
-            spec_type=_spec_type,spec_draft_n_max=_spec_draft_n_max)
+            spec_type=_spec_type,spec_draft_n_max=_spec_draft_n_max,_draft_bundle=_draft_bundle)
         return
     from mlx_one.engine.cache_errors import PrefixReuseUnsupported
     from mlx_one.engine.cache_manager import CacheManager
@@ -97,6 +98,7 @@ def stream_generate(
             _cooperative=_cooperative, _prefill_chunk_size=_prefill_chunk_size,
             _cache_runtime=_cache_manager, _cache_handle=handle,
             spec_type=_spec_type,spec_draft_n_max=_spec_draft_n_max,
+            _draft_bundle=_draft_bundle,
             on_cache_update=lambda tokens, _: _cache_manager.publish_prefix(
                 handle, fingerprint, tokens
             ),
@@ -244,18 +246,23 @@ def _stream_bundle(
     _cache_handle: object | None = None,
     _forced_token_ids: tuple[int, ...] = (),
     _prepared_input_ids: tuple[int, ...] | None = None,
+    _draft_bundle: object | None = None,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
     from mlx_one.core.cache import configure_kv_caches
 
     cancelled = is_cancelled or (lambda: False)
-    if spec_type not in {"none","draft-mtp"} or spec_draft_n_max<1:
+    if spec_type not in {"none","draft-mtp","draft-model"} or spec_draft_n_max<1:
         raise ValueError("unsupported speculation policy or draft budget")
     if spec_type=="draft-mtp":
         from mlx_one.engine.speculation import validate_mtp
 
         validate_mtp(bundle,temperature=options.temperature)
+    if spec_type=="draft-model":
+        from mlx_one.engine.speculation import validate_external
+
+        validate_external(bundle,_draft_bundle,temperature=options.temperature)
     tokenization_started = time.perf_counter()
     prepared = (_cache_handle.metadata.get("prepared_prompt")
                 if _cache_handle is not None else None)
@@ -347,7 +354,8 @@ def _stream_bundle(
                 from mlx_one.engine.batching import ForwardRequest
 
                 output = yield ForwardRequest(bundle, part, cache, phase, tuple(prompt_ids),
-                                              _cache_runtime, _cache_handle, options=options)
+                                              _cache_runtime, _cache_handle, options=options,
+                                              generated_ids=tuple(tokens[len(prompt_ids):]))
             else:
                 from contextlib import ExitStack
 
@@ -415,7 +423,7 @@ def _stream_bundle(
         step_yielded = False
         proposal=None
         step_events=[]
-        if spec_type not in {"none","draft-mtp"}:
+        if spec_type not in {"none","draft-mtp","draft-model"}:
             raise ValueError("unsupported speculation policy")
         if spec_type=="draft-mtp":
             from mlx_one.engine.speculation import SpeculativeProposal, validate_mtp
@@ -435,6 +443,34 @@ def _stream_bundle(
                     for key,value in (("drafted_tokens",proposal.drafted),
                                       ("accepted_draft_tokens",proposal.accepted)):
                         speculative_stats[key]=speculative_stats.get(key,0)+value
+        if (spec_type=="draft-model" and produced+1<maximum and not forced_tokens
+                and not (reasoning_active and reasoning_budget>=0)):
+            from mlx_one.engine.speculation import (
+                SpeculativeProposal,
+                accept_verification,
+                prepare_external,
+            )
+
+            proposal=SpeculativeProposal(bundle,cache,runtime=_cache_runtime,
+                handle=_cache_handle,cancelled=cancelled,observer=on_execution)
+            try:
+                ids=prepare_external(proposal,_draft_bundle,tuple(tokens),token,
+                                     min(spec_draft_n_max,maximum-produced-1))
+                if cancelled():
+                    proposal.close()
+                    return
+                if _cooperative:
+                    from mlx_one.engine.batching import ForwardRequest
+
+                    verified=yield ForwardRequest(bundle,ids,proposal.verified.entries,'prefill',
+                        tuple(prompt_ids),return_all_logits=True,staged_verification=True)
+                else:
+                    verified=proposal._forward(ids,proposal.verified.entries,'verify')
+                accept_verification(proposal,verified.logits)
+                candidates=proposal.candidates
+            except BaseException:
+                proposal.close()
+                raise
         before_produced=produced
         try:
             stopped = False
@@ -508,6 +544,10 @@ def _stream_bundle(
         finally:
             if proposal is not None:
                 proposal.close()
+        if _cooperative and proposal is not None:
+            from mlx_one.engine.batching import GenerationProgress
+
+            yield GenerationProgress(tuple(tokens[len(prompt_ids):]),cache[0].offset)
         for event in step_events:
             yield event
         if stopped:

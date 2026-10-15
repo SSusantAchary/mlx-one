@@ -302,3 +302,17 @@ trimming. Reservations and all predictor/verification caches release on errors
 and cancellation. 65 CPU and five tiny native actor/parity tests pass.
 Predictor checkpoint quality and actual speed benefit remain unmeasured; the
 tiny initialized predictor is implementation validation, not qualification.
+
+### PR-18 — optional external drafts and batched target verification
+
+Explicit Python draft_model bundles require matching serialized tokenizer,
+special-token/EOS semantics and supported FP16 dense adapters. Request-private
+draft caches generate proposals; the existing actor schedules target all-logit
+verification in shared B2 forwards, with independent rejection/bonus/stop state.
+Draft prefill currently rebuilds its private history each round; speed benefit
+is unmeasured, and no external-draft HTTP configuration is advertised.
+The previous dense runner's last-logit-only behavior fails the new regression;
+all real positions now pass. 68 CPU and seven native tests pass, including
+unequal histories, real B2 verification, disagreement and cancellation recovery.
+Stochastic speculation, paged/hybrid external verification and production
+speculative qualification remain unavailable.

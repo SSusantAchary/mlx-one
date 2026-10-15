@@ -118,3 +118,94 @@ class SpeculativeProposal:
         if not self.closed:
             self.closed=True
             self.resources.close()
+
+
+def tokenizer_semantics(bundle):
+    import hashlib
+    import json
+
+    tokenizer=bundle.tokenizer
+    serialize=getattr(getattr(tokenizer,'_tokenizer',None),'to_str',None)
+    if not callable(serialize):
+        raise ModelCapabilityUnsupported('external draft requires serialized tokenizer semantics')
+    payload={'tokenizer':json.loads(serialize()),'special_tokens':tokenizer.special_tokens,
+        'ids':[tokenizer.bos_token_id,tokenizer.eos_token_id,tokenizer.pad_token_id],
+        'eos':sorted(bundle.eos_token_ids)}
+    return hashlib.sha256(json.dumps(payload,sort_keys=True).encode()).hexdigest()
+
+
+def validate_external(target,draft,*,temperature=0):
+    from mlx_one.engine.adapters import native_adapter
+
+    if draft is None or temperature!=0:
+        raise ModelCapabilityUnsupported(
+            'external draft requires a native bundle and greedy decoding')
+    if tokenizer_semantics(target)!=tokenizer_semantics(draft):
+        raise ModelCapabilityUnsupported('external draft tokenizer/token/EOS semantics differ')
+    for bundle in (target,draft):
+        adapter=native_adapter(bundle)
+        if adapter.spec.hybrid or bundle.architecture not in {'qwen2','qwen3','llama'}:
+            raise ModelCapabilityUnsupported(
+                'external drafting requires supported full-attention models')
+
+
+def prepare_external(proposal,draft,prefix,first,maximum):
+    """Request-private draft state; target verification is scheduled separately."""
+    import mlx.core as mx
+
+    from mlx_one.core.cache import configure_kv_caches
+
+    try:
+        if proposal.runtime is not None:
+            from mlx_one.engine.pressure import execution_forecast
+
+            amount=execution_forecast(proposal.runtime,proposal.bundle.model.config,
+                batch=1,chunk=maximum+1,history=proposal.cache[0].offset,
+                explicit_bytes=CacheBundle(proposal.cache).allocated_nbytes*3,phase='decode')['bytes']
+            # Draft caches + full-prefix activations are distinct from target replacements.
+            from mlx_one.engine.cache_planner import build_cache_plan
+
+            plan=build_cache_plan(draft)
+            amount+=plan.bytes_per_token()*((len(prefix)+maximum+255)//256*256)
+            hidden=getattr(draft.model.config,'hidden_size',1)
+            heads=getattr(draft.model.config,'num_attention_heads',1)
+            amount+=len(prefix)**2*heads*20+len(prefix)*hidden*32
+            proposal.resources.enter_context(proposal.runtime.transient_reservation(amount))
+        proposal.before=CacheBundle(proposal.cache).clone()
+        proposal.resources.callback(proposal.before.release)
+        proposal.verified=proposal.before.clone()
+        proposal.resources.callback(proposal.verified.release)
+        state=CacheBundle(configure_kv_caches(draft.model.make_cache(),'f16','f16'))
+        proposal.resources.callback(state.release)
+        current=tuple(prefix)+(first,)
+        drafts=[]
+        for _ in range(maximum):
+            if proposal.cancelled():
+                break
+            output=draft.model(mx.array([current]),cache=state.entries)
+            mx.eval(output.logits)
+            token=int(mx.argmax(output.logits[0,-1]).item())
+            drafts.append(token)
+            current=(token,)
+        proposal.drafted=len(drafts)
+        proposal.verify_ids=tuple([first,*drafts])
+        return proposal.verify_ids
+    except BaseException:
+        proposal.close()
+        raise
+
+
+def accept_verification(proposal,logits):
+    import mlx.core as mx
+
+    if logits.shape[:2]!=(1,len(proposal.verify_ids)):
+        raise ValueError('external verification requires logits for every proposed position')
+    predicted=[int(x) for x in mx.argmax(logits[0],axis=-1).tolist()]
+    first,*drafts=proposal.verify_ids
+    for index,token in enumerate(drafts):
+        if token!=predicted[index]:
+            proposal.accepted=index
+            proposal.candidates=[first,*drafts[:index],predicted[index]]
+            return
+    proposal.accepted=len(drafts)
+    proposal.candidates=[first,*drafts,predicted[-1]]
