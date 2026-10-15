@@ -97,6 +97,14 @@ class InferenceService:
 
                 loader=load_audio_model
                 settings=dict(settings,task="align" if task==TaskKind.ALIGNMENT else "transcribe")
+            elif task in {TaskKind.IMAGE_SEGMENTATION,TaskKind.MASK_GENERATION,
+                          TaskKind.VIDEO_SEGMENTATION}:
+                from mlx_one.segmentation.loading import load_segmentation_model
+
+                loader=load_segmentation_model
+                settings=dict(settings,task=settings.get("task") or (
+                    "video" if task==TaskKind.VIDEO_SEGMENTATION else
+                    "interactive" if task==TaskKind.MASK_GENERATION else "concept"))
             else:
                 from mlx_one.retrieval.loading import load_retrieval_model
 
@@ -116,6 +124,26 @@ class InferenceService:
         session=DeviceSession(lease,actor.device_executor,lambda:open_audio_stream(lease.runtime.value,
             sample_rate=sample_rate,language=language,options=options,cancelled=event.is_set),
             methods=("push","finish","reset"),cancel=event,deadline=deadline)
+        with self._lock:
+            if self._closed:
+                session.close()
+                raise RuntimeError("inference service is closed")
+            self._sessions.add(session)
+            session.on_close=lambda:self._sessions.discard(session)
+        return session
+
+    def open_video_session(self,name,*,memory_budget_bytes=24*1024**3,
+                           cancel=None,deadline=None):
+        from mlx_one.engine.contracts import TaskKind
+        from mlx_one.engine.sessions import DeviceSession
+
+        if memory_budget_bytes<1:
+            raise ValueError("video state requires a positive byte budget")
+        actor,lease=self._task_lease(name,TaskKind.VIDEO_SEGMENTATION)
+        session=DeviceSession(lease,actor.device_executor,lambda:lease.runtime.value.video_session(
+            streaming=True,memory_budget_bytes=memory_budget_bytes),
+            methods=("add_prompt","remove_prompt","remove_object","correct_object",
+                     "process_frame","reset"),cancel=cancel,deadline=deadline)
         with self._lock:
             if self._closed:
                 session.close()
@@ -165,8 +193,15 @@ class InferenceService:
     def close(self):
         with self._lock:
             self._closed = True
-        for session in tuple(self._sessions):
-            session.close()
+        error=None
+        releases=[session.close for session in tuple(self._sessions)]
         if self._task_actor is not None:
-            self._task_actor.close()
-        self.pool.close()
+            releases.append(self._task_actor.close)
+        releases.append(self.pool.close)
+        for release in releases:
+            try:
+                release()
+            except BaseException as exc:
+                error=error or exc
+        if error is not None:
+            raise error

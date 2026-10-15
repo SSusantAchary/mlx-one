@@ -26,6 +26,10 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.speech:"+adapter
 BUILTIN_ADAPTERS["parakeet_tdt"]=(
     "mlx_one.engine.task_runners.transducer:ParakeetTDTAdapter")
 
+BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.segmentation:"+adapter
+    for name,adapter in (("sam3","SAM3ConceptAdapter"),
+        ("sam3_tracker","SAM3InteractiveAdapter"),("sam3_video","SAM3VideoAdapter"))})
+
 
 def builtin_runtime(entry):
     component = entry.model_type == "sam3_tracker_video"

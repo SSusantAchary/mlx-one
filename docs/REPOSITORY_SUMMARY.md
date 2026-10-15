@@ -263,3 +263,16 @@ ragged B2-to-B1 turnover and independent greedy parity. No causal audio streamin
 is claimed. LFM2 Audio remains architecture-only: no exact safe checkpoint,
 processor/tokenizer and codec cadence/flush contract is available in this repo.
 Its explicit adapter boundary rejects tasks rather than inventing TTS/ASR.
+
+### PR-15 — segmentation task and ordered video bridge
+
+SAM3 concept/interactive/mask workflows use native float32 task adapters with
+private image copies, validated original-image prompts and bounded feature
+forecasts. Video sessions retain model epochs, object IDs and frame ordering;
+late events are rejected and disposal/cancellation leaves peers independent.
+The nested tracker remains component-only. Existing point-grid masks reuse
+native image features; task bridges remain singleton, not claimed GPU batches.
+58 affected CPU tests pass (seven native-only skips), 15 cleanup/service checks
+pass, and ten supervised native video/workflow tests pass. Real SAM3 masks,
+checkpoint accuracy and service performance remain pending; fake tracker
+fixtures establish lifecycle correctness only.
