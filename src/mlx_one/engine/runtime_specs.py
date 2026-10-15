@@ -19,6 +19,10 @@ VISION_ADAPTERS={name:"mlx_one.engine.task_runners.multimodal:"+adapter for name
     ("lfm2_vl","LFM2VLAdapter"),("qwen3_5","Qwen35VisionAdapter"))}
 BUILTIN_ADAPTERS.update({k:v for k,v in VISION_ADAPTERS.items() if k!="qwen3_5"})
 
+BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.speech:"+adapter
+    for name,adapter in (("whisper","WhisperAdapter"),("moonshine","MoonshineAdapter"),
+    ("qwen3_asr","Qwen3ASRAdapter"),("qwen3_forced_aligner","Qwen3AlignmentAdapter"))})
+
 
 def builtin_runtime(entry):
     component = entry.model_type == "sam3_tracker_video"

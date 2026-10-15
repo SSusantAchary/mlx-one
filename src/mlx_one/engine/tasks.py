@@ -23,6 +23,11 @@ class TaskResult:
 
 
 @dataclass(frozen=True)
+class TaskFailure:
+    error: BaseException
+
+
+@dataclass(frozen=True)
 class PreparedTask:
     task: TaskKind
     payload: object
@@ -130,24 +135,25 @@ class TaskMicrobatches:
             raise
 
     def _finish(self,job,output=None,error=None):
-        try:
-            if not job.handle.phase.terminal:
-                phase=(RequestPhase.CANCELLED if isinstance(error,CancelledError) else
-                       RequestPhase.TIMED_OUT if isinstance(error,RequestTimeoutError) else
-                       RequestPhase.FAILED if error else RequestPhase.FINISHED)
-                job.handle.transition(phase)
-                if job.handle.future.done():
-                    return
-                if error:
-                    job.handle.future.set_exception(error)
-                else:
-                    job.handle.future.set_result(TaskResult(job.handle.request_id,job.prepared.task,
-                        output,{'model_epoch':job.lease.runtime.epoch,'qualification':'unqualified'}))
-        finally:
+        if job.handle.phase.terminal:
+            return
+        epoch=job.lease.runtime.epoch
+        # Completion includes cleanup; a subsequent request cannot observe leaked residency.
+        for release in (lambda:job.adapter.dispose_prepared(job.prepared),job.lease.release):
             try:
-                job.adapter.dispose_prepared(job.prepared)
-            finally:
-                job.lease.release()
+                release()
+            except BaseException as cleanup_error:
+                error=error or cleanup_error
+        phase=(RequestPhase.CANCELLED if isinstance(error,CancelledError) else
+               RequestPhase.TIMED_OUT if isinstance(error,RequestTimeoutError) else
+               RequestPhase.FAILED if error else RequestPhase.FINISHED)
+        job.handle.transition(phase)
+        if not job.handle.future.done():
+            if error:
+                job.handle.future.set_exception(error)
+            else:
+                job.handle.future.set_result(TaskResult(job.handle.request_id,job.prepared.task,
+                    output,{'model_epoch':epoch,'qualification':'unqualified'}))
 
     def _error(self,job):
         if self.closed or job.handle.cancel_event.is_set():
@@ -206,7 +212,9 @@ class TaskMicrobatches:
                     if len(result)!=len(live):
                         raise ValueError('task result mapping mismatch')
                     for job,output in zip(live,result,strict=True):
-                        self._finish(job,output,error=self._error(job))
+                        self._finish(job,None if isinstance(output,TaskFailure) else output,
+                            error=self._error(job) or (output.error
+                                if isinstance(output,TaskFailure) else None))
                 except BaseException as exc:
                     for job in live:
                         if not job.handle.phase.terminal:

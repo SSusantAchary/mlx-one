@@ -238,3 +238,16 @@ Publisher-format LFM assets without a native conversion contract fail closed.
 suite (891 passed, 30 skipped, two inherited warnings) pass. The first native
 fixture failure is retained locally; its continuation mask was corrected.
 Real checkpoint processor/quality/performance gates remain pending.
+
+### PR-13 — speech tasks and owned utterance sessions
+
+Whisper (including its existing Distil topology), Moonshine, Qwen3-ASR and
+ForcedAligner use task-specific native bridges, bounded copied PCM and model
+epoch leases. Ready equal-shape Whisper/Moonshine decoder rows support evaluated
+B2 forwards and private self/cross caches. Full transcript workflows retain
+their existing singleton decoding policy; heterogeneous batched transcript
+scheduling is not qualified. Qwen utterance sessions are ordered and explicitly
+accumulated/reprocessed, with cancellation and reliable lease disposal.
+83 affected CPU tests pass (one native-only skip); 27 distinct supervised tiny
+native tests pass. Transcript WER/CER and alignment timestamp gates need actual
+checkpoints; the inherited 800-ms alignment discrepancy remains failed.

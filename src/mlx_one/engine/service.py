@@ -12,6 +12,7 @@ class InferenceService:
         self._models = {}
         self._task_models = {}
         self._task_actor = None
+        self._sessions = set()
         self._batching_config = batching_config
         self._lock = threading.RLock()
         self._closed = False
@@ -56,32 +57,14 @@ class InferenceService:
             self._task_models[name]=(model,loader,estimated_bytes,dict(settings))
 
     def _prepare_task(self,name,task,payload):
-        from mlx_one.engine.actor import InferenceActor
         from mlx_one.engine.adapter_registry import get_runtime_registration
-        from mlx_one.engine.cache import array_nbytes
         from mlx_one.engine.contracts import canonical_task
 
         task=canonical_task(task)
-        with self._lock:
-            if self._closed:
-                raise RuntimeError("inference service is closed")
-            model,loader,estimate,settings=self._task_models[name]
-            if self._task_actor is None:
-                self._task_actor=InferenceActor(self._batching_config)
-            actor=self._task_actor
-        if loader is None and not hasattr(model,"model"):
-            if task.value == "vision-language-generation":
-                from mlx_one.vision.loading import load_vlm_model
-
-                loader=load_vlm_model
-            else:
-                from mlx_one.retrieval.loading import load_retrieval_model
-
-                loader=load_retrieval_model
-        lease=self.pool.acquire(name,lambda:loader(model,**settings) if loader else model,
-            estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters()))
+        actor,lease=self._task_lease(name,task)
         try:
-            binding=get_runtime_registration(lease.runtime.value.architecture)
+            binding=get_runtime_registration(getattr(lease.runtime.value,"architecture",None)
+                or lease.runtime.value.model.config.model_type)
             tasks,_=binding.specifications()
             if task not in {s.task for s in tasks}:
                 raise ValueError("task has no registered native execution contract")
@@ -91,6 +74,55 @@ class InferenceService:
             lease.release()
             raise
         return actor,adapter,prepared,lease
+
+    def _task_lease(self,name,task):
+        from mlx_one.engine.actor import InferenceActor
+        from mlx_one.engine.cache import array_nbytes
+        from mlx_one.engine.contracts import TaskKind
+
+        with self._lock:
+            if self._closed:
+                raise RuntimeError("inference service is closed")
+            model,loader,estimate,settings=self._task_models[name]
+            if self._task_actor is None:
+                self._task_actor=InferenceActor(self._batching_config)
+            actor=self._task_actor
+        if loader is None and not hasattr(model,"model"):
+            if task==TaskKind.VISION_LANGUAGE:
+                from mlx_one.vision.loading import load_vlm_model
+
+                loader=load_vlm_model
+            elif task in {TaskKind.TRANSCRIPTION,TaskKind.ALIGNMENT}:
+                from mlx_one.audio.loading import load_audio_model
+
+                loader=load_audio_model
+                settings=dict(settings,task="align" if task==TaskKind.ALIGNMENT else "transcribe")
+            else:
+                from mlx_one.retrieval.loading import load_retrieval_model
+
+                loader=load_retrieval_model
+        lease=self.pool.acquire(name,lambda:loader(model,**settings) if loader else model,
+            estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters()))
+        return actor,lease
+
+    def open_audio_session(self,name,*,sample_rate,language=None,options=None,
+                           cancel=None,deadline=None):
+        from mlx_one.audio.streaming import open_audio_stream
+        from mlx_one.engine.contracts import TaskKind
+        from mlx_one.engine.sessions import DeviceSession
+
+        actor,lease=self._task_lease(name,TaskKind.TRANSCRIPTION)
+        event=cancel or threading.Event()
+        session=DeviceSession(lease,actor.device_executor,lambda:open_audio_stream(lease.runtime.value,
+            sample_rate=sample_rate,language=language,options=options,cancelled=event.is_set),
+            methods=("push","finish","reset"),cancel=event,deadline=deadline)
+        with self._lock:
+            if self._closed:
+                session.close()
+                raise RuntimeError("inference service is closed")
+            self._sessions.add(session)
+            session.on_close=lambda:self._sessions.discard(session)
+        return session
 
     def submit_task(self,name,task,payload,*,cancel=None,deadline=None):
         actor,adapter,prepared,lease=self._prepare_task(name,task,payload)
@@ -133,6 +165,8 @@ class InferenceService:
     def close(self):
         with self._lock:
             self._closed = True
+        for session in tuple(self._sessions):
+            session.close()
         if self._task_actor is not None:
             self._task_actor.close()
         self.pool.close()
