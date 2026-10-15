@@ -251,3 +251,15 @@ accumulated/reprocessed, with cancellation and reliable lease disposal.
 83 affected CPU tests pass (one native-only skip); 27 distinct supervised tiny
 native tests pass. Transcript WER/CER and alignment timestamp gates need actual
 checkpoints; the inherited 800-ms alignment discrepancy remains failed.
+
+### PR-14 — transducer batching and fail-closed audio language
+
+Parakeet now batches padded offline encoders and ready predictor/joint rows
+with independent frame cursors, duration transitions, EOS and emission budgets.
+Evaluated predictor state is published per live row; cancellation does not
+advance a peer. Float32 and existing 80-ms token timebase remain unchanged.
+67 affected CPU tests and nine distinct tiny native tests pass, including
+ragged B2-to-B1 turnover and independent greedy parity. No causal audio streaming
+is claimed. LFM2 Audio remains architecture-only: no exact safe checkpoint,
+processor/tokenizer and codec cadence/flush contract is available in this repo.
+Its explicit adapter boundary rejects tasks rather than inventing TTS/ASR.

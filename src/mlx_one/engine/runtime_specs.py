@@ -23,6 +23,9 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.speech:"+adapter
     for name,adapter in (("whisper","WhisperAdapter"),("moonshine","MoonshineAdapter"),
     ("qwen3_asr","Qwen3ASRAdapter"),("qwen3_forced_aligner","Qwen3AlignmentAdapter"))})
 
+BUILTIN_ADAPTERS["parakeet_tdt"]=(
+    "mlx_one.engine.task_runners.transducer:ParakeetTDTAdapter")
+
 
 def builtin_runtime(entry):
     component = entry.model_type == "sam3_tracker_video"
