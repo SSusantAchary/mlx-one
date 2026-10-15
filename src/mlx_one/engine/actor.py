@@ -70,6 +70,7 @@ class InferenceActor:
         self._active = []
         self._paused = []
         self._closed = False
+        self._task_work = None
         self._epoch = 0
         self._finalizer = None
         self._traces = deque(maxlen=4096)
@@ -192,6 +193,17 @@ class InferenceActor:
         timeout = self.config.timeout if apply_timeout and self.config.timeout else None
         return call.result.result(timeout)
 
+    def submit_task(self, adapter, prepared, lease, **settings):
+        from mlx_one.engine.tasks import TaskMicrobatches
+
+        with self._condition:
+            if self._closed:
+                lease.release()
+                raise RuntimeError("inference actor is closed")
+            if self._task_work is None:
+                self._task_work = TaskMicrobatches(self)
+            return self._task_work.submit(adapter,prepared,lease,**settings)
+
     def close(self, finalizer=None):
         with self._condition:
             if self._closed:
@@ -201,6 +213,8 @@ class InferenceActor:
             for job in [*self._active, *self._paused]:
                 job.cancel.set()
             self._condition.notify_all()
+        if self._task_work is not None:
+            self._task_work.close()
         if threading.current_thread() is not self._thread:
             self._thread.join()
 

@@ -9,6 +9,11 @@ BUILTIN_ADAPTERS = {name: "mlx_one.engine.native_adapters:" + adapter for name, 
     ("lfm2", "LFM2Adapter"), ("lfm2_moe", "LFM2MoeAdapter"),
     ("qwen3_5", "Qwen35Adapter"))}
 
+BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.retrieval:"+adapter for name,adapter in (
+    ("bert","BertEmbeddingAdapter"),("mpnet","MPNetEmbeddingAdapter"),
+    ("qwen3_embedding","Qwen3EmbeddingAdapter"),("qwen3_reranker","Qwen3RerankAdapter"),
+    ("lfm2_colbert","LFM2ColBERTAdapter"))})
+
 
 def builtin_runtime(entry):
     component = entry.model_type == "sam3_tracker_video"
@@ -18,7 +23,7 @@ def builtin_runtime(entry):
     adapter = BUILTIN_ADAPTERS.get(entry.model_type)
     if adapter is not None:
         status = "integrated"
-    reason = ("Native causal service adapter; checkpoint qualification is separate" if adapter
+    reason = ("Native task service adapter; checkpoint qualification is separate" if adapter
               else "Nested video tracker; no standalone task loader" if component
               else "Architecture only; loader and task integration required"
               if status == "architecture_only" else "Shared task-service integration unavailable")
@@ -34,6 +39,8 @@ def task_specs(entry):
     # The text loader cannot establish multimodal preparation or outputs.
     if entry.model_type == "qwen3_5":
         tasks.discard(TaskKind.VISION_LANGUAGE)
+    if entry.model_type == "lfm2_colbert":
+        tasks.discard(TaskKind.EMBEDDING)
     recipes = {
         TaskKind.TEXT_GENERATION: ("causal", (StageKind.PREFILL, StageKind.DECODE), "token-budget"),
         TaskKind.VISION_LANGUAGE: ("multimodal", (StageKind.ENCODE, StageKind.PREFILL,

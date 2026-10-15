@@ -216,3 +216,12 @@ passes. Other real checkpoints, multi-model stress, paged INT8 correctness and
 performance/service gates remain unqualified. All 55 pre-existing local file
 states are preserved. Generated runs, failures, source/test checksums and CPU
 logs remain local under `benchmarks/results/p1/<host>/`; none are committed.
+
+PR-11 adds bounded retrieval task microbatches to the inference actor and residency
+service. BERT/MPNet/Qwen3 vectors, native yes/no reranking and ragged LFM2-ColBERT
+features retain original input order. Native-task contracts keep encoder work
+separate from decode KV; cancellation/deadlines release residency leases. BERT
+learned positions require right padding (reproduced and fixed in the existing API);
+reranker loading now returns its canonical registry identity. 71 affected CPU
+tests and 19 tiny native/legacy tests pass. Checkpoint quality, cross-task service
+performance and the earlier paged INT8 failure remain unqualified.

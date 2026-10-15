@@ -149,7 +149,8 @@ def load_retrieval_model(
     if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
         resolved_revision = root.name
     return LoadedRetrievalModel(
-        native, tokenizer, task, root, str(model), resolved_revision, f"qwen3_{task}"
+        native, tokenizer, task, root, str(model), resolved_revision,
+        "qwen3_embedding" if task == "embedding" else "qwen3_reranker"
     )
 
 
