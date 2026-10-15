@@ -4,7 +4,12 @@ from __future__ import annotations
 import importlib
 from dataclasses import dataclass
 
-from mlx_one.core.registry import get_registration, registered_model_types, validate_import_path
+from mlx_one.core.registry import (
+    _REGISTRY_LOCK,
+    get_registration,
+    registered_model_types,
+    validate_import_path,
+)
 from mlx_one.engine.contracts import LayerExecutionSpec, TaskSpec, canonical_task
 
 RUNTIME_CONTRACT_VERSION = "registry-runtime-v1"
@@ -29,6 +34,8 @@ class RuntimeRegistration:
         for path in (self.adapter_path, self.task_specs_path, self.state_specs_path):
             if path is not None:
                 validate_import_path(path)
+        object.__setattr__(self,"task_adapters",tuple((canonical_task(task),path)
+            for task,path in self.task_adapters))
         if len({task for task,_ in self.task_adapters})!=len(self.task_adapters):
             raise ValueError("duplicate task adapter bindings")
         for task,path in self.task_adapters:
@@ -53,9 +60,12 @@ class RuntimeRegistration:
             raise ValueError(f"{self.model_type} task-service adapter unavailable: {self.reason}")
         return _resolve(self.adapter_path)
 
-    def specifications(self) -> tuple[tuple[TaskSpec, ...], tuple[LayerExecutionSpec, ...]]:
+    def specifications(self,architecture=None) -> tuple[tuple[TaskSpec, ...],
+                                                       tuple[LayerExecutionSpec, ...]]:
         """Resolve selected metadata only. Model-dependent state planning is a later step."""
-        architecture = get_registration(self.model_type)
+        architecture = architecture or get_registration(self.model_type)
+        if architecture.model_type!=self.model_type:
+            raise ValueError("runtime/architecture identity mismatch")
         tasks = _resolve(self.task_specs_path)(architecture)
         states = _resolve(self.state_specs_path)(architecture)
         if not isinstance(tasks, tuple) or not all(isinstance(t, TaskSpec) for t in tasks):
@@ -67,6 +77,8 @@ class RuntimeRegistration:
                 or len({s.layer_id for s in states}) != len(states)):
             raise ValueError("duplicate task or layer specifications")
         declared = {canonical_task(task) for task in architecture.tasks}
+        if any(task not in {s.task for s in tasks} for task,_ in self.task_adapters):
+            raise ValueError("task adapter binding is not declared by its task provider")
         if any(task.task not in declared for task in tasks):
             raise ValueError("runtime task is not declared by architecture registration")
         if self.integration_status == "integrated" and (not architecture.loader_path or not tasks):
@@ -78,26 +90,29 @@ _RUNTIME_REGISTRY: dict[str, RuntimeRegistration] = {}
 
 
 def register_runtime(registration: RuntimeRegistration) -> None:
-    existing = _RUNTIME_REGISTRY.get(registration.model_type)
-    if existing is not None and existing != registration:
-        raise ValueError(f"runtime already registered: {registration.model_type}")
-    _RUNTIME_REGISTRY[registration.model_type] = registration
+    with _REGISTRY_LOCK:
+        existing = _RUNTIME_REGISTRY.get(registration.model_type)
+        if existing is not None and existing != registration:
+            raise ValueError(f"runtime already registered: {registration.model_type}")
+        _RUNTIME_REGISTRY[registration.model_type] = registration
 
 
 def get_runtime_registration(model_type: str, *, contract_version=None) -> RuntimeRegistration:
-    get_registration(model_type)  # Populate built-ins and reject architecture aliases.
-    try:
-        result = _RUNTIME_REGISTRY[model_type]
-    except KeyError as exc:
-        raise KeyError(f"architecture has no explicit runtime binding: {model_type}") from exc
-    if contract_version is not None and result.contract_version != contract_version:
-        raise ValueError("runtime contract version mismatch")
-    return result
+    with _REGISTRY_LOCK:
+        get_registration(model_type)
+        try:
+            result = _RUNTIME_REGISTRY[model_type]
+        except KeyError as exc:
+            raise KeyError(f"architecture has no explicit runtime binding: {model_type}") from exc
+        if contract_version is not None and result.contract_version != contract_version:
+            raise ValueError("runtime contract version mismatch")
+        return result
 
 
 def registered_runtime_types() -> tuple[str, ...]:
-    registered_model_types()
-    return tuple(sorted(_RUNTIME_REGISTRY))
+    with _REGISTRY_LOCK:
+        registered_model_types()
+        return tuple(sorted(_RUNTIME_REGISTRY))
 
 
 def runtime_coverage() -> tuple[dict, ...]:
@@ -115,7 +130,11 @@ def runtime_coverage() -> tuple[dict, ...]:
             "tasks": tuple(t.task.value for t in tasks),
             "declared_tasks": tuple(sorted(get_registration(model_type).tasks)),
             "state_spec_count": len(states), "correctness_qualified": False,
-            "performance_qualified": False})
+            "performance_qualified": False,
+            "availability":{"implemented":registration.integration_status=="integrated",
+                "opt_in":registration.adapter_path is not None,"reason":registration.reason},
+            "validation":{"cpu_tested":None,"checkpoint_validated":False,
+                "hardware_qualified":False,"reason":"Exact-scope evidence not attached"}})
     return tuple(rows)
 
 

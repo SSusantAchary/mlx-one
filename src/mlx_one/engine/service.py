@@ -187,6 +187,33 @@ class InferenceService:
         return self.run_task(name,TaskKind.RERANKING,
             {'query':query,'documents':documents,**settings}).output
 
+    def task_capabilities(self,name,task):
+        from dataclasses import asdict
+
+        from mlx_one.engine.adapter_registry import get_runtime_registration
+        from mlx_one.engine.contracts import canonical_task
+        from mlx_one.engine.reporting import tensor_dtypes
+
+        task=canonical_task(task)
+        _,lease=self._task_lease(name,task)
+        try:
+            bundle=lease.runtime.value
+            architecture=getattr(bundle,"architecture",None) or bundle.model.config.model_type
+            binding=get_runtime_registration(architecture)
+            specs,_=binding.specifications()
+            available=task in {s.task for s in specs} and not binding.component_only
+            descriptor=binding.adapter(task)(bundle).describe(bundle) if available else None
+            return {"architecture":architecture,"task":task.value,
+                "availability":{"implemented":available,"opt_in":available,
+                    "reason":binding.reason},"adapter":asdict(descriptor) if descriptor else None,
+                "actual_weight_dtypes":tensor_dtypes(bundle.model.parameters()),
+                "model_epoch":lease.runtime.epoch,
+                "validation":{"checkpoint_validated":False,"hardware_qualified":False},
+                "qualification":{"performance_qualified":False,
+                    "reason":"No exact task/profile evidence selected; defaults remain unchanged"}}
+        finally:
+            lease.release()
+
     def unload(self, model, *, timeout=None):
         self.pool.unload(model, timeout=timeout)
 

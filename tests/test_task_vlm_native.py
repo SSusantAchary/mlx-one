@@ -14,7 +14,7 @@ from mlx_one.engine.cache import CacheBundle
 from mlx_one.vision.generation import VisionForward
 
 
-@pytest.mark.parametrize('family',['qwen2_5_vl','qwen3_5','lfm2_vl'])
+@pytest.mark.parametrize('family',['qwen2_vl','qwen2_5_vl','qwen3_5','lfm2_vl'])
 def test_multimodal_cached_positions_equal_fresh_prefill(family):
     from test_native_qwen_multimodal_mlx import qwen2_5_vl_config, qwen3_5_config
 
@@ -37,10 +37,16 @@ def test_multimodal_cached_positions_equal_fresh_prefill(family):
     else:
         from mlx_one.core.registry import get_registration
 
-        config=qwen2_5_vl_config() if family=='qwen2_5_vl' else qwen3_5_config()
+        if family=='qwen2_vl':
+            from test_native_qwen_mlx import vl_config
+
+            config=vl_config()
+        else:
+            config=qwen2_5_vl_config() if family=='qwen2_5_vl' else qwen3_5_config()
         model=get_registration(family).model_class()(config)
         ids=[1,62,60,60,60,60,63,2]
-        kwargs={'pixel_values':mx.random.normal((16,12)),'image_grid_thw':((1,4,4),),
+        patch_dim=3*config.vision_config.temporal_patch_size*config.vision_config.patch_size**2
+        kwargs={'pixel_values':mx.random.normal((16,patch_dim)),'image_grid_thw':((1,4,4),),
                 'mm_token_type_ids':mx.array([[0,0,1,1,1,1,0,0]])}
     bundle=SimpleNamespace(model=model)
     wrapped=VisionForward(bundle,SimpleNamespace(**kwargs),lambda:False)

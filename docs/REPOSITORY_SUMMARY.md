@@ -331,3 +331,26 @@ feature registry and rejects incomplete/stale/synthetic promotion. Corpus
 coverage, full task lifecycle and performance traffic gates remain pending when
 not measured. 84 affected CPU tests pass (two inherited warnings); the isolated
 native task-worker smoke passes and explicitly cannot qualify any capability.
+
+### PR-20 — local plugins, migration and evidence-bound rollout
+
+Explicit local plugins validate metadata in an isolated backend-blocked process
+and publish architecture/runtime bindings atomically. A synthetic encoder uses
+the existing task actor without scheduler edits; invalid descriptors leave no
+partial registrations. Per-task bindings canonicalize aliases and reject
+duplicate/undeclared authority. Task capability diagnostics separate implemented
+contracts from unverified checkpoint/hardware/performance facts. Qualified task
+profile selection revalidates exact current checksummed evidence; defaults and
+public capability statuses are unchanged. Migration/API limits and commands are
+in docs/registry-native-inference-migration.md.
+
+Final validation: 930 backend-free passed, 37 skipped, two inherited dependency
+warnings. The final supervised native cohort passed 28 tests; supplemental
+Qwen2-VL/Qwen regressions passed 11. Ruff reports exactly the 65 inherited
+findings, with zero additions; diff checks pass. Ten ordered commits cover
+PR-11–PR-20, without pushing or staging UI/older reports/generated evidence.
+Implementation limits remain: complete heterogeneous speech and VLM GPU task
+batching, publisher LFM2-VL conversion, LFM2 Audio task/codec contracts and
+checkpoint-scale task corpus/lifecycle/service qualification are incomplete.
+External draft speed benefit is unmeasured. The inherited paged INT8 parity
+failure remains failed; tiny native tests do not promote Gates D–F or defaults.

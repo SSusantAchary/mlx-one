@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib
+import threading
 from dataclasses import dataclass
 from typing import Any
 
@@ -54,38 +55,43 @@ class ModelRegistration:
         return capability in self.capabilities or capability in self.tasks
 
 
+_REGISTRY_LOCK = threading.RLock()
 _REGISTRY: dict[str, ModelRegistration] = {}
 _BUILTINS_LOADED = False
 
 
 def register_model(registration: ModelRegistration) -> None:
-    current = _REGISTRY.get(registration.model_type)
-    if current is not None and current != registration:
-        raise ValueError(f"model type already registered: {registration.model_type}")
-    _REGISTRY[registration.model_type] = registration
+    with _REGISTRY_LOCK:
+        current = _REGISTRY.get(registration.model_type)
+        if current is not None and current != registration:
+            raise ValueError(f"model type already registered: {registration.model_type}")
+        _REGISTRY[registration.model_type] = registration
 
 
 def get_registration(model_type: str) -> ModelRegistration:
-    _ensure_builtins()
-    try:
-        return _REGISTRY[model_type]
-    except KeyError as exc:
-        raise KeyError(f"unsupported native model type: {model_type}") from exc
+    with _REGISTRY_LOCK:
+        _ensure_builtins()
+        try:
+            return _REGISTRY[model_type]
+        except KeyError as exc:
+            raise KeyError(f"unsupported native model type: {model_type}") from exc
 
 
 def registered_model_types() -> tuple[str, ...]:
-    _ensure_builtins()
-    return tuple(sorted(_REGISTRY))
+    with _REGISTRY_LOCK:
+        _ensure_builtins()
+        return tuple(sorted(_REGISTRY))
 
 
 def _ensure_builtins() -> None:
     global _BUILTINS_LOADED
-    if _BUILTINS_LOADED:
-        return
-    from mlx_one.models.registry import register_builtin_models
+    with _REGISTRY_LOCK:
+        if _BUILTINS_LOADED:
+            return
+        from mlx_one.models.registry import register_builtin_models
 
-    register_builtin_models()
-    _BUILTINS_LOADED = True
+        register_builtin_models()
+        _BUILTINS_LOADED = True
 
 
 def _resolve(path: str) -> type[Any]:
