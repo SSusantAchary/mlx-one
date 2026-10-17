@@ -203,6 +203,22 @@ def test_python_concurrent_submissions_batch_and_preserve_output(native):
     assert [result.text for result in results] == expected
 
 
+def test_actor_pressure_shedding_runs_on_the_device_owner(native):
+    calls = []
+    config = BatchingConfig(max_sequences=2, prefill_chunk_size=1,
+                            max_scheduled_tokens=1, max_prefill_tokens=1)
+    with Engine(native, inference_mode="experimental_dense_batch",
+                batching_config=config) as engine:
+        engine._actor.pressure = SimpleNamespace(
+            state="normal", poll=lambda: "normal", stats=lambda: {},
+            shed=lambda runtime: calls.append(engine._actor.device_executor.is_owner))
+        with engine._actor._condition:
+            handles = [engine.submit(prompt, max_tokens=6) for prompt in ("abc", "unequal")]
+        for handle in handles:
+            handle.result(timeout=5)
+    assert calls and all(calls)
+
+
 def test_actor_bounded_output_cancellation_and_barrier(native):
     actor = InferenceActor(BatchingConfig(max_sequences=2, output_buffer_events=2,
                                          output_stall_timeout_s=.05, timeout=1))

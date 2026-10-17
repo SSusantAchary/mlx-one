@@ -6,7 +6,8 @@ from typing import Literal
 
 from mlx_one.engine.cache_specs import CACHE_BACKENDS
 
-InferenceMode = Literal["reference_dense", "experimental_block", "experimental_dense_batch",
+InferenceMode = Literal["reference_dense", "native_optimized", "experimental_block",
+                        "experimental_dense_batch",
                         "paged", "experimental_hybrid_batch", "auto"]
 
 ACTOR_MODES = {"experimental_dense_batch", "paged", "experimental_hybrid_batch", "auto"}
@@ -17,7 +18,7 @@ class ModelCapabilityUnsupported(ValueError):
 
 
 def resolve_backend(mode: str | None, backend: str | None) -> str:
-    modes = {"reference_dense": "dense", "experimental_block": "block",
+    modes = {"reference_dense": "dense", "native_optimized": "dense", "experimental_block": "block",
              "experimental_dense_batch": "dense", "paged": "paged",
              "experimental_hybrid_batch": "hybrid", "auto": "dense"}
     if mode is not None and mode not in modes:
@@ -94,7 +95,7 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
         from mlx_one.engine.adapters import quantized_modules
 
         try:
-            quantized_modules(bundle)
+            quantized_modules(bundle, allowed_bits=(4, 8))
         except ValueError as exc:
             raise ModelCapabilityUnsupported(str(exc)) from exc
     import mlx.core as mx
@@ -117,6 +118,11 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
 
     bundle.model._mlx_one_execution_policy = {
         "version": EXECUTION_POLICY_VERSION, "dtype": execution_dtype,
+        "hybrid_attention_softmax": "float32-before-mask-v1"
+            if getattr(bundle, "architecture", None) in {"lfm2", "lfm2_moe", "qwen3_5"} else None,
+        "hybrid_affine_projection": "rowwise-gather-qmm-v1"
+            if execution_dtype == "float16" and quantized and
+            getattr(bundle, "architecture", None) in {"lfm2", "lfm2_moe", "qwen3_5"} else None,
         "quantized_payload_preserved": quantized,
         "affine_int8_fp16_arithmetic": {
             "shared_attention_swiglu_projections": "rowwise-gather-qmm-v1",
@@ -132,9 +138,7 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
     named = getattr(bundle.model, "named_modules", None)
     if callable(named):
         for _, module in named():
-            if any(hasattr(module, name) for name in
-                   ("q_proj", "c_attn", "qkv_proj", "in_proj_qkv")):
-                module._mlx_one_activation_dtype = execution_dtype
+            module._mlx_one_activation_dtype = execution_dtype
 
 
 def validate_batch_precision(bundle) -> None:

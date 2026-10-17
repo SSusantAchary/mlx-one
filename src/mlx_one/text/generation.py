@@ -16,6 +16,15 @@ CancelCheck = Callable[[], bool]
 CacheCallback = Callable[[tuple[int, ...], tuple[object, ...]], None]
 
 
+def _decode_piece(tokenizer, token_ids, committed_text, *, final=False):
+    """Commit only stable text; incomplete byte sequences can revise trailing U+FFFD."""
+    text = tokenizer.decode(token_ids)
+    stable = text if final else text.rstrip("\ufffd")
+    if not stable.startswith(committed_text):
+        raise RuntimeError("tokenizer revised previously committed streaming text")
+    return stable[len(committed_text):], stable
+
+
 def stream_generate(
     model: str | Path | LoadedTextModel,
     prompt: str,
@@ -62,6 +71,13 @@ def stream_generate(
     if not isinstance(_cache_manager, CacheManager):
         raise TypeError("_cache_manager must be a CacheManager")
     token_ids = tuple(int(value) for value in bundle.tokenizer.encode(prompt))
+    context_limit = bundle.context_length or _legacy_context_length(bundle)
+    effective_prompt_tokens = len(token_ids) or 1
+    if effective_prompt_tokens >= context_limit:
+        raise ValueError("prompt leaves no room inside the model context window")
+    if not token_ids and bundle.tokenizer.bos_token_id is None:
+        raise ValueError("empty prompt requires a tokenizer BOS token")
+    output_budget = min(resolved.max_tokens, context_limit - effective_prompt_tokens)
     if (_cache_manager.config.backend in {"paged", "hybrid"}
             or getattr(_cache_manager, "requested_mode", None) == "auto"):
         from mlx_one.engine.selection import validate_context_admission
@@ -80,12 +96,12 @@ def stream_generate(
             reused = 0
         requested = _cache_manager.estimate_growth(
             handle,
-            prompt_tokens=len(token_ids),
-            max_new_tokens=resolved.max_tokens,
+            prompt_tokens=effective_prompt_tokens,
+            max_new_tokens=output_budget,
         )
         _cache_manager.reserve(
             handle,
-            tokens=max(len(token_ids) - reused, 0) + resolved.max_tokens,
+            tokens=max(effective_prompt_tokens - reused, 0) + output_budget,
             requested_bytes=requested,
         )
         yield from _stream_bundle(
@@ -247,10 +263,19 @@ def _stream_bundle(
     _forced_token_ids: tuple[int, ...] = (),
     _prepared_input_ids: tuple[int, ...] | None = None,
     _draft_bundle: object | None = None,
+    _math_policy: object | None = None,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
     from mlx_one.core.cache import configure_kv_caches
+    from mlx_one.engine.observation import current_observer
+    from mlx_one.engine.optimization_policy import REFERENCE_MATH, math_execution
+    from mlx_one.ops.logits import LogitsMode
+
+    math_policy = _math_policy or getattr(_cache_runtime, "math_policy", REFERENCE_MATH)
+    request_observer = current_observer()
+    if on_execution is None:
+        on_execution = request_observer
 
     cancelled = is_cancelled or (lambda: False)
     if spec_type not in {"none","draft-mtp","draft-model"} or spec_draft_n_max<1:
@@ -331,7 +356,9 @@ def _stream_bundle(
         if not current:
             raise ValueError("prompt cache must leave at least one token for prefill")
         phase = "prefill" if produced == 0 else "decode"
-        width = _prefill_chunk_size if _cooperative and produced == 0 else len(current)
+        width = (_prefill_chunk_size if _cooperative and produced == 0 else
+                 math_policy.prefill_chunk_size if produced == 0 and
+                 math_policy.prefill_chunk_size is not None else len(current))
         start = 0
         while start < len(current):
             stop = min(start + width, len(current))
@@ -349,6 +376,14 @@ def _stream_bundle(
                 stop = relative
             part = tuple(current[start:stop])
             start = stop
+            if (math_policy != REFERENCE_MATH or
+                    getattr(_cache_runtime, "mode", None) == "native_optimized"):
+                from mlx_one.engine.modes import ModelCapabilityUnsupported
+
+                precision = getattr(bundle.model, "_mlx_one_execution_policy", {})
+                if precision.get("dtype") != "float16":
+                    raise ModelCapabilityUnsupported(
+                        "model precision changed after native math policy was frozen")
             forward_started = time.perf_counter()
             if _cooperative:
                 from mlx_one.engine.batching import ForwardRequest
@@ -376,10 +411,41 @@ def _stream_bundle(
                                 amount += CacheBundle(cache).allocated_nbytes
                             execution.enter_context(_cache_runtime.transient_reservation(amount))
                         staged = CacheBundle(cache).clone() if transactional else None
-                        output = bundle.model(mx.array([part]),
-                                              cache=staged.entries if staged else cache)
-                        # Publication and committed boundaries require evaluated state.
-                        mx.eval(output.logits)
+                        forward_started = time.perf_counter()
+                        with math_execution(math_policy, family=bundle.architecture,
+                                            phase=phase, observer=request_observer):
+                            mode = None
+                            if math_policy.logits == "last_only":
+                                mode = (LogitsMode.NO_LOGITS if start < len(current) and
+                                        not getattr(request_observer, "capture_state", False)
+                                        else LogitsMode.LAST_ONLY)
+                            kwargs = {"cache": staged.entries if staged else cache}
+                            if mode is not None:
+                                kwargs["logits_mode"] = mode
+                            output = bundle.model(mx.array([part]), **kwargs)
+                            if mode is not None:
+                                from mlx_one.engine.modes import ModelCapabilityUnsupported
+
+                                if (output.last_hidden_state is None
+                                        or output.last_hidden_state.shape[:2] != (1, len(part))):
+                                    raise ModelCapabilityUnsupported(
+                                        "native logits selection must retain complete hidden rows")
+                                if (mode == LogitsMode.LAST_ONLY and (output.logits is None
+                                        or output.logits.shape[:2] != (1, 1))):
+                                    raise ModelCapabilityUnsupported(
+                                        "native last-only logits must have shape [1,1,V]")
+                                if mode == LogitsMode.NO_LOGITS and output.logits is not None:
+                                    raise ModelCapabilityUnsupported(
+                                        "unused intermediate logits must not be projected")
+                            # NO_LOGITS is allowed only for unused intermediate chunks.
+                            if output.logits is not None:
+                                mx.eval(output.logits)
+                            else:
+                                from mlx_one.engine.transactions import component_tensors
+
+                                state = [tensor for entry in kwargs["cache"]
+                                         for tensor in component_tensors(entry)]
+                                mx.eval(output.last_hidden_state, state)
                         if cancelled():
                             return
                         if staged is not None:
@@ -402,7 +468,15 @@ def _stream_bundle(
                               "duration_ms": getattr(output, "forward_duration_ms", elapsed_ms),
                               "at": time.perf_counter(),
                               "batch_size": getattr(output, "batch_size", 1),
-                              "input_tokens": len(part), "logits_dtype": str(output.logits.dtype)})
+                              "input_tokens": len(part), "logits_dtype": (str(output.logits.dtype)
+                                  if output.logits is not None else "not_projected")})
+            if request_observer is not None and getattr(request_observer, "capture_bytes", False):
+                request_observer({"kind": "cache_bytes",
+                                  "bytes": sum(int(getattr(entry, "nbytes", 0))
+                                               for entry in cache)})
+            if request_observer is not None and getattr(request_observer, "capture_state", False):
+                request_observer({"kind": "state", "logits": output.logits,
+                                  "cache": cache, "input_ids": part, "phase": phase})
         if cancelled():
             return
         if on_cache_update is not None and produced == 0 and not prompt_cache_published:
@@ -414,11 +488,15 @@ def _stream_bundle(
             prompt_cache_published = True
         logits = output.logits[0, -1]
         using_forced = bool(forced_tokens)
-        token = (
-            forced_tokens.popleft()
-            if using_forced
-            else select_token(logits, options, randomizer)
-        )
+        if request_observer is not None and getattr(request_observer, "profile_math", False):
+            from mlx_one.ops.profiling import phase as math_phase
+
+            with math_phase("sampling", observer=request_observer):
+                token = (forced_tokens.popleft() if using_forced else
+                         select_token(logits, options, randomizer))
+        else:
+            token = (forced_tokens.popleft() if using_forced else
+                     select_token(logits, options, randomizer))
         candidates = [token]
         step_yielded = False
         proposal=None
@@ -526,13 +604,7 @@ def _stream_bundle(
                     sampled_at = pending_times.popleft()
                     if on_execution is not None:
                         on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
-                    current_text = bundle.tokenizer.decode(generated)
-                    piece = (
-                        current_text[len(decoded) :]
-                        if current_text.startswith(decoded)
-                        else current_text
-                    )
-                    decoded = current_text
+                    piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded)
                     step_yielded = True
                     event=GenerationChunk(generated[-1],piece,emitted)
                     if proposal is not None:
@@ -560,11 +632,10 @@ def _stream_bundle(
             on_execution({"kind": "token", "at": sampled_at, "token_id": current_token})
         emitted += 1
         generated.append(current_token)
-        current_text = bundle.tokenizer.decode(generated)
-        piece = current_text[len(decoded) :] if current_text.startswith(decoded) else current_text
-        decoded = current_text
+        piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded)
         yield GenerationChunk(current_token, piece, emitted)
-    yield GenerationChunk(None, "", emitted, finish_reason)
+    trailing, _ = _decode_piece(bundle.tokenizer, generated, decoded, final=True)
+    yield GenerationChunk(None, trailing, emitted, finish_reason)
 
 
 def _legacy_context_length(bundle: LoadedTextModel) -> int:

@@ -20,6 +20,7 @@ from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.gpt2.config import GPT2Config
 from mlx_one.models.shared.execution import attention_matmul, project
 from mlx_one.models.shared.transformer import causal_mask
+from mlx_one.ops.logits import project_logits
 
 
 def gelu_new(value: Any) -> Any:
@@ -195,12 +196,14 @@ class GPT2LMHeadModel(nn.Module):
     def make_cache(self) -> tuple[Any, ...]:
         return make_kv_caches(self.config.n_layer)
 
-    def __call__(self, input_ids: Any, **kwargs: Any) -> ModelOutput:
+    def __call__(self, input_ids: Any, *, logits_mode=None, **kwargs: Any) -> ModelOutput:
         cache = kwargs.get("cache")
         hidden, states, attentions = self.transformer(input_ids, **kwargs)
         return ModelOutput(
-            project(self.transformer.wte, hidden, execution_dtype=getattr(
-                self.transformer.h[0].attn, "_mlx_one_activation_dtype", None), as_linear=True),
+            project_logits(hidden, lambda value: project(self.transformer.wte, value,
+                execution_dtype=getattr(self.transformer.h[0].attn,
+                "_mlx_one_activation_dtype", None), as_linear=True), logits_mode,
+                attention_mask=kwargs.get("attention_mask")),
             hidden,
             cache=cache,
             hidden_states=states,

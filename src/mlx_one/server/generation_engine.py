@@ -349,6 +349,7 @@ class GenerationEngine:
                     generated = chunk.generated_tokens
                     if first_at is None:
                         first_at = time.perf_counter()
+                if chunk.token_id is not None or chunk.text:
                     text, thought = parser.feed(chunk.text) if chunk.text else ("", "")
                     yield GenerationEvent(text=text, reasoning_content=thought)
                 elif chunk.finish_reason is None:

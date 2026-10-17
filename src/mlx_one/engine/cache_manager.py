@@ -48,8 +48,10 @@ class CacheManager:
                                 _digest(self.weight_identity + str(id(bundle.model))))
         self.plan = (_planning.plan if _planning else
                      build_cache_plan(bundle, block_size_tokens=self.config.block_size_tokens))
+        self.has_hybrid_state = any(s.kind in {"conv", "recurrent"}
+                                    for s in self.plan.state_specs)
         self.hybrid_state = (self.config.backend in {"hybrid", "paged"}
-                             and any(s.kind in {"conv","recurrent"} for s in self.plan.state_specs))
+                             and self.has_hybrid_state)
         capacity = self.config.memory_budget_bytes or (2**63 - 1)
         from mlx_one.engine.arena import SegmentedPageArena
 
@@ -233,8 +235,23 @@ class CacheManager:
             step = 256
             tokens = ((tokens + step - 1) // step) * step
         amount = self.plan.bytes_per_token(key_bits=key_bits, value_bits=value_bits) * tokens
-        if self.hybrid_state:
-            amount += self.plan.carry_bytes()
+        if handle.backend == "dense" and key_bits == value_bits == 16:
+            from mlx_one.engine.cache import cache_allocated_nbytes
+
+            total = max(prompt_tokens, 0) + max(max_new_tokens, 0)
+            total = ((total + 255) // 256) * 256
+            existing_kv = sum(cache_allocated_nbytes(entry)
+                for spec, entry in zip(self.plan.state_specs, handle.bundle.entries, strict=True)
+                if spec.kind in {"full_kv", "sliding_kv"})
+            amount = max(self.plan.bytes_per_token() * total - existing_kv, 0)
+        carry_growth = 0
+        if self.has_hybrid_state:
+            from mlx_one.engine.cache import cache_allocated_nbytes
+
+            existing_carries = sum(cache_allocated_nbytes(entry)
+                for spec, entry in zip(self.plan.state_specs, handle.bundle.entries, strict=True)
+                if spec.kind in {"conv", "recurrent"})
+            carry_growth = max(self.plan.carry_bytes() - existing_carries, 0)
         if handle.backend == "paged" and key_bits < 16:
             # FP16 scales+biases per 32 scalars plus floating tails and sealing overlap.
             amount = sum((s.num_kv_heads or 0) * tokens * sum(
@@ -242,36 +259,26 @@ class CacheManager:
                 for dim in (s.key_head_dim or 0, s.value_head_dim or s.key_head_dim or 0))
                 for s in self.plan.layer_specs)
             amount += self.plan.bytes_per_token() * self.config.block_size_tokens * 16
+        amount += carry_growth
+        handle.metadata["admission_request"] = {
+            "prompt_tokens": prompt_tokens, "requested_output_tokens": max_new_tokens,
+            "estimated_kv_growth_bytes": max(amount - carry_growth, 0),
+            "estimated_hybrid_carry_growth_bytes": carry_growth,
+            "total_growth_bytes": amount}
         return amount
 
     def _host_capacity(self, amount, *, transient=False):
-        """Observed working set overlaps owner bytes; use their maximum, never their sum."""
-        from mlx_one.engine.pressure import sample_telemetry
+        from mlx_one.engine.admission import check_host_capacity
 
-        now = time.monotonic()
-        if self._capacity_snapshot is None or now - self._capacity_sampled_at >= 1:
-            self._capacity_snapshot, self._capacity_sampled_at = sample_telemetry(), now
-        telemetry = self._capacity_snapshot
-        ceilings = [v for v in (int(telemetry.installed_bytes * .75)
-                    if telemetry.installed_bytes else None, telemetry.recommended_bytes)
-                    if v is not None]
-        if not ceilings:
-            self.capacity_diagnostics = {"status": "unverified",
-                "reason": "host ceiling unavailable; configured cache limit only",
-                "cache_limit_bytes": self.config.memory_budget_bytes}
-            return
-        stats = self.stats()
-        ceiling = min(ceilings)
-        allocator = (telemetry.mlx_active_bytes or 0) + (telemetry.mlx_cached_bytes or 0)
-        owner = self.model_bytes + stats.physical_bytes
-        working = max(telemetry.rss_bytes or 0, allocator, owner)
-        self.capacity_diagnostics = {"status": "bounded", "ceiling_bytes": ceiling,
-            "working_set_bytes": working, "owner_bytes": owner,
-            "reserved_bytes": stats.reserved_bytes, "requested_bytes": amount,
-            "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested"}
-        if working + stats.reserved_bytes + amount > ceiling:
-            raise CacheCapacityError("request exceeds conservative host memory headroom",
-                retryable=not transient and self.model_bytes + amount <= ceiling)
+        check_host_capacity(self, amount, transient=transient)
+
+    def _capacity_rejection(self, reason, *, retryable, stage):
+        from mlx_one.engine.admission import _publish
+
+        record = dict(self.capacity_diagnostics, decision="reject", stage=stage,
+                      rejection_reason=reason, retryable=retryable)
+        _publish(self, record)
+        return CacheCapacityError(reason, retryable=retryable)
 
     def reserve(
         self,
@@ -294,11 +301,20 @@ class CacheManager:
                 raise ValueError("reserved cache bytes cannot be negative")
             self._host_capacity(amount)
             if self.pressure is not None:
-                self.pressure.shed(self)
-                stats = self.stats()
-                self.pressure.admission(amount,
-                                        owner_physical=stats.physical_bytes + self.model_bytes,
-                                        outstanding=stats.reserved_bytes)
+                try:
+                    self.pressure.shed(self)
+                    stats = self.stats()
+                    self.pressure.admission(amount,
+                                            owner_physical=stats.physical_bytes + self.model_bytes,
+                                            outstanding=stats.reserved_bytes)
+                except Exception as error:
+                    from mlx_one.engine.admission import _publish
+
+                    _publish(self, dict(self.capacity_diagnostics, decision="reject",
+                        stage="pressure", rejection_reason=str(error),
+                        retryable=getattr(error, "retryable", False),
+                        error_type=type(error).__name__))
+                    raise
             available = self.available_bytes()
             if available is not None and amount > available:
                 self.clear_prefixes()
@@ -308,11 +324,11 @@ class CacheManager:
                 self._admission_failures += 1
                 budget = self.config.memory_budget_bytes or 0
                 if amount > budget:
-                    raise CacheCapacityError(
+                    raise self._capacity_rejection(
                         "request exceeds the configured cache budget",
-                        retryable=False,
-                    )
-                raise CacheCapacityError("request does not fit the available cache budget")
+                        retryable=False, stage="cache-budget")
+                raise self._capacity_rejection("request does not fit the available cache budget",
+                                               retryable=True, stage="cache-budget")
             reservation = CacheReservation(
                 f"reservation-{uuid.uuid4().hex}", handle.handle_id, amount, tokens
             )
@@ -352,19 +368,29 @@ class CacheManager:
                 raise ValueError("transient bytes cannot be negative")
             self._host_capacity(amount, transient=True)
             if self.pressure is not None:
-                self.pressure.shed(self)
-                stats = self.stats()
-                self.pressure.forward(amount,
-                                      owner_physical=stats.physical_bytes + self.model_bytes,
-                                      outstanding=stats.reserved_bytes)
+                try:
+                    self.pressure.shed(self)
+                    stats = self.stats()
+                    self.pressure.forward(amount,
+                                          owner_physical=stats.physical_bytes + self.model_bytes,
+                                          outstanding=stats.reserved_bytes)
+                except Exception as error:
+                    from mlx_one.engine.admission import _publish
+
+                    _publish(self, dict(self.capacity_diagnostics, decision="reject",
+                        stage="pressure", rejection_reason=str(error),
+                        retryable=getattr(error, "retryable", False),
+                        error_type=type(error).__name__))
+                    raise
             available = self.available_bytes()
             if available is not None and amount > available:
                 self.clear_prefixes()
                 self.block_pool.discard_free()
                 available = self.available_bytes()
             if available is not None and amount > available:
-                raise CacheCapacityError("temporary dense batch buffers exceed cache budget",
-                                         retryable=False)
+                raise self._capacity_rejection(
+                    "temporary dense batch buffers exceed cache budget",
+                    retryable=False, stage="cache-budget")
             self._transient_bytes += amount
         try:
             yield

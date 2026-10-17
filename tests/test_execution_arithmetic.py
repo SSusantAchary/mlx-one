@@ -62,7 +62,8 @@ class Projection(dict):
         return value+2
 
 
-def test_gathered_projection_preserves_packed_payload_and_optional_bias(core):
+@pytest.mark.parametrize('bits', [4, 8])
+def test_gathered_projection_preserves_packed_payload_and_optional_bias(core, bits):
     calls=[]
     def qmm(rows,weight,**options):
         calls.append((rows.copy(),weight,options))
@@ -70,6 +71,7 @@ def test_gathered_projection_preserves_packed_payload_and_optional_bias(core):
         return np.repeat(rows.sum(axis=-1,keepdims=True),3,axis=-1)
     core.gather_qmm=qmm
     module=Projection()
+    module.bits=bits
     module.bias=np.array([1,2,3],dtype=np.float16)
     module['bias']=module.bias
     value=np.arange(24,dtype=np.float16).reshape(2,3,4)
@@ -78,6 +80,7 @@ def test_gathered_projection_preserves_packed_payload_and_optional_bias(core):
     rows,weight,options=calls[0]
     assert rows.shape == (6,1,4) and weight is module.weight
     assert options['scales'] is module.scales and options['biases'] is module.biases
+    assert options['bits'] == bits and options['mode'] == 'affine'
     np.testing.assert_array_equal(options['lhs_indices'],np.arange(6))
     np.testing.assert_array_equal(options['rhs_indices'],np.zeros(6))
     assert output.dtype == np.float16 and module.weight.dtype == np.uint32
@@ -85,7 +88,7 @@ def test_gathered_projection_preserves_packed_payload_and_optional_bias(core):
     np.testing.assert_array_equal(tied,output-module.bias)
 
 
-@pytest.mark.parametrize('dtype,bits',[(None,8),('bfloat16',8),('float16',4)])
+@pytest.mark.parametrize('dtype,bits',[(None,8),(None,4),('bfloat16',8),('float16',2)])
 def test_omitted_policy_and_other_formats_keep_module_dispatch(core,dtype,bits):
     module=Projection()
     module.bits=bits

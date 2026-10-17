@@ -18,6 +18,7 @@ from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.qwen2.config import Qwen2Config
 from mlx_one.models.shared.transformer import DecoderLayer, causal_mask
+from mlx_one.ops.logits import native_projection, project_logits
 
 
 class Qwen2Model(nn.Module):
@@ -45,7 +46,8 @@ class Qwen2Model(nn.Module):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
         paged = cache is not None and callable(getattr(cache[0], "attend", None))
-        mask = None if paged else causal_mask(hidden.shape[1], offset)
+        mask = None if paged else causal_mask(hidden.shape[1], offset,
+                                                     optimized=attention_mask is None)
         if attention_mask is not None:
             expected = (hidden.shape[0], offset + hidden.shape[1])
             if attention_mask.shape != expected:
@@ -88,6 +90,7 @@ class Qwen2ForCausalLM(nn.Module):
         attention_mask: Any | None = None,
         position_ids: Any | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> ModelOutput:
         hidden, cache, states = self.model(
             input_ids,
@@ -96,9 +99,8 @@ class Qwen2ForCausalLM(nn.Module):
             position_ids=position_ids,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.model.embed_tokens.as_linear(hidden)
-            if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
-        )
+        logits = project_logits(hidden, lambda value: (
+            native_projection(self.model.embed_tokens, value, as_linear=True)
+            if self.config.tie_word_embeddings else native_projection(self.lm_head, value)
+        ), logits_mode, attention_mask=attention_mask)
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

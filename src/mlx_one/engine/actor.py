@@ -419,7 +419,8 @@ class InferenceActor:
                     runtimes = {id(j.request.runtime): j.request.runtime for j in self._active
                                 if j.request is not None and j.request.runtime is not None}
                     for runtime in runtimes.values():
-                        self.pressure.shed(runtime)
+                        self.device_executor.call(id(runtime),
+                            lambda owner=runtime: self.pressure.shed(owner))
                 self._admit()
                 now = time.monotonic()
                 with self._condition:

@@ -190,18 +190,40 @@ class MemoryPressureController:
             raise CacheCapacityError("forward cannot fit its transient pressure reservation",
                                      retryable=False)
 
+    def _refresh_after_reclaim(self, snapshot):
+        self._latest = (snapshot, self.clock())
+        self.last_sample = -float("inf")
+        self.poll()
+
     def shed(self, runtime):
         if self.poll() not in {"warning", "critical"}:
             return
         if self._last_shed_sample == (self.last_sample, id(runtime)):
             return
+        from mlx_one.engine.device_executor import DeviceExecutor
+
+        owner = DeviceExecutor._shared
+        if owner is None or not owner.is_owner or getattr(runtime, "_transient_bytes", 0):
+            return
+        stats = runtime.stats()
+        if not (stats.evictable_bytes or stats.retained_free_bytes
+                or self.last.mlx_cached_bytes):
+            return
         self._last_shed_sample = (self.last_sample, id(runtime))
+        mx = sys.modules.get("mlx.core")
+        synchronize = getattr(mx, "synchronize", None)
+        if mx is not None and (not callable(synchronize) or
+                               not callable(getattr(mx, "clear_cache", None))):
+            return
+        if callable(synchronize):
+            synchronize()
         runtime.clear_prefixes()
         runtime.block_pool.discard_free()
-        mx = sys.modules.get("mlx.core")
         if mx is not None and callable(getattr(mx, "clear_cache", None)):
             mx.clear_cache()
+        runtime._capacity_snapshot = None
         self.eviction_actions += 1
+        self._refresh_after_reclaim(self.telemetry())
 
     def stats(self):
         return {"state": self.state, "ceiling_bytes": self.ceiling,
@@ -212,7 +234,7 @@ class MemoryPressureController:
                 "rejected_forwards": self.rejected_forwards}
 
 
-def activation_forecast(config, *, batch, chunk, history, calibrated_peak=None):
+def activation_forecast(config, *, batch, chunk, history, calibrated_peak=None, math_policy=None):
     """Conservative analytical increments; calibration is an explicit separate source."""
     if min(batch, chunk) < 1 or history < 0:
         raise ValueError("invalid activation forecast dimensions")
@@ -231,8 +253,21 @@ def activation_forecast(config, *, batch, chunk, history, calibrated_peak=None):
     intermediate = int(getattr(config,"intermediate_size",getattr(config,"inner_dim",
                        max(getattr(config,"ffn_dims",(hidden*4,))))) or hidden*4)
     vocab = int(getattr(config, "vocab_size", 0))
-    amount = batch * chunk * (hidden * 12 + intermediate * 4 + vocab * 4)
+    logits_rows = 1 if math_policy is not None and math_policy.logits == "last_only" else chunk
+    amount = batch * chunk * (hidden * 12 + intermediate * 4)
+    amount += batch * logits_rows * vocab * 4
     amount += batch * heads * chunk * (history + chunk) * 4
+    from mlx_one.engine.optimization_policy import REFERENCE_MATH
+
+    if math_policy is not None and math_policy != REFERENCE_MATH:
+        from mlx_one.models.shared.execution import attention_scratch_bound
+
+        dimension = int(getattr(config, "head_dim", hidden // heads))
+        # The reference scores and softmax overlap are still a conservative
+        # bound for an experimental fused route. Do not infer measured scratch
+        # savings or use a calibration from a different math/logits policy.
+        amount += attention_scratch_bound(batch=batch, heads=heads, head_dim=dimension,
+                                          chunk=chunk, history=history)
     return {"bytes": amount, "source": "conservative-analytical", "measured": False}
 
 
@@ -245,7 +280,11 @@ def execution_forecast(runtime, config, *, batch, chunk, history, explicit_bytes
                   "widths": list(widths or [chunk] * batch),
                   "phase": phase or ("decode" if chunk == 1 else "prefill")}
     registry = getattr(runtime, "qualification_registry", None)
-    if registry is not None:
+    from mlx_one.engine.optimization_policy import REFERENCE_MATH
+
+    policy = getattr(runtime, "math_policy", REFERENCE_MATH)
+    if (registry is not None and policy == REFERENCE_MATH
+            and getattr(runtime, "mode", None) != "native_optimized"):
         import json
         from dataclasses import asdict
         from pathlib import Path
@@ -284,7 +323,8 @@ def execution_forecast(runtime, config, *, batch, chunk, history, explicit_bytes
                 calibrated = peak["incremental_bytes"]
                 break
     result = activation_forecast(config, batch=batch, chunk=chunk, history=history,
-                                 calibrated_peak=calibrated)
+                                 calibrated_peak=calibrated,
+                                 math_policy=getattr(runtime, "math_policy", None))
     result["bytes"] = (max(result["bytes"], explicit_bytes) if calibrated is not None
                        else result["bytes"] + explicit_bytes)
     if runtime is not None:

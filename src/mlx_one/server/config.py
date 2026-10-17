@@ -52,6 +52,9 @@ class ServerConfig:
     transcription_enabled: bool = False
 
     def __post_init__(self) -> None:
+        if self.inference_mode == "native_optimized":
+            raise ModelCapabilityUnsupported(
+                "native_optimized math policy currently requires the Python Engine")
         object.__setattr__(
             self, "cache_backend", resolve_backend(self.inference_mode, self.cache_backend)
         )

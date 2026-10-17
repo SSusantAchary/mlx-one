@@ -14,14 +14,32 @@ def sanitize_weights(weights: dict[str, Any], config: Qwen3_5Config) -> dict[str
         name = original
         if name.endswith(("rotary_emb.inv_freq", "position_ids")):
             continue
-        if name == "lm_head.weight" and config.tie_word_embeddings:
-            continue
         if name.startswith("model."):
             name = name.removeprefix("model.")
+        if name.startswith("language_model.model."):
+            name = "language_model." + name.removeprefix("language_model.model.")
+        elif name.startswith("language_model.lm_head."):
+            name = "lm_head." + name.removeprefix("language_model.lm_head.")
+        elif name.startswith("vision_tower."):
+            name = "visual." + name.removeprefix("vision_tower.")
+        if name == "lm_head.weight" and config.tie_word_embeddings:
+            continue
         if name.endswith("linear_attn.conv1d.weight") and value.ndim == 3:
-            value = value.squeeze(1)
+            kernel = config.text_config.linear_conv_kernel_dim
+            if tuple(value.shape[1:]) == (1, kernel):
+                value = value.squeeze(1)
+            elif tuple(value.shape[1:]) == (kernel, 1):
+                value = value.squeeze(-1)
+            else:
+                raise ValueError("unsupported Qwen3.5 convolution layout")
         if name == "visual.patch_embed.proj.weight" and value.ndim == 5:
+            vision = config.vision_config
+            if tuple(value.shape[1:]) == (vision.temporal_patch_size, vision.patch_size,
+                                         vision.patch_size, vision.in_channels):
+                value = value.transpose(0, 4, 1, 2, 3)
             value = value.reshape(value.shape[0], -1)
+        if name in sanitized:
+            raise ValueError(f"duplicate canonical Qwen3.5 weight: {name}")
         sanitized[name] = value
     return sanitized
 

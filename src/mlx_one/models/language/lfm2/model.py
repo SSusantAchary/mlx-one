@@ -16,8 +16,10 @@ import mlx.nn as nn
 from mlx_one.core.cache import make_hybrid_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.lfm2.config import Lfm2Config
+from mlx_one.models.shared.execution import project
 from mlx_one.models.shared.hybrid import HybridDecoderLayer, sliding_causal_mask
 from mlx_one.models.shared.transformer import causal_mask
+from mlx_one.ops.logits import project_logits
 
 
 class Lfm2Model(nn.Module):
@@ -92,6 +94,7 @@ class Lfm2ForCausalLM(nn.Module):
         attention_mask: Any | None = None,
         position_ids: Any | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> ModelOutput:
         hidden, cache, states = self.model(
             input_ids,
@@ -101,9 +104,12 @@ class Lfm2ForCausalLM(nn.Module):
             position_ids=position_ids,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.model.embed_tokens.as_linear(hidden)
+        logits = project_logits(hidden, lambda value: (
+            project(self.model.embed_tokens, value,
+                    execution_dtype=getattr(self, "_mlx_one_activation_dtype", None),
+                    as_linear=True)
             if self.config.tie_embedding
-            else self.lm_head(hidden)
-        )
+            else project(self.lm_head, value,
+                         execution_dtype=getattr(self, "_mlx_one_activation_dtype", None))
+        ), logits_mode, attention_mask=attention_mask)
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

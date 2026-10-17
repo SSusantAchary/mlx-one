@@ -7,12 +7,19 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
-from mlx_one.models.shared.execution import attention_matmul, project
+from mlx_one.models.shared.execution import project
+from mlx_one.ops.attention import attention, select_attention
+from mlx_one.ops.profiling import phase
 
 
-def causal_mask(length: int, offset: int = 0) -> Any | None:
+def causal_mask(length: int, offset: int = 0, *, optimized: bool = False) -> Any | None:
     if length <= 1 and offset > 0:
         return None
+    if optimized:
+        from mlx_one.engine.optimization_policy import current_math
+
+        if current_math().policy.attention == "mlx_sdpa":
+            return "causal"
     return mx.triu(mx.full((length, offset + length), -float("inf")), k=offset + 1)
 
 
@@ -104,11 +111,14 @@ class GroupedQueryAttention(nn.Module):
     ) -> Any:
         batch, length, _ = hidden_states.shape
         execution_dtype = getattr(self, "_mlx_one_activation_dtype", None)
-        queries = project(self.q_proj, hidden_states, execution_dtype=execution_dtype).reshape(
+        queries = project(self.q_proj, hidden_states,
+            role="attention_qkv", execution_dtype=execution_dtype).reshape(
             batch, length, self.num_heads, self.head_dim)
-        keys = project(self.k_proj, hidden_states, execution_dtype=execution_dtype).reshape(
+        keys = project(self.k_proj, hidden_states,
+            role="attention_qkv", execution_dtype=execution_dtype).reshape(
             batch, length, self.num_kv_heads, self.head_dim)
-        values = project(self.v_proj, hidden_states, execution_dtype=execution_dtype).reshape(
+        values = project(self.v_proj, hidden_states,
+            role="attention_qkv", execution_dtype=execution_dtype).reshape(
             batch, length, self.num_kv_heads, self.head_dim)
         if self.q_norm is not None:
             queries = self.q_norm(queries)
@@ -142,28 +152,21 @@ class GroupedQueryAttention(nn.Module):
             output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
             if execution_dtype is not None:
                 output = output.astype(getattr(mx, execution_dtype))
-            return project(self.o_proj, output, execution_dtype=execution_dtype)
+            return project(self.o_proj, output,
+                role="attention_output", execution_dtype=execution_dtype)
+        decision = select_attention(queries, keys, values, mask=mask, history=offset)
         if cache is not None:
-            keys, values = cache.update(keys, values)
-        repeats = self.num_heads // self.num_kv_heads
-        keys = _repeat_kv(keys, repeats)
-        values = _repeat_kv(values, repeats)
+            with phase("kv_append", output=lambda: (keys, values)):
+                keys, values = cache.update(keys, values)
         stable_int8 = execution_dtype == "float16" and getattr(self.q_proj, "bits", None) == 8
-        scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable_int8
-                  else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
-        if execution_dtype is not None:
-            # A neutral FP32 padding mask must not change softmax/value arithmetic.
-            # Promote scores without allocating FP32 copies of the KV history.
-            scores = scores.astype(mx.float32)
-        if mask is not None:
-            scores = scores + mask
-        probabilities = mx.softmax(scores, axis=-1, precise=True)
-        output = (attention_matmul(probabilities, values) if stable_int8
-                  else probabilities @ values)
+        output = attention(queries, keys, values, scale=self.scale, mask=mask,
+                           stable=stable_int8, promote=execution_dtype is not None,
+                           decision=decision)
         output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
         if execution_dtype is not None:
             output = output.astype(getattr(mx, execution_dtype))
-        return project(self.o_proj, output, execution_dtype=execution_dtype)
+        return project(self.o_proj, output,
+            role="attention_output", execution_dtype=execution_dtype)
 
 
 class SwiGLU(nn.Module):
@@ -174,10 +177,10 @@ class SwiGLU(nn.Module):
         self.down_proj = nn.Linear(intermediate_size, hidden_size, bias=False)
 
     def __call__(self, value: Any, *, execution_dtype: str | None = None) -> Any:
-        gate = project(self.gate_proj, value, execution_dtype=execution_dtype)
-        up = project(self.up_proj, value, execution_dtype=execution_dtype)
+        gate = project(self.gate_proj, value, role="mlp", execution_dtype=execution_dtype)
+        up = project(self.up_proj, value, role="mlp", execution_dtype=execution_dtype)
         return project(self.down_proj, (gate * mx.sigmoid(gate)) * up,
-                       execution_dtype=execution_dtype)
+                       role="mlp", execution_dtype=execution_dtype)
 
 
 class DecoderLayer(nn.Module):

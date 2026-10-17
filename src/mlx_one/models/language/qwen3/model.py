@@ -19,6 +19,7 @@ from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.qwen3.config import Qwen3Config
 from mlx_one.models.shared.execution import project
 from mlx_one.models.shared.transformer import DecoderLayer, causal_mask
+from mlx_one.ops.logits import project_logits
 
 
 class Qwen3Model(nn.Module):
@@ -48,7 +49,8 @@ class Qwen3Model(nn.Module):
         if cache is not None and len(cache) != len(self.layers):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
-        mask = causal_mask(hidden.shape[1], offset)
+        mask = causal_mask(hidden.shape[1], offset,
+                                                     optimized=attention_mask is None)
         if attention_mask is not None:
             expected = (hidden.shape[0], offset + hidden.shape[1])
             if attention_mask.shape != expected:
@@ -87,11 +89,12 @@ class Qwen3ForCausalLM(nn.Module):
     def make_cache(self) -> tuple[Any, ...]:
         return make_kv_caches(self.config.num_hidden_layers)
 
-    def __call__(self, input_ids: Any, **kwargs: Any) -> ModelOutput:
+    def __call__(self, input_ids: Any, *, logits_mode=None, **kwargs: Any) -> ModelOutput:
         hidden, cache, states = self.model(input_ids, **kwargs)
         execution_dtype = getattr(self.model.layers[0].self_attn,
                                   "_mlx_one_activation_dtype", None)
-        logits = project(self.model.embed_tokens if self.config.tie_word_embeddings
-                         else self.lm_head, hidden, execution_dtype=execution_dtype,
-                         as_linear=self.config.tie_word_embeddings)
+        logits = project_logits(hidden, lambda value: project(
+            self.model.embed_tokens if self.config.tie_word_embeddings else self.lm_head,
+            value, execution_dtype=execution_dtype, as_linear=self.config.tie_word_embeddings),
+            logits_mode, attention_mask=kwargs.get("attention_mask"))
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

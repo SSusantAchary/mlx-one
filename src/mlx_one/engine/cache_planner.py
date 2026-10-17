@@ -21,6 +21,11 @@ def build_cache_plan(bundle: Any, *, block_size_tokens: int = 32) -> CachePlan:
     config = getattr(model, "config", None)
     text = getattr(config, "text_config", config)
     specs = tuple(_layer_spec(index, cache, text) for index, cache in enumerate(prototype))
+    execution_dtype = getattr(model, "_mlx_one_activation_dtype", None)
+    if execution_dtype in {"float16", "bfloat16"}:
+        specs = tuple(replace(spec, state_dtypes=(execution_dtype,))
+                      if spec.kind is CacheKind.CONV_STATE and not spec.state_dtypes else spec
+                      for spec in specs)
     declared = getattr(model, "layer_execution_specs", None)
     if callable(declared):
         layouts = declared()

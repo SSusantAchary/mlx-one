@@ -11,6 +11,7 @@ from mlx_one.compat.unsloth import FastLanguageModel
 from mlx_one.engine.batching import BatchingConfig
 from mlx_one.engine.cache_specs import CacheConfig
 from mlx_one.engine.envelope import QualificationEnvelope
+from mlx_one.engine.optimization_policy import NativeMathPolicy
 from mlx_one.engine.pressure import MemoryPressureConfig
 from mlx_one.engine.public import Engine, EngineRequestHandle
 from mlx_one.hardware import (
@@ -89,6 +90,7 @@ from mlx_one.training import SFTTrainer
 __version__ = "0.1.0a1"
 
 __all__ = [
+    "NativeMathPolicy",
     "MemoryPressureConfig",
     "QualificationEnvelope",
     "SCHEMA_VERSION",

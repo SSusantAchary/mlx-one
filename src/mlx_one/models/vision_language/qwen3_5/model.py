@@ -21,6 +21,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import KVCache
 from mlx_one.core.outputs import VisionLanguageModelOutput
 from mlx_one.engine.compound import CompoundLinearComponent, compound_layout
+from mlx_one.models.shared.execution import attention_matmul, project
 from mlx_one.models.shared.transformer import causal_mask
 from mlx_one.models.shared.vision import VisionAttention, vision_position_ids
 from mlx_one.models.vision_language.qwen2_vl.model import (
@@ -28,6 +29,7 @@ from mlx_one.models.vision_language.qwen2_vl.model import (
     multimodal_position_ids,
 )
 from mlx_one.models.vision_language.qwen3_5.config import Qwen3_5Config, Qwen3_5TextConfig
+from mlx_one.ops.logits import project_logits
 
 
 def _silu(value: Any) -> Any:
@@ -134,7 +136,8 @@ class Qwen3_5GatedDeltaNet(nn.Module):
     ) -> Any:
         if attention_mask is not None:
             hidden = hidden * attention_mask[:, -hidden.shape[1] :, None]
-        mixed = _silu(self.conv1d(self.in_proj_qkv(hidden), cache))
+        policy = getattr(self, "_mlx_one_activation_dtype", None)
+        mixed = _silu(self.conv1d(project(self.in_proj_qkv, hidden, execution_dtype=policy), cache))
         query, key, value = mx.split(mixed, (self.key_dim, self.key_dim * 2), axis=-1)
         batch, length, _ = hidden.shape
         query = query.reshape(batch, length, self.num_k_heads, self.head_k_dim)
@@ -145,8 +148,9 @@ class Qwen3_5GatedDeltaNet(nn.Module):
         key = mx.repeat(key, repeats, axis=2)
         query = _l2_normalize(query) * self.head_k_dim**-0.5
         key = _l2_normalize(key)
-        beta = mx.sigmoid(self.in_proj_b(hidden))
-        a = self.in_proj_a(hidden).astype(mx.float32) + self.dt_bias
+        beta = mx.sigmoid(project(self.in_proj_b, hidden, execution_dtype=policy))
+        a = (project(self.in_proj_a, hidden, execution_dtype=policy).astype(mx.float32)
+             + self.dt_bias)
         decay = mx.exp(-mx.exp(self.A_log) * mx.logaddexp(a, mx.zeros_like(a)))
         state = None if cache is None else cache.recurrent_state
         if state is None:
@@ -167,9 +171,11 @@ class Qwen3_5GatedDeltaNet(nn.Module):
         if cache is not None:
             cache.recurrent_state = state
         core = mx.stack(outputs, axis=1)
-        z = self.in_proj_z(hidden).reshape(batch, length, self.num_v_heads, self.head_v_dim)
+        z = project(self.in_proj_z, hidden, execution_dtype=policy).reshape(
+            batch, length, self.num_v_heads, self.head_v_dim)
         core = self.norm(core, z)
-        result = self.out_proj(core.reshape(batch, length, self.value_dim))
+        result = project(self.out_proj, core.reshape(batch, length, self.value_dim),
+                         execution_dtype=policy)
         dtype = getattr(self,"_mlx_one_activation_dtype",None)
         return result.astype(getattr(mx,dtype)) if dtype is not None else result
 
@@ -232,14 +238,15 @@ class Qwen3_5Attention(nn.Module):
         self, hidden: Any, *, mask: Any | None, position_ids: Any, cache: KVCache | None
     ) -> Any:
         batch, length, _ = hidden.shape
-        projected = self.q_proj(hidden).reshape(
+        dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        projected = project(self.q_proj, hidden, execution_dtype=dtype).reshape(
             batch, length, self.config.num_attention_heads, self.config.head_dim * 2
         )
         query, gate = mx.split(projected, 2, axis=-1)
-        key = self.k_proj(hidden).reshape(
+        key = project(self.k_proj, hidden, execution_dtype=dtype).reshape(
             batch, length, self.config.num_key_value_heads, self.config.head_dim
         )
-        value = self.v_proj(hidden).reshape(
+        value = project(self.v_proj, hidden, execution_dtype=dtype).reshape(
             batch, length, self.config.num_key_value_heads, self.config.head_dim
         )
         query = self.q_norm(query).transpose(0, 2, 1, 3)
@@ -259,15 +266,21 @@ class Qwen3_5Attention(nn.Module):
             repeats = self.config.num_attention_heads // self.config.num_key_value_heads
             key = mx.repeat(key, repeats, axis=1)
             value = mx.repeat(value, repeats, axis=1)
-            scores = (query @ key.transpose(0, 1, 3, 2)) * self.config.head_dim**-0.5
+            stable = dtype == "float16" and getattr(self.q_proj, "bits", None) in {4, 8}
+            scores = (attention_matmul(query, key.transpose(0, 1, 3, 2)) if stable
+                      else query @ key.transpose(0, 1, 3, 2)) * self.config.head_dim**-0.5
+            if dtype is not None:
+                scores = scores.astype(mx.float32)
             if mask is not None:
                 scores = scores + mask
-            attended = mx.softmax(scores, axis=-1, precise=True) @ value
+            probabilities = mx.softmax(scores, axis=-1, precise=True)
+            attended = (attention_matmul(probabilities, value) if stable
+                        else probabilities @ value)
         attended = attended.transpose(0, 2, 1, 3)
         attended = attended * mx.sigmoid(gate)
         if dtype is not None:
             attended = attended.astype(getattr(mx,dtype))
-        return self.o_proj(attended.reshape(batch, length, -1))
+        return project(self.o_proj, attended.reshape(batch, length, -1), execution_dtype=dtype)
 
 
 class Qwen3_5MLP(nn.Module):
@@ -278,7 +291,10 @@ class Qwen3_5MLP(nn.Module):
         self.down_proj = nn.Linear(config.intermediate_size, config.hidden_size, bias=False)
 
     def __call__(self, hidden: Any) -> Any:
-        return self.down_proj(_silu(self.gate_proj(hidden)) * self.up_proj(hidden))
+        policy = getattr(self, "_mlx_one_activation_dtype", None)
+        gate = project(self.gate_proj, hidden, execution_dtype=policy)
+        up = project(self.up_proj, hidden, execution_dtype=policy)
+        return project(self.down_proj, _silu(gate) * up, execution_dtype=policy)
 
 
 class Qwen3_5DecoderLayer(nn.Module):
@@ -583,9 +599,12 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
             embeddings, hidden_states, cache=cache, position_offset=position_offset
         )
         return (
-            self.language_model.embed_tokens.as_linear(hidden)
+            project(self.language_model.embed_tokens, hidden,
+                    execution_dtype=getattr(self, "_mlx_one_activation_dtype", None),
+                    as_linear=True)
             if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
+            else project(self.lm_head, hidden,
+                         execution_dtype=getattr(self, "_mlx_one_activation_dtype", None))
         )
 
     def make_cache(self) -> tuple[Any, ...]:
@@ -616,6 +635,7 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
         position_ids: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> VisionLanguageModelOutput:
         embeddings = self.language_model.embed_tokens(input_ids)
         vision_states = []
@@ -665,11 +685,14 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
             cache=cache,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.language_model.embed_tokens.as_linear(hidden)
+        logits = project_logits(hidden, lambda value: (
+            project(self.language_model.embed_tokens, value,
+                    execution_dtype=getattr(self, "_mlx_one_activation_dtype", None),
+                    as_linear=True)
             if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
-        )
+            else project(self.lm_head, value,
+                         execution_dtype=getattr(self, "_mlx_one_activation_dtype", None))
+        ), logits_mode, attention_mask=attention_mask)
         return VisionLanguageModelOutput(
             logits,
             hidden,
