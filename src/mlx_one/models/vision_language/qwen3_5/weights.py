@@ -10,18 +10,56 @@ from mlx_one.models.vision_language.qwen3_5.config import Qwen3_5Config
 
 def sanitize_weights(weights: dict[str, Any], config: Qwen3_5Config) -> dict[str, Any]:
     sanitized: dict[str, Any] = {}
+    # MLX-LM folds 1 + weight into these norms when transposing HF convolutions.
+    # Our model retains HF offset norms, so undo folding only for publisher MLX
+    # layout [channels, kernel, 1]. Native 2D and HF [channels, 1, kernel] stay raw.
+    conv_layouts = {
+        tuple(value.shape[1:])
+        for name, value in weights.items()
+        if name.endswith("linear_attn.conv1d.weight") and value.ndim == 3
+    }
+    kernel = config.text_config.linear_conv_kernel_dim
+    if (kernel, 1) in conv_layouts and (1, kernel) in conv_layouts and kernel != 1:
+        raise ValueError("mixed HF and MLX Qwen3.5 convolution layouts")
+    folded_norms = kernel != 1 and (kernel, 1) in conv_layouts
+    offset_norms = (
+        ".input_layernorm.weight", ".post_attention_layernorm.weight",
+        ".q_norm.weight", ".k_norm.weight",
+    )
     for original, value in weights.items():
         name = original
         if name.endswith(("rotary_emb.inv_freq", "position_ids")):
             continue
-        if name == "lm_head.weight" and config.tie_word_embeddings:
-            continue
         if name.startswith("model."):
             name = name.removeprefix("model.")
+        if name.startswith("language_model.model."):
+            name = "language_model." + name.removeprefix("language_model.model.")
+        elif name.startswith("language_model.lm_head."):
+            name = "lm_head." + name.removeprefix("language_model.lm_head.")
+        elif name.startswith("vision_tower."):
+            name = "visual." + name.removeprefix("vision_tower.")
+        if name == "lm_head.weight" and config.tie_word_embeddings:
+            continue
+        if folded_norms and (name == "language_model.norm.weight" or (
+            name.startswith("language_model.layers.") and name.endswith(offset_norms)
+        )):
+            value = value - 1.0
         if name.endswith("linear_attn.conv1d.weight") and value.ndim == 3:
-            value = value.squeeze(1)
+            kernel = config.text_config.linear_conv_kernel_dim
+            if tuple(value.shape[1:]) == (1, kernel):
+                value = value.squeeze(1)
+            elif tuple(value.shape[1:]) == (kernel, 1):
+                value = value.squeeze(-1)
+            else:
+                raise ValueError("unsupported Qwen3.5 convolution layout")
         if name == "visual.patch_embed.proj.weight" and value.ndim == 5:
+            vision = config.vision_config
+            if tuple(value.shape[1:]) == (vision.temporal_patch_size, vision.patch_size,
+                                         vision.patch_size, vision.in_channels):
+                value = value.transpose(0, 4, 1, 2, 3)
             value = value.reshape(value.shape[0], -1)
+        if name in sanitized:
+            raise ValueError(f"duplicate canonical Qwen3.5 weight: {name}")
         sanitized[name] = value
     return sanitized
 

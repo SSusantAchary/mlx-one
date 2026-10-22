@@ -532,6 +532,11 @@ def configure_kv_caches(
 
     key_bits = {"q4_0": 4, "q8_0": 8}.get(key_type)
     value_bits = {"q4_0": 4, "q8_0": 8}.get(value_type)
+    for cache in caches:
+        if isinstance(cache, KVCache) and not getattr(cache, "supports_quantization", True):
+            if key_bits or value_bits or key_type != value_type:
+                raise ValueError("sliding KV supports matched floating storage only")
+            cache.storage_dtype = "bfloat16" if key_type == "bf16" else "float16"
     return tuple(
         QuantizedKVCache(
             key_bits,
@@ -539,7 +544,7 @@ def configure_kv_caches(
             key_dtype=key_type,
             value_dtype=value_type,
         )
-        if isinstance(cache, KVCache)
+        if isinstance(cache, KVCache) and getattr(cache, "supports_quantization", True)
         else cache
         for cache in caches
     )

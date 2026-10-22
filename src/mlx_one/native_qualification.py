@@ -6,7 +6,6 @@ import hashlib
 import itertools
 import json
 import os
-import re
 import shutil
 import socket
 import subprocess
@@ -17,17 +16,30 @@ from pathlib import Path
 
 from mlx_one.inference_baseline import run_profile, source_provenance, supervise
 from mlx_one.inference_qualification import export_matrix, validate_integrity, write_integrity
+from mlx_one.native_correctness import (
+    BACKENDS,
+    CORRECTNESS_VERSION,
+    QUALIFICATION_STATUSES,
+    backend_requirements,
+    checkpoint_proof,
+    correctness_command,
+    validate_native_row,
+)
 from mlx_one.p1_profiles import CHECKPOINTS, profile
 
 BASE_SHA = "b698f88afc1729cd7d2dea53fd5a69f11b60246e"
 PLAN_VERSION = "native-p1-command-manifest-v1"
-CORRECTNESS_VERSION = "native-p1-correctness-v1"
 
 
 def qualification_source():
     source = source_provenance(Path.cwd())
-    source["native_test_sha256"] = hashlib.sha256(
-        Path("tests/test_p1_checkpoint_parity.py").read_bytes()).hexdigest()
+    digest = hashlib.sha256()
+    paths = [*Path("tests").rglob("*.py"), *Path("scripts/qualification").glob("*.py"),
+             *Path("scripts/qualification").glob("*.sh")]
+    for path in sorted(paths):
+        digest.update(str(path).encode())
+        digest.update(path.read_bytes())
+    source["native_test_sha256"] = digest.hexdigest()
     return source
 
 
@@ -61,7 +73,7 @@ class NativeCase:
         return replace(self, slots=1)
 
 
-def cases(checkpoints=tuple(CHECKPOINTS)):
+def cases(checkpoints=tuple(CHECKPOINTS), *, backends=None):
     """Full requested legal cross-product; SmolLM2 uses a labeled legal substitute."""
     for key in checkpoints:
         asset = CHECKPOINTS[key]
@@ -73,7 +85,8 @@ def cases(checkpoints=tuple(CHECKPOINTS)):
             if prompt + output > asset.context_tokens:
                 prompt, label = asset.context_tokens - output, "maximum_legal_8k"
             for mode, page in ((dense, 32), ("paged", 16), ("paged", 32)):
-                yield NativeCase(key, mode, prompt, output, slots, chunk, page, label)
+                if backends is None or mode in backends:
+                    yield NativeCase(key, mode, prompt, output, slots, chunk, page, label)
 
 
 def settings(case):
@@ -85,7 +98,7 @@ def settings(case):
         "decode_gap_budget_ms": 100, "max_queue_wait_ms": 5000, "max_service_gap_ms": 250}
 
 
-def comparison_traffic(case):
+def comparison_traffic(case, *, requests=12):
     """Identical twelve requests for serial, cooperative and optimized workers."""
     from mlx_one.traffic_replay import validate_traffic
 
@@ -93,12 +106,18 @@ def comparison_traffic(case):
         "requests": [{"request_id": f"request-{index:04}", "arrival_ms": index * 20,
             "prompt_tokens": case.prompt_tokens, "output_tokens": case.output_tokens,
             "principal_label": "principal-a", "consumer": {}, "shared_prefix_fraction": 0}
-            for index in range(12)]})
+            for index in range(requests)]})
 
 
-def command_manifest(checkpoints=tuple(CHECKPOINTS)):
-    optimized = list(cases(checkpoints))
+def command_manifest(checkpoints=tuple(CHECKPOINTS), *, backends=None):
+    backend_requirements(backends)
+    optimized = list(cases(checkpoints, backends=backends))
     controls = {}
+    if backends is not None and "reference_dense" in backends:
+        # Reference-only baselines are a real workload track, not an empty manifest.
+        for case in cases(checkpoints):
+            for control in (case.reference(), case.reference(cooperative=True)):
+                controls[control.key] = control
     for case in optimized:
         for control in (case.reference(), case.reference(cooperative=True)):
             controls[control.key] = control
@@ -119,7 +138,36 @@ def command_manifest(checkpoints=tuple(CHECKPOINTS)):
         "optimized_configurations": len(optimized), "tasks": records,
         "rejected_literal_contexts": rejected,
         "repetitions": 5, "warmup_requests": 1, "workers_at_once": 1,
-        "qualification_promoted": False}
+        "qualification_promoted": False,
+        "selected_backends": list(backends) if backends is not None else list(BACKENDS),
+        "status_schema": sorted(QUALIFICATION_STATUSES)}
+
+
+def baseline_manifest(checkpoints=tuple(CHECKPOINTS), *, reference_smoke=False):
+    """Phase 0 minimum workload, without substituting shorter illegal contexts."""
+    tasks, unsupported, omitted = [], [], []
+    for checkpoint in checkpoints:
+        for prompt, slots in ((512, 1), (2048, 1), (4096, 1), (2048, 2), (2048, 4)):
+            case = NativeCase(checkpoint, "reference_dense", prompt, 128, slots, 512)
+            if reference_smoke and (prompt, slots) != (512, 1):
+                omitted.append({"case": vars(case), "status": "HARDWARE_PENDING"})
+                continue
+            if prompt + 128 > CHECKPOINTS[checkpoint].context_tokens:
+                unsupported.append({"case": vars(case), "status": "UNSUPPORTED",
+                                    "reason": "prompt plus output exceeds checkpoint context"})
+            else:
+                tasks.append({"id": case.key, "case": vars(case),
+                              "settings": {**settings(case), "exact_prompt_tokens": True,
+                                           "eos_policy": "ignore_for_fixed_workload"},
+                              "dependencies": [], "status": "NOT_RUN"})
+                tasks[-1]["settings"]["timeout_seconds"] = 1800 if reference_smoke else 3600
+    return {"schema_version": PLAN_VERSION, "tasks": tasks, "unsupported": unsupported,
+            "reference_smoke": reference_smoke, "omitted_cases": omitted,
+            "requests_per_group": 1 if reference_smoke else 12,
+            "full_baseline_scope": not reference_smoke,
+            "selected_backends": ["reference_dense"], "repetitions": 5,
+            "warmup_requests": 1, "workers_at_once": 1, "qualification_promoted": False,
+            "status_schema": sorted(QUALIFICATION_STATUSES)}
 
 
 def supervised_command(command, output, *, ceiling, timeout=600, env=None):
@@ -195,39 +243,29 @@ time.sleep(.5)''']
     return report
 
 
-def validate_correctness(path, checkpoints, *, source, hardware):
+def validate_correctness(path, checkpoints, *, source, hardware, backends=None,
+                         checkpoint_paths=None):
     """Do not accept a hand-written PASS, stale source, skipped tests or changed logs."""
     path = Path(path).resolve()
     validate_integrity(path.parent, required={path.name})
     proof = json.loads(path.read_text())
     if (proof.get("schema_version") != CORRECTNESS_VERSION
-            or proof.get("source", {}).get("source_sha256") != source["source_sha256"]
-            or proof.get("source", {}).get("native_test_sha256") != source["native_test_sha256"]
+            or proof.get("source") != source
             or proof.get("hardware") != hardware):
         raise ValueError("correctness evidence schema, source or hardware mismatch")
     for checkpoint in checkpoints:
-        for paged in (False, True):
+        for paged in backend_requirements(backends):
             row = proof.get("outcomes", {}).get(f"{checkpoint}:{paged}", {})
+            if row.get("status", "NOT_RUN") not in QUALIFICATION_STATUSES:
+                raise ValueError("unknown correctness status")
             if row.get("status") != "PASS":
                 raise ValueError("checkpoint correctness is incomplete")
-            directory = Path(row["path"])
-            validate_integrity(directory, required={"supervision.json", "command.json"})
-            supervision = json.loads((directory / "supervision.json").read_text())
-            log = (directory / "worker.log").read_bytes()
-            if (supervision.get("status") != "completed"
-                    or supervision.get("worker_log_sha256") != hashlib.sha256(log).hexdigest()
-                    or not re.search(rb"6 passed", log) or re.search(rb"\d+ skipped", log)):
-                raise ValueError("native correctness log is missing, changed or incomplete")
-            required = {f"parity-{checkpoint}-{paged}-{page}-{size}.json"
-                        for page in (16, 32) for size in (1, 2, 4)}
-            validate_integrity(directory, required=required)
-            for name in required:
-                parity = json.loads((directory / name).read_text())
-                if (parity.get("status") != "passed"
-                        or parity.get("greedy_agreement_fraction") != 1
-                        or parity.get("cleanup", {}).get("active_handles") != 0
-                        or parity.get("cleanup", {}).get("reserved_bytes") != 0):
-                    raise ValueError("native parity/state artifacts are incomplete")
+            if checkpoint not in proof.get("assets", {}):
+                raise ValueError("correctness checkpoint checksums are missing")
+            asset = checkpoint_proof(checkpoint, (checkpoint_paths or {}).get(checkpoint))
+            if proof.get("assets", {}).get(checkpoint) != asset:
+                raise ValueError("correctness checkpoint revision or checksums mismatch")
+            validate_native_row(row["path"], checkpoint, paged, source=source, asset=asset)
     return proof
 
 
@@ -276,11 +314,14 @@ def execute_manifest(manifest, output, hardware, *, checkpoint_paths=None, runne
         else:
             case = NativeCase(**task["case"])
             options = {**task["settings"], "checkpoint_path": checkpoint_paths.get(case.checkpoint)}
+            asset = checkpoint_proof(case.checkpoint, options["checkpoint_path"])
+            options["checkpoint_files"] = asset["files"]
+            options["checkpoint_path"] = asset.get("path", options["checkpoint_path"])
             if memory_ceiling is not None:
                 options["memory_fraction"] = min(.75, memory_ceiling / hardware["memory_bytes"])
             from mlx_one.traffic_replay import traffic_identity
 
-            traffic = comparison_traffic(case)
+            traffic = comparison_traffic(case, requests=manifest.get("requests_per_group", 12))
             traffic_path = output / "traffic" / (traffic_identity(traffic) + ".json")
             write(traffic_path, traffic)
             options.update(traffic_manifest=str(traffic_path.resolve()),
@@ -295,6 +336,9 @@ def execute_manifest(manifest, output, hardware, *, checkpoint_paths=None, runne
             try:
                 item = profile(case.checkpoint, **options)
                 result = runner(item, directory, hardware=hardware, provenance=source)
+                if checkpoint_proof(case.checkpoint, options["checkpoint_path"])["files"] != (
+                        options["checkpoint_files"]):
+                    raise ValueError("checkpoint files changed during benchmark execution")
             except (OSError, ValueError, RuntimeError) as exc:
                 directory.mkdir(parents=True, exist_ok=True)
                 result = {"status": "worker_failed", "reason": f"{type(exc).__name__}: {exc}"}
@@ -327,9 +371,19 @@ def main(argv=None):
     parser.add_argument("--output", type=Path, default=Path("benchmarks/results/p1"))
     parser.add_argument("--correctness-report", type=Path)
     parser.add_argument("--checkpoint-paths", type=Path)
+    parser.add_argument("--backends", nargs="+", choices=BACKENDS,
+                        help="Qualify only the selected execution backends; omission requires all")
+    parser.add_argument("--defer-paged", action="store_true",
+                        help="Record paged correctness as DEFERRED without treating it as PASS")
+    parser.add_argument("--phase0-baseline", action="store_true",
+                        help="Use the five required Phase 0 reference workloads per checkpoint")
+    parser.add_argument("--reference-smoke", action="store_true",
+                        help="Bounded 512/B1 reference benchmark; four other cases remain pending")
     parser.add_argument("--process-ceiling-bytes", type=int,
                         help="Lower the PR-00 native diagnostic watchdog ceiling")
     args = parser.parse_args(argv)
+    if args.reference_smoke and not args.phase0_baseline:
+        parser.error("--reference-smoke requires --phase0-baseline")
     stamp = str(time.time_ns())
     if args.stage in {"inventory", "prefix-diagnostic", "prefix-parity"}:
         from mlx_one.runtime_baseline import run_baseline
@@ -349,12 +403,14 @@ def main(argv=None):
         export_matrix(args.output, args.output / "matrix")
         return 0
     root.mkdir(parents=True)
-    manifest = command_manifest(args.checkpoints)
+    manifest = (baseline_manifest(args.checkpoints, reference_smoke=args.reference_smoke)
+                if args.phase0_baseline else
+                command_manifest(args.checkpoints, backends=args.backends))
     write(root / "command-manifest.json", manifest)
     if args.stage == "manifest":
         print(root)
         return 0
-    observed = preflight(root / "preflight")
+    observed = preflight(root / "preflight", configured_ceiling=args.process_ceiling_bytes)
     from mlx_one.p1_profiles import asset_inventory
 
     write(root / "assets.json", asset_inventory())
@@ -363,9 +419,20 @@ def main(argv=None):
         outcomes = {}
         proof = {"schema_version": CORRECTNESS_VERSION, "source": observed["source"],
                  "hardware": observed["hardware"], "outcomes": outcomes,
+                 "assets": {}, "status_schema": sorted(QUALIFICATION_STATUSES),
                  "qualification_promoted": False}
         for checkpoint in args.checkpoints:
-            for paged in (False, True):
+            asset = checkpoint_proof(checkpoint, paths.get(checkpoint))
+            proof["assets"][checkpoint] = asset
+            for paged in backend_requirements(args.backends):
+                if paged and args.defer_paged:
+                    outcomes[f"{checkpoint}:True"] = {"status": "DEFERRED",
+                        "reason": "direct paged parity is explicitly deferred; no PASS inferred"}
+                    write(root / "correctness.json", proof)
+                    write(root / "cohort-matrix.json",
+                          correctness_matrix(outcomes, observed["source"]))
+                    write_integrity(root)
+                    continue
                 directory = (args.output / socket.gethostname() / checkpoint / stamp
                              / ("paged" if paged else "dense"))
                 env = {"MLX_ONE_RUN_P1_CHECKPOINTS": "1", "HF_HUB_OFFLINE": "1",
@@ -373,30 +440,38 @@ def main(argv=None):
                 if checkpoint in paths:
                     env["MLX_ONE_P1_" + checkpoint.upper().replace("-", "_") + "_PATH"] = paths[
                         checkpoint]
-                command = [sys.executable, "-m", "pytest", "--no-cov", "-q",
-                    "tests/test_p1_checkpoint_parity.py", "-k", f"{checkpoint} and {paged}", "-x"]
+                command = correctness_command(checkpoint, paged, directory, sys.executable)
                 result = supervised_command(command, directory,
                     ceiling=observed["process_ceiling_bytes"], env=env)
-                log = (directory / "worker.log").read_text()
-                passed = result["status"] == "completed" and re.search(r"6 passed", log)
-                passed = bool(passed and not re.search(r"\d+ skipped", log))
+                try:
+                    if checkpoint_proof(checkpoint, paths.get(checkpoint)) != asset:
+                        raise ValueError("checkpoint changed during correctness execution")
+                    validate_native_row(directory, checkpoint, paged,
+                                        source=observed["source"], asset=asset)
+                    passed, reason = True, None
+                except (OSError, ValueError, KeyError) as exc:
+                    passed, reason = False, str(exc)
                 outcomes[f"{checkpoint}:{paged}"] = {"status": "PASS" if passed else "FAIL",
-                                                     "path": str(directory)}
+                                                     "path": str(directory.resolve()),
+                                                     "reason": reason}
                 write(root / "correctness.json", proof)
                 write(root / "cohort-matrix.json", correctness_matrix(outcomes, observed["source"]))
                 write_integrity(root)
-                if not passed:
+                if result["status"].startswith("memory_watchdog"):
                     print(root)
                     return 1
         print(root)
-        return 0
+        return int(any(row["status"] == "FAIL" for row in outcomes.values()))
     if args.stage == "performance":
         if args.correctness_report is None:
             parser.error("performance requires --correctness-report from native tests")
         validate_correctness(args.correctness_report, args.checkpoints,
-                             source=observed["source"], hardware=observed["hardware"])
-        execute_manifest(manifest, root, observed["hardware"], checkpoint_paths=paths,
-                         artifact_root=args.output / socket.gethostname(),
-                         memory_ceiling=observed["process_ceiling_bytes"])
+                             source=observed["source"], hardware=observed["hardware"],
+                             backends=manifest["selected_backends"], checkpoint_paths=paths)
+        outcomes = execute_manifest(manifest, root, observed["hardware"], checkpoint_paths=paths,
+                                    artifact_root=args.output / socket.gethostname(),
+                                    memory_ceiling=observed["process_ceiling_bytes"])
+        print(root)
+        return int(any(row["status"] != "PASS" for row in outcomes.values()))
     print(root)
     return 0

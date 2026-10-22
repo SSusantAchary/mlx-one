@@ -122,7 +122,13 @@ def test_compound_growth_uses_declared_state_shapes(advanced):
     try:
         amount=runtime.estimate_growth(handle,prompt_tokens=8,max_new_tokens=4)
         assert runtime.plan.carry_bytes()==88
-        assert amount>=256*runtime.plan.bytes_per_token()+88
+        # The fixture already owns its evaluated carry. Growth reserves only
+        # missing storage; the live carry remains in owner accounting.
+        assert handle.bundle.allocated_nbytes==88
+        assert amount==256*runtime.plan.bytes_per_token()
+        handle.bundle.entries[0].conv_state=None
+        handle.bundle.entries[0].recurrent_state=None
+        assert runtime.estimate_growth(handle,prompt_tokens=8,max_new_tokens=4)==amount+88
     finally:
         runtime.close()
 

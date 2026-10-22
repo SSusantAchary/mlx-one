@@ -4,6 +4,7 @@ from __future__ import annotations
 import threading
 from collections import OrderedDict, deque
 from concurrent.futures import CancelledError, Future
+from contextvars import copy_context
 
 from mlx_one.engine.execution_context import QueueFullError
 
@@ -99,9 +100,11 @@ class DeviceExecutor:
 
 def device_iterator(executor, model_key, iterator):
     """Keep lazy reference generation and its disposal on the device owner."""
+    context = copy_context()
+
     def step():
         try:
-            return True, next(iterator)
+            return True, context.run(next, iterator)
         except StopIteration:
             return False, None
     try:
@@ -113,4 +116,4 @@ def device_iterator(executor, model_key, iterator):
     finally:
         close = getattr(iterator, "close", None)
         if callable(close):
-            executor.call(model_key, close)
+            executor.call(model_key, lambda: context.run(close))

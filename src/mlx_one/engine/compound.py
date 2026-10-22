@@ -4,7 +4,7 @@ from __future__ import annotations
 from mlx_one.engine.cache import array_nbytes
 from mlx_one.engine.components import ComponentCapabilities
 
-COMPOUND_VERSION = 'qwen35-gated-delta-v1'
+COMPOUND_VERSION = 'qwen35-gated-delta-v2-reference-first'
 
 
 class CompoundLinearComponent:

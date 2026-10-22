@@ -11,6 +11,17 @@ from typing import Any
 ChatMessage = Mapping[str, Any]
 
 
+class _TemplateMessage(dict):
+    """Supply optional values without inventing keys tested by upstream templates."""
+
+    def __missing__(self, key):
+        if key == "tool_calls":
+            return []
+        if key == "reasoning_content":
+            return ""
+        raise KeyError(key)
+
+
 class ChatTemplate:
     def __init__(self, model_type: str, template: str | None, tokenizer: Any) -> None:
         self.model_type = model_type
@@ -50,6 +61,8 @@ class ChatTemplate:
     def render(self, messages: Sequence[ChatMessage], **template_options: Any) -> str:
         _validate_messages(messages)
         if not self.template:
+            if self.model_type in {"phi3", "gemma3_text", "gpt_oss"}:
+                raise ValueError("loaded checkpoint has no supported chat template")
             return _fallback(self.model_type, messages,
                              add_generation_prompt=template_options.get(
                                  "add_generation_prompt", True))
@@ -59,9 +72,7 @@ class ChatTemplate:
         try:
             normalized_messages = []
             for message in messages:
-                normalized = dict(message)
-                normalized.setdefault("reasoning_content", "")
-                normalized.setdefault("tool_calls", [])
+                normalized = _TemplateMessage(message)
                 normalized_messages.append(normalized)
             token_values = dict(getattr(self.tokenizer, "special_tokens", {}))
             token_values.update(
@@ -71,6 +82,7 @@ class ChatTemplate:
                     "bos_token": bos,
                     "eos_token": eos,
                     "tools": None,
+                    "builtin_tools": [],
                 }
             )
             token_values.update(template_options)
@@ -82,10 +94,28 @@ class ChatTemplate:
     def _compile(template: str) -> Any:
         try:
             from jinja2 import StrictUndefined
+            from jinja2.ext import Extension
             from jinja2.sandbox import SandboxedEnvironment
 
+            class GenerationExtension(Extension):
+                """HF's generation blocks annotate training spans; render their body."""
+
+                tags = {"generation"}
+
+                def parse(self, parser):
+                    from jinja2 import nodes
+
+                    line = next(parser.stream).lineno
+                    body = parser.parse_statements(["name:endgeneration"], drop_needle=True)
+                    block = nodes.CallBlock(self.call_method("render_body"), [], [], body)
+                    return block.set_lineno(line)
+
+                def render_body(self, caller):
+                    return caller()
+
             environment = SandboxedEnvironment(
-                undefined=StrictUndefined, autoescape=False, trim_blocks=True, lstrip_blocks=True
+                undefined=StrictUndefined, autoescape=False, trim_blocks=True, lstrip_blocks=True,
+                extensions=[GenerationExtension],
             )
             environment.filters["tojson"] = lambda value: json.dumps(
                 value, ensure_ascii=False, separators=(",", ":")

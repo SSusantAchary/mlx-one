@@ -1,0 +1,244 @@
+{
+  "scope": "All 13 pinned text checkpoints in the current support manifest. Other task/training discovery catalogs are outside this text inference comparison.",
+  "checkpoints": [
+    {
+      "id": "M01",
+      "model_id": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "primary_profile": "float32",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "124M",
+      "primary_precision": "FP32",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb7b4",
+      "source_precision": "FP32",
+      "available_profiles": [
+        "stored"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M02",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "primary_profile": "affine_q8",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "0.5B",
+      "primary_precision": "Affine Q8 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q8"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M03",
+      "model_id": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "primary_profile": "affine_q8",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "0.6B",
+      "primary_precision": "Affine Q8 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q8"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M04",
+      "model_id": "LiquidAI/LFM2-350M",
+      "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+      "primary_profile": "affine_q4",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "350M",
+      "primary_precision": "Affine Q4 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "fd3b3fba4e50e7b9a22bd41cbab59e9b28e319b2de19668d7fd9777c8d1a9ba1",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q4"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M05",
+      "model_id": "Qwen/Qwen3.5-0.8B",
+      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "primary_profile": "affine_q4",
+      "status": "EXPERIMENTAL_NOT_QUALIFIED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Current stored-source native prefill/continuation/reset and 8-token generation pass at context 512. Converted Q4 and previously broken paths remain unqualified; no automatic promotion.",
+      "parameters": "0.8B",
+      "primary_precision": "Affine Q4 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q4"
+      ],
+      "benchmark_gap": "Primary Q4 has no comparable measurement; stored-source functional smoke only."
+    },
+    {
+      "id": "M06",
+      "model_id": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "revision": "31b70e2e869a7173562077fd711b654946d38674",
+      "primary_profile": "affine_q4",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "1.7B",
+      "primary_precision": "Affine Q4 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "994f50b16abb4ae00880baefe03c10260b5bd608d2bf586f7056ca05a534feea",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q4"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M07",
+      "model_id": "meta-llama/Llama-3.2-1B-Instruct",
+      "revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "primary_profile": "affine_q4",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "1B",
+      "primary_precision": "Affine Q4 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "2febf68cea25bf4611be02b7536f2488a5ba523bb1134986e3610152abe74fdb",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q4"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M08",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "primary_profile": "affine_q4",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "1.5B",
+      "primary_precision": "Affine Q4 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q4"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M09",
+      "model_id": "google/gemma-3-1b-it",
+      "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "primary_profile": "bfloat16",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "1B",
+      "primary_precision": "BF16",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "19cb5d28c97778271ba2b3c3df47bf76bdd6706724777a2318b3522230afe91e",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M10",
+      "model_id": "microsoft/Phi-3-mini-4k-instruct",
+      "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+      "primary_profile": "affine_q4",
+      "status": "EXPERIMENTAL_SUPPORTED",
+      "checkpoint_status": "MODEL_SMOKE_TESTED",
+      "reason": "Bounded source/primary functional Python/CLI/HTTP/SSE and state smoke recorded in the historical proof; no 128K or other-hardware claim.",
+      "parameters": "3.8B",
+      "primary_precision": "Affine Q4 (group 64)",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "072d4df63228ef806a6b2b2f02a93f1d048ebd31584d0f61d1180aef36e5bcea",
+      "source_precision": "BF16",
+      "available_profiles": [
+        "stored",
+        "affine_q4"
+      ],
+      "benchmark_gap": null
+    },
+    {
+      "id": "M11",
+      "model_id": "LiquidAI/LFM2.5-24B-A2B-MLX-4bit",
+      "revision": "667408d494bde191c2cb9dd4f4549827816b9275",
+      "primary_profile": "mixed_affine_q4_embedding_q6_router_fp32",
+      "status": "ARCHITECTURE_IMPLEMENTED",
+      "checkpoint_status": "NOT_DOWNLOADED_NOT_SMOKE_TESTED",
+      "reason": "Native tiny synthetic floating/mixed-quantized forward, continuation/reset and Python/CLI/HTTP/SSE tests passed. Full checkpoint NOT_DOWNLOADED; MANUAL_TEST_PENDING.",
+      "parameters": "24B / 2B active",
+      "primary_precision": "Mixed affine Q4 / embedding Q6 / FP32 router",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "4901707c3cef43e3cf68a0dedc3e39687de43413cab30578a32c63c643984244",
+      "available_profiles": [
+        "stored"
+      ],
+      "benchmark_gap": "Full checkpoint not downloaded or benchmarked; owner will run manually."
+    },
+    {
+      "id": "M12",
+      "model_id": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+      "revision": "f356f2747216d7e98fee755df25987459fc19089",
+      "primary_profile": "mixed_mxfp4_affine_q4_q8",
+      "status": "ARCHITECTURE_IMPLEMENTED",
+      "checkpoint_status": "NOT_DOWNLOADED_NOT_SMOKE_TESTED",
+      "reason": "Native tiny synthetic floating/mixed-quantized forward, continuation/reset and Python/CLI/HTTP/SSE tests passed. Full checkpoint NOT_DOWNLOADED; MANUAL_TEST_PENDING.",
+      "parameters": "20B / 3.6B active",
+      "primary_precision": "Mixed MXFP4 / affine Q4\u2013Q8",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "e8ec3c105ab83e913a75baf587de778083ada1af3fac68d807e75ff926240e38",
+      "available_profiles": [
+        "stored"
+      ],
+      "benchmark_gap": "Full checkpoint not downloaded or benchmarked; owner will run manually."
+    },
+    {
+      "id": "M13",
+      "model_id": "manjunathshiva/gpt-oss-20b-tq3",
+      "revision": "20ba1835e625264e07366d215933fe31a9940a6a",
+      "primary_profile": "turboquant_tq3",
+      "status": "QUANTIZATION_BACKEND_TESTED",
+      "checkpoint_status": "NOT_DOWNLOADED_NOT_SMOKE_TESTED",
+      "reason": "Independent packed arithmetic and tiny GPT functional Python/CLI/HTTP/SSE/cancellation tests passed. Full checkpoint and 90% throughput target PENDING_USER_DOWNLOAD.",
+      "parameters": "20B / 3.6B active",
+      "primary_precision": "TurboQuant TQ3",
+      "parameter_basis": "Nominal model size; MoE total / active, not a count inferred from quantized file size.",
+      "config_sha256": "c937fd01d002ecb557ccda1e5bb15b103f4f882597f20a61b60a894c5242d5f8",
+      "available_profiles": [
+        "stored"
+      ],
+      "benchmark_gap": "Full checkpoint not downloaded or benchmarked; owner will run manually."
+    }
+  ]
+}

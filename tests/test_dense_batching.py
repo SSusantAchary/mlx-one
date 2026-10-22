@@ -150,6 +150,24 @@ def test_runner_contract_preserves_unequal_committed_boundaries(native):
         assert state.cache.closed
 
 
+def test_copy_telemetry_counts_real_ragged_history_separately_from_padding(native):
+    runner = BatchedDenseRunner(native)
+    a, b = request(native, (4, 5, 6), "a"), request(native, (7,), "b")
+    runner.execute((a, b))
+    a.phase = b.phase = "decode"
+    a.token_ids = b.token_ids = (8,)
+    runner.execute((a, b))
+    trace = runner.last_trace
+    per_token = runner.adapter.plan.bytes_per_token()
+    assert trace["history_pack_bytes"] == trace["history_scatter_bytes"] == 4 * per_token
+    assert trace["packed_history_bytes"] == 6 * per_token
+    assert trace["kv_delta_write_bytes"] == 2 * per_token
+    assert trace["pack_allocated_bytes"] == 8 * per_token
+    assert all(trace[key] >= 0 for key in ("pack_graph_time_ms", "forward_eval_time_ms",
+                                          "stage_eval_time_ms", "commit_time_ms"))
+    assert trace["gpu_sync_time_ms"] is None
+
+
 def test_scatter_failure_and_invalid_mappings_are_atomic(native, monkeypatch):
     runner = BatchedDenseRunner()
     a, b = request(native, (1, 2), "a"), request(native, (3,), "b")
@@ -201,6 +219,22 @@ def test_python_concurrent_submissions_batch_and_preserve_output(native):
         expected = [reference.generate(prompt, max_tokens=8, seed=i).text
                     for i, prompt in enumerate(("abc", "abcdef", "xy", "longer"))]
     assert [result.text for result in results] == expected
+
+
+def test_actor_pressure_shedding_runs_on_the_device_owner(native):
+    calls = []
+    config = BatchingConfig(max_sequences=2, prefill_chunk_size=1,
+                            max_scheduled_tokens=1, max_prefill_tokens=1)
+    with Engine(native, inference_mode="experimental_dense_batch",
+                batching_config=config) as engine:
+        engine._actor.pressure = SimpleNamespace(
+            state="normal", poll=lambda: "normal", stats=lambda: {},
+            shed=lambda runtime: calls.append(engine._actor.device_executor.is_owner))
+        with engine._actor._condition:
+            handles = [engine.submit(prompt, max_tokens=6) for prompt in ("abc", "unequal")]
+        for handle in handles:
+            handle.result(timeout=5)
+    assert calls and all(calls)
 
 
 def test_actor_bounded_output_cancellation_and_barrier(native):

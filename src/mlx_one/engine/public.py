@@ -8,6 +8,7 @@ import sys
 import threading
 from collections.abc import Iterator
 from concurrent.futures import Future, ThreadPoolExecutor
+from contextvars import copy_context
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -18,11 +19,13 @@ from mlx_one.engine.device_executor import DeviceExecutor, device_iterator
 from mlx_one.engine.modes import (
     ACTOR_MODES,
     InferenceMode,
+    ModelCapabilityUnsupported,
     configure_execution_dtype,
     resolve_backend,
     resolved_mode,
     validate_mode,
 )
+from mlx_one.engine.optimization_policy import REFERENCE_MATH, NativeMathPolicy
 from mlx_one.engine.pressure import MemoryPressureConfig, MemoryPressureController
 from mlx_one.engine.reporting import native_report
 from mlx_one.text import (
@@ -68,6 +71,7 @@ class Engine:
         cache_config: CacheConfig | None = None,
         inference_mode: InferenceMode | None = None,
         execution_dtype: str | None = None,
+        math_policy: NativeMathPolicy | None = None,
         batching_config: BatchingConfig | None = None,
         cache_namespace: str | None = None,
         memory_pressure_config: MemoryPressureConfig | None = None,
@@ -77,10 +81,40 @@ class Engine:
         spec_draft_n_max: int = 3,
         draft_model: LoadedTextModel | None = None,
     ) -> None:
+        self._math_policy = (math_policy if math_policy is not None else
+            NativeMathPolicy.optimized() if inference_mode == "native_optimized"
+            else REFERENCE_MATH)
+        if not isinstance(self._math_policy, NativeMathPolicy):
+            raise TypeError("math_policy must be a NativeMathPolicy")
+        optimized_operators = (self._math_policy.attention != "reference" or
+            self._math_policy.projection != "reference" or self._math_policy.logits != "all"
+            or self._math_policy.hybrid != "reference" or self._math_policy.enable_compile)
+        if inference_mode != "native_optimized" and optimized_operators:
+            raise ValueError("optimized math requires explicit inference_mode=native_optimized")
+        if (self._math_policy.attention == "tiled_256" or
+                self._math_policy.projection == "native" or self._math_policy.hybrid == "fast"):
+            raise ModelCapabilityUnsupported(
+                    "requested native specialization is not implemented/qualified")
+        if self._math_policy != REFERENCE_MATH or inference_mode == "native_optimized":
+            if (inference_mode not in {None, "reference_dense", "native_optimized"}
+                    or execution_dtype != "float16" or spec_type != "none"
+                    or batching_config is not None and batching_config.max_sequences != 1):
+                raise ModelCapabilityUnsupported(
+                    "native math requires explicit FP16, dense B1 and no speculation")
+            if cache_config is not None and (cache_config.prefix_cache_enabled
+                    or cache_config.key_type != "f16" or cache_config.value_type != "f16"):
+                raise ModelCapabilityUnsupported(
+                    "native math requires FP16 KV and prefix reuse disabled")
+            if self._math_policy.enable_compile:
+                raise ModelCapabilityUnsupported(
+                    "compiled math has no measured shape qualification")
         self._device = DeviceExecutor.shared()
         backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
         config = (replace(cache_config, backend=backend)
                   if cache_config else CacheConfig(backend=backend))
+        if cache_config is None and (self._math_policy != REFERENCE_MATH
+                                     or inference_mode == "native_optimized"):
+            config = replace(config, prefix_cache_enabled=False)
         self._bundle = (
             model
             if isinstance(model, LoadedTextModel)
@@ -92,6 +126,29 @@ class Engine:
                 tokenizer_source=tokenizer_source,
             ))
         )
+        if getattr(self._bundle.model, "_mlx_one_qwen3_candidate", False):
+            from mlx_one.models.language.qwen3.upstream_adapter import validate_candidate_runtime
+
+            validate_candidate_runtime(
+                self._bundle, mode=inference_mode, backend=backend,
+                key_type=config.key_type, value_type=config.value_type,
+                max_sequences=(batching_config.max_sequences if batching_config else 1),
+                spec_type=spec_type, math_policy=self._math_policy,
+            )
+        if self._math_policy != REFERENCE_MATH or inference_mode == "native_optimized":
+            from mlx_one.engine.kernel_dispatch import SUPPORTED_FAMILIES
+
+            if (self._bundle.architecture not in SUPPORTED_FAMILIES or not
+                    callable(getattr(self._bundle.model, "make_cache", None))):
+                raise ModelCapabilityUnsupported(
+                    "native math is unavailable for this model family/state contract")
+            if (self._math_policy.attention == "mlx_sdpa" and
+                    self._bundle.architecture == "gpt2"):
+                raise ModelCapabilityUnsupported(
+                    "GPT-2 optimized attention is unavailable; use reference attention")
+            if self._math_policy.projection == "mlx_qmm" and not self._bundle.quantization:
+                raise ModelCapabilityUnsupported(
+                    "packed QMM requires validated affine quantized weights")
         self._device.call(id(self),
             lambda: configure_execution_dtype(self._bundle, execution_dtype))
         self._requested_mode = inference_mode
@@ -144,6 +201,7 @@ class Engine:
                 self._bundle, config, inference_mode, batching=self._batching_config,
                 pressure=self._pressure, registry=qualification_registry,
                 profile=qualification_profile))
+            self._cache_manager.math_policy = self._math_policy
             inference_mode = self._selection["resolved_mode"]
             self._inference_mode = inference_mode
             backend = self._cache_manager.config.backend
@@ -206,7 +264,10 @@ class Engine:
             **self.runtime_stats(),
             "cache": {
                 "dense_kv": True,
-                "quantized_kv": True,
+                "quantized_kv": bundle.architecture not in {"gemma3_text", "gpt_oss"} and not (
+                    bundle.architecture == "phi3"
+                    and getattr(bundle.model.config, "sliding_window", None)
+                ),
                 "block_kv": block_supported,
                 "prefix_block_cache": block_supported,
                 "sliding_block_kv": False,
@@ -223,6 +284,15 @@ class Engine:
         if self._actor is not None:
             report["scheduler"] = self._actor.stats()
         report["selection"] = self._selection
+        report["native_math"] = self._math_policy.to_dict()
+        from mlx_one.engine.kernel_dispatch import math_availability
+
+        config = self._cache_manager.config if self._cache_manager else None
+        report["native_math"]["components"] = math_availability(
+            self._bundle.architecture, quantized=bool(self._bundle.quantization),
+            configured_fp16=self._execution_dtype == "float16" and config is not None
+            and config.key_type == config.value_type == "f16" and config.backend == "dense"
+            and not config.prefix_cache_enabled)
         report["speculation"]={"policy":self._spec_type,"draft_limit":self._spec_draft_n_max,
                                "production_qualified":False}
         report["memory_pressure"] = self._pressure.stats() if self._pressure else None
@@ -280,7 +350,8 @@ class Engine:
                 yield GenerationChunk(None, "", latest.generated_tokens if latest else 0, "stop")
         else:
             yield from device_iterator(self._device, id(self), stream_generate(
-                self.model, prompt, options=resolved, is_cancelled=event.is_set,
+                self.model, prompt, options=resolved,
+                is_cancelled=lambda: event.is_set() or self._closed,
                 _cache_manager=self._cache_manager, _cache_namespace=self._cache_namespace))
 
     def _batch_factory(self, prompt, options):
@@ -320,7 +391,8 @@ class Engine:
             future = self._executor.submit(
                 self._consume_chunks, prompt, self._actor.read_sync(job), cancel)
         else:
-            future = self._executor.submit(self._consume, prompt, resolved, cancel)
+            future = self._executor.submit(
+                copy_context().run, self._consume, prompt, resolved, cancel)
         return EngineRequestHandle(future, cancel)
 
     async def async_generate(
@@ -330,9 +402,12 @@ class Engine:
         options: TextGenerationOptions | None = None,
         **settings: Any,
     ) -> GenerationResult:
-        return await asyncio.to_thread(
-            self.generate, prompt, options=options, **settings
-        )
+        handle = self.submit(prompt, options=options, **settings)
+        try:
+            return await asyncio.wrap_future(handle._future)
+        except asyncio.CancelledError:
+            handle.cancel()
+            raise
 
     def _consume(
         self,
@@ -344,17 +419,20 @@ class Engine:
             prompt, self.stream(prompt, options=options, cancel=cancel), cancel)
 
     def _consume_chunks(self, prompt, stream, cancel=None):
+        # Close rejects new work while already admitted requests finish cleanup.
+        # Their immutable identity must not pass through the closed public accessor.
+        bundle = self._bundle
         chunks = tuple(stream)
         terminal = chunks[-1] if chunks else None
         result = GenerationResult(
             prompt=prompt,
             text="".join(chunk.text for chunk in chunks),
-            prompt_tokens=len(self.model.tokenizer.encode(prompt)) or 1,
+            prompt_tokens=len(bundle.tokenizer.encode(prompt)) or 1,
             generation_tokens=sum(chunk.token_id is not None for chunk in chunks),
             finish_reason=("stop" if cancel is not None and cancel.is_set() else
                            (terminal.finish_reason if terminal else None) or "length"),
-            model=self.model.model_id,
-            revision=self.model.revision,
+            model=bundle.model_id,
+            revision=bundle.revision,
         )
         with self._lock:
             self._latest_result = result

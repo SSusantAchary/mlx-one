@@ -101,5 +101,5 @@ pytest -q tests/test_native_qwen_multimodal_architectures.py
 MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_qwen_multimodal_mlx.py
 ```
 
-The [family backlog](../../../../../model_list.txt) tracks candidates.
+The [family backlog](../../../../../docs/qualification/archived-evidence.md) tracks candidates.
 See [capability levels](../../../../../README.md#capability-levels) for promotion criteria.

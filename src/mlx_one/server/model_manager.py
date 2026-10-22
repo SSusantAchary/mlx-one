@@ -55,17 +55,25 @@ class ModelManager:
         offline: bool = False,
         cache_dir: str | Path | None = None,
         tokenizer_source: str | Path | None = None,
+        checkpoint_path: str | Path | None = None,
+        expected_files: dict[str, str] | None = None,
     ) -> LoadedTextModel:
         with self._lock:
             if self._bundle is not None or self._unloading:
                 raise RuntimeError("a model is already loaded or draining")
-            self._bundle_key = str(model_id) + "@" + str(revision)
+            self._bundle_key = str(model_id) + "@" + str(revision) + ":" + str(checkpoint_path)
+            identity_options = {}
+            if checkpoint_path is not None:
+                identity_options["checkpoint_path"] = checkpoint_path
+            if expected_files is not None:
+                identity_options["expected_files"] = expected_files
             self._bundle_lease = self._pool.acquire(self._bundle_key, lambda: load_text_model(
                 model_id,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
+                **identity_options,
             ))
             self._bundle = self._bundle_lease.runtime.value
             if (

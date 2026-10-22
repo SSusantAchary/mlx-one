@@ -6,7 +6,8 @@ from typing import Literal
 
 from mlx_one.engine.cache_specs import CACHE_BACKENDS
 
-InferenceMode = Literal["reference_dense", "experimental_block", "experimental_dense_batch",
+InferenceMode = Literal["reference_dense", "native_optimized", "experimental_block",
+                        "experimental_dense_batch",
                         "paged", "experimental_hybrid_batch", "auto"]
 
 ACTOR_MODES = {"experimental_dense_batch", "paged", "experimental_hybrid_batch", "auto"}
@@ -17,7 +18,7 @@ class ModelCapabilityUnsupported(ValueError):
 
 
 def resolve_backend(mode: str | None, backend: str | None) -> str:
-    modes = {"reference_dense": "dense", "experimental_block": "block",
+    modes = {"reference_dense": "dense", "native_optimized": "dense", "experimental_block": "block",
              "experimental_dense_batch": "dense", "paged": "paged",
              "experimental_hybrid_batch": "hybrid", "auto": "dense"}
     if mode is not None and mode not in modes:
@@ -37,6 +38,10 @@ def resolved_mode(backend: str) -> str:
 
 
 def validate_mode(bundle, plan, mode: str | None) -> None:
+    if getattr(getattr(bundle, "model", None), "_mlx_one_qwen3_candidate", False):
+        from mlx_one.models.language.qwen3.upstream_adapter import validate_candidate_runtime
+
+        validate_candidate_runtime(bundle, mode=mode)
     if mode == "paged":
         from mlx_one.engine.adapters import native_adapter
 
@@ -87,14 +92,14 @@ def validate_mode(bundle, plan, mode: str | None) -> None:
 def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
     if execution_dtype is None:
         return
-    if execution_dtype not in {"float16", "bfloat16"}:
-        raise ModelCapabilityUnsupported("execution dtype must be float16 or bfloat16")
+    if execution_dtype not in {"float32", "float16", "bfloat16"}:
+        raise ModelCapabilityUnsupported("execution dtype must be float32, float16 or bfloat16")
     quantized = bool(getattr(bundle, "quantization", {}))
     if quantized:
         from mlx_one.engine.adapters import quantized_modules
 
         try:
-            quantized_modules(bundle)
+            quantized_modules(bundle, allowed_bits=(4, 8))
         except ValueError as exc:
             raise ModelCapabilityUnsupported(str(exc)) from exc
     import mlx.core as mx
@@ -117,6 +122,11 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
 
     bundle.model._mlx_one_execution_policy = {
         "version": EXECUTION_POLICY_VERSION, "dtype": execution_dtype,
+        "hybrid_attention_softmax": "float32-before-mask-v1"
+            if getattr(bundle, "architecture", None) in {"lfm2", "lfm2_moe", "qwen3_5"} else None,
+        "hybrid_affine_projection": "rowwise-gather-qmm-v1"
+            if execution_dtype == "float16" and quantized and
+            getattr(bundle, "architecture", None) in {"lfm2", "lfm2_moe", "qwen3_5"} else None,
         "quantized_payload_preserved": quantized,
         "affine_int8_fp16_arithmetic": {
             "shared_attention_swiglu_projections": "rowwise-gather-qmm-v1",
@@ -129,12 +139,33 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
             and getattr(bundle, "architecture", None) in {"qwen2", "qwen3", "llama"} else None,
         "previous_dtypes": previous.get("previous_dtypes", before)
         if previous.get("dtype") == execution_dtype else before}
+    if getattr(bundle.model, "_mlx_one_reference_first_math", False):
+        bundle.model._mlx_one_execution_policy.update({
+            "affine_int8_fp16_arithmetic": None,
+            "hybrid_attention_softmax": None,
+            "hybrid_affine_projection": None,
+            "reference_first_arithmetic": {
+                "projection": "mlx-nn-module-dispatch",
+                "attention": "mlx-fast-sdpa",
+                "activation": "family-reference-order",
+                "qualification": "requires-checkpoint-gates",
+            },
+        })
+    if getattr(bundle.model, "_mlx_one_qwen3_candidate", False):
+        # This explicit candidate uses upstream module dispatch and fused SDPA,
+        # rather than the existing canonical model's gathered reference math.
+        bundle.model._mlx_one_execution_policy["affine_int8_fp16_arithmetic"] = None
+        bundle.model._mlx_one_execution_policy["qwen3_upstream_native_arithmetic"] = {
+            "upstream_commit": "ed1fca4cef15a824c5f1702c80f70b4cffc8e4dd",
+            "projection": "mlx-nn-module-dispatch",
+            "attention": "mlx-fast-sdpa",
+            "swiglu": "upstream-shapeless-compiled-silu-times-up",
+            "promotion": "CANDIDATE_ONLY",
+        }
     named = getattr(bundle.model, "named_modules", None)
     if callable(named):
         for _, module in named():
-            if any(hasattr(module, name) for name in
-                   ("q_proj", "c_attn", "qkv_proj", "in_proj_qkv")):
-                module._mlx_one_activation_dtype = execution_dtype
+            module._mlx_one_activation_dtype = execution_dtype
 
 
 def validate_batch_precision(bundle) -> None:

@@ -52,11 +52,14 @@ class ServerConfig:
     transcription_enabled: bool = False
 
     def __post_init__(self) -> None:
+        if self.inference_mode == "native_optimized":
+            raise ModelCapabilityUnsupported(
+                "native_optimized math policy currently requires the Python Engine")
         object.__setattr__(
             self, "cache_backend", resolve_backend(self.inference_mode, self.cache_backend)
         )
-        if self.execution_dtype not in {None, "float16", "bfloat16"}:
-            raise ValueError("execution dtype must be float16 or bfloat16")
+        if self.execution_dtype not in {None, "float32", "float16", "bfloat16"}:
+            raise ValueError("execution dtype must be float32, float16 or bfloat16")
         if self.admission_policy not in {"deadline", "cache_aware"}:
             raise ValueError("unsupported admission policy")
         if self.admission_policy == "cache_aware" and self.inference_mode not in {

@@ -1,0 +1,265 @@
+{
+  "baseline_commit": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+  "current_phase": 1,
+  "date": "2026-10-19",
+  "historical_implementation_map_sha256": "d63ad0a364048cbd1c626d8d9929233b8f3b5355b5dca9015a33cc2a24d64277",
+  "next_steps": [
+    "Read tiled_feasibility/report.md, integrated-measured-tables.md and exact source identities; preserve all archives/raw trees.",
+    "Scoped opt-in native_gather_tiled numerical gates pass; defaults remain reference and global qualification is not promoted.",
+    "Repeat staged M4 commands after any source/test/package/checkpoint change; both strict and uninstrumented numerical gates must pass before timing.",
+    "Resolve marginal/variable whole-model benefit and outstanding checkpoint/context/batch/BF16 coverage before broad promotion.",
+    "Stock full/vector SDPA remains numerically incompatible; preserve force_fused diagnostics and safe unsupported-shape fallback.",
+    "Physical cache-copy traffic and GPU kernel counts remain unmeasured; do not replace them with logical allocation counts.",
+    "Keep Phase2 NOT_RUN until full Phase1 acceptance is supported and separately authorized."
+  ],
+  "paged_int8": "DEFERRED",
+  "phase1_repair": {
+    "artifact_root": "qualification/results/inference_optimization_phase1_repair",
+    "current_native_test_sha256": "0d3e64354026fce726b2848850be19bd35a3696d5a29f082f2a675bf4fff21ab",
+    "current_source_sha256": "3b51a5c11c69819715277ce4c694b4e04754140e9afa463d736f73fcdd0414c0",
+    "fixed_output_repair": {
+      "earlier_reference_failure": "74 output tokens, required 128",
+      "implemented": true,
+      "ordinary_http_eos": "respect",
+      "policy": "ignore_for_fixed_workload",
+      "validation": "PASS: 7 completed HTTP requests, all exact 512/128 tokens; 5 warm samples"
+    },
+    "http_identity": "PASS",
+    "interrupted_runs": [
+      "1792341566618735000: incomplete full replay, FAIL; SIGTERM recorded",
+      "1792341800228273000: stale test-source scope after fixture correction, FAIL; SIGTERM recorded"
+    ],
+    "operator_performance": {
+      "faster": 191,
+      "slower": 13,
+      "smoke_untimed": 1,
+      "timed": 204,
+      "unsupported_untimed": 18
+    },
+    "operators": {
+      "FAIL": 0,
+      "NOT_RUN": 0,
+      "PASS": 205,
+      "UNSUPPORTED": 18
+    },
+    "original_artifacts_preserved": true,
+    "original_tree_sha256": "eaadabf890349eba25fd6377b95cfc8ef5dacf9980d150c14d1c9dd323a185de",
+    "phase2": "NOT_RUN",
+    "qwen3_fused_parity": "FAIL",
+    "reference_full_matrix": "HARDWARE_PENDING",
+    "reference_smoke": "PASS: measurement availability only; TTFT budget exceeded",
+    "results": "phase1_repair/results.md",
+    "source_file": "phase1_repair/source.json",
+    "status": "IMPLEMENTED_WITH_BLOCKED_ACCEPTANCE",
+    "whole_model_fused_performance": "BLOCKED"
+  },
+  "phases": {
+    "0": {
+      "available_implementation": "PASS",
+      "backend_free_validation": "PASS",
+      "native_correctness": "PASS for current-source qwen3-small dense scope only; other checkpoints HARDWARE_PENDING",
+      "performance": "Bounded reference measurement PASS; full five-case baseline HARDWARE_PENDING"
+    },
+    "1": {
+      "acceptance": "NOT_PASSED",
+      "backend_free_validation": "PASS",
+      "implementation": "Opt-in capability-gated native gather tiled attention plus strict and uninstrumented qualifiers implemented; original stock SDPA arithmetic remains unresolved",
+      "native_correctness": "PASS for scoped native_gather_tiled pinned Qwen3 B1 64/chunk7/forced32 and reference B1/B2/B4; stock full/vector SDPA retains historical FAIL",
+      "performance": "Current matched native_gather_tiled B1 measurements complete; marginal median gains, slower pairs retained; global performance qualification/promotion pending"
+    },
+    "2": {
+      "implementation": "NOT_RUN"
+    },
+    "3": {
+      "implementation": "NOT_RUN"
+    },
+    "4": {
+      "implementation": "NOT_RUN"
+    },
+    "5": {
+      "implementation": "NOT_RUN"
+    },
+    "6": {
+      "implementation": "NOT_RUN"
+    },
+    "7": {
+      "implementation": "NOT_RUN"
+    }
+  },
+  "qualification_promoted": false,
+  "qwen_causal": {
+    "artifact_root": "qualification/results/inference_optimization_qwen_causal",
+    "backend_free": {
+      "passed": 1453,
+      "seconds": 35.29,
+      "skipped": 47,
+      "warnings": 2
+    },
+    "backend_promoted": false,
+    "causal_run": "1792344698348447000",
+    "current_native_test_sha256": "495300380d4fb5b4b464b7eaa14fad24465e1921b8de5294781894f73ab9b972",
+    "current_source_sha256": "018549f002ca495e92ac2a8ee9a9dd7092b2ccf4f820cc4e7c48a84826f746bb",
+    "direct_fused": {
+      "comparisons": 3818,
+      "failed": 3164,
+      "run": "1792344773910715000",
+      "sdpa_invocations": 2100,
+      "status": "FAIL"
+    },
+    "first_changed": "layer0 attention_output; max2.3543834686279297e-6, 0 FP32 gate violations",
+    "first_model_state_failure": "layer2 key; max0.25",
+    "first_trace_violation": "layer1 q_rope; max0.015625, 47586 failing elements",
+    "fp16_boundary_changed_elements": 471,
+    "guarded_runtime": {
+      "actual_backend": "reference",
+      "candidate_reference_calls": 2100,
+      "comparisons": 3818,
+      "failed": 0,
+      "fused_calls": 0,
+      "max_error": 0,
+      "run": "1792344661852434000",
+      "status": "PASS"
+    },
+    "operators": {
+      "FAIL": 0,
+      "NOT_RUN": 0,
+      "PASS": 205,
+      "UNSUPPORTED": 18,
+      "run": "1792344744571536000"
+    },
+    "performance": "BLOCKED_NUMERICAL_GATE; HARDWARE_PENDING",
+    "phase1_acceptance": "NOT_PASSED",
+    "phase2": "NOT_RUN",
+    "reference_b1_b2_b4": {
+      "cases": 6,
+      "greedy_agreement_fraction": 1.0,
+      "max_component_error": 0,
+      "max_logit_error": 0,
+      "report": "qualification/results/inference_optimization_qwen_causal/1792344801505157000/correctness/Susants-MacBook-Air.local/qualification/1792344802032024000/correctness.json",
+      "run": "1792344801505157000",
+      "seconds": 197.92,
+      "status": "PASS"
+    },
+    "results": "qwen_causal/results.md",
+    "single_layer_controls": 28,
+    "source_file": "qwen_causal/source.json",
+    "starting_source_archive": "qwen_causal/starting-source.zip",
+    "status": "CAUSE_LOCALIZED_SAFETY_REPAIRED_FUSED_PARITY_UNRESOLVED",
+    "vector_alternative": {
+      "comparisons": 3818,
+      "failed": 3111,
+      "run": "1792344642951885000",
+      "sdpa_invocations": 5376,
+      "status": "FAIL"
+    }
+  },
+  "source": {
+    "dirty": true,
+    "git_revision": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+    "native_test_sha256": "e2340e4eb39ce31e88e5c36403f31e82217ba2a0d968cfcbfe2f9312f38421c1",
+    "packages": {
+      "huggingface-hub": "1.30.0",
+      "mlx": "0.32.2",
+      "mlx-one": "0.1.0a1",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.2",
+      "uvicorn": "0.52.4"
+    },
+    "software": {
+      "git_commit": null,
+      "metadata": {
+        "implementation": "cpython"
+      },
+      "os_version": "macOS-15.7.9",
+      "packages": {
+        "mlx": "0.32.2",
+        "mlx-one": "0.1.0a1"
+      },
+      "python_version": "3.12.11"
+    },
+    "source_sha256": "3e32d7bb5e7cec8c4d800e0d7acfc5c06defd4dda3b9a0ddc26564d955ca5e98"
+  },
+  "source_record": "tiled_feasibility/source.json",
+  "tiled_feasibility": {
+    "actual_candidate_calls_each_numerical_mode": 2100,
+    "actual_fallback_calls": 0,
+    "actual_native_sdpa_calls": 0,
+    "artifact_root": "qualification/results/inference_optimization_tiled_feasibility",
+    "backend": "native_gather_tiled",
+    "backend_promoted": false,
+    "captured_run": "1792369239230662000",
+    "comparisons": 3818,
+    "correctness_qualified": "PASS for pinned Qwen3 B1 full64/chunk7/forced32; strict and uninstrumented modes",
+    "current_native_test_sha256": "e2340e4eb39ce31e88e5c36403f31e82217ba2a0d968cfcbfe2f9312f38421c1",
+    "current_source_sha256": "3e32d7bb5e7cec8c4d800e0d7acfc5c06defd4dda3b9a0ddc26564d955ca5e98",
+    "decision": "A: compatible and faster attention path; marginal model medians, experimental opt-in only",
+    "default_attention": "reference",
+    "evidence_index": "tiled_feasibility/artifact-index.json",
+    "fp16_bit_unequal": 0,
+    "implemented": true,
+    "integrated_performance": {
+      "actual_dispatches_per_request": 924,
+      "all_samples_preserved": true,
+      "batch_size": 1,
+      "candidate": {
+        "decode_tps": 22.353946217958683,
+        "observed_repeat_output_bytes": 0,
+        "peak_mlx_bytes": 717574536,
+        "prefill_tps": 222.42630610639077,
+        "ttft_ms": 288.0212909076363
+      },
+      "cpu_startup_overlap_seconds": 0.95,
+      "decode_slower_pairs": 7,
+      "forced_tokens": 32,
+      "pairs": 21,
+      "prefill_slower_pairs": 12,
+      "prompt_tokens": 64,
+      "reference": {
+        "decode_tps": 22.19470233387227,
+        "observed_repeat_output_bytes": 605552640,
+        "peak_mlx_bytes": 720275688,
+        "prefill_tps": 221.33040055973217,
+        "ttft_ms": 289.4553750520572
+      },
+      "scope": "direct native model; not HTTP; actual production dispatch observed"
+    },
+    "max_float16_ulp": 0,
+    "max_logit_kv_error": 0,
+    "measured_tables": "tiled_feasibility/integrated-measured-tables.md",
+    "model_run": "1792369261637521000",
+    "operators_run": "1792369322194355000",
+    "performance_qualified": false,
+    "performance_run": "1792369367137956000",
+    "performance_status": "MEASURED_MARGINAL; robust whole-model benefit/promotion not established",
+    "phase1_acceptance": "NOT_PASSED",
+    "phase2": "NOT_RUN",
+    "raw_artifacts_preserved": true,
+    "reference_b1_b2_b4": {
+      "cases": 6,
+      "greedy_agreement": 1.0,
+      "max_error": 0,
+      "seconds": 211.626,
+      "status": "PASS"
+    },
+    "reference_regression_run": "1792369476526598000",
+    "reference_report": "qualification/results/inference_optimization_tiled_feasibility/1792369476526598000/correctness/Susants-MacBook-Air.local/qualification/1792369477029302000/correctness.json",
+    "report": "tiled_feasibility/report.md",
+    "rerun": "tiled_feasibility/rerun-m4.sh",
+    "status": "COMPLETE_SCOPED_EXPERIMENT",
+    "stock_sdpa_model_parity": "FAIL: preserved original full/vector evidence; not rerun under this source",
+    "strict_boundaries": 2100,
+    "uninstrumented_comparisons": 3818
+  },
+  "timezone": "Asia/Kolkata",
+  "validation": {
+    "log": "tiled_feasibility/backend-free-final-integrated.log",
+    "passed": 1589,
+    "ruff_changed_files": "PASS",
+    "ruff_log": "tiled_feasibility/ruff-final.log",
+    "seconds": 38.07,
+    "shell_syntax": "PASS",
+    "skipped": 47,
+    "status": "PASS",
+    "warnings": 2
+  }
+}

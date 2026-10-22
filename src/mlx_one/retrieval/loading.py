@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from huggingface_hub import snapshot_download
-from safetensors import SafetensorError, safe_open
+from safetensors import SafetensorError
 
 from mlx_one.core.registry import get_registration
 from mlx_one.models.embeddings.qwen3_embedding.config import Qwen3EmbeddingConfig
@@ -28,6 +28,7 @@ from mlx_one.models.embeddings.qwen3_reranker.weights import (
 )
 from mlx_one.retrieval.tokenizer import Qwen3Tokenizer
 from mlx_one.text.loading import (
+    _load_safetensor_file,
     _prepare_quantized_model,
     _quantization_config,
     _validate_quantized_tensors,
@@ -162,22 +163,13 @@ def _load_sentence_encoder(
     config_data: dict[str, Any],
 ) -> LoadedRetrievalModel:
     try:
-        pooling = _read_json(root / "1_Pooling" / "config.json")
-        sentence_config = _read_json(root / "sentence_bert_config.json")
-        payload = {
-            **config_data,
-            "sentence_max_length": sentence_config.get(
-                "max_seq_length", config_data.get("max_position_embeddings", 512)
-            ),
-            "add_pooling_layer": False,
-            "normalize_embeddings": bool(pooling.get("pooling_mode_mean_tokens", True)),
-        }
+        quantization = _quantization_config(config_data)
+        payload = _sentence_encoder_config(root, config_data)
         registration = get_registration(model_type)
         config = registration.config_class().from_dict(payload)
         tokenizer = HFTokenizerAdapter.from_directory(root)
         tensors = registration.sanitizer()(_read_safetensors(root), config)
         native = registration.model_class()(config)
-        quantization = _quantization_config(config_data)
         if quantization:
             _prepare_quantized_model(native, tensors, quantization)
             _validate_quantized_tensors(native, tensors)
@@ -195,6 +187,34 @@ def _load_sentence_encoder(
     )
 
 
+def _sentence_encoder_config(root: Path, config_data: dict[str, Any]) -> dict[str, Any]:
+    """Honor supported Sentence Transformer pooling and normalization metadata."""
+    pooling = _read_json(root / "1_Pooling" / "config.json")
+    if pooling.get("pooling_mode_mean_tokens") is not True or any(
+        type(value) is not bool or (key != "pooling_mode_mean_tokens" and value)
+        for key, value in pooling.items() if key.startswith("pooling_mode_")
+    ):
+        raise ValueError("native sentence encoders require mean-token pooling only")
+    dimension = pooling.get("word_embedding_dimension")
+    if type(dimension) is not int or dimension != config_data.get("hidden_size"):
+        raise ValueError("pooling dimension differs from the native encoder width")
+    normalize = config_data.get("normalize_embeddings", True)
+    if (root / "modules.json").is_file():
+        modules = _read_json_array(root / "modules.json")
+        types = [module.get("type") if isinstance(module, dict) else None for module in modules]
+        prefix = ["sentence_transformers.models.Transformer",
+                  "sentence_transformers.models.Pooling"]
+        if types not in (prefix, [*prefix, "sentence_transformers.models.Normalize"]):
+            raise ValueError("unsupported Sentence Transformer module pipeline")
+        if modules[1].get("path") != "1_Pooling":
+            raise ValueError("pooling module path must match the loaded pooling metadata")
+        normalize = len(types) == 3
+    sentence = _read_json(root / "sentence_bert_config.json")
+    return {**config_data, "sentence_max_length": sentence.get(
+        "max_seq_length", config_data.get("max_position_embeddings", 512)),
+        "add_pooling_layer": False, "normalize_embeddings": normalize}
+
+
 def _load_colbert(
     root: Path,
     model: str | Path,
@@ -202,12 +222,12 @@ def _load_colbert(
     config_data: dict[str, Any],
 ) -> LoadedRetrievalModel:
     try:
+        quantization = _quantization_config(config_data)
         registration = get_registration("lfm2_colbert")
         config = registration.config_class().from_dict(config_data)
         tokenizer = HFTokenizerAdapter.from_directory(root)
         tensors = registration.sanitizer()(_read_safetensors(root), config)
         native = registration.model_class()(config)
-        quantization = _quantization_config(config_data)
         if quantization:
             _prepare_quantized_model(native, tensors, quantization)
             _validate_quantized_tensors(native, tensors)
@@ -323,21 +343,18 @@ def _read_json_array(path: Path) -> list[Any]:
 
 def _read_safetensors(root: Path) -> dict[str, Any]:
     files, expected_map = _checkpoint_files(root)
-    import mlx.core as mx
-
     result: dict[str, Any] = {}
     try:
         for path in files:
-            with safe_open(path, framework="numpy") as handle:
-                for name in handle.keys():
-                    if name in result:
-                        raise RetrievalModelLoadError(f"duplicate retrieval tensor: {name}")
-                    if expected_map is not None and expected_map.get(name) != path.name:
-                        raise RetrievalModelLoadError(
-                            f"safetensors index mismatch for tensor: {name}"
-                        )
-                    result[name] = mx.array(handle.get_tensor(name))
-    except (OSError, SafetensorError) as exc:
+            for name, tensor in _load_safetensor_file(path).items():
+                if name in result:
+                    raise RetrievalModelLoadError(f"duplicate retrieval tensor: {name}")
+                if expected_map is not None and expected_map.get(name) != path.name:
+                    raise RetrievalModelLoadError(
+                        f"safetensors index mismatch for tensor: {name}"
+                    )
+                result[name] = tensor
+    except (OSError, SafetensorError, ValueError) as exc:
         raise RetrievalModelLoadError(f"cannot read retrieval safetensors: {exc}") from exc
     if expected_map is not None and set(result) != set(expected_map):
         raise RetrievalModelLoadError("safetensors index and shard tensors do not match")

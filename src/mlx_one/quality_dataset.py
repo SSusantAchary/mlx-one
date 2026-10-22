@@ -10,6 +10,101 @@ from pathlib import Path
 QUALITY_SCHEMA = "native-held-out-quality-v1"
 DEPTH_BANDS = ("start", "quarter", "middle", "three_quarter", "end")
 SCORER_VERSION = "nfkc-casefold-whitespace-v1"
+TEXT_QUALITY_VERSION = "native-text-quality-v1"
+TEXT_CATEGORIES = frozenset({"factual", "arithmetic", "reasoning", "instruction",
+    "structured", "chat", "eos", "stop", "unicode", "invalid"})
+
+
+def validate_text_quality(data):
+    """Validate the short text contract without changing long-context research gates."""
+    protocol = data.get("text_quality", {})
+    required = protocol.get("required_cases", {})
+    if (protocol.get("schema_version") != TEXT_QUALITY_VERSION
+            or not protocol.get("dataset_id") or not protocol.get("provenance")
+            or protocol.get("required_repetitions") != 5
+            or protocol.get("minimum_accuracy") != 1.0
+            or len(required) < 27 or set(required.values()) != TEXT_CATEGORIES
+            or any(list(required.values()).count(k) < 2 for k in TEXT_CATEGORIES)):
+        raise ValueError(
+            "text quality requires the frozen 27-case, ten-category, five-repeat protocol")
+    if len({case['request_id'] for case in data['cases']}) != len(data['cases']):
+        raise ValueError("duplicate text quality case IDs")
+    for case in data["cases"]:
+        if (required.get(case["request_id"]) != case.get("category")
+                or not isinstance(case.get("expected"), dict) or not case["expected"]):
+            raise ValueError("text quality case category and independent expected answer required")
+        expected = case["expected"]
+        if set(expected) not in ({"text"}, {"json"}, {"error_type", "message_contains"}):
+            raise ValueError("unknown text quality scoring rule")
+        if "text" in expected and not isinstance(expected["text"], str):
+            raise ValueError("text ground truth must be a string")
+        if case["category"] == "invalid" and "error_type" not in expected:
+            raise ValueError("invalid cases require an explicit exception contract")
+        if case["category"] != "invalid" and "error_type" in expected:
+            raise ValueError("valid cases cannot qualify through an exception")
+    return protocol
+
+
+def _strict_json(text):
+    def unique(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError("duplicate JSON key")
+            value[key] = item
+        return value
+    return json.loads(text, object_pairs_hook=unique,
+                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
+
+
+def evaluate_text_quality(data, repetitions, manifest_sha256):
+    """Exact independent anchors; coverage and answer accuracy are separate results."""
+    protocol = validate_text_quality(data)
+    cases = data["cases"]
+    checks = []
+    for repetition, outputs in enumerate(repetitions):
+        if len(outputs) != len(cases):
+            raise ValueError("quality output/case count mismatch")
+        for case, output in zip(cases, outputs, strict=True):
+            expected = case["expected"]
+            if "error_type" in expected:
+                answer = all(output.get(key, {}).get("type") == expected["error_type"]
+                    and expected["message_contains"] in output[key].get("message", "")
+                    for key in ("error", "nonstream_error"))
+            elif "json" in expected:
+                try:
+                    # Canonical JSON distinguishes bools from integers, unlike Python ==.
+                    answer = json.dumps(_strict_json(output.get("text", "")), sort_keys=True) == (
+                        json.dumps(expected["json"], sort_keys=True))
+                except (ValueError, TypeError):
+                    answer = False
+            else:
+                answer = output.get("text", "").strip() == expected["text"]
+            terminal = (case["category"] not in {"eos", "stop"}
+                        or output.get("finish_reason") == "stop")
+            checks.append({"request_id": case["request_id"], "category": case["category"],
+                "repetition": repetition, "answer_passed": answer,
+                "termination_passed": terminal,
+                "stream_consistency_passed": output.get("stream_consistent") is True,
+                "passed": answer and terminal and output.get("stream_consistent") is True})
+    deterministic = bool(repetitions) and all(rows == repetitions[0] for rows in repetitions)
+    covered = {c["request_id"] for c in cases}
+    coverage = {"all_required_cases": covered == set(protocol["required_cases"]),
+                "five_repetitions": len(repetitions) == 5,
+                "complete_outputs": len(checks) == len(cases) * 5,
+                "stream_evidence": bool(checks) and all(
+                    c["stream_consistency_passed"] for c in checks)}
+    return {"schema_version": TEXT_QUALITY_VERSION, "dataset_id": protocol["dataset_id"],
+        "ground_truth_sha256": manifest_sha256, "checks": checks,
+        "passed": bool(checks) and all(c["passed"] for c in checks) and deterministic,
+        "deterministic_passed": deterministic,
+        "coverage_passed": (all(coverage.values()) if coverage['all_required_cases']
+                            and coverage['five_repetitions'] else None),
+        "coverage": {"checks": coverage, "observed_cases": len(cases),
+                     "required_cases": len(protocol["required_cases"]),
+                     "category_counts": {k: sum(c["category"] == k for c in cases)
+                                         for k in sorted(TEXT_CATEGORIES)}},
+        "scope": "frozen bounded text contract; no broad benchmark or long-context qualification"}
 
 
 def load_quality_manifest(path):

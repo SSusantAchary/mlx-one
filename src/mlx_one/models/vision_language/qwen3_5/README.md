@@ -14,6 +14,18 @@ architecture-level and synthetic.
 checkpoint reference; 0.8B/2B variants are candidates. The presence of image/video
 capabilities in the registry does not qualify the public vision task path.
 
+## Current pinned checkpoint limitations
+
+`Qwen/Qwen3.5-0.8B` at `2fc06364715b967f1860aea9cf38778875588b17`
+is inventoried as `EXPERIMENTAL_NOT_QUALIFIED` under the
+[functional admission policy](../../../../../docs/model-admission.md).
+A fresh stored-source eight-token generation and continuation/reset at context 512 passed.
+That bounded smoke does not qualify the primary affine Q4 conversion, long context,
+multimodal tasks, or the previously broken paths. There is no comparable primary-precision
+performance record; see [benchmark coverage](../../../../../docs/benchmarks/coverage.md).
+The hybrid path uses FP16 full-attention KV and FP32 recurrent state. Numerical research
+is optional and is not a prerequisite for future functional checkpoint admission.
+
 ## Model Architecture
 
 The diagram follows the [native implementation](model.py). Layer counts, widths,

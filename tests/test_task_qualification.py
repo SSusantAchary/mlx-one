@@ -26,7 +26,7 @@ def profile(tmp_path):
 
 def test_registry_derived_inventory_is_complete_and_lazy():
     inventory=task_inventory()
-    assert len(inventory['entries'])==27
+    assert len(inventory['entries'])==30
     assert inventory['qualification_promoted'] is False
     assert sum(r['component_only'] for r in inventory['entries'])==1
     assert next(r for r in inventory['entries'] if r['model_type']=='lfm2_audio')[
@@ -79,7 +79,7 @@ def test_matrix_includes_unrun_architectures_and_retains_failed_worker(tmp_path)
     (run/'failure.json').write_text(json.dumps({'status':'FAIL','reason':'watchdog timeout'}))
     write_integrity(run)
     rows=export_task_matrix([run],tmp_path/'matrix')
-    assert len({r['model_type'] for r in rows})==27
+    assert len({r['model_type'] for r in rows})==30
     assert next(r for r in rows if r['model_type']=='bert')['status']=='FAIL'
     assert next(r for r in rows if r['model_type']=='sam3_tracker_video')['status']=='SKIPPED'
     assert all(r['qualification_promoted'] is False for r in rows)
@@ -101,6 +101,43 @@ def test_quality_requires_anchors_and_never_relaxes_alignment_80ms():
     result=task_quality('alignment',[{'end':.2}],[{'expected':{'end':.1}}],
         {'quality_atol':1,'quality_rtol':1},'a')
     assert result['passed'] is False and result['coverage_passed'] is None
+
+
+def test_observed_cases_do_not_manufacture_quality_coverage():
+    result=task_quality('text-generation',[{'text':'Paris'}],
+                        [{'expected':{'text':'Paris'}}],
+                        {'quality_atol':0,'quality_rtol':0},'a'*64)
+    assert result['passed'] is True
+    assert result['coverage']=={'declared_cases':1,'observed_outputs':1,
+        'cases_with_ground_truth':1,'status':'NOT_RUN',
+        'reason':'no independently validated coverage protocol supplied'}
+    assert result['coverage_passed'] is None
+    missing=task_quality('text-generation',[{'text':'Paris'}],[{}],{},'a'*64)
+    assert missing['passed'] is None and missing['coverage_passed'] is None
+    assert missing['coverage']['cases_with_ground_truth']==0
+
+
+@pytest.mark.parametrize('ignore_cancel,leak,change_recovery',[
+    (False,False,False),(True,False,False),(False,True,False),(False,False,True)])
+def test_text_lifecycle_observes_cancel_leaks_and_recovery(ignore_cancel,leak,change_recovery):
+    from types import SimpleNamespace
+
+    from mlx_one.task_qualification_worker import probe_text_cancellation
+
+    class Target:
+        _cache_manager=SimpleNamespace(stats=lambda:SimpleNamespace(
+            active_handles=int(leak),reserved_bytes=int(leak)))
+
+        def stream(self,prompt,*,options,cancel):
+            yield SimpleNamespace(token_id=1)
+            if ignore_cancel or not cancel.is_set():
+                yield SimpleNamespace(token_id=2)
+
+    result=probe_text_cancellation(Target(),{'prompt':'hi'}, {'tokens':[1]},
+        lambda case:({'tokens':[2 if change_recovery else 1]},{}),{},atol=0,rtol=0)
+    assert result['cancellation'] is (not ignore_cancel)
+    assert result['cancel_cleanup'] is (not leak)
+    assert result['recovery'] is (not change_recovery)
 
 
 def test_task_registry_rejects_incomplete_or_synthetic_native_artifacts(tmp_path):

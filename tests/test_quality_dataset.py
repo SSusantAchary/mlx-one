@@ -1,6 +1,8 @@
 """Held-out scoring and evidence eligibility without a native backend."""
 import hashlib
 import json
+from copy import deepcopy
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -9,11 +11,13 @@ from mlx_one.quality_dataset import (
     DEPTH_BANDS,
     QUALITY_SCHEMA,
     SCORER_VERSION,
+    evaluate_text_quality,
     load_quality_manifest,
     paired_logits_metrics,
     quality_coverage,
     retrieval_score,
     summarize_quality_documents,
+    validate_text_quality,
 )
 
 
@@ -75,3 +79,64 @@ def test_retrieval_exact_normalization_and_coverage_are_required():
     assert quality_coverage(documents, {"fixtures": rows}, 2048)["eligible"]
     assert not quality_coverage(documents, {"fixtures": rows[:-1]}, 2048)["eligible"]
     assert not quality_coverage(documents, {"fixtures": rows}, 8192)["eligible"]
+
+
+def text_fixture():
+    data=json.loads((Path(__file__).parent/'alpha_0_1/fixtures/text-quality-v1.json').read_text())
+    outputs=[]
+    for case in data['cases']:
+        expected=case['expected']
+        output={'stream_consistent':True,'finish_reason':'stop','tokens':[1]}
+        if 'error_type' in expected:
+            output.update(error={'type':expected['error_type'],'message':expected['message_contains']},
+                nonstream_error={'type':expected['error_type'],'message':expected['message_contains']})
+        else:
+            output['text']=expected.get('text',json.dumps(expected.get('json')))
+        outputs.append(output)
+    return data,[deepcopy(outputs) for _ in range(5)]
+
+
+def test_text_quality_requires_all_frozen_cases_and_five_repetitions():
+    data,outputs=text_fixture()
+    result=evaluate_text_quality(data,outputs,'a'*64)
+    assert result['passed'] and result['coverage_passed'] and result['deterministic_passed']
+    assert len(result['checks'])==135
+    assert evaluate_text_quality(data,outputs[:1],'a'*64)['coverage_passed'] is None
+    shard={**data,'cases':data['cases'][:2]}
+    partial=evaluate_text_quality(shard,[row[:2] for row in outputs],'a'*64)
+    assert partial['coverage_passed'] is None
+    data['text_quality']['required_repetitions']=1
+    with pytest.raises(ValueError,match='five-repeat'):
+        validate_text_quality(data)
+
+
+@pytest.mark.parametrize('mutation',['answer','stream','eos','invalid','json_duplicate','json_type','repeat'])
+def test_text_quality_retains_failures_and_strict_json(mutation):
+    data,outputs=text_fixture()
+    if mutation=='answer':
+        outputs[0][0]['text']='wrong'
+    elif mutation=='stream':
+        outputs[0][0]['stream_consistent']=False
+    elif mutation=='repeat':
+        outputs[0][0]['tokens']=[2]
+    else:
+        category={'eos':'eos','invalid':'invalid','json_duplicate':'structured','json_type':'structured'}[mutation]
+        i=next(i for i,c in enumerate(data['cases']) if c['category']==category)
+        if mutation=='eos':
+            outputs[0][i]['finish_reason']='length'
+        elif mutation=='invalid':
+            outputs[0][i]['nonstream_error']['type']='TypeError'
+        elif mutation=='json_duplicate':
+            outputs[0][i]['text']='{"answer":7,"answer":7}'
+        else:
+            outputs[0][i]['text']='{"answer":true}'
+    assert evaluate_text_quality(data,outputs,'a'*64)['passed'] is False
+
+
+def test_text_quality_rejects_unknown_rules_and_output_misalignment():
+    data,outputs=text_fixture()
+    with pytest.raises(ValueError,match='count mismatch'):
+        evaluate_text_quality(data,[outputs[0][:-1]],'a'*64)
+    data['cases'][0]['expected']={'contains':'Tokyo'}
+    with pytest.raises(ValueError,match='scoring rule'):
+        validate_text_quality(data)

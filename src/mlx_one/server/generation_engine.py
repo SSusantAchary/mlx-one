@@ -142,6 +142,10 @@ class GenerationEngine:
         with self._lock:
             return self._stats
 
+    def stream_completion(self, *, prompt: str, **settings: Any) -> Iterator[GenerationEvent]:
+        """Raw text uses the same lease, cache, device owner and cancellation path."""
+        yield from self.stream(messages=[], _prompt=prompt, reasoning_format="none", **settings)
+
     def stream(
         self,
         *,
@@ -164,6 +168,7 @@ class GenerationEngine:
         cache_type_v: str = "f16",
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
+        _prompt: str | None = None,
     ) -> Iterator[GenerationEvent]:
         lifecycle: dict[str, Any] = {}
         acquire = getattr(self.manager, "model_lease", None)
@@ -190,6 +195,7 @@ class GenerationEngine:
                 spec_type=spec_type,
                 spec_draft_n_max=spec_draft_n_max,
                 lifecycle=lifecycle,
+                raw_prompt=_prompt,
             )
         finally:
             runtime = lifecycle.get("runtime")
@@ -225,19 +231,29 @@ class GenerationEngine:
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
         lifecycle: dict[str, Any],
+        raw_prompt: str | None = None,
     ) -> Iterator[GenerationEvent]:
         queue_ms = current_queue_ms()
         bundle = self.manager.current_model()
+        if getattr(bundle.model, "_mlx_one_qwen3_candidate", False):
+            from mlx_one.models.language.qwen3.upstream_adapter import validate_candidate_runtime
+
+            validate_candidate_runtime(
+                bundle, mode=self._inference_mode, backend=self._cache_config.backend,
+                key_type=cache_type_k, value_type=cache_type_v, spec_type=spec_type,
+            )
         if model != self.manager.model_info().id:
             raise ValueError(f"model {model!r} is not loaded")
-        if bundle.chat_template is None:
+        if raw_prompt is None and bundle.chat_template is None:
             raise RuntimeError("loaded model has no chat template")
         if reasoning == "on" and "enable_thinking" not in (bundle.chat_template.template or ""):
             raise ValueError("loaded chat template does not support explicit reasoning control")
-        from mlx_one.engine.prompts import prepare_chat
+        from mlx_one.engine.prompts import prepare_chat, prepare_completion
 
         tokenization_started = time.perf_counter()
-        prepared = prepare_chat(
+        prepared = prepare_completion(
+            bundle, raw_prompt, options.max_tokens, context_length or bundle.context_length
+        ) if raw_prompt is not None else prepare_chat(
             bundle, messages, options.max_tokens, context_length or bundle.context_length,
             context_shift=context_shift, rendering_options=_reasoning_template_options(
                 reasoning, reasoning_budget, reasoning_preserve))
@@ -268,8 +284,8 @@ class GenerationEngine:
             value_type=cache_type_v,
             context_tokens=context_length or bundle.context_length,
             namespace=cache_namespace,
-            rendering_options=_reasoning_template_options(
-                reasoning, reasoning_budget, reasoning_preserve),
+            rendering_options=(prepared.rendering_options if raw_prompt is not None else
+                _reasoning_template_options(reasoning, reasoning_budget, reasoning_preserve)),
         )
         if cache_prompt:
             try:
@@ -303,9 +319,10 @@ class GenerationEngine:
         from mlx_one.engine.timing import RequestTiming
 
         timings = RequestTiming(started, trace=self._collect_execution_metrics)
-        iterator = stream_chat(
+        streamer = stream_chat if raw_prompt is None else _stream_raw
+        iterator = streamer(
             bundle,
-            rendered_messages,
+            rendered_messages if raw_prompt is None else prompt,
             options=options,
             is_cancelled=cancel.is_set,
             template_options=_reasoning_template_options(
@@ -335,6 +352,8 @@ class GenerationEngine:
             _cooperative=self._actor is not None,
             _prefill_chunk_size=self._prefill_chunk_size,
             _cache_runtime=runtime, _cache_handle=handle,
+            _math_observer=getattr(self, "_qualification_math_observer", None),
+            _ignore_eos=getattr(self, "_qualification_ignore_eos", False),
         )
         from mlx_one.engine.batching import ForwardRequest
 
@@ -347,9 +366,10 @@ class GenerationEngine:
                     continue
                 if chunk.token_id is not None:
                     generated = chunk.generated_tokens
-                    if first_at is None:
-                        first_at = time.perf_counter()
+                if chunk.token_id is not None or chunk.text:
                     text, thought = parser.feed(chunk.text) if chunk.text else ("", "")
+                    if text and first_at is None:
+                        first_at = time.perf_counter()
                     yield GenerationEvent(text=text, reasoning_content=thought)
                 elif chunk.finish_reason is None:
                     yield GenerationEvent()
@@ -362,6 +382,8 @@ class GenerationEngine:
             iterator.close()
         trailing_text, trailing_reasoning = parser.flush()
         if trailing_text or trailing_reasoning:
+            if trailing_text and first_at is None:
+                first_at = time.perf_counter()
             yield GenerationEvent(
                 text=trailing_text, reasoning_content=trailing_reasoning
             )
@@ -496,7 +518,8 @@ class GenerationEngine:
                 "block_size_tokens": runtime.config.block_size_tokens,
                 "capabilities": {
                     "dense_kv": True,
-                    "quantized_kv": True,
+                    "quantized_kv": all(spec.can_quantize for spec in runtime.plan.state_specs
+                                         if spec.kind in {"full_kv", "sliding_kv"}),
                     "block_kv": block_supported,
                     "prefix_block_cache": block_supported,
                     "sliding_block_kv": False,
@@ -625,6 +648,12 @@ def _fit_messages(
                             rendering_options=_reasoning_template_options(
                                 reasoning, reasoning_budget, reasoning_preserve))
     return list(prepared.messages), prepared.text
+
+
+def _stream_raw(bundle, prompt, *, options, is_cancelled, template_options=None, **settings):
+    from mlx_one.text.generation import _stream_bundle
+
+    yield from _stream_bundle(bundle, prompt, options, is_cancelled, **settings)
 
 
 class _ReasoningParser:

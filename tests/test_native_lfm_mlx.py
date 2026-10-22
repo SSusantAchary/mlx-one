@@ -92,8 +92,8 @@ def test_lfm_moe_router_shapes_auxiliary_loss_and_stacking() -> None:
         weights[f"model.layers.1.feed_forward.experts.{expert}.w3.weight"] = mx.zeros((12, 16))
         weights[f"model.layers.1.feed_forward.experts.{expert}.w2.weight"] = mx.zeros((16, 12))
     cleaned = sanitize_weights(weights, config)
-    assert cleaned["model.layers.1.feed_forward.experts.gate_proj"].shape == (4, 12, 16)
-    assert cleaned["model.layers.1.feed_forward.experts.down_proj"].shape == (4, 16, 12)
+    assert cleaned["model.layers.1.feed_forward.switch_mlp.gate_proj.weight"].shape == (4, 12, 16)
+    assert cleaned["model.layers.1.feed_forward.switch_mlp.down_proj.weight"].shape == (4, 16, 12)
 
 
 def test_lfm_vl_vision_projection_and_token_replacement() -> None:

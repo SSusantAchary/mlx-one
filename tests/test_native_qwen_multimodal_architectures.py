@@ -218,3 +218,37 @@ def test_qwen3_5_sanitizes_recurrent_conv_patch_and_ignored_buffers() -> None:
     )
     assert result["visual.patch_embed.proj.weight"].shape == (8, 12)
     assert "lm_head.weight" not in result
+
+
+def test_qwen35_accepts_publisher_mlx_depthwise_convolution_layout():
+    config = qwen3_5_config()
+    text = config.text_config
+    width = (2 * text.linear_num_key_heads * text.linear_key_head_dim
+             + text.linear_num_value_heads * text.linear_value_head_dim)
+    expected = np.arange(width * 4).reshape(width, 4)
+    result = sanitize_qwen3_5({
+        'model.language_model.layers.0.linear_attn.conv1d.weight': expected[..., None]
+    }, config)
+    np.testing.assert_array_equal(result['language_model.layers.0.linear_attn.conv1d.weight'],
+                                  expected)
+    with pytest.raises(ValueError, match='convolution layout'):
+        sanitize_qwen3_5({
+            'model.language_model.layers.0.linear_attn.conv1d.weight': np.zeros((width, 2, 2))
+        }, config)
+
+
+def test_qwen35_normalizes_publisher_tower_names_and_patch_axes():
+    config = qwen3_5_config()
+    patch = np.arange(8*1*2*2*3).reshape(8,1,2,2,3)
+    result = sanitize_qwen3_5({
+        'language_model.model.embed_tokens.weight': np.zeros((64,16)),
+        'vision_tower.patch_embed.proj.weight': patch,
+    }, config)
+    assert 'language_model.embed_tokens.weight' in result
+    np.testing.assert_array_equal(result['visual.patch_embed.proj.weight'],
+                                  patch.transpose(0,4,1,2,3).reshape(8,-1))
+    with pytest.raises(ValueError, match='duplicate canonical'):
+        sanitize_qwen3_5({
+            'language_model.embed_tokens.weight': np.zeros((64,16)),
+            'language_model.model.embed_tokens.weight': np.zeros((64,16)),
+        }, config)

@@ -107,20 +107,38 @@ def test_scheduler_rejects_more_than_eight_pending_jobs() -> None:
     scheduler.close()
 
 
-def test_scheduler_cancels_abandoned_generation_and_isolates_failures() -> None:
+@pytest.mark.parametrize("at_yield_boundary", (False, True))
+def test_scheduler_cancels_abandoned_generation_and_isolates_failures(
+    monkeypatch, at_yield_boundary: bool,
+) -> None:
     scheduler = GenerationScheduler()
     cancelled = threading.Event()
+    yielded = threading.Event()
+    release = threading.Event()
+    if at_yield_boundary:
+        step = scheduler._step
+        def pause_after_yield(job):
+            again = step(job)
+            if again and not yielded.is_set():
+                yielded.set()
+                release.wait(timeout=2)
+            return again
+        monkeypatch.setattr(scheduler, "_step", pause_after_yield)
 
     def cancellable(cancel: threading.Event):
-        yield "first"
-        cancel.wait(timeout=2)
-        if cancel.is_set():
-            cancelled.set()
+        try:
+            yield "first"
+            cancel.wait(timeout=2)
+        finally:
+            # Cancellation can close a generator while it is suspended at yield.
+            if cancel.is_set():
+                cancelled.set()
 
     async def abandon() -> None:
         stream = scheduler.schedule(cancellable)
         assert await anext(stream) == "first"
         await stream.aclose()
+        release.set()
         assert await asyncio.to_thread(cancelled.wait, 1)
 
     def failing(cancel: threading.Event):
@@ -139,6 +157,7 @@ def test_scheduler_cancels_abandoned_generation_and_isolates_failures() -> None:
         asyncio.run(abandon())
         asyncio.run(failure_then_success())
     finally:
+        release.set()
         scheduler.close()
 
 

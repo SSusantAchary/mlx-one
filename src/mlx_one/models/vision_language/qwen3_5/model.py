@@ -21,13 +21,20 @@ import mlx.nn as nn
 from mlx_one.core.cache import KVCache
 from mlx_one.core.outputs import VisionLanguageModelOutput
 from mlx_one.engine.compound import CompoundLinearComponent, compound_layout
-from mlx_one.models.shared.transformer import causal_mask
+from mlx_one.models.shared.execution import project
+from mlx_one.models.shared.reference_math import attention_mask as causal_mask
+from mlx_one.models.shared.reference_math import swiglu
 from mlx_one.models.shared.vision import VisionAttention, vision_position_ids
 from mlx_one.models.vision_language.qwen2_vl.model import (
     _replace_features,
     multimodal_position_ids,
 )
 from mlx_one.models.vision_language.qwen3_5.config import Qwen3_5Config, Qwen3_5TextConfig
+from mlx_one.models.vision_language.qwen3_5.reference_math import (
+    Qwen3NextRMSNormGated,
+    gated_delta_forward,
+)
+from mlx_one.ops.logits import project_logits
 
 
 def _silu(value: Any) -> Any:
@@ -70,7 +77,7 @@ class Qwen3_5LinearCache(CompoundLinearComponent):
 
 def make_qwen3_5_caches(config: Qwen3_5TextConfig, dtype="float32") -> tuple[Any, ...]:
     return tuple(
-        Qwen3_5LinearCache(config.linear_conv_kernel_dim,*compound_layout(config,dtype))
+        Qwen3_5LinearCache(config.linear_conv_kernel_dim, *compound_layout(config, dtype))
         if kind == "linear_attention"
         else KVCache()
         for kind in config.layer_types
@@ -94,14 +101,23 @@ class DepthwiseCausalConv1d(nn.Module):
         else:
             combined = cache.prefix(values)
         outputs = []
+        # Convolution accumulates products before rounding the output. Multiplying
+        # BF16/FP16 operands first loses cancellation terms before the reduction.
+        weights = self.weight.T[None, ...].astype(mx.float32)
         for index in range(values.shape[1]):
-            window = combined[:, index : index + self.kernel_size]
-            outputs.append(mx.sum(window * self.weight.T[None, ...], axis=1))
-        return mx.stack(outputs, axis=1)
+            window = combined[:, index : index + self.kernel_size].astype(mx.float32)
+            outputs.append(mx.sum(window * weights, axis=1))
+        return mx.stack(outputs, axis=1).astype(values.dtype)
 
 
 def _l2_normalize(value: Any) -> Any:
     return value * mx.rsqrt(mx.sum(value.astype(mx.float32) ** 2, axis=-1, keepdims=True) + 1e-6)
+
+
+def _gated_delta_decay(a: Any, a_log: Any, dt_bias: Any) -> Any:
+    shifted = a.astype(mx.float32) + dt_bias
+    # Decay is an FP32 recurrent-state operand, including the inner exponential.
+    return mx.exp(-mx.exp(a_log.astype(mx.float32)) * mx.logaddexp(shifted, mx.zeros_like(shifted)))
 
 
 class Qwen3_5GatedDeltaNet(nn.Module):
@@ -122,7 +138,7 @@ class Qwen3_5GatedDeltaNet(nn.Module):
         self.conv1d = DepthwiseCausalConv1d(self.conv_dim, config.linear_conv_kernel_dim)
         self.dt_bias = mx.ones((self.num_v_heads,))
         self.A_log = mx.zeros((self.num_v_heads,))
-        self.norm = Qwen3_5GatedRMSNorm(self.head_v_dim, config.rms_norm_eps)
+        self.norm = Qwen3NextRMSNormGated(self.head_v_dim, config.rms_norm_eps)
         self.out_proj = nn.Linear(self.value_dim, config.hidden_size, bias=False)
 
     def __call__(
@@ -132,46 +148,8 @@ class Qwen3_5GatedDeltaNet(nn.Module):
         cache: Qwen3_5LinearCache | None,
         attention_mask: Any | None,
     ) -> Any:
-        if attention_mask is not None:
-            hidden = hidden * attention_mask[:, -hidden.shape[1] :, None]
-        mixed = _silu(self.conv1d(self.in_proj_qkv(hidden), cache))
-        query, key, value = mx.split(mixed, (self.key_dim, self.key_dim * 2), axis=-1)
-        batch, length, _ = hidden.shape
-        query = query.reshape(batch, length, self.num_k_heads, self.head_k_dim)
-        key = key.reshape(batch, length, self.num_k_heads, self.head_k_dim)
-        value = value.reshape(batch, length, self.num_v_heads, self.head_v_dim)
-        repeats = self.num_v_heads // self.num_k_heads
-        query = mx.repeat(query, repeats, axis=2)
-        key = mx.repeat(key, repeats, axis=2)
-        query = _l2_normalize(query) * self.head_k_dim**-0.5
-        key = _l2_normalize(key)
-        beta = mx.sigmoid(self.in_proj_b(hidden))
-        a = self.in_proj_a(hidden).astype(mx.float32) + self.dt_bias
-        decay = mx.exp(-mx.exp(self.A_log) * mx.logaddexp(a, mx.zeros_like(a)))
-        state = None if cache is None else cache.recurrent_state
-        if state is None:
-            state = mx.zeros(
-                (batch, self.num_v_heads, self.head_k_dim, self.head_v_dim),
-                dtype=mx.float32,
-            )
-        outputs = []
-        for index in range(length):
-            q = query[:, index].astype(mx.float32)
-            k = key[:, index].astype(mx.float32)
-            v = value[:, index].astype(mx.float32)
-            state = state * decay[:, index, :, None, None]
-            memory = mx.sum(state * k[..., None], axis=-2)
-            delta = (v - memory) * beta[:, index, :, None]
-            state = state + k[..., None] * delta[..., None, :]
-            outputs.append(mx.sum(state * q[..., None], axis=-2))
-        if cache is not None:
-            cache.recurrent_state = state
-        core = mx.stack(outputs, axis=1)
-        z = self.in_proj_z(hidden).reshape(batch, length, self.num_v_heads, self.head_v_dim)
-        core = self.norm(core, z)
-        result = self.out_proj(core.reshape(batch, length, self.value_dim))
-        dtype = getattr(self,"_mlx_one_activation_dtype",None)
-        return result.astype(getattr(mx,dtype)) if dtype is not None else result
+        mask = None if attention_mask is None else attention_mask[:, -hidden.shape[1] :]
+        return gated_delta_forward(self, hidden, cache=cache, mask=mask)
 
 
 def _rotate_half(value: Any) -> Any:
@@ -206,7 +184,7 @@ def _partial_mrope(value: Any, position_ids: Any, config: Qwen3_5TextConfig) -> 
     embedding = mx.concatenate((frequency, frequency), axis=-1)[:, None]
     rotated, passthrough = value[..., :rotary_dim], value[..., rotary_dim:]
     rotated = rotated * mx.cos(embedding) + _rotate_half(rotated) * mx.sin(embedding)
-    return mx.concatenate((rotated, passthrough), axis=-1)
+    return mx.concatenate((rotated, passthrough), axis=-1).astype(value.dtype)
 
 
 class Qwen3_5Attention(nn.Module):
@@ -232,42 +210,47 @@ class Qwen3_5Attention(nn.Module):
         self, hidden: Any, *, mask: Any | None, position_ids: Any, cache: KVCache | None
     ) -> Any:
         batch, length, _ = hidden.shape
-        projected = self.q_proj(hidden).reshape(
-            batch, length, self.config.num_attention_heads, self.config.head_dim * 2
+        c = self.config
+        q_proj_output = self.q_proj(hidden)
+        query, gate = mx.split(
+            q_proj_output.reshape(batch, length, c.num_attention_heads, -1), 2, axis=-1
         )
-        query, gate = mx.split(projected, 2, axis=-1)
-        key = self.k_proj(hidden).reshape(
-            batch, length, self.config.num_key_value_heads, self.config.head_dim
-        )
-        value = self.v_proj(hidden).reshape(
-            batch, length, self.config.num_key_value_heads, self.config.head_dim
-        )
+        gate = gate.reshape(batch, length, -1)
+        key, value = self.k_proj(hidden), self.v_proj(hidden)
         query = self.q_norm(query).transpose(0, 2, 1, 3)
-        key = self.k_norm(key).transpose(0, 2, 1, 3)
-        value = value.transpose(0, 2, 1, 3)
-        query = _partial_mrope(query, position_ids, self.config)
-        key = _partial_mrope(key, position_ids, self.config)
-        dtype = getattr(self,"_mlx_one_activation_dtype",None)
-        if dtype is not None:
-            query,key,value = (v.astype(getattr(mx,dtype)) for v in (query,key,value))
-        if cache is not None and callable(getattr(cache,"attend",None)):
-            attended = cache.attend(query,key,value,scale=self.config.head_dim**-0.5,
-                                    position_ids=position_ids)
+        key = self.k_norm(key.reshape(batch, length, c.num_key_value_heads, -1)).transpose(
+            0, 2, 1, 3
+        )
+        value = value.reshape(batch, length, c.num_key_value_heads, -1).transpose(0, 2, 1, 3)
+        offset = 0 if cache is None else cache.offset
+        if position_ids is None:
+            settings = dict(
+                dims=c.rotary_dim,
+                traditional=False,
+                base=c.rope_parameters["rope_theta"],
+                scale=1.0,
+                offset=offset,
+            )
+            query, key = mx.fast.rope(query, **settings), mx.fast.rope(key, **settings)
+        else:
+            query = _partial_mrope(query, position_ids, c)
+            key = _partial_mrope(key, position_ids, c)
+        if cache is not None and callable(getattr(cache, "attend", None)):
+            output = cache.attend(
+                query, key, value, scale=c.head_dim**-0.5, position_ids=position_ids
+            )
         else:
             if cache is not None:
                 key, value = cache.update(key, value)
-            repeats = self.config.num_attention_heads // self.config.num_key_value_heads
-            key = mx.repeat(key, repeats, axis=1)
-            value = mx.repeat(value, repeats, axis=1)
-            scores = (query @ key.transpose(0, 1, 3, 2)) * self.config.head_dim**-0.5
-            if mask is not None:
-                scores = scores + mask
-            attended = mx.softmax(scores, axis=-1, precise=True) @ value
-        attended = attended.transpose(0, 2, 1, 3)
-        attended = attended * mx.sigmoid(gate)
-        if dtype is not None:
-            attended = attended.astype(getattr(mx,dtype))
-        return self.o_proj(attended.reshape(batch, length, -1))
+            output = mx.fast.scaled_dot_product_attention(
+                query,
+                key.astype(query.dtype),
+                value.astype(query.dtype),
+                scale=c.head_dim**-0.5,
+                mask=mask,
+            )
+        output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
+        return self.o_proj(output * mx.sigmoid(gate))
 
 
 class Qwen3_5MLP(nn.Module):
@@ -278,7 +261,7 @@ class Qwen3_5MLP(nn.Module):
         self.down_proj = nn.Linear(config.intermediate_size, config.hidden_size, bias=False)
 
     def __call__(self, hidden: Any) -> Any:
-        return self.down_proj(_silu(self.gate_proj(hidden)) * self.up_proj(hidden))
+        return self.down_proj(swiglu(self.gate_proj(hidden), self.up_proj(hidden)))
 
 
 class Qwen3_5DecoderLayer(nn.Module):
@@ -340,16 +323,11 @@ class Qwen3_5TextModel(nn.Module):
         length = hidden.shape[1]
         if offset + length > self.config.max_position_embeddings:
             raise ValueError("Qwen3.5 sequence exceeds max_position_embeddings")
-        if position_ids is None:
-            base = mx.arange(offset, offset + length)[None, :]
-            position_ids = mx.broadcast_to(base, (hidden.shape[0], length))
-        mask = causal_mask(length, offset)
+        mask = causal_mask(length, offset, attention_mask)
         if attention_mask is not None:
             expected = (hidden.shape[0], offset + length)
             if attention_mask.shape != expected:
                 raise ValueError("attention_mask must cover the complete cached sequence")
-            padding = mx.where(attention_mask[:, None, None, :] != 0, 0.0, -1e9)
-            mask = padding if mask is None else mask + padding
         states = [hidden] if output_hidden_states else None
         for index, layer in enumerate(self.layers):
             hidden = layer(
@@ -381,8 +359,7 @@ class Qwen3_5MTP(nn.Module):
         self.pre_fc_norm_hidden = Qwen3_5RMSNorm(config.hidden_size, config.rms_norm_eps)
         self.fc = nn.Linear(config.hidden_size * 2, config.hidden_size, bias=False)
         self.layers = [
-            Qwen3_5DecoderLayer(self.config, index)
-            for index in range(config.mtp_num_hidden_layers)
+            Qwen3_5DecoderLayer(self.config, index) for index in range(config.mtp_num_hidden_layers)
         ]
         self.norm = Qwen3_5RMSNorm(config.hidden_size, config.rms_norm_eps)
 
@@ -408,9 +385,7 @@ class Qwen3_5MTP(nn.Module):
         )
         offset = 0 if cache is None else cache[0].offset
         length = hidden.shape[1]
-        positions = mx.arange(
-            position_offset + offset, position_offset + offset + length
-        )[None, :]
+        positions = mx.arange(position_offset + offset, position_offset + offset + length)[None, :]
         mask = causal_mask(length, offset)
         for index, layer in enumerate(self.layers):
             hidden = layer(
@@ -549,6 +524,8 @@ def _interpolate_positions(embedding: Any, grids: Sequence[Sequence[int]], confi
 
 
 class Qwen3_5ForConditionalGeneration(nn.Module):
+    _mlx_one_reference_first_math = True
+
     def __init__(self, config: Qwen3_5Config) -> None:
         super().__init__()
         self.config = config
@@ -579,29 +556,41 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
         if not hasattr(self, "mtp"):
             raise RuntimeError("Qwen3.5 checkpoint has no MTP predictor")
         embeddings = self.language_model.embed_tokens(input_ids)
-        hidden = self.mtp(
-            embeddings, hidden_states, cache=cache, position_offset=position_offset
-        )
+        hidden = self.mtp(embeddings, hidden_states, cache=cache, position_offset=position_offset)
         return (
-            self.language_model.embed_tokens.as_linear(hidden)
+            project(
+                self.language_model.embed_tokens,
+                hidden,
+                execution_dtype=getattr(self, "_mlx_one_activation_dtype", None),
+                as_linear=True,
+            )
             if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
+            else project(
+                self.lm_head,
+                hidden,
+                execution_dtype=getattr(self, "_mlx_one_activation_dtype", None),
+            )
         )
 
     def make_cache(self) -> tuple[Any, ...]:
         embedding = self.language_model.embed_tokens
         weight = embedding.scales if hasattr(embedding, "bits") else embedding.weight
-        dtype = str(weight.dtype).rsplit(".",1)[-1]
-        return make_qwen3_5_caches(self.config.text_config,dtype)
+        dtype = str(weight.dtype).rsplit(".", 1)[-1]
+        return make_qwen3_5_caches(self.config.text_config, dtype)
 
     def make_state_components(self, key_type, pool=None):
         from mlx_one.engine.components import FullKVComponent
         from mlx_one.engine.paged import PagedKVComponent
 
         dtype = "bfloat16" if key_type == "bf16" else "float16"
-        return tuple(cache if isinstance(cache,CompoundLinearComponent) else
-                     PagedKVComponent(pool,layer_id=i,dtype=dtype) if pool is not None
-                     else FullKVComponent(dtype) for i,cache in enumerate(self.make_cache()))
+        return tuple(
+            cache
+            if isinstance(cache, CompoundLinearComponent)
+            else PagedKVComponent(pool, layer_id=i, dtype=dtype)
+            if pool is not None
+            else FullKVComponent(dtype)
+            for i, cache in enumerate(self.make_cache())
+        )
 
     def __call__(
         self,
@@ -616,6 +605,7 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
         position_ids: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> VisionLanguageModelOutput:
         embeddings = self.language_model.embed_tokens(input_ids)
         vision_states = []
@@ -642,7 +632,7 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
             if mm_token_type_ids is not None or vision_states:
                 raise ValueError("explicit text positions cannot replace multimodal positions")
             positions = position_ids
-            deltas = mx.zeros((input_ids.shape[0],1),dtype=mx.int32)
+            deltas = mx.zeros((input_ids.shape[0], 1), dtype=mx.int32)
         elif mm_token_type_ids is None:
             offset = 0 if cache is None else cache[0].offset
             base = mx.arange(offset, offset + input_ids.shape[1])[None, :]
@@ -661,14 +651,19 @@ class Qwen3_5ForConditionalGeneration(nn.Module):
             None,
             input_embeddings=embeddings,
             attention_mask=attention_mask,
-            position_ids=positions,
+            position_ids=positions
+            if position_ids is not None or mm_token_type_ids is not None
+            else None,
             cache=cache,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.language_model.embed_tokens.as_linear(hidden)
+        logits = project_logits(
+            hidden,
+            self.language_model.embed_tokens.as_linear
             if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
+            else self.lm_head,
+            logits_mode,
+            attention_mask=attention_mask,
         )
         return VisionLanguageModelOutput(
             logits,

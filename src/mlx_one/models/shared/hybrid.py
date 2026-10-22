@@ -7,6 +7,7 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.models.shared.execution import attention_matmul, project
 from mlx_one.models.shared.transformer import apply_rope
 
 
@@ -38,17 +39,21 @@ class LfmAttention(nn.Module):
     def __call__(self, hidden: Any, *, mask: Any | None, cache: Any | None,
                  position_ids: Any | None = None) -> Any:
         batch, length, _ = hidden.shape
-        queries = self.q_proj(hidden).reshape(batch, length, self.num_heads, self.head_dim)
-        keys = self.k_proj(hidden).reshape(batch, length, self.num_kv_heads, self.head_dim)
-        values = self.v_proj(hidden).reshape(batch, length, self.num_kv_heads, self.head_dim)
+        activation_dtype = getattr(self, "_mlx_one_activation_dtype", None)
+        queries = project(self.q_proj, hidden, execution_dtype=activation_dtype).reshape(
+            batch, length, self.num_heads, self.head_dim)
+        keys = project(self.k_proj, hidden, execution_dtype=activation_dtype).reshape(
+            batch, length, self.num_kv_heads, self.head_dim)
+        values = project(self.v_proj, hidden, execution_dtype=activation_dtype).reshape(
+            batch, length, self.num_kv_heads, self.head_dim)
         queries = self.q_layernorm(queries).transpose(0, 2, 1, 3)
         keys = self.k_layernorm(keys).transpose(0, 2, 1, 3)
         values = values.transpose(0, 2, 1, 3)
         offset = 0 if cache is None else cache.offset
         queries = apply_rope(queries, offset=offset, theta=self.rope_theta,
-                             position_ids=position_ids)
-        keys = apply_rope(keys, offset=offset, theta=self.rope_theta, position_ids=position_ids)
-        activation_dtype = getattr(self, "_mlx_one_activation_dtype", None)
+                             position_ids=position_ids, native_precision=activation_dtype is None)
+        keys = apply_rope(keys, offset=offset, theta=self.rope_theta, position_ids=position_ids,
+                          native_precision=activation_dtype is None)
         if activation_dtype:
             dtype = getattr(mx, activation_dtype)
             queries, keys, values = (v.astype(dtype) for v in (queries, keys, values))
@@ -57,21 +62,35 @@ class LfmAttention(nn.Module):
                                   position_ids=position_ids)
             if activation_dtype:
                 output = output.astype(dtype)
-            return self.out_proj(output.transpose(0, 2, 1, 3).reshape(batch, length, -1))
+            return project(self.out_proj, output.transpose(0, 2, 1, 3).reshape(batch, length, -1),
+                           execution_dtype=activation_dtype)
         if cache is not None:
             keys, values = cache.update(keys, values)
         repeats = self.num_heads // self.num_kv_heads
         if repeats > 1:
             keys = mx.repeat(keys, repeats, axis=1)
             values = mx.repeat(values, repeats, axis=1)
-        scores = (queries @ keys.transpose(0, 1, 3, 2)) * self.scale
+        stable = activation_dtype == "float16" and getattr(self.q_proj, "bits", None) in {4, 8}
+        operand_dtype = queries.dtype
+        accumulate_fp32 = not stable and str(operand_dtype).rsplit(".", 1)[-1] in {
+            "float16", "bfloat16"}
+        if accumulate_fp32:
+            queries, keys, values = (x.astype(mx.float32) for x in (queries, keys, values))
+        scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable
+                  else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
+        if activation_dtype:
+            # A FP32 prefill mask must not change decode softmax/value arithmetic.
+            scores = scores.astype(mx.float32)
         if mask is not None:
-            scores = scores + mask
-        output = mx.softmax(scores, axis=-1, precise=True) @ values
+            scores = scores + mask.astype(scores.dtype)
+        probabilities = mx.softmax(scores, axis=-1, precise=True)
+        output = attention_matmul(probabilities, values) if stable else probabilities @ values
+        if accumulate_fp32:
+            output = output.astype(operand_dtype)
         output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
         if activation_dtype:
             output = output.astype(dtype)
-        return self.out_proj(output)
+        return project(self.out_proj, output, execution_dtype=activation_dtype)
 
 
 class ShortConv(nn.Module):
@@ -90,7 +109,9 @@ class ShortConv(nn.Module):
         self.out_proj = nn.Linear(config.hidden_size, config.hidden_size, bias=config.conv_bias)
 
     def __call__(self, hidden: Any, *, padding_mask: Any | None, cache: Any | None) -> Any:
-        left_gate, right_gate, value = mx.split(self.in_proj(hidden), 3, axis=-1)
+        policy = getattr(self, "_mlx_one_activation_dtype", None)
+        left_gate, right_gate, value = mx.split(
+            project(self.in_proj, hidden, execution_dtype=policy), 3, axis=-1)
         gated = left_gate * value
         if padding_mask is not None:
             gated = mx.where(padding_mask[..., None], gated, 0)
@@ -105,7 +126,7 @@ class ShortConv(nn.Module):
         convolved = mx.einsum("blkd,dk->bld", windows, self.conv)
         if self.conv_bias is not None:
             convolved = convolved + self.conv_bias
-        return self.out_proj(right_gate * convolved)
+        return project(self.out_proj, right_gate * convolved, execution_dtype=policy)
 
 
 class LfmMLP(nn.Module):
@@ -116,8 +137,10 @@ class LfmMLP(nn.Module):
         self.w2 = nn.Linear(intermediate_size, hidden_size, bias=False)
 
     def __call__(self, value: Any) -> Any:
-        gate = self.w1(value)
-        return self.w2((gate * mx.sigmoid(gate)) * self.w3(value))
+        policy = getattr(self, "_mlx_one_activation_dtype", None)
+        gate = project(self.w1, value, execution_dtype=policy)
+        up = project(self.w3, value, execution_dtype=policy)
+        return project(self.w2, (gate * mx.sigmoid(gate)) * up, execution_dtype=policy)
 
 
 class HybridDecoderLayer(nn.Module):

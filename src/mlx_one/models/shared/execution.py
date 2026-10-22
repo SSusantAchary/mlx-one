@@ -1,4 +1,4 @@
-"""Shape-stable arithmetic for explicit FP16 affine INT8 decoder execution.
+"""Shape-stable arithmetic for explicit FP16 affine quantized decoder execution.
 
 Use existing MLX primitives, with one matrix-vector row per real token. Packed
 weights remain shared; no weight dequantization or per-token Python loop is used.
@@ -26,8 +26,28 @@ def attention_scratch_bound(*, batch: int, heads: int, head_dim: int, chunk: int
 
 
 def project(module: Any, value: Any, *, execution_dtype: str | None = None,
-            as_linear: bool = False) -> Any:
-    if (execution_dtype != "float16" or getattr(module, "bits", None) != 8
+            as_linear: bool = False, role: str = "projection") -> Any:
+    from mlx_one.engine.optimization_policy import current_math
+
+    observer = current_math().observer
+    if observer is None or not getattr(observer, "profile_math", False):
+        return _project(module, value, execution_dtype=execution_dtype, as_linear=as_linear)
+    from mlx_one.ops.profiling import phase
+
+    result = None
+    with phase(role, output=lambda: result):
+        result = _project(module, value, execution_dtype=execution_dtype, as_linear=as_linear)
+    return result
+
+
+def _project(module: Any, value: Any, *, execution_dtype: str | None = None,
+             as_linear: bool = False) -> Any:
+    from mlx_one.ops.quantized_linear import try_quantized_linear
+
+    used, result = try_quantized_linear(module, value, as_linear=as_linear)
+    if used:
+        return result
+    if (execution_dtype != "float16" or getattr(module, "bits", None) not in {4, 8}
             or getattr(module, "mode", None) != "affine"):
         return module.as_linear(value) if as_linear else module(value)
     import mlx.core as mx

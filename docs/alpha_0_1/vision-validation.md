@@ -1,0 +1,9 @@
+# A7 native vision-language implementation and validation
+
+Qwen image processing now validates placeholder count before MLX import or image work, checks positive integer/model-feasible pixel metadata, limits source images to 40 million pixels before conversion, applies EXIF orientation before RGB resize/patch layout, and rejects patch-aligned outputs exceeding the configured budget. Default processed budget stays 28×28×1280 pixels; no native model/tower/projector mathematics rewritten. VLM quantization metadata validates before allocation, and shared text safetensor reading now supplies finite CPU checks.
+
+Safe bounded data URLs remain accepted by the existing server resolver; HTTPS policy unchanged. Other VLM families remain candidates; LFM2 native-format/processor restrictions and Qwen3.5 separate text/media adapters are preserved. Qwen2 legacy static processor fallback is retained but is not exact-checkpoint qualification.
+
+**46 passed**, 0.79s, with one inherited API deprecation warning for Pillow getdata. Command: `PYTHONPATH=src:tests:. .venv/bin/python -m pytest --no-cov -q tests/alpha_0_1/test_vision_contract.py tests/test_native_qwen_multimodal_architectures.py tests/test_task_vlm_runtime.py tests/test_server_media.py tests/test_native_lfm_architectures.py`. New tests cover pre-import placeholder errors, impossible/invalid budgets, pre-conversion source limits, EXIF/grid/patch consistency and caller-image preservation. Existing media tests cover data URLs, malformed/mismatched types, private-network rejection, lifecycle/cancellation. Ignored a7 log/JUnit; focused Ruff and example --help PASS.
+
+End-to-end real image→processor→tower→projector→LM output quality, exact checkpoint/processor hashes, memory and Python/HTTP M4 gates are HARDWARE_PENDING/NOT_QUALIFIED. No native image answer claimed. Video/SAM3 preserved independently, not promoted to alpha support.

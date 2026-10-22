@@ -328,6 +328,7 @@ class BatchedDenseRunner(CausalLMRunner):
                           for i in range(width)] for r in requests]
             mask = [[0] * (history - r.cache[0].offset) + [1] * r.cache[0].offset
                     + [1] * len(r.token_ids) + [0] * (width - len(r.token_ids)) for r in requests]
+            pack_started = time.perf_counter()
             for layer in range(len(first.cache)):
                 spec = specs[layer]
                 key_shape = (count, spec.num_kv_heads, history + width, spec.key_head_dim)
@@ -348,10 +349,12 @@ class BatchedDenseRunner(CausalLMRunner):
                     widths=tuple(len(r.token_ids) for r in requests),
                     compact_attention=bool(arithmetic_scratch)
                         and self.adapter.spec.architecture in {"qwen2","qwen3","llama"}))
+            forward_started = time.perf_counter()
             output = self.adapter.forward(mx.array(ids), cache=tuple(packed),
                                         attention_mask=mx.array(mask),
                                         position_ids=mx.array(positions))
             mx.eval(output.logits)
+            stage_started = time.perf_counter()
             # Every scatter is evaluated before changing any original layer.
             try:
                 for row, request in enumerate(requests):
@@ -384,10 +387,12 @@ class BatchedDenseRunner(CausalLMRunner):
                 raise
 
             drafts = tuple(CacheBundle(tuple(layers)) for layers in staged)
+            commit_started = time.perf_counter()
             try:
                 commit_evaluated(requests, drafts, specs=self.adapter.plan.state_specs)
             finally:
                 release_all(drafts)
+            committed = time.perf_counter()
         self.last_trace = {"phase": first.phase, "request_ids": [r.request_id for r in requests],
                            "batch_size": count,
                            "history_lengths": [s.start_pos for s in plan.sequences],
@@ -401,6 +406,16 @@ class BatchedDenseRunner(CausalLMRunner):
                                else "padded-batch",
                            "adapter_transient_bound_bytes": adapter_scratch,
                            "packed_history_bytes": per_token * count * history,
+                           "history_pack_bytes": per_token * sum(s.start_pos for s in slots),
+                           "history_scatter_bytes": per_token * sum(s.start_pos for s in slots),
+                           "kv_delta_write_bytes": per_token * plan.total_scheduled_tokens,
+                           "pack_allocated_bytes": per_token * count * (history + width),
+                           "pack_graph_time_ms": (forward_started - pack_started) * 1000,
+                           "forward_eval_time_ms": (stage_started - forward_started) * 1000,
+                           "stage_eval_time_ms": (commit_started - stage_started) * 1000,
+                           "commit_time_ms": (committed - commit_started) * 1000,
+                           "gpu_sync_time_ms": None,
+                           "copy_accounting": "tensor payload bytes; device traffic unmeasured",
                            "replacement_cache_bytes": per_token * replacement_tokens,
                            "adapter_version": self.adapter.spec.adapter_version,
                            "duration_ms": (time.perf_counter() - started) * 1000}

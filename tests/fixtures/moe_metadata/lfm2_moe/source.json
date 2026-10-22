@@ -1,0 +1,14 @@
+{
+  "model_id": "LiquidAI/LFM2.5-24B-A2B-MLX-4bit",
+  "revision": "667408d494bde191c2cb9dd4f4549827816b9275",
+  "retrieved_date": "2026-10-21",
+  "weights_downloaded": false,
+  "files": {
+    "tokenizer_config.json": "11f1de897317b489dd09199284528382eeb17f566398b16e2039bb2266d26b09",
+    "config.json": "4901707c3cef43e3cf68a0dedc3e39687de43413cab30578a32c63c643984244",
+    "generation_config.json": "d1ecad152cd278e57220364423f5a5b19350f1e6e230ff82281a5c23a3173f16",
+    "chat_template.jinja": "aadd425edb1d42fe9288e5de3624c21c1c03099129b9cfea5978f1bc67222c0a",
+    "model.safetensors.index.json": "7887b03265aef7824c8e5b9a51667e486f889749240d8c59a95f3cd899e86e4a",
+    "LICENSE": "4d28ca14dedc0b3d0fcc2b3339f0e79931faa33874f3d24f522183a8fc70068c"
+  }
+}

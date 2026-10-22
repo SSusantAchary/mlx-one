@@ -1,0 +1,13 @@
+{
+  "repo": "manjunathshiva/gpt-oss-20b-tq3",
+  "revision": "20ba1835e625264e07366d215933fe31a9940a6a",
+  "files": {
+    "config.json": "c937fd01d002ecb557ccda1e5bb15b103f4f882597f20a61b60a894c5242d5f8",
+    "generation_config.json": "f9970ada892d2d1f72e3ed0a6535ccebadd11897318794ca671d8c7014c957da",
+    "tokenizer_config.json": "e8bd3a5467e803377983a664138bf28bc3c9bf5c8134b57202d6ec22fa627cbf",
+    "chat_template.jinja": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
+    "model.safetensors.index.json": "953cc52d6378824b130f62b0fd3362365587461a940b5e39998db93520f1d218",
+    "model-00001-of-00002.safetensors.header.json": "b0295086069dea6d1b1d39dc74fac41b3b60865cb0ca7e185e0f742b5d688800",
+    "model-00002-of-00002.safetensors.header.json": "15e376a74eb2879a0d61f5e06a9c62b1df0deb4bec4df1bcdeb2433b96090048"
+  }
+}

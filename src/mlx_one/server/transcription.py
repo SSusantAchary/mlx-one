@@ -10,8 +10,10 @@ from typing import Any
 
 from mlx_one.audio import WhisperDecodeOptions, transcribe
 from mlx_one.models.audio.whisper.loading import LoadedWhisper
+from mlx_one.models.audio.whisper.processing import AudioProcessingError, decode_audio
 
 MAX_AUDIO_BYTES = 25 * 1024**2
+MAX_AUDIO_SECONDS = 300
 SUPPORTED_AUDIO_TYPES = {
     "audio/webm": ".webm",
     "audio/ogg": ".ogg",
@@ -21,6 +23,8 @@ SUPPORTED_AUDIO_TYPES = {
     "audio/x-wav": ".wav",
     "audio/wave": ".wav",
 }
+_INPUT_FORMATS = {".webm": "matroska", ".ogg": "ogg", ".m4a": "mov",
+                  ".mp3": "mp3", ".wav": "wav"}
 
 
 class AudioUploadError(ValueError):
@@ -40,6 +44,7 @@ class NativeTranscriptionService:
             "enabled": True,
             "accepted_formats": sorted(SUPPORTED_AUDIO_TYPES),
             "max_bytes": MAX_AUDIO_BYTES,
+            "max_duration_seconds": MAX_AUDIO_SECONDS,
             "language_detection": True,
             "model_memory_bytes": None,
         }
@@ -68,11 +73,21 @@ class NativeTranscriptionService:
         try:
             with handle:
                 handle.write(audio)
+            try:
+                waveform = decode_audio(
+                    path, cancelled=cancel.is_set if cancel is not None else None,
+                    max_duration_seconds=MAX_AUDIO_SECONDS, max_file_bytes=MAX_AUDIO_BYTES,
+                    timeout_seconds=120,
+                    input_format=_INPUT_FORMATS[suffix],
+                )
+            except AudioProcessingError as exc:
+                raise AudioUploadError(str(exc)) from exc
             return transcribe(
                 self.bundle,
-                path,
+                waveform,
                 language=language,
                 task=task,
+                sample_rate=16000,
                 cancelled=cancel.is_set if cancel is not None else None,
             )
         finally:

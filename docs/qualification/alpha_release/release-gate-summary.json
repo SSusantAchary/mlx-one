@@ -1,0 +1,3500 @@
+{
+  "schema_version": "alpha-release-gates-v1",
+  "timestamp": 1792551420.753006,
+  "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+  "source_base_commit": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+  "source_frozen_commit": true,
+  "candidate_checkout": "/tmp/mlx-one-alpha-candidate-proof-20261021-1792544161047727000",
+  "production_source_sha256": {
+    "src/mlx_one/inference_qualification.py": "7e89719989cd50ed008593ae24f268a536a5793b7bda7bf616b77ab41c33930e",
+    "src/mlx_one/peak_calibration.py": "c18735ef160c50f280a4a486cdbfd0bcbf9ccd5e01bba4c83692b2f9de5ad667",
+    "src/mlx_one/p1_qualification.py": "96c3286e6c565c8e90ae0ea991c1045967459fa93e16ba628e481d19eb72e1f8",
+    "src/mlx_one/task_qualification_worker.py": "88d12b3a0818db47e8463c097f8ef792080ce329eef8268de3c6be9e28853050",
+    "src/mlx_one/compatibility.py": "c1b7369814a862e3802e3eebafa1ec487822e49624569287f7223ffe2107a571",
+    "src/mlx_one/native_qualification.py": "b794a7a1650104f13df193bc787b96a7885c68862e524e424ba77e85d9204de1",
+    "src/mlx_one/task_qualification.py": "eadfd0d00db885f69cd836c4c785b4e46f0000b9d1a3de03a26df62b45e9c180",
+    "src/mlx_one/generation.py": "1ecf736351f912040e47af2802e3f86028f54af4f4ed3066cc4369df059c6bd9",
+    "src/mlx_one/benchmark.py": "ef99a5c912c1cec4704d21c5aa56ce74e0da57eae6e015a6e49e174e890a6515",
+    "src/mlx_one/registry.py": "99936e0ed581ab45839fbee97cadfa92e6376bd5fbc4f1adb34d33cbb817fdcd",
+    "src/mlx_one/generation_worker.py": "708974ab3731a69ef5e17ade9a8e07ccf085e646b662a944131ff0e420365cc8",
+    "src/mlx_one/p0_qualification.py": "d3d997dca570ae0361b8a0ef492592382e18bce23c6f9ee794e6fa00f281afca",
+    "src/mlx_one/diagnostics.py": "1a456144a3c38b67bae95eed362af983f49ba51e48f17a89b165be982e4c66cb",
+    "src/mlx_one/evaluation.py": "9c41096c7834fd2e15725b887dddb15ec1bc6e872edebcd3d4f276e198fc21e5",
+    "src/mlx_one/conversion_worker.py": "138a884c234cac007f32c2da280a9c84c015a55a1b79cf473333bc3a0933fe30",
+    "src/mlx_one/conversion.py": "3d95e345bb15882f94e33d9348fca5e01656b5bfd9407db3f3a2d90f403ee2ad",
+    "src/mlx_one/datasets.py": "55d206805141fa17cccc7954db660f5cf494c33428a6043e976fe572da915d3e",
+    "src/mlx_one/__init__.py": "febe6174fd82f6ec883fc15cced72de757a70408e579cab467736fbf0bc9d256",
+    "src/mlx_one/p1_profiles.py": "45b24a692fe9839deb48388d0db231a75c4d3e9d3079655f8c475728d83fe72a",
+    "src/mlx_one/native_correctness.py": "2da4cfce2e54c498120dd50a91497f0ff13c80090d6f317aea82e07e0af5a3ca",
+    "src/mlx_one/stress_qualification.py": "8265e571b44357aa13b8923dc43273f24686af33dd688c848909e181a28652d7",
+    "src/mlx_one/inference_baseline.py": "885a505dd005a3af4efb40fd707898468004bf28b932bab3329fdc0805d6cda4",
+    "src/mlx_one/inspection.py": "dd9c3f4eb9fca5f7d0e607474db654654959080530da87d552ee5b368b6d8d9a",
+    "src/mlx_one/comparison.py": "7e583a30fadc0d782fe86ef233ef5079c635e2e52df440660f75239eb04c8ba0",
+    "src/mlx_one/p0_engine_worker.py": "8e1e2e027251a186ab1c6ea9715b2cf1fe803cc52cfd8466a73a5ac018a3e3f4",
+    "src/mlx_one/p1_benchmark.py": "77722fc33558c18bd8f43a0fcee8b5b43ad8399b3ffa4f91b7e87fc56a2fe96e",
+    "src/mlx_one/schemas.py": "06bfa90802fbe72de16d907853046303a22c872b12799c3e477837124ab0ccd2",
+    "src/mlx_one/cli.py": "d56e4fdfb9ba9d93e3db151dc304db5c5482b33165cd18e7cfbab8c0abdd28df",
+    "src/mlx_one/runtime_baseline.py": "d15e0bcf3e44412d052a97a718601624abb56e23c67c5c72958ab7565b13b333",
+    "src/mlx_one/schema_migrations.py": "af073f076b0d7179d02355f42c296aa55346fd16b3fe338a0893cbcbd76ea231",
+    "src/mlx_one/hardware.py": "d39ed1877b91989a6d412ececf92c5f179a7aa02b2e72a79c48e86cab2ced291",
+    "src/mlx_one/planning.py": "0bb6439c46bf13d5542f15eda0a2410fa163d454ab49765c20e57e353f587c75",
+    "src/mlx_one/p1_decode.py": "041ad3bf9e5c1682c63dff4446ac43e71ce25bbe8276a8df85cb83e5019f9fbc",
+    "src/mlx_one/tuning.py": "287dce80955b2ad4b2f8277ac84dae1a3ef8aa823726c05d619e679cd8c9ce82",
+    "src/mlx_one/workflow.py": "3a94531fa4a167b1ab5135a6958d01585951dee93207b706e29a9f306d3c4d78",
+    "src/mlx_one/provenance.py": "2bda0c105557f55728801fa6f7d7f04d0c9f84d9107d1412f7820fe87b270dd9",
+    "src/mlx_one/inference_qualification_worker.py": "bd14c9ad29e68638fdaca03d629341694ebbfd97f62494da31aa90fabd7cd2d3",
+    "src/mlx_one/benchmark_worker.py": "4ff2fee8b9bb0ad664a7e0093b5cc6fa30d969ad1362bf6c2cb464864f0f413c",
+    "src/mlx_one/quality_dataset.py": "ce08ac2bb1bfe9ee67f5dec06cd9a8c4357f70b00c4c5dac6fffe3aa1062f4c1",
+    "src/mlx_one/p0_engine_qualification.py": "727022c32524ac09b601e9ed6cf59232cddb04963ba4e56b8b847d74d67ff76e",
+    "src/mlx_one/evidence.py": "052839dcdcb46637f1664e88ffd9033553f86e1ad38c76858da817be9683f2a7",
+    "src/mlx_one/run_store.py": "54d102796697af38ff25dcdac882505b9ff4f830c850f925a5e1b936b24f6eb4",
+    "src/mlx_one/inference_baseline_worker.py": "66153c92a265e92340a69a3b70dabe2a0da8f433e8062a4d0f6f74cbb69e19d4",
+    "src/mlx_one/training.py": "abab08b8365d619e2ef65f619d9593b536947d2061c6ee285017d7deadceb74a",
+    "src/mlx_one/calibration_worker.py": "03e994852c4adf6198f181e345752d849004a4580522fb8da36c3d9b895c6c1a",
+    "src/mlx_one/calibration.py": "279f61d130750a2f088f663af691b671ea9aa168ae5e131437705542d8b657a1",
+    "src/mlx_one/traffic_replay.py": "e228cbee58b7ab80a46e70c41ff6bf96e7495395d4d4e57090affb9a2923c968",
+    "src/mlx_one/compat/unsloth.py": "bb522fe94a03627fc8b53c7e856590571b24275b02ca5b2100bdbaff1f3e4512",
+    "src/mlx_one/compat/__init__.py": "3759af693072f61aeb07f671964611cdee5242c6fa5183de5701729cacacdde4",
+    "src/mlx_one/compat/trl.py": "e99829e6270340e0a051d627d108777e9839fa7775c804d2deb5650f727ea31b",
+    "src/mlx_one/core/compatibility.py": "727fdf816c2c0666bf22a9c8572fa3dbf1206e798f76efd94966428453ec2e6c",
+    "src/mlx_one/core/config.py": "702138fae379efae2e1519ffa91187e385a9e0b6fbf57022cd8940c22049eccc",
+    "src/mlx_one/core/sliding_cache.py": "b109f4aed6e190ab33f8a2a1a4102b8ab1dff1552dc04d8c6cd96d959e2762f3",
+    "src/mlx_one/core/protocols.py": "b846677910e0b38270ced3e60a067e82a99425fd531b1d4e60eb0b9085c62e33",
+    "src/mlx_one/core/registry.py": "45114b2cc1704161fae45ce9e8f52277106016c3d8d548147a2ca99c66503a2a",
+    "src/mlx_one/core/release_support.py": "9bad134ac99b32677bc3286c9bda608c9952b490a1c1f32de8c1534a74efa779",
+    "src/mlx_one/core/cache.py": "7b03155e3ee497901dc17400654b02d7d8572dcf2e3cee340fac6923a6895447",
+    "src/mlx_one/core/__init__.py": "80e259e17cfea452b7354b1f24a59e088a20c46d0634663bc777a6615db508b9",
+    "src/mlx_one/core/precision.py": "c2b38cb4da68261965d2874a18fb21f7e60364ad9a4c63cc1b24ecf3372efb7a",
+    "src/mlx_one/core/capabilities.py": "2e925aaf0e0c3b86161599dbf3c676314236dca8df0ad9815d5abb13ed5172a7",
+    "src/mlx_one/core/weights.py": "40a855d8aceca23c5998fba7d82e7c400d6154152eb0c4ff8add0695bc4bffc2",
+    "src/mlx_one/core/outputs.py": "2fe9b41069126a8ebc585a7d407c569d50f77feffcb4d50580203716690f035e",
+    "src/mlx_one/segmentation/loading.py": "5635c457ba80c7630bf78a82c2966475c3769981d5a38acb1e9ae433630c2a26",
+    "src/mlx_one/segmentation/__init__.py": "da5a275534c90cf508ad2cc162f971801c0f4f99ad99b1f3b7401923f28bdb3d",
+    "src/mlx_one/segmentation/export.py": "69344503571e7558d8c63c857c1991d4114cad977138db0a1d5e42865ecca578",
+    "src/mlx_one/segmentation/resizing.py": "e05ccf6fd47985868efeb00993651efca152d53f6267701c10dcfe199d509207",
+    "src/mlx_one/segmentation/schemas.py": "e334d927d31f0e7761484d6551192a46cf38e9a813fab9fb09680e2c3a31af0a",
+    "src/mlx_one/segmentation/cli.py": "7cd85fec4bb20bb880f2b624c6a6eecf4d041f85a3d4c5f8655b5ac66a586745",
+    "src/mlx_one/segmentation/inference.py": "5d777431efba049fe3e518e5eb357bd8a5160576451b88d4b9e0b7c9450050e8",
+    "src/mlx_one/segmentation/postprocessing.py": "7ce807d43f700170cfaead2577c35dc52f302b921f529cd02a848f18f2cd12a9",
+    "src/mlx_one/segmentation/processing.py": "0bb33534e7240d96a6893460808435183246f932e11db960fba202d6aa37f8df",
+    "src/mlx_one/segmentation/video.py": "244df70f2d979e39c399bb181ac8cc88bccabb95f54cddc942684f9198b2bea9",
+    "src/mlx_one/server/transcription.py": "293274c523f958495a8526e4710b5778e7973800d6fca3d5b9ad4222e03be864",
+    "src/mlx_one/server/media.py": "6c09a4b835a0ebee5e06270d6c42f0ed75361f4a4462b727b4838f053e0a1d81",
+    "src/mlx_one/server/config.py": "1d043b1033308241d595fb095678d7e3b12520a9dca1db21ecfa165d35958a7a",
+    "src/mlx_one/server/__init__.py": "8f149d475ebf8ed06d60e9356386aa28c695e3c06d1f2673a1437f329bed77ec",
+    "src/mlx_one/server/model_manager.py": "1de8fc7c33220b76e414ccb37b778bb10ce26401f875c64fd7d102f52b16d4f4",
+    "src/mlx_one/server/schemas.py": "e7963517d1698e04e9c367d04ffc59fd993d2e35b5a38075506a94ee7da67994",
+    "src/mlx_one/server/app.py": "fcd51651ffa9bfe8c91fc050ad86f760d540294549e6a9f240bcc41210a5e36b",
+    "src/mlx_one/server/scheduler.py": "0a8e2288e57c070f54c0cd10413ce4c1529a50f6afbe89909f9ba7b03c0c094d",
+    "src/mlx_one/server/admission.py": "b633351b11e16f1b280101e53e022d05a44ffd992283649c450af7ea0fb6a17c",
+    "src/mlx_one/server/generation_engine.py": "753346538c767fd0728fdb3b7870d0a65052dbdc07e3515a989de98b122203d7",
+    "src/mlx_one/utils/checkpoint.py": "d7abb6d12b7b0d74322dc30ae8db8be7caf6c85080598626105b4b25a7245547",
+    "src/mlx_one/utils/memory.py": "a1af4b30c51ef81a8949fe40c7709cddc8a399b3ab6e1fc46f67d16975d21cf5",
+    "src/mlx_one/utils/__init__.py": "49fe30d3b1a299233c7100f407358f32bd4f396fe5a3fbdabb4d870d41abe7e7",
+    "src/mlx_one/utils/model_loader.py": "523b38d8ac225e5c8511efeadd87cbbd8dc5bf10957147582603e64970d37d4d",
+    "src/mlx_one/models/registry.py": "e9ac82d2f87ddce946b674b2c9fe6e6a5b37ba7520aecf417acd56a53dd24365",
+    "src/mlx_one/models/__init__.py": "4cb70da05adbf9effbb8f3bf0ac5287c2309a84cfdde33899430ba1498bb0a50",
+    "src/mlx_one/vision/loading.py": "e1df1fbb05340cfce94f3dde3e71b5ecb6a9998b515dbc10b74d3a5db24cb6d2",
+    "src/mlx_one/vision/generation.py": "40d5547268a21467a2e1468a34edb55b30fd0c7002e918d030a2dd8c0c7ec547",
+    "src/mlx_one/vision/__init__.py": "4f6a5229d271be615a193795647fcab1b42f2f1ce9eaec6a4d83caf8ce953921",
+    "src/mlx_one/vision/lfm_processing.py": "42f67523f157fc666c10b0d91cac323e8ef3c6a4ce6da895996c430f6de4929f",
+    "src/mlx_one/vision/processing.py": "272d386587e71e180c81aee2fe4ea1d8b21c22300418e79d168945368e97602e",
+    "src/mlx_one/audio/service.py": "7324e3fb29654038d21fb377dd51beddca73b18ce53964b2a1c2fabaa81a1f49",
+    "src/mlx_one/audio/moonshine.py": "ed26877b6eb9fe6481f946a4af7fe625fe989bd099b195eb654240c8241e22c1",
+    "src/mlx_one/audio/parakeet.py": "e8b5d2277ae6256c9adf8125c220b6470b0d426587177503b18fbf833006f3bf",
+    "src/mlx_one/audio/loading.py": "90057c6e192145ae8662032401a00aa58aa85e5c8c0217eb66883c16d539fce4",
+    "src/mlx_one/audio/evaluation.py": "1d97792c88fcd8606a78ea06642ee81727c6acf53f5e6ef323789ccd9490c86b",
+    "src/mlx_one/audio/__init__.py": "5b07dd9e0b7874db528860d3af31c6d3be780a65c9266230de1760f79ae49586",
+    "src/mlx_one/audio/decoding.py": "99944ee4b6048459d4a53ef382b2f32eb63f73d9a3bd5d99460e4759266938e6",
+    "src/mlx_one/audio/schemas.py": "f8b5b89099b4778c6dc61dfd6adc3a8dda10b7c7f65b7e12350f55f8dba03983",
+    "src/mlx_one/audio/qwen.py": "dab84672d4609a11aa307633ceb4f8d1e3d70195ff25a30ead136eeec0b1e1b2",
+    "src/mlx_one/audio/streaming.py": "7e01ba1ae0b3746e97288a1e5df91ea5a2bea450daea5089ec88ec803fbd2a98",
+    "src/mlx_one/audio/weights.py": "ba0537bcc520eade78a266249961427c7b6db570128099d685b58ac9d7e2ae5d",
+    "src/mlx_one/retrieval/service.py": "e5dadc0df217d23fbc4bc7e7d1c44fa126ddc7bd27a4c0a0dec5f3955c6bc301",
+    "src/mlx_one/retrieval/loading.py": "8c7d816c99fbcca29446e8c6f07394221ca6278c19bfa4ddfd039ffca8d64400",
+    "src/mlx_one/retrieval/__init__.py": "f61e99167dc74d60ed4ecbdb5679ab650d1bcf1f5ab1e708fcf93c1df4fe6cda",
+    "src/mlx_one/retrieval/tokenizer.py": "34447d39c5c6c320ae9f67f3ec1d62333e9bd4e83db9bc88a3a33ce75287f9d2",
+    "src/mlx_one/retrieval/schemas.py": "43e2628693e11a7471daecc5f19aa866e6e41d7a78eb24247d337e69f4d79959",
+    "src/mlx_one/ops/quantized_linear.py": "32d25204d35d8b378b386be9fe002dff5b3be24b64693fd78eed927f6aa4e7d7",
+    "src/mlx_one/ops/attention.py": "1c5e4b4fc37fc6e997981867596b07dcde705030e5e5a1130628e1e3509d8922",
+    "src/mlx_one/ops/__init__.py": "1ce9e2022dd9a4f451160217f9155b80ba1a331ae4c76155ef3e50a24bfe6b20",
+    "src/mlx_one/ops/compiled.py": "187545fa2e76cf87b395d1176f78329b6430685134285ffbc96f03254d7e9b73",
+    "src/mlx_one/ops/numerical_trace.py": "3619444fd78a8c01797604bcc95930c46d7048832a0ffa0299cca4c192baf7a9",
+    "src/mlx_one/ops/logits.py": "c9e9909c27678aa867f75d10b33229c1f59ff4fc2366f8caf6b3c2a922ad94d1",
+    "src/mlx_one/ops/reference_tiled.py": "4a7bd2ac67e706d2fe8f36f25e6477d4ceed740bdaeb2b7454bf321f16d5c91e",
+    "src/mlx_one/ops/profiling.py": "b5aa503c082d4ca39d600cb194ca0b5c3ba4e37e6eed356471741eeccb5ad973",
+    "src/mlx_one/text/loading.py": "77af929ffbb17d869bdca75be978121dcd1eabdd55a044e3321f0c0046738083",
+    "src/mlx_one/text/generation.py": "75b31f792af60a7a5cfe005e4b40fc9055752df18a12d486284c353178f09d90",
+    "src/mlx_one/text/__init__.py": "9f2584ad3a4585a3617e98ff0c1d43054cc5598c934ef1e0cd46359e1846e0d8",
+    "src/mlx_one/text/tokenizer.py": "8220ca23da4a456b6696cd01084a400365171b806cd15dfba2bd614e8888186b",
+    "src/mlx_one/text/chat.py": "ad718ebe0952d8db5deba50634ad9020455282ff0837fe03583aad1cbffeec2c",
+    "src/mlx_one/text/schemas.py": "382604da75d9fbeb741c9f1dbef169e090b7d804a73a3e26fa1eeb96ee3f04e6",
+    "src/mlx_one/text/sampling.py": "c19ec02d29ff135701b08fc9f80eaaf5a9033a201fdfbf61844a57d51b4ab9ef",
+    "src/mlx_one/text/tokenizers.py": "e7177f23c550ce68a67481088bea2451be5bdb74a0f07df8069d7f55e49c3110",
+    "src/mlx_one/engine/cache_specs.py": "aff6f21a85a4eb9c15736258e719cfe73bc022082a97b366b978739d10923fdd",
+    "src/mlx_one/engine/plugins.py": "24d08c456067b90658e7fd2b3c2e254e57c26f300c501d67ea669d01d6080ace",
+    "src/mlx_one/engine/service.py": "cc026ec37a4cb7de9d986b9df1f3d359d801c61a66794c6e0a39323ad366113c",
+    "src/mlx_one/engine/observation.py": "6498541c8a03af0741d8ca073f1c502e54f96652ebd5efae20d1c6b1824bb6c6",
+    "src/mlx_one/engine/sessions.py": "2906e39b9d4430cf47afb80f1bdda332621382ac46940c4e92c3b779b459776d",
+    "src/mlx_one/engine/public.py": "a3e8c6b4cb918bb2b911fdb062d89bea268efd763e953e87bd9cadba5b8e8068",
+    "src/mlx_one/engine/batching.py": "0d735d401a20ee705f00e2cada5da792760ef9c8bcb170ecd05f1301fa3dfe23",
+    "src/mlx_one/engine/media.py": "8cce503f0f66711d6529f200aed92f974fe9a4b6d648ab7fe124a1ede8943baf",
+    "src/mlx_one/engine/block_kv.py": "e0b8c76f12f24f5488fdd4fbc8f15bceb0e24037119790c5d56fd8f3c18399a1",
+    "src/mlx_one/engine/tasks.py": "923e3a5d7ca76d59af9f7d0b32a09e1a88f1eedb9dfc48f87e1cc217cceb3366",
+    "src/mlx_one/engine/pressure.py": "0503d4a12495df0bb5648c8ad8439887de53b091b5c5a2739669824a6a9bdbb2",
+    "src/mlx_one/engine/cold_prefix.py": "47994c9816fa279d7f0369e714e8975f7f16a1e0d6e174fbab04f7421654ca5f",
+    "src/mlx_one/engine/memory.py": "49bd867d80ad6b0f4c4a277c9353f98a7ce3b21374c85e94af92a2193c698a91",
+    "src/mlx_one/engine/parity.py": "a3c0975ebe46064ddf1dbc57d4bf5f3c0fccfbf9a05d52da851ea062d4fcccca",
+    "src/mlx_one/engine/cache_manager.py": "c2bb9dc7b9664359e4733946a1e4086da1bb90e9727f515c9020d003a222c87b",
+    "src/mlx_one/engine/construction.py": "c59dc790c965b1d58dc2798dcf63071fe9bd4ebff3ee821b8273cf4e66cfd876",
+    "src/mlx_one/engine/device_executor.py": "2185186f8f8fb03c1462e05b524e937f23b346ec74e3d846591b34dc03401505",
+    "src/mlx_one/engine/dispatch.py": "32b42efb33f94cc48181c000e479dfb742fc8572c49223631651d2637060d4d4",
+    "src/mlx_one/engine/hybrid.py": "6917d14fe1c4551dadad5e372cd816f0f64008ca1c680f7124e9415091743bcb",
+    "src/mlx_one/engine/cache_errors.py": "8580d2a6d2297b15da6b16fdc4c10953927da636364b2a067947f0f8f8b24868",
+    "src/mlx_one/engine/transactions.py": "4aab737d6973b9f2b21fa340789ae214b8d0121647ff85e9c74db2d4511549cb",
+    "src/mlx_one/engine/cache.py": "711e1655adff9f2ec097eabf0ba30ddbcd4a11662d3f0308d23f07b5638d7a87",
+    "src/mlx_one/engine/__init__.py": "0271c7b00faa2c3ab8b3c73664636d460090b45891bc2eda010fb1042dabfb57",
+    "src/mlx_one/engine/modes.py": "470377b2f543eae5a7f847c2ae86d151fe2c38662c8597ef9d746699ac506dee",
+    "src/mlx_one/engine/prompts.py": "b46339d52194d40e3a47f3dfb460714a436842ceff9500423814c3b9a6f093ba",
+    "src/mlx_one/engine/speculation.py": "5b1aa3067f66e007c11a6d3590847dd79ec3b7161733439ff758ae2360bf3d81",
+    "src/mlx_one/engine/optimization_policy.py": "4fef10cd5caf557f86401e382250d6ce1fa210eb7f2ec83fd6b9e3e38cf9eece",
+    "src/mlx_one/engine/runtime_specs.py": "4167f193d9b298444d1a9a10d4c2682795f2e02318eb5b3af4505abd784ce170",
+    "src/mlx_one/engine/kernel_dispatch.py": "44ac3de0fd2bf889a969a051a551016a654da31d631fa55b52c590f17ade488d",
+    "src/mlx_one/engine/adapter_registry.py": "81836952f1293b5ff1cd7523de7008795f8a0443cb2e3e00e79d4e220ef8329b",
+    "src/mlx_one/engine/compound.py": "fa9c00b8058ac569b9656231124243a57b8151b0351e1ebabed76a26dd0179e7",
+    "src/mlx_one/engine/timing.py": "e3a7155bb63ee1fbec4041d9f3060d0feb237af1245a010e1b95c850202058fc",
+    "src/mlx_one/engine/block_cache.py": "44ee455102c2290cb07dfba3eba1f020851c825cb4724576bb3f0a35ba46496a",
+    "src/mlx_one/engine/native_adapters.py": "073a9aa0c04daf5716acf415fb12703695d34ec35e71506e7554ac5c18937ce2",
+    "src/mlx_one/engine/lifecycle.py": "259c10a37561f9fa991bcedeee89f4c28ba82c4deee4047fe7277a8e9f69c155",
+    "src/mlx_one/engine/qualification.py": "d671e036f9c77fe2ae2795b06b931743d4291b17da9306dcd097528c4328feec",
+    "src/mlx_one/engine/runners.py": "bc6e5a6f95e22c2debee5b5692c0429fcfceab08af6fb16197e1353acd0aa105",
+    "src/mlx_one/engine/paged_attention.py": "91e1a388538fa22d4a0488c5049f1fbe132a820d43f5dfe9e2257fb9ef754888",
+    "src/mlx_one/engine/contracts.py": "13db9bcc4bced885df6a979fc6ef0acf80ef1f36e3560495e353e47ecf7250a1",
+    "src/mlx_one/engine/model_pool.py": "a44539dd45db8313a849d08df407a4b98b75d5f15970c21cec1873c92207638a",
+    "src/mlx_one/engine/execution_context.py": "d938fcb4b67bc31a935c7beb78a41db8c2ebe30ac0eade870223b57544a8e00c",
+    "src/mlx_one/engine/prefix_cache.py": "d8c59f04cdcdf5358d497741ca0a8e888a9ca820b4029d7b3718f607a22915bc",
+    "src/mlx_one/engine/scheduler.py": "7cac4e1a9c5b55430f9087cca622cb37532508fd5a6f858cf630e34bf3876857",
+    "src/mlx_one/engine/cache_planner.py": "001d4f80f930d8e2447cb2a0912c6603f43535a3afd3b0aa446192b6843fec32",
+    "src/mlx_one/engine/admission.py": "90770f34db4ccc55b290125e8ba6ebca7066bdf571f6eb3d0bcd8aace7017851",
+    "src/mlx_one/engine/selection.py": "3f6140158f63991589ac3c2d8ef2654e5813b6278913cbea86665598a9ad5080",
+    "src/mlx_one/engine/actor.py": "197ffb02b1f25bada163719fa7814f186b92d58267b162b5a5f4f26f2d5516cd",
+    "src/mlx_one/engine/components.py": "2c5a1f7f7a25dd144bd6f6db804c9504d4c83f55405a484795f235da9f051201",
+    "src/mlx_one/engine/envelope.py": "aff1ea64f1b5f312072aa20a4a8fe3ea3f43298d59ecb13cfa1803a5dfc5c71e",
+    "src/mlx_one/engine/arena.py": "dd971114889ffd65b40aea84608461bbf7e8f9e06f23f3ba985a445f9f4c36f9",
+    "src/mlx_one/engine/paged.py": "7dc7fe114097792116cce7c3dd4960652cf9abdc03ab294176159c6bf9347baa",
+    "src/mlx_one/engine/reporting.py": "60a4df924d5261b3871a52ac1ef409732d133bdf40a0ac105536e2a1851d848e",
+    "src/mlx_one/engine/adapters.py": "9d7684b38815b59b15c343dd0d2e7a146125f3da15e95809cb67f328759b2354",
+    "src/mlx_one/models/embeddings/__init__.py": "773dcf94d3747bcbcaa07ba680d5116f748b8881dcc7030208ef59919dfc3611",
+    "src/mlx_one/models/vision_language/__init__.py": "14687b02a43f6913dddf00ecfc009f1fe9b432a16e1e7b7f59243c0217ccdf41",
+    "src/mlx_one/models/segmentation/__init__.py": "eb7918d18304f23e5c3ddac5f88679a8eaa020649013cbdbc6b2fe0836dfa90e",
+    "src/mlx_one/models/language/__init__.py": "5d6eb0abcd8410666ea740ebd0082783dcf780c3d95c05866eeb068679712e5a",
+    "src/mlx_one/models/shared/decoder.py": "8d28b9c3fcf28440ed2f1098653653c090d5878d6d884a88758639de2410b736",
+    "src/mlx_one/models/shared/execution.py": "02eb6af2fd89d137af1157196b67b0bdf1908206c371b36fc794a4b2315b21c1",
+    "src/mlx_one/models/shared/vision.py": "587e55ab9d24b43fccde828308178972f299f32fca9cb4d7ab8ca085789576bd",
+    "src/mlx_one/models/shared/hybrid.py": "1b6c8cc1a5112a5e772bc8105cbee0c1d9bbd279adcad5fa9671f02f92274a1a",
+    "src/mlx_one/models/shared/__init__.py": "fe0e558e6e9889fda7de230eb03b8d2256d2bb4a2c36669c0182166c270a44d4",
+    "src/mlx_one/models/shared/encoder.py": "76ec1792c00f6a0b504ddedeedc826f8ce5a11e393ad43c99d226146a124cf6a",
+    "src/mlx_one/models/shared/transformer.py": "60fb5d9f59459059f2777788d33928a708784944f47a8e0a09df61a9926c1889",
+    "src/mlx_one/models/shared/reference_activations.py": "84096c1c794ef02c7ce740cd40cdb2677e6e12dd1ddef6eb46907aa5c1da6d45",
+    "src/mlx_one/models/shared/reference_math.py": "d305e4cf6020703002074419687fc86fd1bf0eef49d9035018e32de5a02ed890",
+    "src/mlx_one/models/shared/moe.py": "eb6748853bb30d892409596a2e9bfefcae7c87ac23ff36d5112b0483b49cf8de",
+    "src/mlx_one/models/audio/__init__.py": "23e62ceeb71f01496e89a39476eb5249a2a2369456aebce1cf93a18d957316af",
+    "src/mlx_one/models/embeddings/lfm2_colbert/config.py": "ccfbc0ddbf4f088dd088f252e90c46c3c1d16e38dd93bea9ce2b2ad85373e7f3",
+    "src/mlx_one/models/embeddings/lfm2_colbert/__init__.py": "3dfb374378302a3c52417065fe8bdb52778f1185be51cfd6f2da6f0ee5198f3b",
+    "src/mlx_one/models/embeddings/lfm2_colbert/model.py": "a9fdb4b5a77c250ec6ca921c3ef27e7b33f2cf48d028451c83aad3788ebdc92b",
+    "src/mlx_one/models/embeddings/lfm2_colbert/weights.py": "4674e753d9926fa8d40a631556aa0cfb2c253eec0f3ed12228b49c1a84c9ad56",
+    "src/mlx_one/models/embeddings/qwen3_reranker/config.py": "e2a26a78c7b1a1ff02fc15dafc74de982fa662b1ec005ba522a5b3f29a375446",
+    "src/mlx_one/models/embeddings/qwen3_reranker/__init__.py": "44f62fadf227bfd355ff68e46919819cc48ffb28194c775877279bfab94476c2",
+    "src/mlx_one/models/embeddings/qwen3_reranker/model.py": "516789958f2c3f6e632e85f2362172332cf19cd8b3477d1786c28fd3f760e2ba",
+    "src/mlx_one/models/embeddings/qwen3_reranker/weights.py": "8df8955a8c450aabce8e90855e2844be020fbb44a0515bc61c81890c9c03937e",
+    "src/mlx_one/models/embeddings/bert/config.py": "485c9a11f32c2bb88e74bc12836a81ff8fc1c258d4369f323ad8cfbfdd67c5cd",
+    "src/mlx_one/models/embeddings/bert/__init__.py": "9972f091a39a7b1ec60fa325696bddf0574530195080c58e87bd9488664d97cf",
+    "src/mlx_one/models/embeddings/bert/model.py": "1860ee916aa980b9f7f5d28c5eb8dfb343f41da9195b1b75465e31120503e4ff",
+    "src/mlx_one/models/embeddings/bert/weights.py": "7135a31204a839e74dea9daa57771b40f64b5174ae731d58ef8c0dbbd3791017",
+    "src/mlx_one/models/embeddings/qwen3_embedding/config.py": "9156859338de2872d6c9d492eda975d2f7bc1db3cbc39e59dcf6e3746497c5f8",
+    "src/mlx_one/models/embeddings/qwen3_embedding/__init__.py": "c6325eb2359db9ab2f4e875a3adaa2b07da81f2ef499b95ab9b1078c3319e950",
+    "src/mlx_one/models/embeddings/qwen3_embedding/model.py": "ac6ac5b682c2cae58e0594871ca4356e4536dbd9bf3d3fb7fa08fd6f424bacc5",
+    "src/mlx_one/models/embeddings/qwen3_embedding/weights.py": "ea5817c2754ec6178b46276c2dcee5aa06599a474e44c421db29d6756cf3b86a",
+    "src/mlx_one/models/embeddings/mpnet/config.py": "c5acbb54e3bd5a56e5ab5eec205e4a25b8cf781f183b8c134c0c59c82fb0ebd3",
+    "src/mlx_one/models/embeddings/mpnet/__init__.py": "918ea3be2c6be1b5ec6bbebdf3084a5e23cb953482ff66f51699169e3c40eb9f",
+    "src/mlx_one/models/embeddings/mpnet/model.py": "6a422e9868e2c317b717cc375385f70e05fae96842f1a99fe5e0af106ab8149d",
+    "src/mlx_one/models/embeddings/mpnet/weights.py": "08bc8ad6ab1b6414fba45994a8ca02e64a9d3bc5921ccadd14c440ff4b96ea7d",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/config.py": "22de5c8ac517db69a660b115ab09f2d6c4b75da5938940b4e5701a22101b4954",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/__init__.py": "10c5a27c37a47f6928f31c3c431c740e89461269f4c89ffd3d0d054359d90bc4",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/model.py": "903feeb3448777f5dac9bd3ae489bcb8d2b89fdc00db12d8ad2c6d1ee2632f0a",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/weights.py": "a4832756047af6464767760fea9406c4c055079a677c102640403c4f5bbf49ce",
+    "src/mlx_one/models/vision_language/lfm2_vl/config.py": "2a4296ccaab2bd7dbf34abdb6ec3eef60d5fd9c9e8d2c7a2dd446315dbbdc981",
+    "src/mlx_one/models/vision_language/lfm2_vl/__init__.py": "6726deb9c88186d8740da97f85a426f0ef34f6eef1bb1bacd2db40c9f623cef1",
+    "src/mlx_one/models/vision_language/lfm2_vl/model.py": "9e761cdf44dffaba8b18a6e70b4cf62260f22f6856c77bf249c7ea1d62d564b6",
+    "src/mlx_one/models/vision_language/lfm2_vl/weights.py": "4d000ec1296d4c68db8f9c9aabf9f63afa7b409ec0a7763449f3be7e650c5570",
+    "src/mlx_one/models/vision_language/qwen2_vl/config.py": "b1afa4b30d86219cb4cfe842a6474c4dd38a4f367acba443b18d148bcbe64d97",
+    "src/mlx_one/models/vision_language/qwen2_vl/__init__.py": "782a89d0008cb9ee4c0769074f173391671929fa41b181d73a170df61a5ed586",
+    "src/mlx_one/models/vision_language/qwen2_vl/model.py": "098b58e7c5ce3ea0f91237df30bb2b69268da0241c434074306e0bc49eb037f4",
+    "src/mlx_one/models/vision_language/qwen2_vl/weights.py": "69ff6119e197aa73590cf90c0c5d0df386f7fe916875adf47575d8b10c49d2b9",
+    "src/mlx_one/models/vision_language/qwen3_5/config.py": "15179892a6de1b53d63d4e7ff36a49a2961dc683b36f5c66d1e005db0914f341",
+    "src/mlx_one/models/vision_language/qwen3_5/__init__.py": "cf40e429c17f7f9f515c5be8a3b3a388806ae679ce627969627cc4d783367262",
+    "src/mlx_one/models/vision_language/qwen3_5/reference_delta.py": "b570261c30c02eaa5ef90d54f8f45413fd2671738c39078b1d504f345e35dbc1",
+    "src/mlx_one/models/vision_language/qwen3_5/model.py": "0f1b56a23d9e909d42b6c5fc5c8bf0969082cc7d2089cfe63876673392208470",
+    "src/mlx_one/models/vision_language/qwen3_5/reference_math.py": "7d4e4f5fda1256090a8624e3d2a6b50cd7c97d8f0c30658736d405f9f9d172c1",
+    "src/mlx_one/models/vision_language/qwen3_5/weights.py": "7feaac30d2688179b379cfaa9474a4b52a61c55f9b9e14fcb03dd7340dcdac50",
+    "src/mlx_one/models/segmentation/sam3/config.py": "ed37f241c5671a6ffd27f38f5c550f5c67a0f2bda50918e9cf6036cd2af05dc5",
+    "src/mlx_one/models/segmentation/sam3/__init__.py": "287b54a6a620aa39c1979b02857ac4147e538908b92b1ef6ea130f94628525fc",
+    "src/mlx_one/models/segmentation/sam3/_runtime.py": "d05211826de1c4e1a0561afa18d260c27c8ea7cf8bdc61e0ac5bf69cc2cffd3f",
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py": "bc8babe74c95d80721da78265cbeb208d85c2e8f301b17461a334050bbe622c9",
+    "src/mlx_one/models/segmentation/sam3/model.py": "dceb564877c01d6b3b2570775672f4508fc593d96d0cb9f8e2997abaac2d1d81",
+    "src/mlx_one/models/segmentation/sam3/tracker.py": "10f7b03d9efad69dd7503e0223c002576ba7590924e86eea4ce07ec197eac44e",
+    "src/mlx_one/models/segmentation/sam3/_configuration.py": "e3398a9eee223e7ea05cde48ce664ef1b4fab2c887bf4a2305a3d23c6916b72c",
+    "src/mlx_one/models/segmentation/sam3/weights.py": "c81fa7df144ba1ae96a22e74117cd50f5a37a8a3780d1dc828f0fb182a3e1456",
+    "src/mlx_one/models/segmentation/sam3/video.py": "4f8ef293426e8b67d79035b87470b7bd006338268f623b60f32cb0d7e9167f55",
+    "src/mlx_one/models/language/phi3/config.py": "fc9c210646fad692c1d3f526117f5ee6640816a01134832bbb74699c85a941b3",
+    "src/mlx_one/models/language/phi3/__init__.py": "f135667659e4021cdc02cea32944b885002ed9d2b197da222a7c85ea3be8ab99",
+    "src/mlx_one/models/language/phi3/model.py": "6eb4ddb538b527e3ccfaa48861821a607409d269c85e0df2aa9e6b136b418049",
+    "src/mlx_one/models/language/phi3/weights.py": "cef7bf5ff1db80fc54b892ec509ae0da1dab7fc920f1087c57d0b00789d549f7",
+    "src/mlx_one/models/language/gemma3/config.py": "5b7dba2e460cedf603bac085f164fb672b2bcf9218fa3e1c4046a2e6b4e50a5e",
+    "src/mlx_one/models/language/gemma3/__init__.py": "ccbef845766cf1243b4351ce19ddce7affde2d2708b97893a17f8cebe6a657cc",
+    "src/mlx_one/models/language/gemma3/model.py": "cbdb97fb89e4f64cecaa9c90808ccedfb7af8af7daae3b86330882646d3de190",
+    "src/mlx_one/models/language/gemma3/weights.py": "5f09c3e209c8fa82d69c275e48ee035af344a653c72a2b0a943aaea91eb192e2",
+    "src/mlx_one/models/language/qwen2/config.py": "03e9003396655adc5665e361447372ae7af1eed9970529fc09bc7db8a44ddfd7",
+    "src/mlx_one/models/language/qwen2/__init__.py": "14b60585d05e12cab01ccec96b3ebe059d0748ac8f933fe5b64924dc72324385",
+    "src/mlx_one/models/language/qwen2/model.py": "a05382d052add5c6fd1216d8794e11937259bb5893c9e32f7a49f8651ec19778",
+    "src/mlx_one/models/language/qwen2/reference_math.py": "d892918ee021e14cdc841a1388abeb15332aee4d39f6bb8ad58ffd6c41d34b56",
+    "src/mlx_one/models/language/qwen2/weights.py": "efc041a02c4725f3cc5f4ea17ad7f7ae78562f07da93ed300c9c70301146c0fe",
+    "src/mlx_one/models/language/lfm2/config.py": "558f7f587953ba3d1806c96dbf6d0781bc7b9467eae85841a9515692248429d4",
+    "src/mlx_one/models/language/lfm2/__init__.py": "6e0c89274ec6390831f76d765c63e5d94388b0dde52e836a1afcd9e9c151711b",
+    "src/mlx_one/models/language/lfm2/model.py": "26fa80f421582b3091df11b5c549e518c44ebae25ec49d5409d8bf222bbf2c20",
+    "src/mlx_one/models/language/lfm2/reference_math.py": "a2f942f9ca29d0c86d697a0902cc7728617f058a71335c04fb3639bc1e125670",
+    "src/mlx_one/models/language/lfm2/weights.py": "963b42d9d73629af0b0377d2148d2cb2d855133f699f022700925518cdaf7f94",
+    "src/mlx_one/models/language/qwen3/config.py": "aeae8cd66c31e4698f9f52fd29cd6bf0c586221e24b678a9a958b5503ab3018e",
+    "src/mlx_one/models/language/qwen3/upstream_model.py": "6aa393c3af91aade8793cc6b509b9a31a9e8b6025c1d66c7a28a53703828c09e",
+    "src/mlx_one/models/language/qwen3/upstream_adapter.py": "5ea90e7fd8f9daec26b0b865c1a495d636800698b75a9e5037c3f9e1f5928403",
+    "src/mlx_one/models/language/qwen3/__init__.py": "623662ca3829c1f1776d855258873ccdf464ca71bad263568f901a5e4905e68f",
+    "src/mlx_one/models/language/qwen3/model.py": "39a744416350e8f346d2782f7df12c16e9cf613e9af987698700932ec8e269db",
+    "src/mlx_one/models/language/qwen3/reference_math.py": "2d9884c49ae0870c9b40b7d2109346f7507989c7d19f0895a79841f1b6a2794d",
+    "src/mlx_one/models/language/qwen3/weights.py": "66975a25698558fb4298fa18e9c89bd93b9d0c48afb611eb71218b36edb0eee1",
+    "src/mlx_one/models/language/qwen3/upstream_math.py": "220bd74d0a6a0ebfb4f1a132fb51694102c09916698a440c68b4cc59e0be36c2",
+    "src/mlx_one/models/language/openelm/config.py": "22965ee5a3d7d3c8bd927b6518590e481bfb43c3c744793fdf0529f9265c0d4c",
+    "src/mlx_one/models/language/openelm/__init__.py": "87d53dd1a06fbdb716d2d32add9807c985456612dc6e7ae6c624e67dcff0560b",
+    "src/mlx_one/models/language/openelm/model.py": "56ad926693ebd711427d82699e7e616edbf1a6bc713469c84a68fc4dd61f691d",
+    "src/mlx_one/models/language/openelm/weights.py": "dcbe272c79b91a2fa9def85ae57a51a3257dadc5f8b92519b749031e1982dd6d",
+    "src/mlx_one/models/language/gpt2/config.py": "c713b56a7c6353bc246322054a8ebf33a666a2bb9b48a78c92e88125c5f7bd97",
+    "src/mlx_one/models/language/gpt2/__init__.py": "9dff3ea445cf5eccc0e914aa34857a4eb91a580faeb90f27a87fa60a5fc8542d",
+    "src/mlx_one/models/language/gpt2/model.py": "bee60656a8871c4070414547ca6d444a8d6c3736241ac770a3d24d83074318e6",
+    "src/mlx_one/models/language/gpt2/reference_math.py": "ef52e39f232c7c363aedf164bc93b9c56b0352de31871c79bb13db59fddf220d",
+    "src/mlx_one/models/language/gpt2/weights.py": "9dacc17c0e2d3c246bb3e8b638b66ecddd6c64d71571f6e94e073d48a5ebaa13",
+    "src/mlx_one/models/language/lfm2_moe/config.py": "97bea34d08bb5fe29510686122aca3fdda9ba9bfd21f2128185d1af71f243beb",
+    "src/mlx_one/models/language/lfm2_moe/__init__.py": "9ec60dce1c4f4728bc4bacb1bb3e3c798bfd585bf53ce09e0a88ace521179970",
+    "src/mlx_one/models/language/lfm2_moe/model.py": "6463a4b56f6440cddb08cc0dac74c78a8b64b546b15cf45628f2c29e95c6df53",
+    "src/mlx_one/models/language/lfm2_moe/weights.py": "53887c25c474c3834176c665b0a30b6b66497de627c6b75424b21dbb67b0aa82",
+    "src/mlx_one/models/language/qwen2_moe/config.py": "f1d582fef5712f7244ce5d2cebbdf2a6b29979344af6dcbad27ce082cd264d83",
+    "src/mlx_one/models/language/qwen2_moe/__init__.py": "8fefc78a433afcced7ee3c3b62af288cfc69dbdf755f0b30456219829227b964",
+    "src/mlx_one/models/language/qwen2_moe/model.py": "e32b8bc6fc5c9792a06015feb1430132e03924e0d10af6a40872301f4d22b805",
+    "src/mlx_one/models/language/qwen2_moe/weights.py": "350e93141b9ff8cf662b506aaf2e4912b4370dd100cfb16cd3140eb1d30c3e9d",
+    "src/mlx_one/models/language/llama/config.py": "d3358617ce8cc5b385e6cc88b76891d716b4452c279df5a67eec1031c512702a",
+    "src/mlx_one/models/language/llama/__init__.py": "2ea2d29fbc7e63230a4e592d93fac5f60e5d8ff46e739d0b0e26c9f45f46f696",
+    "src/mlx_one/models/language/llama/model.py": "9cada0dada4809f84eee18e6706af55248899559616267b6f10adc4f0814542c",
+    "src/mlx_one/models/language/llama/reference_math.py": "2d5cc8b0790216559d88d95adae4e02c89ce5bb09e155cbd9b34ba45bcc2e7b3",
+    "src/mlx_one/models/language/llama/weights.py": "7cb3cffc2d31af2f0f1c9f5b51d6c4b55a0a4ea55812d85e719307ea896e3fb4",
+    "src/mlx_one/models/audio/parakeet/loading.py": "82e96f5977bf3d38a72ce154bdc8a6e0778bf03ecc5571061772658c424bc1b6",
+    "src/mlx_one/models/audio/parakeet/config.py": "64459aa512f05b54fc5c96f91f53753c5401cdcf12e462f8f9728e196435d4d6",
+    "src/mlx_one/models/audio/parakeet/__init__.py": "665f4420251a1de420f6009ca2aa9ae26508da6a98dc966055d7a92dd013aeb8",
+    "src/mlx_one/models/audio/parakeet/model.py": "f4ed372261c3cf8c65f5d90656fdf3750ce937dfe23ecaf3c50424bbafe6fa0b",
+    "src/mlx_one/models/audio/parakeet/processing.py": "56b7c750201c8659fd5b3c7e1036a4acefe24b3c668860a0fca30b428e48c4fc",
+    "src/mlx_one/models/audio/parakeet/weights.py": "85f7cd664e97c607293141bb9392baf4c2a1f2158f6316170d213a0cef4e61bf",
+    "src/mlx_one/models/audio/moonshine/loading.py": "4d12e5d528a4501e9e2afbe07cc3876faf3c80b217f67ba4b44ba3b0e013cd58",
+    "src/mlx_one/models/audio/moonshine/config.py": "3a7f0159d654d7648219b249eb2c30ba16681b00f70f2b95626bc25b8d60f86a",
+    "src/mlx_one/models/audio/moonshine/__init__.py": "67e2535f601901e4c313a68204c7cf5f5d600f671a579e4445a79815ee21f179",
+    "src/mlx_one/models/audio/moonshine/model.py": "25c3276b4f01f7565aa2d26f26bb35a691a20ebc3463967ef6a9dec70c6b3148",
+    "src/mlx_one/models/audio/moonshine/weights.py": "39ea33fad7b926d63ee641042d02971523db80aa7be22f4062525dee91e8da3b",
+    "src/mlx_one/models/audio/qwen3_asr/loading.py": "54323ec3a73b1d957401c198378d9b4aabe9b5069af608674cc602c72a49572a",
+    "src/mlx_one/models/audio/qwen3_asr/config.py": "f0abeb88056ac15d4c0007cbd965163d0f975857b29b97ca047784b306e05650",
+    "src/mlx_one/models/audio/qwen3_asr/alignment.py": "40d7e000596fdae1cd25d98d9f09e7b2a929c86e533a5cd1e9c969a1bf6e4301",
+    "src/mlx_one/models/audio/qwen3_asr/__init__.py": "c05d2fb650b2788d960340c565de267a26435fc55e877915aeb7eec03488f0aa",
+    "src/mlx_one/models/audio/qwen3_asr/model.py": "019c2e7c4c50f321eebcc2c771119b4ba67230e5a9eb90955903d21920c35ca6",
+    "src/mlx_one/models/audio/qwen3_asr/processing.py": "5a8d0032d700b03d68a9fb5e2969f6e23123bca05371ae7bd0381043d55d60ec",
+    "src/mlx_one/models/audio/qwen3_asr/weights.py": "e6439c563731f16b625f46e835eeac5a5235257012701a6b43c151636cd7e0bc",
+    "src/mlx_one/models/audio/whisper/loading.py": "1d10ea1d07ba85b9db040532ea73a5483d43fd6d730dd073014f3fc4fd151521",
+    "src/mlx_one/models/audio/whisper/config.py": "ea9c63d880ab4f43f93441f2894af7b77ef60b1149f2b7cbc7e2fc7378b2ce61",
+    "src/mlx_one/models/audio/whisper/__init__.py": "48e6d0f6e83df9f73e7aa7f67e44bd9af4ac77f56fd2369f2c7a763b8f156530",
+    "src/mlx_one/models/audio/whisper/model.py": "5d477cf6dd810166044c5796ea036aa88cb5127f059558ef0761489d5974d2d6",
+    "src/mlx_one/models/audio/whisper/tokenizer.py": "cbed5bedfd2c91c258beecaa103baa7ff3aba7826c52b05465b47fc5bbcbc692",
+    "src/mlx_one/models/audio/whisper/processing.py": "4831d4b1bbfb256ce9d37de75f62470f0186c939b9387d2f7dd5fba23be6e405",
+    "src/mlx_one/models/audio/whisper/weights.py": "022eb85f286647537b533ab1923ada479b2ede8cebdde42ee43ce38994299cdf",
+    "src/mlx_one/models/audio/lfm2_audio/config.py": "b290ad0beb8daa2e9a0c2b38292879a08b8ea77cbeab5124bfc6ea9397eda44d",
+    "src/mlx_one/models/audio/lfm2_audio/__init__.py": "f0fadd55b5c23278589f187afc58cdb1ba9d140118a34ea551013981e623f320",
+    "src/mlx_one/models/audio/lfm2_audio/model.py": "d75cc700ea816530dc13b3ba51898bd13552e09914fcc77ca4cef91b79af67c8",
+    "src/mlx_one/models/audio/lfm2_audio/processing.py": "5842494add8f6ad3cffe969cf31b8c77dbad2aef7f90560d9bf25e160ae81c13",
+    "src/mlx_one/models/audio/lfm2_audio/weights.py": "cdc72163e555d12470efd1d48aad083ad4cc4e69258c4128749c619aab8775eb",
+    "src/mlx_one/engine/task_runners/transducer.py": "8af48033520d15c242efa5d3c15fd671280e22e523e7fbc6ff4c7e2f003572c9",
+    "src/mlx_one/engine/task_runners/multimodal.py": "a4b817ee8b58709a63c5a7645b6e3b39638dd3a85c4b6f60d0e28925e5900f4f",
+    "src/mlx_one/engine/task_runners/__init__.py": "e2a37e3f4d14fba29fa8b0c1713caeb0e71000cdb30ed4be14e92352402162cd",
+    "src/mlx_one/engine/task_runners/retrieval.py": "8236f1e4f9d2dd991910d4b70c2a63baad1ae9a0054ae1f986a0d325eb0f7a6c",
+    "src/mlx_one/engine/task_runners/lfm_audio.py": "7686615462d0f3d3ed20d196fa6689f0fb2e4c9ef1c2d0c3d79923880873fd96",
+    "src/mlx_one/engine/task_runners/speech.py": "af35366f034afbc229a64af0b00ae53b839edffa5005bfe71779d2cdf3579e73",
+    "src/mlx_one/engine/task_runners/base.py": "ab4d0a4ab3ac0bcdc5009d257e337e0ab8eb155efe31907477681aa87ead83c3",
+    "src/mlx_one/engine/task_runners/segmentation.py": "269cba617e1f6f58433fe2e495c1b953216b76c077f15fe10f0d59cb42557b3b"
+  },
+  "package_source_sha256": {
+    "src/mlx_one/inference_qualification.py": "7e89719989cd50ed008593ae24f268a536a5793b7bda7bf616b77ab41c33930e",
+    "src/mlx_one/peak_calibration.py": "c18735ef160c50f280a4a486cdbfd0bcbf9ccd5e01bba4c83692b2f9de5ad667",
+    "src/mlx_one/p1_qualification.py": "96c3286e6c565c8e90ae0ea991c1045967459fa93e16ba628e481d19eb72e1f8",
+    "src/mlx_one/task_qualification_worker.py": "88d12b3a0818db47e8463c097f8ef792080ce329eef8268de3c6be9e28853050",
+    "src/mlx_one/compatibility.py": "c1b7369814a862e3802e3eebafa1ec487822e49624569287f7223ffe2107a571",
+    "src/mlx_one/native_qualification.py": "b794a7a1650104f13df193bc787b96a7885c68862e524e424ba77e85d9204de1",
+    "src/mlx_one/task_qualification.py": "eadfd0d00db885f69cd836c4c785b4e46f0000b9d1a3de03a26df62b45e9c180",
+    "src/mlx_one/generation.py": "1ecf736351f912040e47af2802e3f86028f54af4f4ed3066cc4369df059c6bd9",
+    "src/mlx_one/benchmark.py": "ef99a5c912c1cec4704d21c5aa56ce74e0da57eae6e015a6e49e174e890a6515",
+    "src/mlx_one/registry.py": "99936e0ed581ab45839fbee97cadfa92e6376bd5fbc4f1adb34d33cbb817fdcd",
+    "src/mlx_one/generation_worker.py": "708974ab3731a69ef5e17ade9a8e07ccf085e646b662a944131ff0e420365cc8",
+    "src/mlx_one/p0_qualification.py": "d3d997dca570ae0361b8a0ef492592382e18bce23c6f9ee794e6fa00f281afca",
+    "src/mlx_one/diagnostics.py": "1a456144a3c38b67bae95eed362af983f49ba51e48f17a89b165be982e4c66cb",
+    "src/mlx_one/evaluation.py": "9c41096c7834fd2e15725b887dddb15ec1bc6e872edebcd3d4f276e198fc21e5",
+    "src/mlx_one/conversion_worker.py": "138a884c234cac007f32c2da280a9c84c015a55a1b79cf473333bc3a0933fe30",
+    "src/mlx_one/conversion.py": "3d95e345bb15882f94e33d9348fca5e01656b5bfd9407db3f3a2d90f403ee2ad",
+    "src/mlx_one/datasets.py": "55d206805141fa17cccc7954db660f5cf494c33428a6043e976fe572da915d3e",
+    "src/mlx_one/__init__.py": "febe6174fd82f6ec883fc15cced72de757a70408e579cab467736fbf0bc9d256",
+    "src/mlx_one/p1_profiles.py": "45b24a692fe9839deb48388d0db231a75c4d3e9d3079655f8c475728d83fe72a",
+    "src/mlx_one/native_correctness.py": "2da4cfce2e54c498120dd50a91497f0ff13c80090d6f317aea82e07e0af5a3ca",
+    "src/mlx_one/stress_qualification.py": "8265e571b44357aa13b8923dc43273f24686af33dd688c848909e181a28652d7",
+    "src/mlx_one/inference_baseline.py": "885a505dd005a3af4efb40fd707898468004bf28b932bab3329fdc0805d6cda4",
+    "src/mlx_one/inspection.py": "dd9c3f4eb9fca5f7d0e607474db654654959080530da87d552ee5b368b6d8d9a",
+    "src/mlx_one/comparison.py": "7e583a30fadc0d782fe86ef233ef5079c635e2e52df440660f75239eb04c8ba0",
+    "src/mlx_one/p0_engine_worker.py": "8e1e2e027251a186ab1c6ea9715b2cf1fe803cc52cfd8466a73a5ac018a3e3f4",
+    "src/mlx_one/p1_benchmark.py": "77722fc33558c18bd8f43a0fcee8b5b43ad8399b3ffa4f91b7e87fc56a2fe96e",
+    "src/mlx_one/schemas.py": "06bfa90802fbe72de16d907853046303a22c872b12799c3e477837124ab0ccd2",
+    "src/mlx_one/cli.py": "d56e4fdfb9ba9d93e3db151dc304db5c5482b33165cd18e7cfbab8c0abdd28df",
+    "src/mlx_one/runtime_baseline.py": "d15e0bcf3e44412d052a97a718601624abb56e23c67c5c72958ab7565b13b333",
+    "src/mlx_one/schema_migrations.py": "af073f076b0d7179d02355f42c296aa55346fd16b3fe338a0893cbcbd76ea231",
+    "src/mlx_one/hardware.py": "d39ed1877b91989a6d412ececf92c5f179a7aa02b2e72a79c48e86cab2ced291",
+    "src/mlx_one/planning.py": "0bb6439c46bf13d5542f15eda0a2410fa163d454ab49765c20e57e353f587c75",
+    "src/mlx_one/p1_decode.py": "041ad3bf9e5c1682c63dff4446ac43e71ce25bbe8276a8df85cb83e5019f9fbc",
+    "src/mlx_one/tuning.py": "287dce80955b2ad4b2f8277ac84dae1a3ef8aa823726c05d619e679cd8c9ce82",
+    "src/mlx_one/workflow.py": "3a94531fa4a167b1ab5135a6958d01585951dee93207b706e29a9f306d3c4d78",
+    "src/mlx_one/provenance.py": "2bda0c105557f55728801fa6f7d7f04d0c9f84d9107d1412f7820fe87b270dd9",
+    "src/mlx_one/inference_qualification_worker.py": "bd14c9ad29e68638fdaca03d629341694ebbfd97f62494da31aa90fabd7cd2d3",
+    "src/mlx_one/benchmark_worker.py": "4ff2fee8b9bb0ad664a7e0093b5cc6fa30d969ad1362bf6c2cb464864f0f413c",
+    "src/mlx_one/quality_dataset.py": "ce08ac2bb1bfe9ee67f5dec06cd9a8c4357f70b00c4c5dac6fffe3aa1062f4c1",
+    "src/mlx_one/p0_engine_qualification.py": "727022c32524ac09b601e9ed6cf59232cddb04963ba4e56b8b847d74d67ff76e",
+    "src/mlx_one/evidence.py": "052839dcdcb46637f1664e88ffd9033553f86e1ad38c76858da817be9683f2a7",
+    "src/mlx_one/run_store.py": "54d102796697af38ff25dcdac882505b9ff4f830c850f925a5e1b936b24f6eb4",
+    "src/mlx_one/inference_baseline_worker.py": "66153c92a265e92340a69a3b70dabe2a0da8f433e8062a4d0f6f74cbb69e19d4",
+    "src/mlx_one/training.py": "abab08b8365d619e2ef65f619d9593b536947d2061c6ee285017d7deadceb74a",
+    "src/mlx_one/calibration_worker.py": "03e994852c4adf6198f181e345752d849004a4580522fb8da36c3d9b895c6c1a",
+    "src/mlx_one/calibration.py": "279f61d130750a2f088f663af691b671ea9aa168ae5e131437705542d8b657a1",
+    "src/mlx_one/traffic_replay.py": "e228cbee58b7ab80a46e70c41ff6bf96e7495395d4d4e57090affb9a2923c968",
+    "src/mlx_one/compat/unsloth.py": "bb522fe94a03627fc8b53c7e856590571b24275b02ca5b2100bdbaff1f3e4512",
+    "src/mlx_one/compat/__init__.py": "3759af693072f61aeb07f671964611cdee5242c6fa5183de5701729cacacdde4",
+    "src/mlx_one/compat/trl.py": "e99829e6270340e0a051d627d108777e9839fa7775c804d2deb5650f727ea31b",
+    "src/mlx_one/core/compatibility.py": "727fdf816c2c0666bf22a9c8572fa3dbf1206e798f76efd94966428453ec2e6c",
+    "src/mlx_one/core/config.py": "702138fae379efae2e1519ffa91187e385a9e0b6fbf57022cd8940c22049eccc",
+    "src/mlx_one/core/sliding_cache.py": "b109f4aed6e190ab33f8a2a1a4102b8ab1dff1552dc04d8c6cd96d959e2762f3",
+    "src/mlx_one/core/protocols.py": "b846677910e0b38270ced3e60a067e82a99425fd531b1d4e60eb0b9085c62e33",
+    "src/mlx_one/core/registry.py": "45114b2cc1704161fae45ce9e8f52277106016c3d8d548147a2ca99c66503a2a",
+    "src/mlx_one/core/release_support.py": "9bad134ac99b32677bc3286c9bda608c9952b490a1c1f32de8c1534a74efa779",
+    "src/mlx_one/core/cache.py": "7b03155e3ee497901dc17400654b02d7d8572dcf2e3cee340fac6923a6895447",
+    "src/mlx_one/core/__init__.py": "80e259e17cfea452b7354b1f24a59e088a20c46d0634663bc777a6615db508b9",
+    "src/mlx_one/core/precision.py": "c2b38cb4da68261965d2874a18fb21f7e60364ad9a4c63cc1b24ecf3372efb7a",
+    "src/mlx_one/core/capabilities.py": "2e925aaf0e0c3b86161599dbf3c676314236dca8df0ad9815d5abb13ed5172a7",
+    "src/mlx_one/core/weights.py": "40a855d8aceca23c5998fba7d82e7c400d6154152eb0c4ff8add0695bc4bffc2",
+    "src/mlx_one/core/outputs.py": "2fe9b41069126a8ebc585a7d407c569d50f77feffcb4d50580203716690f035e",
+    "src/mlx_one/segmentation/loading.py": "5635c457ba80c7630bf78a82c2966475c3769981d5a38acb1e9ae433630c2a26",
+    "src/mlx_one/segmentation/__init__.py": "da5a275534c90cf508ad2cc162f971801c0f4f99ad99b1f3b7401923f28bdb3d",
+    "src/mlx_one/segmentation/export.py": "69344503571e7558d8c63c857c1991d4114cad977138db0a1d5e42865ecca578",
+    "src/mlx_one/segmentation/resizing.py": "e05ccf6fd47985868efeb00993651efca152d53f6267701c10dcfe199d509207",
+    "src/mlx_one/segmentation/schemas.py": "e334d927d31f0e7761484d6551192a46cf38e9a813fab9fb09680e2c3a31af0a",
+    "src/mlx_one/segmentation/cli.py": "7cd85fec4bb20bb880f2b624c6a6eecf4d041f85a3d4c5f8655b5ac66a586745",
+    "src/mlx_one/segmentation/inference.py": "5d777431efba049fe3e518e5eb357bd8a5160576451b88d4b9e0b7c9450050e8",
+    "src/mlx_one/segmentation/postprocessing.py": "7ce807d43f700170cfaead2577c35dc52f302b921f529cd02a848f18f2cd12a9",
+    "src/mlx_one/segmentation/processing.py": "0bb33534e7240d96a6893460808435183246f932e11db960fba202d6aa37f8df",
+    "src/mlx_one/segmentation/video.py": "244df70f2d979e39c399bb181ac8cc88bccabb95f54cddc942684f9198b2bea9",
+    "src/mlx_one/server/transcription.py": "293274c523f958495a8526e4710b5778e7973800d6fca3d5b9ad4222e03be864",
+    "src/mlx_one/server/media.py": "6c09a4b835a0ebee5e06270d6c42f0ed75361f4a4462b727b4838f053e0a1d81",
+    "src/mlx_one/server/config.py": "1d043b1033308241d595fb095678d7e3b12520a9dca1db21ecfa165d35958a7a",
+    "src/mlx_one/server/__init__.py": "8f149d475ebf8ed06d60e9356386aa28c695e3c06d1f2673a1437f329bed77ec",
+    "src/mlx_one/server/model_manager.py": "1de8fc7c33220b76e414ccb37b778bb10ce26401f875c64fd7d102f52b16d4f4",
+    "src/mlx_one/server/schemas.py": "e7963517d1698e04e9c367d04ffc59fd993d2e35b5a38075506a94ee7da67994",
+    "src/mlx_one/server/app.py": "fcd51651ffa9bfe8c91fc050ad86f760d540294549e6a9f240bcc41210a5e36b",
+    "src/mlx_one/server/scheduler.py": "0a8e2288e57c070f54c0cd10413ce4c1529a50f6afbe89909f9ba7b03c0c094d",
+    "src/mlx_one/server/admission.py": "b633351b11e16f1b280101e53e022d05a44ffd992283649c450af7ea0fb6a17c",
+    "src/mlx_one/server/generation_engine.py": "753346538c767fd0728fdb3b7870d0a65052dbdc07e3515a989de98b122203d7",
+    "src/mlx_one/utils/checkpoint.py": "d7abb6d12b7b0d74322dc30ae8db8be7caf6c85080598626105b4b25a7245547",
+    "src/mlx_one/utils/memory.py": "a1af4b30c51ef81a8949fe40c7709cddc8a399b3ab6e1fc46f67d16975d21cf5",
+    "src/mlx_one/utils/__init__.py": "49fe30d3b1a299233c7100f407358f32bd4f396fe5a3fbdabb4d870d41abe7e7",
+    "src/mlx_one/utils/model_loader.py": "523b38d8ac225e5c8511efeadd87cbbd8dc5bf10957147582603e64970d37d4d",
+    "src/mlx_one/models/UPSTREAM_LICENSE": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "src/mlx_one/models/registry.py": "e9ac82d2f87ddce946b674b2c9fe6e6a5b37ba7520aecf417acd56a53dd24365",
+    "src/mlx_one/models/__init__.py": "4cb70da05adbf9effbb8f3bf0ac5287c2309a84cfdde33899430ba1498bb0a50",
+    "src/mlx_one/vision/loading.py": "e1df1fbb05340cfce94f3dde3e71b5ecb6a9998b515dbc10b74d3a5db24cb6d2",
+    "src/mlx_one/vision/generation.py": "40d5547268a21467a2e1468a34edb55b30fd0c7002e918d030a2dd8c0c7ec547",
+    "src/mlx_one/vision/__init__.py": "4f6a5229d271be615a193795647fcab1b42f2f1ce9eaec6a4d83caf8ce953921",
+    "src/mlx_one/vision/lfm_processing.py": "42f67523f157fc666c10b0d91cac323e8ef3c6a4ce6da895996c430f6de4929f",
+    "src/mlx_one/vision/processing.py": "272d386587e71e180c81aee2fe4ea1d8b21c22300418e79d168945368e97602e",
+    "src/mlx_one/audio/service.py": "7324e3fb29654038d21fb377dd51beddca73b18ce53964b2a1c2fabaa81a1f49",
+    "src/mlx_one/audio/moonshine.py": "ed26877b6eb9fe6481f946a4af7fe625fe989bd099b195eb654240c8241e22c1",
+    "src/mlx_one/audio/parakeet.py": "e8b5d2277ae6256c9adf8125c220b6470b0d426587177503b18fbf833006f3bf",
+    "src/mlx_one/audio/loading.py": "90057c6e192145ae8662032401a00aa58aa85e5c8c0217eb66883c16d539fce4",
+    "src/mlx_one/audio/evaluation.py": "1d97792c88fcd8606a78ea06642ee81727c6acf53f5e6ef323789ccd9490c86b",
+    "src/mlx_one/audio/__init__.py": "5b07dd9e0b7874db528860d3af31c6d3be780a65c9266230de1760f79ae49586",
+    "src/mlx_one/audio/decoding.py": "99944ee4b6048459d4a53ef382b2f32eb63f73d9a3bd5d99460e4759266938e6",
+    "src/mlx_one/audio/schemas.py": "f8b5b89099b4778c6dc61dfd6adc3a8dda10b7c7f65b7e12350f55f8dba03983",
+    "src/mlx_one/audio/qwen.py": "dab84672d4609a11aa307633ceb4f8d1e3d70195ff25a30ead136eeec0b1e1b2",
+    "src/mlx_one/audio/streaming.py": "7e01ba1ae0b3746e97288a1e5df91ea5a2bea450daea5089ec88ec803fbd2a98",
+    "src/mlx_one/audio/weights.py": "ba0537bcc520eade78a266249961427c7b6db570128099d685b58ac9d7e2ae5d",
+    "src/mlx_one/retrieval/service.py": "e5dadc0df217d23fbc4bc7e7d1c44fa126ddc7bd27a4c0a0dec5f3955c6bc301",
+    "src/mlx_one/retrieval/loading.py": "8c7d816c99fbcca29446e8c6f07394221ca6278c19bfa4ddfd039ffca8d64400",
+    "src/mlx_one/retrieval/__init__.py": "f61e99167dc74d60ed4ecbdb5679ab650d1bcf1f5ab1e708fcf93c1df4fe6cda",
+    "src/mlx_one/retrieval/tokenizer.py": "34447d39c5c6c320ae9f67f3ec1d62333e9bd4e83db9bc88a3a33ce75287f9d2",
+    "src/mlx_one/retrieval/schemas.py": "43e2628693e11a7471daecc5f19aa866e6e41d7a78eb24247d337e69f4d79959",
+    "src/mlx_one/ops/quantized_linear.py": "32d25204d35d8b378b386be9fe002dff5b3be24b64693fd78eed927f6aa4e7d7",
+    "src/mlx_one/ops/attention.py": "1c5e4b4fc37fc6e997981867596b07dcde705030e5e5a1130628e1e3509d8922",
+    "src/mlx_one/ops/__init__.py": "1ce9e2022dd9a4f451160217f9155b80ba1a331ae4c76155ef3e50a24bfe6b20",
+    "src/mlx_one/ops/compiled.py": "187545fa2e76cf87b395d1176f78329b6430685134285ffbc96f03254d7e9b73",
+    "src/mlx_one/ops/numerical_trace.py": "3619444fd78a8c01797604bcc95930c46d7048832a0ffa0299cca4c192baf7a9",
+    "src/mlx_one/ops/logits.py": "c9e9909c27678aa867f75d10b33229c1f59ff4fc2366f8caf6b3c2a922ad94d1",
+    "src/mlx_one/ops/reference_tiled.py": "4a7bd2ac67e706d2fe8f36f25e6477d4ceed740bdaeb2b7454bf321f16d5c91e",
+    "src/mlx_one/ops/profiling.py": "b5aa503c082d4ca39d600cb194ca0b5c3ba4e37e6eed356471741eeccb5ad973",
+    "src/mlx_one/text/loading.py": "77af929ffbb17d869bdca75be978121dcd1eabdd55a044e3321f0c0046738083",
+    "src/mlx_one/text/generation.py": "75b31f792af60a7a5cfe005e4b40fc9055752df18a12d486284c353178f09d90",
+    "src/mlx_one/text/__init__.py": "9f2584ad3a4585a3617e98ff0c1d43054cc5598c934ef1e0cd46359e1846e0d8",
+    "src/mlx_one/text/tokenizer.py": "8220ca23da4a456b6696cd01084a400365171b806cd15dfba2bd614e8888186b",
+    "src/mlx_one/text/chat.py": "ad718ebe0952d8db5deba50634ad9020455282ff0837fe03583aad1cbffeec2c",
+    "src/mlx_one/text/schemas.py": "382604da75d9fbeb741c9f1dbef169e090b7d804a73a3e26fa1eeb96ee3f04e6",
+    "src/mlx_one/text/sampling.py": "c19ec02d29ff135701b08fc9f80eaaf5a9033a201fdfbf61844a57d51b4ab9ef",
+    "src/mlx_one/text/tokenizers.py": "e7177f23c550ce68a67481088bea2451be5bdb74a0f07df8069d7f55e49c3110",
+    "src/mlx_one/data/capabilities.json": "a0209fdf6b2d2f7984858f6cd28b564708f080c2c081f3d09a32c883e188da8e",
+    "src/mlx_one/engine/cache_specs.py": "aff6f21a85a4eb9c15736258e719cfe73bc022082a97b366b978739d10923fdd",
+    "src/mlx_one/engine/plugins.py": "24d08c456067b90658e7fd2b3c2e254e57c26f300c501d67ea669d01d6080ace",
+    "src/mlx_one/engine/service.py": "cc026ec37a4cb7de9d986b9df1f3d359d801c61a66794c6e0a39323ad366113c",
+    "src/mlx_one/engine/observation.py": "6498541c8a03af0741d8ca073f1c502e54f96652ebd5efae20d1c6b1824bb6c6",
+    "src/mlx_one/engine/sessions.py": "2906e39b9d4430cf47afb80f1bdda332621382ac46940c4e92c3b779b459776d",
+    "src/mlx_one/engine/public.py": "a3e8c6b4cb918bb2b911fdb062d89bea268efd763e953e87bd9cadba5b8e8068",
+    "src/mlx_one/engine/batching.py": "0d735d401a20ee705f00e2cada5da792760ef9c8bcb170ecd05f1301fa3dfe23",
+    "src/mlx_one/engine/media.py": "8cce503f0f66711d6529f200aed92f974fe9a4b6d648ab7fe124a1ede8943baf",
+    "src/mlx_one/engine/block_kv.py": "e0b8c76f12f24f5488fdd4fbc8f15bceb0e24037119790c5d56fd8f3c18399a1",
+    "src/mlx_one/engine/tasks.py": "923e3a5d7ca76d59af9f7d0b32a09e1a88f1eedb9dfc48f87e1cc217cceb3366",
+    "src/mlx_one/engine/pressure.py": "0503d4a12495df0bb5648c8ad8439887de53b091b5c5a2739669824a6a9bdbb2",
+    "src/mlx_one/engine/cold_prefix.py": "47994c9816fa279d7f0369e714e8975f7f16a1e0d6e174fbab04f7421654ca5f",
+    "src/mlx_one/engine/memory.py": "49bd867d80ad6b0f4c4a277c9353f98a7ce3b21374c85e94af92a2193c698a91",
+    "src/mlx_one/engine/parity.py": "a3c0975ebe46064ddf1dbc57d4bf5f3c0fccfbf9a05d52da851ea062d4fcccca",
+    "src/mlx_one/engine/cache_manager.py": "c2bb9dc7b9664359e4733946a1e4086da1bb90e9727f515c9020d003a222c87b",
+    "src/mlx_one/engine/construction.py": "c59dc790c965b1d58dc2798dcf63071fe9bd4ebff3ee821b8273cf4e66cfd876",
+    "src/mlx_one/engine/device_executor.py": "2185186f8f8fb03c1462e05b524e937f23b346ec74e3d846591b34dc03401505",
+    "src/mlx_one/engine/dispatch.py": "32b42efb33f94cc48181c000e479dfb742fc8572c49223631651d2637060d4d4",
+    "src/mlx_one/engine/hybrid.py": "6917d14fe1c4551dadad5e372cd816f0f64008ca1c680f7124e9415091743bcb",
+    "src/mlx_one/engine/cache_errors.py": "8580d2a6d2297b15da6b16fdc4c10953927da636364b2a067947f0f8f8b24868",
+    "src/mlx_one/engine/transactions.py": "4aab737d6973b9f2b21fa340789ae214b8d0121647ff85e9c74db2d4511549cb",
+    "src/mlx_one/engine/cache.py": "711e1655adff9f2ec097eabf0ba30ddbcd4a11662d3f0308d23f07b5638d7a87",
+    "src/mlx_one/engine/__init__.py": "0271c7b00faa2c3ab8b3c73664636d460090b45891bc2eda010fb1042dabfb57",
+    "src/mlx_one/engine/modes.py": "470377b2f543eae5a7f847c2ae86d151fe2c38662c8597ef9d746699ac506dee",
+    "src/mlx_one/engine/prompts.py": "b46339d52194d40e3a47f3dfb460714a436842ceff9500423814c3b9a6f093ba",
+    "src/mlx_one/engine/speculation.py": "5b1aa3067f66e007c11a6d3590847dd79ec3b7161733439ff758ae2360bf3d81",
+    "src/mlx_one/engine/optimization_policy.py": "4fef10cd5caf557f86401e382250d6ce1fa210eb7f2ec83fd6b9e3e38cf9eece",
+    "src/mlx_one/engine/runtime_specs.py": "4167f193d9b298444d1a9a10d4c2682795f2e02318eb5b3af4505abd784ce170",
+    "src/mlx_one/engine/kernel_dispatch.py": "44ac3de0fd2bf889a969a051a551016a654da31d631fa55b52c590f17ade488d",
+    "src/mlx_one/engine/adapter_registry.py": "81836952f1293b5ff1cd7523de7008795f8a0443cb2e3e00e79d4e220ef8329b",
+    "src/mlx_one/engine/compound.py": "fa9c00b8058ac569b9656231124243a57b8151b0351e1ebabed76a26dd0179e7",
+    "src/mlx_one/engine/timing.py": "e3a7155bb63ee1fbec4041d9f3060d0feb237af1245a010e1b95c850202058fc",
+    "src/mlx_one/engine/block_cache.py": "44ee455102c2290cb07dfba3eba1f020851c825cb4724576bb3f0a35ba46496a",
+    "src/mlx_one/engine/native_adapters.py": "073a9aa0c04daf5716acf415fb12703695d34ec35e71506e7554ac5c18937ce2",
+    "src/mlx_one/engine/lifecycle.py": "259c10a37561f9fa991bcedeee89f4c28ba82c4deee4047fe7277a8e9f69c155",
+    "src/mlx_one/engine/qualification.py": "d671e036f9c77fe2ae2795b06b931743d4291b17da9306dcd097528c4328feec",
+    "src/mlx_one/engine/runners.py": "bc6e5a6f95e22c2debee5b5692c0429fcfceab08af6fb16197e1353acd0aa105",
+    "src/mlx_one/engine/paged_attention.py": "91e1a388538fa22d4a0488c5049f1fbe132a820d43f5dfe9e2257fb9ef754888",
+    "src/mlx_one/engine/contracts.py": "13db9bcc4bced885df6a979fc6ef0acf80ef1f36e3560495e353e47ecf7250a1",
+    "src/mlx_one/engine/model_pool.py": "a44539dd45db8313a849d08df407a4b98b75d5f15970c21cec1873c92207638a",
+    "src/mlx_one/engine/execution_context.py": "d938fcb4b67bc31a935c7beb78a41db8c2ebe30ac0eade870223b57544a8e00c",
+    "src/mlx_one/engine/prefix_cache.py": "d8c59f04cdcdf5358d497741ca0a8e888a9ca820b4029d7b3718f607a22915bc",
+    "src/mlx_one/engine/scheduler.py": "7cac4e1a9c5b55430f9087cca622cb37532508fd5a6f858cf630e34bf3876857",
+    "src/mlx_one/engine/cache_planner.py": "001d4f80f930d8e2447cb2a0912c6603f43535a3afd3b0aa446192b6843fec32",
+    "src/mlx_one/engine/admission.py": "90770f34db4ccc55b290125e8ba6ebca7066bdf571f6eb3d0bcd8aace7017851",
+    "src/mlx_one/engine/selection.py": "3f6140158f63991589ac3c2d8ef2654e5813b6278913cbea86665598a9ad5080",
+    "src/mlx_one/engine/actor.py": "197ffb02b1f25bada163719fa7814f186b92d58267b162b5a5f4f26f2d5516cd",
+    "src/mlx_one/engine/components.py": "2c5a1f7f7a25dd144bd6f6db804c9504d4c83f55405a484795f235da9f051201",
+    "src/mlx_one/engine/envelope.py": "aff1ea64f1b5f312072aa20a4a8fe3ea3f43298d59ecb13cfa1803a5dfc5c71e",
+    "src/mlx_one/engine/arena.py": "dd971114889ffd65b40aea84608461bbf7e8f9e06f23f3ba985a445f9f4c36f9",
+    "src/mlx_one/engine/paged.py": "7dc7fe114097792116cce7c3dd4960652cf9abdc03ab294176159c6bf9347baa",
+    "src/mlx_one/engine/reporting.py": "60a4df924d5261b3871a52ac1ef409732d133bdf40a0ac105536e2a1851d848e",
+    "src/mlx_one/engine/adapters.py": "9d7684b38815b59b15c343dd0d2e7a146125f3da15e95809cb67f328759b2354",
+    "src/mlx_one/ui/dist/index.html": "dc80438628a3465ebe7cf07b07b7134a11c8523f0ba757df0e296b354c455159",
+    "src/mlx_one/ui/dist/mlx-one-logo.png": "7550921c833f19715e92ba634c7463f391ce5871cbb700910626b5ee7598e7cb",
+    "src/mlx_one/ui/dist/THIRD_PARTY_NOTICES.txt": "f5292e2ce591e3bc8586189bedd830e60320b210fec32a7aa16362262d4c82f3",
+    "src/mlx_one/ui/dist/_app/version.json": "9f7ddaaef67ab180a89263a9680aba0ac405897ee21cf0f787c9e72650f5fc70",
+    "src/mlx_one/ui/dist/_app/immutable/nodes/0.BdtHWFD4.js": "36818cb161b545f36422a2333442b55e5a483094f6e0db90ca525fa1a7a46c8e",
+    "src/mlx_one/ui/dist/_app/immutable/nodes/1.BR2PQgca.js": "dd8ab5dc85b190c50571acdaf1b28a0de26c4e4620a4eb17a43afe6458a8f720",
+    "src/mlx_one/ui/dist/_app/immutable/nodes/2.P1F_yBJ7.js": "3c9e82347ebfe5cecc86e9e14262a5b0a44b73ec6ebd17b0ac05995067d4d107",
+    "src/mlx_one/ui/dist/_app/immutable/entry/start.CpMXdwfj.js": "5bc1ee8bfa7bf3eb00cf70748228431d066f531b55c91ea314a6e450664e4f13",
+    "src/mlx_one/ui/dist/_app/immutable/entry/app.DK6E1OQ7.js": "a4912bed7da2c675d202f8dcb54bd8d6b7c1248c3a0afc246946170258d61877",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/BDBYekvl.js": "b383746920d35fe99395a1de86ceba4d341c48bc5713eb3e27c1a07b19ccbe29",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/mo_kpY37.js": "48a2e579d7a30f76e876fc70929f4719ba4df70cf23b32856b54f766bbdfa844",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/wbPk3Yxo.js": "5de7f8b5c08f95a02035798b4130a56f17ae31392b8ec5f959da12e29ac3d045",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/qhmwaBmK.js": "b6a46cb31ea8536582ef153e1a5fa2d926d74dee687b5bb07cbfdd51b1ffa042",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/82h7flzh.js": "74a262f9dd9b914d341e01076ddddb95efa4ddeb630545b2d6ed6c922756d1e4",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/Bij8Ok7U.js": "e14fdcc9fd23dc67fe980436fbe8757ee8003f5193bd742e49380ed1ffaa5868",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/C8pA1lZh.js": "2058afd44ae9b1e5f130158ed123191bd26d448e98b430159c6746389485d418",
+    "src/mlx_one/ui/dist/_app/immutable/chunks/DUBjb0lT.js": "92fc8c230e9246afc2872c4ba799d25614f66aa771b070c325bf79936beba6d2",
+    "src/mlx_one/ui/dist/_app/immutable/assets/0.g1PcYTVf.css": "07ea52ffa75f1337ec02e3b3878bb3a57c918728d335600fb38abf507e03da18",
+    "src/mlx_one/ui/dist/_app/immutable/assets/2.B8K-Evu6.css": "89a70756d6d1766bfc38f7fb100c7bf446a481cd4649b6addfa975d4fd8dd402",
+    "src/mlx_one/models/embeddings/__init__.py": "773dcf94d3747bcbcaa07ba680d5116f748b8881dcc7030208ef59919dfc3611",
+    "src/mlx_one/models/vision_language/__init__.py": "14687b02a43f6913dddf00ecfc009f1fe9b432a16e1e7b7f59243c0217ccdf41",
+    "src/mlx_one/models/segmentation/__init__.py": "eb7918d18304f23e5c3ddac5f88679a8eaa020649013cbdbc6b2fe0836dfa90e",
+    "src/mlx_one/models/language/__init__.py": "5d6eb0abcd8410666ea740ebd0082783dcf780c3d95c05866eeb068679712e5a",
+    "src/mlx_one/models/shared/decoder.py": "8d28b9c3fcf28440ed2f1098653653c090d5878d6d884a88758639de2410b736",
+    "src/mlx_one/models/shared/execution.py": "02eb6af2fd89d137af1157196b67b0bdf1908206c371b36fc794a4b2315b21c1",
+    "src/mlx_one/models/shared/vision.py": "587e55ab9d24b43fccde828308178972f299f32fca9cb4d7ab8ca085789576bd",
+    "src/mlx_one/models/shared/hybrid.py": "1b6c8cc1a5112a5e772bc8105cbee0c1d9bbd279adcad5fa9671f02f92274a1a",
+    "src/mlx_one/models/shared/__init__.py": "fe0e558e6e9889fda7de230eb03b8d2256d2bb4a2c36669c0182166c270a44d4",
+    "src/mlx_one/models/shared/encoder.py": "76ec1792c00f6a0b504ddedeedc826f8ce5a11e393ad43c99d226146a124cf6a",
+    "src/mlx_one/models/shared/transformer.py": "60fb5d9f59459059f2777788d33928a708784944f47a8e0a09df61a9926c1889",
+    "src/mlx_one/models/shared/reference_activations.py": "84096c1c794ef02c7ce740cd40cdb2677e6e12dd1ddef6eb46907aa5c1da6d45",
+    "src/mlx_one/models/shared/reference_math.py": "d305e4cf6020703002074419687fc86fd1bf0eef49d9035018e32de5a02ed890",
+    "src/mlx_one/models/shared/moe.py": "eb6748853bb30d892409596a2e9bfefcae7c87ac23ff36d5112b0483b49cf8de",
+    "src/mlx_one/models/audio/__init__.py": "23e62ceeb71f01496e89a39476eb5249a2a2369456aebce1cf93a18d957316af",
+    "src/mlx_one/models/embeddings/lfm2_colbert/config.py": "ccfbc0ddbf4f088dd088f252e90c46c3c1d16e38dd93bea9ce2b2ad85373e7f3",
+    "src/mlx_one/models/embeddings/lfm2_colbert/__init__.py": "3dfb374378302a3c52417065fe8bdb52778f1185be51cfd6f2da6f0ee5198f3b",
+    "src/mlx_one/models/embeddings/lfm2_colbert/model.py": "a9fdb4b5a77c250ec6ca921c3ef27e7b33f2cf48d028451c83aad3788ebdc92b",
+    "src/mlx_one/models/embeddings/lfm2_colbert/README.md": "29397bce3c4c2ca59783577016ffa51e7ad17a8fa0de766b3afec63d7eb3b12b",
+    "src/mlx_one/models/embeddings/lfm2_colbert/weights.py": "4674e753d9926fa8d40a631556aa0cfb2c253eec0f3ed12228b49c1a84c9ad56",
+    "src/mlx_one/models/embeddings/qwen3_reranker/config.py": "e2a26a78c7b1a1ff02fc15dafc74de982fa662b1ec005ba522a5b3f29a375446",
+    "src/mlx_one/models/embeddings/qwen3_reranker/__init__.py": "44f62fadf227bfd355ff68e46919819cc48ffb28194c775877279bfab94476c2",
+    "src/mlx_one/models/embeddings/qwen3_reranker/model.py": "516789958f2c3f6e632e85f2362172332cf19cd8b3477d1786c28fd3f760e2ba",
+    "src/mlx_one/models/embeddings/qwen3_reranker/README.md": "02383af205b1a0e8671badb408704ed789750e58c5d9e8188f2b9ed6d34ad6e3",
+    "src/mlx_one/models/embeddings/qwen3_reranker/weights.py": "8df8955a8c450aabce8e90855e2844be020fbb44a0515bc61c81890c9c03937e",
+    "src/mlx_one/models/embeddings/bert/config.py": "485c9a11f32c2bb88e74bc12836a81ff8fc1c258d4369f323ad8cfbfdd67c5cd",
+    "src/mlx_one/models/embeddings/bert/__init__.py": "9972f091a39a7b1ec60fa325696bddf0574530195080c58e87bd9488664d97cf",
+    "src/mlx_one/models/embeddings/bert/model.py": "1860ee916aa980b9f7f5d28c5eb8dfb343f41da9195b1b75465e31120503e4ff",
+    "src/mlx_one/models/embeddings/bert/README.md": "e1b3f580b069a6f2260120b0c31341fa9b95d7b5f3589285657aeb58adc92ff4",
+    "src/mlx_one/models/embeddings/bert/weights.py": "7135a31204a839e74dea9daa57771b40f64b5174ae731d58ef8c0dbbd3791017",
+    "src/mlx_one/models/embeddings/qwen3_embedding/config.py": "9156859338de2872d6c9d492eda975d2f7bc1db3cbc39e59dcf6e3746497c5f8",
+    "src/mlx_one/models/embeddings/qwen3_embedding/__init__.py": "c6325eb2359db9ab2f4e875a3adaa2b07da81f2ef499b95ab9b1078c3319e950",
+    "src/mlx_one/models/embeddings/qwen3_embedding/model.py": "ac6ac5b682c2cae58e0594871ca4356e4536dbd9bf3d3fb7fa08fd6f424bacc5",
+    "src/mlx_one/models/embeddings/qwen3_embedding/README.md": "4ee4fe342684216b5b5e19936aa07bd710e47ce01433aea606eff6d5ee90b223",
+    "src/mlx_one/models/embeddings/qwen3_embedding/weights.py": "ea5817c2754ec6178b46276c2dcee5aa06599a474e44c421db29d6756cf3b86a",
+    "src/mlx_one/models/embeddings/mpnet/config.py": "c5acbb54e3bd5a56e5ab5eec205e4a25b8cf781f183b8c134c0c59c82fb0ebd3",
+    "src/mlx_one/models/embeddings/mpnet/__init__.py": "918ea3be2c6be1b5ec6bbebdf3084a5e23cb953482ff66f51699169e3c40eb9f",
+    "src/mlx_one/models/embeddings/mpnet/model.py": "6a422e9868e2c317b717cc375385f70e05fae96842f1a99fe5e0af106ab8149d",
+    "src/mlx_one/models/embeddings/mpnet/README.md": "a39247b12d1bfce5e9a81932680a5d1e4b16639eabd90eed2d6977c764414f06",
+    "src/mlx_one/models/embeddings/mpnet/weights.py": "08bc8ad6ab1b6414fba45994a8ca02e64a9d3bc5921ccadd14c440ff4b96ea7d",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/config.py": "22de5c8ac517db69a660b115ab09f2d6c4b75da5938940b4e5701a22101b4954",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/__init__.py": "10c5a27c37a47f6928f31c3c431c740e89461269f4c89ffd3d0d054359d90bc4",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/model.py": "903feeb3448777f5dac9bd3ae489bcb8d2b89fdc00db12d8ad2c6d1ee2632f0a",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/README.md": "ce8d46cc8f58e28030a840cdaeabd9717c93956d1008974a537a48dbfcfa5fdf",
+    "src/mlx_one/models/vision_language/qwen2_5_vl/weights.py": "a4832756047af6464767760fea9406c4c055079a677c102640403c4f5bbf49ce",
+    "src/mlx_one/models/vision_language/lfm2_vl/config.py": "2a4296ccaab2bd7dbf34abdb6ec3eef60d5fd9c9e8d2c7a2dd446315dbbdc981",
+    "src/mlx_one/models/vision_language/lfm2_vl/__init__.py": "6726deb9c88186d8740da97f85a426f0ef34f6eef1bb1bacd2db40c9f623cef1",
+    "src/mlx_one/models/vision_language/lfm2_vl/model.py": "9e761cdf44dffaba8b18a6e70b4cf62260f22f6856c77bf249c7ea1d62d564b6",
+    "src/mlx_one/models/vision_language/lfm2_vl/README.md": "498f17696b1a4e9a1ef7a9e006705820575f012d90d8be943fd8b7ba599e79ae",
+    "src/mlx_one/models/vision_language/lfm2_vl/weights.py": "4d000ec1296d4c68db8f9c9aabf9f63afa7b409ec0a7763449f3be7e650c5570",
+    "src/mlx_one/models/vision_language/qwen2_vl/config.py": "b1afa4b30d86219cb4cfe842a6474c4dd38a4f367acba443b18d148bcbe64d97",
+    "src/mlx_one/models/vision_language/qwen2_vl/__init__.py": "782a89d0008cb9ee4c0769074f173391671929fa41b181d73a170df61a5ed586",
+    "src/mlx_one/models/vision_language/qwen2_vl/model.py": "098b58e7c5ce3ea0f91237df30bb2b69268da0241c434074306e0bc49eb037f4",
+    "src/mlx_one/models/vision_language/qwen2_vl/README.md": "09ba0d4d1c26c2c0b6f2d4c23ccd42795cd6583b3ffacaafb81c0628db463141",
+    "src/mlx_one/models/vision_language/qwen2_vl/weights.py": "69ff6119e197aa73590cf90c0c5d0df386f7fe916875adf47575d8b10c49d2b9",
+    "src/mlx_one/models/vision_language/qwen3_5/config.py": "15179892a6de1b53d63d4e7ff36a49a2961dc683b36f5c66d1e005db0914f341",
+    "src/mlx_one/models/vision_language/qwen3_5/__init__.py": "cf40e429c17f7f9f515c5be8a3b3a388806ae679ce627969627cc4d783367262",
+    "src/mlx_one/models/vision_language/qwen3_5/reference_delta.py": "b570261c30c02eaa5ef90d54f8f45413fd2671738c39078b1d504f345e35dbc1",
+    "src/mlx_one/models/vision_language/qwen3_5/model.py": "0f1b56a23d9e909d42b6c5fc5c8bf0969082cc7d2089cfe63876673392208470",
+    "src/mlx_one/models/vision_language/qwen3_5/README.md": "2764e5b29dd724fe9fca2041f5c2eab6baf91911507f833d040dbe5d7419fd16",
+    "src/mlx_one/models/vision_language/qwen3_5/reference_math.py": "7d4e4f5fda1256090a8624e3d2a6b50cd7c97d8f0c30658736d405f9f9d172c1",
+    "src/mlx_one/models/vision_language/qwen3_5/weights.py": "7feaac30d2688179b379cfaa9474a4b52a61c55f9b9e14fcb03dd7340dcdac50",
+    "src/mlx_one/models/segmentation/sam3/config.py": "ed37f241c5671a6ffd27f38f5c550f5c67a0f2bda50918e9cf6036cd2af05dc5",
+    "src/mlx_one/models/segmentation/sam3/__init__.py": "287b54a6a620aa39c1979b02857ac4147e538908b92b1ef6ea130f94628525fc",
+    "src/mlx_one/models/segmentation/sam3/_runtime.py": "d05211826de1c4e1a0561afa18d260c27c8ea7cf8bdc61e0ac5bf69cc2cffd3f",
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py": "bc8babe74c95d80721da78265cbeb208d85c2e8f301b17461a334050bbe622c9",
+    "src/mlx_one/models/segmentation/sam3/model.py": "dceb564877c01d6b3b2570775672f4508fc593d96d0cb9f8e2997abaac2d1d81",
+    "src/mlx_one/models/segmentation/sam3/README.md": "974dc4df1ea899f5e7b32dea187b26e48b3156894d439e01dbefaf0c05134286",
+    "src/mlx_one/models/segmentation/sam3/tracker.py": "10f7b03d9efad69dd7503e0223c002576ba7590924e86eea4ce07ec197eac44e",
+    "src/mlx_one/models/segmentation/sam3/_configuration.py": "e3398a9eee223e7ea05cde48ce664ef1b4fab2c887bf4a2305a3d23c6916b72c",
+    "src/mlx_one/models/segmentation/sam3/weights.py": "c81fa7df144ba1ae96a22e74117cd50f5a37a8a3780d1dc828f0fb182a3e1456",
+    "src/mlx_one/models/segmentation/sam3/video.py": "4f8ef293426e8b67d79035b87470b7bd006338268f623b60f32cb0d7e9167f55",
+    "src/mlx_one/models/segmentation/sam3/NOTICE.md": "9e45dd07aae31d65fa6a355065572f2e88595ec66d34bb631e9ec90e6b28e3a9",
+    "src/mlx_one/models/language/phi3/config.py": "fc9c210646fad692c1d3f526117f5ee6640816a01134832bbb74699c85a941b3",
+    "src/mlx_one/models/language/phi3/UPSTREAM_LICENSE": "f7c5738db93a9a86488063aac4b741739a133bab10ae8e8be2f2538807d2d086",
+    "src/mlx_one/models/language/phi3/__init__.py": "f135667659e4021cdc02cea32944b885002ed9d2b197da222a7c85ea3be8ab99",
+    "src/mlx_one/models/language/phi3/model.py": "6eb4ddb538b527e3ccfaa48861821a607409d269c85e0df2aa9e6b136b418049",
+    "src/mlx_one/models/language/phi3/weights.py": "cef7bf5ff1db80fc54b892ec509ae0da1dab7fc920f1087c57d0b00789d549f7",
+    "src/mlx_one/models/language/gemma3/config.py": "5b7dba2e460cedf603bac085f164fb672b2bcf9218fa3e1c4046a2e6b4e50a5e",
+    "src/mlx_one/models/language/gemma3/UPSTREAM_LICENSE": "78bdfd0850361aea1dbf1780afbe7d9b6a9838f34cd37c4e1e25a5b30bcac572",
+    "src/mlx_one/models/language/gemma3/__init__.py": "ccbef845766cf1243b4351ce19ddce7affde2d2708b97893a17f8cebe6a657cc",
+    "src/mlx_one/models/language/gemma3/model.py": "cbdb97fb89e4f64cecaa9c90808ccedfb7af8af7daae3b86330882646d3de190",
+    "src/mlx_one/models/language/gemma3/weights.py": "5f09c3e209c8fa82d69c275e48ee035af344a653c72a2b0a943aaea91eb192e2",
+    "src/mlx_one/models/language/qwen2/config.py": "03e9003396655adc5665e361447372ae7af1eed9970529fc09bc7db8a44ddfd7",
+    "src/mlx_one/models/language/qwen2/__init__.py": "14b60585d05e12cab01ccec96b3ebe059d0748ac8f933fe5b64924dc72324385",
+    "src/mlx_one/models/language/qwen2/model.py": "a05382d052add5c6fd1216d8794e11937259bb5893c9e32f7a49f8651ec19778",
+    "src/mlx_one/models/language/qwen2/README.md": "154ea6b6dbcb0218080ff7df87b95ee46749b9ff63e8d3e0a2bf85522469fc08",
+    "src/mlx_one/models/language/qwen2/reference_math.py": "d892918ee021e14cdc841a1388abeb15332aee4d39f6bb8ad58ffd6c41d34b56",
+    "src/mlx_one/models/language/qwen2/weights.py": "efc041a02c4725f3cc5f4ea17ad7f7ae78562f07da93ed300c9c70301146c0fe",
+    "src/mlx_one/models/language/lfm2/config.py": "558f7f587953ba3d1806c96dbf6d0781bc7b9467eae85841a9515692248429d4",
+    "src/mlx_one/models/language/lfm2/__init__.py": "6e0c89274ec6390831f76d765c63e5d94388b0dde52e836a1afcd9e9c151711b",
+    "src/mlx_one/models/language/lfm2/model.py": "26fa80f421582b3091df11b5c549e518c44ebae25ec49d5409d8bf222bbf2c20",
+    "src/mlx_one/models/language/lfm2/README.md": "0521ddee6efd1dd5a88fc3dd5f6f8f6081fca047440bf2e1d255b0fce261b0e9",
+    "src/mlx_one/models/language/lfm2/reference_math.py": "a2f942f9ca29d0c86d697a0902cc7728617f058a71335c04fb3639bc1e125670",
+    "src/mlx_one/models/language/lfm2/weights.py": "963b42d9d73629af0b0377d2148d2cb2d855133f699f022700925518cdaf7f94",
+    "src/mlx_one/models/language/qwen3/config.py": "aeae8cd66c31e4698f9f52fd29cd6bf0c586221e24b678a9a958b5503ab3018e",
+    "src/mlx_one/models/language/qwen3/upstream_model.py": "6aa393c3af91aade8793cc6b509b9a31a9e8b6025c1d66c7a28a53703828c09e",
+    "src/mlx_one/models/language/qwen3/UPSTREAM_LICENSE": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "src/mlx_one/models/language/qwen3/upstream_adapter.py": "5ea90e7fd8f9daec26b0b865c1a495d636800698b75a9e5037c3f9e1f5928403",
+    "src/mlx_one/models/language/qwen3/__init__.py": "623662ca3829c1f1776d855258873ccdf464ca71bad263568f901a5e4905e68f",
+    "src/mlx_one/models/language/qwen3/model.py": "39a744416350e8f346d2782f7df12c16e9cf613e9af987698700932ec8e269db",
+    "src/mlx_one/models/language/qwen3/README.md": "e21ba58d5eac0f201ba56e77efa7b75415df744baf48e01b5ec1fe8268c32f55",
+    "src/mlx_one/models/language/qwen3/reference_math.py": "2d9884c49ae0870c9b40b7d2109346f7507989c7d19f0895a79841f1b6a2794d",
+    "src/mlx_one/models/language/qwen3/weights.py": "66975a25698558fb4298fa18e9c89bd93b9d0c48afb611eb71218b36edb0eee1",
+    "src/mlx_one/models/language/qwen3/upstream_math.py": "220bd74d0a6a0ebfb4f1a132fb51694102c09916698a440c68b4cc59e0be36c2",
+    "src/mlx_one/models/language/openelm/config.py": "22965ee5a3d7d3c8bd927b6518590e481bfb43c3c744793fdf0529f9265c0d4c",
+    "src/mlx_one/models/language/openelm/__init__.py": "87d53dd1a06fbdb716d2d32add9807c985456612dc6e7ae6c624e67dcff0560b",
+    "src/mlx_one/models/language/openelm/model.py": "56ad926693ebd711427d82699e7e616edbf1a6bc713469c84a68fc4dd61f691d",
+    "src/mlx_one/models/language/openelm/README.md": "567ef77108ece41f7132c84ce8496ef9e6a2a2ca6c2c7eeaeb8bfa1c173d5217",
+    "src/mlx_one/models/language/openelm/weights.py": "dcbe272c79b91a2fa9def85ae57a51a3257dadc5f8b92519b749031e1982dd6d",
+    "src/mlx_one/models/language/gpt2/config.py": "c713b56a7c6353bc246322054a8ebf33a666a2bb9b48a78c92e88125c5f7bd97",
+    "src/mlx_one/models/language/gpt2/__init__.py": "9dff3ea445cf5eccc0e914aa34857a4eb91a580faeb90f27a87fa60a5fc8542d",
+    "src/mlx_one/models/language/gpt2/model.py": "bee60656a8871c4070414547ca6d444a8d6c3736241ac770a3d24d83074318e6",
+    "src/mlx_one/models/language/gpt2/README.md": "3df3f82bc5fe1946e0216568563e00820b3007e7f461e792bc3d5df0c8dff66b",
+    "src/mlx_one/models/language/gpt2/reference_math.py": "ef52e39f232c7c363aedf164bc93b9c56b0352de31871c79bb13db59fddf220d",
+    "src/mlx_one/models/language/gpt2/weights.py": "9dacc17c0e2d3c246bb3e8b638b66ecddd6c64d71571f6e94e073d48a5ebaa13",
+    "src/mlx_one/models/language/lfm2_moe/config.py": "97bea34d08bb5fe29510686122aca3fdda9ba9bfd21f2128185d1af71f243beb",
+    "src/mlx_one/models/language/lfm2_moe/__init__.py": "9ec60dce1c4f4728bc4bacb1bb3e3c798bfd585bf53ce09e0a88ace521179970",
+    "src/mlx_one/models/language/lfm2_moe/model.py": "6463a4b56f6440cddb08cc0dac74c78a8b64b546b15cf45628f2c29e95c6df53",
+    "src/mlx_one/models/language/lfm2_moe/README.md": "3ef82f9bce5055251851ededa96235879d286992522ecf5f285b72fab75d330b",
+    "src/mlx_one/models/language/lfm2_moe/weights.py": "53887c25c474c3834176c665b0a30b6b66497de627c6b75424b21dbb67b0aa82",
+    "src/mlx_one/models/language/qwen2_moe/config.py": "f1d582fef5712f7244ce5d2cebbdf2a6b29979344af6dcbad27ce082cd264d83",
+    "src/mlx_one/models/language/qwen2_moe/__init__.py": "8fefc78a433afcced7ee3c3b62af288cfc69dbdf755f0b30456219829227b964",
+    "src/mlx_one/models/language/qwen2_moe/model.py": "e32b8bc6fc5c9792a06015feb1430132e03924e0d10af6a40872301f4d22b805",
+    "src/mlx_one/models/language/qwen2_moe/README.md": "84f47dda8617a7885675697f07386fcb06d172d6fdb572e6e2fcb7f6b219c4ea",
+    "src/mlx_one/models/language/qwen2_moe/weights.py": "350e93141b9ff8cf662b506aaf2e4912b4370dd100cfb16cd3140eb1d30c3e9d",
+    "src/mlx_one/models/language/llama/config.py": "d3358617ce8cc5b385e6cc88b76891d716b4452c279df5a67eec1031c512702a",
+    "src/mlx_one/models/language/llama/__init__.py": "2ea2d29fbc7e63230a4e592d93fac5f60e5d8ff46e739d0b0e26c9f45f46f696",
+    "src/mlx_one/models/language/llama/model.py": "9cada0dada4809f84eee18e6706af55248899559616267b6f10adc4f0814542c",
+    "src/mlx_one/models/language/llama/README.md": "458488f3080e980737883dce02348e4499956997382296eb33e2ccf32839c102",
+    "src/mlx_one/models/language/llama/reference_math.py": "2d5cc8b0790216559d88d95adae4e02c89ce5bb09e155cbd9b34ba45bcc2e7b3",
+    "src/mlx_one/models/language/llama/weights.py": "7cb3cffc2d31af2f0f1c9f5b51d6c4b55a0a4ea55812d85e719307ea896e3fb4",
+    "src/mlx_one/models/audio/parakeet/loading.py": "82e96f5977bf3d38a72ce154bdc8a6e0778bf03ecc5571061772658c424bc1b6",
+    "src/mlx_one/models/audio/parakeet/config.py": "64459aa512f05b54fc5c96f91f53753c5401cdcf12e462f8f9728e196435d4d6",
+    "src/mlx_one/models/audio/parakeet/__init__.py": "665f4420251a1de420f6009ca2aa9ae26508da6a98dc966055d7a92dd013aeb8",
+    "src/mlx_one/models/audio/parakeet/NOTICE": "ef21542bf7fbad6f712245658d6302a72d56aabcffc870449286db45f9c35480",
+    "src/mlx_one/models/audio/parakeet/model.py": "f4ed372261c3cf8c65f5d90656fdf3750ce937dfe23ecaf3c50424bbafe6fa0b",
+    "src/mlx_one/models/audio/parakeet/README.md": "ed71692e5c0485ba882f34e643ce053fabff7de89a0ac3e7875cc568c0cd7301",
+    "src/mlx_one/models/audio/parakeet/processing.py": "56b7c750201c8659fd5b3c7e1036a4acefe24b3c668860a0fca30b428e48c4fc",
+    "src/mlx_one/models/audio/parakeet/weights.py": "85f7cd664e97c607293141bb9392baf4c2a1f2158f6316170d213a0cef4e61bf",
+    "src/mlx_one/models/audio/moonshine/loading.py": "4d12e5d528a4501e9e2afbe07cc3876faf3c80b217f67ba4b44ba3b0e013cd58",
+    "src/mlx_one/models/audio/moonshine/config.py": "3a7f0159d654d7648219b249eb2c30ba16681b00f70f2b95626bc25b8d60f86a",
+    "src/mlx_one/models/audio/moonshine/__init__.py": "67e2535f601901e4c313a68204c7cf5f5d600f671a579e4445a79815ee21f179",
+    "src/mlx_one/models/audio/moonshine/NOTICE": "71bb2424f537458c51fe7598a6dfffb5893b33bbcae7d3180b9051e7d1be88c9",
+    "src/mlx_one/models/audio/moonshine/model.py": "25c3276b4f01f7565aa2d26f26bb35a691a20ebc3463967ef6a9dec70c6b3148",
+    "src/mlx_one/models/audio/moonshine/README.md": "7c96547878a99e092982b1ef465fd9edb4619b06f1850f094dd6d561c0e9dc38",
+    "src/mlx_one/models/audio/moonshine/weights.py": "39ea33fad7b926d63ee641042d02971523db80aa7be22f4062525dee91e8da3b",
+    "src/mlx_one/models/audio/qwen3_asr/loading.py": "54323ec3a73b1d957401c198378d9b4aabe9b5069af608674cc602c72a49572a",
+    "src/mlx_one/models/audio/qwen3_asr/config.py": "f0abeb88056ac15d4c0007cbd965163d0f975857b29b97ca047784b306e05650",
+    "src/mlx_one/models/audio/qwen3_asr/alignment.py": "40d7e000596fdae1cd25d98d9f09e7b2a929c86e533a5cd1e9c969a1bf6e4301",
+    "src/mlx_one/models/audio/qwen3_asr/__init__.py": "c05d2fb650b2788d960340c565de267a26435fc55e877915aeb7eec03488f0aa",
+    "src/mlx_one/models/audio/qwen3_asr/NOTICE": "c5e60c3f99093ce3279c84318096f515162ef49017642f70b735fd42dec1a476",
+    "src/mlx_one/models/audio/qwen3_asr/model.py": "019c2e7c4c50f321eebcc2c771119b4ba67230e5a9eb90955903d21920c35ca6",
+    "src/mlx_one/models/audio/qwen3_asr/README.md": "4e9f2e24530265b42bb5471054c445a754f9335514a85857b3aec112b69f9fa2",
+    "src/mlx_one/models/audio/qwen3_asr/processing.py": "5a8d0032d700b03d68a9fb5e2969f6e23123bca05371ae7bd0381043d55d60ec",
+    "src/mlx_one/models/audio/qwen3_asr/weights.py": "e6439c563731f16b625f46e835eeac5a5235257012701a6b43c151636cd7e0bc",
+    "src/mlx_one/models/audio/whisper/loading.py": "1d10ea1d07ba85b9db040532ea73a5483d43fd6d730dd073014f3fc4fd151521",
+    "src/mlx_one/models/audio/whisper/config.py": "ea9c63d880ab4f43f93441f2894af7b77ef60b1149f2b7cbc7e2fc7378b2ce61",
+    "src/mlx_one/models/audio/whisper/__init__.py": "48e6d0f6e83df9f73e7aa7f67e44bd9af4ac77f56fd2369f2c7a763b8f156530",
+    "src/mlx_one/models/audio/whisper/model.py": "5d477cf6dd810166044c5796ea036aa88cb5127f059558ef0761489d5974d2d6",
+    "src/mlx_one/models/audio/whisper/README.md": "a6bae35ea1ed454956d6825d245f0b276e7312f17559b4dddb32592d1f739eb2",
+    "src/mlx_one/models/audio/whisper/tokenizer.py": "cbed5bedfd2c91c258beecaa103baa7ff3aba7826c52b05465b47fc5bbcbc692",
+    "src/mlx_one/models/audio/whisper/processing.py": "4831d4b1bbfb256ce9d37de75f62470f0186c939b9387d2f7dd5fba23be6e405",
+    "src/mlx_one/models/audio/whisper/weights.py": "022eb85f286647537b533ab1923ada479b2ede8cebdde42ee43ce38994299cdf",
+    "src/mlx_one/models/audio/lfm2_audio/config.py": "b290ad0beb8daa2e9a0c2b38292879a08b8ea77cbeab5124bfc6ea9397eda44d",
+    "src/mlx_one/models/audio/lfm2_audio/__init__.py": "f0fadd55b5c23278589f187afc58cdb1ba9d140118a34ea551013981e623f320",
+    "src/mlx_one/models/audio/lfm2_audio/model.py": "d75cc700ea816530dc13b3ba51898bd13552e09914fcc77ca4cef91b79af67c8",
+    "src/mlx_one/models/audio/lfm2_audio/README.md": "d2b408ef03d52e587d261fcaf7d7cf148461121dcba81423a974e73f5011258c",
+    "src/mlx_one/models/audio/lfm2_audio/processing.py": "5842494add8f6ad3cffe969cf31b8c77dbad2aef7f90560d9bf25e160ae81c13",
+    "src/mlx_one/models/audio/lfm2_audio/weights.py": "cdc72163e555d12470efd1d48aad083ad4cc4e69258c4128749c619aab8775eb",
+    "src/mlx_one/data/compatibility/alpha_release.json": "7206914453d9ca8e69ef69382c228ac61f18d87a478ec17fff4e7936eb005d6f",
+    "src/mlx_one/data/compatibility/mlx.json": "4194309f65fbbe3d0c73b07da266e4d3313975b5305f3531306f3b38f3a094f5",
+    "src/mlx_one/data/hardware/m4-air-32gb.yaml": "b5665ac6c4ae104947f5f5d576a196c5b37d259210d9c752a5debf247b99ae4b",
+    "src/mlx_one/data/calibrations/m4-air-32gb-text-v1.json": "37e0ba6774163c93717935703dec2699ac90888fff777fd48497bc0eb41a7204",
+    "src/mlx_one/data/calibrations/m4-air-32gb-text-v1.matrix.yaml": "2b0bd8125fab91a495bfcbaa82201f9777f4b57bb7efc7cda6fe4c7537f35417",
+    "src/mlx_one/engine/task_runners/transducer.py": "8af48033520d15c242efa5d3c15fd671280e22e523e7fbc6ff4c7e2f003572c9",
+    "src/mlx_one/engine/task_runners/multimodal.py": "a4b817ee8b58709a63c5a7645b6e3b39638dd3a85c4b6f60d0e28925e5900f4f",
+    "src/mlx_one/engine/task_runners/__init__.py": "e2a37e3f4d14fba29fa8b0c1713caeb0e71000cdb30ed4be14e92352402162cd",
+    "src/mlx_one/engine/task_runners/retrieval.py": "8236f1e4f9d2dd991910d4b70c2a63baad1ae9a0054ae1f986a0d325eb0f7a6c",
+    "src/mlx_one/engine/task_runners/lfm_audio.py": "7686615462d0f3d3ed20d196fa6689f0fb2e4c9ef1c2d0c3d79923880873fd96",
+    "src/mlx_one/engine/task_runners/speech.py": "af35366f034afbc229a64af0b00ae53b839edffa5005bfe71779d2cdf3579e73",
+    "src/mlx_one/engine/task_runners/base.py": "ab4d0a4ab3ac0bcdc5009d257e337e0ab8eb155efe31907477681aa87ead83c3",
+    "src/mlx_one/engine/task_runners/segmentation.py": "269cba617e1f6f58433fe2e495c1b953216b76c077f15fe10f0d59cb42557b3b"
+  },
+  "numerical_contract_approval": "PENDING",
+  "release_owner_approval": "PENDING",
+  "approved_minimum_count": 3,
+  "alpha_supported_count": 0,
+  "semantic_pass_count": 9,
+  "original_source_pass_count": 0,
+  "original_primary_pass_count": 0,
+  "proposed_contract_both_profile_pass_count": 0,
+  "default_tests": {
+    "passed": 1834,
+    "failed": 0,
+    "skipped": 67
+  },
+  "native_tests": {
+    "passed": 2099,
+    "failed": 0,
+    "skipped": 18
+  },
+  "independent_operation_controls": {
+    "passed": 40,
+    "total": 54,
+    "failed_ids": [
+      "dot-float32-True-4-gemv",
+      "dot-float32-True-8-gemv",
+      "dot-float16-False-4-gemm",
+      "dot-float16-False-4-gemv",
+      "dot-float16-False-8-gemm",
+      "dot-float16-True-4-gemm",
+      "dot-float16-True-4-gemv",
+      "dot-float16-True-8-gemm",
+      "dot-bfloat16-False-4-gemm",
+      "dot-bfloat16-False-4-gemv",
+      "dot-bfloat16-False-8-gemm",
+      "dot-bfloat16-True-4-gemm",
+      "dot-bfloat16-True-4-gemv",
+      "dot-bfloat16-True-8-gemm"
+    ]
+  },
+  "trained_attention_controls": {
+    "M09-stored-attention.json": {
+      "status": "FAIL",
+      "rows": 20
+    },
+    "M01-stored-attention.json": {
+      "status": "PASS",
+      "rows": 12
+    },
+    "M03-stored-attention.json": {
+      "status": "PASS",
+      "rows": 15
+    },
+    "M03-affine_q8-attention.json": {
+      "status": "PASS",
+      "rows": 15
+    }
+  },
+  "upstream_tests": 25,
+  "mandatory_gates": [
+    {
+      "id": "mathematics",
+      "status": "FAIL",
+      "scope": "Short cross-reference passes for nine candidates, but trained Gemma BF16 full-query SDPA fails one independent FP64 comparison."
+    },
+    {
+      "id": "cache_semantics",
+      "status": "PASS",
+      "scope": "9/9 candidates; analytical and actual append/position/visibility checks in the tested envelope."
+    },
+    {
+      "id": "numerical_contract",
+      "status": "PENDING",
+      "scope": "Proposed v1 has no release-owner approval."
+    },
+    {
+      "id": "source_and_primary_profiles",
+      "status": "FAIL",
+      "scope": "Original source 0/10, primary 0/10; proposed both-profile 0/9."
+    },
+    {
+      "id": "framework_quality",
+      "status": "PASS",
+      "scope": "30 immutable prompts per candidate/profile with independent reference and repeats."
+    },
+    {
+      "id": "interfaces",
+      "status": "PASS",
+      "scope": "Final source and saved primary Python/CLI/HTTP/SSE checks."
+    },
+    {
+      "id": "resources",
+      "status": "PASS",
+      "scope": "Repeated requests, running cancellation, failed request recovery and memory/handle bounds."
+    },
+    {
+      "id": "clean_wheel",
+      "status": "PASS",
+      "scope": "Isolated offline installation; all ten native sources and TCP HTTP/chat/SSE; no reference libraries."
+    },
+    {
+      "id": "licensing_and_dependencies",
+      "status": "PASS",
+      "scope": "Distribution payload, retained MIT/Apache/UI notices, pip check and exact-version OSV audit."
+    },
+    {
+      "id": "claims_match_evidence",
+      "status": "PASS",
+      "scope": "Package advertises zero alpha-certified checkpoints; experimental features stay explicit."
+    },
+    {
+      "id": "regressions",
+      "status": "PASS",
+      "scope": "All eight baseline failures repaired; current entire suites recorded."
+    },
+    {
+      "id": "frozen_source",
+      "status": "PASS",
+      "scope": "Independent local candidate commit; source bytes match the executed tree and distributions."
+    },
+    {
+      "id": "lint_disposition",
+      "status": "PENDING",
+      "scope": "65 inherited findings tracked; zero new findings; release-owner disposition pending."
+    },
+    {
+      "id": "proof_complete",
+      "status": "PASS",
+      "scope": "Required proof reports and indexed raw evidence are present and independently checked at signoff."
+    }
+  ],
+  "decision": "NO-GO",
+  "publication_authorized": false,
+  "models": [
+    {
+      "id": "M01",
+      "model_id": "openai-community/gpt2",
+      "checkpoint_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M01/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float32"
+          ],
+          "activation_dtype": "float32",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 9.361994082447074e-05,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.00644683837890625,
+          "max_kl_nats": 2.4622614959841454e-07,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M01/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 30,
+            "reference": 30,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M01/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "stored",
+          "raw": "canonical/M01/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float32"
+          ],
+          "activation_dtype": "float32",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float32",
+              "mlx.core.float32"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 9.361994082447074e-05,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.00644683837890625,
+          "max_kl_nats": 2.4622614959841454e-07,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M01/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 30,
+            "reference": 30,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M01/stored/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M01.json"
+    },
+    {
+      "id": "M02",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "checkpoint_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M02/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.0001339518855775189,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.779296875,
+          "max_kl_nats": 0.00017742367549757537,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M02/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 22,
+            "reference": 22,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M02/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q8",
+          "raw": "canonical/M02/affine_q8/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 2.3343694398668157e-05,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.099609375,
+          "max_kl_nats": 4.072264042992472e-06,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M02/affine_q8/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 22,
+            "reference": 22,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M02/affine_q8/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M02.json"
+    },
+    {
+      "id": "M03",
+      "model_id": "Qwen/Qwen3-0.6B",
+      "checkpoint_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M03/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.0006367617004429741,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.25,
+          "max_kl_nats": 0.0005427661848121473,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M03/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 16,
+            "reference": 16,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M03/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q8",
+          "raw": "canonical/M03/affine_q8/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 2.24555355038098e-05,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.0341796875,
+          "max_kl_nats": 2.8813398017167463e-06,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M03/affine_q8/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 16,
+            "reference": 16,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M03/affine_q8/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M03.json"
+    },
+    {
+      "id": "M04",
+      "model_id": "LiquidAI/LFM2-350M",
+      "checkpoint_revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M04/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.027823408112652513,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.4296875,
+          "max_kl_nats": 0.0015282394199812653,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M04/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 13,
+            "reference": 13,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M04/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q4",
+          "raw": "canonical/M04/affine_q4/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 0.003025850135844532,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.07421875,
+          "max_kl_nats": 0.0001388210870618373,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M04/affine_q4/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 14,
+            "reference": 14,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M04/affine_q4/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M04.json"
+    },
+    {
+      "id": "M05",
+      "model_id": "Qwen/Qwen3.5-0.8B",
+      "checkpoint_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M05/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "FAIL",
+          "cross_max_abs": 0.3125,
+          "weight_dtypes": [
+            "bfloat16",
+            "float32"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "cache_semantics": "REGRESSION_ONLY",
+          "proposed_numerical": "NOT_QUALIFIED",
+          "quality": {
+            "status": "UNSUPPORTED_EXCLUDED_FROM_CANDIDATE_SCOPE"
+          }
+        },
+        "primary": {
+          "profile": "affine_q4",
+          "raw": "canonical/M05/affine_q4/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "FAIL",
+          "cross_max_abs": 0.08203125,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float32"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "cache_semantics": "REGRESSION_ONLY",
+          "proposed_numerical": "NOT_QUALIFIED",
+          "quality": {
+            "status": "UNSUPPORTED_EXCLUDED_FROM_CANDIDATE_SCOPE"
+          }
+        }
+      },
+      "status": "EXPERIMENTAL_NOT_QUALIFIED",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "UNSUPPORTED",
+      "api_raw": "final-checks/api-M05.json"
+    },
+    {
+      "id": "M06",
+      "model_id": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "checkpoint_revision": "31b70e2e869a7173562077fd711b654946d38674",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M06/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.0021292138947591236,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.265625,
+          "max_kl_nats": 0.0018447920986077544,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M06/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 19,
+            "reference": 19,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M06/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q4",
+          "raw": "canonical/M06/affine_q4/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 0.001042910918071682,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.04638671875,
+          "max_kl_nats": 9.932460140185239e-05,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M06/affine_q4/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 20,
+            "reference": 20,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M06/affine_q4/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M06.json"
+    },
+    {
+      "id": "M07",
+      "model_id": "meta-llama/Llama-3.2-1B-Instruct",
+      "checkpoint_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M07/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.0011461343196305387,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.140625,
+          "max_kl_nats": 0.0005964937132182548,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M07/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 17,
+            "reference": 17,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M07/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q4",
+          "raw": "canonical/M07/affine_q4/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 0.00023090587050965497,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.029296875,
+          "max_kl_nats": 1.7211082806510138e-05,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M07/affine_q4/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 16,
+            "reference": 16,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M07/affine_q4/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M07.json"
+    },
+    {
+      "id": "M08",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "checkpoint_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M08/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 6.323707680586458e-05,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.603759765625,
+          "max_kl_nats": 0.0006327186374269105,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M08/stored/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 19,
+            "reference": 19,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M08/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q4",
+          "raw": "canonical/M08/affine_q4/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 0.0001277419665625795,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 0.0673828125,
+          "max_kl_nats": 2.8104408140464365e-05,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M08/affine_q4/result.json",
+          "long_cross_reference": "PASS",
+          "quality": {
+            "native": 17,
+            "reference": 17,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M08/affine_q4/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M08.json"
+    },
+    {
+      "id": "M09",
+      "model_id": "google/gemma-3-1b-it",
+      "checkpoint_revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M09/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.009463032664593068,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 1.0,
+          "max_kl_nats": 0.009095327873305734,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M09/stored/result.json",
+          "long_cross_reference": "FAIL",
+          "quality": {
+            "native": 17,
+            "reference": 17,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M09/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "stored",
+          "raw": "canonical/M09/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.009463032664593068,
+          "reference_specification_gaps": [],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 1.0,
+          "max_kl_nats": 0.009095327873305734,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M09/stored/result.json",
+          "long_cross_reference": "FAIL",
+          "quality": {
+            "native": 17,
+            "reference": 17,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M09/stored/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M09.json"
+    },
+    {
+      "id": "M10",
+      "model_id": "microsoft/Phi-3-mini-4k-instruct",
+      "checkpoint_revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+      "source_commit": "05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51",
+      "profiles": {
+        "source": {
+          "profile": "stored",
+          "raw": "canonical/M10/stored/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "bfloat16"
+          ],
+          "activation_dtype": "bfloat16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ],
+            [
+              "mlx.core.bfloat16",
+              "mlx.core.bfloat16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "PASS",
+          "fixed_fixture_nll_abs_mean": 0.0005857049452393316,
+          "reference_specification_gaps": [
+            {
+              "context": 2048,
+              "reason": "Raw local Phi3 reference omits the configured sliding mask."
+            }
+          ],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 1.375,
+          "max_kl_nats": 0.0009904281343503431,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M10/stored/result.json",
+          "long_cross_reference": "FAIL",
+          "quality": {
+            "native": 19,
+            "reference": 19,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M10/stored/result.json"
+          }
+        },
+        "primary": {
+          "profile": "affine_q4",
+          "raw": "canonical/M10/affine_q4/result.json",
+          "original_frozen": "FAIL_NUMERICAL",
+          "short_cross_reference": "PASS",
+          "cross_max_abs": 0.0,
+          "weight_dtypes": [
+            "float16",
+            "uint32"
+          ],
+          "activation_dtype": "float16",
+          "raw_canonical_state_dtypes": [
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ],
+            [
+              "mlx.core.float16",
+              "mlx.core.float16"
+            ]
+          ],
+          "state": "FP16 KV in public Engine; raw canonical cache separately recorded",
+          "public_state_profile": "FP16 KV; architecture-owned recurrent/conv state",
+          "cache_semantics": "PASS",
+          "independent_operation_gate": "FAIL",
+          "fixed_fixture_nll_abs_mean": 4.694478051696169e-05,
+          "reference_specification_gaps": [
+            {
+              "context": 2048,
+              "reason": "Raw local Phi3 reference omits the configured sliding mask."
+            }
+          ],
+          "proposed_numerical": "FAIL",
+          "proposed_approved": false,
+          "max_centered_logit_error": 1.5,
+          "max_kl_nats": 4.225086544654619e-05,
+          "high_margin_flips": 0,
+          "stability_raw": "stability/M10/affine_q4/result.json",
+          "long_cross_reference": "FAIL",
+          "quality": {
+            "native": 15,
+            "reference": 15,
+            "scored": 30,
+            "framework_regressions": [],
+            "deterministic_repeat": true,
+            "status": "PASS",
+            "raw": "quality/M10/affine_q4/result.json"
+          }
+        }
+      },
+      "status": "FAIL_NUMERICAL",
+      "alpha_supported": false,
+      "qualified_maximum_context": null,
+      "api_source": "PASS",
+      "api_primary": "PASS",
+      "api_raw": "final-checks/api-M10.json"
+    }
+  ]
+}

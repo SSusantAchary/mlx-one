@@ -32,7 +32,12 @@ from mlx_one.server.generation_engine import GenerationEngine, GenerationEvent
 from mlx_one.server.media import ImageResolver, MediaError
 from mlx_one.server.model_manager import ModelManager
 from mlx_one.server.scheduler import GenerationScheduler, QueueFullError, RequestTimeoutError
-from mlx_one.server.schemas import ChatCompletionRequest, EmbeddingRequest, RerankRequest
+from mlx_one.server.schemas import (
+    ChatCompletionRequest,
+    CompletionRequest,
+    EmbeddingRequest,
+    RerankRequest,
+)
 from mlx_one.server.transcription import MAX_AUDIO_BYTES, AudioUploadError
 from mlx_one.text import TextGenerationOptions
 
@@ -251,7 +256,9 @@ def create_app(
 
         jobs.close(finalizer=release)
 
-    app = FastAPI(title="mlx-one", version="0.1.0", lifespan=lifespan)
+    from mlx_one import __version__
+
+    app = FastAPI(title="mlx-one", version=__version__, lifespan=lifespan)
     app.add_middleware(BodyLimitMiddleware, limit=1024 * 1024)
     app.add_middleware(
         CORSMiddleware,
@@ -272,6 +279,8 @@ def create_app(
     async def models(auth: None | JSONResponse = authorization_dependency) -> Any:
         if auth is not None:
             return auth
+        from mlx_one.core.release_support import checkpoint_release_status
+
         return {
             "object": "list",
             "data": [
@@ -287,6 +296,8 @@ def create_app(
                         "revision": item.revision,
                         "tasks": list(item.tasks),
                         "modalities": list(item.modalities),
+                        "release_support": checkpoint_release_status(
+                            item.id, item.revision, architecture=item.architecture),
                     },
                 }
                 for item in manager.list_models()
@@ -335,6 +346,119 @@ def create_app(
             measured = getattr(manager, "transcription_bytes", 0)
             result["transcription"]["model_memory_bytes"] = measured or None
         return result
+
+    @app.post("/v1/completions")
+    async def completions(
+        request: Request,
+        body: CompletionRequest,
+        auth: None | JSONResponse = authorization_dependency,
+    ) -> Any:
+        if auth is not None:
+            return auth
+        invalid_model = _validate_task_model(manager, body.model)
+        if invalid_model is not None:
+            return invalid_model
+        try:
+            from mlx_one.core.registry import get_registration
+            from mlx_one.engine.prompts import prepare_completion
+
+            if not get_registration(manager.model_info().architecture).supports("text-generation"):
+                return _error(400, "model does not support text generation", "capability_error")
+            execute = getattr(engine, "stream_completion", None)
+            if not callable(execute):
+                return _error(400, "raw completions are unavailable", "capability_error")
+            bundle = manager.current_model()
+            context = manager.model_info().context_length
+            prepared = prepare_completion(bundle, body.prompt, body.max_tokens, context)
+            options = TextGenerationOptions(
+                max_tokens=body.max_tokens, temperature=body.temperature,
+                top_k=body.top_k, top_p=body.top_p, seed=body.seed,
+                stop=(body.stop,) if isinstance(body.stop, str) else tuple(body.stop or ()),
+            )
+            admission_check = None
+            if memory_admission is not None:
+                def admission_check():
+                    stats = engine.cache_stats() if callable(
+                        getattr(engine, "cache_stats", None)) else {}
+                    return memory_admission.decide(
+                        bundle, len(prepared.token_ids) + body.max_tokens,
+                        key_bits=_cache_bits(settings.cache_type_k),
+                        value_bits=_cache_bits(settings.cache_type_v),
+                        prefix_cache_bytes=int(stats.get("prefix_bytes", 0)),
+                    )
+
+                decision = admission_check()
+                if decision.status is AdmissionStatus.REJECT:
+                    return _error(503, decision.reason or "request exceeds memory capacity",
+                                  "capacity_error")
+            stream = jobs.schedule(
+                lambda cancel: execute(
+                    model=body.model, prompt=body.prompt, options=options, cancel=cancel,
+                    context_length=context, cache_prompt=settings.cache_prompt,
+                    cache_reuse=settings.cache_reuse, cache_entries=settings.parallel,
+                    cache_idle_slots=settings.cache_idle_slots,
+                    cache_namespace=request.state.cache_namespace,
+                    cache_type_k=settings.cache_type_k, cache_type_v=settings.cache_type_v,
+                    spec_type=settings.spec_type, spec_draft_n_max=settings.spec_draft_n_max,
+                ), admission=admission_check,
+            )
+        except QueueFullError:
+            return _error(429, "generation queue is full", "rate_limit_error")
+        except (RuntimeError, ValueError, KeyError) as exc:
+            return _error(400, str(exc), "invalid_request_error")
+        completion_id, created = f"cmpl-{uuid.uuid4().hex}", int(time.time())
+        stream = _until_disconnected(request, stream)
+        if body.stream:
+            try:
+                first_event = await anext(stream)
+            except ModelCapabilityUnsupported as exc:
+                await stream.aclose()
+                return _error(400, str(exc), "capability_error", code=exc.code)
+            except RequestTimeoutError as exc:
+                await stream.aclose()
+                return _error(408, str(exc), "timeout_error")
+            except (RuntimeError, ValueError) as exc:
+                await stream.aclose()
+                return _error(400, str(exc), "invalid_request_error")
+            except StopAsyncIteration:
+                await stream.aclose()
+                return _error(500, "generation ended without a result", "server_error")
+            return StreamingResponse(
+                _sse(request, stream, completion_id, created, body.model,
+                     first_event=first_event, text_completion=True),
+                media_type="text/event-stream",
+                headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+            )
+        content, terminal = "", None
+        try:
+            async for event in stream:
+                content += event.text
+                if event.finish_reason is not None:
+                    terminal = event
+        except ModelCapabilityUnsupported as exc:
+            return _error(400, str(exc), "capability_error", code=exc.code)
+        except RequestTimeoutError as exc:
+            return _error(408, str(exc), "timeout_error")
+        except ValueError as exc:
+            return _error(400, str(exc), "invalid_request_error")
+        except Exception as exc:
+            return _error(500, str(exc), "server_error")
+        finally:
+            await stream.aclose()
+        if terminal is None:
+            return _error(500, "generation ended without a terminal result", "server_error")
+        metrics = terminal.metrics or {}
+        prompt_tokens = int(metrics.get("prompt_tokens", 0))
+        generated_tokens = int(metrics.get("generated_tokens", 0))
+        return {
+            "id": completion_id, "object": "text_completion", "created": created,
+            "model": body.model,
+            "choices": [{"index": 0, "text": content, "logprobs": None,
+                         "finish_reason": terminal.finish_reason}],
+            "usage": {"prompt_tokens": prompt_tokens, "completion_tokens": generated_tokens,
+                      "total_tokens": prompt_tokens + generated_tokens},
+            "mlx": metrics,
+        }
 
     @app.post("/v1/chat/completions")
     async def chat(
@@ -794,6 +918,29 @@ async def _resolve_message_images(
     return normalized
 
 
+async def _until_disconnected(request, stream):
+    """Cancel queued or active device work even while no tokens are emitted."""
+    pending = None
+    try:
+        while True:
+            pending = asyncio.create_task(anext(stream))
+            while not pending.done():
+                await asyncio.wait({pending}, timeout=0.1)
+                if await request.is_disconnected():
+                    raise ClientDisconnected("client disconnected")
+            try:
+                event = pending.result()
+            except StopAsyncIteration:
+                break
+            pending = None
+            yield event
+    finally:
+        if pending is not None:
+            pending.cancel()
+            await asyncio.gather(pending, return_exceptions=True)
+        await stream.aclose()
+
+
 async def _sse(
     request: Request,
     stream: AsyncIterator[GenerationEvent],
@@ -802,6 +949,7 @@ async def _sse(
     model: str,
     *,
     first_event: GenerationEvent | None = None,
+    text_completion: bool = False,
 ) -> AsyncIterator[str]:
     first = True
     disconnected = False
@@ -828,10 +976,12 @@ async def _sse(
                 delta["reasoning_content"] = event.reasoning_content
             payload: dict[str, Any] = {
                 "id": completion_id,
-                "object": "chat.completion.chunk",
+                "object": "text_completion" if text_completion else "chat.completion.chunk",
                 "created": created,
                 "model": model,
                 "choices": [
+                    {"index": 0, "text": event.text, "logprobs": None,
+                     "finish_reason": event.finish_reason} if text_completion else
                     {"index": 0, "delta": delta, "finish_reason": event.finish_reason}
                 ],
             }
@@ -842,7 +992,7 @@ async def _sse(
         timeout = isinstance(exc, RequestTimeoutError)
         payload = {
             "error": {
-                "message": str(exc),
+                "message": str(exc) if timeout else "internal server error",
                 "type": "timeout_error" if timeout else "server_error",
                 "code": 408 if timeout else 500,
             }
@@ -862,6 +1012,8 @@ def _error(
     headers: dict[str, str] | None = None,
     code: str | int | None = None,
 ) -> JSONResponse:
+    if status >= 500:
+        message = "internal server error"
     return JSONResponse(
         status_code=status,
         headers=headers,
@@ -872,7 +1024,7 @@ def _error(
 
 async def _streaming_failure(exc: Exception) -> AsyncIterator[str]:
     payload = {
-        "error": {"message": str(exc), "type": "server_error", "code": 500}
+        "error": {"message": "internal server error", "type": "server_error", "code": 500}
     }
     yield f"data: {json.dumps(payload, separators=(',', ':'))}\n\n"
     yield "data: [DONE]\n\n"

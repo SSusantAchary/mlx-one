@@ -96,5 +96,5 @@ pytest -q tests/test_native_lfm_architectures.py
 MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_lfm_mlx.py
 ```
 
-The [family backlog](../../../../../model_list.txt) records the initial-tier
+The [family backlog](../../../../../docs/qualification/archived-evidence.md) records the initial-tier
 exclusion; the [cache matrix](../../../../../docs/cache-runtime.md) records hybrid restrictions.

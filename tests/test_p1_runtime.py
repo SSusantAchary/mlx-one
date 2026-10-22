@@ -75,6 +75,9 @@ def test_explicit_float_conversion_preserves_packed_weights(monkeypatch):
 
     core = ModuleType("mlx.core")
     core.float16, core.eval = np.float16, lambda *args: None
+    package = ModuleType("mlx")
+    package.core = core
+    monkeypatch.setitem(sys.modules, "mlx", package)
     monkeypatch.setitem(sys.modules, "mlx.core", core)
     bundle = SimpleNamespace(model=Model(), quantization={"bits": 8, "group_size": 64})
     configure_execution_dtype(bundle, "float16")
@@ -415,18 +418,21 @@ def test_p1_gate_requires_targets_and_complete_native_observations():
         "checks"]["b1_regression"]
 
 
-def test_p1_profile_cli_is_backend_free_and_keeps_native_pending(capsys):
+def test_p1_profile_cli_is_backend_free_and_keeps_native_pending():
     import json
+    import subprocess
     import sys
 
-    from mlx_one.p1_benchmark import main
-
-    assert main(["profiles", "--prompt-tokens", "128", "--output-tokens", "32",
-                 "--slots", "1", "2", "4"]) == 0
-    value = json.loads(capsys.readouterr().out)
+    result = subprocess.run([sys.executable, "-c", """
+import sys
+from mlx_one.p1_benchmark import main
+assert main(['profiles', '--prompt-tokens', '128', '--output-tokens', '32',
+             '--slots', '1', '2', '4']) == 0
+assert not any(n == 'mlx' or n.startswith('mlx.') for n in sys.modules)
+"""], check=True, capture_output=True, text=True)
+    value = json.loads(result.stdout)
     assert len(value["profiles"]) == 3 and value["native_qualification"] == "pending"
     assert all(p["repeats"] == 5 and p["qualification_track"] == "p1" for p in value["profiles"])
-    assert "mlx.core" not in sys.modules or not hasattr(sys.modules["mlx.core"], "metal")
 
 
 def test_p1_decode_aggregation_excludes_prefill_and_first_tokens():

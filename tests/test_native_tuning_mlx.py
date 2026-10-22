@@ -24,9 +24,9 @@ def _model(*, quantized: bool = False) -> Qwen2ForCausalLM:
     config = Qwen2Config.from_dict(
         {
             "model_type": "qwen2",
-            "hidden_size": 16,
+            "hidden_size": 64,
             "num_hidden_layers": 2,
-            "intermediate_size": 32,
+            "intermediate_size": 128,
             "num_attention_heads": 4,
             "num_key_value_heads": 2,
             "vocab_size": 64,
@@ -34,7 +34,7 @@ def _model(*, quantized: bool = False) -> Qwen2ForCausalLM:
     )
     model = Qwen2ForCausalLM(config)
     if quantized:
-        nn.quantize(model, group_size=8, bits=4, mode="affine")
+        nn.quantize(model, group_size=64, bits=4, mode="affine")
     return model
 
 

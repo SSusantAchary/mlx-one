@@ -46,8 +46,8 @@ difference is ≤ 0.02, and every pixel-space XYXY box differs by ≤ 2 pixels.
 No identity swap was observed in this single-object fixture.
 
 Per-frame measurements and capture checksums are recorded in the
-[streaming comparison](../qualification/results/sam3-streaming-truck-32-m4.json)
-and [offline comparison](../qualification/results/sam3-offline-truck-32-m4.json).
+[streaming comparison](qualification/archived-evidence.md)
+and [offline comparison](qualification/archived-evidence.md).
 The large `.npz` captures remain local validation artifacts, not repository files.
 
 | Native mode | Total session seconds | Peak MLX bytes | Peak process resident bytes |
@@ -82,7 +82,7 @@ at most 2 pixels), but the missing detection means the overall MPS comparison is
 **FAIL**, not a pass with frame 0 excluded. The cause is not established.
 The subsequent full CPU reference retains one object in every frame and passes
 both 32-frame comparisons. CPU and MPS results are not interchangeable evidence.
-See the [failed MPS comparison](../qualification/results/sam3-streaming-truck-32-mps-reference.json).
+See the [failed MPS comparison](qualification/archived-evidence.md).
 
 ## Image fixture checks
 

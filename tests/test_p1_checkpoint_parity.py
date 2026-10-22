@@ -13,6 +13,7 @@ if os.environ.get("MLX_ONE_RUN_P1_CHECKPOINTS") != "1":
 from mlx_one.engine.adapters import native_adapter
 from mlx_one.engine.modes import configure_execution_dtype
 from mlx_one.engine.qualification import execution_parity
+from mlx_one.native_correctness import cached_checkpoint_proof, parity_identity
 from mlx_one.p1_profiles import CHECKPOINTS, profile
 from mlx_one.text import load_text_model
 
@@ -38,6 +39,8 @@ def test_native_p1_serial_dense_paged_full_state(checkpoint, size, page, paged):
         assert attention.q_norm is not None and attention.k_norm is not None
     result = execution_parity(bundle, mode=mode, batch_size=size, count=32,
         page_tokens=page, prompt="Native INT8 shared prefix and divergent suffixes. " * 32)
+    result["test_identity"] = parity_identity(
+        checkpoint, paged, page, size, cached_checkpoint_proof(checkpoint, path))
     output = os.environ.get("MLX_ONE_P1_RESULTS_DIR")
     if output:
         directory = Path(output)

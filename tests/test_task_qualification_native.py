@@ -49,5 +49,9 @@ def test_isolated_native_task_worker_and_pending_matrix(tmp_path):
     assert json.loads((output/'task-parity.json').read_text())['passed']
     assert json.loads((output/'task-evidence.json').read_text())['correctness_passed'] is False
     rows=export_task_matrix([output],tmp_path/'matrix')
-    assert len({row['model_type'] for row in rows})==27
+    from mlx_one.runtime_baseline import registry_inventory
+
+    expected = {row['model_type'] for row in registry_inventory()['registrations']}
+    assert len(expected) == 30
+    assert {row['model_type'] for row in rows} == expected
     assert all(not row['qualification_promoted'] for row in rows)

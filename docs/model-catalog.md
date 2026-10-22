@@ -19,8 +19,8 @@ tracks qualification candidates; it is not the inventory of implemented architec
 
 Their quality-evaluation entries remain candidates. The Qwen tiny held-out suite
 scored `0.0 → 0.0`; SmolLM2 scored `1.0 → 0.0`. Both gates failed, so neither
-model has a quality-verified claim. See the checksummed [Qwen result](../qualification/results/qwen2.5-coder-1.5b-lora-m4-air-32gb.json)
-and [SmolLM2 result](../qualification/results/smollm2-1.7b-lora-m4-air-32gb.json).
+model has a quality-verified claim. See the checksummed [Qwen result](qualification/archived-evidence.md)
+and [SmolLM2 result](qualification/archived-evidence.md).
 
 ## Subsequent text candidates
 

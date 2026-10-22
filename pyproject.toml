@@ -27,7 +27,6 @@ classifiers = [
     "Environment :: MacOS X",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: MacOS",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -37,8 +36,11 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "mlx>=0.29",
+    "mlx==0.32.2",
+    "mlx-metal==0.32.2; platform_system == 'Darwin' and platform_machine == 'arm64'",
+    "numpy>=1.26,<3",
     "click>=8.0",
+    "certifi>=2026.10.19",
     "tokenizers>=0.20,<1",
     "jinja2>=3.1,<4",
     "tqdm",
@@ -85,11 +87,21 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 mlx_one = [
+    "models/UPSTREAM_LICENSE",
+    "quantization/turboquant/LICENSE.txt",
+    "quantization/turboquant/NOTICE.txt",
     "data/*.json",
     "data/hardware/*.yaml",
     "data/calibrations/*.yaml",
     "data/calibrations/*.json",
     "data/compatibility/*.json",
+    "models/language/qwen3/UPSTREAM_LICENSE",
+    "models/language/gemma3/UPSTREAM_LICENSE",
+    "models/language/phi3/UPSTREAM_LICENSE",
+    "models/segmentation/sam3/NOTICE.md",
+    "models/audio/parakeet/NOTICE",
+    "models/audio/moonshine/NOTICE",
+    "models/audio/qwen3_asr/NOTICE",
     "ui/dist/**/*",
 ]
 
@@ -102,4 +114,5 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src", "tests"]
 addopts = "--cov=mlx_one --cov-report=term-missing"

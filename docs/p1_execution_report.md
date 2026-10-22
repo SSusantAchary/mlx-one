@@ -1,5 +1,13 @@
 # P1 execution report
 
+Latest native attempt (2026-10-14): implementation base is now merged
+`b698f88afc1729cd7d2dea53fd5a69f11b60246e`, in the original `mlx-one` directory.
+Native M4 serial parity passed; dense B1 expansion stopped on prefix logits
+parity. Backend-free validation is 773 passed, 24 skipped; 65 inherited Ruff
+findings remain. The sections below describe historical implementation boundaries.
+Current measured scope and pending work are in the
+[native hardware report](p1_native_hardware_report.md).
+
 Base: `6d2c9a1bbc36f1972b468ca841977e3b342fbb36`.
 PR-00: reference repositories inspected at immutable pins; P0 CPU suite refreshed:
 704 passed, 23 skipped, two dependency warnings. 65 pre-existing Ruff findings.

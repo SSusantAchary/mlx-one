@@ -81,6 +81,33 @@ def qualification_evidence(output, *, feature, scope, parity, gate=None, **metad
     write_json(output / f"evidence-{feature}.json", result)
 
 
+def build_exact_messages(bundle, target, *, suffix=""):
+    """Bounded deterministic chat fixture; fail rather than mislabel a shorter prompt."""
+    from mlx_one.inference_baseline import deterministic_prompt
+
+    def render(content):
+        messages = [{"role": "user", "content": content + suffix}]
+        return messages, bundle.chat_template.render(messages, enable_thinking=False)
+    _, empty = render("")
+    overhead = len(bundle.tokenizer.encode(empty))
+    if target <= overhead + 32:
+        raise BaselineError("exact prompt target is smaller than chat template overhead")
+    base = deterministic_prompt(bundle.tokenizer, max(1, target - overhead - 64))
+    _, rendered = render(base)
+    deficit = target - len(bundle.tokenizer.encode(rendered))
+    for unit in (" x", " a", " hello", " local", "\n", "1"):
+        count = max(0, deficit)
+        for _ in range(8):
+            if not 0 <= count <= 2 * target:
+                break
+            messages, prompt = render(base + unit * count)
+            actual = len(bundle.tokenizer.encode(prompt))
+            if actual == target:
+                return messages, prompt
+            count += target - actual
+    raise BaselineError("cannot construct exact rendered prompt; workload not executed")
+
+
 def build_messages(bundle, target, *, suffix=""):
     from mlx_one.inference_baseline import deterministic_prompt
 
@@ -196,7 +223,10 @@ async def replay_group(client, bundle, engine, profile, replay, *, group, phase,
     records = replay["requests"][:1] if phase == "warmup" else replay["requests"]
     async def request(record, index):
         await asyncio.sleep(max(0, started + record["arrival_ms"] / 1000 - time.monotonic()))
-        if record.get("messages"):
+        if profile.exact_prompt_tokens:
+            messages, prompt = build_exact_messages(bundle, record["prompt_tokens"],
+                                                    suffix=f"\nRequest {index}.")
+        elif record.get("messages"):
             messages = record["messages"]
             prompt = bundle.chat_template.render(messages, enable_thinking=False)
         else:
@@ -227,6 +257,10 @@ async def replay_group(client, bundle, engine, profile, replay, *, group, phase,
             row = {"status": status,
                    "temperature_phase": phase, "group_id": group, "request_index": index,
                    "started": started, "ended": time.monotonic()}
+        if (profile.exact_prompt_tokens and row.get("status") == "completed"
+                and row.get("generated_tokens") != record["output_tokens"]):
+            raise BaselineError("exact workload output length differs from requested tokens: "
+                                f"{row.get('generated_tokens')} != {record['output_tokens']}")
         return {**row, "replay_request_id": record["request_id"],
                 "arrival_ms": record["arrival_ms"],
                 "principal_label": record.get("principal_label"),
@@ -472,9 +506,12 @@ def execute(manifest):
     listener = None
     try:
         started = time.perf_counter()
+        expected_files = profile.checkpoint_files
+        if profile.qualification_track == "p1" and not expected_files:
+            raise BaselineError("P1 workers require checkpoint hashes bound before execution")
         bundle = scheduler.execute(lambda: manager.load(
-            profile.checkpoint_path or profile.model_id, revision=profile.revision,
-                                                        offline=True))
+            profile.model_id, checkpoint_path=profile.checkpoint_path,
+            expected_files=expected_files, revision=profile.revision, offline=True))
         from mlx_one.engine.modes import configure_execution_dtype
 
         scheduler.execute(lambda: configure_execution_dtype(bundle, profile.execution_dtype))
@@ -501,12 +538,24 @@ def execute(manifest):
                         digest.update(chunk)
                 files[path.name] = digest.hexdigest()
         write_json(output / "checkpoint.json", {"model_id": bundle.model_id,
+                                                "path": str(bundle.path.resolve()),
+                                                "weight_hashes": bundle.weight_hashes,
                                                 "revision": bundle.revision, "files": files,
                                                 "quantization": bundle.quantization})
         if profile.inference_mode in ACTOR_MODES:
             engine.bind_actor(scheduler)
         runtime_owner = scheduler.execute(lambda: engine._cache_manager_for(bundle))
         runtime_owner.harness_only = True
+        engine._qualification_ignore_eos = profile.eos_policy == "ignore_for_fixed_workload"
+        class MathDispatchRecorder:
+            capture_math_dispatch = True
+            profile_math = False
+
+            def __call__(self, event):
+                with (output / "math-dispatch.jsonl").open("a") as stream:
+                    stream.write(json.dumps(event) + "\n")
+
+        engine._qualification_math_observer = MathDispatchRecorder()
         native_tokens = []
         if profile.qualification_track == "p1":
             def capture_tokens(request_id, tokens):
@@ -553,7 +602,8 @@ def execute(manifest):
             from mlx_one.text import load_text_model
 
             def reload_checkpoint():
-                fresh = load_text_model(profile.checkpoint_path or profile.model_id,
+                fresh = load_text_model(profile.model_id, checkpoint_path=profile.checkpoint_path,
+                                        expected_files=expected_files,
                                         revision=profile.revision, offline=True)
                 configure_execution_dtype(fresh, profile.execution_dtype)
                 return fresh

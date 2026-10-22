@@ -27,8 +27,8 @@ jobs:
           python -m pip install --upgrade build twine
           python -m pip install -e ".[dev]" "mlx==0.32.2"
 
-      - name: Ruff lint
-        run: ruff check .
+      - name: Ruff lint with explicit inherited debt
+        run: python scripts/release/check_lint.py
 
       - name: Pytest
         run: pytest

@@ -1,0 +1,385 @@
+{
+  "checkpoint": "LiquidAI/LFM2-350M",
+  "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+  "profile": "stored",
+  "timestamp": 1792562607.309612,
+  "reference_resident": false,
+  "diagnostic_direct_model": true,
+  "public_engine_benchmark": false,
+  "output_budget": 16,
+  "rows": [
+    {
+      "context": 128,
+      "mode": "natural",
+      "samples": [
+        {
+          "input_tokens": 128,
+          "generated_tokens": 16,
+          "token_ids": [
+            2643,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3771,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3460,
+            2643
+          ],
+          "ttft_ms": 33.722166903316975,
+          "prefill_tokens_per_second": 3795.722865822412,
+          "decode_tokens_per_second": 111.76844031508955,
+          "peak_inference_mlx_bytes": 852827752,
+          "peak_state_bytes": 1798144,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 128,
+          "generated_tokens": 16,
+          "token_ids": [
+            2643,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3771,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3460,
+            2643
+          ],
+          "ttft_ms": 34.06008402816951,
+          "prefill_tokens_per_second": 3758.064715698797,
+          "decode_tokens_per_second": 101.4179068701857,
+          "peak_inference_mlx_bytes": 852827752,
+          "peak_state_bytes": 1798144,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 128,
+          "generated_tokens": 16,
+          "token_ids": [
+            2643,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3771,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3460,
+            2643
+          ],
+          "ttft_ms": 38.04849996231496,
+          "prefill_tokens_per_second": 3364.1273670914034,
+          "decode_tokens_per_second": 95.70344727444702,
+          "peak_inference_mlx_bytes": 852827752,
+          "peak_state_bytes": 1798144,
+          "cleanup": true
+        }
+      ]
+    },
+    {
+      "context": 128,
+      "mode": "production_fp16",
+      "samples": [
+        {
+          "input_tokens": 128,
+          "generated_tokens": 16,
+          "token_ids": [
+            2643,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3771,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3460,
+            2643
+          ],
+          "ttft_ms": 38.83241699077189,
+          "prefill_tokens_per_second": 3296.215119198422,
+          "decode_tokens_per_second": 91.86736499381526,
+          "peak_inference_mlx_bytes": 840236644,
+          "peak_state_bytes": 1798144,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 128,
+          "generated_tokens": 16,
+          "token_ids": [
+            2643,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3771,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3460,
+            2643
+          ],
+          "ttft_ms": 40.387250017374754,
+          "prefill_tokens_per_second": 3169.317047952854,
+          "decode_tokens_per_second": 92.85137283670075,
+          "peak_inference_mlx_bytes": 840236644,
+          "peak_state_bytes": 1798144,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 128,
+          "generated_tokens": 16,
+          "token_ids": [
+            2643,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3771,
+            953,
+            884,
+            779,
+            4715,
+            523,
+            941,
+            3460,
+            2643
+          ],
+          "ttft_ms": 42.79945802409202,
+          "prefill_tokens_per_second": 2990.6920767068636,
+          "decode_tokens_per_second": 87.89747053977874,
+          "peak_inference_mlx_bytes": 840236644,
+          "peak_state_bytes": 1798144,
+          "cleanup": true
+        }
+      ]
+    },
+    {
+      "context": 512,
+      "mode": "natural",
+      "samples": [
+        {
+          "input_tokens": 512,
+          "generated_tokens": 2,
+          "token_ids": [
+            941,
+            7
+          ],
+          "ttft_ms": 459.8190829856321,
+          "prefill_tokens_per_second": 1113.4814081128477,
+          "decode_tokens_per_second": 20.73984203995916,
+          "peak_inference_mlx_bytes": 1111825996,
+          "peak_state_bytes": 6344704,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 512,
+          "generated_tokens": 2,
+          "token_ids": [
+            941,
+            7
+          ],
+          "ttft_ms": 841.043125023134,
+          "prefill_tokens_per_second": 608.7678321916212,
+          "decode_tokens_per_second": 55.67166821761079,
+          "peak_inference_mlx_bytes": 1111825996,
+          "peak_state_bytes": 6344704,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 512,
+          "generated_tokens": 2,
+          "token_ids": [
+            941,
+            7
+          ],
+          "ttft_ms": 390.4360830783844,
+          "prefill_tokens_per_second": 1311.3542067196956,
+          "decode_tokens_per_second": 58.268267286676505,
+          "peak_inference_mlx_bytes": 1111825996,
+          "peak_state_bytes": 6344704,
+          "cleanup": true
+        }
+      ]
+    },
+    {
+      "context": 512,
+      "mode": "production_fp16",
+      "samples": [
+        {
+          "input_tokens": 512,
+          "generated_tokens": 2,
+          "token_ids": [
+            941,
+            7
+          ],
+          "ttft_ms": 302.0218750461936,
+          "prefill_tokens_per_second": 1695.2414454141465,
+          "decode_tokens_per_second": 66.39151355107097,
+          "peak_inference_mlx_bytes": 1118117452,
+          "peak_state_bytes": 6344704,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 512,
+          "generated_tokens": 2,
+          "token_ids": [
+            941,
+            7
+          ],
+          "ttft_ms": 287.3816250357777,
+          "prefill_tokens_per_second": 1781.6031207153844,
+          "decode_tokens_per_second": 67.65098889920725,
+          "peak_inference_mlx_bytes": 1118117452,
+          "peak_state_bytes": 6344704,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 512,
+          "generated_tokens": 2,
+          "token_ids": [
+            941,
+            7
+          ],
+          "ttft_ms": 268.9381659729406,
+          "prefill_tokens_per_second": 1903.7833404854675,
+          "decode_tokens_per_second": 70.07033297561571,
+          "peak_inference_mlx_bytes": 1118117452,
+          "peak_state_bytes": 6344704,
+          "cleanup": true
+        }
+      ]
+    },
+    {
+      "context": 1024,
+      "mode": "natural",
+      "samples": [
+        {
+          "input_tokens": 1024,
+          "generated_tokens": 2,
+          "token_ids": [
+            2643,
+            7
+          ],
+          "ttft_ms": 534.400082891807,
+          "prefill_tokens_per_second": 1916.1673674502704,
+          "decode_tokens_per_second": 70.2376667114752,
+          "peak_inference_mlx_bytes": 1264901684,
+          "peak_state_bytes": 12636160,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 1024,
+          "generated_tokens": 2,
+          "token_ids": [
+            2643,
+            7
+          ],
+          "ttft_ms": 546.0737079847604,
+          "prefill_tokens_per_second": 1875.2047297405818,
+          "decode_tokens_per_second": 68.02200521497564,
+          "peak_inference_mlx_bytes": 1264901684,
+          "peak_state_bytes": 12636160,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 1024,
+          "generated_tokens": 2,
+          "token_ids": [
+            2643,
+            7
+          ],
+          "ttft_ms": 566.9723749160767,
+          "prefill_tokens_per_second": 1806.0844677865878,
+          "decode_tokens_per_second": 67.84548200976465,
+          "peak_inference_mlx_bytes": 1264901684,
+          "peak_state_bytes": 12636160,
+          "cleanup": true
+        }
+      ]
+    },
+    {
+      "context": 1024,
+      "mode": "production_fp16",
+      "samples": [
+        {
+          "input_tokens": 1024,
+          "generated_tokens": 2,
+          "token_ids": [
+            2643,
+            7
+          ],
+          "ttft_ms": 558.9141669915989,
+          "prefill_tokens_per_second": 1832.1238939276911,
+          "decode_tokens_per_second": 67.48359619192902,
+          "peak_inference_mlx_bytes": 1275387444,
+          "peak_state_bytes": 12636160,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 1024,
+          "generated_tokens": 2,
+          "token_ids": [
+            2643,
+            7
+          ],
+          "ttft_ms": 563.194917049259,
+          "prefill_tokens_per_second": 1818.1982276491985,
+          "decode_tokens_per_second": 65.22270985490759,
+          "peak_inference_mlx_bytes": 1275387444,
+          "peak_state_bytes": 12636160,
+          "cleanup": true
+        },
+        {
+          "input_tokens": 1024,
+          "generated_tokens": 2,
+          "token_ids": [
+            2643,
+            7
+          ],
+          "ttft_ms": 558.3844999782741,
+          "prefill_tokens_per_second": 1833.8617924384403,
+          "decode_tokens_per_second": 65.49842755301776,
+          "peak_inference_mlx_bytes": 1275387444,
+          "peak_state_bytes": 12636160,
+          "cleanup": true
+        }
+      ]
+    }
+  ],
+  "status": "MEASURED_NOT_RELEASE_APPROVED"
+}

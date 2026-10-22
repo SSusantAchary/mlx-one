@@ -27,7 +27,7 @@ def embed(
     input_type: Literal["query", "document"] = "document",
     instruction: str | None = None,
     dimensions: int | None = None,
-    max_length: int = 8192,
+    max_length: int | None = None,
     batch_size: int = 8,
     revision: str | None = None,
     offline: bool = False,
@@ -51,6 +51,8 @@ def embed(
         "max_seq_length",
         getattr(bundle.model.config, "sentence_max_length", 0),
     )
+    if max_length is None:
+        max_length = min(8192, model_limit)
     _validate_batch_options(max_length, batch_size, model_limit)
     if hasattr(bundle.model.config, "validate_dimensions"):
         size = bundle.model.config.validate_dimensions(dimensions)

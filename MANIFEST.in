@@ -1,0 +1,14 @@
+include LICENSE README.md pyproject.toml
+include requirements/alpha-tested-constraints.txt
+recursive-include src/mlx_one *.py *.json *.yaml *.html *.js *.css *.png *.txt UPSTREAM_LICENSE NOTICE NOTICE.md
+prune local
+prune calibration
+prune references_libs
+prune docs
+prune qualification
+prune benchmarks
+prune tests
+prune scripts
+prune ui
+prune .github
+global-exclude .DS_Store *.py[cod]

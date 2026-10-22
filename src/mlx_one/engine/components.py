@@ -318,6 +318,8 @@ def _snapshot_contents(bundle):
     """Local JSON+NPZ, SHA256 checked. BF16 is losslessly encoded as FP32."""
     import numpy as np
 
+    from mlx_one.engine.compound import COMPOUND_VERSION
+
     if len({cache.offset for cache in bundle.entries}) > 1:
         raise ValueError("snapshot components are not at one committed boundary")
     tensors, layers = {}, []
@@ -327,7 +329,7 @@ def _snapshot_contents(bundle):
                  "kernel_size": getattr(cache, "kernel_size", None),
                  "window_start": getattr(cache, "window_start", None),
                  "capabilities": asdict(cache.capabilities()), "tensors": {}}
-        compound = getattr(cache,"checkpoint_semantics",None) == "qwen35-gated-delta-v1"
+        compound = getattr(cache,"checkpoint_semantics",None) == COMPOUND_VERSION
         names = ("conv_state","recurrent_state") if compound else ("keys","values")
         if compound:
             layer["compound"] = {"version":cache.checkpoint_semantics,
@@ -472,7 +474,9 @@ def _load_snapshot(directory, *, identity, expected_specs, page_pool=None):
                 if layer["kind"] != spec.kind or layer["offset"] < 0:
                     raise ValueError("hybrid snapshot layer mismatch")
                 compound = layer.get("compound")
-                if spec.checkpoint_semantics == "qwen35-gated-delta-v1" and compound is None:
+                from mlx_one.engine.compound import COMPOUND_VERSION
+
+                if spec.checkpoint_semantics == COMPOUND_VERSION and compound is None:
                     raise ValueError("snapshot lacks complete native recurrent state")
                 paged = layer.get("storage") == "paged-fp16-v1"
                 restored_arrays = {}

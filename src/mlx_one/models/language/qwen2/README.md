@@ -108,7 +108,7 @@ against the exact checkpoint; do not skip strict weight validation.
 See [configuration](config.py), [model](model.py), [weights](weights.py),
 [architecture tests](../../../../../tests/test_native_qwen_architectures.py),
 [Metal tests](../../../../../tests/test_native_qwen_mlx.py), and
-[Qwen training evidence](../../../../../qualification/results/qwen2.5-coder-1.5b-lora-m4-air-32gb.json).
+[Qwen training evidence](../../../../../docs/qualification/archived-evidence.md).
 
 ```bash
 pytest -q tests/test_native_qwen_architectures.py

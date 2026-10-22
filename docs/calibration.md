@@ -73,3 +73,8 @@ The first M4 32 GiB run produced 48 records: 44 completed, two BF16 LoRA
 validation reported 5.98% median relative error, 17.85% p90 relative error, and
 95.45% upper-bound coverage. The raw normalized records and checksummed manifest
 are stored in `calibration/results/m4-air-32gb-text-v1`.
+
+Raw host-specific records remain in ignored `calibration/results/` and are not bundled with
+the source or wheel. Packaged capability evidence URIs identify those historical records; they
+are not required local inputs for ordinary imports or tests. See the
+[archive policy](qualification/archived-evidence.md) for restoring optional audit data.

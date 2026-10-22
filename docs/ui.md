@@ -15,8 +15,8 @@ The server does not import or invoke `mlx-lm`, llama.cpp, Ollama, or another inf
 mlx-one serve mlx-community/Qwen3.5-0.8B-4bit
 ```
 
-The default API base is `http://127.0.0.1:8080/v1` and the UI is at
-`http://127.0.0.1:8080`. Use `--host` and `--port` to change the listener. The command also
+The default API base is `http://127.0.0.1:8888/v1` and the UI is at
+`http://127.0.0.1:8888`. Use `--host` and `--port` to change the listener. The command also
 accepts the same `--revision`, `--offline`, and `--cache-dir` controls as other model commands.
 For a checkpoint without tokenizer assets, pass `--tokenizer REPOSITORY_OR_DIRECTORY`.
 
@@ -88,7 +88,7 @@ and a bounded FIFO queue. `-np/--parallel` interleaves token steps fairly on tha
 not create additional MLX inference threads.
 
 ```bash
-curl http://127.0.0.1:8080/v1/chat/completions \
+curl http://127.0.0.1:8888/v1/chat/completions \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer local-secret' \
   -d '{"model":"mlx-community/Qwen3.5-0.8B-4bit","messages":[{"role":"user","content":"Hello"}],"stream":false}'
@@ -133,7 +133,7 @@ npm install
 npm run dev
 ```
 
-Vite runs on port 5173 and proxies `/health` and `/v1` to `http://127.0.0.1:8080`. Override the
+Vite runs on port 5173 and proxies `/health` and `/v1` to `http://127.0.0.1:8888`. Override the
 target with `MLX_ONE_SERVER_ORIGIN`.
 
 Run checks with:

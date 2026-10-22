@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, replace
 from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 from typing import Any
 
 from mlx_one.engine.cache import cache_allocated_nbytes, cache_nbytes
@@ -148,7 +149,17 @@ def native_report(bundle, runtime=None, *, backend="dense", hardware=None,
     from mlx_one.engine.selection import compatibility_digest
 
     contract = execution_contract(bundle, plan, selected_mode) if plan else None
+    from mlx_one.core.release_support import checkpoint_release_status
+
     return {
+        "release_support": checkpoint_release_status(
+            bundle.model_id, bundle.revision, architecture=getattr(bundle, "architecture", None)),
+        "checkpoint_identity": {
+            "canonical_model_id": bundle.model_id,
+            "path": str(Path(bundle.path).resolve()) if getattr(bundle, "path", None) else None,
+            "revision": bundle.revision,
+            "weight_hashes": getattr(bundle, "weight_hashes", {}),
+        },
         "execution_contract": contract,
         "compatibility_digest": compatibility_digest(runtime) if runtime else None,
         "runtime_schema_version": "native-runtime-v2",

@@ -29,7 +29,7 @@ def evaluate_p1(profile, summary, traces, parity, *, serial=None, b1=None, no_pr
                     "queue_size", "output_buffer_events", "output_stall_timeout_s",
                     "cache_capacity_bytes", "prefix_cache_budget_bytes", "pressure_config",
                     "timeout_seconds", "ttft_budget_ms", "decode_gap_budget_ms",
-                    "max_queue_wait_ms", "max_service_gap_ms"):
+                    "max_queue_wait_ms", "max_service_gap_ms", "eos_policy"):
             if expected.get(key) != getattr(profile, key):
                 raise ValueError("P1 reference mismatch: " + key)
         for key in ("hardware", "source", "weight_precision", "cache_precision", "mlx_version",

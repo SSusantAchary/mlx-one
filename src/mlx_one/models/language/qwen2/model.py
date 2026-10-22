@@ -11,13 +11,14 @@ from __future__ import annotations
 
 from typing import Any
 
-import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.qwen2.config import Qwen2Config
-from mlx_one.models.shared.transformer import DecoderLayer, causal_mask
+from mlx_one.models.language.qwen2.reference_math import TransformerBlock
+from mlx_one.models.shared.reference_math import attention_mask as causal_mask
+from mlx_one.ops.logits import project_logits
 
 
 class Qwen2Model(nn.Module):
@@ -25,7 +26,7 @@ class Qwen2Model(nn.Module):
         super().__init__()
         self.config = config
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
-        self.layers = [DecoderLayer(config, qkv_bias=True) for _ in range(config.num_hidden_layers)]
+        self.layers = [TransformerBlock(config) for _ in range(config.num_hidden_layers)]
         self.norm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def __call__(
@@ -45,13 +46,11 @@ class Qwen2Model(nn.Module):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
         paged = cache is not None and callable(getattr(cache[0], "attend", None))
-        mask = None if paged else causal_mask(hidden.shape[1], offset)
+        mask = None if paged else causal_mask(hidden.shape[1], offset, attention_mask)
         if attention_mask is not None:
             expected = (hidden.shape[0], offset + hidden.shape[1])
             if attention_mask.shape != expected:
                 raise ValueError("attention_mask must cover the complete cached sequence")
-            padding = mx.where(attention_mask[:, None, None, :] != 0, 0.0, -1e9)
-            mask = padding if mask is None else mask + padding
         states = [hidden] if output_hidden_states else None
         layer_caches = cache or (None,) * len(self.layers)
         for layer, layer_cache in zip(self.layers, layer_caches, strict=True):
@@ -70,6 +69,8 @@ class Qwen2Model(nn.Module):
 
 
 class Qwen2ForCausalLM(nn.Module):
+    _mlx_one_reference_first_math = True
+
     def __init__(self, config: Qwen2Config) -> None:
         super().__init__()
         self.config = config
@@ -88,6 +89,7 @@ class Qwen2ForCausalLM(nn.Module):
         attention_mask: Any | None = None,
         position_ids: Any | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> ModelOutput:
         hidden, cache, states = self.model(
             input_ids,
@@ -96,9 +98,9 @@ class Qwen2ForCausalLM(nn.Module):
             position_ids=position_ids,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.model.embed_tokens.as_linear(hidden)
-            if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
+        logits = project_logits(
+            hidden,
+            self.model.embed_tokens.as_linear if self.config.tie_word_embeddings else self.lm_head,
+            logits_mode, attention_mask=attention_mask
         )
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

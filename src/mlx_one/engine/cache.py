@@ -51,11 +51,11 @@ def cache_capabilities(cache: Any) -> CacheCapabilities:
     attention = "kvcache" in name or "attention" in name
     recurrent = "linear" in name or "conv" in name
     return CacheCapabilities(
-        batchable=attention and not recurrent,
+        batchable=attention and not recurrent and getattr(cache, "supports_batching", True),
         trimmable=callable(getattr(cache, "trim", None)),
-        quantizable=attention and not recurrent,
+        quantizable=attention and not recurrent and getattr(cache, "supports_quantization", True),
         sliding_window=bool(getattr(cache, "max_size", None)),
-        block_compatible=attention and not recurrent,
+        block_compatible=attention and not recurrent and getattr(cache, "supports_batching", True),
     )
 
 
