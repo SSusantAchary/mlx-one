@@ -85,12 +85,12 @@ def get_memory_snapshot() -> MemorySnapshot:
     if not metal.is_available():
         raise RuntimeError("MLX Metal backend is unavailable on this host.")
 
-    info = metal.device_info()
+    info = mx.device_info()
     return MemorySnapshot(
         active_bytes=int(mx.get_active_memory()),
         peak_bytes=int(mx.get_peak_memory()),
-        total_bytes=_optional_int(info.get("memory")),
-        device_name=_optional_str(info.get("name")),
+        total_bytes=_optional_int(info.get("memory_size")),
+        device_name=_optional_str(info.get("device_name")),
     )
 
 

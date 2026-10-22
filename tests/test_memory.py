@@ -1,3 +1,6 @@
+import sys
+from types import SimpleNamespace
+
 import pytest
 
 from mlx_one.utils import memory
@@ -48,17 +51,28 @@ def test_memory_queries_use_current_top_level_mlx_api(monkeypatch) -> None:
         def get_peak_memory() -> int:
             return 34
 
+        @staticmethod
+        def device_info() -> dict[str, object]:
+            return {"memory_size": 56, "device_name": "Fake GPU"}
+
     class FakeMetal:
         @staticmethod
         def is_available() -> bool:
             return True
-
-        @staticmethod
-        def device_info() -> dict[str, object]:
-            return {"memory": 56, "name": "Fake GPU"}
 
     monkeypatch.setattr(memory, "_load_metal_modules", lambda: (FakeMLX(), FakeMetal()))
 
     assert memory.get_active_memory() == 12
     assert memory.get_peak_memory() == 34
     assert memory.get_memory_snapshot() == MemorySnapshot(12, 34, 56, "Fake GPU")
+
+
+def test_pressure_reads_recommended_memory_from_top_level_mlx_api(monkeypatch) -> None:
+    from mlx_one.engine import pressure
+
+    core = SimpleNamespace(device_info=lambda: {"max_recommended_working_set_size": 1234})
+    monkeypatch.setitem(sys.modules, "mlx.core", core)
+    monkeypatch.setattr(pressure, "_command", lambda args: None)
+    monkeypatch.setattr(pressure.platform, "system", lambda: "Darwin")
+
+    assert pressure.sample_telemetry().recommended_bytes == 1234

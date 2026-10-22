@@ -74,7 +74,7 @@ def sample_telemetry():
             return None
     recommended = None
     try:
-        info = mx.metal.device_info() if mx is not None else {}
+        info = mx.device_info() if mx is not None else {}
         recommended = info.get("max_recommended_working_set_size")
     except (AttributeError, RuntimeError):
         pass
