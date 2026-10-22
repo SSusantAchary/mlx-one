@@ -1,0 +1,7 @@
+> Historical source-bound report. Current checkpoint support follows the [functional admission policy](../../model-admission.md); raw artifacts are [archived locally](../archived-evidence.md). Numerical research outcomes below are preserved historical observations, not current admission gates.
+
+# Known limitations
+
+Cohort: `proof-20261021-1792544161047727000`. Tested source commit: `05a3b5f27f6a596bacb5e3e3c5199fc8e5948f51`.
+
+No alpha-supported checkpoint. Original full/cache gates remain failed; proposed output budgets do not qualify the requested minimum, and no numerical contract is approved. Gemma cached cross-reference behavior diverges after sliding boundaries; Phi3’s reference omits the required configured window, so raw long reference agreement cannot alone establish specification correctness. Synthetic low-precision affine accumulation assumptions require further kernel-level investigation. Qwen3.5 retains its independent mathematical discrepancy and remains experimental. Only one M4/32GB host and the recorded runtime were tested. Benchmarks do not certify 4K context or other hardware. Continuous batching, paging, INT8 KV, speculation, SSD persistence and other tasks/precisions remain unqualified. Queue capacity does not imply concurrent model execution. Shared small-model arithmetic/JSON/instruction failures are not framework guarantees. Lint debt disposition, numerical policy and any narrower minimum require owner approval.

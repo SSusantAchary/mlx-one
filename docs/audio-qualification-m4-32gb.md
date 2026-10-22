@@ -56,10 +56,10 @@ the same stored weights to float32. This is not a comparison of two pure float16
 implementations, nor qualification of the publisher's separate float32 export.
 No quantization was used. Reference and native checkpoint runs were separate.
 
-The [fixture manifest](../qualification/results/distil-large-v3-en-fixture-manifest.json)
+The [fixture manifest](qualification/archived-evidence.md)
 records source and per-clip checksums. Audio remains in the local validation cache;
 it is not added to the repository. Respect the source dataset's attribution/license.
-The [Distil checkpoint contract](../qualification/results/distil-large-v3-checkpoint-contract.json)
+The [Distil checkpoint contract](qualification/archived-evidence.md)
 records the selected asset hashes, raw tensor headers, configuration, preprocessing
 and reference source pin. Its publisher checkpoint license is MIT, separate from
 the repository's Apache-2.0 code license.
@@ -85,13 +85,13 @@ NFKC/lowercase/punctuation normalization. Existing `whisper-wer-v1` and
 times are clamped to original audio duration on both sides; the reference capture
 also retains raw end times. Word-timestamp accuracy is **not qualified**.
 
-Evidence: [float32 components](../qualification/results/whisper-float32-component-parity-m4.json),
-[transcript comparison](../qualification/results/distil-large-v3-en-100-comparison-m4.json),
-[native transcripts/resources](../qualification/results/distil-large-v3-en-100-native-m4.json),
-[reference transcripts/resources](../qualification/results/distil-large-v3-en-100-reference.json),
-[segment comparison](../qualification/results/distil-large-v3-timestamps-comparison-m4.json),
-[native segments](../qualification/results/distil-large-v3-timestamps-native-m4.json), and
-[reference segments](../qualification/results/distil-large-v3-timestamps-reference.json).
+Evidence: [float32 components](qualification/archived-evidence.md),
+[transcript comparison](qualification/archived-evidence.md),
+[native transcripts/resources](qualification/archived-evidence.md),
+[reference transcripts/resources](qualification/archived-evidence.md),
+[segment comparison](qualification/archived-evidence.md),
+[native segments](qualification/archived-evidence.md), and
+[reference segments](qualification/archived-evidence.md).
 
 ## Resource and latency scope
 
@@ -161,8 +161,8 @@ The publisher float32 weights are retained by both implementations.
 Each uses valid 127/7/3 waveform convolutions at strides 64/3/2, one-group
 GroupNorm, a GELU encoder MLP and a SiLU-gated decoder MLP. Configuration,
 preprocessing, raw tensor names/shapes/dtypes and SHA-256 hashes of weights and
-tokenizer assets are recorded in the [Tiny checkpoint contract](../qualification/results/moonshine-tiny-checkpoint-contract.json)
-and [Base checkpoint contract](../qualification/results/moonshine-base-checkpoint-contract.json).
+tokenizer assets are recorded in the [Tiny checkpoint contract](qualification/archived-evidence.md)
+and [Base checkpoint contract](qualification/archived-evidence.md).
 Both publisher model cards identify the checkpoint license as MIT; adapted
 Transformers code notices and mlx-one's Apache-2.0 license remain separate.
 
@@ -188,14 +188,14 @@ Checkpoint transcripts were evaluated independently from those components.
 Exact agreement is required for the fixed anchors; equal normalized WER/CER is
 not a claim of verbatim agreement on every non-anchor clip.
 
-Evidence for Tiny: [component gates](../qualification/results/moonshine-tiny-component-comparison.json),
-[checkpoint gates](../qualification/results/moonshine-tiny-comparison.json),
-[native run](../qualification/results/moonshine-tiny-native.json) and
-[reference run](../qualification/results/moonshine-tiny-reference.json).
-Evidence for Base: [component gates](../qualification/results/moonshine-base-component-comparison.json),
-[checkpoint gates](../qualification/results/moonshine-base-comparison.json),
-[native run](../qualification/results/moonshine-base-native.json) and
-[reference run](../qualification/results/moonshine-base-reference.json).
+Evidence for Tiny: [component gates](qualification/archived-evidence.md),
+[checkpoint gates](qualification/archived-evidence.md),
+[native run](qualification/archived-evidence.md) and
+[reference run](qualification/archived-evidence.md).
+Evidence for Base: [component gates](qualification/archived-evidence.md),
+[checkpoint gates](qualification/archived-evidence.md),
+[native run](qualification/archived-evidence.md) and
+[reference run](qualification/archived-evidence.md).
 
 Native active allocations return to the loaded-model baseline after every
 request, but the shared MLX allocator retains reusable cached buffers. Its
@@ -265,9 +265,9 @@ These implementation statements do **not** establish checkpoint qualification.
 
 | Checkpoint | Frozen revision | Contract |
 | --- | --- | --- |
-| Qwen3-ASR 0.6B | `5eb144179a02acc5e5ba31e748d22b0cf3e303b0` | [Assets/tensors](../qualification/results/qwen3-asr-0.6b-checkpoint-contract.json) |
-| Qwen3-ASR 1.7B | `7278e1e70fe206f11671096ffdd38061171dd6e5` | [Assets/tensors](../qualification/results/qwen3-asr-1.7b-checkpoint-contract.json) |
-| Qwen3-ForcedAligner 0.6B | `c7cbfc2048c462b0d63a45797104fc9db3ad62b7` | [Assets/tensors](../qualification/results/qwen3-forced-aligner-checkpoint-contract.json) |
+| Qwen3-ASR 0.6B | `5eb144179a02acc5e5ba31e748d22b0cf3e303b0` | [Assets/tensors](qualification/archived-evidence.md) |
+| Qwen3-ASR 1.7B | `7278e1e70fe206f11671096ffdd38061171dd6e5` | [Assets/tensors](qualification/archived-evidence.md) |
+| Qwen3-ForcedAligner 0.6B | `c7cbfc2048c462b0d63a45797104fc9db3ad62b7` | [Assets/tensors](qualification/archived-evidence.md) |
 
 The separate reference environment uses Python 3.12, PyTorch 2.7.1 and
 Transformers 4.57.6 with Qwen source commit
@@ -277,14 +277,14 @@ publisher's BF16 weights. Synthetic component tests use float32 separately.
 This reference scope is **SDPA/global audio attention**, not the upstream
 FlashAttention/windowed path. The source and publisher checkpoints are Apache-2.0.
 
-The [initial 16-clip diagnostic](../qualification/results/qwen3-asr-0.6b-en-16-initial-diagnostic.json)
+The [initial 16-clip diagnostic](qualification/archived-evidence.md)
 failed: 15/16 exact Qwen 0.6B anchors matched. Clip `1089-134686-0012` differed
 in sentence punctuation/capitalization (period versus semicolon), despite equal
 normalized WER/CER. The exact gate is not normalized or weakened. This diagnostic
 also lacks the required full corpus and is explicitly **not qualification**.
 Subsequent rounding investigations and full-corpus runs preserve new output
 artifacts rather than overwrite this failure. Initial
-[float32 synthetic component evidence](../qualification/results/qwen3-audio-float32-component-parity-m4.json)
+[float32 synthetic component evidence](qualification/archived-evidence.md)
 passed independently; it cannot replace checkpoint or streaming gates.
 
 ### Qwen3-ASR 0.6B English offline results
@@ -312,11 +312,11 @@ by this result.
 | Active allocation growth across 100 requests | 0 |
 | Final shared allocator cached bytes | 12,138,387,928 |
 
-Evidence: [latest scoped checkpoint gates](../qualification/results/qwen3-asr-0.6b-en-100-comparison-m4.json),
-[native corpus/resources](../qualification/results/qwen3-asr-0.6b-en-100-native-m4.json),
-[reference corpus/resources](../qualification/results/qwen3-asr-0.6b-en-100-reference.json),
-[latest float32 component gates](../qualification/results/qwen3-audio-float32-component-parity-m4-v3.json),
-and [component fixture/source checksums](../qualification/results/qwen3-audio-float32-component-reference-v3.json).
+Evidence: [latest scoped checkpoint gates](qualification/archived-evidence.md),
+[native corpus/resources](qualification/archived-evidence.md),
+[reference corpus/resources](qualification/archived-evidence.md),
+[latest float32 component gates](qualification/archived-evidence.md),
+and [component fixture/source checksums](qualification/archived-evidence.md).
 The existing 100 English fixtures and 16 anchors are unchanged. WER/CER are
 normalized corpus metrics; exact case/punctuation is separately enforced on
 anchors. Non-anchor predictions need not be verbatim identical.
@@ -330,9 +330,9 @@ Resident, active and cached metrics are distinct observations, not additive.
 Multilingual fixture selection is frozen before inference: FLEURS revision
 `70bb2e84b976b7e960aa89f1c648e09c59f894dd`, first 25 test recordings sorted by
 sentence ID and source-row index in each language, without deduplicating repeated
-sentence IDs. The [French](../qualification/results/qwen3-fleurs-fr-fr-25-fixture-manifest.json),
-[German](../qualification/results/qwen3-fleurs-de-de-25-fixture-manifest.json), and
-[Mandarin](../qualification/results/qwen3-fleurs-cmn-hans-cn-25-fixture-manifest.json)
+sentence IDs. The [French](qualification/archived-evidence.md),
+[German](qualification/archived-evidence.md), and
+[Mandarin](qualification/archived-evidence.md)
 manifests preserve audio hashes, source shard hash, row selection and CC-BY-4.0
 attribution metadata. Mandarin is additional scope for ASR 1.7B. Prepared manifests
 alone are **not evidence of passing model runs**. Repository JSON copies are
@@ -343,10 +343,10 @@ input manifest. Audio remains outside the repository.
 
 | Checkpoint / scope | Recorded outcome | Evidence |
 | --- | --- | --- |
-| ASR 0.6B, French offline, 25 FLEURS clips | PASS: WER native/reference `0.09653092006033183` / `0.09803921568627451`; CER `0.02762119503945885` / `0.02846674182638106` | [Gates](../qualification/results/qwen3-asr-0.6b-fr-25-comparison-m4.json), [native](../qualification/results/qwen3-asr-0.6b-fr-25-native-m4.json), [reference](../qualification/results/qwen3-asr-0.6b-fr-25-reference.json) |
-| ASR 1.7B, 16 English anchors only | FAIL: 15/16 exact anchors; punctuation mismatch at `1089-134686-0001`; required 100-clip corpus absent | [Diagnostic gates](../qualification/results/qwen3-asr-1.7b-en-16-comparison-diagnostic-m4.json), [native](../qualification/results/qwen3-asr-1.7b-en-16-native-diagnostic-m4.json), [reference](../qualification/results/qwen3-asr-1.7b-en-16-reference-diagnostic.json) |
-| ForcedAligner, 100 English clips | FAIL: text units/order agree, but eight boundaries across six clips exceed one 80-ms tick; maximum difference 800 ms | [Detailed failed gates](../qualification/results/qwen3-forced-aligner-en-100-comparison-m4-v2.json), [native](../qualification/results/qwen3-forced-aligner-en-100-native-m4.json), [reference](../qualification/results/qwen3-forced-aligner-en-100-reference.json) |
-| ASR 0.6B, two English streaming utterances | FAIL: complete hypotheses and one final anchor differ in colon/comma punctuation; required full corpus absent | [Diagnostic gates](../qualification/results/qwen3-asr-0.6b-en-2-stream-comparison-diagnostic-m4.json), [native](../qualification/results/qwen3-asr-0.6b-en-2-stream-native-diagnostic-m4.json), [reference](../qualification/results/qwen3-asr-0.6b-en-2-stream-reference-diagnostic.json) |
+| ASR 0.6B, French offline, 25 FLEURS clips | PASS: WER native/reference `0.09653092006033183` / `0.09803921568627451`; CER `0.02762119503945885` / `0.02846674182638106` | [Gates](qualification/archived-evidence.md), [native](qualification/archived-evidence.md), [reference](qualification/archived-evidence.md) |
+| ASR 1.7B, 16 English anchors only | FAIL: 15/16 exact anchors; punctuation mismatch at `1089-134686-0001`; required 100-clip corpus absent | [Diagnostic gates](qualification/archived-evidence.md), [native](qualification/archived-evidence.md), [reference](qualification/archived-evidence.md) |
+| ForcedAligner, 100 English clips | FAIL: text units/order agree, but eight boundaries across six clips exceed one 80-ms tick; maximum difference 800 ms | [Detailed failed gates](qualification/archived-evidence.md), [native](qualification/archived-evidence.md), [reference](qualification/archived-evidence.md) |
+| ASR 0.6B, two English streaming utterances | FAIL: complete hypotheses and one final anchor differ in colon/comma punctuation; required full corpus absent | [Diagnostic gates](qualification/archived-evidence.md), [native](qualification/archived-evidence.md), [reference](qualification/archived-evidence.md) |
 
 French has no additional exact anchors; the fixed English anchors enforce that
 checkpoint's separate exact-text gate. These language/mode scopes are not merged
@@ -359,7 +359,7 @@ zero active-allocation growth across requests. Peak resident bytes were
 `2,123,005,952` for French 0.6B, `4,924,227,584` for the 1.7B diagnostic, and
 `2,071,658,496` for alignment. These resource passes do not override quality failures.
 
-The [alignment head diagnostic](../qualification/results/qwen3-forced-aligner-selected-full-head-diagnostic-m4.json)
+The [alignment head diagnostic](qualification/archived-evidence.md)
 found identical native logits for selected-position and full-sequence projections
 on all six affected clips. Removing the projection optimization does not resolve
 the timestamp failure. The residual reference/native classification difference
@@ -371,7 +371,7 @@ chunks, five-token rollback, the distinct finish-time rollback, and the explicit
 30-second utterance limit. Events contain complete current hypotheses, not text
 deltas. The validation helper applies the pinned upstream rollback/buffer
 algorithm around its Torch SDPA decoder: it does **not** claim vLLM-kernel parity.
-The [native lifecycle diagnostic](../qualification/results/qwen3-asr-0.6b-stream-lifecycle-diagnostic-m4.json)
+The [native lifecycle diagnostic](qualification/archived-evidence.md)
 passes on two real English utterances: 17-/16,000-/32,000-sample partitions produce
 identical complete hypotheses, repeated reset/finish works, one session survives
 another's cancellation, three mid-decode cancellations release request state, and
@@ -406,10 +406,10 @@ tested, failed unchanged gates, and was **not promoted into production**.
 
 One previously failing English aligner clip (`1089-134686-0005`) was captured in
 the pinned reference environment before native Metal diagnostics. The
-[reference manifest](../qualification/results/qwen3-forced-aligner-bf16-layer-reference.json)
+[reference manifest](qualification/archived-evidence.md)
 records the checkpoint/source/fixture checksums; the large activation NPZ remains
 outside the repository. The
-[native layer diagnostic](../qualification/results/qwen3-forced-aligner-bf16-layer-candidate-m4.json)
+[native layer diagnostic](qualification/archived-evidence.md)
 isolates operators using identical reference inputs. Convolution bias and
 LayerNorm affine rounding account for substantial differences. Reconstructing
 the pinned CPU BF16 attention sequence reduces first-layer attention differences
@@ -420,10 +420,10 @@ it must not be advertised as GPU-reference or vLLM parity.
 
 | Candidate checkpoint / scope | Outcome | Evidence |
 | --- | --- | --- |
-| Qwen ASR 0.6B, English 100 | FAIL: 15/16 exact anchors; WER/CER, budget and cleanup pass | [Comparison](../qualification/results/qwen3-asr-0.6b-en-100-comparison-m4-v2.json) |
-| Qwen ASR 0.6B, French 25 | PASS for this language/offline candidate scope only | [Comparison](../qualification/results/qwen3-asr-0.6b-fr-25-comparison-m4-v2.json) |
-| Qwen ASR 1.7B, English 16 diagnostic | FAIL: 15/16 exact anchors; required full corpus absent | [Comparison](../qualification/results/qwen3-asr-1.7b-en-16-comparison-diagnostic-m4-v3.json) |
-| ForcedAligner, English 100 | FAIL: six boundaries across five clips; maximum 480 ms exceeds 80-ms gate | [Comparison](../qualification/results/qwen3-forced-aligner-en-100-comparison-m4-v4.json) |
+| Qwen ASR 0.6B, English 100 | FAIL: 15/16 exact anchors; WER/CER, budget and cleanup pass | [Comparison](qualification/archived-evidence.md) |
+| Qwen ASR 0.6B, French 25 | PASS for this language/offline candidate scope only | [Comparison](qualification/archived-evidence.md) |
+| Qwen ASR 1.7B, English 16 diagnostic | FAIL: 15/16 exact anchors; required full corpus absent | [Comparison](qualification/archived-evidence.md) |
+| ForcedAligner, English 100 | FAIL: six boundaries across five clips; maximum 480 ms exceeds 80-ms gate | [Comparison](qualification/archived-evidence.md) |
 
 Intermediate convolution/normalization-only experiments are separately labelled
 `audio-fp32-affine-convolution`; the complete experimental sequence is labelled
@@ -434,12 +434,12 @@ never to the production CLI or a reference run. Comparison output retains that
 label so failed-candidate results cannot be mistaken for production evidence.
 
 The established production implementation and historical English/French passes
-remain intact. A fresh [default English 100 comparison](../qualification/results/qwen3-asr-0.6b-en-100-comparison-m4-v3.json)
+remain intact. A fresh [default English 100 comparison](qualification/archived-evidence.md)
 passes 16/16 anchors and WER/CER/resource gates after isolating the candidate.
-The [native run](../qualification/results/qwen3-asr-0.6b-en-100-native-m4-v3.json)
+The [native run](qualification/archived-evidence.md)
 records a 2,170,142,720-byte peak resident size, 2,238,074,152-byte MLX peak,
 zero active-allocation cleanup growth and the native implementation hashes.
-The [fresh float32 component comparison](../qualification/results/qwen3-audio-float32-component-parity-m4-v4.json)
+The [fresh float32 component comparison](qualification/archived-evidence.md)
 also passes. The latest targeted suites pass 160 network-free tests and 27 Metal
 tests, including explicit candidate/model isolation and existing Whisper/Moonshine
 regressions. The full default regression suite passes **485 tests, 21 skipped**;
@@ -466,7 +466,7 @@ Supplying the saved reference audio encoding in a diagnostic still leaves the
 decoder mismatch; preprocessing is therefore not its only source. These
 observations do not authorize special-casing this clip, adjusting greedy scores,
 removing punctuation, replacing the oracle, or weakening the exact-anchor gate.
-The [default native token diagnostic](../qualification/results/qwen3-asr-1.7b-token-native-diagnostic-m4.json)
+The [default native token diagnostic](qualification/archived-evidence.md)
 records a native cached score of `39.75` for token 13 versus `40.25` for token
 1335, the frozen input-fixture hash, teacher-prefix IDs, and source hashes.
 This is not a tie-breaking bug: the native score ordering itself differs.
@@ -481,10 +481,10 @@ diagnostics, not qualified runtime alternatives.
 
 The narrower LayerNorm-only correction was also tested against the entire
 passing 0.6B English corpus before considering promotion. Its
-[100-clip candidate comparison](../qualification/results/qwen3-asr-0.6b-layernorm-en-100-comparison-candidate-m4.json)
+[100-clip candidate comparison](qualification/archived-evidence.md)
 fails the unchanged exact-anchor gate: **15/16**, with mismatch
 `1089-134686-0012`. Aggregate WER/CER, the 24-GiB process budget, and cleanup pass.
-The [native capture](../qualification/results/qwen3-asr-0.6b-layernorm-en-100-native-candidate-m4.json)
+The [native capture](qualification/archived-evidence.md)
 is explicitly labelled `audio-fp32-layernorm`; the production loader/model remain
 unchanged, and the passing default 0.6B result is preserved. Reduced operator
 differences or passing aggregate accuracy do not override the failed anchor.
@@ -492,8 +492,8 @@ differences or passing aggregate accuracy do not override the failed anchor.
 The [isolated timestamp classifier probe](../benchmarks/qwen_alignment_classifier_probe.py)
 uses frozen reference hidden states, preserving BF16 weights and output dtype.
 It loads only the classifier tensor, not another copy of the full checkpoint.
-The [reference capture](../qualification/results/qwen3-forced-aligner-classifier-reference-diagnostic.json)
-and [Metal comparison](../qualification/results/qwen3-forced-aligner-classifier-native-diagnostic-m4.json)
+The [reference capture](qualification/archived-evidence.md)
+and [Metal comparison](qualification/archived-evidence.md)
 agree on all **44 timestamp classes** for `1089-134686-0005`. Fifteen individual
 logits differ, with a maximum absolute difference of `0.0625`; this is a BF16
 diagnostic, not a passing float32 component gate or checkpoint qualification.
@@ -512,9 +512,9 @@ justify changing timestamp repair to hide the error.
 ### Completed 1.7B English corpus — still fails exact anchors
 
 The 2026-10-03–04 run completes the previously missing **100 English clips**.
-The [reference corpus](../qualification/results/qwen3-asr-1.7b-en-100-reference.json)
-was persisted before the [native Metal corpus](../qualification/results/qwen3-asr-1.7b-en-100-native-m4.json).
-The [full comparison](../qualification/results/qwen3-asr-1.7b-en-100-comparison-m4.json)
+The [reference corpus](qualification/archived-evidence.md)
+was persisted before the [native Metal corpus](qualification/archived-evidence.md).
+The [full comparison](qualification/archived-evidence.md)
 is **FAIL**: the sole failed gate is the unchanged exact-anchor requirement,
 with mismatch `1089-134686-0001` and **15/16** matches. Completing the corpus does
 not turn this failure into qualification.
@@ -569,20 +569,20 @@ of Stage 4 or of the full audio plan.
 
 ### Frozen contracts and component gate
 
-- [v2 contract](../qualification/results/parakeet-tdt-v2-checkpoint-contract.json):
+- [v2 contract](qualification/archived-evidence.md):
   `ae9ad07059c7c739ffaf932226a8fe64ae2620b0`; original archive SHA-256
   `d99e39955c9d3d0350d8fb7c75e40c64a2b2eaeb003883d7c941fd2e8747b28c`.
-- [v3 contract](../qualification/results/parakeet-tdt-v3-checkpoint-contract.json):
+- [v3 contract](qualification/archived-evidence.md):
   `541d1f99c6b0c3cd0b11a95167540bb8edefd82b`; canonical `model.safetensors`.
 - Reference Transformers commit `469230357aab0f2b303b0d638c1f8d06edb14184`,
   PyTorch 2.7.1 CPU in a new isolated Stage 4 environment. Earlier environments
   were not upgraded. The persisted
-  [reference component manifest](../qualification/results/parakeet-float32-component-reference.json)
+  [reference component manifest](qualification/archived-evidence.md)
   includes dependency versions and the fixture checksum.
-- [Initial component result](../qualification/results/parakeet-float32-component-parity-m4.json)
+- [Initial component result](qualification/archived-evidence.md)
   failed silent normalization by 0.158806. A centered FP32 mean reduction fixes
   summation residuals without changing the normalization formula or tolerance.
-  [Current component result](../qualification/results/parakeet-float32-component-parity-m4-v2.json)
+  [Current component result](qualification/archived-evidence.md)
   passes all tested components at `atol=rtol=1e-4`; random frontend maximum absolute
   difference is 0.000031477, silence and Mel filter differences are zero.
 
@@ -606,9 +606,9 @@ Transformers reference**, not a recorded original NeMo inference run.
 | Peak process memory | 2,660,958,208 bytes; below 24 GiB |
 | Active MLX growth after repeated calls | 0 bytes; shared allocator cache is not cleared |
 
-Evidence: [reference run](../qualification/results/parakeet-tdt-v2-en-100-reference.json),
-[native run](../qualification/results/parakeet-tdt-v2-en-100-native-m4.json),
-[comparison](../qualification/results/parakeet-tdt-v2-en-100-comparison-m4.json).
+Evidence: [reference run](qualification/archived-evidence.md),
+[native run](qualification/archived-evidence.md),
+[comparison](qualification/archived-evidence.md).
 Original NeMo frontend/decoding parity, token/word timestamp accuracy and broader
 workloads remain **WIP**. These scoped passing gates do not qualify the whole model.
 
@@ -620,9 +620,9 @@ Load time was 0.769 seconds, native processing 39.626 seconds for 901.135
 seconds of audio (offline RTF 0.04397), peak MLX allocation 2,697,672,228 bytes,
 peak process memory 2,702,147,584 bytes and active allocation growth zero.
 
-Evidence: [reference](../qualification/results/parakeet-tdt-v3-en-100-reference.json),
-[native](../qualification/results/parakeet-tdt-v3-en-100-native-m4.json),
-[comparison](../qualification/results/parakeet-tdt-v3-en-100-comparison-m4.json).
+Evidence: [reference](qualification/archived-evidence.md),
+[native](qualification/archived-evidence.md),
+[comparison](qualification/archived-evidence.md).
 
 The existing checksummed 25-clip French and German selections from FLEURS
 `70bb2e84b976b7e960aa89f1c648e09c59f894dd` were captured in the same pinned
@@ -635,26 +635,26 @@ qualify every publisher language or long-form audio.
 | French | 25 | 6.9381599% / 6.9381599% | 1.8038331% / 1.8038331% | 0.04094 | 0 bytes |
 | German | 25 | 5.9590317% / 5.9590317% | 1.3465854% / 1.3465854% | 0.03567 | 0 bytes |
 
-French evidence: [reference](../qualification/results/parakeet-tdt-v3-fr-25-reference.json),
-[native](../qualification/results/parakeet-tdt-v3-fr-25-native-m4.json),
-[comparison](../qualification/results/parakeet-tdt-v3-fr-25-comparison-m4.json).
-German evidence: [reference](../qualification/results/parakeet-tdt-v3-de-25-reference.json),
-[native](../qualification/results/parakeet-tdt-v3-de-25-native-m4.json),
-[comparison](../qualification/results/parakeet-tdt-v3-de-25-comparison-m4.json).
+French evidence: [reference](qualification/archived-evidence.md),
+[native](qualification/archived-evidence.md),
+[comparison](qualification/archived-evidence.md).
+German evidence: [reference](qualification/archived-evidence.md),
+[native](qualification/archived-evidence.md),
+[comparison](qualification/archived-evidence.md).
 The fixture hashes and full reference/native dependency versions are retained in
 each run. Peak process memory remained below 2.71 GB in all three subsets.
 Token/word timestamp qualification and broader workloads remain **WIP**.
 
 ### Nemotron and later stages
 
-The [Nemotron contract](../qualification/results/nemotron-3.5-asr-checkpoint-contract.json)
+The [Nemotron contract](qualification/archived-evidence.md)
 freezes 655 canonical tensors, tokenizer/processor and publisher safety/bias/privacy
 assets at `ea30d66debe3740a08b573244286791d423d6b3e`, with official source commit
 `469230357aab0f2b303b0d638c1f8d06edb14184`. The pinned model card specifies
 OpenMDW-1.1, separate from mlx-one's license. Cache-aware frontend, convolution,
 attention and RNNT state, language prompts, three-token lookahead and all native
 checkpoint/streaming gates are **WIP / not implemented**; no runtime task is advertised.
-The [initial 16-anchor reference capture](../qualification/results/nemotron-3.5-asr-en-16-reference.json)
+The [initial 16-anchor reference capture](qualification/archived-evidence.md)
 was persisted in a **separate** Python 3.12 environment at the frozen source,
 using explicit `en-US` prompts, three-token lookahead and float32 CPU inference.
 Its complete dependency versions are recorded. Load time was 4.854 seconds and
@@ -667,12 +667,12 @@ temporary qualification cache and frozen without loading their neural backends:
 
 | Checkpoint | Authoritative export | Frozen tensor dtype/count | Contract |
 | --- | --- | --- | --- |
-| Parakeet v2 | Isolated converted canonical safetensors | 699 F32 + 24 I64 | [v2](../qualification/results/parakeet-tdt-v2-checkpoint-contract.json) |
-| Parakeet v3 | `model.safetensors` | 699 F32 + 24 I64 | [v3](../qualification/results/parakeet-tdt-v3-checkpoint-contract.json) |
-| Nemotron 3.5 ASR | `model.safetensors` | 655 F32 | [Nemotron](../qualification/results/nemotron-3.5-asr-checkpoint-contract.json) |
-| Voxtral Mini 3B | Indexed two HF shards; no consolidated export | 761 BF16 + 1 F32 | [Mini](../qualification/results/voxtral-mini-3b-checkpoint-contract.json) |
-| Voxtral Realtime 4B | `model.safetensors`; no consolidated export | 711 BF16 | [Realtime](../qualification/results/voxtral-realtime-4b-checkpoint-contract.json) |
-| Original VibeVoice 1.5B | Indexed three HF shards | 1,204 BF16 | [Original TTS](../qualification/results/vibevoice-1.5b-checkpoint-contract.json) |
+| Parakeet v2 | Isolated converted canonical safetensors | 699 F32 + 24 I64 | [v2](qualification/archived-evidence.md) |
+| Parakeet v3 | `model.safetensors` | 699 F32 + 24 I64 | [v3](qualification/archived-evidence.md) |
+| Nemotron 3.5 ASR | `model.safetensors` | 655 F32 | [Nemotron](qualification/archived-evidence.md) |
+| Voxtral Mini 3B | Indexed two HF shards; no consolidated export | 761 BF16 + 1 F32 | [Mini](qualification/archived-evidence.md) |
+| Voxtral Realtime 4B | `model.safetensors`; no consolidated export | 711 BF16 | [Realtime](qualification/archived-evidence.md) |
+| Original VibeVoice 1.5B | Indexed three HF shards | 1,204 BF16 | [Original TTS](qualification/archived-evidence.md) |
 
 The contracts record hashes, raw names/shapes/dtypes, shard assignments,
 configuration, family-specific processor/tokenizer assets and reference-source
@@ -695,7 +695,7 @@ it is not a claim of a signed commit or permission from recorded speakers.
 The original processor explicitly requires `Qwen/Qwen2.5-1.5B` tokenizer assets,
 separately pinned to `8faed761d45a263340a0528343f099c05c9a4323`.
 
-The [source/tokenizer contract](../qualification/results/vibevoice-original-source-tokenizer-contract.json)
+The [source/tokenizer contract](qualification/archived-evidence.md)
 records source file, license, tokenizer and public voice-file checksums; all
 voice-fixture permission evidence is marked **WIP**, never inferred from MIT
 licensing or public availability. The preserved original README warns against

@@ -61,7 +61,7 @@ def test_config_rejects_unsupported_dimensions(change):
 
 def test_pinned_v3_contract_matches_all_frozen_headers():
     path = (
-        Path(__file__).parents[1] / "qualification/results/parakeet-tdt-v3-checkpoint-contract.json"
+        Path(__file__).parents[1] / "tests/fixtures/parakeet/v3-header-contract.json"
     )
     contract = json.loads(path.read_text())
     config = ParakeetConfig.from_dict(contract["config"])

@@ -91,7 +91,9 @@ class LayerStateSpec:
         kind = kinds.get(spec.kind, "unknown")
         return cls(
             spec.layer_id, kind, spec.num_kv_heads, spec.key_head_dim,
-            spec.value_head_dim or spec.key_head_dim, None, spec.max_window_tokens,
+            spec.value_head_dim or spec.key_head_dim,
+            {"f16": "float16", "bf16": "bfloat16"}.get(spec.dtype, spec.dtype),
+            spec.max_window_tokens,
             state_shapes=spec.state_shapes, checkpoint_semantics=spec.checkpoint_semantics,
             state_dtypes=spec.state_dtypes,
             can_batch=spec.batchable and kind == "full_kv",

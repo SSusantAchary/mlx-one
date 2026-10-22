@@ -85,14 +85,17 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
         num_kv_heads=heads if attention else None,
         key_head_dim=head_dim if attention else None,
         value_head_dim=head_dim if attention else None,
-        dtype="f16" if attention else None,
+        # An empty cache does not establish its eventual tensor dtype. Storage
+        # precision is bound by the runtime config and observed at execution.
+        dtype=None,
         max_window_tokens=(getattr(config, "sliding_window", None)
                            if kind is CacheKind.ROTATING_KV else getattr(cache, "max_size", None)),
-        quantizable=attention,
+        quantizable=attention and getattr(cache, "supports_quantization", True),
         shareable_prefix=attention,
         trimmable=callable(getattr(cache, "trim", None)),
-        batchable=attention,
-        block_compatible=attention and heads is not None and head_dim is not None,
+        batchable=attention and getattr(cache, "supports_batching", True),
+        block_compatible=attention and heads is not None and head_dim is not None
+        and getattr(cache, "supports_batching", True),
         state_shapes=((1, int(cache.kernel_size) - 1,
                        _per_layer_int(config, index, "hidden_size") or 0),)
         if kind is CacheKind.CONV_STATE and hasattr(cache, "kernel_size")

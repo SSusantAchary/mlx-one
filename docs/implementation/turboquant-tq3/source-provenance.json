@@ -1,0 +1,44 @@
+{
+  "repository": "https://github.com/manjunathshiva/turboquant-mlx",
+  "commit": "54443c8b83424adb5dac7e6ffc7ac2d91fe88af1",
+  "files": {
+    "kernels/polar_qmv.py": "e05815215e10be3f1de471667ec1d1ac28f649caf534f8b7c0b1c44bb10f5fd6",
+    "kernels/polar_qmm.py": "ab2a06eb4454449b6124ce272673037066d48e97a3018cb96ff5e8685b52209b",
+    "kernels/polar_gather_qmv.py": "a64e10d4d8fce0c6418c636a9284ed47e72d7518d766fdfe0f4e4865cfbe53ee",
+    "kernels/polar_multi_gather_qmv.py": "97220c1297931bfd14e8820c976b12cadbe2905d608b9ef1a225aae23498878e",
+    "kernels/polar_gather_qmm.py": "a808f36b72e3f1d9e86c202729cc24667de8837ccf789321d15add459b9a685e",
+    "layers/polar_linear.py": "0a37873b62b3ca0d2e38ebe19beb443af77e519b77255a7a7c99e1e896c94101",
+    "layers/polar_switch_linear.py": "5eab8ff083ab8a9bff06bcc945281fb3061b7b51c18c3af1d42753b9df273341",
+    "core/rotation.py": "9732fb8d40000234c8595830287f5b414fde0ed9b3b7863d279fd365d2bc2f04",
+    "core/packing.py": "da7ddd7bd5ca5ed97272016760c10a4826d3dec8b12aa36f148f8733a3b025a0",
+    "core/polar_quantize.py": "fe62f94130bc438cb145f0b3c514aa428f13547c268ab46e91ed3f2c061ab3a2",
+    "generate.py": "4c7d1004135b6f311eb406f57a362037e170145ed6261b876aeebe12e5bbdc4a",
+    "quantize_model.py": "048a3dfe7f63e61dfa6ef857b1818d422e8ee7df0aae6caf30c85a4caba5d7de",
+    "LICENSE": "50b90a16d8fef4a9f2d1453731ae1c83bbbf64c74d5ad47b0479969ad9fd7cc9",
+    "NOTICE": "45b1fb5e844481cda3f97793b74e2003867a85a4214b66f941c0744a3bc6595a"
+  },
+  "gpt_oss": {
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "commit": "72be8c955d9a0d3099bd01865af288e0e947c3fa",
+    "path": "mlx_lm/models/gpt_oss.py",
+    "sha256": "21ce2788670c6eda508a794e282e732c7fd3635e1d8b9c62a6efc4c433014d08"
+  },
+  "benchmark_gpt_oss": {
+    "package": "mlx-lm",
+    "version": "0.32.2",
+    "sha256": "21ce2788670c6eda508a794e282e732c7fd3635e1d8b9c62a6efc4c433014d08"
+  },
+  "generated_fixtures": {
+    "reference-generated-2880.npz": "d78edd0d7ece2a7a9ea0bf6b5e851158881a5b4b29d5b8fb96c830c0de4dac3d",
+    "reference-generated-64.npz": "b67d9996cb9ad30963377cb449cd5fc224fd4d53fbf14c78d9227f17d417376a",
+    "reference-generated-4096.npz": "1721e84a5426c58ea8f2d10d1c50d306962f6228ef110076097d0f50c7e757e4"
+  },
+  "generated_fixture_command": "reference-env/bin/python benchmarks/turboquant/generate_reference_fixtures.py --output tests/fixtures/turboquant_metadata",
+  "generated_fixture_script_sha256": "c408ab4c36e2d6601212fa683ab3d807068b65ce36ab7d29ef371aba3b6db2e4",
+  "benchmark_rope_utils": {
+    "package": "mlx-lm",
+    "version": "0.32.2",
+    "sha256": "06466d57dfe1ccc1e61ba595c0a8f2dd3a14bcb5c6a1d06c67591dc03128606b",
+    "difference": "YarnRoPE always rounds low/high correction bounds; native honors checkpoint truncate=false."
+  }
+}

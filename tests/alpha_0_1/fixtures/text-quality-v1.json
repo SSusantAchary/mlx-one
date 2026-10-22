@@ -1,0 +1,602 @@
+{
+  "schema_version": "native-task-inputs-v1",
+  "text_quality": {
+    "schema_version": "native-text-quality-v1",
+    "dataset_id": "mlx-one-alpha-text-contract-1.0.0",
+    "license": "Apache-2.0",
+    "provenance": {
+      "method": "original authored factual, arithmetic and toy instruction cases; answers fixed independently of model output",
+      "model_outputs_used": false,
+      "statistical_held_out_benchmark": false
+    },
+    "required_repetitions": 5,
+    "minimum_accuracy": 1.0,
+    "required_cases": {
+      "fact-japan": "factual",
+      "fact-planet": "factual",
+      "fact-water": "factual",
+      "add": "arithmetic",
+      "multiply": "arithmetic",
+      "subtract": "arithmetic",
+      "count": "reasoning",
+      "order": "reasoning",
+      "deduction": "reasoning",
+      "literal": "instruction",
+      "lowercase": "instruction",
+      "select": "instruction",
+      "json-object": "structured",
+      "json-array": "structured",
+      "json-types": "structured",
+      "chat-system": "chat",
+      "chat-history": "chat",
+      "eos-done": "eos",
+      "eos-ok": "eos",
+      "stop-pipe": "stop",
+      "stop-end": "stop",
+      "unicode-latin": "unicode",
+      "unicode-devanagari": "unicode",
+      "unicode-cjk": "unicode",
+      "invalid-empty": "invalid",
+      "invalid-type": "invalid",
+      "invalid-budget": "invalid"
+    },
+    "scoring": "strip outer whitespace only for exact text; strict JSON structural equality with duplicate-key/nonfinite rejection; declared exception type/message for both APIs; stop/EOS require stop finish; every valid case must agree across stream/generate and across five repeats"
+  },
+  "cases": [
+    {
+      "request_id": "fact-japan",
+      "category": "factual",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "What is the capital of Japan? Answer with only the city name."
+          }
+        ]
+      },
+      "expected": {
+        "text": "Tokyo"
+      }
+    },
+    {
+      "request_id": "fact-planet",
+      "category": "factual",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "What is the largest planet in our Solar System? Answer with only its name."
+          }
+        ]
+      },
+      "expected": {
+        "text": "Jupiter"
+      }
+    },
+    {
+      "request_id": "fact-water",
+      "category": "factual",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "What is the chemical formula of water? Answer using only ASCII letters and digits."
+          }
+        ]
+      },
+      "expected": {
+        "text": "H2O"
+      }
+    },
+    {
+      "request_id": "add",
+      "category": "arithmetic",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 7 + 5. Answer with only the integer."
+          }
+        ]
+      },
+      "expected": {
+        "text": "12"
+      }
+    },
+    {
+      "request_id": "multiply",
+      "category": "arithmetic",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 9 * 6. Answer with only the integer."
+          }
+        ]
+      },
+      "expected": {
+        "text": "54"
+      }
+    },
+    {
+      "request_id": "subtract",
+      "category": "arithmetic",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 20 - 7. Answer with only the integer."
+          }
+        ]
+      },
+      "expected": {
+        "text": "13"
+      }
+    },
+    {
+      "request_id": "count",
+      "category": "reasoning",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "A box contains 3 red balls and 2 blue balls. How many balls are in the box? Answer with only the integer."
+          }
+        ]
+      },
+      "expected": {
+        "text": "5"
+      }
+    },
+    {
+      "request_id": "order",
+      "category": "reasoning",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which is larger: 8 or 3? Answer with only the integer."
+          }
+        ]
+      },
+      "expected": {
+        "text": "8"
+      }
+    },
+    {
+      "request_id": "deduction",
+      "category": "reasoning",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "All cats are mammals. All mammals are animals. Is a cat an animal? Answer with only yes or no in lowercase."
+          }
+        ]
+      },
+      "expected": {
+        "text": "yes"
+      }
+    },
+    {
+      "request_id": "literal",
+      "category": "instruction",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Output exactly ALPHA. Do not add punctuation or explanation."
+          }
+        ]
+      },
+      "expected": {
+        "text": "ALPHA"
+      }
+    },
+    {
+      "request_id": "lowercase",
+      "category": "instruction",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Convert MiXeD to lowercase. Output only the converted word."
+          }
+        ]
+      },
+      "expected": {
+        "text": "mixed"
+      }
+    },
+    {
+      "request_id": "select",
+      "category": "instruction",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "From the list [red, blue, green], output only the second word."
+          }
+        ]
+      },
+      "expected": {
+        "text": "blue"
+      }
+    },
+    {
+      "request_id": "json-object",
+      "category": "structured",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return only a JSON object with one key answer whose value is the integer 7. No markdown."
+          }
+        ]
+      },
+      "expected": {
+        "json": {
+          "answer": 7
+        }
+      }
+    },
+    {
+      "request_id": "json-array",
+      "category": "structured",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return only the JSON array [2,4,6]. No markdown or explanation."
+          }
+        ]
+      },
+      "expected": {
+        "json": [
+          2,
+          4,
+          6
+        ]
+      }
+    },
+    {
+      "request_id": "json-types",
+      "category": "structured",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return only a JSON object with ok set to true and count set to the integer 2. No markdown."
+          }
+        ]
+      },
+      "expected": {
+        "json": {
+          "ok": true,
+          "count": 2
+        }
+      }
+    },
+    {
+      "request_id": "chat-system",
+      "category": "chat",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "system",
+            "content": "For every user message, reply with exactly BLUE and nothing else."
+          },
+          {
+            "role": "user",
+            "content": "What is your reply?"
+          }
+        ]
+      },
+      "expected": {
+        "text": "BLUE"
+      }
+    },
+    {
+      "request_id": "chat-history",
+      "category": "chat",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Remember this codeword: MAPLE."
+          },
+          {
+            "role": "assistant",
+            "content": "I will remember MAPLE."
+          },
+          {
+            "role": "user",
+            "content": "Output only the codeword I gave you."
+          }
+        ]
+      },
+      "expected": {
+        "text": "MAPLE"
+      }
+    },
+    {
+      "request_id": "eos-done",
+      "category": "eos",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly DONE and then end your response. No extra words."
+          }
+        ]
+      },
+      "expected": {
+        "text": "DONE"
+      }
+    },
+    {
+      "request_id": "eos-ok",
+      "category": "eos",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly OK and then end your response. No extra words."
+          }
+        ]
+      },
+      "expected": {
+        "text": "OK"
+      }
+    },
+    {
+      "request_id": "stop-pipe",
+      "category": "stop",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0,
+          "stop": [
+            "|BLUE"
+          ]
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Output exactly RED|BLUE|GREEN without spaces or explanation."
+          }
+        ]
+      },
+      "expected": {
+        "text": "RED"
+      }
+    },
+    {
+      "request_id": "stop-end",
+      "category": "stop",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0,
+          "stop": [
+            " END"
+          ]
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Output exactly one END two without quotation marks or explanation."
+          }
+        ]
+      },
+      "expected": {
+        "text": "one"
+      }
+    },
+    {
+      "request_id": "unicode-latin",
+      "category": "unicode",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Copy exactly this text and nothing else: café"
+          }
+        ]
+      },
+      "expected": {
+        "text": "café"
+      }
+    },
+    {
+      "request_id": "unicode-devanagari",
+      "category": "unicode",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Copy exactly this text and nothing else: नमस्ते"
+          }
+        ]
+      },
+      "expected": {
+        "text": "नमस्ते"
+      }
+    },
+    {
+      "request_id": "unicode-cjk",
+      "category": "unicode",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "messages": [
+          {
+            "role": "user",
+            "content": "Copy exactly this text and nothing else: 你好"
+          }
+        ]
+      },
+      "expected": {
+        "text": "你好"
+      }
+    },
+    {
+      "request_id": "invalid-empty",
+      "category": "invalid",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "prompt": ""
+      },
+      "expected": {
+        "error_type": "ValueError",
+        "message_contains": "prompt must be non-empty text"
+      }
+    },
+    {
+      "request_id": "invalid-type",
+      "category": "invalid",
+      "payload": {
+        "generation": {
+          "max_tokens": 16,
+          "temperature": 0,
+          "seed": 0
+        },
+        "prompt": null
+      },
+      "expected": {
+        "error_type": "ValueError",
+        "message_contains": "prompt must be non-empty text"
+      }
+    },
+    {
+      "request_id": "invalid-budget",
+      "category": "invalid",
+      "payload": {
+        "generation": {
+          "max_tokens": 0,
+          "temperature": 0,
+          "seed": 0
+        },
+        "prompt": "hello"
+      },
+      "expected": {
+        "error_type": "ValueError",
+        "message_contains": "max_tokens must be positive"
+      }
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "baseline_commit": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+  "qualification_promoted": false,
+  "rows": [
+    {
+      "checkpoint": "qwen3-small",
+      "correctness": "PASS",
+      "correctness_scope": "reference attention dense B1/B2/B4",
+      "full_reference_performance": "HARDWARE_PENDING",
+      "phase": 0,
+      "qualification_promoted": false,
+      "revision": "11de96878523501bcaa86104e3c186de07ff9068"
+    },
+    {
+      "checkpoint": "qwen3-large",
+      "correctness": "HARDWARE_PENDING",
+      "correctness_scope": "unexecuted current-source model qualification",
+      "full_reference_performance": "HARDWARE_PENDING",
+      "phase": 0,
+      "qualification_promoted": false,
+      "revision": "8c24f6782a91421513803ce527a27dcc560ab904"
+    },
+    {
+      "checkpoint": "smol-small",
+      "correctness": "HARDWARE_PENDING",
+      "correctness_scope": "unexecuted current-source model qualification",
+      "full_reference_performance": "HARDWARE_PENDING",
+      "phase": 0,
+      "qualification_promoted": false,
+      "revision": "f8027fd0eaeea54caa13c31d31b9fdc459c38b49"
+    },
+    {
+      "checkpoint": "smol-large",
+      "correctness": "HARDWARE_PENDING",
+      "correctness_scope": "unexecuted current-source model qualification",
+      "full_reference_performance": "HARDWARE_PENDING",
+      "phase": 0,
+      "qualification_promoted": false,
+      "revision": "effd688a12921b4cc83e3312b6feb579f70f9c71"
+    },
+    {
+      "checkpoint": "lfm-small",
+      "correctness": "HARDWARE_PENDING",
+      "correctness_scope": "unexecuted current-source model qualification",
+      "full_reference_performance": "HARDWARE_PENDING",
+      "phase": 0,
+      "qualification_promoted": false,
+      "revision": "3b5014a1966c54313045fd0a23a098a220083b1e"
+    },
+    {
+      "checkpoint": "lfm-large",
+      "correctness": "HARDWARE_PENDING",
+      "correctness_scope": "unexecuted current-source model qualification",
+      "full_reference_performance": "HARDWARE_PENDING",
+      "phase": 0,
+      "qualification_promoted": false,
+      "revision": "9384737a4b9172faf97f4d65d4bf7799bee182fa"
+    },
+    {
+      "completed": 7,
+      "decode_tps_median": 17.15709801737368,
+      "failed": 0,
+      "full_baseline_scope": false,
+      "kv_head_repeat_bytes": 118277275648,
+      "model_performance_gate": "pending",
+      "peak_mlx_bytes": 1211149036,
+      "phase": 0,
+      "prefill_tps_median": 148.68762480034633,
+      "scope": "qwen3-small bounded reference 512/B1",
+      "status": "PASS: measurement availability",
+      "ttft_budget_ms": 2000,
+      "ttft_p95_ms": 3782.781125046313,
+      "warm_completed": 5,
+      "within_ttft_budget": false
+    },
+    {
+      "counts": {
+        "FAIL": 0,
+        "NOT_RUN": 0,
+        "PASS": 205,
+        "UNSUPPORTED": 18
+      },
+      "performance": {
+        "faster": 191,
+        "slower": 13,
+        "smoke_untimed": 1,
+        "timed": 204,
+        "unsupported_untimed": 18
+      },
+      "phase": 1,
+      "scope": "forced-fused operators",
+      "status": "COMPLETE_WITH_UNSUPPORTED"
+    },
+    {
+      "atol": 0.01,
+      "correctness": "FAIL",
+      "max_kv_error": 1.765625,
+      "max_logit_error": 0.125,
+      "performance": "BLOCKED",
+      "phase": 1,
+      "rtol": 0.01,
+      "scope": "Qwen3 INT8 fused model"
+    },
+    {
+      "phase": 1,
+      "scope": "additional four-model track on current source",
+      "status": "HARDWARE_PENDING"
+    }
+  ],
+  "schema_version": "inference-optimization-hardware-handoff-v2",
+  "source": {
+    "dirty": true,
+    "git_revision": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+    "native_test_sha256": "0d3e64354026fce726b2848850be19bd35a3696d5a29f082f2a675bf4fff21ab",
+    "packages": {
+      "huggingface-hub": "1.30.0",
+      "mlx": "0.32.2",
+      "mlx-one": "0.1.0a1",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.2",
+      "uvicorn": "0.52.4"
+    },
+    "software": {
+      "git_commit": null,
+      "metadata": {
+        "implementation": "cpython"
+      },
+      "os_version": "macOS-15.7.9",
+      "packages": {
+        "mlx": "0.32.2",
+        "mlx-one": "0.1.0a1"
+      },
+      "python_version": "3.12.11"
+    },
+    "source_sha256": "3b51a5c11c69819715277ce4c694b4e04754140e9afa463d736f73fcdd0414c0"
+  }
+}

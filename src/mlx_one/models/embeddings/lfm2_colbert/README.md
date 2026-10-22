@@ -122,4 +122,4 @@ pytest -q tests/test_native_lfm_architectures.py
 MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_lfm_mlx.py
 ```
 
-See the [family backlog](../../../../../model_list.txt) for candidate status.
+See the [family backlog](../../../../../docs/qualification/archived-evidence.md) for candidate status.

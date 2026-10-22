@@ -125,10 +125,13 @@ def _read_json(path: Path, *, required: bool = True) -> dict[str, Any]:
 
 
 def _read_safetensors(root: Path) -> dict[str, Any]:
+    from mlx_one.core.precision import validate_finite_safetensors
+
     try:
         files, mapping = select_safetensors(root)
         names = {}
         for path in files:
+            validate_finite_safetensors(path)
             with safe_open(path, framework="numpy") as handle:
                 names[path.name] = tuple(handle.keys())
         validate_tensor_index(files, mapping, names)

@@ -34,7 +34,7 @@ def native_decode(bundle, profile):
     from mlx_one.engine.cache_specs import CacheConfig
     from mlx_one.engine.hybrid import HybridRunner
     from mlx_one.engine.paged import PagedRunner
-    from mlx_one.inference_baseline_worker import build_messages
+    from mlx_one.inference_baseline_worker import build_exact_messages, build_messages
 
     backend = {"reference_dense": "dense", "experimental_dense_batch": "dense",
                "experimental_hybrid_batch": "hybrid", "paged": "paged"}[profile.inference_mode]
@@ -48,7 +48,8 @@ def native_decode(bundle, profile):
     batch = 1 if serial else profile.slots
     prompts = []
     for index in range(4):
-        _, rendered = build_messages(bundle, profile.context_tokens, suffix=f"\nRequest {index}.")
+        builder = build_exact_messages if profile.exact_prompt_tokens else build_messages
+        _, rendered = builder(bundle, profile.context_tokens, suffix=f"\nRequest {index}.")
         prompts.append(tuple(bundle.tokenizer.encode(rendered)))
     fixture = bundle.tokenizer.encode(" A deterministic continuation.")
     forced = [fixture[i % len(fixture)] for i in range(profile.output_tokens - 1)]

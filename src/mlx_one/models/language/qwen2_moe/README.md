@@ -98,5 +98,5 @@ pytest -q tests/test_native_qwen_architectures.py
 MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_qwen_mlx.py
 ```
 
-See the [family backlog](../../../../../model_list.txt) and
+See the [family backlog](../../../../../docs/qualification/archived-evidence.md) and
 [cache runtime](../../../../../docs/cache-runtime.md) for qualification boundaries.

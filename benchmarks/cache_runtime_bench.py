@@ -41,7 +41,7 @@ class RunSpec:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base-url", default="http://127.0.0.1:8080")
+    parser.add_argument("--base-url", default="http://127.0.0.1:8888")
     model_group = parser.add_mutually_exclusive_group(required=True)
     model_group.add_argument("--model", help="Model currently loaded by the server")
     model_group.add_argument(

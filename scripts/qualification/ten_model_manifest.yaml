@@ -1,0 +1,12 @@
+schema_version: ten-model-manifest-v1
+models:
+  - {id: M01, repo: openai-community/gpt2, family: gpt2, primary: float32, chat: false}
+  - {id: M02, repo: Qwen/Qwen2.5-0.5B-Instruct, family: qwen2, primary: affine_q8, chat: true}
+  - {id: M03, repo: Qwen/Qwen3-0.6B, family: qwen3, primary: affine_q8, chat: true}
+  - {id: M04, repo: LiquidAI/LFM2-350M, family: lfm2, primary: affine_q4, chat: true}
+  - {id: M05, repo: Qwen/Qwen3.5-0.8B, family: qwen3_5, primary: affine_q4, chat: true}
+  - {id: M06, repo: HuggingFaceTB/SmolLM2-1.7B-Instruct, family: llama, primary: affine_q4, chat: true}
+  - {id: M07, repo: meta-llama/Llama-3.2-1B-Instruct, family: llama, primary: affine_q4, chat: true}
+  - {id: M08, repo: Qwen/Qwen2.5-1.5B-Instruct, family: qwen2, primary: affine_q4, chat: true}
+  - {id: M09, repo: google/gemma-3-1b-it, family: gemma3_text, primary: bfloat16, chat: true}
+  - {id: M10, repo: microsoft/Phi-3-mini-4k-instruct, family: phi3, primary: affine_q4, chat: true}

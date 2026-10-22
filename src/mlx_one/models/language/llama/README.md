@@ -127,4 +127,4 @@ MLX_ONE_RUN_MINICPM5_INTEGRATION=1 pytest -q tests/test_native_minicpm5_integrat
 
 The last command may download pinned checkpoints. See the
 [candidate catalog](../../../../../docs/model-catalog.md) and
-[SmolLM2 evidence](../../../../../qualification/results/smollm2-1.7b-lora-m4-air-32gb.json).
+[SmolLM2 evidence](../../../../../docs/qualification/archived-evidence.md).

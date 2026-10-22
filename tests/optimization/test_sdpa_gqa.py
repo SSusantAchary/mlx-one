@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from mlx_one.engine.optimization_policy import NativeMathPolicy, math_execution
-from mlx_one.ops.attention import attention
+from mlx_one.ops.attention import attention, attention_fused, select_attention
 
 
 def test_native_fp16_decode_failure_preserves_reference_before_cache_mutation():
@@ -78,7 +78,9 @@ def test_gqa_and_lower_right_causality_match_independent_high_precision(core, d,
     with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family="lfm2"):
         optimized = attention(q, k, v, scale=d**-.5, mask="causal", stable=True, promote=True)
     np.testing.assert_allclose(optimized, expected, atol=1e-2, rtol=1e-2)
-    assert core[1] == ([] if queries == 1 else [(q.shape, k.shape, v.shape)])
+    # Stable FP16 decoders retain reference rounding even when a fused operator
+    # is available. Explicit attention_fused diagnostics below remain forced.
+    assert core[1] == []
 
 
 @pytest.mark.parametrize("mask_kind", ("none", "bool", "additive"))
@@ -122,3 +124,158 @@ def test_cpu_backend_never_selects_fused_gpu_route(core):
     with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family="lfm2"):
         attention(q, q, q, scale=.125, mask="causal", stable=True, promote=True)
     assert core[1] == []
+
+
+@pytest.mark.parametrize("batch", (1, 2, 4))
+@pytest.mark.parametrize("heads,kv_heads", ((8, 8), (8, 2), (8, 1)))
+@pytest.mark.parametrize("queries,history", ((1, 0), (1, 17), (7, 19), (32, 0)))
+def test_forced_fused_diagnostic_preserves_native_gqa_without_repeating_kv(
+        core, monkeypatch, batch, heads, kv_heads, queries, history):
+    rng = np.random.default_rng(616)
+    q = rng.normal(size=(batch, heads, queries, 64)).astype(np.float16)
+    k = rng.normal(size=(batch, kv_heads, queries + history, 64)).astype(np.float16)
+    v = rng.normal(size=k.shape).astype(np.float16)
+    expected = oracle(q, k, v, .125, "causal")
+    def no_repeat(*args, **kwargs):
+        raise AssertionError("fused attention must retain native GQA heads")
+    monkeypatch.setattr(core[0], "repeat", no_repeat)
+    actual = attention_fused(q, k, v, scale=.125, mask="causal")
+    np.testing.assert_allclose(actual, expected, atol=1e-4, rtol=1e-4)
+    assert core[1] == [(q.shape, k.shape, v.shape)]
+
+
+@pytest.mark.parametrize("change", ("rank", "zero", "batch", "heads", "keys", "width",
+                                    "mask", "mask_rank", "mask_string"))
+def test_invalid_inputs_fail_under_reference_policy_before_cache_append(core, change):
+    q = np.ones((2, 4, 3, 64), dtype=np.float16)
+    k = v = np.ones((2, 2, 3, 64), dtype=np.float16)
+    mask = None
+    if change == "rank":
+        q = q[0]
+    elif change == "zero":
+        q = q[:, :, :0]
+    elif change == "batch":
+        k = k[:1]
+    elif change == "heads":
+        q = q[:, :3]
+    elif change == "keys":
+        v = v[:, :, :2]
+    elif change == "width":
+        k = k[..., :32]
+    elif change == "mask":
+        mask = np.ones((2, 1, 3, 9), dtype=bool)
+    elif change == "mask_rank":
+        mask = np.ones((1, 1, 1, 3, 3), dtype=bool)
+    else:
+        mask = "upper_left"
+    with pytest.raises(ValueError):
+        select_attention(q, k, v, mask=mask)
+    assert core[1] == []
+
+
+def test_native_precision_diagnostic_does_not_cast_or_claim_checkpoint_qualification(core):
+    calls = []
+    def diagnostic(q, k, v, *, scale, mask, force_fused):
+        calls.append((q.dtype, k.dtype, v.dtype, force_fused))
+        return q
+    core[0].fast.scaled_dot_product_attention = diagnostic
+    q = np.ones((4, 2, 3, 64), dtype=np.float16)
+    attention_fused(q, q, q, scale=.125, accumulation="native")
+    assert calls == [(np.float16, np.float16, np.float16, True)]
+    assert NativeMathPolicy.optimized().to_dict()["qualified"] is False
+
+
+def test_diagnostic_cannot_run_without_metal_or_round_additive_bias(core):
+    q = np.ones((1, 1, 2, 64), dtype=np.float16)
+    mask = np.array([[.00012345, -np.inf], [.00019345, 0]], dtype=np.float32)
+    with pytest.raises(ValueError, match="precision"):
+        attention_fused(q, q, q, scale=.125, mask=mask, accumulation="native")
+    core[0].default_device = lambda: "cpu"
+    with pytest.raises(ValueError, match="Metal"):
+        attention_fused(q, q, q, scale=.125)
+
+
+@pytest.mark.parametrize("family", ("qwen2", "qwen3"))
+def test_diagnostic_availability_does_not_reenable_failed_qwen_checkpoint(core, family):
+    q = np.ones((1, 4, 8, 64), dtype=np.float16)
+    k = np.ones((1, 2, 8, 64), dtype=np.float16)
+    with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family=family):
+        decision = select_attention(q, k, k, mask="causal")
+    assert decision.selected == "reference" and "failed" in decision.reason
+
+
+@pytest.mark.parametrize("requires_stable_rounding", (False, True))
+def test_stable_rounding_contract_is_explicit_and_preserves_other_candidates(
+        core, requires_stable_rounding):
+    from mlx_one.ops.attention import STABLE_ROUNDING_REASON
+
+    q = np.ones((1, 4, 16, 64), dtype=np.float16)
+    k = np.ones((1, 2, 16, 64), dtype=np.float16)
+    with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family="lfm2"):
+        decision = select_attention(q, k, k, mask="causal",
+                                    requires_stable_rounding=requires_stable_rounding)
+    if requires_stable_rounding:
+        assert decision.selected == "reference" and decision.reason == STABLE_ROUNDING_REASON
+    else:
+        assert decision.selected == "mlx_sdpa"
+    assert core[1] == []  # Capability selection never executes a kernel.
+
+
+@pytest.mark.parametrize("stable,dtype,selected", [(True, np.float16, "reference"),
+                                                  (False, np.float16, "mlx_sdpa"),
+                                                  (True, np.float32, "mlx_sdpa")])
+def test_supplied_decision_cannot_bypass_stable_fp16_contract_and_dispatch_is_actual(
+        core, stable, dtype, selected):
+    from mlx_one.engine.kernel_dispatch import KernelDecision
+    from mlx_one.ops.attention import STABLE_ROUNDING_REASON
+
+    class Observer(list):
+        capture_math_dispatch = True
+
+        def __call__(self, event):
+            self.append(event)
+
+    rng, observer = np.random.default_rng(73), Observer()
+    q = rng.normal(size=(1, 4, 2, 64)).astype(dtype)
+    k = rng.normal(size=(1, 2, 2, 64)).astype(dtype)
+    v = rng.normal(size=k.shape).astype(dtype)
+    with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family="lfm2",
+                        observer=observer):
+        actual = attention(q, k, v, scale=.125, mask="causal", stable=stable, promote=True,
+                           decision=KernelDecision("mlx_sdpa", "supplied experimental decision"))
+    np.testing.assert_allclose(actual, oracle(q, k, v, .125, "causal"), atol=1e-4, rtol=1e-4)
+    routes = [event for event in observer if event["operation"] == "attention"]
+    assert len(routes) == 1
+    assert routes[0]["requested"] == "mlx_sdpa" and routes[0]["selected"] == selected
+    assert routes[0]["reason"] == (STABLE_ROUNDING_REASON if selected == "reference"
+                                   else "supplied experimental decision")
+    assert routes[0]["shape"]["accumulation_operands"] == (
+        "reference" if selected == "reference" else "float32")
+    assert bool(core[1]) == (selected == "mlx_sdpa")
+
+
+def test_stable_contract_does_not_hide_invalid_attention_inputs(core):
+    q = np.ones((1, 4, 2, 64), dtype=np.float16)
+    k = np.ones((2, 2, 2, 64), dtype=np.float16)
+    with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family="lfm2"):
+        with pytest.raises(ValueError, match="layout mismatch"):
+            select_attention(q, k, k, requires_stable_rounding=True)
+    assert core[1] == []
+
+
+def test_explicit_fused_diagnostics_retain_force_fused_after_runtime_guard(core):
+    calls = []
+
+    def diagnostic(q, k, v, *, scale, mask, force_fused):
+        calls.append({"dtype": q.dtype, "force_fused": force_fused})
+        return oracle(q, k, v, scale, mask).astype(q.dtype)
+
+    core[0].fast.scaled_dot_product_attention = diagnostic
+    q = np.ones((1, 4, 2, 64), dtype=np.float16)
+    k = np.ones((1, 2, 2, 64), dtype=np.float16)
+    with math_execution(NativeMathPolicy(attention="mlx_sdpa"), family="qwen3"):
+        assert select_attention(q, k, k, requires_stable_rounding=True).selected == "reference"
+        attention_fused(q, k, k, scale=.125, mask="causal", accumulation="native")
+        attention_fused(q, k, k, scale=.125, mask="causal", accumulation="float32")
+    assert calls == [{"dtype": np.float16, "force_fused": True},
+                     {"dtype": np.float32, "force_fused": True}]

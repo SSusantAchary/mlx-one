@@ -99,4 +99,4 @@ MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_sentence_transformers_mlx.py
 ```
 
 See [qualification levels](../../../../../README.md#capability-levels) and the
-[family backlog](../../../../../model_list.txt).
+[family backlog](../../../../../docs/qualification/archived-evidence.md).

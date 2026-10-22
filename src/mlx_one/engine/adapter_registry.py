@@ -87,6 +87,20 @@ class RuntimeRegistration:
 
 
 _RUNTIME_REGISTRY: dict[str, RuntimeRegistration] = {}
+_BUILTIN_RUNTIMES_LOADED = False
+
+
+def _ensure_builtin_runtimes() -> None:
+    global _BUILTIN_RUNTIMES_LOADED
+    with _REGISTRY_LOCK:
+        if _BUILTIN_RUNTIMES_LOADED:
+            return
+        from mlx_one.engine.runtime_specs import builtin_runtime
+        from mlx_one.models.registry import builtin_registrations
+
+        for architecture in builtin_registrations():
+            register_runtime(builtin_runtime(architecture))
+        _BUILTIN_RUNTIMES_LOADED = True
 
 
 def register_runtime(registration: RuntimeRegistration) -> None:
@@ -100,6 +114,7 @@ def register_runtime(registration: RuntimeRegistration) -> None:
 def get_runtime_registration(model_type: str, *, contract_version=None) -> RuntimeRegistration:
     with _REGISTRY_LOCK:
         get_registration(model_type)
+        _ensure_builtin_runtimes()
         try:
             result = _RUNTIME_REGISTRY[model_type]
         except KeyError as exc:
@@ -112,6 +127,7 @@ def get_runtime_registration(model_type: str, *, contract_version=None) -> Runti
 def registered_runtime_types() -> tuple[str, ...]:
     with _REGISTRY_LOCK:
         registered_model_types()
+        _ensure_builtin_runtimes()
         return tuple(sorted(_RUNTIME_REGISTRY))
 
 

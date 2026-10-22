@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from math import isfinite
 from typing import Any
 
 
@@ -11,13 +12,16 @@ class ConfigError(ValueError):
 
 
 def require_positive(name: str, value: int | float) -> None:
-    if isinstance(value, bool) or value <= 0:
+    if (isinstance(value, bool) or not isinstance(value, (int, float))
+            or not isfinite(value) or value <= 0):
         raise ConfigError(f"{name} must be positive")
 
 
 def require_divisible(name: str, value: int, divisor_name: str, divisor: int) -> None:
     require_positive(name, value)
     require_positive(divisor_name, divisor)
+    if not isinstance(value, int) or not isinstance(divisor, int):
+        raise ConfigError(f"{name} and {divisor_name} must be integers")
     if value % divisor:
         raise ConfigError(f"{name} must be divisible by {divisor_name}")
 
@@ -27,12 +31,21 @@ def validate_rope_scaling(value: Mapping[str, Any] | None) -> dict[str, Any] | N
         return None
     result = dict(value)
     rope_type = result.get("rope_type", result.get("type", "default"))
-    if rope_type not in {"default", "linear", "mrope"}:
+    if rope_type not in {"default", "linear", "mrope", "llama3"}:
         raise ConfigError(f"unsupported RoPE type: {rope_type}")
     if rope_type == "linear":
         factor = result.get("factor")
         if not isinstance(factor, (int, float)) or factor <= 0:
             raise ConfigError("linear RoPE scaling requires a positive factor")
+    if rope_type == "llama3":
+        for name in ("factor", "low_freq_factor", "high_freq_factor",
+                     "original_max_position_embeddings"):
+            try:
+                require_positive(name, result.get(name))
+            except ConfigError as exc:
+                raise ConfigError(f"llama3 RoPE requires positive {name}") from exc
+        if result["high_freq_factor"] <= result["low_freq_factor"]:
+            raise ConfigError("llama3 high_freq_factor must exceed low_freq_factor")
     if rope_type == "mrope":
         sections = result.get("mrope_section")
         if not isinstance(sections, (list, tuple)) or len(sections) != 3:

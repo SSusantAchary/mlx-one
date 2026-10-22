@@ -16,9 +16,10 @@ import mlx.nn as nn
 from mlx_one.core.cache import make_hybrid_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.lfm2.config import Lfm2Config
-from mlx_one.models.shared.execution import project
-from mlx_one.models.shared.hybrid import HybridDecoderLayer, sliding_causal_mask
-from mlx_one.models.shared.transformer import causal_mask
+from mlx_one.models.language.lfm2.reference_math import Lfm2DecoderLayer
+from mlx_one.models.shared.hybrid import sliding_causal_mask
+from mlx_one.models.shared.reference_math import attention_mask as causal_mask
+from mlx_one.models.shared.transformer import causal_mask as legacy_causal_mask
 from mlx_one.ops.logits import project_logits
 
 
@@ -28,7 +29,7 @@ class Lfm2Model(nn.Module):
         self.config = config
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
         self.layers = [
-            HybridDecoderLayer(config, index) for index in range(config.num_hidden_layers)
+            Lfm2DecoderLayer(config, index) for index in range(config.num_hidden_layers)
         ]
         self.embedding_norm = nn.RMSNorm(config.hidden_size, eps=config.norm_eps)
 
@@ -59,13 +60,23 @@ class Lfm2Model(nn.Module):
                 mask = causal_mask(hidden.shape[1], offset)
             else:
                 mask = None
-            hidden = layer(
-                hidden,
-                attention_mask=mask,
-                padding_mask=attention_mask,
-                cache=layer_cache,
-                position_ids=position_ids,
-            )
+            if isinstance(layer, Lfm2DecoderLayer):
+                hidden = layer(
+                    hidden,
+                    mask=mask if layer.is_attention_layer else (
+                        None if attention_mask is None else attention_mask[:, -hidden.shape[1]:]
+                    ),
+                    cache=layer_cache,
+                    position_ids=position_ids,
+                )
+            else:
+                # Existing LFM2 MoE/multimodal subclasses retain their own blocks.
+                if isinstance(mask, str):
+                    mask = legacy_causal_mask(hidden.shape[1], offset)
+                hidden = layer(
+                    hidden, attention_mask=mask, padding_mask=attention_mask,
+                    cache=layer_cache, position_ids=position_ids,
+                )
             if states is not None:
                 states.append(hidden)
         hidden = self.embedding_norm(hidden)
@@ -75,6 +86,8 @@ class Lfm2Model(nn.Module):
 
 
 class Lfm2ForCausalLM(nn.Module):
+    _mlx_one_reference_first_math = True
+
     def __init__(self, config: Lfm2Config) -> None:
         super().__init__()
         self.config = config
@@ -104,12 +117,9 @@ class Lfm2ForCausalLM(nn.Module):
             position_ids=position_ids,
             output_hidden_states=output_hidden_states,
         )
-        logits = project_logits(hidden, lambda value: (
-            project(self.model.embed_tokens, value,
-                    execution_dtype=getattr(self, "_mlx_one_activation_dtype", None),
-                    as_linear=True)
-            if self.config.tie_embedding
-            else project(self.lm_head, value,
-                         execution_dtype=getattr(self, "_mlx_one_activation_dtype", None))
-        ), logits_mode, attention_mask=attention_mask)
+        logits = project_logits(
+            hidden,
+            self.model.embed_tokens.as_linear if self.config.tie_embedding else self.lm_head,
+            logits_mode, attention_mask=attention_mask,
+        )
         return ModelOutput(logits, hidden, cache=cache, hidden_states=states)

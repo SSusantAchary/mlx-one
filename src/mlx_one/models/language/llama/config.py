@@ -96,13 +96,16 @@ class LlamaConfig:
     def rope_scaling_factor(self) -> float:
         if self.rope_scaling is None:
             return 1.0
-        return float(self.rope_scaling.get("factor", 1.0))
+        kind = self.rope_scaling.get("rope_type", self.rope_scaling.get("type", "default"))
+        return float(self.rope_scaling.get("factor", 1.0)) if kind == "linear" else 1.0
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> LlamaConfig:
         data = dict(data)
         if "rope_scaling" not in data and "rope_parameters" in data:
             data["rope_scaling"] = data["rope_parameters"]
+        if isinstance(data.get("rope_parameters"), Mapping):
+            data.setdefault("rope_theta", data["rope_parameters"].get("rope_theta", 10000.0))
         if data.get("num_key_value_heads") is None and "num_attention_heads" in data:
             data["num_key_value_heads"] = data["num_attention_heads"]
         if isinstance(data.get("eos_token_id"), list):

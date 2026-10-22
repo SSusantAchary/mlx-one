@@ -1,0 +1,33 @@
+# A4 native text implementation and validation
+
+Latest independent qualification: **Qwen3 quality FAIL, bounded coverage PASS**, 15/27 distinct cases passing across five deterministic repetitions. Native execution/lifecycle and stream/generate consistency passed. See [release-readiness.md](release-readiness.md). The results below retain their stated earlier source identity and scope. No alpha support promotion.
+
+## Authorized native resume — current state
+
+**Qwen3 native B1 workflow PASS; alpha release NO-GO.** User explicitly authorized only the bounded Qwen3 workflow. Python, token streaming, CLI generation/streaming, real TCP HTTP chat, SSE completion, authentication, client disconnect, recovery and cleanup passed on Apple M4 / 32 GiB. Quality coverage and floating-weight native evidence remain pending. Packaging remains BLOCKED_ON_RELEASE_INCLUSION.
+
+Development SHA `8c57a6aff778f210ea0d212d0648df75dd3b920d4f96d93355e7edab268fb7c0`; broader validation SHA `a9a3f23771a2a116bc3bfaf9953341163aeb2faf573f2346feef230fe11e557c`; native source-provenance SHA `554a1a98fd16e7cb6530b9fa8e81cfe3401034752f07e5d5808ad172f39bcdf4`. These are three different hashing scopes. HEAD remains `b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902`; version remains `0.1.0a1`. Approved release-source SHA is unavailable.
+
+Only the A10 task worker and its focused tests changed in this resume. Native inference mathematics, model registries, execution engines, caches, task routers and numerical tolerances were reused. Final regression: **1671 passed, 47 skipped, 3 warnings**, 43.89s; focused alpha/task tests 90 passed; changed-file Ruff PASS. All prior active source remains present, only those two files differ from the prior A10 source manifest, and all 6494 historical files are hash-identical. Staged contents remain unchanged; Git status refreshed index stat metadata.
+
+Measured Python load: 0.881s in a fresh process with warm filesystem caches. Four warm requests: TTFT 77.01–86.91ms, prefill 96.21–108.59 tokens/s, decode 25.41–26.64 tokens/s. Python peak MLX 729333940 bytes, peak sampled RSS 871219200 bytes; after unloading 8 active / 0 cached MLX bytes. No competitive threshold or speedup claim.
+
+A10 now records actual startup, execution, cancellation, recovery, idempotent close, model weak-reference release, cache/lease cleanup and post-unload memory. The Qwen3 lifecycle receipt passed. Quality receipts count declared/observed/ground-truth cases and retain coverage_passed=null / NOT_RUN without an independently validated coverage protocol. Two factual continuation anchors passed separately; they do not establish broad model quality. The one-repetition task receipt retains aggregate **failed** (five_repetitions=false) with quality/coverage pending; this is not converted to qualification. Performance/fairness gates were not relaxed.
+
+Final-source native evidence: `.venv/alpha_0_1/resume-release-blockers-20261019-1/final-native-1792433770647560000/result.json`; detailed task receipt `.venv/alpha_0_1/resume-release-blockers-20261019-1/task-lifecycle-1792433799685333000/native`. Final tests: `.venv/alpha_0_1/resume-release-blockers-20261019-1/final-validation/backend-free-1792433779259685000-8208d610`. Full outputs, token IDs, precision, commands, failures and exact resume: [native-qwen3-validation.md](native-qwen3-validation.md).
+
+The private final inclusion proposal is `.venv/alpha_0_1/resume-release-blockers-20261019-1/proposed-release-manifest.final.private.json`: 324 candidates, 11 local-only (3 required, 8 owner decisions), 0 optional approved; all content hashes refreshed for this source. Original manifests and older-source native attempts remain unchanged. Wheel/sdist/isolated install NOT_RUN. No download, conversion, sweep, optimization, staging, commit, tag, push or publication occurred.
+
+Exact next owner action: review and approve/reject the final private release-inclusion proposal by content hash. This authorizes neither publication nor another checkpoint. In parallel, A4/A10 still need independent quality/coverage fixtures and separately authorized native evidence for a discovered floating-weight checkpoint. Qwen2.5 Q8, LFM2 Q4 and all floating candidates remain native NOT_RUN / HARDWARE_PENDING.
+
+## Earlier source-bound execution history
+
+The following entries describe their original stage/source and pre-authorization state. Current status is the authorized resume above; prior receipts are preserved.
+
+Existing native text/Engine reference paths reused unchanged mathematically. Fixed loader defects: reject scalar/list/bool/float-bit quantization metadata before config/model allocation; CPU finite safetensors validation before importing MLX; restrict index targets to safetensors and reject local escaping shard symlinks while preserving pinned Hub snapshot links to their own blob store. No re-quantization, numerical tolerance, cache ownership or experimental mode change.
+
+New regression tests exercise malformed quantization, local index/unindexed escape, compatible Hub links, and NaN rejection with mlx.core unavailable. Existing tests cover checkpoint identity/hash/revision mismatch, quantized tree strictness, architecture weight contracts, Engine generation/streaming, context/stop/cancellation and cleanup. **122 passed**, 1.30s. Command: `PYTHONPATH=src:tests:. .venv/bin/python -m pytest --no-cov -q tests/alpha_0_1/test_text_contract.py tests/test_checkpoint_identity.py tests/test_text_runtime.py tests/test_native_gpt2_architecture.py tests/test_native_qwen_architectures.py tests/test_native_llama_architecture.py tests/test_engine_public.py tests/test_cache_runtime.py tests/optimization/test_engine_math.py`. Evidence: ignored `a4.log`, `a4.junit.xml`; focused Ruff PASS. New generate/stream examples: --help PASS only; actual checkpoint execution NOT_RUN.
+
+Core text gate: **HARDWARE_PENDING / NOT_QUALIFIED**. No permission for checkpoint Metal runs was given. Historical Qwen3 affine INT8 B1/B2/B4 reference parity is preserved, not relabeled current source proof. Need one real pinned text quality/stream/lifecycle/memory/API receipt plus real floating and affine Q4/Q8 cells. No measured performance reported.
+
+Bounded existing command for owner opt-in (not executed): `HF_HUB_OFFLINE=1 .venv/bin/python benchmarks/p1_native_qualification.py correctness --checkpoints qwen3-small --backends reference_dense --checkpoint-paths scripts/qualification/checkpoint-paths.local.json --output <new-private-artifact-directory>`. This runner's numerical gate is necessary but alone does not establish end-user task quality or floating-weight coverage. A10 documents complementary task profiles and artifact validation.

@@ -3,8 +3,26 @@
 from mlx_one.core.registry import ModelRegistration, register_model
 
 
-def register_builtin_models() -> None:
-    registrations = (
+def builtin_registrations() -> tuple[ModelRegistration, ...]:
+    """Architecture metadata is independent of task scheduling and runtime bindings."""
+    return (
+        *(
+            ModelRegistration(
+                model_type,
+                f"mlx_one.models.language.{family}.config:{config}",
+                f"mlx_one.models.language.{family}.model:{model}",
+                "text", frozenset({"forward", "cache", "generate", "sample", "stream"}),
+                f"mlx_one.models.language.{family}.weights:sanitize_weights",
+                f"mlx_one.models.language.{family}.weights:weight_contract",
+                loader_path="mlx_one.text.loading:load_text_model",
+                tasks=frozenset({"text-generation"}),
+            )
+            for model_type, family, config, model in (
+                ("gemma3_text", "gemma3", "Gemma3TextConfig", "Gemma3ForCausalLM"),
+                ("phi3", "phi3", "Phi3Config", "Phi3ForCausalLM"),
+                ("gpt_oss", "gpt_oss", "GptOssConfig", "GptOssForCausalLM"),
+            )
+        ),
         ModelRegistration(
             "parakeet_tdt",
             "mlx_one.models.audio.parakeet.config:ParakeetConfig",
@@ -297,9 +315,8 @@ def register_builtin_models() -> None:
             tasks=frozenset({"asr"}),
         ),
     )
-    from mlx_one.engine.adapter_registry import register_runtime
-    from mlx_one.engine.runtime_specs import builtin_runtime
 
-    for registration in registrations:
+
+def register_builtin_models() -> None:
+    for registration in builtin_registrations():
         register_model(registration)
-        register_runtime(builtin_runtime(registration))

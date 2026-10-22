@@ -70,6 +70,26 @@ class ChatCompletionRequest(BaseModel):
         return value
 
 
+class CompletionRequest(BaseModel):
+    """B1 raw-text subset of the completions API."""
+
+    model_config = ConfigDict(extra="forbid")
+    model: str = Field(min_length=1)
+    prompt: str = Field(min_length=1)
+    temperature: float = Field(default=0.7, ge=0, allow_inf_nan=False)
+    top_p: float = Field(default=0.9, gt=0, le=1)
+    top_k: int | None = Field(default=None, ge=1)
+    max_tokens: int = Field(default=512, ge=1, le=32768)
+    seed: int = 0
+    stop: str | list[str] | None = None
+    stream: bool = False
+
+    @field_validator("stop")
+    @classmethod
+    def validate_stop(cls, value: str | list[str] | None) -> str | list[str] | None:
+        return ChatCompletionRequest.validate_stop(value)
+
+
 class EmbeddingRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     model: str = Field(min_length=1)

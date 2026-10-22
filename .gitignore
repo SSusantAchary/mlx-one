@@ -1,10 +1,3 @@
-.gitignore
-mlx_one_LTS.md
-mlxone_roadmap.md
-mlx_one_development.md
-PROJECT_STRUCTURE.md
-model_list.txt
-mlx_one_full.md
 .venv/
 .coverage
 build/
@@ -13,6 +6,11 @@ dist/
 !src/mlx_one/ui/dist/
 !src/mlx_one/ui/dist/**
 runs/
+# Curated public benchmark evidence; all other runtime runs remain ignored.
+!/docs/benchmarks/runs/
+/docs/benchmarks/runs/*
+!/docs/benchmarks/runs/*.json
+!/docs/benchmarks/runs/*-runner.py.txt
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
@@ -22,4 +20,22 @@ node_modules/
 test-results/
 *.py[cod]
 
-benchmarks/results/p1/
+
+# Developer-only context and preserved private research
+/local/
+/references_libs/
+/scripts/qualification/checkpoint-paths.local.json
+
+# Generated machine-specific results
+/qualification/results/
+/benchmarks/results/
+/calibration/results/
+.DS_Store
+
+# Historical artifact locations; archives live under ignored local/evidence/
+/docs/qualification/alpha_release/proof-20261021-*
+/docs/qualification/alpha_release/numerical-correction-20261021-*/
+/docs/qualification/ten-models/reference-first-20261020-*/
+/docs/qualification/m4-32gb/ten-model-qualification-20261020-*/
+/docs/qualification/m4-32gb/numerical-correction-20261020-*/
+/docs/qualification/m4-32gb/revamp-20261020/

@@ -1,0 +1,77 @@
+{
+  "status": "PASS_WITH_FULL_CHECKPOINT_PENDING",
+  "checkpoint": "manjunathshiva/gpt-oss-20b-tq3",
+  "revision": "20ba1835e625264e07366d215933fe31a9940a6a",
+  "support_status": "QUANTIZATION_BACKEND_TESTED",
+  "checkpoint_status": "PENDING_USER_DOWNLOAD",
+  "full_checkpoint_downloaded": false,
+  "full_checkpoint_speed_target_measured": false,
+  "tests": {
+    "focused_tq3": {
+      "passed": 87,
+      "warnings": 2
+    },
+    "default": {
+      "passed": 1978,
+      "skipped": 68,
+      "warnings": 3
+    },
+    "metal": {
+      "passed": 2244,
+      "skipped": 18,
+      "warnings": 3
+    },
+    "note": "Full regressions include 86 TQ3 cases; one subsequent mixed-format guard test passed in the final 87-case focused run. Runtime sources unchanged after full regressions."
+  },
+  "lint": {
+    "existing_findings": 65,
+    "new_findings": 0
+  },
+  "artifacts": [
+    {
+      "filename": "mlx_one-0.1.0a1-py3-none-any.whl",
+      "sha256": "01401ec53c5661d2dae05a96a8ab8421e15b365f9c103b31591b967d211d3fa4",
+      "bytes": 2077624,
+      "status": "PASS"
+    },
+    {
+      "filename": "mlx_one-0.1.0a1.tar.gz",
+      "sha256": "0bcdaf3fa5902c7b37628f463fa83cb90ce8d66c9984fbc53032e1cab8feea0b",
+      "bytes": 1911615,
+      "status": "PASS"
+    }
+  ],
+  "wheel_smoke": {
+    "status": "PASS",
+    "fixture": "fabricated tiny GPT-OSS, scripted sampler with real packed forwards",
+    "python": true,
+    "cli": true,
+    "http": true,
+    "sse": true,
+    "authentication": true,
+    "cancellation": true,
+    "unload": true,
+    "forbidden_runtime_dependencies": false,
+    "installed_package": "0.1.0a1",
+    "full_checkpoint_status": "PENDING_USER_DOWNLOAD"
+  },
+  "tcp_smoke": {
+    "status": "PASS",
+    "checkpoint": "fabricated tiny GPT-OSS TQ3",
+    "actual_cli_serve": true,
+    "tcp_http": true,
+    "chat": true,
+    "sse": true,
+    "disconnect_and_recovery": true,
+    "full_checkpoint_status": "PENDING_USER_DOWNLOAD"
+  },
+  "reference_environment": {
+    "turboquant_commit": "54443c8b83424adb5dac7e6ffc7ac2d91fe88af1",
+    "mlx_lm": "0.32.2",
+    "mlx": "0.32.2",
+    "production_dependency": false
+  },
+  "archived_verification_sha256": "4c3067cb69b11ff61eaa1d0ccfcb6599c0dc5856da639eda3cb7c3e257a24a39",
+  "archive_notice": "docs/qualification/archived-evidence.md",
+  "note": "Raw logs and source/evidence hash inventories are preserved privately; no full checkpoint test is implied."
+}

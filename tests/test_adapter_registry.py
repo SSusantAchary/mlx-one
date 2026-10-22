@@ -19,7 +19,7 @@ from mlx_one.engine.adapter_registry import (
 def test_all_architectures_have_explicit_truthful_runtime_records():
     assert registered_runtime_types() == registered_model_types()
     rows = {row['model_type']: row for row in runtime_coverage()}
-    assert len(rows) == 27
+    assert len(rows) == 30
     assert {name for name, row in rows.items()
             if row['integration_status']=='architecture_only'} == {
         'lfm2_audio'}
@@ -43,7 +43,7 @@ def test_coverage_is_lazy_in_fresh_interpreter():
     script = """
 import sys
 from mlx_one.engine.adapter_registry import runtime_coverage
-assert len(runtime_coverage())==27
+assert len(runtime_coverage())==30
 assert not any(n=='mlx' or n.startswith('mlx.') for n in sys.modules)
 assert not any(n.startswith('mlx_one.models.') and n.endswith('.model') for n in sys.modules)
 """

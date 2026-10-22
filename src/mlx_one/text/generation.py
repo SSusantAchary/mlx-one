@@ -16,9 +16,22 @@ CancelCheck = Callable[[], bool]
 CacheCallback = Callable[[tuple[int, ...], tuple[object, ...]], None]
 
 
-def _decode_piece(tokenizer, token_ids, committed_text, *, final=False):
+def _qualification_eos_ids(eos_ids, *, ignore_eos=False, runtime=None):
+    if not ignore_eos:
+        return eos_ids
+    if not getattr(runtime, "harness_only", False):
+        raise ValueError("fixed output EOS policy requires the qualification harness")
+    return set()
+
+
+def _decode_piece(tokenizer, token_ids, committed_text, *, final=False, harmony_prompt=None):
     """Commit only stable text; incomplete byte sequences can revise trailing U+FFFD."""
-    text = tokenizer.decode(token_ids)
+    if harmony_prompt is not None:
+        from mlx_one.text.harmony import final_text
+
+        text = final_text(tokenizer, token_ids, prompt=harmony_prompt, final=final)
+    else:
+        text = tokenizer.decode(token_ids)
     stable = text if final else text.rstrip("\ufffd")
     if not stable.startswith(committed_text):
         raise RuntimeError("tokenizer revised previously committed streaming text")
@@ -152,6 +165,8 @@ def stream_chat(
     _prefill_chunk_size: int = 512,
     _cache_runtime: object | None = None,
     _cache_handle: object | None = None,
+    _math_observer: object | None = None,
+    _ignore_eos: bool = False,
 ) -> Iterator[GenerationChunk]:
     if model.chat_template is None:
         raise ValueError("loaded model has no chat-template layer")
@@ -178,6 +193,8 @@ def stream_chat(
         on_execution=on_execution,
         _cooperative=_cooperative, _prefill_chunk_size=_prefill_chunk_size,
         _cache_runtime=_cache_runtime, _cache_handle=_cache_handle,
+        _math_observer=_math_observer,
+        _ignore_eos=_ignore_eos,
     )
 
 
@@ -238,7 +255,35 @@ def _generate_one(
     )
 
 
-def _stream_bundle(
+def _stream_bundle(bundle, prompt, options, is_cancelled, **settings):
+    """Apply text stops even when a stop starts or ends inside a model token."""
+    iterator = _stream_bundle_impl(bundle, prompt, options, is_cancelled, **settings)
+    if not options.stop:
+        yield from iterator
+        return
+    buffered = ""
+    try:
+        for chunk in iterator:
+            buffered += chunk.text
+            matches = [buffered.find(stop) for stop in options.stop if stop in buffered]
+            if matches:
+                yield GenerationChunk(chunk.token_id, buffered[:min(matches)],
+                                      chunk.generated_tokens, "stop")
+                return
+            if chunk.finish_reason is not None:
+                yield GenerationChunk(chunk.token_id, buffered, chunk.generated_tokens,
+                                      chunk.finish_reason)
+                return
+            hold = max((length for stop in options.stop for length in range(1, len(stop))
+                        if buffered.endswith(stop[:length])), default=0)
+            ready = buffered[:-hold] if hold else buffered
+            buffered = buffered[-hold:] if hold else ""
+            yield GenerationChunk(chunk.token_id, ready, chunk.generated_tokens)
+    finally:
+        iterator.close()
+
+
+def _stream_bundle_impl(
     bundle: LoadedTextModel,
     prompt: str,
     options: TextGenerationOptions,
@@ -264,6 +309,8 @@ def _stream_bundle(
     _prepared_input_ids: tuple[int, ...] | None = None,
     _draft_bundle: object | None = None,
     _math_policy: object | None = None,
+    _math_observer: object | None = None,
+    _ignore_eos: bool = False,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
@@ -273,7 +320,7 @@ def _stream_bundle(
     from mlx_one.ops.logits import LogitsMode
 
     math_policy = _math_policy or getattr(_cache_runtime, "math_policy", REFERENCE_MATH)
-    request_observer = current_observer()
+    request_observer = _math_observer or current_observer()
     if on_execution is None:
         on_execution = request_observer
 
@@ -313,6 +360,7 @@ def _stream_bundle(
     pending_times: deque[float] = deque()
     generated: list[int] = []
     decoded = ""
+    harmony_prompt = prompt if bundle.architecture == "gpt_oss" else None
     hold = max((len(value) for value in stop_tokens), default=1)
     cached = tuple(int(value) for value in cached_prompt_ids)
     if cached and tuple(prompt_ids[: len(cached)]) != cached:
@@ -346,6 +394,8 @@ def _stream_bundle(
                 for value in configured
                 if isinstance(value, int) and not isinstance(value, bool)
             )
+    eos_token_ids = _qualification_eos_ids(eos_token_ids, ignore_eos=_ignore_eos,
+                                         runtime=_cache_runtime)
     produced = 0
     prompt_cache_published = False
     while produced < maximum:
@@ -604,7 +654,8 @@ def _stream_bundle(
                     sampled_at = pending_times.popleft()
                     if on_execution is not None:
                         on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
-                    piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded)
+                    piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded,
+                                                    harmony_prompt=harmony_prompt)
                     step_yielded = True
                     event=GenerationChunk(generated[-1],piece,emitted)
                     if proposal is not None:
@@ -632,9 +683,11 @@ def _stream_bundle(
             on_execution({"kind": "token", "at": sampled_at, "token_id": current_token})
         emitted += 1
         generated.append(current_token)
-        piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded)
+        piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded,
+                                       harmony_prompt=harmony_prompt)
         yield GenerationChunk(current_token, piece, emitted)
-    trailing, _ = _decode_piece(bundle.tokenizer, generated, decoded, final=True)
+    trailing, _ = _decode_piece(bundle.tokenizer, generated, decoded, final=True,
+                                harmony_prompt=harmony_prompt)
     yield GenerationChunk(None, trailing, emitted, finish_reason)
 
 

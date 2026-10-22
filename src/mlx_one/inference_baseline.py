@@ -83,6 +83,9 @@ class BaselineProfile:
     quality_manifest: str | None = None
     quality_dataset_identity: dict | None = None
     checkpoint_path: str | None = None
+    checkpoint_files: dict[str, str] | None = None
+    eos_policy: str = "respect"
+    exact_prompt_tokens: bool = False
     qualification_track: str | None = None
     serial_run: str | None = None
     b1_run: str | None = None
@@ -158,6 +161,12 @@ class BaselineProfile:
             raise BaselineError("parity requires at least three forced steps")
         if self.execution_dtype not in {None, "float16", "bfloat16"}:
             raise BaselineError("unsupported execution dtype")
+        if type(self.exact_prompt_tokens) is not bool:
+            raise BaselineError("exact_prompt_tokens must be boolean")
+        if (self.eos_policy not in {"respect", "ignore_for_fixed_workload"}
+                or self.eos_policy != "respect" and
+                (self.qualification_track != "p1" or not self.exact_prompt_tokens)):
+            raise BaselineError("fixed output EOS policy requires exact P1 qualification workload")
         if self.inference_mode == "experimental_dense_batch" and (
             self.cache_type != "f16" or self.execution_dtype != "float16"
         ):
@@ -185,7 +194,8 @@ class BaselineProfile:
         payload = asdict(self)
         new = {"qualification_track": None, "serial_run": None, "b1_run": None,
                "no_prefix_run": None, "reuse_prefix": None,
-               "checkpoint_path": None, "page_tokens": 32, "kv_bits": None,
+               "checkpoint_path": None, "exact_prompt_tokens": False,
+               "page_tokens": 32, "kv_bits": None,
                "duration_seconds": None,
                "shared_prefix_fraction": None, "admission_policy": "deadline",
                "quality_limits": None,
@@ -301,6 +311,15 @@ def validate_identity(profile: BaselineProfile, runtime: dict[str, Any]) -> None
     if (scope.get("model_id") != profile.model_id or scope.get("revision") != profile.revision
             or report.get("engine_mode") != profile.inference_mode):
         raise BaselineError("backend substitution or checkpoint identity mismatch")
+    if profile.checkpoint_files is not None:
+        observed = report.get("checkpoint_identity", {})
+        expected_weights = {name: digest for name, digest in profile.checkpoint_files.items()
+                            if name.endswith(".safetensors")}
+        if (observed.get("canonical_model_id") != profile.model_id
+                or observed.get("revision") != profile.revision
+                or observed.get("path") != str(Path(profile.checkpoint_path).resolve())
+                or not expected_weights or observed.get("weight_hashes") != expected_weights):
+            raise BaselineError("local checkpoint path or verified weight hashes mismatch")
     for field in ("topology_digest", "weight_precision", "cache_precision", "mlx_version",
                   "hardware", "source_revision"):
         if not scope.get(field):

@@ -379,7 +379,7 @@ def generate_command(
 @main.command("serve", help="Serve a native text model with an OpenAI-compatible API and UI.")
 @click.argument("model")
 @click.option("--host", default="127.0.0.1", show_default=True)
-@click.option("--port", type=click.IntRange(min=1, max=65535), default=8080, show_default=True)
+@click.option("--port", type=click.IntRange(min=1, max=65535), default=8888, show_default=True)
 @click.option("--revision", help="Hugging Face branch, tag, or commit.")
 @click.option("--offline", is_flag=True, help="Use only local files or cached Hub assets.")
 @click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
@@ -436,7 +436,9 @@ def generate_command(
     default=None,
     help="Select an explicit native execution path; unsupported combinations fail.",
 )
-@click.option("--execution-dtype", type=click.Choice(["float16", "bfloat16"]), default=None)
+@click.option(
+    "--execution-dtype", type=click.Choice(["float32", "float16", "bfloat16"]), default=None
+)
 @click.option("--max-prefill-tokens", type=click.IntRange(min=1), default=1024)
 @click.option("--admission-policy", type=click.Choice(["deadline", "cache_aware"]),
               default="deadline")

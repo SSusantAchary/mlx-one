@@ -75,6 +75,10 @@ def quantization_identity(bundle):
     modules = quantized_modules(bundle) if config.get("bits") == 8 else ()
     payload = {"declared": config, "modules": [asdict(s) for s in modules],
                "floating_policy": getattr(bundle.model, "_mlx_one_execution_policy", None)}
+    if getattr(bundle.model, "_mlx_one_reference_first_math", False):
+        # Stored-weight execution can omit a floating policy. Its prefix states
+        # still belong to this mathematical implementation, not the old decoder.
+        payload["model_mathematics"] = "reference-first-v1"
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
 

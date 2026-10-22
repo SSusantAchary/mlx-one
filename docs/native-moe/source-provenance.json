@@ -1,0 +1,18 @@
+{
+  "entry_revision": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+  "entry_worktree": "pre-existing tracked and untracked changes; preserved",
+  "local_references": {
+    "mlx-lm-main/mlx_lm/models/lfm2_moe.py": "4234efafa726e94070d6da3a7ace4547dbc7b88a2de38dcbfb88c69ac3a9ff35",
+    "mlx-lm-main/mlx_lm/models/gpt_oss.py": "21ce2788670c6eda508a794e282e732c7fd3635e1d8b9c62a6efc4c433014d08",
+    "mlx-lm-main/mlx_lm/models/switch_layers.py": "438e000aa28c69f1ec9b0862e015355c36ef033d7f4bbabada577792b4217673",
+    "mlx-lm-main/mlx_lm/models/rope_utils.py": "06466d57dfe1ccc1e61ba595c0a8f2dd3a14bcb5c6a1d06c67591dc03128606b",
+    "mlx-lm-main/mlx_lm/models/activations.py": "6f7d756897deb322af4fe98e040df76e9358a91d76521e51f14d734fdd0fb05f",
+    "transformers-main/src/transformers/models/lfm2_moe/modeling_lfm2_moe.py": "5dc14133903ba7a0f88d82d75e5c1d28d80ed2a686bac40e901232ccda454f33",
+    "transformers-main/src/transformers/models/gpt_oss/modeling_gpt_oss.py": "5813a1eab9077ca096309b016600f5e3c6b1f4710504d86c088e67480ad627a8",
+    "transformers-main/src/transformers/modeling_rope_utils.py": "8b08f3f372207816eae420e7d33b982e44858dc9e4be7728d95f606b07c23fd0"
+  },
+  "mlx": "0.32.2",
+  "mlx_metal": "0.32.2",
+  "metal_available": true,
+  "large_checkpoint_weights_downloaded": false
+}

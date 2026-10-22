@@ -57,11 +57,11 @@ def load_vlm_model(
             raise ValueError(f"model type {model_type!r} has no native VLM task loader")
         if model_type == "lfm2_vl" and payload.get("mlx_one_native_format") != "lfm2-vl-v1":
             raise ValueError("LFM2-VL requires an explicit native-format tensor manifest")
+        quantization = _quantization_config(payload)
         config = registration.config_class().from_dict(payload)
         tokenizer = HFTokenizerAdapter.from_directory(root)
         tensors = registration.sanitizer()(_read_safetensors(root), config)
         native = registration.model_class()(config)
-        quantization = _quantization_config(payload)
         if quantization:
             _prepare_quantized_model(native, tensors, quantization)
             _validate_quantized_tensors(native, tensors)

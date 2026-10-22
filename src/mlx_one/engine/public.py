@@ -126,6 +126,15 @@ class Engine:
                 tokenizer_source=tokenizer_source,
             ))
         )
+        if getattr(self._bundle.model, "_mlx_one_qwen3_candidate", False):
+            from mlx_one.models.language.qwen3.upstream_adapter import validate_candidate_runtime
+
+            validate_candidate_runtime(
+                self._bundle, mode=inference_mode, backend=backend,
+                key_type=config.key_type, value_type=config.value_type,
+                max_sequences=(batching_config.max_sequences if batching_config else 1),
+                spec_type=spec_type, math_policy=self._math_policy,
+            )
         if self._math_policy != REFERENCE_MATH or inference_mode == "native_optimized":
             from mlx_one.engine.kernel_dispatch import SUPPORTED_FAMILIES
 
@@ -255,7 +264,10 @@ class Engine:
             **self.runtime_stats(),
             "cache": {
                 "dense_kv": True,
-                "quantized_kv": True,
+                "quantized_kv": bundle.architecture not in {"gemma3_text", "gpt_oss"} and not (
+                    bundle.architecture == "phi3"
+                    and getattr(bundle.model.config, "sliding_window", None)
+                ),
                 "block_kv": block_supported,
                 "prefix_block_cache": block_supported,
                 "sliding_block_kv": False,

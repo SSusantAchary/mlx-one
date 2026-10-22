@@ -150,6 +150,9 @@ def test_terminal_text_flush_reaches_http_without_adding_a_token(monkeypatch, tm
     core.float16, core.bfloat16 = np.float16, np.float32
     core.eval = lambda *_args: None
     core.clear_cache = lambda: None
+    package = ModuleType('mlx')
+    package.core = core
+    monkeypatch.setitem(sys.modules, 'mlx', package)
     monkeypatch.setitem(sys.modules, 'mlx.core', core)
     tokenizer = Tokenizer()
     bundle = LoadedTextModel(Model(), tokenizer, tmp_path, 'test/model', 'a' * 40,
@@ -323,4 +326,5 @@ def test_explicit_lfm_attention_softmax_precision_does_not_depend_on_mask(monkey
     del attention._mlx_one_activation_dtype
     dtypes.clear()
     attention(hidden[:,-1:], mask=None, cache=cache)
-    assert dtypes == [np.float16]  # Omitted execution policy is unchanged.
+    # Native reference arithmetic accumulates low-precision attention in FP32 too.
+    assert dtypes == [np.float32]

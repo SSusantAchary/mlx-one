@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import asdict, dataclass
 
-POLICY_VERSION = "native-math-v5"
+POLICY_VERSION = "native-math-v6"
 
 
 @dataclass(frozen=True)
@@ -18,7 +18,8 @@ class NativeMathPolicy:
     enable_compile: bool = False
 
     def __post_init__(self):
-        for field, choices in (("attention", {"reference", "mlx_sdpa", "tiled_256"}),
+        for field, choices in (("attention", {"reference", "mlx_sdpa", "tiled_256",
+                                                  "native_gather_tiled"}),
                                ("projection", {"reference", "mlx_qmm", "native"}),
                                ("logits", {"all", "last_only"}),
                                ("hybrid", {"reference", "fast"})):
@@ -41,7 +42,7 @@ class NativeMathPolicy:
         return {"version": POLICY_VERSION, "kernel_version": MATH_KERNEL_VERSION,
                 **asdict(self), "qualified": False,
                 "attention_accumulation_operands": "float32"
-                if self.attention == "mlx_sdpa" else "reference",
+                if self.attention in {"mlx_sdpa", "native_gather_tiled"} else "reference",
                 "projection_accumulation_operands": "stock_fp16_vector_only"
                 if self.projection == "mlx_qmm" else "reference"}
 

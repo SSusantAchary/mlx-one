@@ -18,7 +18,8 @@ import mlx.nn as nn
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.models.language.llama.config import LlamaConfig
-from mlx_one.models.shared.transformer import DecoderLayer, causal_mask
+from mlx_one.models.language.llama.reference_math import TransformerBlock
+from mlx_one.models.shared.reference_math import attention_mask as causal_mask
 
 
 class LlamaModel(nn.Module):
@@ -27,7 +28,7 @@ class LlamaModel(nn.Module):
         self.config = config
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
         self.layers = [
-            DecoderLayer(config, qkv_bias=False) for _ in range(config.num_hidden_layers)
+            TransformerBlock(config) for _ in range(config.num_hidden_layers)
         ]
         self.norm = nn.RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
@@ -47,7 +48,7 @@ class LlamaModel(nn.Module):
         if cache is not None and len(cache) != len(self.layers):
             raise ValueError("cache count must match decoder layer count")
         offset = 0 if cache is None else cache[0].offset
-        mask = causal_mask(hidden.shape[1], offset)
+        mask = causal_mask(hidden.shape[1], offset, attention_mask)
         if attention_mask is not None:
             expected = (hidden.shape[0], offset + hidden.shape[1])
             if attention_mask.shape != expected:
@@ -55,8 +56,6 @@ class LlamaModel(nn.Module):
             if position_ids is None:
                 positions = mx.maximum(mx.cumsum(attention_mask, axis=-1) - 1, 0)
                 position_ids = positions[:, -hidden.shape[1] :]
-            padding = mx.where(attention_mask[:, None, None, :] != 0, 0.0, -1e9)
-            mask = padding if mask is None else mask + padding
         states = [hidden] if output_hidden_states else None
         for layer, layer_cache in zip(
             self.layers, cache or (None,) * len(self.layers), strict=True
@@ -71,6 +70,8 @@ class LlamaModel(nn.Module):
 
 
 class LlamaForCausalLM(nn.Module):
+    _mlx_one_reference_first_math = True
+
     def __init__(self, config: LlamaConfig) -> None:
         super().__init__()
         self.config = config

@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "date": "2026-10-22",
+  "branch": "chore/alpha-repository-cleanup",
+  "tracking_removals": 151,
+  "raw_result_tracking_removals": 150,
+  "runtime_python_unchanged": true,
+  "archive_files": 4065,
+  "archive_sha256": "363e9ebd3386ee6ee11fcd2bd505a2e892568e2cce21f0fde945beb502e55f3a",
+  "additional_machine_data_archive_sha256": "8649d75e94f942279bb878ec89cb5ff52979b97a56f1ae78c24fd669f3af1fd3",
+  "archived_original_index_files_checked": 1067,
+  "original_index_mismatches": 0,
+  "public_local_broken_links": 0,
+  "optional_upstream_checkouts_preserved": true,
+  "runtime_dependencies_preserved": true,
+  "model_support_promoted": false,
+  "repository_commit_created": false,
+  "pushed": false,
+  "validation": {
+    "default": {
+      "passed": 1979,
+      "skipped": 68
+    },
+    "metal": {
+      "passed": 2245,
+      "skipped": 18
+    },
+    "isolated_default": {
+      "passed": 1979,
+      "skipped": 68
+    },
+    "isolated_metal": {
+      "passed": 2212,
+      "skipped": 51
+    },
+    "ui_unit_passed": 7,
+    "ui_browser_passed": 3,
+    "package_audit": "PASS",
+    "installed_python_http_tq3_smokes": "PASS"
+  },
+  "artifacts": [
+    {
+      "filename": "mlx_one-0.1.0a1-py3-none-any.whl",
+      "sha256": "b78ad10e70c106c268bb59b5df5b17ce6e0d611b1cf052e95d24c9827e89f862",
+      "bytes": 2133379,
+      "status": "PASS"
+    },
+    {
+      "filename": "mlx_one-0.1.0a1.tar.gz",
+      "sha256": "8154039e189a51eab9d8df7abeb493d44d91ad8a509aecb4df9b56a99dfa08e1",
+      "bytes": 1962596,
+      "status": "PASS"
+    }
+  ]
+}

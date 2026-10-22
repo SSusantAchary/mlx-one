@@ -1,0 +1,14 @@
+{
+  "model_id": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+  "revision": "f356f2747216d7e98fee755df25987459fc19089",
+  "retrieved_date": "2026-10-21",
+  "weights_downloaded": false,
+  "files": {
+    "tokenizer_config.json": "2d8386578f85ea1fa698e78c58b2d8503e8122d6b110b61f93d3995601b07d91",
+    "config.json": "e8ec3c105ab83e913a75baf587de778083ada1af3fac68d807e75ff926240e38",
+    "generation_config.json": "f9970ada892d2d1f72e3ed0a6535ccebadd11897318794ca671d8c7014c957da",
+    "model.safetensors.index.json": "065001869dd5ffd332419a432127467191b1bb0fd5c463dd0dc51f1359728a27",
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "license_provenance": "Apache-2.0 declared by the checkpoint model card; full Apache license text copied from the project LICENSE."
+}

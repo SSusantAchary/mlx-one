@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "revision": "b802fd2a0e9cd500a96e4fe21e2c9b3bb43df902",
+  "lint": {
+    "command": ".venv/bin/python scripts/release/check_lint.py",
+    "status": "PASS",
+    "pre_existing_findings": 65,
+    "new_findings": 0,
+    "focused_ruff": "PASS"
+  },
+  "archived_verification_sha256": "79028f4454f98cccabdadf8824a9dfb17ae0915f8faf6410eaa8585b552aea3b",
+  "archive_notice": "docs/qualification/archived-evidence.md",
+  "note": "Raw logs and source/evidence hash inventories are preserved privately; no full checkpoint test is implied."
+}

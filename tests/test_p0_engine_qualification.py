@@ -198,6 +198,9 @@ def test_fp16_conversion_preserves_native_affine_payload(bits, monkeypatch):
 
     core = ModuleType('mlx.core')
     core.float16, core.eval = np.float16, lambda *_args: None
+    package = ModuleType('mlx')
+    package.core = core
+    monkeypatch.setitem(sys.modules, 'mlx', package)
     monkeypatch.setitem(sys.modules, 'mlx.core', core)
     bundle = SimpleNamespace(model=Model(), architecture='lfm2',
                              quantization={'bits': bits, 'group_size': 64})
@@ -397,6 +400,9 @@ def test_explicit_four_bit_projection_uses_existing_rowwise_primitive(monkeypatc
         return np.zeros((value.shape[0],1,5), np.float16)
 
     core.gather_qmm = gather
+    package = ModuleType('mlx')
+    package.core = core
+    monkeypatch.setitem(sys.modules, 'mlx', package)
     monkeypatch.setitem(sys.modules, 'mlx.core', core)
     module = Affine()
     output = project(module, np.zeros((1,3,64), np.float16), execution_dtype='float16',

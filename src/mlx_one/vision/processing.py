@@ -31,6 +31,7 @@ class QwenImageProcessor:
         *,
         min_pixels: int = 56 * 56,
         max_pixels: int = 28 * 28 * 1280,
+        max_source_pixels: int = 40_000_000,
         metadata: dict | None = None,
     ) -> None:
         self.tokenizer = tokenizer
@@ -40,7 +41,7 @@ class QwenImageProcessor:
 
             mean,std=metadata.get("image_mean"),metadata.get("image_std")
             if (not isinstance(mean,list) or not isinstance(std,list) or len(mean)!=3 or len(std)!=3
-                    or any(not isinstance(v,(int,float)) or not math.isfinite(v) for v in mean+std)
+                    or any(type(v) not in {int, float} or not math.isfinite(v) for v in mean+std)
                     or any(v<=0 for v in std) or metadata.get("resample",3)!=3
                     or any(metadata.get(k,True) is not True for k in
                            ("do_normalize","do_resize","do_rescale"))
@@ -54,18 +55,27 @@ class QwenImageProcessor:
                     raise ValueError("processor patch layout differs from model")
             self._MEAN,self._STD=tuple(mean),tuple(std)
             size=metadata.get("size",{})
+            if not isinstance(size, dict):
+                raise ValueError("processor size metadata must be an object")
             min_pixels=metadata.get("min_pixels",size.get("shortest_edge",min_pixels))
             max_pixels=metadata.get("max_pixels",size.get("longest_edge",max_pixels))
-        if not 0<min_pixels<=max_pixels:
+        if (any(type(value) is not int or value < 1 for value in
+                (min_pixels, max_pixels, max_source_pixels)) or min_pixels > max_pixels
+                or max_pixels < (config.vision_config.patch_size
+                                  * config.vision_config.spatial_merge_size) ** 2):
             raise ValueError("invalid image pixel bounds")
         self.min_pixels = min_pixels
         self.max_pixels = max_pixels
+        self.max_source_pixels = max_source_pixels
 
     def prepare(self, prompt: str, images: list[Any] | tuple[Any, ...]) -> PreparedVisionInput:
         if not isinstance(prompt, str) or not prompt:
             raise ValueError("vision prompt must be non-empty text")
         if not images:
             raise ValueError("at least one image is required")
+        pieces = prompt.split("<image>")
+        if len(pieces) - 1 != len(images):
+            raise ValueError("the number of <image> placeholders must match the images")
         import mlx.core as mx
 
         all_patches = []
@@ -82,9 +92,6 @@ class QwenImageProcessor:
                 + [self.config.image_token_id] * (visual_tokens // merge)
                 + [self.config.vision_end_token_id]
             )
-        pieces = prompt.split("<image>")
-        if len(pieces) - 1 != len(images):
-            raise ValueError("the number of <image> placeholders must match the images")
         ids = self.tokenizer.encode(pieces[0])
         types = [0] * len(ids)
         for visual_ids, text in zip(replacement_ids, pieces[1:], strict=True):
@@ -104,14 +111,16 @@ class QwenImageProcessor:
 
     def _patches(self, image: Any, mx: Any) -> tuple[Any, tuple[int, int, int]]:
         try:
-            from PIL import Image
+            from PIL import Image, ImageOps
         except ImportError as exc:
             raise RuntimeError("image processing requires `pip install 'mlx-one[vision]'`") from exc
         if isinstance(image, (str, Path)):
             with Image.open(image) as opened:
-                source = opened.convert("RGB")
+                self._validate_source_size(opened)
+                source = ImageOps.exif_transpose(opened).convert("RGB")
         elif isinstance(image, Image.Image):
-            source = image.convert("RGB")
+            self._validate_source_size(image)
+            source = ImageOps.exif_transpose(image).convert("RGB")
         else:
             raise TypeError("image must be a path or PIL image")
         patch = self.config.vision_config.patch_size
@@ -146,6 +155,11 @@ class QwenImageProcessor:
         patch_dim = 3 * temporal * patch * patch
         return pixels.reshape(-1, patch_dim), (1, grid_h, grid_w)
 
+    def _validate_source_size(self, image: Any) -> None:
+        if (image.width < 1 or image.height < 1
+                or image.width * image.height > self.max_source_pixels):
+            raise ValueError("image exceeds the source pixel budget")
+
 
 def _smart_resize(
     width: int, height: int, *, factor: int, min_pixels: int, max_pixels: int
@@ -163,4 +177,6 @@ def _smart_resize(
         scale = math.sqrt(min_pixels / (width * height))
         resized_w = max(factor, math.ceil(width * scale / factor) * factor)
         resized_h = max(factor, math.ceil(height * scale / factor) * factor)
+    if resized_w * resized_h > max_pixels:
+        raise ValueError("patch-aligned image exceeds the pixel budget")
     return resized_w, resized_h

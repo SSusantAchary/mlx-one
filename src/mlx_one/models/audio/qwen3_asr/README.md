@@ -39,9 +39,9 @@ same indices, so its interleaved MRoPE reduces to ordinary nontraditional RoPE.
 | [ForcedAligner 0.6B](https://huggingface.co/Qwen/Qwen3-ForcedAligner-0.6B) | `qwen3_forced_aligner` / align | 24 audio layers, width 1024; 28 text layers, width 1024; timestamp head | FAIL: 100 English clips, maximum boundary difference 800 ms exceeds 80-ms gate |
 
 Full checkpoint pins, tensor names/shapes, precision and asset checksums:
-[0.6B contract](../../../../../qualification/results/qwen3-asr-0.6b-checkpoint-contract.json),
-[1.7B contract](../../../../../qualification/results/qwen3-asr-1.7b-checkpoint-contract.json),
-[aligner contract](../../../../../qualification/results/qwen3-forced-aligner-checkpoint-contract.json).
+[0.6B contract](../../../../../docs/qualification/archived-evidence.md),
+[1.7B contract](../../../../../docs/qualification/archived-evidence.md),
+[aligner contract](../../../../../docs/qualification/archived-evidence.md).
 All stored weights are BF16; no automatic quantization or precision reduction.
 Float32 component parity alone does not qualify these checkpoints.
 

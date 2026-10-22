@@ -242,6 +242,10 @@ def test_whisper_ffmpeg_decode_uses_argument_array(monkeypatch, tmp_path) -> Non
     assert captured["command"] == [
         "/fake/ffmpeg",
         "-nostdin",
+        "-loglevel",
+        "error",
+        "-protocol_whitelist",
+        "file,pipe",
         "-threads",
         "0",
         "-i",

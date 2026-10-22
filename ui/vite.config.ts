@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 
-const backend = process.env.MLX_ONE_SERVER_ORIGIN ?? 'http://127.0.0.1:8080';
+const backend = process.env.MLX_ONE_SERVER_ORIGIN ?? 'http://127.0.0.1:8888';
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],

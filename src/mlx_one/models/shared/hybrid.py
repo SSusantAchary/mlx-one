@@ -51,8 +51,9 @@ class LfmAttention(nn.Module):
         values = values.transpose(0, 2, 1, 3)
         offset = 0 if cache is None else cache.offset
         queries = apply_rope(queries, offset=offset, theta=self.rope_theta,
-                             position_ids=position_ids)
-        keys = apply_rope(keys, offset=offset, theta=self.rope_theta, position_ids=position_ids)
+                             position_ids=position_ids, native_precision=activation_dtype is None)
+        keys = apply_rope(keys, offset=offset, theta=self.rope_theta, position_ids=position_ids,
+                          native_precision=activation_dtype is None)
         if activation_dtype:
             dtype = getattr(mx, activation_dtype)
             queries, keys, values = (v.astype(dtype) for v in (queries, keys, values))
@@ -70,15 +71,22 @@ class LfmAttention(nn.Module):
             keys = mx.repeat(keys, repeats, axis=1)
             values = mx.repeat(values, repeats, axis=1)
         stable = activation_dtype == "float16" and getattr(self.q_proj, "bits", None) in {4, 8}
+        operand_dtype = queries.dtype
+        accumulate_fp32 = not stable and str(operand_dtype).rsplit(".", 1)[-1] in {
+            "float16", "bfloat16"}
+        if accumulate_fp32:
+            queries, keys, values = (x.astype(mx.float32) for x in (queries, keys, values))
         scores = (attention_matmul(queries, keys.transpose(0, 1, 3, 2)) if stable
                   else queries @ keys.transpose(0, 1, 3, 2)) * self.scale
         if activation_dtype:
             # A FP32 prefill mask must not change decode softmax/value arithmetic.
             scores = scores.astype(mx.float32)
         if mask is not None:
-            scores = scores + mask
+            scores = scores + mask.astype(scores.dtype)
         probabilities = mx.softmax(scores, axis=-1, precise=True)
         output = attention_matmul(probabilities, values) if stable else probabilities @ values
+        if accumulate_fp32:
+            output = output.astype(operand_dtype)
         output = output.transpose(0, 2, 1, 3).reshape(batch, length, -1)
         if activation_dtype:
             output = output.astype(dtype)

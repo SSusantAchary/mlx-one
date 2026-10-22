@@ -6,6 +6,7 @@ import json
 import math
 import shutil
 import subprocess
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -59,18 +60,44 @@ def decode_audio(
     *,
     ffmpeg: str = "ffmpeg",
     cancelled: Callable[[], bool] | None = None,
+    max_duration_seconds: float | None = None,
+    max_file_bytes: int | None = None,
+    timeout_seconds: float = 120,
+    input_format: str | None = None,
 ) -> Any:
-    """Decode any FFmpeg-supported file to mono 16-kHz float32 samples."""
+    """Decode local audio with a timeout and optional byte/duration limits.
+
+    HTTP callers must supply both limits. Python's existing long-form file
+    workflow remains available; FFmpeg cannot fetch remote playlist resources.
+    """
+
+    for name, value in (("max_duration_seconds", max_duration_seconds),
+                        ("timeout_seconds", timeout_seconds)):
+        if (value is None and name == "max_duration_seconds"):
+            continue
+        if (isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(value) or value <= 0):
+            raise AudioProcessingError(f"{name} must be finite and positive")
+    if max_file_bytes is not None and (type(max_file_bytes) is not int or max_file_bytes < 1):
+        raise AudioProcessingError("max_file_bytes must be a positive integer")
+    if input_format is not None and input_format not in {"wav", "mp3", "ogg", "mov", "matroska"}:
+        raise AudioProcessingError("unsupported bounded audio input format")
 
     source = Path(path)
     if not source.is_file():
         raise AudioProcessingError(f"audio file does not exist: {source}")
+    if max_file_bytes is not None and source.stat().st_size > max_file_bytes:
+        raise AudioProcessingError("audio file exceeds the byte limit")
     executable = shutil.which(ffmpeg)
     if executable is None:
         raise AudioProcessingError("ffmpeg is required to decode audio file inputs")
     command = [
         executable,
         "-nostdin",
+        "-loglevel",
+        "error",
+        "-protocol_whitelist",
+        "file,pipe",
         "-threads",
         "0",
         "-i",
@@ -85,13 +112,24 @@ def decode_audio(
         str(SAMPLE_RATE),
         "-",
     ]
+    max_samples = None
+    if input_format is not None:
+        position = command.index("-i")
+        command[position:position] = ["-f", input_format]
+    if max_duration_seconds is not None:
+        max_samples = int(max_duration_seconds * SAMPLE_RATE)
+        # One extra sample distinguishes oversized input from a valid boundary.
+        command[-1:-1] = ["-t", str((max_samples + 1) / SAMPLE_RATE)]
     try:
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        deadline = time.monotonic() + timeout_seconds
         while True:
             if cancelled is not None and cancelled():
-                process.terminate()
-                process.communicate()
+                _stop_decoder(process)
                 raise AudioProcessingError("audio decoding was cancelled")
+            if time.monotonic() >= deadline:
+                _stop_decoder(process)
+                raise AudioProcessingError("audio decoding timed out")
             try:
                 stdout, stderr = process.communicate(timeout=0.1)
                 break
@@ -106,9 +144,24 @@ def decode_audio(
         )
     if len(stdout) % 4:
         raise AudioProcessingError("ffmpeg returned malformed float32 audio")
+    if max_samples is not None and len(stdout) // 4 > max_samples:
+        raise AudioProcessingError("audio exceeds the duration limit")
+    import numpy as np
+
+    if not stdout or not np.isfinite(np.frombuffer(stdout, dtype="<f4")).all():
+        raise AudioProcessingError("decoded audio is empty or non-finite")
     import mlx.core as mx
 
     return mx.array(memoryview(stdout).cast("f"))
+
+
+def _stop_decoder(process: subprocess.Popen) -> None:
+    process.terminate()
+    try:
+        process.communicate(timeout=1)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.communicate(timeout=1)
 
 
 def pad_or_trim(waveform: Any, length: int = N_SAMPLES) -> Any:

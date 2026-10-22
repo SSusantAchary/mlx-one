@@ -1,0 +1,327 @@
+[
+  [
+    "src/mlx_one/cli.py",
+    "E402",
+    "Module level import not at top of file"
+  ],
+  [
+    "src/mlx_one/cli.py",
+    "E501",
+    "Line too long (113 > 100)"
+  ],
+  [
+    "src/mlx_one/cli.py",
+    "E501",
+    "Line too long (116 > 100)"
+  ],
+  [
+    "src/mlx_one/cli.py",
+    "E501",
+    "Line too long (112 > 100)"
+  ],
+  [
+    "src/mlx_one/cli.py",
+    "E501",
+    "Line too long (103 > 100)"
+  ],
+  [
+    "src/mlx_one/cli.py",
+    "E501",
+    "Line too long (105 > 100)"
+  ],
+  [
+    "src/mlx_one/inspection.py",
+    "E501",
+    "Line too long (101 > 100)"
+  ],
+  [
+    "src/mlx_one/models/registry.py",
+    "E501",
+    "Line too long (101 > 100)"
+  ],
+  [
+    "src/mlx_one/models/registry.py",
+    "E501",
+    "Line too long (106 > 100)"
+  ],
+  [
+    "src/mlx_one/models/registry.py",
+    "E501",
+    "Line too long (105 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_configuration.py",
+    "I001",
+    "Import block is un-sorted or un-formatted"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "E501",
+    "Line too long (146 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "E731",
+    "Do not assign a `lambda` expression, use a `def`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "E731",
+    "Do not assign a `lambda` expression, use a `def`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "E731",
+    "Do not assign a `lambda` expression, use a `def`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B023",
+    "Function definition does not bind loop variable `parents`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B023",
+    "Function definition does not bind loop variable `parents`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B023",
+    "Function definition does not bind loop variable `parents`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B023",
+    "Function definition does not bind loop variable `parents`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B023",
+    "Function definition does not bind loop variable `parents`"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/_runtime.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/config.py",
+    "I001",
+    "Import block is un-sorted or un-formatted"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/config.py",
+    "E501",
+    "Line too long (102 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/config.py",
+    "E501",
+    "Line too long (102 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/config.py",
+    "E501",
+    "Line too long (119 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/config.py",
+    "E501",
+    "Line too long (111 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/model.py",
+    "I001",
+    "Import block is un-sorted or un-formatted"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/model.py",
+    "E501",
+    "Line too long (153 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/model.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "I001",
+    "Import block is un-sorted or un-formatted"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "E501",
+    "Line too long (170 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "E501",
+    "Line too long (128 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "E501",
+    "Line too long (170 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "E501",
+    "Line too long (145 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "I001",
+    "Import block is un-sorted or un-formatted"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "E501",
+    "Line too long (128 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "E501",
+    "Line too long (145 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "UP034",
+    "Avoid extraneous parentheses"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "E501",
+    "Line too long (113 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "E501",
+    "Line too long (106 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "E501",
+    "Line too long (221 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/tracker_video.py",
+    "E501",
+    "Line too long (139 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "I001",
+    "Import block is un-sorted or un-formatted"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "E501",
+    "Line too long (113 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "E501",
+    "Line too long (126 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "E501",
+    "Line too long (155 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "E501",
+    "Line too long (139 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "B905",
+    "`zip()` without an explicit `strict=` parameter"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "E501",
+    "Line too long (235 > 100)"
+  ],
+  [
+    "src/mlx_one/models/segmentation/sam3/video.py",
+    "E501",
+    "Line too long (132 > 100)"
+  ]
+]

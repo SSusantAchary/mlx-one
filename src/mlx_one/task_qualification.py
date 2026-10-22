@@ -24,6 +24,10 @@ TASK_PROFILE_VERSION='native-task-profile-v1'
 TASK_EVIDENCE_VERSION='native-task-evidence-v1'
 TASK_GATE_VERSION='native-task-gates-v1'
 STATUSES={'PASS','FAIL','BLOCKED','SKIPPED','NOT_RUN'}
+TASK_CORRECTNESS_CHECKS = frozenset({
+    'parity', 'native_execution', 'checkpoint_scope', 'telemetry', 'cleanup', 'quality',
+    'task_lifecycle', 'task_quality_coverage', 'five_repetitions',
+})
 
 
 @dataclass(frozen=True)
@@ -61,6 +65,11 @@ class TaskProfile:
                or v<0 for v in self.limits.values()):
             raise ValueError("task limits must be finite nonnegative numbers")
         object.__setattr__(self,"task",canonical_task(self.task).value)
+        implementation = self.settings.get('qwen3_implementation', 'canonical')
+        if implementation not in {'canonical', 'upstream-candidate'} or (
+                implementation == 'upstream-candidate'
+                and (self.model_type != 'qwen3' or self.task != 'text-generation')):
+            raise ValueError('Qwen3 implementation must be canonical or explicit text candidate')
         from mlx_one.engine.adapter_registry import get_runtime_registration
 
         binding=get_runtime_registration(self.model_type)
@@ -108,6 +117,12 @@ def read_inputs(profile):
         if any(k in case for k in ('api_key','authorization','credentials','cache_namespace')):
             raise ValueError(
                 'input manifests cannot grant namespace authority or contain credentials')
+    if 'text_quality' in data:
+        from mlx_one.quality_dataset import validate_text_quality
+
+        if profile.task!='text-generation':
+            raise ValueError('text quality protocol requires text-generation')
+        validate_text_quality(data)
     return data,path.parent
 
 
@@ -253,8 +268,7 @@ def validate_task_evidence(result,scope,evidence,*,performance=False):
             'task evidence is stale, synthetic or has incomplete checkpoint identity')
     gates=task_gates(profile,documents['task-parity.json'],measurement,
                      documents['task-quality.json'],reference=measurement.get('reference'))
-    required_checks={'parity','native_execution','checkpoint_scope','telemetry','cleanup','quality',
-                     'task_lifecycle','task_quality_coverage'}
+    required_checks=TASK_CORRECTNESS_CHECKS
     if performance:
         required_checks=set(gates['checks'])
     if (documents['task-gates.json'].get('schema_version')!=TASK_GATE_VERSION

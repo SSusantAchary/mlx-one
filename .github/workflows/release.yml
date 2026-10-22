@@ -1,41 +1,164 @@
-name: Release
+name: Release candidate and approved publication
 
 on:
-  push:
-    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      evidence:
+        description: Committed proof cohort directory relative to the repository
+        required: true
+        type: string
+      publish:
+        description: Publish validated artifacts after release environment approval
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: macos-latest
+  static:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - name: Build and inspect distributions
+          python-version: "3.12.11"
+      - run: python -m pip install ruff==0.16.6 pyyaml packaging
+      - run: python scripts/release/validate.py
+      - run: python scripts/release/check_lint.py
+
+  backend-independent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.11"
+      - name: Install backend-free test dependencies
         run: |
-          python -m pip install --upgrade build twine
+          python -m pip install --no-deps -e .
+          python -m pip install pytest pytest-cov numpy click tokenizers jinja2 tqdm safetensors pyyaml regex huggingface-hub fastapi httpx uvicorn python-multipart pillow
+      - name: Exercise registry, configurations, schemas and synthetic loading
+        run: >-
+          python -m pytest --no-cov
+          tests/test_runtime_registry.py tests/test_registry_plugins.py
+          tests/test_schemas.py tests/test_model_loader.py tests/unit
+          tests/models/test_new_language_contracts.py
+          tests/qualification/test_alpha_release_support.py
+          tests/api/test_alpha_error_privacy.py
+
+  native-hardware:
+    needs: [static, backend-independent]
+    runs-on: [self-hosted, macOS, ARM64, mlx-one-hardware]
+    timeout-minutes: 180
+    concurrency:
+      group: mlx-one-m4-qualification
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.11"
+      - run: python -m pip install -c requirements/alpha-tested-constraints.txt -e ".[dev]"
+      - name: Require actual Metal hardware
+        run: |
+          test "$(uname -m)" = arm64
+          python -c 'import mlx.core as mx; assert mx.metal.is_available(); assert mx.default_device() == mx.gpu; print(mx.metal.device_info())'
+      - name: Run entire native suite on the frozen checkout
+        env:
+          MLX_ONE_RUN_MLX_TESTS: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -m pytest --no-cov
+      - name: Validate committed checkpoint hardware proof
+        env:
+          EVIDENCE: ${{ inputs.evidence }}
+        run: python scripts/release/validate.py --evidence "$EVIDENCE"
+
+  distributions:
+    needs: [static, backend-independent, native-hardware]
+    runs-on: [self-hosted, macOS, ARM64, mlx-one-hardware]
+    timeout-minutes: 60
+    concurrency:
+      group: mlx-one-m4-qualification
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.11"
+      - run: python -m pip install build twine
+      - name: Build once from the frozen commit
+        run: |
+          test -z "$(git status --porcelain)"
           python -m build
           python -m twine check dist/*
+          shasum -a 256 dist/* > SHA256SUMS
+          git rev-parse HEAD > RELEASE_COMMIT
+      - name: Audit distribution payloads
+        run: |
+          python scripts/release/package_audit.py --dist dist --output /tmp/mlx-one-package-audit-${{ github.run_id }}.json
+          python -c 'import json,sys; assert json.load(open(sys.argv[1]))["status"] == "PASS"' /tmp/mlx-one-package-audit-${{ github.run_id }}.json
+      - name: Clean native installation outside source checkout
+        env:
+          EVIDENCE: ${{ inputs.evidence }}
+        run: |
+          WHEEL_ENV="$(mktemp -d /tmp/mlx-one-release-wheel.XXXXXX)"
+          python -m venv "$WHEEL_ENV"
+          WHEEL_FILES=("$GITHUB_WORKSPACE"/dist/*.whl)
+          "$WHEEL_ENV/bin/python" -m pip install -c requirements/alpha-tested-constraints.txt "${WHEEL_FILES[0]}[server]"
+          cp scripts/release/wheel_smoke.py "$WHEEL_ENV/wheel_smoke.py"
+          mkdir "$GITHUB_WORKSPACE/release-smoke"
+          cd /tmp
+          "$WHEEL_ENV/bin/mlx-one" --version
+          "$WHEEL_ENV/bin/python" -m pip check
+          for MODEL in M01 M02 M03 M04 M05 M06 M07 M08 M09 M10; do
+            "$WHEEL_ENV/bin/python" "$WHEEL_ENV/wheel_smoke.py" --assets "$GITHUB_WORKSPACE/$EVIDENCE/checkpoint-manifest.json" --model "$MODEL" --output "$GITHUB_WORKSPACE/release-smoke/$MODEL.json"
+          done
+          "$WHEEL_ENV/bin/python" "$WHEEL_ENV/wheel_smoke.py" --assets "$GITHUB_WORKSPACE/$EVIDENCE/checkpoint-manifest.json" --model M03 --http --output "$GITHUB_WORKSPACE/release-smoke/http.json"
       - uses: actions/upload-artifact@v4
         with:
-          name: python-distributions
-          path: dist/
+          name: tested-release-artifacts
+          path: |
+            dist/*
+            SHA256SUMS
+            RELEASE_COMMIT
+            release-smoke/*
 
-  publish:
-    needs: build
+  candidate-validation:
+    needs: [native-hardware, distributions]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.11"
+      - uses: actions/download-artifact@v4
+        with:
+          name: tested-release-artifacts
+      - name: Verify artifact identity and release approvals
+        env:
+          EVIDENCE: ${{ inputs.evidence }}
+        run: |
+          sha256sum -c SHA256SUMS
+          test "$(cat RELEASE_COMMIT)" = "$(git rev-parse HEAD)"
+          python scripts/release/validate.py --evidence "$EVIDENCE" --publication
+
+  publication:
+    if: ${{ inputs.publish }}
+    needs: candidate-validation
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: pypi-manual-approval
       url: https://pypi.org/p/mlx-one
     permissions:
       id-token: write
+      contents: read
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: python-distributions
-          path: dist/
+          name: tested-release-artifacts
+      - run: sha256sum -c SHA256SUMS
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/

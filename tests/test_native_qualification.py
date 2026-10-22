@@ -32,7 +32,23 @@ def test_comparison_traffic_is_independent_of_backend_and_slots():
     assert len(driver.comparison_traffic(case)["requests"]) == 12
 
 
+def test_bounded_reference_benchmark_never_completes_full_baseline():
+    full = driver.baseline_manifest(["qwen3-small"])
+    smoke = driver.baseline_manifest(["qwen3-small"], reference_smoke=True)
+    assert len(full["tasks"]) == 5 and full["requests_per_group"] == 12
+    assert all(t["settings"]["timeout_seconds"] == 3600 for t in full["tasks"])
+    assert full["full_baseline_scope"] is True and not full["omitted_cases"]
+    assert len(smoke["tasks"]) == 1 and smoke["requests_per_group"] == 1
+    assert smoke["repetitions"] == 5
+    assert smoke["tasks"][0]["settings"]["output_tokens"] == 128
+    assert smoke["full_baseline_scope"] is False
+    assert len(smoke["omitted_cases"]) == 4
+    assert all(t["status"] == "HARDWARE_PENDING" for t in smoke["omitted_cases"])
+
+
 def test_failed_dependency_is_retained_and_blocks_optimized_run(tmp_path, monkeypatch):
+    monkeypatch.setattr(driver, "checkpoint_proof", lambda *a, **k:
+                        {"files": {"model.safetensors": "simulated"}})
     monkeypatch.setattr(driver, "source_provenance", lambda root: {"source_sha256": "source"})
     monkeypatch.setattr(driver, "export_matrix", lambda *args: None)
     manifest = driver.command_manifest(["qwen3-small"])
@@ -51,6 +67,8 @@ def test_failed_dependency_is_retained_and_blocks_optimized_run(tmp_path, monkey
 
 @pytest.mark.parametrize("status", ["memory_watchdog_unavailable", "memory_watchdog_terminated"])
 def test_watchdog_failure_stops_all_native_expansion(tmp_path, monkeypatch, status):
+    monkeypatch.setattr(driver, "checkpoint_proof", lambda *a, **k:
+                        {"files": {"model.safetensors": "simulated"}})
     monkeypatch.setattr(driver, "source_provenance", lambda root: {"source_sha256": "source"})
     manifest = driver.command_manifest(["qwen3-small"])
     calls = []
@@ -185,7 +203,7 @@ def gate_fixture():
 
 
 @pytest.mark.parametrize("field", ["traffic_identity", "max_prefill_tokens", "queue_size",
-                                  "max_scheduled_tokens", "output_stall_timeout_s"])
+                                  "max_scheduled_tokens", "output_stall_timeout_s", "eos_policy"])
 def test_p1_gate_rejects_changed_workload_or_execution_budget(field):
     from mlx_one.p1_qualification import evaluate_p1
 

@@ -98,9 +98,12 @@ def read_safetensors(directory: Path, *, layout: str = "auto") -> dict[str, Any]
     """Read only the selected layout, preserving the publisher's tensor dtypes."""
     from safetensors import safe_open
 
+    from mlx_one.core.precision import validate_finite_safetensors
+
     files, mapping = select_safetensors(directory, layout=layout)
     names = {}
     for path in files:
+        validate_finite_safetensors(path)
         with safe_open(path, framework="numpy") as handle:
             names[path.name] = tuple(handle.keys())
     validate_tensor_index(files, mapping, names)

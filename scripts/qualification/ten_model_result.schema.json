@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Exact ten-model checkpoint qualification record",
+  "type": "object",
+  "required": ["schema_version", "checkpoint_id", "model_id", "architecture", "checkpoint_revision", "checkpoint", "license", "qualification", "profiles", "evidence_paths", "limitations"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["ten-model-result-v1"]},
+    "checkpoint_id": {"type": "string", "enum": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10"]},
+    "model_id": {"type": "string"},
+    "architecture": {"type": "string"},
+    "checkpoint_revision": {"type": ["string", "null"]},
+    "checkpoint": {"type": "object"},
+    "license": {"type": "object"},
+    "qualification": {"type": "string", "enum": ["NOT_QUALIFIED", "QUALIFIED"]},
+    "profiles": {"type": "array", "items": {
+      "type": "object",
+      "required": ["name", "status", "precision", "checks", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "status": {"type": "string", "enum": ["PASS", "FAIL_NUMERICAL", "FAIL_BEHAVIOR", "FAIL_LOADING", "FAIL_API", "BLOCKED_ASSET", "BLOCKED_ENVIRONMENT", "NOT_RUN", "UNSUPPORTED"]},
+        "precision": {"type": "object"},
+        "checks": {"type": "object"},
+        "evidence": {"type": "string"}
+      }
+    }},
+    "evidence_paths": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "ten-model-quality-v2",
+  "max_tokens": 32,
+  "cases": [
+    {
+      "id": "completion",
+      "prompt": "The capital of France is",
+      "kind": "nonempty",
+      "instruction": false,
+      "max_tokens": 32
+    },
+    {
+      "id": "arithmetic",
+      "prompt": "Compute 17 + 25. Return only the number.",
+      "kind": "exact",
+      "expected": "42",
+      "instruction": true,
+      "max_tokens": 256
+    },
+    {
+      "id": "instruction",
+      "prompt": "Return exactly YES and nothing else.",
+      "kind": "exact",
+      "expected": "YES",
+      "instruction": true,
+      "max_tokens": 32
+    },
+    {
+      "id": "json",
+      "prompt": "Return only a JSON object with exactly two keys: name with value Lin, and count with value 2.",
+      "kind": "json",
+      "instruction": true,
+      "max_tokens": 128
+    },
+    {
+      "id": "explanation",
+      "prompt": "Explain what an API does in one sentence.",
+      "kind": "nonempty",
+      "instruction": true,
+      "max_tokens": 128
+    },
+    {
+      "id": "repetition",
+      "prompt": "Continue the pattern briefly: blue blue blue",
+      "kind": "nonempty",
+      "instruction": false,
+      "max_tokens": 32
+    },
+    {
+      "id": "bounded-retrieval",
+      "prompt": "The secret value is orchid-17. {filler} What is the secret value? Return only the value.",
+      "kind": "exact",
+      "expected": "orchid-17",
+      "instruction": true,
+      "max_tokens": 64
+    },
+    {
+      "id": "multiturn",
+      "messages": [
+        {
+          "role": "user",
+          "content": "My name is Lin."
+        },
+        {
+          "role": "assistant",
+          "content": "Hello, Lin."
+        },
+        {
+          "role": "user",
+          "content": "What is my name? Return only the name."
+        }
+      ],
+      "kind": "exact",
+      "expected": "Lin",
+      "instruction": true,
+      "max_tokens": 64
+    }
+  ],
+  "metrics": "Exact responses permit surrounding whitespace only. JSON is parsed without fence removal. Base completion models are not scored on instruction cases. Determinism and stop/cancellation have separate runtime checks. Bounded retrieval uses 128 filler words, not a maximum-context claim. v2 preserves every prompt and expected answer; only task budgets and failure classification change. Nonempty explanation/completion checks remain limited surface checks, not semantic evaluation."
+}

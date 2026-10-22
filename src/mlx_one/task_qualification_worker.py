@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import gc
 import json
 import threading
 import time
+import weakref
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
@@ -46,9 +48,12 @@ def compare_result(left,right,*,atol,rtol):
 
 def task_quality(task,outputs,cases,limits,manifest_sha256):
     """Ground truth is required; independent native agreement alone is not quality."""
+    coverage={'declared_cases':len(cases),'observed_outputs':len(outputs),
+              'cases_with_ground_truth':sum('expected' in case for case in cases),
+              'status':'NOT_RUN','reason':'no independently validated coverage protocol supplied'}
     if any('expected' not in case for case in cases):
         return {'passed':None,'reason':'ground truth task anchors not supplied',
-                'ground_truth_sha256':None}
+                'ground_truth_sha256':None,'coverage_passed':None,'coverage':coverage}
     checks=[]
     if task=='transcription':
         from mlx_one.audio.evaluation import word_error_rate
@@ -70,7 +75,34 @@ def task_quality(task,outputs,cases,limits,manifest_sha256):
                 {k:output[k] for k in expected},expected,atol=atol,rtol=rtol))
     return {'passed':False if False in checks else None if None in checks else True,
             'checks':checks,'ground_truth_sha256':manifest_sha256,'coverage_passed':None,
+            'coverage':coverage,
             'scope':'declared task anchors only; no unseen dataset generalization'}
+
+
+def probe_text_cancellation(target,payload,reference,execute,case,*,atol,rtol):
+    """Exercise cancellation and recovery on the same native B1 engine."""
+    from mlx_one.text.schemas import TextGenerationOptions
+
+    cancel=threading.Event()
+    stream=target.stream(payload['prompt'],options=TextGenerationOptions(
+        **payload.get('generation',{})),cancel=cancel)
+    try:
+        first=next(stream,None)
+        cancel.set()
+        remaining=list(stream)
+    finally:
+        cancel.set()
+        stream.close()
+    stats=target._cache_manager.stats()
+    started=first is not None and first.token_id is not None
+    cancelled=started and not any(e.token_id is not None for e in remaining)
+    recovery=execute(case)[0]
+    return {'cancellation':cancelled if started else None,
+            'cancelled_after_first_token':started,
+            'active_handles_after_cancel':stats.active_handles,
+            'reserved_bytes_after_cancel':stats.reserved_bytes,
+            'recovery':compare_result(recovery,reference,atol=atol,rtol=rtol),
+            'cancel_cleanup':stats.active_handles==0 and stats.reserved_bytes==0}
 
 
 def _arrays(value):
@@ -146,7 +178,12 @@ def load_bundle(profile):
     if task==TaskKind.TEXT_GENERATION:
         from mlx_one.text.loading import load_text_model
 
-        bundle=load_text_model(profile.checkpoint_path,**settings)
+        if profile.settings.get('qwen3_implementation') == 'upstream-candidate':
+            from mlx_one.models.language.qwen3.upstream_adapter import load_upstream_candidate
+
+            bundle=load_upstream_candidate(profile.checkpoint_path,**settings)
+        else:
+            bundle=load_text_model(profile.checkpoint_path,**settings)
     elif task==TaskKind.VISION_LANGUAGE:
         from mlx_one.vision.loading import load_vlm_model
 
@@ -203,6 +240,49 @@ def payload_for(case,root):
     return payload
 
 
+def execute_text_quality_case(target,bundle,case):
+    """Use the existing Engine twice, recording actual API agreement and failures."""
+    from mlx_one.engine.observation import observe_request
+    from mlx_one.engine.timing import RequestTiming
+    from mlx_one.text.schemas import TextGenerationOptions
+
+    payload=case['payload']
+    prompt=payload.get('prompt')
+    if 'messages' in payload:
+        prompt=bundle.chat_template.render(payload['messages'],enable_thinking=False)
+    if isinstance(prompt,str) and len(bundle.tokenizer.encode(prompt))>512:
+        raise ValueError('quality prompt exceeds the authorized 512-token bound')
+    settings=payload.get('generation',{})
+    if isinstance(settings.get('max_tokens'),int) and settings['max_tokens']>64:
+        raise ValueError('quality output exceeds the authorized 64-token bound')
+    timing=RequestTiming(time.perf_counter(),trace=True)
+    result={'rendered_prompt':prompt}
+    try:
+        options=TextGenerationOptions(**settings)
+        with observe_request(timing.observe):
+            events=list(target.stream(prompt,options=options))
+        result.update(tokens=[e.token_id for e in events if e.token_id is not None],
+            text=''.join(e.text for e in events),finish_reason=events[-1].finish_reason,
+            prompt_ids=bundle.tokenizer.encode(prompt))
+    except (ValueError,TypeError) as error:
+        result['error']={'type':type(error).__name__,'message':str(error)}
+    try:
+        generated=target.generate(prompt,options=TextGenerationOptions(**settings))
+        result['nonstream']={'text':generated.text,'finish_reason':generated.finish_reason,
+                             'generation_tokens':generated.generation_tokens}
+    except (ValueError,TypeError) as error:
+        result['nonstream_error']={'type':type(error).__name__,'message':str(error)}
+    result['stream_consistent']=result.get('error')==result.get('nonstream_error') \
+        if 'error' in result or 'nonstream_error' in result else (
+            result['text']==result['nonstream']['text']
+            and result['finish_reason']==result['nonstream']['finish_reason']
+            and len(result['tokens'])==result['nonstream']['generation_tokens'])
+    return result,{**timing.summary(),'prefill_ms':timing.forward_ms['prefill'],
+        'decode_forward_ms':timing.forward_ms['decode'],'prefill_tokens':timing.prefill_tokens,
+        'actual_forward_batch_sizes':list(timing.batches or []),
+        'scope':'synchronized streamed Engine request; paired generate excluded from token timing'}
+
+
 def run(profile,output):
     import mlx.core as mx
     import numpy as np
@@ -214,7 +294,10 @@ def run(profile,output):
 
     data,root=read_inputs(profile)
     cases=data['cases']
+    load_started=time.perf_counter()
     bundle=load_bundle(profile)
+    mx.eval(bundle.model.parameters())
+    cold_load_seconds=time.perf_counter()-load_started
     batching=dict(profile.settings.get('batching',{}))
     if batching.get('max_sequences',profile.slots)!=profile.slots:
         raise ValueError('profile slots conflict with configured task rows')
@@ -237,7 +320,10 @@ def run(profile,output):
     def execute(case):
         started=time.perf_counter()
         payload=payload_for(case,root)
-        if target is not None:
+        observed={}
+        if target is not None and 'text_quality' in data:
+            result,observed=execute_text_quality_case(target,bundle,case)
+        elif target is not None:
             from mlx_one.text.schemas import TextGenerationOptions
 
             events=list(target.stream(payload['prompt'],options=TextGenerationOptions(
@@ -261,12 +347,19 @@ def run(profile,output):
                         result.append(session.call('process_frame',frame,frame_index=i))
         else:
             result=service.run_task('checkpoint',profile.task,payload).output
-        return serializable(result),{'request_id':case['request_id'],
+        return serializable(result),{**observed,'request_id':case['request_id'],
                                     'response_ms':(time.perf_counter()-started)*1000}
     outputs=[]
     timings=[]
     references=[]
     parity=[]
+    measurement=None
+    proof={}
+    quality={}
+    lifecycle={'startup':True,'execution':None,'cancellation':None,'recovery':None,
+               'unloading':None,'cleanup':None,
+               'scope':'native B1 text lifecycle; other task probes remain NOT_RUN'}
+    model_reference=weakref.ref(bundle.model)
     try:
         with observe_calls(bundle) as traces:
             references=[execute(case)[0] for case in cases]
@@ -287,6 +380,17 @@ def run(profile,output):
                     for (actual,_),expected in zip(results,references,strict=True))
             mx.synchronize()
             seconds=time.perf_counter()-measured_start
+        lifecycle['execution']=all(parity)
+        if target is not None and profile.slots==1:
+            probe_index=next((i for i,c in enumerate(cases) if c.get('category')!='invalid'),None)
+            if probe_index is not None:
+                probe=cases[probe_index]
+                payload=payload_for(probe,root)
+                if 'messages' in payload:
+                    payload['prompt']=bundle.chat_template.render(
+                        payload['messages'],enable_thinking=False)
+                lifecycle.update(probe_text_cancellation(target,payload,
+                    references[probe_index],execute,probe,atol=atol,rtol=rtol))
         telemetry=sample_telemetry()
         stats=service.pool.stats()
         owner=target._cache_manager.stats() if target is not None else None
@@ -306,7 +410,9 @@ def run(profile,output):
             'actual_max_forward_batch':max((t['batch_size'] or 1 for t in traces
                 if t['cohort']=='measured'),default=0),
             'trace_truncated':len(traces)>=8192,'resolved_execution_settings':
-                dataclasses.asdict(config)}
+                dataclasses.asdict(config),'cold_load_seconds':cold_load_seconds,
+            'cold_load_scope':('fresh process, model load + parameter evaluation; '
+                               'filesystem cache uncontrolled')}
         if profile.reference_run:
             from mlx_one.inference_qualification import validate_integrity
 
@@ -315,7 +421,12 @@ def run(profile,output):
             measurement['reference']=json.loads((reference/'measurement.json').read_text())
         proof={'passed':all(parity),'comparisons':parity,
                'oracle':'independent native task execution'}
-        quality=task_quality(profile.task,outputs[-1],cases,profile.limits,profile.inputs_sha256)
+        if 'text_quality' in data:
+            from mlx_one.quality_dataset import evaluate_text_quality
+
+            quality=evaluate_text_quality(data,outputs,profile.inputs_sha256)
+        else:
+            quality=task_quality(profile.task,outputs[-1],cases,profile.limits,profile.inputs_sha256)
         gates=task_gates(profile,proof,measurement,quality,reference=measurement['reference'])
         for name,value in (('measurement.json',measurement),('task-parity.json',proof),
             ('task-quality.json',quality),('task-gates.json',gates),('outputs.json',outputs),
@@ -356,9 +467,42 @@ def run(profile,output):
         if not proof['passed']:
             raise ValueError('native task parity failed; checkpoint expansion must stop')
     finally:
-        if target is not None:
-            target.close()
-        service.close()
+        try:
+            if target is not None:
+                target.close()
+                target.close()
+                closed=target._cache_manager.stats()
+                lifecycle['engine_closed']=target._closed
+                lifecycle['closed_handles']=closed.active_handles
+                lifecycle['closed_reserved_bytes']=closed.reserved_bytes
+                lifecycle['cleanup']=target._closed and closed.active_handles==0 \
+                    and closed.reserved_bytes==0 and lifecycle.get('cancel_cleanup') is not False
+            service.close()
+            lifecycle['active_leases_after_close']=service.pool.stats()['active_leases']
+            if lifecycle['active_leases_after_close']!=0:
+                lifecycle['cleanup']=False
+            target=None
+            bundle=None
+            gc.collect()
+            mx.clear_cache()
+            mx.synchronize()
+            lifecycle['unloading']=model_reference() is None
+            lifecycle['mlx_active_bytes_after_unload']=int(mx.get_active_memory())
+            lifecycle['mlx_cached_bytes_after_unload']=int(mx.get_cache_memory())
+        except Exception:
+            lifecycle['cleanup']=False
+            raise
+        finally:
+            phases=[lifecycle[k] for k in ('startup','execution','cancellation','recovery',
+                                          'unloading','cleanup')]
+            lifecycle['passed']=False if False in phases else None if None in phases else True
+            write(output/'task-lifecycle.json',lifecycle)
+            if measurement is not None:
+                measurement['task_lifecycle_passed']=lifecycle['passed']
+                measurement['task_lifecycle']=lifecycle
+                write(output/'measurement.json',measurement)
+                write(output/'task-gates.json',task_gates(profile,proof,measurement,quality,
+                    reference=measurement.get('reference')))
 
 
 def main(argv=None):

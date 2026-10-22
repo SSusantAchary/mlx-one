@@ -203,7 +203,7 @@ def load_quality_reference(directory, *, profile, runtime):
 def write_integrity(output):
     root = Path(output)
     checksums = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.iterdir())
-                 if p.is_file() and p.suffix in {".json", ".jsonl", ".csv"}
+                 if p.is_file() and p.suffix in {".json", ".jsonl", ".csv", ".xml", ".log"}
                  and p.name != "result-integrity.json"}
     (root / "result-integrity.json").write_text(
         json.dumps(checksums, indent=2, sort_keys=True) + "\n")

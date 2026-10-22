@@ -150,6 +150,24 @@ def test_runner_contract_preserves_unequal_committed_boundaries(native):
         assert state.cache.closed
 
 
+def test_copy_telemetry_counts_real_ragged_history_separately_from_padding(native):
+    runner = BatchedDenseRunner(native)
+    a, b = request(native, (4, 5, 6), "a"), request(native, (7,), "b")
+    runner.execute((a, b))
+    a.phase = b.phase = "decode"
+    a.token_ids = b.token_ids = (8,)
+    runner.execute((a, b))
+    trace = runner.last_trace
+    per_token = runner.adapter.plan.bytes_per_token()
+    assert trace["history_pack_bytes"] == trace["history_scatter_bytes"] == 4 * per_token
+    assert trace["packed_history_bytes"] == 6 * per_token
+    assert trace["kv_delta_write_bytes"] == 2 * per_token
+    assert trace["pack_allocated_bytes"] == 8 * per_token
+    assert all(trace[key] >= 0 for key in ("pack_graph_time_ms", "forward_eval_time_ms",
+                                          "stage_eval_time_ms", "commit_time_ms"))
+    assert trace["gpu_sync_time_ms"] is None
+
+
 def test_scatter_failure_and_invalid_mappings_are_atomic(native, monkeypatch):
     runner = BatchedDenseRunner()
     a, b = request(native, (1, 2), "a"), request(native, (3,), "b")
