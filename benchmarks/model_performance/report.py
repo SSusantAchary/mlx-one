@@ -74,6 +74,11 @@ def validate_samples(samples, inputs, budget, repeats):
 
 def load_records(evidence=EVIDENCE):
     inventory = read(evidence / "inventory.json")["checkpoints"]
+    for model in inventory:
+        require(
+            type(model.get("context_window_tokens")) is int and model["context_window_tokens"] > 0,
+            "invalid configured context window",
+        )
     models = {m["model_id"]: m for m in inventory}
     support = read(ROOT / "src/mlx_one/data/compatibility/alpha_release.json")["checkpoints"]
     require(
@@ -218,6 +223,10 @@ def render(inventory, records):
         "Python Engine, CLI and HTTP serving throughput are separate measurement types "
         "and are not represented by these numbers. Parameters are nominal model sizes.",
         "",
+        "Configured context windows come from the pinned checkpoint configs; "
+        "they are separate from benchmark input lengths and do not establish "
+        "full-window validation. See the [config sources](docs/benchmarks/inventory.md).",
+        "",
         "**Historical 128-input / 16-output protocol.** These archived runs are not "
         "the new standardized 128-input / 128-output results. Source and primary "
         "precision measurements are listed separately; “source” means the stored weights.",
@@ -240,13 +249,12 @@ def render(inventory, records):
             "repetitions; per-column median. FP16 KV; fresh state, no prefix reuse. "
             "TTFT includes prefill and greedy selection of the first token. "
             "Peak MLX resets before each request after load/conversion/warmup; "
-            "it includes resident model allocations. "
-            f"Implementation `{group_records[0]['source_fingerprint'][:12]}`; "
-            f"runner `{group_records[0]['runner_hash'][:12]}`.",
+            "it includes resident model allocations.",
             "",
-            "| Model name | Parameters | Quantization/precision | Prefill tokens/sec | "
+            "| Model name | Parameters | Configured context (tokens) | "
+            "Quantization/precision | Prefill tokens/sec | "
             "Decode tokens/sec | Time to first token (ms) | Peak MLX memory (GiB) |",
-            "|---|---|---|---:|---:|---:|---:|",
+            "|---|---|---:|---|---:|---:|---:|---:|",
         ]
         for r in group_records:
             m = r["model"]
@@ -255,10 +263,11 @@ def render(inventory, records):
             )
             values = [statistics.median(s[k] for s in r["samples"]) for k in METRICS]
             parts.append(
-                f"| [{m['model_id']}]({r['path']}) | {m['parameters']} | {precision} | "
-                f"{values[0]:.2f} | "
+                f"| [{m['model_id']}]({r['path']}) | {m['parameters']} | "
+                f"{m['context_window_tokens']:,} | {precision} | "
+                f"**{values[0]:.2f}** | "
                 + (
-                    f"{values[1]:.2f}"
+                    f"**{values[1]:.2f}**"
                     if all(s["generated_tokens"] > 1 for s in r["samples"])
                     else "—"
                 )
@@ -310,12 +319,15 @@ def derived(inventory, records):
     intro = "# Text inference checkpoint inventory\n\nPrimary means the support manifest’s "
     intro += "selected configuration, not certification. Q4/Q8 conversions use group size 64. "
     intro += "Source BF16/FP32 runs are distinct. Parameter sizes are nominal labels; "
-    intro += "quantized bytes are not parameter counts.\n\n"
+    intro += "quantized bytes are not parameter counts. Configured context is taken from "
+    intro += "each pinned config's `max_position_embeddings` (inside `text_config` where "
+    intro += "applicable), or GPT-2's `n_positions`. Context values link to those configs; "
+    intro += "they do not establish full-window validation.\n\n"
     lines = [
         intro,
-        "| ID / checkpoint | Revision | Parameters | Primary precision | "
-        "Available benchmark profiles | Functional status |",
-        "|---|---|---|---|---|---|",
+        "| ID / checkpoint | Revision | Parameters | Configured context (tokens) | "
+        "Primary precision | Available benchmark profiles | Functional status |",
+        "|---|---|---|---:|---|---|---|",
     ]
     coverage = [
         "# Benchmark coverage\n",
@@ -338,6 +350,8 @@ def derived(inventory, records):
         profiles = ", ".join(sorted({r["data"]["profile"] for r in measured})) or "None"
         lines.append(
             f"| {m['id']} `{m['model_id']}` | `{m['revision']}` | {m['parameters']} | "
+            f"[{m['context_window_tokens']:,}](https://huggingface.co/{m['model_id']}"
+            f"/resolve/{m['revision']}/config.json) | "
             f"{m['primary_precision']} | {profiles} | {m['status']} / {m['checkpoint_status']} |"
         )
         gap = (

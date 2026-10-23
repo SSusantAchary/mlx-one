@@ -48,12 +48,14 @@ class PerformanceReportingTests(unittest.TestCase):
             )
         )
 
-    def test_readme_block_is_current_and_after_supported_table(self):
+    def test_readme_block_is_current_and_near_top(self):
         text = (ROOT / "README.md").read_text()
         table = report.render(self.inventory, self.records)
         self.assertIn(table, text)
-        preceding = text[: text.index(report.START)].rstrip().splitlines()[-1]
-        self.assertTrue(preceding.startswith("| [microsoft/Phi-3"))
+        position = text.index(report.START)
+        self.assertGreater(position, text.index("## Why mlx-one?"))
+        self.assertLess(position, text.index("## Architecture"))
+        self.assertLess(len(text[:position].splitlines()), len(text.splitlines()) / 10)
 
     def test_actual_count_must_equal_token_ids(self):
         self.samples[0]["generated_tokens"] = 15
