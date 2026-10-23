@@ -49,6 +49,7 @@ class GenerationChunk:
     text: str
     generated_tokens: int
     finish_reason: Literal["stop", "length"] | None = None
+    terminal_token_id: int | None = None
 
 
 @dataclass(frozen=True)

@@ -53,7 +53,7 @@ def prepare_chat(bundle, messages, output_tokens, context_tokens, *, context_shi
         if len(selected) - start <= 1:
             raise ValueError("the system message or newest turn cannot fit in the context")
         end = start + 1
-        while end < len(selected) and selected[end]["role"] == "assistant":
+        while end < len(selected) and selected[end]["role"] not in {"user", "system", "developer"}:
             end += 1
         del selected[start:end]
     boundary = 0

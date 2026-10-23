@@ -1,0 +1,413 @@
+{
+  "date": "2026-10-23",
+  "host": {
+    "device": "Apple M4",
+    "unified_memory_bytes": 34359738368,
+    "server_python": "3.12"
+  },
+  "checkpoint": "mlx-community/gpt-oss-20b-MXFP4-Q4 (existing local files)",
+  "model_alias": "gpt-oss-20b-mxfp4-128k",
+  "baseline": {
+    "tests_passed": 37,
+    "representative_kilo_status_before": 422
+  },
+  "automated": {
+    "unit_http_passed": 142,
+    "unit_optional_native_skipped": 1,
+    "native_metal_passed": 31,
+    "new_deterministic_cases": 75
+  },
+  "hardware": {
+    "checkpoint": "local GPT-OSS",
+    "model": "gpt-oss-20b-mxfp4-128k",
+    "checks": {
+      "discovery": "PASS",
+      "plain_chat": "PASS",
+      "plain_sse": {
+        "status": "PASS",
+        "finish_reason": "stop",
+        "ttft_s": 4.103235000002314,
+        "first_tool_delta_s": null,
+        "complete_s": 4.103516709001269,
+        "http_total_s": 4.103721084000426,
+        "usage": {
+          "prompt_tokens": 73,
+          "completion_tokens": 58,
+          "total_tokens": 131
+        },
+        "native_metrics": {
+          "queue_ms": 1.0703329899115488,
+          "decode_tokens_per_second": 19.021983338380124,
+          "prompt_tokens": 73,
+          "generated_tokens": 58,
+          "generation_latency_ms": 4057.180083997082,
+          "prefill_ms": 983.2408750080504,
+          "decode_ms": 1478.927791074966,
+          "prompt_tokens_per_second": 74.24426898383604,
+          "tokens_per_second": 14.295643476308092,
+          "server_text_ttft_ms": 4057.0466249919264,
+          "time_to_first_token_ms": 1009.5380419952562,
+          "memory_used_bytes": 11199606630,
+          "memory_peak_bytes": 11277314818
+        }
+      },
+      "nonstream_tool": "PASS",
+      "tool_warmup": {
+        "status": "PASS",
+        "finish_reason": "tool_calls",
+        "ttft_s": 7.099795624992112,
+        "first_tool_delta_s": 7.099796249996871,
+        "complete_s": 7.100280957994983,
+        "http_total_s": 7.100499666994438,
+        "usage": {
+          "prompt_tokens": 175,
+          "completion_tokens": 91,
+          "total_tokens": 266
+        },
+        "native_metrics": {
+          "queue_ms": 1.0454169969307259,
+          "decode_tokens_per_second": 19.04621376521369,
+          "prompt_tokens": 175,
+          "generated_tokens": 91,
+          "generation_latency_ms": 7081.551167008001,
+          "prefill_ms": 2308.996333988034,
+          "decode_ms": 2365.4778789932607,
+          "prompt_tokens_per_second": 75.79050578124776,
+          "tokens_per_second": 12.850291956366398,
+          "server_text_ttft_ms": null,
+          "time_to_first_token_ms": 2357.646750009735,
+          "memory_used_bytes": 11208257382,
+          "memory_peak_bytes": 11389946378
+        }
+      },
+      "stream_tools": [
+        {
+          "status": "PASS",
+          "finish_reason": "tool_calls",
+          "ttft_s": 7.117350290995091,
+          "first_tool_delta_s": 7.117351082997629,
+          "complete_s": 7.117794332996709,
+          "http_total_s": 7.117996332992334,
+          "usage": {
+            "prompt_tokens": 175,
+            "completion_tokens": 91,
+            "total_tokens": 266
+          },
+          "native_metrics": {
+            "queue_ms": 1.0385000059613958,
+            "decode_tokens_per_second": 18.94982400041718,
+            "prompt_tokens": 175,
+            "generated_tokens": 91,
+            "generation_latency_ms": 7099.218834002386,
+            "prefill_ms": 2301.634167000884,
+            "decode_ms": 2378.0632471462013,
+            "prompt_tokens_per_second": 76.03293455972266,
+            "tokens_per_second": 12.818311722431604,
+            "server_text_ttft_ms": null,
+            "time_to_first_token_ms": 2351.6474589996506,
+            "memory_used_bytes": 11208257382,
+            "memory_peak_bytes": 11389946378
+          }
+        },
+        {
+          "status": "PASS",
+          "finish_reason": "tool_calls",
+          "ttft_s": 7.099676333004027,
+          "first_tool_delta_s": 7.0996767500037095,
+          "complete_s": 7.1000955420022365,
+          "http_total_s": 7.100290542002767,
+          "usage": {
+            "prompt_tokens": 175,
+            "completion_tokens": 91,
+            "total_tokens": 266
+          },
+          "native_metrics": {
+            "queue_ms": 1.189041999168694,
+            "decode_tokens_per_second": 19.002366845799525,
+            "prompt_tokens": 175,
+            "generated_tokens": 91,
+            "generation_latency_ms": 7081.329207998351,
+            "prefill_ms": 2298.737542005256,
+            "decode_ms": 2375.6377960380632,
+            "prompt_tokens_per_second": 76.12874319150954,
+            "tokens_per_second": 12.850694739232802,
+            "server_text_ttft_ms": null,
+            "time_to_first_token_ms": 2346.248082991224,
+            "memory_used_bytes": 11208257382,
+            "memory_peak_bytes": 11389946378
+          }
+        },
+        {
+          "status": "PASS",
+          "finish_reason": "tool_calls",
+          "ttft_s": 7.140829708005185,
+          "first_tool_delta_s": 7.140830083008041,
+          "complete_s": 7.141259125011857,
+          "http_total_s": 7.141465167005663,
+          "usage": {
+            "prompt_tokens": 175,
+            "completion_tokens": 91,
+            "total_tokens": 266
+          },
+          "native_metrics": {
+            "queue_ms": 1.039665992720984,
+            "decode_tokens_per_second": 18.877783970252757,
+            "prompt_tokens": 175,
+            "generated_tokens": 91,
+            "generation_latency_ms": 7122.005041994271,
+            "prefill_ms": 2304.2698339995695,
+            "decode_ms": 2381.9276260765037,
+            "prompt_tokens_per_second": 75.94596666495816,
+            "tokens_per_second": 12.777300698809755,
+            "server_text_ttft_ms": null,
+            "time_to_first_token_ms": 2355.3802920068847,
+            "memory_used_bytes": 11208257382,
+            "memory_peak_bytes": 11389946378
+          }
+        },
+        {
+          "status": "PASS",
+          "finish_reason": "tool_calls",
+          "ttft_s": 7.126932749990374,
+          "first_tool_delta_s": 7.126933208986884,
+          "complete_s": 7.127410124987364,
+          "http_total_s": 7.127608333990793,
+          "usage": {
+            "prompt_tokens": 175,
+            "completion_tokens": 91,
+            "total_tokens": 266
+          },
+          "native_metrics": {
+            "queue_ms": 1.054332999046892,
+            "decode_tokens_per_second": 18.96239732645219,
+            "prompt_tokens": 175,
+            "generated_tokens": 91,
+            "generation_latency_ms": 7108.448415994644,
+            "prefill_ms": 2313.3717919990886,
+            "decode_ms": 2360.2409590967,
+            "prompt_tokens_per_second": 75.64715736797959,
+            "tokens_per_second": 12.801668475956282,
+            "server_text_ttft_ms": null,
+            "time_to_first_token_ms": 2363.47537500842,
+            "memory_used_bytes": 11208257382,
+            "memory_peak_bytes": 11389946378
+          }
+        },
+        {
+          "status": "PASS",
+          "finish_reason": "tool_calls",
+          "ttft_s": 7.134755207996932,
+          "first_tool_delta_s": 7.134755666003912,
+          "complete_s": 7.135246791003738,
+          "http_total_s": 7.1354279999941355,
+          "usage": {
+            "prompt_tokens": 175,
+            "completion_tokens": 91,
+            "total_tokens": 266
+          },
+          "native_metrics": {
+            "queue_ms": 1.0946670081466436,
+            "decode_tokens_per_second": 18.96856711287541,
+            "prompt_tokens": 175,
+            "generated_tokens": 91,
+            "generation_latency_ms": 7116.224457990029,
+            "prefill_ms": 2324.1207499959273,
+            "decode_ms": 2366.4794179057935,
+            "prompt_tokens_per_second": 75.29729253538426,
+            "tokens_per_second": 12.787679834610342,
+            "server_text_ttft_ms": null,
+            "time_to_first_token_ms": 2373.191582999425,
+            "memory_used_bytes": 11208257382,
+            "memory_peak_bytes": 11389946378
+          }
+        }
+      ],
+      "tool_continuation": {
+        "status": "PASS",
+        "finish_reason": "stop",
+        "ttft_s": 6.467316542009939,
+        "first_tool_delta_s": null,
+        "complete_s": 7.195387792002293,
+        "http_total_s": 7.19553295901278,
+        "usage": {
+          "prompt_tokens": 225,
+          "completion_tokens": 78,
+          "total_tokens": 303
+        },
+        "native_metrics": {
+          "queue_ms": 1.0420420003356412,
+          "decode_tokens_per_second": 19.058267274086834,
+          "prompt_tokens": 225,
+          "generated_tokens": 78,
+          "generation_latency_ms": 7175.9953330038115,
+          "prefill_ms": 3053.323708998505,
+          "decode_ms": 1986.2807930621784,
+          "prompt_tokens_per_second": 73.69018860885876,
+          "tokens_per_second": 10.869572286545768,
+          "server_text_ttft_ms": 6446.44933300151,
+          "time_to_first_token_ms": 3136.9307080021827,
+          "memory_used_bytes": 11207077734,
+          "memory_peak_bytes": 11414265046
+        }
+      },
+      "http_round_trip_s": 14.330967833986506,
+      "catalog_29_tools": {
+        "status": "PASS",
+        "finish_reason": "tool_calls",
+        "ttft_s": 89.87204258400016,
+        "first_tool_delta_s": 89.87204316700809,
+        "complete_s": 89.87263041699771,
+        "http_total_s": 89.87286641700484,
+        "usage": {
+          "prompt_tokens": 4865,
+          "completion_tokens": 141,
+          "total_tokens": 5006
+        },
+        "native_metrics": {
+          "queue_ms": 1.0847500088857487,
+          "decode_tokens_per_second": 13.928296087018987,
+          "prompt_tokens": 4865,
+          "generated_tokens": 141,
+          "generation_latency_ms": 89836.23087500746,
+          "prefill_ms": 79354.8547069804,
+          "decode_ms": 4897.781753010349,
+          "prompt_tokens_per_second": 61.30689821012366,
+          "tokens_per_second": 1.56952265947331,
+          "server_text_ttft_ms": null,
+          "time_to_first_token_ms": 79783.20404099941,
+          "memory_used_bytes": 11446857574,
+          "memory_peak_bytes": 11881090446
+        }
+      },
+      "robustness": {
+        "unknown_model": {
+          "status": "PASS",
+          "http_status": 404
+        },
+        "required_choice": {
+          "status": "PASS",
+          "http_status": 400
+        },
+        "unknown_function": {
+          "status": "PASS",
+          "http_status": 422
+        },
+        "context_overflow": {
+          "status": "PASS",
+          "http_status": 400
+        },
+        "no_auth": {
+          "status": "PASS",
+          "http_status": 401
+        },
+        "wrong_auth": {
+          "status": "PASS",
+          "http_status": 401
+        }
+      },
+      "cancellation": {
+        "status": "PASS",
+        "active_handles_after": 0,
+        "cleanup_s": 7.0682520830014255,
+        "http_total_s": 18.10119262500666,
+        "followup_chat": "PASS"
+      }
+    },
+    "limitations": [
+      "128K inference not tested",
+      "cold load time not measured",
+      "HTTP check never executes tools; Kilo tested separately"
+    ],
+    "status": "PASS"
+  },
+  "startup": {
+    "model_load_plus_warmup_s": 10.203682374994969,
+    "scope": "CLI load and one-token warmup before uvicorn.run; includes filesystem cache effects"
+  },
+  "process_memory": {
+    "peak_sampled_rss_bytes": 5183700992,
+    "samples": 989,
+    "interval_s": 0.5,
+    "scope": "Sampled server RSS during final HTTP/cancellation validation; not lifetime RSS peak"
+  },
+  "kilo": {
+    "status": "PASS",
+    "elapsed_s": 409.91999933400075,
+    "kilo_version": "7.8.15",
+    "model": "gpt-oss-20b-mxfp4-128k",
+    "temperature": 0,
+    "reasoning_effort": "medium",
+    "chunk_timeout_ms": 600000,
+    "request_tool_count": 23,
+    "structured_handoffs": 7,
+    "final_finish_reason": "stop",
+    "completed_tools": 5,
+    "tool_permission_errors": 2,
+    "client_protocol_errors": 0,
+    "first_tool_response_s": 331.584972541008,
+    "http_response_total_s": 406.87771379102196,
+    "client_tool_execution_total_s": 0.2,
+    "tool_execution_durations_s": [
+      0.113,
+      0.012,
+      0.005,
+      0.004,
+      0.007,
+      0.006,
+      0.053
+    ],
+    "unittest": {
+      "exit_code": 0,
+      "output": "test_factorial (test_factorial.TestFactorial.test_factorial) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+    },
+    "factorial_inputs_verified": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "kilo_direct_followup": {
+    "status": "PASS",
+    "exit_code": 0,
+    "elapsed_s": 326.64273858399247,
+    "client_errors": [],
+    "tools": [
+      "bash"
+    ],
+    "endpoint": "http://127.0.0.1:8084/v1"
+  },
+  "kilo_memory_cleanup": {
+    "memory_peak_bytes": 12184864734,
+    "memory_used_bytes": 11938492284,
+    "reused_prompt_tokens": 14976,
+    "prompt_tokens": 15081,
+    "generated_tokens": 102,
+    "active_handles": 0,
+    "scope": "MLX peak is server lifetime including Kilo task and direct follow-up; current active KV handles zero"
+  },
+  "limitations": [
+    "128K inference reliability not qualified",
+    "Required/named tool choice and strict schema sampling return explicit capability errors",
+    "Multiple native parallel calls not qualified",
+    "Cold-disk load-only time not isolated from warmup/cache effects",
+    "Kilo profile uses temperature 0, medium effort, and 600000 ms semantic chunk timeout"
+  ],
+  "ui_budget_followup": {
+    "reproduced_http_status": 400,
+    "cause": "Explicit automatic reasoning_budget=-1 was rejected by the GPT-OSS capability check",
+    "fix": "Validate the effective request/server budget; allow the automatic -1 sentinel",
+    "added_http_regression_cases_passed": 17,
+    "active_python_3_13_reasoning_subset_passed": 24,
+    "explicit_reasoning_controls_remain_rejected": true,
+    "requires_server_restart": true,
+    "full_checkpoint_measurements_rerun": false
+  }
+}

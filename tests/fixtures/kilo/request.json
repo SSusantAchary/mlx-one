@@ -1,0 +1,1466 @@
+{
+  "model": "test/model",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hi"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_00",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_01",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_02",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_03",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_04",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_05",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_06",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_07",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_08",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_09",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_10",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_11",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_12",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_13",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_14",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_15",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_16",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_17",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_18",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_19",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_20",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_21",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_22",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_23",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_24",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_25",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_26",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_27",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "coding_tool_28",
+        "description": "Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. Inspect or update a disposable coding workspace. ",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "read",
+                        "write"
+                      ]
+                    },
+                    "lines": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "stream": true,
+  "stream_options": {
+    "include_usage": true
+  }
+}
