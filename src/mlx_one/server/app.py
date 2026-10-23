@@ -269,7 +269,9 @@ def create_app(
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
-        return _error(422, str(exc), "invalid_request_error")
+        details = [".".join(str(part) for part in error["loc"])[:200] + ": "
+                   + error["msg"][:200] for error in exc.errors()[:8]]
+        return _error(422, "; ".join(details), "invalid_request_error")
 
     @app.get("/health")
     async def health() -> dict[str, str]:
@@ -474,7 +476,14 @@ def create_app(
             if body.model != exposed_model:
                 return _error(404, f"model {body.model!r} is not loaded", "invalid_request_error")
             effective_reasoning = body.reasoning or settings.reasoning
-            multimodal = any(not isinstance(item.content, str) for item in body.messages)
+            effective_reasoning_budget = (
+                body.reasoning_budget
+                if body.reasoning_budget is not None
+                else settings.reasoning_budget
+            )
+            multimodal = any(isinstance(item.content, list)
+                             and any(part.type == "image_url" for part in item.content)
+                             for item in body.messages)
             if not multimodal and getattr(request.state, "body_bytes", 0) > 1024 * 1024:
                 return _error(413, "text request body exceeds 1 MiB", "invalid_request_error")
             if multimodal and settings.inference_mode in ACTOR_MODES:
@@ -495,6 +504,35 @@ def create_app(
                     "loaded chat template does not support explicit reasoning control",
                     "invalid_request_error",
                 )
+            has_tool_history = any(item.tool_calls or item.role == "tool" for item in body.messages)
+            if body.tools or has_tool_history or body.tool_choice not in (None, "none"):
+                if getattr(bundle, "architecture", None) != "gpt_oss" or multimodal:
+                    return _error(400, "function calling is supported for GPT-OSS text only",
+                                  "capability_error")
+            if (body.tool_choice == "required"
+                    or not isinstance(body.tool_choice, (str, type(None)))):
+                return _error(400, "required and named tool choice are not supported",
+                              "capability_error")
+            if any(tool.function.strict for tool in body.tools or []):
+                return _error(400, "strict schema-constrained generation is not supported",
+                              "capability_error")
+            if getattr(bundle, "architecture", None) == "gpt_oss" and (
+                effective_reasoning != "auto" or effective_reasoning_budget != -1
+            ):
+                return _error(400, "GPT-OSS reasoning switches and token budgets are not supported",
+                              "capability_error")
+            tool_settings = {}
+            if body.tools is not None or body.tool_choice is not None or has_tool_history:
+                tool_settings = {"tools": [tool.model_dump(exclude_none=True)
+                                           for tool in body.tools or []],
+                                 "tool_choice": body.tool_choice,
+                                 "parallel_tool_calls": body.parallel_tool_calls}
+            if body.reasoning_effort is not None:
+                if (getattr(bundle, "architecture", None) != "gpt_oss"
+                        or body.reasoning_effort not in {"low", "medium", "high"}):
+                    return _error(400, "GPT-OSS supports reasoning_effort low, medium, or high",
+                                  "capability_error")
+                tool_settings["reasoning_effort"] = body.reasoning_effort
             stop = (body.stop,) if isinstance(body.stop, str) else tuple(body.stop or ())
             options = TextGenerationOptions(
                 max_tokens=body.max_tokens,
@@ -505,11 +543,19 @@ def create_app(
                 stop=stop,
             )
             messages = [item.model_dump(exclude_none=True) for item in body.messages]
+            if not multimodal:
+                for message in messages:
+                    if isinstance(message.get("content"), list):
+                        message["content"] = "\n".join(part["text"] for part in message["content"])
             if multimodal:
                 messages = await _resolve_message_images(messages, images)
             admission_check = None
+            if tool_settings:
+                from mlx_one.engine.prompts import prepare_chat
+                prepare_chat(bundle, messages, body.max_tokens, manager.model_info().context_length,
+                             context_shift=settings.context_shift, rendering_options=tool_settings)
             if memory_admission is not None and not multimodal:
-                prompt = bundle.chat_template.render(messages)
+                prompt = bundle.chat_template.render(messages, **tool_settings)
                 prompt_ids = tuple(bundle.tokenizer.encode(prompt))
                 prompt_tokens = len(prompt_ids)
 
@@ -558,16 +604,13 @@ def create_app(
                 lambda cancel: selected_engine.stream(
                     model=body.model,
                     messages=messages,
+                    **tool_settings,
                     options=options,
                     cancel=cancel,
                     context_length=manager.model_info().context_length,
                     context_shift=settings.context_shift,
                     reasoning=effective_reasoning,
-                    reasoning_budget=(
-                        body.reasoning_budget
-                        if body.reasoning_budget is not None
-                        else settings.reasoning_budget
-                    ),
+                    reasoning_budget=effective_reasoning_budget,
                     reasoning_format=settings.reasoning_format,
                     reasoning_preserve=settings.reasoning_preserve,
                     cache_prompt=settings.cache_prompt,
@@ -586,8 +629,7 @@ def create_app(
                     messages, options, namespace=request.state.cache_namespace,
                     context_length=manager.model_info().context_length,
                     context_shift=settings.context_shift, reasoning=effective_reasoning,
-                    reasoning_budget=(body.reasoning_budget if body.reasoning_budget is not None
-                                      else settings.reasoning_budget),
+                    reasoning_budget=effective_reasoning_budget,
                     reasoning_preserve=settings.reasoning_preserve,
                     minimum_tokens=settings.cache_reuse)}
                    if settings.inference_mode in ACTOR_MODES
@@ -598,6 +640,7 @@ def create_app(
             return _error(429, "generation queue is full", "rate_limit_error")
         except (RuntimeError, ValueError) as exc:
             return _error(400, str(exc), "invalid_request_error")
+        stream = _until_disconnected(request, stream)
         completion_id = f"chatcmpl-{uuid.uuid4().hex}"
         created = int(time.time())
         if body.stream:
@@ -622,17 +665,27 @@ def create_app(
                     created,
                     body.model,
                     first_event=first_event,
+                    include_usage=bool(body.stream_options and body.stream_options.include_usage),
                 ),
                 media_type="text/event-stream",
                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
             )
         content = ""
         reasoning_content = ""
+        tool_calls = {}
         terminal: GenerationEvent | None = None
         try:
             async for event in stream:
                 content += event.text
                 reasoning_content += event.reasoning_content
+                for delta in event.tool_calls or []:
+                    index = delta["index"]
+                    if index not in tool_calls:
+                        tool_calls[index] = {"id": delta["id"], "type": "function",
+                                             "function": {"name": delta["function"]["name"],
+                                                          "arguments": ""}}
+                    tool_calls[index]["function"]["arguments"] += (
+                        delta["function"].get("arguments", ""))
                 if event.finish_reason is not None:
                     terminal = event
         except ModelCapabilityUnsupported as exc:
@@ -641,6 +694,8 @@ def create_app(
             return _error(408, str(exc), "timeout_error")
         except Exception as exc:
             return _error(500, str(exc), "server_error")
+        finally:
+            await stream.aclose()
         metrics = terminal.metrics if terminal and terminal.metrics else {}
         prompt_tokens = int(metrics.get("prompt_tokens", 0))
         generated_tokens = int(metrics.get("generated_tokens", 0))
@@ -653,7 +708,9 @@ def create_app(
                 "index": 0,
                 "message": {
                     "role": "assistant",
-                    "content": content,
+                    "content": content or (None if tool_calls else ""),
+                    **({"tool_calls": [tool_calls[index] for index in sorted(tool_calls)]}
+                       if tool_calls else {}),
                     **({"reasoning_content": reasoning_content} if reasoning_content else {}),
                 },
                 "finish_reason": terminal.finish_reason if terminal else "stop",
@@ -950,9 +1007,11 @@ async def _sse(
     *,
     first_event: GenerationEvent | None = None,
     text_completion: bool = False,
+    include_usage: bool = False,
 ) -> AsyncIterator[str]:
     first = True
     disconnected = False
+    last_emitted = time.monotonic()
     try:
         async def events() -> AsyncIterator[GenerationEvent]:
             if first_event is not None:
@@ -964,9 +1023,17 @@ async def _sse(
             if await request.is_disconnected():
                 disconnected = True
                 break
-            if not event.text and not event.reasoning_content and event.finish_reason is None:
+            if (not event.text and not event.reasoning_content and not event.tool_calls
+                    and event.finish_reason is None and not first):
+                if time.monotonic() - last_emitted >= 15:
+                    heartbeat = {"id": completion_id, "object": "chat.completion.chunk",
+                                 "created": created, "model": model,
+                                 "choices": [{"index": 0, "delta": {"content": ""},
+                                              "finish_reason": None}]}
+                    yield f"data: {json.dumps(heartbeat, separators=(',', ':'))}\n\n"
+                    last_emitted = time.monotonic()
                 continue
-            delta: dict[str, str] = {}
+            delta: dict[str, Any] = {}
             if first:
                 delta["role"] = "assistant"
                 first = False
@@ -974,6 +1041,8 @@ async def _sse(
                 delta["content"] = event.text
             if event.reasoning_content:
                 delta["reasoning_content"] = event.reasoning_content
+            if event.tool_calls:
+                delta["tool_calls"] = event.tool_calls
             payload: dict[str, Any] = {
                 "id": completion_id,
                 "object": "text_completion" if text_completion else "chat.completion.chunk",
@@ -988,6 +1057,17 @@ async def _sse(
             if event.metrics is not None:
                 payload["mlx"] = event.metrics
             yield f"data: {json.dumps(payload, separators=(',', ':'))}\n\n"
+            last_emitted = time.monotonic()
+            if include_usage and event.finish_reason is not None:
+                metrics = event.metrics or {}
+                prompt_tokens = int(metrics.get("prompt_tokens", 0))
+                completion_tokens = int(metrics.get("generated_tokens", 0))
+                usage_payload = {"id": completion_id, "object": "chat.completion.chunk",
+                                 "created": created, "model": model, "choices": [],
+                                 "usage": {"prompt_tokens": prompt_tokens,
+                                           "completion_tokens": completion_tokens,
+                                           "total_tokens": prompt_tokens + completion_tokens}}
+                yield f"data: {json.dumps(usage_payload, separators=(',', ':'))}\n\n"
     except Exception as exc:
         timeout = isinstance(exc, RequestTimeoutError)
         payload = {

@@ -24,8 +24,11 @@ def _qualification_eos_ids(eos_ids, *, ignore_eos=False, runtime=None):
     return set()
 
 
-def _decode_piece(tokenizer, token_ids, committed_text, *, final=False, harmony_prompt=None):
+def _decode_piece(tokenizer, token_ids, committed_text, *, final=False, harmony_prompt=None,
+                  token_events_only=False):
     """Commit only stable text; incomplete byte sequences can revise trailing U+FFFD."""
+    if token_events_only:
+        return "", committed_text
     if harmony_prompt is not None:
         from mlx_one.text.harmony import final_text
 
@@ -167,6 +170,8 @@ def stream_chat(
     _cache_handle: object | None = None,
     _math_observer: object | None = None,
     _ignore_eos: bool = False,
+    _yield_prefill_progress: bool = False,
+    _token_events_only: bool = False,
 ) -> Iterator[GenerationChunk]:
     if model.chat_template is None:
         raise ValueError("loaded model has no chat-template layer")
@@ -195,6 +200,8 @@ def stream_chat(
         _cache_runtime=_cache_runtime, _cache_handle=_cache_handle,
         _math_observer=_math_observer,
         _ignore_eos=_ignore_eos,
+        _yield_prefill_progress=_yield_prefill_progress,
+        _token_events_only=_token_events_only,
     )
 
 
@@ -272,7 +279,7 @@ def _stream_bundle(bundle, prompt, options, is_cancelled, **settings):
                 return
             if chunk.finish_reason is not None:
                 yield GenerationChunk(chunk.token_id, buffered, chunk.generated_tokens,
-                                      chunk.finish_reason)
+                                      chunk.finish_reason, chunk.terminal_token_id)
                 return
             hold = max((length for stop in options.stop for length in range(1, len(stop))
                         if buffered.endswith(stop[:length])), default=0)
@@ -311,6 +318,8 @@ def _stream_bundle_impl(
     _math_policy: object | None = None,
     _math_observer: object | None = None,
     _ignore_eos: bool = False,
+    _yield_prefill_progress: bool = False,
+    _token_events_only: bool = False,
 ) -> Iterator[GenerationChunk]:
     import mlx.core as mx
 
@@ -380,6 +389,7 @@ def _stream_bundle_impl(
         closing_reasoning = True
     emitted = 0
     finish_reason = "length"
+    terminal_token_id = None
     eos_token_ids = set(bundle.eos_token_ids)
     if bundle.tokenizer.eos_token_id is not None:
         eos_token_ids.add(bundle.tokenizer.eos_token_id)
@@ -406,7 +416,8 @@ def _stream_bundle_impl(
         if not current:
             raise ValueError("prompt cache must leave at least one token for prefill")
         phase = "prefill" if produced == 0 else "decode"
-        width = (_prefill_chunk_size if _cooperative and produced == 0 else
+        width = (_prefill_chunk_size if (_cooperative or _yield_prefill_progress)
+                 and produced == 0 else
                  math_policy.prefill_chunk_size if produced == 0 and
                  math_policy.prefill_chunk_size is not None else len(current))
         start = 0
@@ -527,6 +538,8 @@ def _stream_bundle_impl(
             if request_observer is not None and getattr(request_observer, "capture_state", False):
                 request_observer({"kind": "state", "logits": output.logits,
                                   "cache": cache, "input_ids": part, "phase": phase})
+            if _yield_prefill_progress and start < len(current):
+                yield GenerationChunk(None, "", emitted)
         if cancelled():
             return
         if on_cache_update is not None and produced == 0 and not prompt_cache_published:
@@ -605,6 +618,7 @@ def _stream_bundle_impl(
             for candidate in candidates[: maximum - produced]:
                 if candidate in eos_token_ids:
                     finish_reason = "stop"
+                    terminal_token_id = candidate
                     stopped = True
                     break
                 tokens.append(candidate)
@@ -655,7 +669,8 @@ def _stream_bundle_impl(
                     if on_execution is not None:
                         on_execution({"kind": "token", "at": sampled_at, "token_id": generated[-1]})
                     piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded,
-                                                    harmony_prompt=harmony_prompt)
+                                                    harmony_prompt=harmony_prompt,
+                                       token_events_only=_token_events_only)
                     step_yielded = True
                     event=GenerationChunk(generated[-1],piece,emitted)
                     if proposal is not None:
@@ -684,11 +699,13 @@ def _stream_bundle_impl(
         emitted += 1
         generated.append(current_token)
         piece, decoded = _decode_piece(bundle.tokenizer, generated, decoded,
-                                       harmony_prompt=harmony_prompt)
+                                       harmony_prompt=harmony_prompt,
+                                token_events_only=_token_events_only)
         yield GenerationChunk(current_token, piece, emitted)
     trailing, _ = _decode_piece(bundle.tokenizer, generated, decoded, final=True,
-                                harmony_prompt=harmony_prompt)
-    yield GenerationChunk(None, trailing, emitted, finish_reason)
+                                harmony_prompt=harmony_prompt,
+                                                    token_events_only=_token_events_only)
+    yield GenerationChunk(None, trailing, emitted, finish_reason, terminal_token_id)
 
 
 def _legacy_context_length(bundle: LoadedTextModel) -> int:

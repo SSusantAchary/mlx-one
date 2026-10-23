@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 import sys
 import threading
 import time
 from collections.abc import Iterator
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from typing import Any
 
 from mlx_one.engine.cache_errors import PrefixReuseUnsupported
@@ -30,6 +31,7 @@ class GenerationEvent:
     reasoning_content: str = ""
     finish_reason: str | None = None
     metrics: dict[str, Any] | None = None
+    tool_calls: list[dict[str, Any]] | None = None
 
 
 @dataclass(frozen=True)
@@ -168,6 +170,10 @@ class GenerationEngine:
         cache_type_v: str = "f16",
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
+        reasoning_effort: str | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | None = None,
+        parallel_tool_calls: bool | None = None,
         _prompt: str | None = None,
     ) -> Iterator[GenerationEvent]:
         lifecycle: dict[str, Any] = {}
@@ -196,8 +202,17 @@ class GenerationEngine:
                 spec_draft_n_max=spec_draft_n_max,
                 lifecycle=lifecycle,
                 raw_prompt=_prompt,
+                tools=tools, tool_choice=tool_choice, parallel_tool_calls=parallel_tool_calls,
+                reasoning_effort=reasoning_effort,
             )
+        except Exception as exc:
+            logging.getLogger(__name__).warning("Native generation failed (%s)",
+                                               type(exc).__name__)
+            raise
         finally:
+            harmony = lifecycle.get("harmony")
+            if harmony is not None:
+                harmony.close()
             runtime = lifecycle.get("runtime")
             handle = lifecycle.get("handle")
             try:
@@ -232,6 +247,10 @@ class GenerationEngine:
         spec_draft_n_max: int = 3,
         lifecycle: dict[str, Any],
         raw_prompt: str | None = None,
+        reasoning_effort: str | None = None,
+        tools: list[dict[str, Any]] | None = None,
+        tool_choice: str | None = None,
+        parallel_tool_calls: bool | None = None,
     ) -> Iterator[GenerationEvent]:
         queue_ms = current_queue_ms()
         bundle = self.manager.current_model()
@@ -250,13 +269,19 @@ class GenerationEngine:
             raise ValueError("loaded chat template does not support explicit reasoning control")
         from mlx_one.engine.prompts import prepare_chat, prepare_completion
 
+        template_options = _reasoning_template_options(
+            reasoning, reasoning_budget, reasoning_preserve)
+        if reasoning_effort is not None:
+            template_options["reasoning_effort"] = reasoning_effort
+        if tools is not None or tool_choice is not None:
+            template_options.update(tools=tools, tool_choice=tool_choice,
+                                    parallel_tool_calls=parallel_tool_calls)
         tokenization_started = time.perf_counter()
         prepared = prepare_completion(
             bundle, raw_prompt, options.max_tokens, context_length or bundle.context_length
         ) if raw_prompt is not None else prepare_chat(
             bundle, messages, options.max_tokens, context_length or bundle.context_length,
-            context_shift=context_shift, rendering_options=_reasoning_template_options(
-                reasoning, reasoning_budget, reasoning_preserve))
+            context_shift=context_shift, rendering_options=template_options)
         rendered_messages, prompt = list(prepared.messages), prepared.text
         prompt_ids = prepared.token_ids
         tokenization_ms = (time.perf_counter() - tokenization_started) * 1000
@@ -284,8 +309,7 @@ class GenerationEngine:
             value_type=cache_type_v,
             context_tokens=context_length or bundle.context_length,
             namespace=cache_namespace,
-            rendering_options=(prepared.rendering_options if raw_prompt is not None else
-                _reasoning_template_options(reasoning, reasoning_budget, reasoning_preserve)),
+            rendering_options=prepared.rendering_options,
         )
         if cache_prompt:
             try:
@@ -315,19 +339,31 @@ class GenerationEngine:
             reasoning_budget,
             start_in_reasoning=prompt.rstrip().endswith("<think>"),
         )
+        harmony = None
+        visible_stops = None
+        external_stop = False
+        if bundle.architecture == "gpt_oss" and raw_prompt is None and tools is not None:
+            from mlx_one.text.harmony_tools import HarmonyToolParser, VisibleStops
+            harmony = HarmonyToolParser(
+                bundle.tokenizer, tools=tools or (), tool_choice=tool_choice,
+                parallel_tool_calls=parallel_tool_calls)
+            lifecycle["harmony"] = harmony
+            visible_stops = VisibleStops(options.stop)
         speculative_stats = {"drafted_tokens": 0, "accepted_draft_tokens": 0}
         from mlx_one.engine.timing import RequestTiming
 
         timings = RequestTiming(started, trace=self._collect_execution_metrics)
+        prefill_chunk_size = self._prefill_chunk_size
+        if harmony is not None:
+            prefill_chunk_size = _fit_tool_prefill(runtime, bundle.model.config,
+                                                  prompt_tokens, prefill_chunk_size)
         streamer = stream_chat if raw_prompt is None else _stream_raw
         iterator = streamer(
             bundle,
             rendered_messages if raw_prompt is None else prompt,
-            options=options,
+            options=replace(options, stop=()) if harmony is not None else options,
             is_cancelled=cancel.is_set,
-            template_options=_reasoning_template_options(
-                reasoning, reasoning_budget, reasoning_preserve
-            ),
+            template_options=template_options,
             context_length=context_length,
             cache=handle.bundle.entries,
             cached_prompt_ids=cached_ids,
@@ -350,7 +386,9 @@ class GenerationEngine:
             yield_steps=True,
             on_execution=timings.observe,
             _cooperative=self._actor is not None,
-            _prefill_chunk_size=self._prefill_chunk_size,
+            _prefill_chunk_size=prefill_chunk_size,
+            **({"_yield_prefill_progress": True, "_token_events_only": True}
+               if harmony is not None else {}),
             _cache_runtime=runtime, _cache_handle=handle,
             _math_observer=getattr(self, "_qualification_math_observer", None),
             _ignore_eos=getattr(self, "_qualification_ignore_eos", False),
@@ -366,7 +404,23 @@ class GenerationEngine:
                     continue
                 if chunk.token_id is not None:
                     generated = chunk.generated_tokens
-                if chunk.token_id is not None or chunk.text:
+                if harmony is not None:
+                    text = harmony.feed(chunk.token_id) if chunk.token_id is not None else ""
+                    terminal_id = getattr(chunk, "terminal_token_id", None)
+                    if terminal_id is not None:
+                        if terminal_id in harmony.controls:
+                            text += harmony.feed(terminal_id)
+                        else:
+                            external_stop = True
+                        generated = chunk.generated_tokens + 1
+                    text = visible_stops.feed(text)
+                    if text and first_at is None:
+                        first_at = time.perf_counter()
+                    yield GenerationEvent(text=text)
+                    if visible_stops.matched:
+                        external_stop, finish_reason = True, "stop"
+                        break
+                elif chunk.token_id is not None or chunk.text:
                     text, thought = parser.feed(chunk.text) if chunk.text else ("", "")
                     if text and first_at is None:
                         first_at = time.perf_counter()
@@ -380,7 +434,15 @@ class GenerationEngine:
             pass
         finally:
             iterator.close()
-        trailing_text, trailing_reasoning = parser.flush()
+        if cancel.is_set():
+            return
+        if harmony is not None:
+            finish_reason = harmony.finish(finish_reason, external_stop=external_stop)
+            if finish_reason == "tool_calls":
+                for delta in harmony.deltas():
+                    yield GenerationEvent(tool_calls=[delta])
+        trailing_text, trailing_reasoning = (parser.flush() if harmony is None
+                                             else (visible_stops.flush(), ""))
         if trailing_text or trailing_reasoning:
             if trailing_text and first_at is None:
                 first_at = time.perf_counter()
@@ -431,7 +493,7 @@ class GenerationEngine:
             context_used=prompt_tokens + generated,
             memory_used_bytes=memory_used,
             memory_peak_bytes=memory_peak,
-            reasoning_tokens=parser.reasoning_tokens,
+            reasoning_tokens=harmony.reasoning_tokens if harmony else parser.reasoning_tokens,
             prompt_cache_hit=bool(cached_ids),
             reused_prompt_tokens=len(cached_ids),
             drafted_tokens=speculative_stats["drafted_tokens"],
@@ -615,6 +677,32 @@ class GenerationEngine:
             rendering_options=prepared.rendering_options)
         return runtime.preview_prefix(fingerprint, prepared.token_ids,
                                       minimum_tokens=minimum_tokens)
+
+
+def _fit_tool_prefill(runtime, config, prompt_tokens, chunk_size):
+    """Fit GPT-OSS tool-catalog prefill within existing host admission guards.
+
+    Prefilling a whole GPT-OSS tool catalog can exceed available workspace.
+    Probe progressively smaller bounded chunks without changing
+    cache ownership, precision, reservations, or the actual forward guard.
+    """
+    from mlx_one.engine.cache_errors import CacheCapacityError
+    from mlx_one.engine.pressure import execution_forecast
+
+    width = min(chunk_size, prompt_tokens)
+    while True:
+        forecast = execution_forecast(runtime, config, batch=1, chunk=width,
+                                      history=prompt_tokens)
+        try:
+            with runtime.transient_reservation(forecast["bytes"]):
+                pass
+            return width
+        except CacheCapacityError:
+            diagnostic = runtime.capacity_diagnostics
+            if (width <= 1 or diagnostic.get("rejection_reason")
+                    != "request exceeds conservative host memory headroom"):
+                raise
+            width = max(width // 2, 1)
 
 
 def _reasoning_template_options(

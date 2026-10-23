@@ -59,6 +59,13 @@ class ChatTemplate:
         return cls(model_type, template, tokenizer)
 
     def render(self, messages: Sequence[ChatMessage], **template_options: Any) -> str:
+        if self.model_type == "gpt_oss" and (
+            template_options.get("tools") is not None
+            or any(message.get("tool_calls") or message.get("role") == "tool"
+                   for message in messages)
+        ):
+            from mlx_one.text.harmony_tools import render_harmony
+            return render_harmony(messages, self.tokenizer, **template_options)
         _validate_messages(messages)
         if not self.template:
             if self.model_type in {"phi3", "gemma3_text", "gpt_oss"}:
