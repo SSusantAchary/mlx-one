@@ -296,6 +296,8 @@ def _resolve(
                 local_files_only=offline,
                 allow_patterns=[
                     "config.json",
+                    "preprocessor_config.json",
+                    "processor_config.json",
                     "generation_config.json",
                     "tokenizer.json",
                     "tokenizer_config.json",

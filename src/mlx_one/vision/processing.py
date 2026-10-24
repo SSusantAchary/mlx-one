@@ -16,6 +16,7 @@ class PreparedVisionInput:
     pixel_values: Any
     image_grid_thw: tuple[tuple[int, int, int], ...]
     mm_token_type_ids: Any
+    image_metadata: tuple[dict, ...] = ()
 
 
 class QwenImageProcessor:
@@ -39,30 +40,45 @@ class QwenImageProcessor:
         if metadata is not None:
             import math
 
-            mean,std=metadata.get("image_mean"),metadata.get("image_std")
-            if (not isinstance(mean,list) or not isinstance(std,list) or len(mean)!=3 or len(std)!=3
-                    or any(type(v) not in {int, float} or not math.isfinite(v) for v in mean+std)
-                    or any(v<=0 for v in std) or metadata.get("resample",3)!=3
-                    or any(metadata.get(k,True) is not True for k in
-                           ("do_normalize","do_resize","do_rescale"))
-                    or metadata.get("rescale_factor",1/255)!=1/255):
+            mean, std = metadata.get("image_mean"), metadata.get("image_std")
+            if (
+                not isinstance(mean, list)
+                or not isinstance(std, list)
+                or len(mean) != 3
+                or len(std) != 3
+                or any(type(v) not in {int, float} or not math.isfinite(v) for v in mean + std)
+                or any(v <= 0 for v in std)
+                or metadata.get("resample", 3) != 3
+                or any(
+                    metadata.get(k, True) is not True
+                    for k in ("do_normalize", "do_resize", "do_rescale")
+                )
+                or metadata.get("rescale_factor", 1 / 255) != 1 / 255
+            ):
                 raise ValueError("unsupported Qwen processor normalization or resize policy")
-            vision=config.vision_config
-            for name,actual in (("patch_size",vision.patch_size),
-                ("temporal_patch_size",vision.temporal_patch_size),
-                ("merge_size",vision.spatial_merge_size)):
-                if name in metadata and metadata[name]!=actual:
+            vision = config.vision_config
+            for name, actual in (
+                ("patch_size", vision.patch_size),
+                ("temporal_patch_size", vision.temporal_patch_size),
+                ("merge_size", vision.spatial_merge_size),
+            ):
+                if name in metadata and metadata[name] != actual:
                     raise ValueError("processor patch layout differs from model")
-            self._MEAN,self._STD=tuple(mean),tuple(std)
-            size=metadata.get("size",{})
+            self._MEAN, self._STD = tuple(mean), tuple(std)
+            size = metadata.get("size", {})
             if not isinstance(size, dict):
                 raise ValueError("processor size metadata must be an object")
-            min_pixels=metadata.get("min_pixels",size.get("shortest_edge",min_pixels))
-            max_pixels=metadata.get("max_pixels",size.get("longest_edge",max_pixels))
-        if (any(type(value) is not int or value < 1 for value in
-                (min_pixels, max_pixels, max_source_pixels)) or min_pixels > max_pixels
-                or max_pixels < (config.vision_config.patch_size
-                                  * config.vision_config.spatial_merge_size) ** 2):
+            min_pixels = metadata.get("min_pixels", size.get("shortest_edge", min_pixels))
+            max_pixels = metadata.get("max_pixels", size.get("longest_edge", max_pixels))
+        if (
+            any(
+                type(value) is not int or value < 1
+                for value in (min_pixels, max_pixels, max_source_pixels)
+            )
+            or min_pixels > max_pixels
+            or max_pixels
+            < (config.vision_config.patch_size * config.vision_config.spatial_merge_size) ** 2
+        ):
             raise ValueError("invalid image pixel bounds")
         self.min_pixels = min_pixels
         self.max_pixels = max_pixels
@@ -71,8 +87,8 @@ class QwenImageProcessor:
     def prepare(self, prompt: str, images: list[Any] | tuple[Any, ...]) -> PreparedVisionInput:
         if not isinstance(prompt, str) or not prompt:
             raise ValueError("vision prompt must be non-empty text")
-        if not images:
-            raise ValueError("at least one image is required")
+        if len(images) > 8:
+            raise ValueError("at most eight images are supported")
         pieces = prompt.split("<image>")
         if len(pieces) - 1 != len(images):
             raise ValueError("the number of <image> placeholders must match the images")
@@ -81,12 +97,33 @@ class QwenImageProcessor:
         all_patches = []
         grids = []
         replacement_ids = []
+        metadata = []
         for image in images:
-            patches, grid = self._patches(image, mx)
+            from mlx_one.vision.images import decode_image
+
+            source = decode_image(image)
+            try:
+                source_size = source.size
+                patches, grid = self._patches(source, mx)
+            finally:
+                source.close()
             all_patches.append(patches)
             grids.append(grid)
             visual_tokens = grid[0] * grid[1] * grid[2]
             merge = self.config.vision_config.spatial_merge_size**2
+            metadata.append(
+                {
+                    "source_size": list(source_size),
+                    "processed_sizes": [
+                        [
+                            grid[2] * self.config.vision_config.patch_size,
+                            grid[1] * self.config.vision_config.patch_size,
+                        ]
+                    ],
+                    "patches": visual_tokens,
+                    "visual_tokens": visual_tokens // merge,
+                }
+            )
             replacement_ids.append(
                 [self.config.vision_start_token_id]
                 + [self.config.image_token_id] * (visual_tokens // merge)
@@ -96,20 +133,21 @@ class QwenImageProcessor:
         types = [0] * len(ids)
         for visual_ids, text in zip(replacement_ids, pieces[1:], strict=True):
             ids.extend(visual_ids)
-            types.extend(
-                [0] + [1] * (len(visual_ids) - 2) + [0]
-            )
+            types.extend([0] + [1] * (len(visual_ids) - 2) + [0])
             suffix = self.tokenizer.encode(text)
             ids.extend(suffix)
             types.extend([0] * len(suffix))
         return PreparedVisionInput(
             input_ids=mx.array([ids], dtype=mx.int32),
-            pixel_values=mx.concatenate(all_patches, axis=0),
+            pixel_values=mx.concatenate(all_patches, axis=0) if all_patches else None,
             image_grid_thw=tuple(grids),
             mm_token_type_ids=mx.array([types], dtype=mx.int32),
+            image_metadata=tuple(metadata),
         )
 
     def _patches(self, image: Any, mx: Any) -> tuple[Any, tuple[int, int, int]]:
+        import numpy as np
+
         try:
             from PIL import Image, ImageOps
         except ImportError as exc:
@@ -134,7 +172,8 @@ class QwenImageProcessor:
             max_pixels=self.max_pixels,
         )
         source = source.resize((width, height), Image.Resampling.BICUBIC)
-        pixels = mx.array(list(source.getdata()), dtype=mx.float32).reshape(height, width, 3)
+        pixels = mx.array(np.asarray(source).copy(), dtype=mx.float32).reshape(height, width, 3)
+        source.close()
         mean = mx.array(self._MEAN)
         std = mx.array(self._STD)
         pixels = (pixels / 255.0 - mean) / std
@@ -156,8 +195,11 @@ class QwenImageProcessor:
         return pixels.reshape(-1, patch_dim), (1, grid_h, grid_w)
 
     def _validate_source_size(self, image: Any) -> None:
-        if (image.width < 1 or image.height < 1
-                or image.width * image.height > self.max_source_pixels):
+        if (
+            image.width < 1
+            or image.height < 1
+            or image.width * image.height > self.max_source_pixels
+        ):
             raise ValueError("image exceeds the source pixel budget")
 
 
@@ -180,3 +222,11 @@ def _smart_resize(
     if resized_w * resized_h > max_pixels:
         raise ValueError("patch-aligned image exceeds the pixel budget")
     return resized_w, resized_h
+
+
+class Qwen25ImageProcessor(QwenImageProcessor):
+    """Qwen2.5 static-image packing; window ordering belongs to its vision tower."""
+
+
+class Qwen35ImageProcessor(QwenImageProcessor):
+    """Qwen3.5 static-image packing with checkpoint normalization and patch size."""

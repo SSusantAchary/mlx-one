@@ -3,6 +3,8 @@
 from mlx_one.vision.generation import stream_vlm
 from mlx_one.vision.loading import LoadedVLM, VLMModelLoadError, load_vlm_model
 from mlx_one.vision.processing import PreparedVisionInput, QwenImageProcessor
+from mlx_one.vision.public import VisionLanguageEngine, generate_vlm
+from mlx_one.vision.schemas import VLMGenerationResult
 
 __all__ = [
     "LoadedVLM",
@@ -11,4 +13,7 @@ __all__ = [
     "VLMModelLoadError",
     "load_vlm_model",
     "stream_vlm",
+    "VisionLanguageEngine",
+    "generate_vlm",
+    "VLMGenerationResult",
 ]

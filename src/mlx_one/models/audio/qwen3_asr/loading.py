@@ -101,7 +101,8 @@ def load_qwen_audio(
                 allow_patterns=shards,
             )
         )
-    config = QwenASRConfig.from_dict(read_json(root / "config.json"))
+    payload = read_json(root / "config.json")
+    config = QwenASRConfig.from_dict(payload)
     validate_preprocessor(read_json(root / "preprocessor_config.json"))
     tokenizer = tokenizer_from_directory(root, config)
     generation = read_json(root / "generation_config.json")
@@ -109,10 +110,29 @@ def load_qwen_audio(
     template = read_json(root / "chat_template.json").get("chat_template")
     if not isinstance(template, str):
         raise ValueError("Qwen checkpoint requires its chat template asset")
-    weights = sanitize_weights(read_safetensors(root), config)
+    from mlx_one.text.loading import (
+        _materialize_loaded_model,
+        _prepare_quantized_model,
+        _quantization_config,
+        _validate_quantized_tensors,
+    )
+
+    quantization = _quantization_config(payload)
+    raw = read_safetensors(root)
+    if quantization:
+        # MLX exports are already in native NHWC conv layout, with no thinker prefix.
+        if any(k.startswith("thinker.") for k in raw):
+            raise ValueError("quantized Qwen requires the MLX native tensor layout")
+        weights = raw
+    else:
+        weights = sanitize_weights(raw, config)
     from mlx_one.models.audio.qwen3_asr.model import QwenASRModel
 
     native = QwenASRModel(config)
+    if quantization:
+        _prepare_quantized_model(native, weights, quantization)
+        _validate_quantized_tensors(native, weights)
     native.load_weights(list(weights.items()), strict=True)
+    _materialize_loaded_model(native)
     native.eval()
     return LoadedQwenAudio(native, tokenizer, generation, template, root, revision)

@@ -154,3 +154,14 @@ Publisher model cards identify the Tiny/Base checkpoints as MIT-licensed. This
 is separate from mlx-one's Apache-2.0 license. The adapted Transformers
 architecture reference is Apache-2.0; see [NOTICE](NOTICE). Respect publisher
 warnings about hallucination, non-consensual recording and high-risk deployment.
+
+
+## Native managed audio API (2026-10-24)
+
+The common `AudioEngine` now exposes the implemented tasks through the existing
+inference actor/model pool, grouped `mlx-one audio` commands, and native HTTP audio
+routes. Encoded bytes, bounded PCM mixing/resampling, repeated requests and
+cancellation use the common input/lifecycle contracts. See the
+[exact manual download and test runbook](../../../../../docs/AUDIO_TESTING.md).
+Existing checkpoint-specific evidence above remains historical and is not a new
+standardized benchmark or an exhaustive numerical admission requirement.

@@ -129,10 +129,14 @@ class QwenASRConfig:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> QwenASRConfig:
-        if data.get("model_type") != "qwen3_asr" or any(
-            data.get(key) is not None for key in ("quantization_config", "quantization")
-        ):
-            raise ConfigError("expected an original, unquantized qwen3_asr composite checkpoint")
+        if data.get("model_type") != "qwen3_asr":
+            raise ConfigError("expected a qwen3_asr composite checkpoint")
+        if data.get("quantization_config") is not None or data.get("quantization") is not None:
+            from mlx_one.text.loading import _quantization_config
+
+            quant = _quantization_config(dict(data))
+            if quant.get("mode") != "affine" or quant.get("bits") not in {4, 8}:
+                raise ConfigError("Qwen audio supports affine Q4/Q8 only")
         thinker = data.get("thinker_config")
         if not isinstance(thinker, Mapping):
             raise ConfigError("Qwen audio requires nested thinker_config")

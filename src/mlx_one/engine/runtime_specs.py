@@ -23,6 +23,8 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.speech:"+adapter
     for name,adapter in (("whisper","WhisperAdapter"),("moonshine","MoonshineAdapter"),
     ("qwen3_asr","Qwen3ASRAdapter"),("qwen3_forced_aligner","Qwen3AlignmentAdapter"))})
 
+BUILTIN_ADAPTERS["lfm2_audio"]="mlx_one.engine.task_runners.lfm_audio:LFM2AudioAdapter"
+
 BUILTIN_ADAPTERS["parakeet_tdt"]=(
     "mlx_one.engine.task_runners.transducer:ParakeetTDTAdapter")
 
@@ -66,6 +68,12 @@ def task_specs(entry):
         TaskKind.RERANKING: ("rerank", (StageKind.SCORE,), "length-buckets"),
         TaskKind.TRANSCRIPTION: ("transcription", (StageKind.ENCODE, StageKind.DECODE),
                                 "audio-buckets"),
+        TaskKind.SPEECH_GENERATION: ("speech-generation",
+            (StageKind.PREFILL, StageKind.DECODE), "bounded-audio-output"),
+        TaskKind.SPEECH_TO_SPEECH: ("speech-to-speech",
+            (StageKind.ENCODE, StageKind.PREFILL, StageKind.DECODE), "bounded-audio-output"),
+        TaskKind.LANGUAGE_DETECTION: ("language-detection",
+            (StageKind.ENCODE,), "audio-buckets"),
         TaskKind.ALIGNMENT: ("alignment", (StageKind.ENCODE, StageKind.ALIGN),
                              "audio-text-buckets"),
         TaskKind.IMAGE_SEGMENTATION: ("segmentation", (StageKind.ENCODE, StageKind.SCORE),

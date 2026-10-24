@@ -441,7 +441,7 @@ class Qwen3_5PatchEmbed(nn.Module):
     def __call__(self, patches: Any) -> Any:
         if patches.ndim != 2 or patches.shape[-1] != self.patch_dim:
             raise ValueError(f"pixel patches must have shape [patches, {self.patch_dim}]")
-        return self.proj(patches)
+        return self.proj(patches.astype(getattr(self.proj, "scales", self.proj.weight).dtype))
 
 
 class Qwen3_5PatchMerger(nn.Module):
@@ -520,7 +520,7 @@ def _interpolate_positions(embedding: Any, grids: Sequence[Sequence[int]], confi
                                 ]
                             )
                             outputs.append(mx.sum(embedding(indexes) * weights[:, None], axis=0))
-    return mx.stack(outputs)
+    return mx.stack(outputs).astype(embedding.weight.dtype)
 
 
 class Qwen3_5ForConditionalGeneration(nn.Module):

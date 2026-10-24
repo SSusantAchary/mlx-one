@@ -94,6 +94,87 @@ Measured on Apple M4 with 32 GB unified memory, Python 3.12, using the native ML
 
 Native first-token time includes hidden analysis; the median first actionable tool delta arrived at **7.127 seconds**, after argument validation. The configured 131,072-token context was not tested at its full length. See the [full measurements and methodology](docs/GPT_OSS_KILO_COMPATIBILITY.md#measured-performance). Standardized direct-model 128/128 coverage remains unchanged.
 
+<!-- MLX-ONE-VLM-BENCHMARK-START -->
+## Vision-Language Model Performance
+
+Actual **direct-model native MLX/Metal** inference on pinned checkpoint revisions. These are image-inference measurements; Python Engine, CLI and HTTP serving overhead are separate. Functional and quality limits are recorded with the evidence.
+
+**VLM-HF-S1 v1:** one 512 × 512 padded image from [Hugging Face documentation-images](https://huggingface.co/datasets/huggingface/documentation-images), with dataset revision and image hashes pinned in the [workload manifest](benchmarks/vlm/hf-images.json). Batch 1, fixed prompt, greedy generation up to 128 emitted tokens; one warmup and five repetitions, per-column median. EOS is respected and actual output counts determine speed. Each checkpoint retains its own resize/tiling. TTFT includes image decoding/preprocessing; prefill combines vision encoding, projection and language prefill. “Vision processing” means image decoding/preprocessing only.
+
+Q4/Q8 denote the published checkpoint format; vision or projector modules may retain floating-point weights.
+
+**Measured hardware:** Apple M4, 32 GiB; macOS-15.8.1-arm64-arm-64bit; MLX 0.32.2; Python 3.12.11. Separate execution cohort.
+
+| Model | Precision | Images | Vision processing (ms) | Prefill TPS | Decode TPS | TTFT (ms) | Peak MLX memory (GiB) | Status |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| [Qwen2-VL 2B](docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **279.68** | **67.28** | 1290.28 | 1.755 | Measured; experimental |
+| [Qwen2.5-VL 3B](docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **215.86** | **41.19** | 1670.08 | 3.164 | Measured; experimental |
+| [Qwen3.5 0.8B](docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) | Q4 | 1 | 4.81 | **717.75** | **68.78** | 401.16 | 1.129 | Measured; experimental |
+| [LFM2-VL 450M](docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) | Q8 | 1 | 7.16 | **1739.05** | **154.33** | 169.97 | 1.163 | Measured; experimental |
+| [LFM2.5-VL 3B](docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) | Q4 | 1 | 7.37 | **300.73** | **52.01** | 942.38 | 2.801 | Measured; experimental |
+
+**Actual fused input / emitted output tokens per repetition:** Qwen2-VL 2B: 359 / 112; Qwen2.5-VL 3B: 359 / 79; Qwen3.5 0.8B: 284 / 106; LFM2-VL 450M: 282 / 128; LFM2.5-VL 3B: 281 / 101.
+
+
+High-resolution (1024 × 1024), four-image and OCR workloads remain separate. The HF image protocol is not pooled with the earlier synthetic-image protocol. See the [methodology and coverage](docs/benchmarks/vlm/README.md), [pinned checkpoint inventory](docs/benchmarks/vlm/benchmark_plan.json), and [manual download/inference/benchmark runbook](docs/VLM_TESTING.md). Text-model measurements above use different protocols. See the [checkpoint smoke and cleanup report](docs/validation/vlm-hf-2026-10-24/report.md).
+<!-- MLX-ONE-VLM-BENCHMARK-END -->
+
+<!-- MLX-ONE-AUDIO-BENCHMARK-START -->
+## Audio Model Performance
+
+Native audio support is experimental. Values below are validated measurements; “—” means unavailable. Recognition uses one pinned English LibriSpeech utterance (9.9 seconds, padded to 10); its WER is a single-clip check, not corpus accuracy. See the linked raw evidence.
+
+Protocol: batch 1, one warmup, five repetitions, median; actual audio durations. ASR uses a fixed 10-second clip (ASR-S1); TTS uses fixed 30-word text (TTS-S1). RTF is processing seconds divided by input audio seconds for ASR, or generated audio seconds for synthesis. Lower RTF is faster. Hardware and MLX version are listed for each measured cohort. Direct-model, Python Engine and full file-pipeline runs remain separate.
+
+### Speech Recognition Performance
+
+| Model | Precision | Audio (s) | Latency (ms) | RTF ↓ | Audio sec/sec ↑ | WER (%) | Peak MLX (GiB) | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Whisper Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) | FP32 | 10.000 | 2144.869 | 0.214 | **4.662** | 4.167 | 0.485 | Measured; experimental |
+| [Whisper Large v3 Turbo](docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) | FP16 | 10.000 | 7666.962 | 0.767 | **1.304** | 4.167 | 2.694 | Measured; experimental |
+| [Distil-Whisper Large v3](docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) | FP16 | 10.000 | 5433.400 | 0.543 | **1.840** | 0.000 | 2.596 | Measured; experimental |
+| [Moonshine Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) | FP32 | 10.000 | 117.038 | 0.012 | **85.443** | 4.167 | 0.191 | Measured; experimental |
+| [Moonshine Base](docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) | FP32 | 10.000 | 153.511 | 0.015 | **65.142** | 12.500 | 0.423 | Measured; experimental |
+| [Qwen3-ASR 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) | Q8 / BF16 | 10.000 | 528.726 | 0.053 | **18.913** | 0.000 | 1.281 | Measured; experimental |
+| [Qwen3-ASR 1.7B](docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) | Q8 / BF16 | 10.000 | 1017.307 | 0.102 | **9.830** | 0.000 | 2.656 | Measured; experimental |
+| [Parakeet TDT v2](docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) | FP32 | 10.000 | 169.265 | 0.017 | **59.079** | 0.000 | 2.383 | Measured; WIP |
+| [Parakeet TDT v3](docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) | FP32 | 10.000 | 174.019 | 0.017 | **57.465** | 0.000 | 2.417 | Measured; experimental |
+| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) | Q4 / BF16 | 10.000 | 547.659 | 0.055 | **18.260** | 4.167 | 1.472 | Measured; experimental |
+
+Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; ASR-S1.
+
+### Forced Alignment Performance
+
+| Model | Precision | Audio (s) | Latency (ms) | Mean boundary error (ms) | Peak MLX (GiB) | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| [Qwen3-ForcedAligner 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) | Q8 / BF16 | 10.000 | 189.892 | — | 1.546 | Measured; WIP |
+
+Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; ALIGN-S1.
+
+### Speech Generation Performance
+
+| Model | Precision | Task | First audio (ms) | Output (s) | RTF ↓ | Audio sec/sec ↑ | Peak MLX (GiB) | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) | Q4 / BF16 | synthesize | 328.986 | 12.320 | 0.312 | **3.207** | 1.850 | Measured; experimental |
+| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) | Q4 / BF16 | speech-to-speech | — | — | — | — | — | Failed; WIP |
+
+Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; TTS-S1.
+
+### Speech-to-speech: separate short-question workload
+
+**STS-HF-Q1:** a different 2.04-second spoken question from the same pinned dataset, without padding; greedy generation, one warmup, five repetitions, median. This completed case does not replace the failed 10-second STS-S1 run.
+
+| Model | First audio (ms) | Output (s) | RTF ↓ | Audio sec/sec ↑ | Peak MLX (GiB) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| [LFM2.5 Audio 1.5B Q4](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-HF-Q1-direct-model-prepared-pcm.json) | 426.127 | 15.360 | 0.349 | **2.867** | 2.016 |
+
+Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm. Experimental; speech quality requires listening review.
+
+Qwen alignment remains WIP because historical timestamp discrepancies are unresolved; boundary errors need independently annotated reference timings. LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder.
+
+[Methodology and coverage](docs/benchmarks/audio/README.md) · [Manual download, Python/CLI/HTTP and benchmark commands](docs/AUDIO_TESTING.md)
+<!-- MLX-ONE-AUDIO-BENCHMARK-END -->
+
 ## Architecture
 
 <p align="center">
@@ -457,10 +538,10 @@ workload. See [capability levels](#capability-levels) and the
 
 | Family | Available workflow | Qualification summary | Guide |
 | --- | --- | --- | --- |
-| Qwen2-VL | Native loading and static-image streaming API | Verify exact checkpoint and processor; video workflow unqualified | [Docs](src/mlx_one/models/vision_language/qwen2_vl/README.md) |
-| Qwen2.5-VL | Config/architecture inspection and synthetic execution | Architecture only; no registered task loader | [Docs](src/mlx_one/models/vision_language/qwen2_5_vl/README.md) |
-| Qwen3.5 | Native text generation; multimodal architecture | 0.8B stored-source short smoke; Q4 and vision task path unqualified | [Docs](src/mlx_one/models/vision_language/qwen3_5/README.md) |
-| LFM2-VL / LFM2.5-VL | Config/architecture inspection and synthetic execution | Architecture only; task loader/processor integration pending | [Docs](src/mlx_one/models/vision_language/lfm2_vl/README.md) |
+| Qwen2-VL | Native Python, image CLI, HTTP chat and SSE | Pinned Q4 checkpoint smoke passed on M4; experimental; static images only | [Docs](src/mlx_one/models/vision_language/qwen2_vl/README.md) |
+| Qwen2.5-VL | Native Python, image CLI, HTTP chat and SSE | Pinned Q4 checkpoint smoke passed on M4; experimental; static images only | [Docs](src/mlx_one/models/vision_language/qwen2_5_vl/README.md) |
+| Qwen3.5 | Native text and static-image generation, CLI, HTTP/SSE | Targeted 0.8B MLX Q4 image checkpoint smoke passed; alternative revisions unqualified | [Docs](src/mlx_one/models/vision_language/qwen3_5/README.md) |
+| LFM2-VL / LFM2.5-VL | Native SigLIP2 NaFlex + hybrid decoder, Python/CLI/HTTP/SSE | Pinned Q8 450M and Q4 3B checkpoint smokes passed on M4; experimental | [Docs](src/mlx_one/models/vision_language/lfm2_vl/README.md) |
 
 ### Retrieval guides
 
@@ -481,9 +562,13 @@ workload. See [capability levels](#capability-levels) and the
 | Qwen3-ASR 0.6B / 1.7B | Native transcription and bounded accumulated-utterance streaming, Python/CLI | 0.6B English/French offline gates pass; **WIP**: 1.7B English WER/CER match reference but only 15/16 exact anchors pass; streaming parity and remaining language gates unresolved | [Docs](src/mlx_one/models/audio/qwen3_asr/README.md) |
 | Qwen3-ForcedAligner 0.6B | Native known-text alignment, Python/CLI; not ASR | Float32 components pass; **WIP**: English timestamp differences reach 800 ms against an 80-ms limit; remaining qualification unresolved | [Docs](src/mlx_one/models/audio/qwen3_asr/README.md) |
 | Parakeet TDT v2 / v3 | Native offline transcription, Python/CLI; isolated v2 archive conversion | Float32 components, both English 100-clip/16-anchor gates and v3 French/German 25-clip gates pass; **WIP** original v2 NeMo, timestamp and broader qualification | [Docs](src/mlx_one/models/audio/parakeet/README.md) |
-| LFM2.5 Audio | Config inspection, frontend and architecture tests | Architecture only; checkpoint/codec/task integration pending | [Docs](src/mlx_one/models/audio/lfm2_audio/README.md) |
+| LFM2.5 Audio | Native ASR, TTS, speech-to-speech, Python/CLI/HTTP and ordered PCM streaming | Source/tiny native tests; Q4 checkpoint and speech quality validation pending | [Docs](src/mlx_one/models/audio/lfm2_audio/README.md) |
 
 ### Audio implementation progress — WIP
+
+The [native audio runbook](docs/AUDIO_TESTING.md) documents the current source
+implementation, exact manual checkpoints and remaining limitations. Standardized
+measurements remain pending; historical investigations below are retained evidence.
 
 As of 2026-10-04, unresolved qualification gates remain **WIP** and no longer
 block implementation of later families. This changes development sequencing,
@@ -539,9 +624,9 @@ implemented components; architecture coverage does not guarantee an end-to-end t
 | Registry type | Family | Native components | Architecture | Qualification |
 | --- | --- | --- | :---: | --- |
 | `qwen2_vl` | Qwen2-VL | Vision Transformer, 3D patches, merger, multimodal RoPE, image/video token insertion | ✅ | Verify exact checkpoint and processor |
-| `qwen2_5_vl` | Qwen2.5-VL-3B | Window/full vision attention, biased SwiGLU vision tower, merger, multimodal RoPE | ✅ | Architecture only; verify checkpoint and processor |
-| `qwen3_5` | Qwen3.5 0.8B/2B | Hybrid gated-delta/full-attention text tower, learned/interpolated vision positions, multimodal RoPE | ✅ | 0.8B stored-source short smoke; Q4 and vision tasks unqualified |
-| `lfm2_vl` | LFM2.5-VL | Vision tower, pixel unshuffle/projector, hybrid language model | ✅ | Verify exact checkpoint and processor |
+| `qwen2_5_vl` | Qwen2.5-VL-3B | Window/full vision attention, biased SwiGLU vision tower, merger, multimodal RoPE | ✅ | Pinned static-image checkpoint smoke passed on M4 |
+| `qwen3_5` | Qwen3.5 0.8B/2B | Hybrid gated-delta/full-attention text tower, learned/interpolated vision positions, multimodal RoPE | ✅ | Text source smoke retained; targeted MLX VLM Q4 checkpoint smoke passed on M4 |
+| `lfm2_vl` | LFM2-VL / LFM2.5-VL | SigLIP2 NaFlex, pixel unshuffle/projector, hybrid language model | ✅ | Pinned Q8 450M / Q4 3B static-image checkpoint smokes passed on M4 |
 
 ### Embeddings and retrieval
 
@@ -562,7 +647,7 @@ implemented components; architecture coverage does not guarantee an end-to-end t
 | `qwen3_asr` | Qwen3-ASR 0.6B / 1.7B | Chunked Conv2D/audio encoder, Qwen3 decoder, strict BF16 loading, context/language prompts, accumulated-utterance streaming | ✅ | [0.6B offline passes and remaining failures](docs/audio-qualification-m4-32gb.md#additional-stage-three-checkpoint-runs-and-failures); **WIP** full qualification |
 | `qwen3_forced_aligner` | Qwen3-ForcedAligner 0.6B | Separate 5,000-class timestamp head, known-text units and boundary reconstruction | ✅ | Alignment only; **WIP** timestamp parity (800 ms versus 80-ms limit) |
 | `parakeet_tdt` | Parakeet TDT 0.6B v2 / v3 | Float32 FastConformer, LSTM predictor, joint token/duration heads, greedy offline transcription, strict safetensors loading | ✅ | [Scoped M4 evidence](docs/audio-qualification-m4-32gb.md#parakeet-stage-four-progress--2026-10-04); **WIP** full qualification; offline-only |
-| `lfm2_audio` | LFM2.5-Audio | Audio encoder, Conformer, Depthformer, detokenizer, feature insertion | ✅ | Verify processor and codec weights |
+| `lfm2_audio` | LFM2.5-Audio | Native checkpoint loader, Conformer/LFM2, Depthformer and waveform codec | ✅ | Source implementation; real checkpoint smoke and speech quality pending |
 
 ### Segmentation and tracking
 

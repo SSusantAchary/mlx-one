@@ -9,7 +9,7 @@ from typing import Any, Literal
 
 from mlx_one.core.registry import get_registration
 
-AudioTask = Literal["transcribe", "align", "synthesize"]
+AudioTask = Literal["transcribe", "align", "synthesize", "speech-to-speech"]
 
 
 class AudioModelLoadError(ValueError):
@@ -20,13 +20,16 @@ def audio_model_type(config: Mapping[str, Any]) -> str:
     """Resolve the aligner before ASR: both use qwen3_asr at the top level."""
 
     model_type = config.get("model_type")
+    if model_type is None and all(k in config for k in ('encoder', 'joint', 'decoder',
+                                                       'model_defaults', 'sample_rate')):
+        return 'parakeet_tdt'
     thinker = config.get("thinker_config")
     if model_type == "qwen3_asr" and isinstance(thinker, Mapping):
         if thinker.get("model_type") == "qwen3_forced_aligner":
             return "qwen3_forced_aligner"
     if not isinstance(model_type, str) or not model_type:
         raise AudioModelLoadError("audio config requires a model_type")
-    return model_type
+    return {"lfm_audio": "lfm2_audio"}.get(model_type, model_type)
 
 
 def load_audio_model(
@@ -45,7 +48,10 @@ def load_audio_model(
     Imports and config/task validation do not initialize MLX or execute Hub code.
     """
 
-    if task not in {"transcribe", "align", "synthesize"}:
+    task = {"audio.transcribe": "transcribe", "audio.align": "align",
+            "audio.generate_speech": "synthesize",
+            "audio.speech_to_speech": "speech-to-speech"}.get(task, task)
+    if task not in {"transcribe", "align", "synthesize", "speech-to-speech"}:
         raise AudioModelLoadError(f"unsupported audio task: {task}")
     if str(model) == "nvidia/parakeet-tdt-0.6b-v2":
         raise AudioModelLoadError(

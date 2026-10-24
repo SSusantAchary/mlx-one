@@ -46,8 +46,9 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
                 tasks=tasks,
             )
             for model_type, capabilities, tasks in (
-                ("qwen3_asr", frozenset({"forward", "cache", "transcribe", "stream"}),
-                 frozenset({"transcribe"})),
+                ("qwen3_asr", frozenset({"forward", "cache", "transcribe", "stream",
+                                           "language-detection"}),
+                 frozenset({"transcribe", "language-detection"})),
                 ("qwen3_forced_aligner", frozenset({"forward", "align"}), frozenset({"align"})),
             )
         ),
@@ -161,7 +162,10 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
             "mlx_one.models.audio.lfm2_audio.config:Lfm2AudioConfig",
             "mlx_one.models.audio.lfm2_audio.model:Lfm2AudioForConditionalGeneration",
             "audio-language",
-            frozenset({"forward", "cache", "audio-encode", "audio-decode"}),
+            frozenset({"forward", "cache", "audio-encode", "audio-decode",
+                       "transcribe", "synthesize", "speech-to-speech"}),
+            loader_path="mlx_one.models.audio.lfm2_audio.loading:load_lfm_audio",
+            tasks=frozenset({"transcription", "speech-generation", "speech-to-speech"}),
         ),
         ModelRegistration(
             "openelm",
@@ -301,7 +305,7 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
                 }
             ),
             loader_path="mlx_one.models.audio.whisper.loading:load_whisper",
-            tasks=frozenset({"asr"}),
+            tasks=frozenset({"asr", "language-detection"}),
         ),
         ModelRegistration(
             "moonshine",

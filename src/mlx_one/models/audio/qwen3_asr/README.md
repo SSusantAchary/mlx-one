@@ -176,3 +176,23 @@ the upstream rollback wrapper with a pinned Torch SDPA decoder, not vLLM-kernel 
 
 Code and publisher checkpoints are Apache-2.0; retain the adjacent [NOTICE](NOTICE).
 This independent MLX port is not an endorsement from Alibaba/Qwen.
+
+
+## Native managed audio API (2026-10-24)
+
+The common `AudioEngine` now exposes the implemented tasks through the existing
+inference actor/model pool, grouped `mlx-one audio` commands, and native HTTP audio
+routes. Encoded bytes, bounded PCM mixing/resampling, repeated requests and
+cancellation use the common input/lifecycle contracts. See the
+[exact manual download and test runbook](../../../../../docs/AUDIO_TESTING.md).
+Existing checkpoint-specific evidence above remains historical and is not a new
+standardized benchmark or an exhaustive numerical admission requirement.
+
+The MLX community ASR 0.6B/1.7B and ForcedAligner 0.6B Q8 exports have explicit
+native packed-weight loading, distinct from the original `thinker.*` publisher
+layout. The loader preserves BF16 encoder exceptions and uses the shared affine
+quantization support; unsupported formats fail explicitly. Pinned config/tensor
+headers and native tiny Q8 execution were tested; these exact full checkpoints
+were not downloaded/run. Historical 1.7B punctuation and aligner timestamp
+reference disagreements remain unresolved. Alignment reports out-of-clip spans
+as unmatched words rather than inventing confidence or clamping predictions.

@@ -34,3 +34,17 @@ __all__ = [
     "align_audio",
     "open_audio_stream",
 ]
+
+from mlx_one.audio.input import AudioInput
+from mlx_one.audio.public import AudioEngine
+from mlx_one.audio.schemas import SpeechGenerationResult, SpeechStreamEvent
+
+
+def generate_speech(*args, **kwargs):
+    from mlx_one.audio.lfm import generate_speech as generate
+
+    return generate(*args, **kwargs)
+
+
+__all__ += ["AudioEngine", "AudioInput", "SpeechGenerationResult", "SpeechStreamEvent",
+            "generate_speech"]

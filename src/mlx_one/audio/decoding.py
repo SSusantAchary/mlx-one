@@ -199,7 +199,9 @@ def decode_segment(
             encoder_outputs=audio_features,
             output_attentions=True,
         )
-        final_attention = output.cross_attentions
+        # Retain generated-token query rows only; prefix/EOS rows are not words.
+        final_attention = tuple(attention[..., len(prefix):len(prefix)+len(generated), :]
+                                for attention in output.cross_attentions)
         mx.eval(*final_attention)
     average = (sum(logprobs) / (len(logprobs) + 1)) if logprobs else -float("inf")
     return DecodingResult(
@@ -477,6 +479,9 @@ def align_words(
     median_width: int,
     time_offset: float = 0.0,
     token_logprobs: tuple[float, ...] = (),
+    token_start: int | None = None,
+    frame_start: int = 0,
+    frame_end: int | None = None,
 ) -> tuple[TranscriptionWord, ...]:
     if not token_ids or not cross_attentions:
         return ()
@@ -487,7 +492,13 @@ def align_words(
         for layer in range(len(cross_attentions) // 2, len(cross_attentions))
         for head in range(cross_attentions[layer].shape[1])
     ]
-    matrices = [cross_attentions[layer][0, head, -len(token_ids) :, :] for layer, head in heads]
+    row = slice(-len(token_ids), None) if token_start is None else slice(
+        token_start, token_start + len(token_ids))
+    matrices = [cross_attentions[layer][0, head, row, frame_start:frame_end]
+                for layer, head in heads]
+    if not matrices or any(matrix.shape[0] != len(token_ids) or matrix.shape[1] < 1
+                           for matrix in matrices):
+        raise ValueError("word alignment attention does not match segment token/frame range")
     weights = mx.mean(mx.stack(matrices), axis=0)
     centered = weights - mx.mean(weights, axis=-1, keepdims=True)
     weights = centered / (mx.sqrt(mx.mean(centered**2, axis=-1, keepdims=True)) + 1e-6)

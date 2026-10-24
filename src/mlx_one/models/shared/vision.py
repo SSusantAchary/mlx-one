@@ -31,7 +31,9 @@ class VisionRotaryEmbedding(nn.Module):
         width = position_ids[:, 1].astype(mx.float32)[:, None] * inv_freq
         frequencies = mx.concatenate((height, width), axis=-1)
         frequencies = mx.concatenate((frequencies, frequencies), axis=-1)[:, None, :]
-        return value * mx.cos(frequencies) + _rotate_half(value) * mx.sin(frequencies)
+        return (value * mx.cos(frequencies) + _rotate_half(value) * mx.sin(frequencies)).astype(
+            value.dtype
+        )
 
 
 class PatchEmbed(nn.Module):
@@ -52,7 +54,8 @@ class PatchEmbed(nn.Module):
     def __call__(self, patches: Any) -> Any:
         if patches.ndim != 2 or patches.shape[-1] != self.patch_dim:
             raise ValueError(f"pixel patches must have shape [patches, {self.patch_dim}]")
-        return self.proj(patches)
+        dtype = getattr(self.proj, "scales", self.proj.weight).dtype
+        return self.proj(patches.astype(dtype))
 
 
 class VisionAttention(nn.Module):

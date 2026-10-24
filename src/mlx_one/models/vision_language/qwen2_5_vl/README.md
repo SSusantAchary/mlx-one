@@ -1,18 +1,28 @@
-# Qwen2.5-VL
+# Qwen2.5-VL 3B
 
 [Model guide index](../../../../../README.md#model-specific-documentation)
 
-## Overview and status
+## Status and exact targets
 
-Registry type: `qwen2_5_vl`. The native architecture implements windowed/full
-vision attention, a biased SwiGLU vision tower, spatial merging, multimodal RoPE,
-and a Qwen text decoder. Configuration, strict tensor contracts, and synthetic
-execution have tests. Current support is architecture-level: no native task loader
-is registered for this model type.
+**CHECKPOINT_SMOKE_PASSED** for the pinned primary checkpoints below on Apple
+M4 with 32 GiB unified memory. Real Python/CLI/live HTTP/SSE, multi-turn,
+changed-image and cancellation checks passed. Direct-model performance is measured
+separately using pinned HF documentation images; see the
+[hardware report](../../../../../docs/validation/vlm-hf-2026-10-24/report.md).
+These bounded smokes are experimental, not general accuracy or long-context qualification.
 
-[Qwen/Qwen2.5-VL-3B-Instruct](https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct)
-is an upstream checkpoint candidate. Complete checkpoint loading, processor
-parity, image/video task integration, training, and quality remain unqualified.
+- `mlx-community/Qwen2.5-VL-3B-Instruct-4bit` (Q4) at `46d4cf06a06ffc1a766c214174f9cbed2f45bcab`.
+
+## Model-specific implementation
+
+This is a distinct native tower, not an alias of Qwen2-VL: RMSNorm,
+biased SwiGLU blocks, window/full attention, spatial merger, multimodal RoPE and
+the Qwen text decoder are preserved. The pinned checkpoint uses patch size 14,
+temporal patch size 2, merge factor 2, window size 112 and full-attention blocks
+7/15/23/31. Window reordering and inverse merged-feature ordering stay in the
+model; the static-image processor preserves checkpoint normalization and dynamic
+resolution. Published `language_model.model`/`vision_tower` namespaces and packed
+weights map strictly to the native parameter tree.
 
 ## Model Architecture
 
@@ -37,69 +47,62 @@ Images / video frame patches                 Text token IDs
                          LM head → token logits
 ```
 
-## Papers and upstream references
+## Installation and native image inference
 
-Paper: [Qwen2.5-VL Technical Report](https://arxiv.org/abs/2502.13923).
+Install `python -m pip install -e '.[vision,server]'` from the repository root.
+Python 3.12 and Apple Silicon/Metal are the manual test target. Keep the complete
+checkpoint, matching tokenizer, processor metadata and template together; strict
+loading rejects missing or mismatched tensors. Packed affine Q4/Q8 remain packed;
+only modules with actual scale tensors are quantized, preserving floating vision
+or projector modules. No MLX-VLM, Transformers or PyTorch runtime is imported.
 
-This is the native forward architecture, not a registered end-to-end task
-loader. Publisher processing and temporal-coordinate parity remain unqualified.
-
-## Installation and assets
-
-Use Python 3.10+ and install `python -m pip install -e '.[vision]'` from the
-repository root. Synthetic execution needs Apple Silicon/Metal. Future
-checkpoint integration needs complete text/vision weights, nested configuration,
-matching tokenizer/template assets, and the exact image/video processor contract.
-Installing the vision extra does not add the missing task loader.
-
-## Available inspection and configuration examples
-
-Metadata inspection does not load model weights:
+After the pinned manual download in the [runbook](../../../../../docs/VLM_TESTING.md):
 
 ```bash
-mlx-one inspect Qwen/Qwen2.5-VL-3B-Instruct
+mlx-one vlm --model ~/mlx-one-models/vlm/qwen2.5-vl-3b \
+  --offline --image benchmarks/vlm/images/VLM-S1-1.png \
+  --prompt 'Describe the shapes and colors.' --max-tokens 64 --stream
 ```
-
-For a local publisher configuration, validate the nested schema without allocating
-the model. Replace the path with a complete local config; incompatible configurations
-raise `ConfigError`.
 
 ```python
-import json
 from pathlib import Path
+from mlx_one.vision import VisionLanguageEngine
+from mlx_one.text import TextGenerationOptions
 
-from mlx_one.models.vision_language.qwen2_5_vl.config import Qwen2_5_VLConfig
-
-payload = json.loads(Path("/path/to/Qwen2.5-VL/config.json").read_text())
-config = Qwen2_5_VLConfig.from_dict(payload)
-print(config.model_type, config.vision_config.fullatt_block_indexes)
+with VisionLanguageEngine(Path('~/mlx-one-models/vlm/qwen2.5-vl-3b').expanduser(),
+                          offline=True) as engine:
+    result = engine.generate('Describe the shapes and colors.',
+        images=['benchmarks/vlm/images/VLM-S1-1.png'],
+        options=TextGenerationOptions(max_tokens=64))
+    print(result.text, result.token_ids, result.image_metadata)
 ```
 
-## Input contract and limitations
+For ordered interleaved images and multi-turn chat, use `messages=` as documented
+in the runbook. HTTP uses OpenAI `image_url` base64 data URLs, the existing
+positional `serve MODEL` command, aliases, authentication and SSE. Remote image
+fetching, video, animation, audio, training, VLM tool calls and speculative decode
+are unsupported. Source image count/pixels, processed token/memory budgets and
+checkpoint context limits are enforced. Large image grids can exceed M4 memory
+before the configured language context is reached.
 
-The model expects tokenized text, image/video patch tensors, grids, and matching
-multimodal positions. The configuration checks special-token IDs, tower widths,
-vision patch/window sizes, and full-attention layer indexes. A public image-chat
-recipe must wait for a compatible task loader and processor integration.
+## Request state and validation
 
-`load_vlm_model` rejects this registry entry because it lacks a task loader.
-The `generate` CLI is text-only; passing `--image` is unsupported. Do not rename
-the checkpoint's `model_type` to Qwen2-VL to bypass this boundary.
-
-Model-level cache tests do not qualify server prefix reuse or block KV. Block
-KV/APC remains limited to dense text Qwen2/Qwen2.5. Unknown weights or nested
-config errors must be resolved against the actual architecture.
-
-## Implementation and validation
-
-See [configuration](config.py), [model](model.py), [weights](weights.py),
-[architecture tests](../../../../../tests/test_native_qwen_multimodal_architectures.py), and
-[synthetic Metal tests](../../../../../tests/test_native_qwen_multimodal_mlx.py).
+Image encoding/fusion runs once per prefill, followed by the existing native
+cached generation loop. Each request owns its image features and full model
+state. Closing/cancelling a stream or encountering an exception releases state;
+there is no cross-request image-prefix reuse, paged VLM cache or VLM continuous
+batching claim. Attention KV defaults to FP16; hybrid recurrent state preserves
+its model-specific policy.
 
 ```bash
-pytest -q tests/test_native_qwen_multimodal_architectures.py
-MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_qwen_multimodal_mlx.py
+python -m pytest -q --no-cov tests/test_vlm_checkpoint_metadata.py tests/test_vlm_benchmark.py
+MLX_ONE_RUN_MLX_TESTS=1 python -m pytest -q --no-cov tests/test_vlm_pipeline_native.py tests/test_task_vlm_native.py
 ```
 
-The [family backlog](../../../../../docs/qualification/archived-evidence.md) tracks candidates.
-See [capability levels](../../../../../README.md#capability-levels) for promotion criteria.
+See [manual acceptance checks](../../../../../docs/VLM_TESTING.md),
+[benchmark methodology and pending records](../../../../../docs/benchmarks/vlm/README.md),
+[reference attribution](../UPSTREAM.md), [configuration](config.py),
+[native model](model.py) and [strict weight mapping](weights.py).
+Any new checkpoint revision requires its own image-dependent smoke and output
+review before inheriting support. The measured primary revisions above passed
+the bounded checks; this does not establish general OCR accuracy.

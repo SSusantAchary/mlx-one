@@ -149,3 +149,22 @@ is validation-only; production has no reference fallback.
 
 Publisher checkpoint terms are **CC-BY-4.0**, separate from mlx-one's Apache-2.0.
 Retain attribution and review the exact model cards. See [NOTICE](NOTICE).
+
+
+## Native managed audio API (2026-10-24)
+
+The common `AudioEngine` now exposes the implemented tasks through the existing
+inference actor/model pool, grouped `mlx-one audio` commands, and native HTTP audio
+routes. Encoded bytes, bounded PCM mixing/resampling, repeated requests and
+cancellation use the common input/lifecycle contracts. See the
+[exact manual download and test runbook](../../../../../docs/AUDIO_TESTING.md).
+Existing checkpoint-specific evidence above remains historical and is not a new
+standardized benchmark or an exhaustive numerical admission requirement.
+
+`mlx-community/parakeet-tdt-0.6b-v3` has an explicit MLX export bridge for its
+NeMo-shaped config, native convolution layout, combined LSTM biases and vocabulary.
+It maps to the existing FastConformer/TDT implementation, not CTC. New source
+contract tests do not replace the historical NVIDIA-layout evidence or validate
+word alignment. Token timestamps follow actual TDT durations on an 80-ms tick;
+last-frame quantization may extend up to one tick beyond clip duration. Original
+v2 conversion remains isolated tooling; original NeMo parity is still WIP.

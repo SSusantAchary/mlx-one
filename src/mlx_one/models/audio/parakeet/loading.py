@@ -140,7 +140,10 @@ def load_parakeet(
             )
         )
         revision = root.name
-    config = ParakeetConfig.from_dict(read_json(root / "config.json"))
+    payload = read_json(root / "config.json")
+    if payload.get("model_type") is None and "joint" in payload:
+        return _load_mlx_export(root, payload, revision)
+    config = ParakeetConfig.from_dict(payload)
     variant = config.extra.get("mlx_one_checkpoint_variant", "v3")
     if variant not in {"v2", "v3"}:
         raise ValueError("unsupported Parakeet checkpoint variant")
@@ -174,3 +177,38 @@ def load_parakeet(
     model_object.eval()
     mx.eval(model_object.parameters())
     return LoadedParakeet(model_object, tokenizer, processor, generation, root, revision, variant)
+
+
+def _load_mlx_export(root, payload, revision):
+    from mlx_one.models.audio.parakeet.mlx_export import (
+        VocabularyTokenizer,
+        config_from_mlx,
+        map_weights,
+    )
+    from mlx_one.models.audio.parakeet.model import ParakeetTDT
+
+    config = config_from_mlx(payload)
+    if config.vocab_size not in {1025, 8193}:
+        raise ValueError('unknown MLX Parakeet checkpoint vocabulary/variant')
+    frontend = payload['preprocessor']
+    if any(frontend.get(k) != v for k, v in {'sample_rate': 16000, 'normalize': 'per_feature',
+            'features': 128, 'n_fft': 512, 'window_size': 0.025, 'window_stride': 0.01,
+            'window': 'hann', 'frame_splicing': 1, 'log': True}.items()):
+        raise ValueError('unsupported MLX Parakeet frontend')
+    weights = map_weights(read_safetensors(root, layout='canonical'), config)
+    if any(str(v.dtype).rsplit('.', 1)[-1] not in {'float32', 'int64'}
+           for v in weights.values()):
+        raise ValueError('MLX Parakeet export requires its published float32 weights')
+    native = ParakeetTDT(config)
+    native.load_weights(list(weights.items()), strict=True)
+    native.eval()
+    import mlx.core as mx
+
+    mx.eval(native.parameters())
+    generation = {'decoder_start_token_id': config.blank_token_id,
+                  'pad_token_id': config.pad_token_id,
+                  'eos_token_id': payload['joint']['vocabulary'].index('<|endoftext|>')
+                  if '<|endoftext|>' in payload['joint']['vocabulary'] else None}
+    return LoadedParakeet(native, VocabularyTokenizer(payload['joint']['vocabulary']),
+        ParakeetProcessor(), generation, root, revision,
+        'v2' if config.vocab_size == 1025 else 'v3')

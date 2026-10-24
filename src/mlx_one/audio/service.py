@@ -58,30 +58,58 @@ def transcribe(
     TranscriptionResult/JSON schema. Moonshine uses a separate SpeechTranscript.
     """
 
+    from mlx_one.models.audio.lfm2_audio.loading import LoadedLFMAudio
+
     started = time.perf_counter()
     bundle = (
         model
-        if isinstance(model, (LoadedWhisper, LoadedMoonshine, LoadedQwenAudio, LoadedParakeet))
+        if isinstance(
+            model, (LoadedWhisper, LoadedMoonshine, LoadedQwenAudio, LoadedParakeet, LoadedLFMAudio)
+        )
         else load_audio_model(model, revision=revision, offline=offline, cache_dir=cache_dir)
     )
     loaded_at = time.perf_counter()
+    if isinstance(bundle, LoadedLFMAudio):
+        from mlx_one.audio.lfm import transcribe_lfm
+
+        if task != "transcribe" or word_timestamps or language is not None:
+            raise ValueError("LFM ASR has no translation, timestamp or language-hint API")
+        if options is not None and type(options) is not ASRDecodeOptions:
+            raise ValueError("LFM ASR accepts ASRDecodeOptions only")
+        return transcribe_lfm(
+            bundle, audio, sample_rate=sample_rate, cancelled=cancelled, options=options
+        )
     if isinstance(bundle, LoadedParakeet):
         from mlx_one.audio.parakeet import transcribe_parakeet
 
         return transcribe_parakeet(
-            bundle, audio,
+            bundle,
+            audio,
             model_name=str(bundle.path) if isinstance(model, LoadedParakeet) else str(model),
-            sample_rate=sample_rate, language=language, task=task, word_timestamps=word_timestamps,
-            options=options, cancelled=cancelled, started=started, loaded_at=loaded_at,
+            sample_rate=sample_rate,
+            language=language,
+            task=task,
+            word_timestamps=word_timestamps,
+            options=options,
+            cancelled=cancelled,
+            started=started,
+            loaded_at=loaded_at,
         )
     if isinstance(bundle, LoadedQwenAudio):
         from mlx_one.audio.qwen import transcribe_qwen
 
         return transcribe_qwen(
-            bundle, audio,
+            bundle,
+            audio,
             model_name=str(bundle.path) if isinstance(model, LoadedQwenAudio) else str(model),
-            sample_rate=sample_rate, language=language, task=task, word_timestamps=word_timestamps,
-            options=options, cancelled=cancelled, started=started, loaded_at=loaded_at,
+            sample_rate=sample_rate,
+            language=language,
+            task=task,
+            word_timestamps=word_timestamps,
+            options=options,
+            cancelled=cancelled,
+            started=started,
+            loaded_at=loaded_at,
         )
     if isinstance(bundle, LoadedMoonshine):
         if isinstance(options, QwenASROptions):
@@ -116,6 +144,12 @@ def transcribe(
         waveform = mx.array(audio)
         if waveform.ndim != 1:
             raise ValueError("waveform input must be mono 16-kHz samples")
+    if not mx.all(mx.isfinite(waveform)).item():
+        raise ValueError("Whisper waveform samples must be finite")
+    if waveform.size == 0:
+        return TranscriptionResult(
+            "", language or "en", (), 0.0, str(bundle.path), bundle.revision, task=task
+        )
     duration = waveform.shape[0] / SAMPLE_RATE
     filters = bundle.processor.mel_filters
     mel = log_mel_spectrogram(
@@ -174,7 +208,21 @@ def transcribe(
         decoded_segments = timestamp_segments(decoded.tokens, bundle.tokenizer)
         if not decoded_segments and decoded.text:
             decoded_segments = [(0.0, min(30.0, duration - offset), decoded.tokens)]
+        token_cursor = 0
         for start, end, token_ids in decoded_segments:
+            # Find this segment's own generated rows, retaining repeated-word order.
+            token_start = next(
+                (
+                    index
+                    for index in range(token_cursor, len(decoded.tokens))
+                    if decoded.tokens[index : index + len(token_ids)] == token_ids
+                ),
+                token_cursor,
+            )
+            token_cursor = token_start + len(token_ids)
+            segment_end = min(end, duration - offset)
+            if start > segment_end:
+                raise ValueError("Whisper predicted a segment outside the available audio")
             text = bundle.tokenizer.decode(token_ids).strip()
             words = (
                 align_words(
@@ -184,7 +232,10 @@ def transcribe(
                     alignment_heads=bundle.generation_config.get("alignment_heads"),
                     median_width=bundle.model.config.median_filter_width,
                     time_offset=offset + start,
-                    token_logprobs=decoded.token_logprobs,
+                    token_logprobs=decoded.token_logprobs[token_start:token_cursor],
+                    token_start=token_start,
+                    frame_start=round(start / 0.02),
+                    frame_end=max(round(start / 0.02) + 1, round(segment_end / 0.02)),
                 )
                 if word_timestamps
                 else ()
@@ -230,3 +281,44 @@ def transcribe(
 def _raise_if_cancelled(cancelled: Callable[[], bool] | None) -> None:
     if cancelled is not None and cancelled():
         raise RuntimeError("transcription was cancelled")
+
+
+def detect_audio_language(bundle, audio, *, sample_rate=16000, cancelled=None):
+    """Whisper encoder language probabilities, or Qwen's generated language label."""
+    from mlx_one.audio.input import prepare_audio
+
+    pcm = prepare_audio(audio, sample_rate=sample_rate, max_seconds=180, cancelled=cancelled)
+    if not len(pcm):
+        raise ValueError("language detection requires nonempty audio")
+    if isinstance(bundle, LoadedQwenAudio) and bundle.model.config.model_type == "qwen3_asr":
+        result = transcribe(bundle, pcm, sample_rate=16000, cancelled=cancelled)
+        return {
+            "language": result.language,
+            "probabilities": None,
+            "model": result.model,
+            "revision": result.revision,
+            "method": "generated-asr-language-label",
+        }
+    if not isinstance(bundle, LoadedWhisper) or "<|en|>" not in bundle.tokenizer.special_tokens:
+        raise ValueError("language detection requires multilingual Whisper or Qwen ASR")
+    import mlx.core as mx
+
+    _raise_if_cancelled(cancelled)
+    waveform = mx.array(pcm[:N_SAMPLES])
+    mel = log_mel_spectrogram(
+        waveform,
+        num_mel_bins=bundle.model.config.num_mel_bins,
+        mel_filters=bundle.processor.mel_filters,
+        padding=N_SAMPLES,
+    )
+    mel = mel[:, :N_FRAMES]
+    encoded, _ = bundle.model.encode(mel[None])
+    language, probabilities = detect_language(bundle.model, encoded, bundle.tokenizer)
+    _raise_if_cancelled(cancelled)
+    return {
+        "language": language,
+        "probabilities": probabilities,
+        "model": str(bundle.path),
+        "revision": bundle.revision,
+        "method": "whisper-first-window",
+    }

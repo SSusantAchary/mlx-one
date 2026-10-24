@@ -176,3 +176,21 @@ See [architecture tests](../../../../../tests/test_native_whisper_architecture.p
 [synthetic Metal tests](../../../../../tests/test_native_whisper_mlx.py), and
 [qualification levels](../../../../../README.md#capability-levels). Integration
 execution requires Metal, model storage, and sufficient host memory.
+
+
+## Native managed audio API (2026-10-24)
+
+The common `AudioEngine` now exposes the implemented tasks through the existing
+inference actor/model pool, grouped `mlx-one audio` commands, and native HTTP audio
+routes. Encoded bytes, bounded PCM mixing/resampling, repeated requests and
+cancellation use the common input/lifecycle contracts. See the
+[exact manual download and test runbook](../../../../../docs/AUDIO_TESTING.md).
+Existing checkpoint-specific evidence above remains historical and is not a new
+standardized benchmark or an exhaustive numerical admission requirement.
+
+Word alignment now selects each segment's own generated-token attention rows and
+its actual audio-frame range, excluding prefix/EOS rows and padded audio. This
+fixes row/offset handling; manually reviewed word-timestamp accuracy remains
+separate. Local file decoding defaults to a ten-minute/64-MiB bound; HTTP and the
+managed API enforce tighter documented bounds. Translation and language detection
+are available only where the checkpoint token/task protocol supports them.

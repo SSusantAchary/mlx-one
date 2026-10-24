@@ -17,11 +17,12 @@ def timestamp_tokens(tokenizer, tokens, durations, *, blank, pad):
     from tokenizers.decoders import DecodeStream
 
     stream = DecodeStream(skip_special_tokens=True)
+    native_tokenizer = getattr(tokenizer, "native", tokenizer)
     frame = 0
     spans = []
     for token, duration in zip(tokens, durations, strict=True):
         if token not in {blank, pad}:
-            text = stream.step(tokenizer, token)
+            text = stream.step(native_tokenizer, token)
             if text is not None:
                 start, end = frame * 0.08, (frame + duration) * 0.08
                 if text in {"?", "'", "¡", "¿", "-", ":", ",", "%", "/", ".", "!"} and spans:

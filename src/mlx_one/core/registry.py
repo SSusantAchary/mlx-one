@@ -69,6 +69,10 @@ def register_model(registration: ModelRegistration) -> None:
 
 
 def get_registration(model_type: str) -> ModelRegistration:
+    if model_type == "lfm_audio":
+        model_type = "lfm2_audio"
+    if model_type == "lfm2-vl":
+        model_type = "lfm2_vl"
     with _REGISTRY_LOCK:
         _ensure_builtins()
         try:

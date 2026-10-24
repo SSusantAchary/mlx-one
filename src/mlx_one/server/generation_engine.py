@@ -180,6 +180,15 @@ class GenerationEngine:
         acquire = getattr(self.manager, "model_lease", None)
         lease = acquire() if callable(acquire) else None
         try:
+            from mlx_one.vision.loading import LoadedVLM
+            if isinstance(self.manager.current_model(), LoadedVLM):
+                if tools or spec_type != "none" or context_shift:
+                    raise ValueError("VLM tools, speculation and context shifting are unsupported")
+                if self._inference_mode not in {None, "reference_dense"}:
+                    raise ValueError("VLM serving requires the reference inference mode")
+                yield from self._stream_vision(model, messages, options, cancel,
+                    context_length, cache_type_k, cache_type_v, _prompt)
+                return
             yield from self._stream_request(
                 model=model,
                 messages=messages,
@@ -222,6 +231,92 @@ class GenerationEngine:
             finally:
                 if lease is not None:
                     lease.release()
+
+    def _stream_vision(
+        self,
+        model,
+        messages,
+        options,
+        cancel,
+        context_length,
+        cache_type_k,
+        cache_type_v,
+        raw_prompt,
+    ):
+        from mlx_one.vision.generation import _stream_vlm
+        from mlx_one.vision.messages import prepare_messages
+
+        if model != self.manager.model_info().id:
+            raise ValueError("requested model is not loaded")
+        bundle = self.manager.current_model()
+        prompt, images = (
+            (raw_prompt, ()) if raw_prompt is not None else prepare_messages(bundle, messages)
+        )
+        from mlx_one.engine.adapter_registry import get_runtime_registration
+        from mlx_one.engine.contracts import TaskKind
+
+        adapter = get_runtime_registration(bundle.architecture).adapter(TaskKind.VISION_LANGUAGE)(
+            bundle
+        )
+        prepared = adapter.prepare(
+            TaskKind.VISION_LANGUAGE, {"prompt": prompt, "images": images, "options": options}
+        )
+        if prepared.transient_bytes > 8 * 1024**3:
+            adapter.dispose_prepared(prepared)
+            raise ValueError("vision request exceeds the 8 GiB processing budget")
+        images = prepared.payload["images"]
+        started = time.perf_counter()
+        first = None
+        generated = 0
+        prompt_count = 0
+
+        def observe(event):
+            nonlocal prompt_count
+            if event["kind"] == "prepared":
+                prompt_count = len(event["tokens"])
+
+        iterator = _stream_vlm(
+            bundle,
+            prompt,
+            images,
+            options,
+            cancel.is_set,
+            observer=observe,
+            context_length=context_length,
+            cache_type_k=cache_type_k,
+            cache_type_v=cache_type_v,
+        )
+        try:
+            for chunk in iterator:
+                generated = chunk.generated_tokens
+                if chunk.token_id is not None and first is None:
+                    first = time.perf_counter()
+                if chunk.finish_reason:
+                    elapsed = time.perf_counter() - started
+                    decode = time.perf_counter() - first if first is not None else 0
+                    stats = RuntimeStats(
+                        prompt_tokens=prompt_count,
+                        generated_tokens=generated,
+                        time_to_first_token_ms=(first - started) * 1000 if first else None,
+                        generation_latency_ms=elapsed * 1000,
+                        decode_tokens_per_second=(generated - 1) / decode
+                        if generated > 1 and decode > 0
+                        else None,
+                        context_used=prompt_count + generated,
+                        prompt_cache_hit=False,
+                        queue_ms=current_queue_ms(),
+                        cache_backend="private-vlm",
+                    )
+                    with self._lock:
+                        self._stats = stats
+                    yield GenerationEvent(
+                        text=chunk.text, finish_reason=chunk.finish_reason, metrics=stats.to_dict()
+                    )
+                elif chunk.text:
+                    yield GenerationEvent(text=chunk.text)
+        finally:
+            iterator.close()
+            adapter.dispose_prepared(prepared)
 
     def _stream_request(
         self,
@@ -606,6 +701,8 @@ class GenerationEngine:
         cache_namespace: str | None = None,
     ) -> int:
         bundle = self.manager.current_model()
+        if hasattr(bundle, "processor"):
+            return 0
         runtime = self._cache_manager_for(bundle)
         fingerprint = runtime.fingerprint(
             key_type=cache_type_k,

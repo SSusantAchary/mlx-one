@@ -31,12 +31,18 @@ class ImageResolver:
     def __init__(
         self,
         *,
+        allow_remote: bool = False,
         maximum_bytes: int = 20 * 1024**2,
         maximum_redirects: int = 3,
         client_factory: Any | None = None,
     ) -> None:
         if maximum_bytes < 1 or maximum_redirects < 0:
             raise ValueError("image resolver limits are invalid")
+        if allow_remote:
+            raise ValueError(
+                "remote image fetching is disabled until DNS-pinned transport is available"
+            )
+        self.allow_remote = False
         self.maximum_bytes = maximum_bytes
         self.maximum_redirects = maximum_redirects
         self._client_factory = client_factory
@@ -45,6 +51,8 @@ class ImageResolver:
         if source.startswith("data:"):
             media_type, content = _decode_data_url(source, self.maximum_bytes)
         else:
+            if not self.allow_remote:
+                raise MediaError("remote image URLs are disabled; use a base64 data URL")
             media_type, content = await self._fetch_https(source)
         image = _validated_image(content, media_type)
         return ResolvedImage(image, media_type, hashlib.sha256(image).hexdigest())
@@ -72,9 +80,7 @@ class ImageResolver:
                             current = urljoin(current, location)
                             continue
                         response.raise_for_status()
-                        media_type = response.headers.get("content-type", "").split(
-                            ";", 1
-                        )[0]
+                        media_type = response.headers.get("content-type", "").split(";", 1)[0]
                         if media_type not in SUPPORTED_IMAGE_TYPES:
                             detail = media_type or "missing"
                             raise MediaError(f"unsupported image content type: {detail}")
@@ -157,7 +163,7 @@ def _validated_image(content: bytes, media_type: str) -> bytes:
             if expected.get(image.format) != media_type:
                 raise MediaError("image bytes do not match the declared content type")
             pixels = int(image.width) * int(image.height)
-            if Image.MAX_IMAGE_PIXELS is not None and pixels > Image.MAX_IMAGE_PIXELS:
+            if pixels > 20_000_000 or getattr(image, "n_frames", 1) != 1:
                 raise MediaError("image dimensions exceed the safe pixel limit")
             image.verify()
     except (Image.DecompressionBombError, UnidentifiedImageError, OSError) as exc:
