@@ -2,125 +2,77 @@
 
 [Model guide index](../../../../../README.md#model-specific-documentation)
 
-## Overview and status
+Native source support now includes the **MLX community Q4 export**, a strict task
+loader, the shared MLX-One LFM2 hybrid backbone, FastConformer speech input,
+audio adapter, sequential codebook prediction, and the separately supplied LFM
+waveform detokenizer. Tasks are ASR, TTS, and interleaved speech-to-speech, with
+ordered text/PCM streaming. Status: **NATIVE_IMPLEMENTED**, with experimental, input-dependent speech-to-speech
+support. Real Q4 checkpoint transcription and TTS, plus a separate short spoken
+question, have been exercised on Apple M4; see the
+[hardware report](../../../../../docs/validation/audio-hf-2026-10-24/report.md)
+and [measured performance](../../../../../docs/benchmarks/audio/README.md).
+These checks do not establish corpus accuracy or human-rated speech quality.
+On the primary 10-second audiobook fixture, greedy STS exceeds the 512-frame
+(40.96-second) output bound. A publisher-style sampled diagnostic ends but has
+unstable waveform amplitude. The separate 2.04-second question completes with a
+normal-amplitude response; that result does not resolve the longer-input failure.
 
-Registry type: `lfm2_audio`. The native architecture includes log-Mel preprocessing,
-a Conformer audio encoder, audio-feature insertion into an LFM2 hybrid decoder,
-Depthformer code predictions, and an audio detokenizer.
-[LiquidAI/LFM2.5-Audio-1.5B](https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B)
-is an upstream reference/candidate. Current validation is architectural and
-synthetic; no complete native checkpoint task loader or registry weight
-sanitizer/contract is registered for this entry.
-
-## Model Architecture
-
-The diagram follows the [native implementation](model.py). Layer counts, widths,
-head counts, and input sizes come from the checkpoint configuration; this is an
-architecture map, not an additional support or qualification claim.
+Primary checkpoint:
+[`mlx-community/LFM2.5-Audio-1.5B-4bit`](https://huggingface.co/mlx-community/LFM2.5-Audio-1.5B-4bit/tree/55d4de65fa10fa935561aaaa995271d8b8ff2ee0),
+revision `55d4de65fa10fa935561aaaa995271d8b8ff2ee0`.
+[LiquidAI's model](https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B) and
+[official task recipes](https://github.com/Liquid4All/liquid-audio/tree/19e65845923a7f136442c95137884ec61eb386aa)
+are references; the original publisher tensor layout is not silently treated as
+the primary MLX export.
 
 ```text
-Waveform → log-Mel → Conformer audio encoder → projection ───────┐
-Text token IDs → token embeddings ───────────────────────────────┤
-                                                               ↓
-                                              Replace audio-token slots
-                                                               ↓
-                                         LFM2 hybrid language backbone
-                                                               ↓
-                                  ┌────────────────────────────┴───────┐
-                              Text logits                        Depthformer
-                                                               codebook logits
-
-Supplied audio codes → audio detokenizer → spectrum → iFFT / overlap-add
-                                                               ↓
-                                                        Waveform output
+16 kHz mono PCM → publisher log-Mel frontend → FastConformer → audio adapter
+                                                                     ↓
+Text embeddings → existing native LFM2 hybrid backbone ← speech features
+                               ↓
+            text logits / sequential Depthformer codebooks
+                               ↓
+  eight discrete codebooks → separate LFM waveform detokenizer → 24 kHz PCM
 ```
 
-## Papers and upstream references
+The publisher schema (`lfm`, `encoder`, `depthformer`, `preprocessor`) is parsed
+separately from the old synthetic nested-config API. The latter remains available
+for existing architecture tests; it is not used to reinterpret real checkpoint
+weights. Model/codec tensor names and shapes were checked against pinned remote
+JSON headers without downloading weights. Packed Q4/Q8 affine linear/embedding
+weights remain packed; BF16 Conformer/normalization/convolution exceptions and
+the separate codec retain their actual precision. Unknown/missing/extra weights
+fail strict loading. No whole-model FP16 dequantization or external inference
+runtime is used.
 
-Backbone paper: [LFM2 Technical Report](https://arxiv.org/abs/2511.23404).
-Variant reference: [LFM2.5-Audio-1.5B official model card](https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B).
+Input uses 16-kHz features; generated audio uses 24 kHz. ASR uses `Perform ASR.`,
+TTS uses the four US/UK male/female publisher prompts, and speech-to-speech uses
+`Respond with interleaved text and audio.`. Decoder state belongs to the request.
+The codec excludes EOS frames and reconstructs a real waveform using the loaded
+ISTFT window and overlap normalization. Mimi encoding, speaker cloning, speed
+control, arbitrary OpenAI voices and multilingual/translation/timestamp guarantees
+are not supported.
 
-The diagram shows local modules, not a complete qualified speech pipeline.
-Depthformer logits require an external decoding loop to become discrete audio
-codes; the detokenizer consumes supplied codes rather than logits directly.
-Publisher codec/processor integration remains pending.
-
-## Installation and assets
-
-Install `python -m pip install -e .` from the repository root using Python 3.10+.
-Synthetic execution needs Apple Silicon/Metal. Future integration must provide
-matching text/audio configs, complete backbone/Conformer/Depthformer/detokenizer
-weights, tokenizer and modality-token metadata, processor settings, codec assets,
-and publisher-specific prompt/decoding behavior. The registered architecture alone
-does not supply that pipeline.
-
-## Available inspection and configuration examples
-
-```bash
-mlx-one inspect LiquidAI/LFM2.5-Audio-1.5B
-```
-
-Validate a compatible nested config without initializing Metal; replace the path.
-Publisher fields may require explicit mapping before this native schema accepts them.
+Streaming keeps native language-model state. The codec recomputes a bounded
+prefix and withholds the unstable overlap-add tail; it is not a cached incremental
+codec implementation. Output is bounded to 512 frames / 40.96 seconds, and token
+or resource exhaustion fails explicitly. Cancellation and generator close release
+request-owned caches without clearing another session's allocator state.
 
 ```python
-import json
-from pathlib import Path
+from mlx_one.audio import AudioEngine
 
-from mlx_one.models.audio.lfm2_audio.config import Lfm2AudioConfig
-
-payload = json.loads(Path("/path/to/lfm2-audio/config.json").read_text())
-config = Lfm2AudioConfig.from_dict(payload)
-print(config.model_type, config.preprocessor_config.sampling_rate)
+with AudioEngine("~/mlx-one-models/lfm2.5-audio-q4", offline=True) as model:
+    transcript = model.transcribe("speech.wav")
+    speech = model.generate_speech("Hello from MLX-One.", voice="uk_female")
+    speech.save("generated.wav")
+    response = model.speech_to_speech("question.wav")
+    response.save("response.wav")
 ```
 
-## Audio input and synthetic preprocessing
-
-`waveform_to_log_mel` accepts `[samples]` or `[batch, samples]` arrays and returns
-batched features. It does not infer the input sample rate; resample to the
-configured rate first. This synthetic example verifies only the frontend API,
-not publisher processor parity or intelligible speech generation.
-
-```python
-import mlx.core as mx
-
-from mlx_one.models.audio.lfm2_audio.config import AudioPreprocessorConfig
-from mlx_one.models.audio.lfm2_audio.processing import waveform_to_log_mel
-
-config = AudioPreprocessorConfig()
-waveform = mx.zeros((config.sampling_rate,), dtype=mx.float32)
-features = waveform_to_log_mel(waveform, config)
-mx.eval(features)
-print(features.shape)
-```
-
-## Limits and troubleshooting
-
-The model requires aligned audio features, token masks, and codebook dimensions.
-Its default frontend uses 16-kHz samples and 128 Mel bins, subject to the actual
-config. Conformer input width must match the frontend; Depthformer width and
-detokenizer codebook count must match the nested configuration.
-
-`mlx-one transcribe` and the public `transcribe` function execute Whisper, not
-LFM2 Audio. There is no qualified file-to-transcript, speech-generation, or
-audio-chat recipe for this family yet. Do not copy Whisper's processor or task
-prompts to bypass the missing integration.
-
-The LFM2 backbone retains convolution and attention state. Hybrid prefix restore
-and block KV are unsupported; synthetic waveform output is not ASR/TTS quality
-evidence. Shape errors require checking sample rate, Mel width, feature/token
-alignment, and codec metadata.
-
-## Implementation and validation
-
-See [configuration](config.py), [model](model.py), [preprocessing](processing.py),
-[architecture tests](../../../../../tests/test_native_lfm_architectures.py), and
-[synthetic Metal tests](../../../../../tests/test_native_lfm_mlx.py).
-
-```bash
-pytest -q tests/test_native_lfm_architectures.py
-MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_lfm_mlx.py
-```
-
-See the [family backlog](../../../../../docs/qualification/archived-evidence.md) and
-[qualification levels](../../../../../README.md#capability-levels).
+See the [download/testing runbook](../../../../../docs/AUDIO_TESTING.md),
+[benchmark methodology](../../../../../docs/benchmarks/audio/README.md),
+[native task tests](../../../../../tests/test_audio_pipeline_native.py),
+[implementation report](../../../../../docs/validation/audio-native-2026-10-24/report.md),
+and [source attribution](UPSTREAM.md). The adjacent [MIT license](UPSTREAM_LICENSE)
+covers adapted reference code; publisher checkpoint terms remain separate.

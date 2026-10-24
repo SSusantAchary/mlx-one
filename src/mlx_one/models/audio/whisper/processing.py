@@ -60,15 +60,15 @@ def decode_audio(
     *,
     ffmpeg: str = "ffmpeg",
     cancelled: Callable[[], bool] | None = None,
-    max_duration_seconds: float | None = None,
-    max_file_bytes: int | None = None,
+    max_duration_seconds: float | None = 600,
+    max_file_bytes: int | None = 64 * 1024**2,
     timeout_seconds: float = 120,
     input_format: str | None = None,
 ) -> Any:
     """Decode local audio with a timeout and optional byte/duration limits.
 
-    HTTP callers must supply both limits. Python's existing long-form file
-    workflow remains available; FFmpeg cannot fetch remote playlist resources.
+    Defaults bound local decoding to ten minutes / 64 MiB; HTTP supplies tighter
+    limits. FFmpeg cannot fetch remote playlist resources.
     """
 
     for name, value in (("max_duration_seconds", max_duration_seconds),
@@ -80,7 +80,9 @@ def decode_audio(
             raise AudioProcessingError(f"{name} must be finite and positive")
     if max_file_bytes is not None and (type(max_file_bytes) is not int or max_file_bytes < 1):
         raise AudioProcessingError("max_file_bytes must be a positive integer")
-    if input_format is not None and input_format not in {"wav", "mp3", "ogg", "mov", "matroska"}:
+    if input_format is not None and input_format not in {
+        "wav", "mp3", "ogg", "mov", "matroska", "flac", "aac"
+    }:
         raise AudioProcessingError("unsupported bounded audio input format")
 
     source = Path(path)

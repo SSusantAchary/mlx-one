@@ -78,6 +78,7 @@ class TranscriptionResult:
     revision: str | None = None
     task: Literal["transcribe", "translate"] = "transcribe"
     timings: dict[str, float] = field(default_factory=dict)
+    offset_seconds: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -117,6 +118,7 @@ class SpeechTranscript:
     task: str = "transcribe"
     timings: dict[str, float] = field(default_factory=dict)
     provenance: dict[str, Any] = field(default_factory=dict)
+    offset_seconds: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -156,6 +158,8 @@ class AudioAlignment:
     sample_rate: int = 16000
     task: Literal["align"] = "align"
     provenance: dict[str, Any] = field(default_factory=dict)
+    unmatched_words: tuple[str, ...] = ()
+    offset_seconds: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -182,5 +186,79 @@ class AudioStreamEvent:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @property
+    def is_final(self):
+        return self.kind == "final"
+
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True)
+
+
+@dataclass(frozen=True)
+class SpeechGenerationResult:
+    """Actual mono waveform output; audio duration derives from generated samples."""
+
+    waveform: Any
+    sample_rate: int
+    text: str
+    model: str
+    revision: str | None
+    timings: dict[str, float] = field(default_factory=dict)
+    provenance: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def duration(self):
+        return len(self.waveform) / self.sample_rate
+
+    def audio_bytes(self, format="wav"):
+        import io
+        import wave
+
+        import numpy as np
+
+        samples = np.asarray(self.waveform, dtype=np.float32)
+        if samples.ndim != 1 or not np.isfinite(samples).all():
+            raise ValueError("speech output must be a finite mono waveform")
+        pcm = (np.clip(samples, -1, 1) * 32767).astype("<i2").tobytes()
+        if format == "pcm":
+            return pcm
+        if format != "wav":
+            raise ValueError("supported speech output formats are wav and pcm (signed 16-bit)")
+        buffer = io.BytesIO()
+        with wave.open(buffer, "wb") as output:
+            output.setnchannels(1)
+            output.setsampwidth(2)
+            output.setframerate(self.sample_rate)
+            output.writeframes(pcm)
+        return buffer.getvalue()
+
+    def save(self, path, *, format="wav"):
+        from pathlib import Path
+
+        with Path(path).open("xb") as output:
+            output.write(self.audio_bytes(format))
+
+    def to_dict(self):
+        return {
+            "text": self.text,
+            "sample_rate": self.sample_rate,
+            "duration": self.duration,
+            "samples": len(self.waveform),
+            "model": self.model,
+            "revision": self.revision,
+            "timings": self.timings,
+            "provenance": self.provenance,
+        }
+
+
+@dataclass(frozen=True)
+class SpeechStreamEvent:
+    """Ordered generated text/PCM; exactly one completion on successful exhaustion."""
+
+    kind: Literal["text_chunk", "audio_chunk", "completion"]
+    sequence: int
+    text: str = ""
+    waveform: Any = None
+    sample_rate: int = 24000
+    sample_offset: int = 0
+    timings: dict[str, float] = field(default_factory=dict)

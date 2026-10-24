@@ -32,6 +32,8 @@ class AudioUploadError(ValueError):
 
 
 class NativeTranscriptionService:
+    family = "whisper"
+
     """Convert bounded browser audio uploads with a private Whisper bundle."""
 
     def __init__(self, bundle: LoadedWhisper) -> None:
@@ -57,6 +59,7 @@ class NativeTranscriptionService:
         language: str | None = None,
         task: str = "transcribe",
         cancel: threading.Event | None = None,
+        word_timestamps: bool = False,
     ) -> Any:
         normalized = media_type.partition(";")[0].strip().lower()
         suffix = SUPPORTED_AUDIO_TYPES.get(normalized)
@@ -87,6 +90,7 @@ class NativeTranscriptionService:
                 waveform,
                 language=language,
                 task=task,
+                word_timestamps=word_timestamps,
                 sample_rate=16000,
                 cancelled=cancel.is_set if cancel is not None else None,
             )

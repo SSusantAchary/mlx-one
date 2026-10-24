@@ -1,6 +1,9 @@
 """Public package surface for mlx-one."""
 
 from mlx_one.audio import (
+    AudioEngine,
+    AudioInput,
+    SpeechGenerationResult,
     TranscriptionResult,
     TranscriptionSegment,
     TranscriptionWord,
@@ -90,6 +93,9 @@ from mlx_one.training import SFTTrainer
 __version__ = "0.1.0a1"
 
 __all__ = [
+    "AudioEngine",
+    "AudioInput",
+    "SpeechGenerationResult",
     "NativeMathPolicy",
     "MemoryPressureConfig",
     "QualificationEnvelope",

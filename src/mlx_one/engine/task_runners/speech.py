@@ -139,7 +139,7 @@ class AudioTaskAdapter(NativeTaskAdapter):
 
     def run_steps(self,prepared,controls):
         from mlx_one.audio.qwen import align_audio
-        from mlx_one.audio.service import transcribe
+        from mlx_one.audio.service import detect_audio_language, transcribe
 
         outputs=[]
         for p,control in zip(prepared,controls,strict=True):
@@ -148,6 +148,9 @@ class AudioTaskAdapter(NativeTaskAdapter):
             try:
                 if p.task==TaskKind.ALIGNMENT:
                     output=align_audio(self.bundle,audio,cancelled=control.cancelled,**data)
+                elif p.task == TaskKind.LANGUAGE_DETECTION:
+                    output=detect_audio_language(self.bundle,audio,
+                        cancelled=control.cancelled,**data)
                 else:
                     output=transcribe(self.bundle,audio,cancelled=control.cancelled,**data)
             except Exception as error:
@@ -171,6 +174,7 @@ class AudioTaskAdapter(NativeTaskAdapter):
 
 class WhisperAdapter(AudioTaskAdapter):
     family='whisper'
+    supported_tasks=(TaskKind.TRANSCRIPTION,TaskKind.LANGUAGE_DETECTION)
 
 
 class MoonshineAdapter(AudioTaskAdapter):
@@ -179,6 +183,7 @@ class MoonshineAdapter(AudioTaskAdapter):
 
 class Qwen3ASRAdapter(AudioTaskAdapter):
     family='qwen3_asr'
+    supported_tasks=(TaskKind.TRANSCRIPTION,TaskKind.LANGUAGE_DETECTION)
 
 
 class Qwen3AlignmentAdapter(AudioTaskAdapter):

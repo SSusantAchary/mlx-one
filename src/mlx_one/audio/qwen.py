@@ -233,6 +233,7 @@ def align_audio(
             "pinned Qwen alignment limit is 180 seconds; no implicit segmentation"
         )
     units = ()
+    unmatched = ()
     if words and waveform.shape[0]:
         import mlx.core as mx
 
@@ -257,12 +258,18 @@ def align_audio(
         predicted = mx.argmax(logits[0], axis=-1).tolist()
         tick = bundle.model.config.timestamp_segment_time
         boundaries = fix_timestamps([int(value * tick) for value in predicted])
-        units = tuple(
+        candidates = tuple(
             AlignmentUnit(
                 word, round(boundaries[i * 2] / 1000, 3), round(boundaries[i * 2 + 1] / 1000, 3)
             )
             for i, word in enumerate(words)
         )
+        # Timestamp bins are predictions, not confidence scores. Out-of-clip
+        # spans are reported as unmatched instead of silently clamped to audio.
+        tolerance = tick / 1000
+        units = tuple(unit for unit in candidates
+                      if 0 <= unit.start <= unit.end <= duration + tolerance)
+        unmatched = tuple(unit.text for unit in candidates if unit not in units)
         check_resources(cancelled)
     elif words:
         raise ValueError("cannot align nonempty text to empty audio")
@@ -274,5 +281,8 @@ def align_audio(
         str(bundle.path) if isinstance(model, LoadedQwenAudio) else str(model),
         bundle.revision,
         bundle.model.config.timestamp_segment_time / 1000,
-        provenance=provenance(bundle),
+        unmatched_words=unmatched,
+        provenance={**provenance(bundle), "status": "WIP",
+                    "boundary_tolerance_seconds": bundle.model.config.timestamp_segment_time / 1000,
+                    "limitation": "historical timestamp reference disagreement unresolved"},
     )

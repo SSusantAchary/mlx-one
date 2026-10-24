@@ -98,6 +98,7 @@ class Qwen2VLForConditionalGeneration(nn.Module):
         position_ids: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> VisionLanguageModelOutput:
         embeddings = self.language_model.embed_tokens(input_ids)
         vision_states = []
@@ -150,10 +151,15 @@ class Qwen2VLForConditionalGeneration(nn.Module):
             position_ids=position_ids,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.language_model.embed_tokens.as_linear(hidden)
+        from mlx_one.ops.logits import project_logits
+
+        logits = project_logits(
+            hidden,
+            self.language_model.embed_tokens.as_linear
             if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
+            else self.lm_head,
+            logits_mode,
+            attention_mask=attention_mask,
         )
         return VisionLanguageModelOutput(
             logits,
@@ -174,7 +180,7 @@ def _replace_features(embeddings: Any, mask: Any, features: Any, kind: str) -> A
             f"{kind} feature count {features.shape[0]} does not match token count {count}"
         )
     indices = mx.maximum(mx.cumsum(flat_mask.astype(mx.int32)) - 1, 0)
-    replacements = features[indices].reshape(embeddings.shape)
+    replacements = features[indices].reshape(embeddings.shape).astype(embeddings.dtype)
     return mx.where(mask[..., None], replacements, embeddings)
 
 

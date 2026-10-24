@@ -92,7 +92,8 @@ def audit(root, dist):
         record["status"] = (
             "PASS"
             if actual == expected
-            and len(notices) == 4
+            and len(notices) == 6
+            and any(n.endswith("models/vision_language/UPSTREAM_LICENSE") for n in notices)
             and len(ui_notices) == 1
             and len(tq3_notices) == 1
             and len(derived_notices) == 4

@@ -11,6 +11,7 @@ import click
 
 from mlx_one import __version__
 from mlx_one.audio import ASRDecodeOptions, QwenASROptions, WhisperDecodeOptions, transcribe
+from mlx_one.audio.cli import audio_group
 from mlx_one.audio.evaluation import (
     ASR_PROFILES,
     ASREvaluationError,
@@ -103,6 +104,50 @@ from mlx_one.segmentation.cli import segment_command, track_command
 
 main.add_command(segment_command)
 main.add_command(track_command)
+
+
+@main.command("vlm", help="Generate text from local static images using native MLX.")
+@click.option("--model", required=True, help="Checkpoint directory or Hugging Face ID.")
+@click.option("--image", multiple=True, type=click.Path(exists=True, dir_okay=False), required=True)
+@click.option("--prompt", required=True)
+@click.option("--max-tokens", default=128, type=click.IntRange(min=1), show_default=True)
+@click.option("--temperature", default=0.0, type=click.FloatRange(min=0))
+@click.option("--revision")
+@click.option("--offline", is_flag=True)
+@click.option("--stream", is_flag=True)
+@click.option("--json-output", is_flag=True)
+def vlm_command(
+    model, image, prompt, max_tokens, temperature, revision, offline, stream, json_output
+):
+    from mlx_one.vision import VisionLanguageEngine
+
+    if stream and json_output:
+        raise click.UsageError("--stream and --json-output cannot be combined")
+    options = TextGenerationOptions(max_tokens=max_tokens, temperature=temperature)
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                *({"type": "image", "image": path} for path in image),
+                {"type": "text", "text": prompt},
+            ],
+        }
+    ]
+    try:
+        with VisionLanguageEngine(model, revision=revision, offline=offline) as engine:
+            if stream:
+                iterator = engine.stream(messages=messages, options=options)
+                try:
+                    for chunk in iterator:
+                        click.echo(chunk.text, nl=False)
+                    click.echo()
+                finally:
+                    iterator.close()
+            else:
+                result = engine.generate(messages=messages, options=options)
+                click.echo(result.to_json() if json_output else result.text)
+    except (ValueError, RuntimeError, OSError) as exc:
+        raise click.ClickException(str(exc)) from exc
 
 
 @main.command(help="Check host and MLX backend readiness.")
@@ -376,7 +421,9 @@ def generate_command(
     click.echo(result.to_json() if as_json else result.text)
 
 
-@main.command("serve", help="Serve a native text model with an OpenAI-compatible API and UI.")
+@main.command(
+    "serve", help="Serve a native text or static-image VLM with an OpenAI-compatible API and UI."
+)
 @click.argument("model")
 @click.option("--host", default="127.0.0.1", show_default=True)
 @click.option("--port", type=click.IntRange(min=1, max=65535), default=8888, show_default=True)
@@ -686,7 +733,7 @@ def serve_command(
             memory_admission = MemoryAdmission.detect()
             if inference_mode in ACTOR_MODES:
                 engine.bind_actor(scheduler)
-            if warmup:
+            if warmup and not hasattr(bundle, "audio"):
                 def warmup_stream(cancel):
                     return engine.stream(
                         model=manager.model_info().id,
@@ -1395,6 +1442,10 @@ def merge() -> None:
 def ship() -> None:
     """Placeholder for release bundles and publishing."""
     click.echo("Quality-gated release bundles — planned for v1.0.0")
+
+
+# Keep the existing top-level transcription commands as compatible entry points.
+main.add_command(audio_group)
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ from mlx_one.server.schemas import (
     EmbeddingRequest,
     RerankRequest,
 )
-from mlx_one.server.transcription import MAX_AUDIO_BYTES, AudioUploadError
+from mlx_one.server.transcription import MAX_AUDIO_BYTES
 from mlx_one.text import TextGenerationOptions
 
 
@@ -56,7 +56,7 @@ class BodyLimitMiddleware:
             32 * 1024**2
             if path == "/v1/chat/completions"
             else 26 * 1024**2
-            if path == "/v1/audio/transcriptions"
+            if path.startswith("/v1/audio/")
             else self.limit
         )
         headers = dict(scope.get("headers", ()))
@@ -207,7 +207,29 @@ def create_app(
         engine.bind_actor(jobs)
     bearer = HTTPBearer(auto_error=False)
     services = dict(task_services or {})
-    images = image_resolver or ImageResolver()
+    try:
+        if "image" in getattr(manager.model_info(), "modalities", ()):
+            services.setdefault("vision", engine)
+    except RuntimeError:
+        pass
+    owned_audio_service = None
+    try:
+        primary_audio = getattr(manager.current_model(), "audio", None)
+        if primary_audio is not None:
+            from mlx_one.server.audio import NativeAudioService
+
+            audio_service = NativeAudioService(primary_audio)
+            owned_audio_service = audio_service
+            family = manager.model_info().architecture
+            if family == "qwen3_forced_aligner":
+                services.setdefault("alignment", audio_service)
+            else:
+                services.setdefault("transcription", audio_service)
+            if family == "lfm2_audio":
+                services.setdefault("speech", audio_service)
+    except RuntimeError:
+        pass
+    images = image_resolver or ImageResolver(allow_remote=False)
     bearer_dependency = Depends(bearer)
 
     principal_secret = uuid.uuid4().bytes
@@ -242,8 +264,6 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-        yield
-
         def release() -> None:
             close_engine = getattr(engine, "close", None)
             if callable(close_engine):
@@ -252,9 +272,14 @@ def create_app(
                 clear_caches = getattr(engine, "clear_caches", None)
                 if callable(clear_caches):
                     clear_caches()
+            if owned_audio_service is not None:
+                owned_audio_service.close()
             manager.unload()
 
-        jobs.close(finalizer=release)
+        try:
+            yield
+        finally:
+            jobs.close(finalizer=release)
 
     from mlx_one import __version__
 
@@ -475,6 +500,8 @@ def create_app(
             exposed_model = manager.model_info().id
             if body.model != exposed_model:
                 return _error(404, f"model {body.model!r} is not loaded", "invalid_request_error")
+            if hasattr(bundle, "audio"):
+                return _error(400, "use the audio endpoints for this model", "capability_error")
             effective_reasoning = body.reasoning or settings.reasoning
             effective_reasoning_budget = (
                 body.reasoning_budget
@@ -807,61 +834,9 @@ def create_app(
             "results": [dict(item) for item in items],
         }
 
-    @app.post("/v1/audio/transcriptions")
-    async def audio_transcriptions(
-        request: Request,
-        auth: None | JSONResponse = authorization_dependency,
-    ) -> Any:
-        if auth is not None:
-            return auth
-        service = services.get("transcription")
-        if service is None:
-            return _error(
-                400,
-                "the loaded model does not support transcription",
-                "capability_error",
-            )
-        try:
-            form = await request.form()
-            model = str(form.get("model", ""))
-            invalid = _validate_task_model(manager, model)
-            if invalid is not None:
-                return invalid
-            uploaded = form.get("file")
-            if uploaded is None or not hasattr(uploaded, "read"):
-                return _error(422, "file is required", "invalid_request_error")
-            audio = await uploaded.read()
-            if len(audio) > MAX_AUDIO_BYTES:
-                return _error(413, "audio file exceeds 25 MiB", "invalid_request_error")
-            result = await _call_service(
-                jobs,
-                service,
-                audio,
-                media_type=str(getattr(uploaded, "content_type", "") or ""),
-                language=form.get("language"),
-                task=str(form.get("task", "transcribe")),
-                request=request,
-            )
-        except QueueFullError:
-            return _error(429, "task queue is full", "rate_limit_error")
-        except RequestTimeoutError as exc:
-            return _error(408, str(exc), "timeout_error")
-        except AudioUploadError as exc:
-            return _error(415, str(exc), "invalid_request_error")
-        except ClientDisconnected:
-            return _error(499, "client disconnected", "cancelled_error")
-        except Exception as exc:
-            return _error(500, str(exc), "server_error")
-        payload = result.to_dict() if hasattr(result, "to_dict") else result
-        return {
-            "text": payload.get("text", ""),
-            **({"language": payload["language"]} if payload.get("language") else {}),
-            "mlx": {
-                key: value
-                for key, value in payload.items()
-                if key in {"duration", "segments", "timings"}
-            },
-        }
+    from mlx_one.server.audio import install_audio_routes
+
+    install_audio_routes(app, manager, jobs, services, authorization_dependency)
 
     assets = Path(ui_dir) if ui_dir is not None else Path(str(files("mlx_one").joinpath("ui/dist")))
 

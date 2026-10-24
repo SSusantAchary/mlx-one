@@ -12,6 +12,7 @@ from mlx_one.models.language.lfm2.config import Lfm2Config
 
 @dataclass(frozen=True)
 class Lfm2VisionConfig:
+    model_type: str = "mlx_one_legacy"
     hidden_size: int = 768
     intermediate_size: int = 3072
     num_hidden_layers: int = 12
@@ -24,6 +25,9 @@ class Lfm2VisionConfig:
     layer_norm_eps: float = 1e-6
     hidden_act: str = "gelu"
     use_projection_layernorm: bool = True
+    num_patches: int | None = None
+    projector_hidden_size: int | None = None
+    projector_bias: bool = True
     extra: Mapping[str, Any] = field(default_factory=dict, repr=False)
 
     def __post_init__(self) -> None:
@@ -50,8 +54,14 @@ class Lfm2VisionConfig:
             "downsample_factor",
             self.downsample_factor,
         )
-        if self.hidden_act not in {"gelu", "quick_gelu"}:
+        if self.hidden_act not in {"gelu", "quick_gelu", "gelu_pytorch_tanh"}:
             raise ConfigError(f"unsupported LFM vision activation: {self.hidden_act}")
+        if self.model_type not in {"mlx_one_legacy", "lfm2_vl", "siglip2_vision_model"}:
+            raise ConfigError("unsupported LFM vision tower")
+        if self.num_patches is not None and (
+            self.num_patches < 1 or int(self.num_patches**0.5) ** 2 != self.num_patches
+        ):
+            raise ConfigError("SigLIP2 position table must be a positive square")
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> Lfm2VisionConfig:
@@ -103,6 +113,18 @@ class Lfm2VLConfig:
         payload = {key: value for key, value in data.items() if key in known}
         payload["model_type"] = str(data.get("model_type", "lfm2_vl")).replace("-", "_")
         payload["text_config"] = Lfm2Config.from_dict(text)
+        vision = dict(vision)
+        if vision.get("model_type") == "siglip2_vision_model":
+            vision.setdefault(
+                "image_size",
+                int(vision.get("num_patches", 256) ** 0.5) * vision.get("patch_size", 16),
+            )
+            vision["downsample_factor"] = data.get("downsample_factor", 2)
+            vision["projection_dim"] = payload["text_config"].hidden_size
+            vision["projector_hidden_size"] = data.get("projector_hidden_size", 2560)
+            vision["use_projection_layernorm"] = data.get("projector_use_layernorm", True)
+            vision["projector_bias"] = data.get("projector_bias", True)
+        payload["image_token_id"] = data.get("image_token_id", data.get("image_token_index"))
         payload["vision_config"] = Lfm2VisionConfig.from_dict(vision)
         payload["extra"] = extras(data, known)
         try:

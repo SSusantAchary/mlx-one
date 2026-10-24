@@ -11,22 +11,21 @@ from mlx_one.models.vision_language.qwen2_vl.config import Qwen2VLConfig
 
 
 def sanitize_weights(weights: dict[str, Any], config: Qwen2VLConfig) -> dict[str, Any]:
-    sanitized = {}
-    for name, value in weights.items():
-        if name.endswith("rotary_emb.inv_freq"):
+    from mlx_one.models.shared.vlm_weights import canonical_name, patch_weight
+
+    result = {}
+    for original, value in weights.items():
+        if original.endswith(("rotary_emb.inv_freq", "position_ids")):
             continue
-        if name.startswith("model.language_model."):
-            name = name.removeprefix("model.")
-        elif name.startswith("model."):
-            name = f"language_model.{name.removeprefix('model.')}"
-        name = name.replace("visual.merger.mlp.0.", "visual.merger.mlp_0.")
-        name = name.replace("visual.merger.mlp.2.", "visual.merger.mlp_2.")
-        sanitized[name] = value
-    patch_name = "visual.patch_embed.proj.weight"
-    if patch_name in sanitized and sanitized[patch_name].ndim == 5:
-        weight = sanitized[patch_name]
-        sanitized[patch_name] = weight.reshape(weight.shape[0], -1)
-    return sanitized
+        name = canonical_name(original, "qwen2_vl")
+        if config.tie_word_embeddings and name.startswith("lm_head."):
+            continue
+        if name == "visual.patch_embed.proj.weight":
+            value = patch_weight(value, config.vision_config.in_channels)
+        if name in result:
+            raise ValueError(f"duplicate VLM tensor mapping: {name}")
+        result[name] = value
+    return result
 
 
 def weight_contract(config: Qwen2VLConfig) -> WeightContract:

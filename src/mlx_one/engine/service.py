@@ -78,8 +78,9 @@ class InferenceService:
     def _task_lease(self,name,task):
         from mlx_one.engine.actor import InferenceActor
         from mlx_one.engine.cache import array_nbytes
-        from mlx_one.engine.contracts import TaskKind
+        from mlx_one.engine.contracts import TaskKind, canonical_task
 
+        task = canonical_task(task)
         with self._lock:
             if self._closed:
                 raise RuntimeError("inference service is closed")
@@ -92,11 +93,14 @@ class InferenceService:
                 from mlx_one.vision.loading import load_vlm_model
 
                 loader=load_vlm_model
-            elif task in {TaskKind.TRANSCRIPTION,TaskKind.ALIGNMENT}:
+            elif task in {TaskKind.TRANSCRIPTION,TaskKind.ALIGNMENT,TaskKind.LANGUAGE_DETECTION,
+                          TaskKind.SPEECH_GENERATION,TaskKind.SPEECH_TO_SPEECH}:
                 from mlx_one.audio.loading import load_audio_model
 
                 loader=load_audio_model
-                settings=dict(settings,task="align" if task==TaskKind.ALIGNMENT else "transcribe")
+                settings=dict(settings,task={TaskKind.ALIGNMENT:"align",
+                    TaskKind.SPEECH_GENERATION:"synthesize",
+                    TaskKind.SPEECH_TO_SPEECH:"speech-to-speech"}.get(task,"transcribe"))
             elif task in {TaskKind.IMAGE_SEGMENTATION,TaskKind.MASK_GENERATION,
                           TaskKind.VIDEO_SEGMENTATION}:
                 from mlx_one.segmentation.loading import load_segmentation_model
@@ -110,7 +114,9 @@ class InferenceService:
 
                 loader=load_retrieval_model
         lease=self.pool.acquire(name,lambda:loader(model,**settings) if loader else model,
-            estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters()))
+            estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters()) + (
+                array_nbytes(b.codec.parameters()) + array_nbytes(getattr(b.codec, '_window', None))
+                if getattr(b, 'codec', None) is not None else 0))
         return actor,lease
 
     def open_audio_session(self,name,*,sample_rate,language=None,options=None,

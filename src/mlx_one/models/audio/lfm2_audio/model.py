@@ -205,6 +205,15 @@ def overlap_add(frames: Any, hop_length: int) -> Any:
 
 
 class Lfm2AudioForConditionalGeneration(nn.Module):
+    def __new__(cls, config):
+        from .checkpoint_config import LFM2AudioConfig
+
+        if isinstance(config, LFM2AudioConfig):
+            from .native import NativeLFMAudio
+
+            return NativeLFMAudio(config)
+        return super().__new__(cls)
+
     def __init__(self, config: Lfm2AudioConfig) -> None:
         super().__init__()
         self.config = config

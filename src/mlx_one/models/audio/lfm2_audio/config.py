@@ -133,6 +133,10 @@ class Lfm2AudioConfig:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> Lfm2AudioConfig:
+        if "lfm" in data:
+            from .checkpoint_config import LFM2AudioConfig
+
+            return LFM2AudioConfig.from_dict(dict(data))
         text = data.get("text_config")
         if not isinstance(text, Mapping):
             raise ConfigError("LFM2-Audio requires text_config")

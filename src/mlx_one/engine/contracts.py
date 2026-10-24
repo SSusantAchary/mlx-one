@@ -303,7 +303,10 @@ class TaskKind(str, Enum):
     RERANKING = "reranking"
     TRANSCRIPTION = "transcription"
     ALIGNMENT = "alignment"
+    LANGUAGE_DETECTION = "language-detection"
     AUDIO_LANGUAGE = "audio-language"
+    SPEECH_GENERATION = "speech-generation"
+    SPEECH_TO_SPEECH = "speech-to-speech"
     IMAGE_SEGMENTATION = "image-segmentation"
     MASK_GENERATION = "mask-generation"
     VIDEO_SEGMENTATION = "video-segmentation"
@@ -311,7 +314,10 @@ class TaskKind(str, Enum):
 
 def canonical_task(task: str | TaskKind) -> TaskKind:
     return TaskKind({"asr": "transcription", "transcribe": "transcription",
-                     "align": "alignment"}.get(task, task))
+                     "align": "alignment", "audio.transcribe": "transcription",
+                     "audio.align": "alignment", "audio.detect_language": "language-detection",
+                     "audio.generate_speech": "speech-generation",
+                     "audio.speech_to_speech": "speech-to-speech"}.get(task, task))
 
 
 class StageKind(str, Enum):

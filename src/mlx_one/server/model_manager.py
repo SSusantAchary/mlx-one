@@ -67,14 +67,14 @@ class ModelManager:
                 identity_options["checkpoint_path"] = checkpoint_path
             if expected_files is not None:
                 identity_options["expected_files"] = expected_files
-            self._bundle_lease = self._pool.acquire(self._bundle_key, lambda: load_text_model(
+            self._bundle_lease = self._pool.acquire(self._bundle_key, lambda: _load_serving_model(
                 model_id,
                 revision=revision,
                 offline=offline,
                 cache_dir=cache_dir,
                 tokenizer_source=tokenizer_source,
                 **identity_options,
-            ))
+            ), measure=lambda bundle: getattr(bundle, "resident_bytes", 0))
             self._bundle = self._bundle_lease.runtime.value
             if (
                 self._context_length is not None
@@ -208,7 +208,18 @@ class ModelManager:
 
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
+        if hasattr(bundle, "audio"):
+            from mlx_one.core.registry import get_registration
+
+            registration = get_registration(bundle.architecture)
+            return ModelMetadata(id=self._alias or bundle.model_id,
+                architecture=bundle.architecture, context_length=bundle.context_length,
+                parameter_count=None, quantization=bundle.quantization, revision=bundle.revision,
+                tasks=tuple(sorted(registration.tasks)), modalities=("audio",))
         tasks = ("text-generation",)
+        vision = hasattr(bundle, "processor")
+        if vision:
+            tasks += ("vision-language",)
         if self.transcription_model() is not None:
             tasks += ("transcription",)
         return ModelMetadata(
@@ -219,6 +230,7 @@ class ModelManager:
             quantization=dict(bundle.quantization),
             revision=bundle.revision,
             tasks=tasks,
+            modalities=("text", "image") if vision else ("text",),
         )
 
 
@@ -248,3 +260,41 @@ def _tokenizer_fingerprint(tokenizer: Any) -> tuple[object, ...]:
         getattr(tokenizer, "eos_token_id", None),
         getattr(tokenizer, "pad_token_id", None),
     )
+
+
+def _load_serving_model(model_id, **options):
+    import json
+
+    from mlx_one.audio.loading import audio_model_type
+    from mlx_one.core.registry import get_registration
+    from mlx_one.server.audio import serving_audio
+
+    local = Path(model_id).expanduser()
+    if (local / "config.json").is_file():
+        payload = json.loads((local / "config.json").read_text())
+        family = audio_model_type(payload)
+        if get_registration(family).modality in {"asr", "tts", "audio-language"}:
+            return serving_audio(model_id, local, **{k: v for k, v in options.items()
+                if k in {"revision", "offline", "cache_dir"}})
+
+    from mlx_one.text.loading import TextModelLoadError
+    from mlx_one.vision.loading import attach_vision_processor, load_vlm_model
+
+    try:
+        bundle = load_text_model(model_id, **options)
+    except TextModelLoadError as exc:
+        if "has no native text loader" not in str(exc):
+            raise
+        if (
+            options.get("checkpoint_path")
+            or options.get("expected_files")
+            or options.get("tokenizer_source")
+        ):
+            raise ValueError(
+                "VLM serving requires tokenizer and processor in the same checkpoint"
+            ) from exc
+        return load_vlm_model(
+            model_id,
+            **{k: v for k, v in options.items() if k in {"revision", "offline", "cache_dir"}},
+        )
+    return attach_vision_processor(bundle)

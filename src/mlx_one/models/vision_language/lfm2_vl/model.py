@@ -9,6 +9,7 @@ mlx-one implementation notes: Native MLX vision-language assembly and LFM2 hybri
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from typing import Any
 
@@ -56,7 +57,14 @@ class VisionBlock(nn.Module):
     def __call__(self, value: Any) -> Any:
         value = value + self.self_attn(self.layer_norm1(value))
         hidden = self.fc1(self.layer_norm2(value))
-        hidden = nn.gelu(hidden) if self.activation == "gelu" else quick_gelu(hidden)
+        if self.activation == "gelu_pytorch_tanh":
+            hidden = (
+                0.5
+                * hidden
+                * (1 + mx.tanh(math.sqrt(2 / math.pi) * (hidden + 0.044715 * hidden**3)))
+            )
+        else:
+            hidden = nn.gelu(hidden) if self.activation == "gelu" else quick_gelu(hidden)
         return value + self.fc2(hidden)
 
 
@@ -67,16 +75,31 @@ class Lfm2VisionTransformer(nn.Module):
         patch_dim = config.num_channels * config.patch_size**2
         self.patch_embedding = nn.Linear(patch_dim, config.hidden_size, bias=True)
         grid = config.image_size // config.patch_size
-        self.position_embedding = nn.Embedding(grid * grid, config.hidden_size)
+        self.position_embedding = nn.Embedding(
+            config.num_patches or grid * grid, config.hidden_size
+        )
         self.blocks = [VisionBlock(config) for _ in range(config.num_hidden_layers)]
         self.post_layernorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         merged = config.hidden_size * config.downsample_factor**2
         self.projector_norm = (
-            nn.LayerNorm(merged, eps=config.layer_norm_eps)
+            nn.LayerNorm(
+                merged,
+                eps=(
+                    1e-5 if config.model_type == "siglip2_vision_model" else config.layer_norm_eps
+                ),
+            )
             if config.use_projection_layernorm
             else None
         )
-        self.projector = nn.Linear(merged, config.projection_dim, bias=True)
+        if config.projector_hidden_size is None:
+            self.projector = nn.Linear(merged, config.projection_dim, bias=True)
+        else:
+            self.projector_1 = nn.Linear(
+                merged, config.projector_hidden_size, bias=config.projector_bias
+            )
+            self.projector_2 = nn.Linear(
+                config.projector_hidden_size, config.projection_dim, bias=config.projector_bias
+            )
 
     def __call__(
         self, pixel_patches: Any, spatial_shapes: Sequence[Sequence[int]]
@@ -90,7 +113,8 @@ class Lfm2VisionTransformer(nn.Module):
         for index, shape in enumerate(spatial_shapes):
             height, width = (int(item) for item in shape)
             length = height * width
-            hidden = self.patch_embedding(pixel_patches[index : index + 1, :length])
+            dtype = getattr(self.patch_embedding, "scales", self.patch_embedding.weight).dtype
+            hidden = self.patch_embedding(pixel_patches[index : index + 1, :length].astype(dtype))
             hidden = hidden + self._position_embeddings(height, width)[None, ...]
             for block in self.blocks:
                 hidden = block(hidden)
@@ -99,10 +123,17 @@ class Lfm2VisionTransformer(nn.Module):
             merged = pixel_unshuffle(hidden, height, width, self.config.downsample_factor)
             if self.projector_norm is not None:
                 merged = self.projector_norm(merged)
-            projected.append(self.projector(merged)[0])
+            projection = (
+                self.projector(merged)
+                if self.config.projector_hidden_size is None
+                else self.projector_2(nn.gelu(self.projector_1(merged)))
+            )
+            projected.append(projection[0])
         return mx.concatenate(projected, axis=0), mx.concatenate(encoded, axis=0)
 
     def _position_embeddings(self, height: int, width: int) -> Any:
+        if self.config.model_type == "siglip2_vision_model":
+            return naflex_position_embeddings(self.position_embedding.weight, height, width)
         base = self.config.image_size // self.config.patch_size
         if height > base or width > base:
             raise ValueError("vision grid exceeds configured image size")
@@ -122,12 +153,42 @@ class Lfm2VisionTransformer(nn.Module):
         return (top * (1 - row_mix) + bottom * row_mix).reshape(height * width, -1)
 
 
+def naflex_position_embeddings(table, height, width):
+    """SigLIP2 bilinear antialias interpolation, align_corners=False.
+
+    Derived from the SigLIP2 / MLX-VLM resize contract; only MLX executes tensors.
+    Separating each view excludes padded patches from attention entirely.
+    """
+    side = math.isqrt(table.shape[0])
+    if side * side != table.shape[0]:
+        raise ValueError("SigLIP2 position table must be square")
+
+    def weights(output):
+        scale = side / output
+        support = max(scale, 1.0)
+        rows = []
+        for index in range(output):
+            center = (index + 0.5) * scale - 0.5
+            row = [max(0.0, 1 - abs(source - center) / support) for source in range(side)]
+            total = sum(row)
+            rows.append([value / total for value in row])
+        return mx.array(rows, mx.float32)
+
+    values = table.astype(mx.float32).reshape(side, side, -1)
+    vertical = mx.einsum("hs,swc->hwc", weights(height), values)
+    result = mx.einsum("ws,hsc->hwc", weights(width), vertical)
+    return result.reshape(height * width, -1).astype(table.dtype)
+
+
 def pixel_unshuffle(value: Any, height: int, width: int, factor: int) -> Any:
-    if height % factor or width % factor:
-        raise ValueError("vision grid must be divisible by downsample_factor")
     batch, length, channels = value.shape
-    if length != height * width:
+    if length != height * width or min(height, width, factor) < 1:
         raise ValueError("vision token count does not match spatial shape")
+    value = value.reshape(batch, height, width, channels)
+    ph, pw = (-height) % factor, (-width) % factor
+    if ph or pw:
+        value = mx.pad(value, ((0, 0), (0, ph), (0, pw), (0, 0)))
+    height, width = height + ph, width + pw
     value = value.reshape(batch, height // factor, factor, width // factor, factor, channels)
     return value.transpose(0, 1, 3, 2, 4, 5).reshape(
         batch, height * width // factor**2, channels * factor**2
@@ -148,8 +209,9 @@ class Lfm2VLForConditionalGeneration(nn.Module):
     def make_cache(self):
         from mlx_one.core.cache import make_hybrid_caches
 
-        return make_hybrid_caches(self.config.text_config.layer_types,
-                                  self.config.text_config.conv_L_cache)
+        return make_hybrid_caches(
+            self.config.text_config.layer_types, self.config.text_config.conv_L_cache
+        )
 
     def __call__(
         self,
@@ -160,6 +222,7 @@ class Lfm2VLForConditionalGeneration(nn.Module):
         attention_mask: Any | None = None,
         cache: tuple[Any, ...] | None = None,
         output_hidden_states: bool = False,
+        logits_mode=None,
     ) -> VisionLanguageModelOutput:
         embeddings = self.language_model.embed_tokens(input_ids)
         vision_states = None
@@ -177,10 +240,15 @@ class Lfm2VLForConditionalGeneration(nn.Module):
             attention_mask=attention_mask,
             output_hidden_states=output_hidden_states,
         )
-        logits = (
-            self.language_model.embed_tokens.as_linear(hidden)
+        from mlx_one.ops.logits import project_logits
+
+        logits = project_logits(
+            hidden,
+            self.language_model.embed_tokens.as_linear
             if self.config.tie_word_embeddings
-            else self.lm_head(hidden)
+            else self.lm_head,
+            logits_mode,
+            attention_mask=attention_mask,
         )
         return VisionLanguageModelOutput(
             logits,
@@ -198,5 +266,5 @@ def replace_image_features(embeddings: Any, mask: Any, features: Any) -> Any:
             f"image feature count {features.shape[0]} does not match token count {count}"
         )
     indices = mx.maximum(mx.cumsum(mask.reshape(-1).astype(mx.int32)) - 1, 0)
-    replacements = features[indices].reshape(embeddings.shape)
+    replacements = features[indices].reshape(embeddings.shape).astype(embeddings.dtype)
     return mx.where(mask[..., None], replacements, embeddings)

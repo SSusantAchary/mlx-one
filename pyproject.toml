@@ -68,6 +68,7 @@ server = [
     "uvicorn>=0.30,<1",
 ]
 vision = ["pillow>=10,<13"]
+audio = []  # Native MLX/NumPy/tokenizers are core; encoded media additionally requires FFmpeg.
 dev = [
     "fastapi>=0.115,<1",
     "httpx>=0.27,<1",
@@ -88,6 +89,8 @@ where = ["src"]
 [tool.setuptools.package-data]
 mlx_one = [
     "models/UPSTREAM_LICENSE",
+    "models/vision_language/UPSTREAM_LICENSE",
+    "models/vision_language/UPSTREAM.md",
     "quantization/turboquant/LICENSE.txt",
     "quantization/turboquant/NOTICE.txt",
     "data/*.json",
@@ -99,6 +102,8 @@ mlx_one = [
     "models/language/gemma3/UPSTREAM_LICENSE",
     "models/language/phi3/UPSTREAM_LICENSE",
     "models/segmentation/sam3/NOTICE.md",
+    "models/audio/lfm2_audio/UPSTREAM_LICENSE",
+    "models/audio/lfm2_audio/UPSTREAM.md",
     "models/audio/parakeet/NOTICE",
     "models/audio/moonshine/NOTICE",
     "models/audio/qwen3_asr/NOTICE",
