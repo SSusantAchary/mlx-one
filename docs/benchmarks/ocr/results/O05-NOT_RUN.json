@@ -1,0 +1,17 @@
+{
+  "schema_version": "mlx-one-ocr-benchmark-v1",
+  "status": "NOT_RUN",
+  "checkpoint": "mlx-community/PaddleOCR-VL-1.5-4bit",
+  "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+  "task": "ocr.document",
+  "workload": "OCR-S3",
+  "measurement_type": "direct-model",
+  "hardware": null,
+  "metrics": {
+    "latency_seconds": null,
+    "pages_per_second": null,
+    "cer": null,
+    "peak_mlx_memory_gib": null
+  },
+  "precision": "Affine Q4"
+}

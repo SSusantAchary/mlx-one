@@ -1,0 +1,685 @@
+{
+  "schema_version": "mlx-one-ocr-hand10-v1",
+  "status": "MEASURED",
+  "checkpoint": "mlx-community/DeepSeek-OCR-4bit",
+  "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+  "id": "O07",
+  "name": "DeepSeek-OCR",
+  "precision_label": "Affine Q4",
+  "dataset": "toghrultahirov/handwritten_text_ocr",
+  "dataset_revision": "3762d848764659233b02278e97751de068a1eebf",
+  "sample_sha256": "2496397e2752ca6d7a480721258e6a40f933cdd715de74eda5fda0c396ba5b5d",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.document",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 10,
+    "max_tokens": 128,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized plain-text references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "065e1939c2a8a0806db6b14948f83fabb7dfd1afb750b28286618dc6dcc1984e",
+  "runner_sha256": "e46cc4fac73dca23948d33c8b0d1eff6588c436f11e009469ea17821450fb5c9",
+  "samples": [
+    {
+      "id": "1737",
+      "image_sha256": "9bb0d68afa05f14ad7fc372f39b88066b5214ddc4eeb0b1df62edf3c5674e251",
+      "status": "OK",
+      "latency_seconds": 6.661038499994902,
+      "transcript": "a prominently, a man of clean tools crossed with",
+      "output_tokens": 10,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.06551641700207256,
+            "encoder_seconds": 3.0329542079998646,
+            "generation_seconds": 3.5611188340117224,
+            "text_prefill_seconds": 3.4656338329950813,
+            "decode_forward_seconds": 0.09070812494610436,
+            "total_seconds": 6.659626084001502,
+            "first_token_seconds": 6.565412124997238
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006920000014360994,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              4003,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 10,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 14,
+        "reference_characters": 48,
+        "word_edits": 5,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1552",
+      "image_sha256": "34bb7adb7f213b246918e47922699d599e8634877fad30d99fd2980106bdb090",
+      "status": "OK",
+      "latency_seconds": 6.792774000001373,
+      "transcript": "pve occupied , and it seemed that the",
+      "output_tokens": 9,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.06660579099843744,
+            "encoder_seconds": 3.2369280830025673,
+            "generation_seconds": 3.488201583008049,
+            "text_prefill_seconds": 3.4018118749954738,
+            "decode_forward_seconds": 0.08150266803568229,
+            "total_seconds": 6.791820290993201,
+            "first_token_seconds": 6.707139833000838
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.000443041994003579,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2113,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 9,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 2,
+        "reference_characters": 36,
+        "word_edits": 2,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "921",
+      "image_sha256": "08190758eb5e323b1d15fda2be31cc11eb89c1c7bd736964c0f84140f6767cb8",
+      "status": "OK",
+      "latency_seconds": 6.703640459003509,
+      "transcript": "<smiles>Genuously enough in his own fashion</smiles>",
+      "output_tokens": 16,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.06962687498889863,
+            "encoder_seconds": 3.0800257499940926,
+            "generation_seconds": 3.553111415996682,
+            "text_prefill_seconds": 3.41036150000582,
+            "decode_forward_seconds": 0.13662512697919738,
+            "total_seconds": 6.70280020798964,
+            "first_token_seconds": 6.560828457993921
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.00035858299816027284,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1449,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 16,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 19,
+        "reference_characters": 38,
+        "word_edits": 3,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "802",
+      "image_sha256": "ab5e6666e75c6cdbc24027e285606f72364702f692b6d591b425f86c747d1dc4",
+      "status": "OK",
+      "latency_seconds": 6.626637917011976,
+      "transcript": "The mere thought of Subterranean travel",
+      "output_tokens": 8,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.0670492089993786,
+            "encoder_seconds": 3.1095127909939038,
+            "generation_seconds": 3.4491209160041763,
+            "text_prefill_seconds": 3.3729986660036957,
+            "decode_forward_seconds": 0.07223020899982657,
+            "total_seconds": 6.625718333991244,
+            "first_token_seconds": 6.550697250000667
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0004361249884823337,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1977,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 8,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 1,
+        "reference_characters": 39,
+        "word_edits": 1,
+        "reference_words": 6
+      }
+    },
+    {
+      "id": "2770",
+      "image_sha256": "e848e5d7228b8e291613717ed4208a83adc4be8f5ba106185420a8d8998f0bd8",
+      "status": "OK",
+      "latency_seconds": 6.780226916001993,
+      "transcript": "\" Sylee-ES 2 \" he lowered his eyes and kissed her on the",
+      "output_tokens": 18,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.07028962500044145,
+            "encoder_seconds": 3.061103334010113,
+            "generation_seconds": 3.647917750000488,
+            "text_prefill_seconds": 3.4489353749959264,
+            "decode_forward_seconds": 0.18989170702116098,
+            "total_seconds": 6.779348625001148,
+            "first_token_seconds": 6.582569165999303
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.00029741699108853936,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1835,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 18,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 7,
+        "reference_characters": 54,
+        "word_edits": 2,
+        "reference_words": 13
+      }
+    },
+    {
+      "id": "2340",
+      "image_sha256": "b8cf6ae9e7c8a979a53226f83b9a9d4c4a4c1c2b86736eb08f76ab8ac5099e2f",
+      "status": "OK",
+      "latency_seconds": 6.727599165998981,
+      "transcript": "Somewhat embarrassing, what?\" \"How can the",
+      "output_tokens": 10,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.09963566598889884,
+            "encoder_seconds": 3.2294220000039786,
+            "generation_seconds": 3.397592833993258,
+            "text_prefill_seconds": 3.302777667006012,
+            "decode_forward_seconds": 0.0897811260074377,
+            "total_seconds": 6.7267401659919415,
+            "first_token_seconds": 6.633483790996252
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0003292920009698719,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1536,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 10,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 4,
+        "reference_characters": 46,
+        "word_edits": 7,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1817",
+      "image_sha256": "50f5e172a695d727a263e7ec40194d4e3fac4e5ebd61c43dadd212765ebe4323",
+      "status": "OK",
+      "latency_seconds": 6.625092833011877,
+      "transcript": "fortitude, it now falleth the with",
+      "output_tokens": 9,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.07071212500159163,
+            "encoder_seconds": 3.169678499994916,
+            "generation_seconds": 3.3837877079931786,
+            "text_prefill_seconds": 3.2980101669963915,
+            "decode_forward_seconds": 0.08183245598047506,
+            "total_seconds": 6.624236167001072,
+            "first_token_seconds": 6.539361250004731
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.000382583006285131,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1691,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 9,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 6,
+        "reference_characters": 34,
+        "word_edits": 4,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "295",
+      "image_sha256": "9bed68500642ce09d2c08c4bc7c3d63ee7a9de7609771bd924bf7d6ccbed62a5",
+      "status": "OK",
+      "latency_seconds": 6.656414166005561,
+      "transcript": "(3) I will redeem you. (4) I will take you to me for a",
+      "output_tokens": 19,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.06752079099533148,
+            "encoder_seconds": 3.031432499992661,
+            "generation_seconds": 3.556841290992452,
+            "text_prefill_seconds": 3.3945269170071697,
+            "decode_forward_seconds": 0.15291708100994583,
+            "total_seconds": 6.655838332997519,
+            "first_token_seconds": 6.494813915996929
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0002892499906010926,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1693,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 19,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 5,
+        "reference_characters": 59,
+        "word_edits": 8,
+        "reference_words": 19
+      }
+    },
+    {
+      "id": "1675",
+      "image_sha256": "94dbdb2683ab8c099d03125419f4e939cb6f174e0aa934f494762083e2d33f8b",
+      "status": "OK",
+      "latency_seconds": 6.506005458999425,
+      "transcript": "minions out of the way.",
+      "output_tokens": 7,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.08028104199911468,
+            "encoder_seconds": 3.032039416008047,
+            "generation_seconds": 3.392237791995285,
+            "text_prefill_seconds": 3.308866457999102,
+            "decode_forward_seconds": 0.07984158302133437,
+            "total_seconds": 6.50463787499757,
+            "first_token_seconds": 6.422338749995106
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0008145409956341609,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              3111,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 7,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 26,
+        "reference_characters": 43,
+        "word_edits": 8,
+        "reference_words": 9
+      }
+    },
+    {
+      "id": "1489",
+      "image_sha256": "d697580269fa585e35de5f92a432904b30ee3f05d51e8bdd7a742c302455b9ec",
+      "status": "OK",
+      "latency_seconds": 6.770972833008273,
+      "transcript": "He love you is beautiful, not beautiful",
+      "output_tokens": 8,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.06930558300518896,
+            "encoder_seconds": 3.216531790996669,
+            "generation_seconds": 3.48426733299857,
+            "text_prefill_seconds": 3.4077087919868063,
+            "decode_forward_seconds": 0.07304958297754638,
+            "total_seconds": 6.770146750001004,
+            "first_token_seconds": 6.694334790998255
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.000331750008626841,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 1183,
+            "prompt_tokens": 1188,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1752,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O07",
+            "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+            "architecture": "deepseek_ocr",
+            "output_tokens": 8,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 3.809510899707675,
+      "peak_process_memory_gib": 2.99835205078125,
+      "accuracy": {
+        "character_edits": 23,
+        "reference_characters": 37,
+        "word_edits": 6,
+        "reference_words": 6
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "README.md",
+      "bytes": 653,
+      "sha256": "193d116cf49b39d68746cddda295986e91ef78ef4df80b509cf02a4f34ce6253"
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 191,
+      "sha256": "b4e4771e69892ebc712ed6986bcce490c65041d1545e85599cd4a531cfab98a5"
+    },
+    {
+      "path": "chat_template.json",
+      "bytes": 217,
+      "sha256": "9aec9391d364b0da5bdee6af557e3d76b3e2ae999610888186df2679f7b27ef7"
+    },
+    {
+      "path": "config.json",
+      "bytes": 3398,
+      "sha256": "c96a8d4289ab3fd3b7409ccfb5da56ba0a36d2a74a0f2c7d3b21ad3804540234"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 2451214926,
+      "sha256": "cf97cb093ef54cd6847bf088d31fb5b507d5fd6e23f6f14ec486f2ec1e03c2eb"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 72573,
+      "sha256": "e408a502fa4df68cd92c201ca83e62522bf6545c5ba080de3c54357ea6e1680a"
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 460,
+      "sha256": "0fe7ba9aa6b967a90e4af40d43c8030cbdd3dbcfbb387b8907625d5e54f0dbbe"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 801,
+      "sha256": "ab4bd57ce17d62e39e0a39e739de1e407484f090f0b2c7e391312bca7a5b061a"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 9979544,
+      "sha256": "a02f8fd5228c90256bb4f6554c34a579d48f909e5beb232dc4afad870b55a8b4"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 577,
+      "sha256": "fe8b80f22dd322ca2c50a2ed97daabdbf4a672cd21ff90bf4a9851574bb3f9d4"
+    }
+  ],
+  "load_seconds": 0.6327687909943052,
+  "precision": {
+    "bits": 4,
+    "group_size": 64,
+    "mode": "affine"
+  },
+  "warmup_seconds": 6.433978500004741,
+  "metrics": {
+    "attempted": 10,
+    "completed": 10,
+    "failed": 0,
+    "truncated": 0,
+    "median_latency_seconds": 6.6823394794992055,
+    "completed_pages_per_second": 0.1495877311664781,
+    "corpus_cer": 0.2465437788018433,
+    "corpus_wer": 0.48936170212765956,
+    "max_peak_mlx_memory_gib": 3.809510899707675,
+    "actual_output_tokens": 114,
+    "inference_seconds": 66.85040224903787
+  }
+}

@@ -1,0 +1,676 @@
+{
+  "schema_version": "mlx-one-ocr-hand10-v1",
+  "status": "MEASURED",
+  "checkpoint": "microsoft/Florence-2-base-ft",
+  "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+  "id": "O04",
+  "name": "Florence-2 Base FT",
+  "precision_label": "FP16",
+  "dataset": "toghrultahirov/handwritten_text_ocr",
+  "dataset_revision": "3762d848764659233b02278e97751de068a1eebf",
+  "sample_sha256": "2496397e2752ca6d7a480721258e6a40f933cdd715de74eda5fda0c396ba5b5d",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.recognize",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 10,
+    "max_tokens": 128,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized plain-text references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "eeccbb4f38590c7b46e10886df06bde2e1a17f7da8d6286f744801c3fb47964f",
+  "runner_sha256": "3413dbe6c247389809b215fcddba7ce484fae183c93ffb035cbd38613b015f64",
+  "samples": [
+    {
+      "id": "1737",
+      "image_sha256": "9bb0d68afa05f14ad7fc372f39b88066b5214ddc4eeb0b1df62edf3c5674e251",
+      "status": "OK",
+      "latency_seconds": 0.2383685829991009,
+      "transcript": "M",
+      "output_tokens": 2,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01860095800657291,
+            "encoder_seconds": 0.205658292004955,
+            "generation_seconds": 0.012077749997843057,
+            "text_prefill_seconds": 0.0059006249939557165,
+            "decode_forward_seconds": 0.005457124003442004,
+            "total_seconds": 0.23636708299454767,
+            "first_token_seconds": 0.2303105000028154
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0015700419899076223,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              4003,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 2,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.201126754283905,
+      "peak_process_memory_gib": 0.646209716796875,
+      "accuracy": {
+        "character_edits": 48,
+        "reference_characters": 48,
+        "word_edits": 10,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1552",
+      "image_sha256": "34bb7adb7f213b246918e47922699d599e8634877fad30d99fd2980106bdb090",
+      "status": "OK",
+      "latency_seconds": 0.28706562500155997,
+      "transcript": "mocapil 4/1 Wocu 4/1",
+      "output_tokens": 14,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.009167333002551459,
+            "encoder_seconds": 0.20867033398826607,
+            "generation_seconds": 0.06794937499216758,
+            "text_prefill_seconds": 0.009038457996211946,
+            "decode_forward_seconds": 0.053495875996304676,
+            "total_seconds": 0.2858927499910351,
+            "first_token_seconds": 0.22729687500395812
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0004383340128697455,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2113,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 14,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.6605987548828125,
+      "accuracy": {
+        "character_edits": 29,
+        "reference_characters": 36,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "921",
+      "image_sha256": "08190758eb5e323b1d15fda2be31cc11eb89c1c7bd736964c0f84140f6767cb8",
+      "status": "OK",
+      "latency_seconds": 0.2957813749962952,
+      "transcript": "mleude mauin inh ih sun fahil",
+      "output_tokens": 15,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.016519040989805944,
+            "encoder_seconds": 0.21047070900385734,
+            "generation_seconds": 0.06715762500243727,
+            "text_prefill_seconds": 0.0074250000034226105,
+            "decode_forward_seconds": 0.05432424900936894,
+            "total_seconds": 0.294209707994014,
+            "first_token_seconds": 0.23466670799825806
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0007455839950125664,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1449,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 15,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.6605987548828125,
+      "accuracy": {
+        "character_edits": 23,
+        "reference_characters": 38,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "802",
+      "image_sha256": "ab5e6666e75c6cdbc24027e285606f72364702f692b6d591b425f86c747d1dc4",
+      "status": "OK",
+      "latency_seconds": 0.2900116670061834,
+      "transcript": "the mee height of wirtenen trell",
+      "output_tokens": 13,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.016559457988478243,
+            "encoder_seconds": 0.21059491600317415,
+            "generation_seconds": 0.06098224999732338,
+            "text_prefill_seconds": 0.00784708300489001,
+            "decode_forward_seconds": 0.04808029301057104,
+            "total_seconds": 0.2882057499955408,
+            "first_token_seconds": 0.23529320799570996
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0009338750096503645,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1977,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 13,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.6690826416015625,
+      "accuracy": {
+        "character_edits": 15,
+        "reference_characters": 39,
+        "word_edits": 5,
+        "reference_words": 6
+      }
+    },
+    {
+      "id": "2770",
+      "image_sha256": "e848e5d7228b8e291613717ed4208a83adc4be8f5ba106185420a8d8998f0bd8",
+      "status": "OK",
+      "latency_seconds": 0.3158460830018157,
+      "transcript": "Sle:s, he hlod his eyes and lssed my on the",
+      "output_tokens": 19,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01728279099916108,
+            "encoder_seconds": 0.21081670800049324,
+            "generation_seconds": 0.08664395799860358,
+            "text_prefill_seconds": 0.008781084005022421,
+            "decode_forward_seconds": 0.07069495800533332,
+            "total_seconds": 0.31483316600497346,
+            "first_token_seconds": 0.2372707909962628
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0005940840055700392,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1835,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 19,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.6761322021484375,
+      "accuracy": {
+        "character_edits": 20,
+        "reference_characters": 54,
+        "word_edits": 7,
+        "reference_words": 13
+      }
+    },
+    {
+      "id": "2340",
+      "image_sha256": "b8cf6ae9e7c8a979a53226f83b9a9d4c4a4c1c2b86736eb08f76ab8ac5099e2f",
+      "status": "OK",
+      "latency_seconds": 0.3028143330011517,
+      "transcript": "Somewhat enuortresiny what; \"Hew can the",
+      "output_tokens": 16,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01780950000102166,
+            "encoder_seconds": 0.21076095900207292,
+            "generation_seconds": 0.07276254100725055,
+            "text_prefill_seconds": 0.007832000002963468,
+            "decode_forward_seconds": 0.05897166999056935,
+            "total_seconds": 0.30139933299506083,
+            "first_token_seconds": 0.23667091599781998
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0005246669898042455,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1536,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 16,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.67633056640625,
+      "accuracy": {
+        "character_edits": 15,
+        "reference_characters": 46,
+        "word_edits": 7,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1817",
+      "image_sha256": "50f5e172a695d727a263e7ec40194d4e3fac4e5ebd61c43dadd212765ebe4323",
+      "status": "OK",
+      "latency_seconds": 0.2960137920017587,
+      "transcript": "littlid, Ima Hled lh, my north",
+      "output_tokens": 15,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.016684250003891066,
+            "encoder_seconds": 0.20990549999987707,
+            "generation_seconds": 0.06827062500815373,
+            "text_prefill_seconds": 0.008830625010887161,
+            "decode_forward_seconds": 0.05384604196297005,
+            "total_seconds": 0.29494612499547657,
+            "first_token_seconds": 0.2358205829950748
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0007014580041868612,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1691,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 15,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.676422119140625,
+      "accuracy": {
+        "character_edits": 25,
+        "reference_characters": 34,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "295",
+      "image_sha256": "9bed68500642ce09d2c08c4bc7c3d63ee7a9de7609771bd924bf7d6ccbed62a5",
+      "status": "OK",
+      "latency_seconds": 0.30816691600193735,
+      "transcript": "3) will rellu you. W will rellate you to me for",
+      "output_tokens": 18,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.016305666998960078,
+            "encoder_seconds": 0.21083158400142565,
+            "generation_seconds": 0.07963654199556913,
+            "text_prefill_seconds": 0.00881083300919272,
+            "decode_forward_seconds": 0.06419454497518018,
+            "total_seconds": 0.30686083299224265,
+            "first_token_seconds": 0.2363444999937201
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006334169884212315,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1693,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 18,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.676513671875,
+      "accuracy": {
+        "character_edits": 23,
+        "reference_characters": 59,
+        "word_edits": 13,
+        "reference_words": 19
+      }
+    },
+    {
+      "id": "1675",
+      "image_sha256": "94dbdb2683ab8c099d03125419f4e939cb6f174e0aa934f494762083e2d33f8b",
+      "status": "OK",
+      "latency_seconds": 0.24355191600625403,
+      "transcript": "M",
+      "output_tokens": 2,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.014273708002292551,
+            "encoder_seconds": 0.2096025000064401,
+            "generation_seconds": 0.017223959002876654,
+            "text_prefill_seconds": 0.00859104200208094,
+            "decode_forward_seconds": 0.007666666992008686,
+            "total_seconds": 0.24117595799907576,
+            "first_token_seconds": 0.23279241599084344
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0011308749963063747,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              3111,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 2,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.6831207275390625,
+      "accuracy": {
+        "character_edits": 43,
+        "reference_characters": 43,
+        "word_edits": 9,
+        "reference_words": 9
+      }
+    },
+    {
+      "id": "1489",
+      "image_sha256": "d697580269fa585e35de5f92a432904b30ee3f05d51e8bdd7a742c302455b9ec",
+      "status": "OK",
+      "latency_seconds": 0.6998306669993326,
+      "transcript": "w.o. m. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w. w",
+      "output_tokens": 128,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.016831917004310526,
+            "encoder_seconds": 0.2105897909932537,
+            "generation_seconds": 0.47129604099609423,
+            "text_prefill_seconds": 0.008413417002884671,
+            "decode_forward_seconds": 0.41788833898317534,
+            "total_seconds": 0.6987982499995269,
+            "first_token_seconds": 0.2361736250022659
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006484999903477728,
+            "processed_size": [
+              768,
+              768
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1752,
+              128
+            ],
+            "model": "/tmp/mlx-one-ocr-100-20261025/models/O04",
+            "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+            "architecture": "florence2",
+            "output_tokens": 128,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.2011420130729675,
+      "peak_process_memory_gib": 0.69000244140625,
+      "accuracy": {
+        "character_edits": 184,
+        "reference_characters": 37,
+        "word_edits": 63,
+        "reference_words": 6
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383"
+    },
+    {
+      "path": "README.md",
+      "bytes": 14820,
+      "sha256": "092b90e814cd6c15f734b15a81e294b4d12c92d12bff3c674a9474ca935ecd1c"
+    },
+    {
+      "path": "config.json",
+      "bytes": 2430,
+      "sha256": "c666d0fe0172d46e115e8fba6cd93cd83714575b33a73005cab8d24ce2a3aa8f"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 463221266,
+      "sha256": "58757d657ff44051314c8030b68e04cb1bb618ca9a4885418f111f6fb708185a"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 806,
+      "sha256": "2f5921bbc53c7cc04251e1027b45b1cec726276be6db23d1bb40641bfbe2cf29"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1355863,
+      "sha256": "847bbeab6174d66a88898f729d52fa8d355fafe1bea101cf960dd404581df70e"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 34,
+      "sha256": "79ffcf43af8ebda99d165f61d243180da2e2639952e41e71e11611c18770489c"
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 1099884,
+      "sha256": "394fdc63c71aabe0a9b97117f5d62fb5fcc4d59b2b3ea929a3929e6a53217b3c"
+    }
+  ],
+  "load_seconds": 0.33752587500202935,
+  "precision": {
+    "mode": "floating",
+    "dtypes": [
+      "float16"
+    ]
+  },
+  "warmup_seconds": 0.27349866600707173,
+  "metrics": {
+    "attempted": 10,
+    "completed": 10,
+    "failed": 0,
+    "truncated": 1,
+    "median_latency_seconds": 0.29589758349902695,
+    "completed_pages_per_second": 3.0511516819481255,
+    "corpus_cer": 0.9792626728110599,
+    "corpus_wer": 1.4361702127659575,
+    "max_peak_mlx_memory_gib": 1.2011420130729675,
+    "actual_output_tokens": 242,
+    "inference_seconds": 3.2774509570153896
+  }
+}

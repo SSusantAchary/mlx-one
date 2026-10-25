@@ -1,0 +1,76 @@
+{
+  "generator": "pillow 12.3.0",
+  "license": "CC0-1.0; generated project fixtures",
+  "fixtures": [
+    {
+      "id": "OCR-S1",
+      "name": "line",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S1.png",
+      "reference": "Invoice number 12345",
+      "kind": "synthetic",
+      "sha256": "e9381b36feab3af02c141d312576a5977ee47de38c988fd8f9476f24312d1634"
+    },
+    {
+      "id": "OCR-S2",
+      "name": "receipt",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S2.png",
+      "reference": "SHOP\n2026-10-25\nTotal 42.50",
+      "kind": "synthetic",
+      "sha256": "9c5a53d6499282c2040f637554961b1af5429b8b3f4014bab016313b5744ed66"
+    },
+    {
+      "id": "OCR-S3",
+      "name": "page",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S3.png",
+      "reference": "Document heading\nFirst paragraph.\nSecond paragraph.",
+      "kind": "synthetic",
+      "sha256": "e26416571e29adf016b2b8d386f6ca8324df8e358594a516ce0078e724002609"
+    },
+    {
+      "id": "OCR-S4",
+      "name": "dense",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S4.png",
+      "reference": "Left column text.\nRight column text.\nFootnote one.",
+      "kind": "synthetic",
+      "sha256": "dba9d27998ddd7a8f3ae6fb8cb504cdbcf61559991e937e10ca7fd841becf8cb"
+    },
+    {
+      "id": "OCR-S5",
+      "name": "table",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S5.png",
+      "reference": "Name | Quantity\nApple | 3\nPear | 2",
+      "kind": "synthetic",
+      "sha256": "7a6922a68e2783afa44df21e752676101a35f9112dcb42497623ae9c5bec3f6c"
+    },
+    {
+      "id": "OCR-S6",
+      "name": "formula",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S6.png",
+      "reference": "E = mc^2",
+      "kind": "synthetic",
+      "sha256": "60f34b90a491131475438b3766e45a1b8067d113fb6f2c53fae5a9586b8ebc7d"
+    },
+    {
+      "id": "OCR-S9",
+      "name": "degraded",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S9.png",
+      "reference": "Read this degraded document.",
+      "kind": "synthetic",
+      "sha256": "4a8ecf51a58912d1c9f3d7801db4875ef113c9c140dc8ad9509c35777bc6c244"
+    },
+    {
+      "id": "OCR-S7",
+      "name": "ten-page PDF",
+      "path": "docs/benchmarks/ocr/fixtures/OCR-S7.pdf",
+      "reference": "Page 1\n\nPage 2\n\nPage 3\n\nPage 4\n\nPage 5\n\nPage 6\n\nPage 7\n\nPage 8\n\nPage 9\n\nPage 10",
+      "kind": "synthetic",
+      "sha256": "dc017c6ea324b731dfe9f3592a92f512fc3add1107d794683877b2af3079ec36"
+    }
+  ],
+  "missing": [
+    {
+      "id": "OCR-S8",
+      "reason": "Provide licensed real handwriting and transcript; printed synthetic text is not a handwriting benchmark."
+    }
+  ]
+}

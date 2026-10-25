@@ -1,0 +1,24 @@
+{
+  "schema": "mlx-one-audio-workloads-v1",
+  "TTS-S1": {
+    "text": "Hello from MLX One. This short speech sample helps measure native audio generation on Apple Silicon. Please speak clearly and naturally while keeping every sentence easy to understand and follow.",
+    "words": 30,
+    "default_voice": "us_male"
+  },
+  "audio_fixtures": {
+    "policy": "Pinned licensed fixtures; download only through an explicitly invoked fixture command",
+    "durations_seconds": {
+      "ASR-S1": 10,
+      "ASR-S2": 60,
+      "ASR-S3": 600,
+      "ASR-S4": 10,
+      "ASR-S5": 10,
+      "ALIGN-S1": 10,
+      "STS-S1": 10,
+      "STS-HF-Q1": 2.04
+    },
+    "stream_chunk_seconds": 2,
+    "manifest": "docs/benchmarks/audio/fixtures/librispeech-s1/manifest.json",
+    "question_manifest": "docs/benchmarks/audio/fixtures/librispeech-s1/sts-question-manifest.json"
+  }
+}

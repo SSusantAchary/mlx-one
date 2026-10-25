@@ -1,0 +1,1506 @@
+{
+  "schema_version": "mlx-one-ocr-omni100-v1",
+  "status": "FAILED",
+  "checkpoint": "microsoft/Florence-2-base-ft",
+  "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+  "id": "O04",
+  "name": "Florence-2 Base FT",
+  "precision_label": "FP16",
+  "dataset": "getomni-ai/ocr-benchmark",
+  "dataset_revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+  "sample_sha256": "adbca43d95dc8a4ab050e7b23de61d45c5d091d26d18c54d2049b7905921a8a3",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.recognize",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 100,
+    "max_tokens": 1024,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized Markdown references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "eeccbb4f38590c7b46e10886df06bde2e1a17f7da8d6286f744801c3fb47964f",
+  "runner_sha256": "ae5f4e9f0050a6e52f8b6baf9be7fbd049a0024604121de5e74f30184329ce92",
+  "samples": [
+    {
+      "id": "434",
+      "image_sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+      "status": "FAILED",
+      "latency_seconds": 0.026907792009296827,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1016,
+        "reference_characters": 1016,
+        "word_edits": 154,
+        "reference_words": 154
+      }
+    },
+    {
+      "id": "388",
+      "image_sha256": "9cfe98c401da955f2572c594ca73b36ce4c84edf8e3b5d0a7979da66c6a19fc1",
+      "status": "FAILED",
+      "latency_seconds": 0.06970570799603593,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3612,
+        "reference_characters": 3612,
+        "word_edits": 638,
+        "reference_words": 638
+      }
+    },
+    {
+      "id": "799",
+      "image_sha256": "336fea21c795c6dfd6789c77af4322f1452e36285419925668b9f87031b392e1",
+      "status": "FAILED",
+      "latency_seconds": 0.035648083008709364,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1114,
+        "reference_characters": 1114,
+        "word_edits": 220,
+        "reference_words": 220
+      }
+    },
+    {
+      "id": "230",
+      "image_sha256": "3b8e980800114ab859b20005c6b69c061449189193db7ce78729dbb92dfb8e74",
+      "status": "FAILED",
+      "latency_seconds": 0.035445375004201196,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1480,
+        "reference_characters": 1480,
+        "word_edits": 341,
+        "reference_words": 341
+      }
+    },
+    {
+      "id": "200",
+      "image_sha256": "d8b0632728a9f69294a3b57e57763fb88a3a3ecd877cfc937ed2e68aef40a8f7",
+      "status": "FAILED",
+      "latency_seconds": 0.01997316699998919,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2070,
+        "reference_characters": 2070,
+        "word_edits": 367,
+        "reference_words": 367
+      }
+    },
+    {
+      "id": "692",
+      "image_sha256": "80d4c6150040ddbe1d463a3baee823ad95106dcbf3594dd98ea7b478ea1891d1",
+      "status": "FAILED",
+      "latency_seconds": 0.01734804199077189,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3226,
+        "reference_characters": 3226,
+        "word_edits": 510,
+        "reference_words": 510
+      }
+    },
+    {
+      "id": "736",
+      "image_sha256": "5f3a880b66d5ec265d37fc53dee5946dcf6d7affb1d6fe0f6fdbaf95fe5dd541",
+      "status": "FAILED",
+      "latency_seconds": 0.042776250003953464,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2999,
+        "reference_characters": 2999,
+        "word_edits": 514,
+        "reference_words": 514
+      }
+    },
+    {
+      "id": "585",
+      "image_sha256": "dca1ef4b01f7a118657cbbff62ce27cb56379f04adb17735e228b63051c73355",
+      "status": "FAILED",
+      "latency_seconds": 0.05149704200448468,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2610,
+        "reference_characters": 2610,
+        "word_edits": 353,
+        "reference_words": 353
+      }
+    },
+    {
+      "id": "900",
+      "image_sha256": "c7a1556431ab4dbe23cb80dbc157f48e58934a4190b3f69b1d7e43b700383ab1",
+      "status": "FAILED",
+      "latency_seconds": 0.025431083995499648,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3457,
+        "reference_characters": 3457,
+        "word_edits": 837,
+        "reference_words": 837
+      }
+    },
+    {
+      "id": "454",
+      "image_sha256": "b156a9119872fe04f3eda70c0ee95de0762b4fc50a101fbc993ebaea7a7544cc",
+      "status": "FAILED",
+      "latency_seconds": 0.022979875007877126,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1629,
+        "reference_characters": 1629,
+        "word_edits": 304,
+        "reference_words": 304
+      }
+    },
+    {
+      "id": "73",
+      "image_sha256": "9165218b9ac92eaf74777d6b60663f0238dcf0bbee48e430c263dcae3c392c14",
+      "status": "FAILED",
+      "latency_seconds": 0.0318841669941321,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 4652,
+        "reference_characters": 4652,
+        "word_edits": 1114,
+        "reference_words": 1114
+      }
+    },
+    {
+      "id": "836",
+      "image_sha256": "3b87b2a404cc96d66b377ddfd0308fd14c178f5542d57cc0c9ba5522e95017cb",
+      "status": "FAILED",
+      "latency_seconds": 0.012684500004979782,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1238,
+        "reference_characters": 1238,
+        "word_edits": 218,
+        "reference_words": 218
+      }
+    },
+    {
+      "id": "925",
+      "image_sha256": "9297eecbeb848810ac1bffbe520254ed88eb031054edc1e3686727b898351d9b",
+      "status": "FAILED",
+      "latency_seconds": 0.02231275000667665,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2165,
+        "reference_characters": 2165,
+        "word_edits": 378,
+        "reference_words": 378
+      }
+    },
+    {
+      "id": "418",
+      "image_sha256": "a98ea40e356bc1c3cecb8478e8b48e1cc93700cec36ed3c1d79ffb8720a36708",
+      "status": "FAILED",
+      "latency_seconds": 0.04209508400526829,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2319,
+        "reference_characters": 2319,
+        "word_edits": 695,
+        "reference_words": 695
+      }
+    },
+    {
+      "id": "372",
+      "image_sha256": "a65046c23441063e5db97bbdbe7c6f328334b536b82bef89598daeb69aa9a1c6",
+      "status": "FAILED",
+      "latency_seconds": 0.022793291005655192,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 969,
+        "reference_characters": 969,
+        "word_edits": 216,
+        "reference_words": 216
+      }
+    },
+    {
+      "id": "964",
+      "image_sha256": "668218a3932ae8eb2fd4fb594cc971cec96151898fa14f71730269ef9624a112",
+      "status": "FAILED",
+      "latency_seconds": 0.04794116700941231,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2640,
+        "reference_characters": 2640,
+        "word_edits": 474,
+        "reference_words": 474
+      }
+    },
+    {
+      "id": "147",
+      "image_sha256": "10bf1dfaaefeddfa065160120c478ee915118de61d6c46615e20f840730c2e33",
+      "status": "FAILED",
+      "latency_seconds": 0.05192625000199769,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3702,
+        "reference_characters": 3702,
+        "word_edits": 423,
+        "reference_words": 423
+      }
+    },
+    {
+      "id": "784",
+      "image_sha256": "a08fea292c5e3072a1700d9937e11468554fef2385cdc5a737eebbd49951e1e2",
+      "status": "FAILED",
+      "latency_seconds": 0.01663058299163822,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3118,
+        "reference_characters": 3118,
+        "word_edits": 426,
+        "reference_words": 426
+      }
+    },
+    {
+      "id": "706",
+      "image_sha256": "26d9120f9965a2591765faea1de3c63490c5af6985ff92c0b33360e465b79663",
+      "status": "FAILED",
+      "latency_seconds": 0.058300124990637414,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1020,
+        "reference_characters": 1020,
+        "word_edits": 115,
+        "reference_words": 115
+      }
+    },
+    {
+      "id": "947",
+      "image_sha256": "9a06d9b9659b8d771cba42fffaf5637d13853c53e9611d310e5d92a8a18af5ce",
+      "status": "FAILED",
+      "latency_seconds": 0.014224541999283247,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1676,
+        "reference_characters": 1676,
+        "word_edits": 285,
+        "reference_words": 285
+      }
+    },
+    {
+      "id": "138",
+      "image_sha256": "6c3a0f33860356cae39925e58d86364db3d98407d081713f02aeb615684ae442",
+      "status": "FAILED",
+      "latency_seconds": 0.03748924999672454,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1864,
+        "reference_characters": 1864,
+        "word_edits": 395,
+        "reference_words": 395
+      }
+    },
+    {
+      "id": "52",
+      "image_sha256": "136a8c44dda39b96f80787cdba19c267088e8292c9c27cef24abe70f50de4e5a",
+      "status": "FAILED",
+      "latency_seconds": 0.013329666995559819,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1194,
+        "reference_characters": 1194,
+        "word_edits": 175,
+        "reference_words": 175
+      }
+    },
+    {
+      "id": "347",
+      "image_sha256": "40db1b5502bdd96d5832642479024c780a167a1f2425efd1b61398a4afc4c274",
+      "status": "FAILED",
+      "latency_seconds": 0.03015058299934026,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 5213,
+        "reference_characters": 5213,
+        "word_edits": 829,
+        "reference_words": 829
+      }
+    },
+    {
+      "id": "451",
+      "image_sha256": "a03d1e69d0a89a60b5fdd0e92fdfa4b8282cebfd20289e53462e80123ece589c",
+      "status": "FAILED",
+      "latency_seconds": 0.04178633300762158,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1914,
+        "reference_characters": 1914,
+        "word_edits": 375,
+        "reference_words": 375
+      }
+    },
+    {
+      "id": "398",
+      "image_sha256": "94f489b6e65ccc14b1162908fdd054875dd33ef00e097ef5bef5d2a7d4a78cd7",
+      "status": "FAILED",
+      "latency_seconds": 0.05889904200739693,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3166,
+        "reference_characters": 3166,
+        "word_edits": 557,
+        "reference_words": 557
+      }
+    },
+    {
+      "id": "640",
+      "image_sha256": "02ade8fe3d60ec1e90fcbe4ff95a6a3b264c398e6ee5fe35898d7340068bd3fb",
+      "status": "FAILED",
+      "latency_seconds": 0.013709708000533283,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2025,
+        "reference_characters": 2025,
+        "word_edits": 436,
+        "reference_words": 436
+      }
+    },
+    {
+      "id": "775",
+      "image_sha256": "e813f3af00a5c3b2b236a958dd89c3b27c2561d8e5010989c2330442c8726e50",
+      "status": "FAILED",
+      "latency_seconds": 0.029093917008140124,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1654,
+        "reference_characters": 1654,
+        "word_edits": 284,
+        "reference_words": 284
+      }
+    },
+    {
+      "id": "77",
+      "image_sha256": "b52160ba1224f045985eacd2362ee16c0004e09d931c230b2242ce1f64dddb3b",
+      "status": "FAILED",
+      "latency_seconds": 0.03226179200282786,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2249,
+        "reference_characters": 2249,
+        "word_edits": 397,
+        "reference_words": 397
+      }
+    },
+    {
+      "id": "930",
+      "image_sha256": "825dbd930b329a8355e18a67480a674bf7f126d621f5f6405616d1ec2dc46452",
+      "status": "FAILED",
+      "latency_seconds": 0.03504083299776539,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1922,
+        "reference_characters": 1922,
+        "word_edits": 354,
+        "reference_words": 354
+      }
+    },
+    {
+      "id": "366",
+      "image_sha256": "33085cfa0e9e1a062f86574333769b7d17126fe009c827cd2ebd6cbb82f3656f",
+      "status": "FAILED",
+      "latency_seconds": 0.04698337499576155,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3395,
+        "reference_characters": 3395,
+        "word_edits": 606,
+        "reference_words": 606
+      }
+    },
+    {
+      "id": "596",
+      "image_sha256": "b774c66053481707cc3ced7fa80ce12d4ac44e8f70baaf4da2e64eed0f009f03",
+      "status": "FAILED",
+      "latency_seconds": 0.029528708997531794,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1656,
+        "reference_characters": 1656,
+        "word_edits": 284,
+        "reference_words": 284
+      }
+    },
+    {
+      "id": "637",
+      "image_sha256": "359e1c1d3a8f1e0e4efa04362a408cd3ac515e81fe9a143546c1ee8f98273110",
+      "status": "FAILED",
+      "latency_seconds": 0.00983591600379441,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 194,
+        "reference_characters": 194,
+        "word_edits": 43,
+        "reference_words": 43
+      }
+    },
+    {
+      "id": "84",
+      "image_sha256": "838c8620335e5c1aa7ace058a3eed85c9b23b0d1bab0c9a8b7ebdd988f1952d3",
+      "status": "FAILED",
+      "latency_seconds": 0.03257587499683723,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1307,
+        "reference_characters": 1307,
+        "word_edits": 282,
+        "reference_words": 282
+      }
+    },
+    {
+      "id": "711",
+      "image_sha256": "71675877375d3729ae11432cd1ee3791d097b9ab8e586e2a89baea69267810a1",
+      "status": "FAILED",
+      "latency_seconds": 0.01651237500482239,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3204,
+        "reference_characters": 3204,
+        "word_edits": 581,
+        "reference_words": 581
+      }
+    },
+    {
+      "id": "495",
+      "image_sha256": "4a81b0c72dd2d4421d56dea7283b4ab7fcd022ed5edbcf285f1a02f950a6c55b",
+      "status": "FAILED",
+      "latency_seconds": 0.04221770899312105,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2034,
+        "reference_characters": 2034,
+        "word_edits": 437,
+        "reference_words": 437
+      }
+    },
+    {
+      "id": "594",
+      "image_sha256": "dbe9cc5dd6adcf887c0f52a1ec493544713202df08b6656b7100d66f315491d2",
+      "status": "FAILED",
+      "latency_seconds": 0.023198167007649317,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1574,
+        "reference_characters": 1574,
+        "word_edits": 292,
+        "reference_words": 292
+      }
+    },
+    {
+      "id": "952",
+      "image_sha256": "6b6bc051fa0e5aac731e9e143cdba84b8bba6ce8a1c1ea56117d270184932736",
+      "status": "FAILED",
+      "latency_seconds": 0.028320832992903888,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2276,
+        "reference_characters": 2276,
+        "word_edits": 668,
+        "reference_words": 668
+      }
+    },
+    {
+      "id": "847",
+      "image_sha256": "7a5940a89d12773ea2bb7947d65daafa45c385de2312020e3bf0fc1c50605f99",
+      "status": "FAILED",
+      "latency_seconds": 0.027541792005649768,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 5109,
+        "reference_characters": 5109,
+        "word_edits": 841,
+        "reference_words": 841
+      }
+    },
+    {
+      "id": "44",
+      "image_sha256": "2439c63077ccc2b1f8254c72862c56332298206689f0a34584aa95c6449de7a5",
+      "status": "FAILED",
+      "latency_seconds": 0.008204583005863242,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 4,
+        "reference_characters": 4,
+        "word_edits": 1,
+        "reference_words": 1
+      }
+    },
+    {
+      "id": "609",
+      "image_sha256": "fea2fc9c2486039c3ef9f05f5654a495503659ffe0a37146f3654b4c89f983d4",
+      "status": "FAILED",
+      "latency_seconds": 0.03220749998581596,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2719,
+        "reference_characters": 2719,
+        "word_edits": 307,
+        "reference_words": 307
+      }
+    },
+    {
+      "id": "648",
+      "image_sha256": "d8ed29836c6529f6b7a700e70c9b9085e25ef1d68b1fa8dae01413d651c787cb",
+      "status": "FAILED",
+      "latency_seconds": 0.022513709001941606,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 331,
+        "reference_characters": 331,
+        "word_edits": 37,
+        "reference_words": 37
+      }
+    },
+    {
+      "id": "942",
+      "image_sha256": "5ec893405921a800bc14b2bb0b828bf1e0ae9605e13884098d9ad0e59dfc5755",
+      "status": "FAILED",
+      "latency_seconds": 0.029282917006639764,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1662,
+        "reference_characters": 1662,
+        "word_edits": 284,
+        "reference_words": 284
+      }
+    },
+    {
+      "id": "62",
+      "image_sha256": "d0e7a2b5ea35dddc9ee461fae551d7319002cce0e51104df648afa7be35c3707",
+      "status": "FAILED",
+      "latency_seconds": 0.00030304100073408335,
+      "transcript": "",
+      "error": "ValueError: decoded page exceeds pixel limit",
+      "accuracy": {
+        "character_edits": 1319,
+        "reference_characters": 1319,
+        "word_edits": 208,
+        "reference_words": 208
+      }
+    },
+    {
+      "id": "102",
+      "image_sha256": "7a4e0fc66cea123983bdb7b20bbea8dff6e99d932257209f43e14349c6d8c2d0",
+      "status": "FAILED",
+      "latency_seconds": 0.02913129200169351,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1429,
+        "reference_characters": 1429,
+        "word_edits": 187,
+        "reference_words": 187
+      }
+    },
+    {
+      "id": "32",
+      "image_sha256": "689aa40121764205cd5aaadc346677651f8827285b72becb415da7c2fa8efa7d",
+      "status": "FAILED",
+      "latency_seconds": 0.00039162499888334423,
+      "transcript": "",
+      "error": "ValueError: decoded page exceeds pixel limit",
+      "accuracy": {
+        "character_edits": 1942,
+        "reference_characters": 1942,
+        "word_edits": 359,
+        "reference_words": 359
+      }
+    },
+    {
+      "id": "263",
+      "image_sha256": "74b055330a17b097170bfd4b6618092e4123c257641f91fee0c117c898ef3126",
+      "status": "FAILED",
+      "latency_seconds": 0.025235082997824065,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1027,
+        "reference_characters": 1027,
+        "word_edits": 232,
+        "reference_words": 232
+      }
+    },
+    {
+      "id": "428",
+      "image_sha256": "9aee51c24f1bc050cfd3d457b8c22a4e1ff0851593af0393e7646041d6655594",
+      "status": "FAILED",
+      "latency_seconds": 0.032977875001961365,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2442,
+        "reference_characters": 2442,
+        "word_edits": 332,
+        "reference_words": 332
+      }
+    },
+    {
+      "id": "482",
+      "image_sha256": "219c1f9251907077b359a7523ece7743e4ace52e83b1948325729194b6596f60",
+      "status": "FAILED",
+      "latency_seconds": 0.02838379199965857,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 5208,
+        "reference_characters": 5208,
+        "word_edits": 843,
+        "reference_words": 843
+      }
+    },
+    {
+      "id": "223",
+      "image_sha256": "a309bbdb804f3cacc14253aeff80828285293eb5d6ababe583fc943a6a62e9e2",
+      "status": "FAILED",
+      "latency_seconds": 0.03011000000697095,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1287,
+        "reference_characters": 1287,
+        "word_edits": 208,
+        "reference_words": 208
+      }
+    },
+    {
+      "id": "504",
+      "image_sha256": "eccfa2124a2f5160f3bb5949ebb0ad3657c09ec095e7bf7be8897912fab0d3ca",
+      "status": "FAILED",
+      "latency_seconds": 0.0261773750098655,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3415,
+        "reference_characters": 3415,
+        "word_edits": 712,
+        "reference_words": 712
+      }
+    },
+    {
+      "id": "41",
+      "image_sha256": "d2f32ed7c446f6d2f21b3f5cd12e78c828b3ad22e4482688f2e24a991794b8b8",
+      "status": "FAILED",
+      "latency_seconds": 0.04438795801252127,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 667,
+        "reference_characters": 667,
+        "word_edits": 141,
+        "reference_words": 141
+      }
+    },
+    {
+      "id": "20",
+      "image_sha256": "1023df93d5a35aba85c3ad232a4dbb9f6d8609068f5ec09f1c59a7e5738318d0",
+      "status": "FAILED",
+      "latency_seconds": 0.013012915995204821,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1938,
+        "reference_characters": 1938,
+        "word_edits": 358,
+        "reference_words": 358
+      }
+    },
+    {
+      "id": "701",
+      "image_sha256": "bee68eb3bf8a8342d50b293e981ab4db695d5d94f7a0a9fd466cbc5dc6ea617e",
+      "status": "FAILED",
+      "latency_seconds": 0.04381629198906012,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1671,
+        "reference_characters": 1671,
+        "word_edits": 285,
+        "reference_words": 285
+      }
+    },
+    {
+      "id": "332",
+      "image_sha256": "ece2ec05d5c4cf3dd665ce7a482b6c7f3e46cc97b27fc1623c946a4a92866686",
+      "status": "FAILED",
+      "latency_seconds": 0.03235679199860897,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3105,
+        "reference_characters": 3105,
+        "word_edits": 716,
+        "reference_words": 716
+      }
+    },
+    {
+      "id": "233",
+      "image_sha256": "832c16710386dd1b5f5dcdca7be9b8d1122d03741e08f71a314a2acea602b4d0",
+      "status": "FAILED",
+      "latency_seconds": 0.035384415998123586,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 5749,
+        "reference_characters": 5749,
+        "word_edits": 1060,
+        "reference_words": 1060
+      }
+    },
+    {
+      "id": "397",
+      "image_sha256": "527ac87a33d60126ebf019d1ace20e5856c7607cb8593e61106ce811fa1ebf75",
+      "status": "FAILED",
+      "latency_seconds": 0.024815957993268967,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 5767,
+        "reference_characters": 5767,
+        "word_edits": 906,
+        "reference_words": 906
+      }
+    },
+    {
+      "id": "556",
+      "image_sha256": "051167c6fbaf089603216e9417537108a777077fce8aabc254561a4f268ad531",
+      "status": "FAILED",
+      "latency_seconds": 0.024011832996620797,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1239,
+        "reference_characters": 1239,
+        "word_edits": 214,
+        "reference_words": 214
+      }
+    },
+    {
+      "id": "474",
+      "image_sha256": "1085efc353f16afc65cde520805a8c4097e4524c964e629ef2a12e27282aa22d",
+      "status": "FAILED",
+      "latency_seconds": 0.02148674998898059,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3988,
+        "reference_characters": 3988,
+        "word_edits": 966,
+        "reference_words": 966
+      }
+    },
+    {
+      "id": "279",
+      "image_sha256": "a45b7b859248a8aeebfd40b460ed08f084457f0c22d13e384675f9fa5baa3749",
+      "status": "FAILED",
+      "latency_seconds": 0.04431554199254606,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1652,
+        "reference_characters": 1652,
+        "word_edits": 284,
+        "reference_words": 284
+      }
+    },
+    {
+      "id": "601",
+      "image_sha256": "2cd3a2f10849452caf1a377664ad22a1506d1fb39d745200024b2c51676c72fe",
+      "status": "FAILED",
+      "latency_seconds": 0.027921250002691522,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2546,
+        "reference_characters": 2546,
+        "word_edits": 572,
+        "reference_words": 572
+      }
+    },
+    {
+      "id": "331",
+      "image_sha256": "e915ff1af11e4d753399636dfc59f77604c5f4cffa5f78a36f5fa73fbfffba42",
+      "status": "FAILED",
+      "latency_seconds": 0.05100416699133348,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1449,
+        "reference_characters": 1449,
+        "word_edits": 196,
+        "reference_words": 196
+      }
+    },
+    {
+      "id": "996",
+      "image_sha256": "df2453dc5a8806dc16778c67d699bc216924ef869d1ea700daee04574a2b0b24",
+      "status": "FAILED",
+      "latency_seconds": 0.04410641700087581,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1675,
+        "reference_characters": 1675,
+        "word_edits": 286,
+        "reference_words": 286
+      }
+    },
+    {
+      "id": "136",
+      "image_sha256": "6c8f47d46a2398127fc82be731461266bae40a265278365a7d8453e848c27544",
+      "status": "FAILED",
+      "latency_seconds": 0.02678170798753854,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2694,
+        "reference_characters": 2694,
+        "word_edits": 595,
+        "reference_words": 595
+      }
+    },
+    {
+      "id": "478",
+      "image_sha256": "57ae5e62bd635a45728cbcfaa25a37ab2af25bb2a4ad240c284b67986ef9a70a",
+      "status": "FAILED",
+      "latency_seconds": 0.045233334007207304,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3350,
+        "reference_characters": 3350,
+        "word_edits": 644,
+        "reference_words": 644
+      }
+    },
+    {
+      "id": "467",
+      "image_sha256": "27843166ff4054174ca18ee63f897ca659adf0e5ff9f8e5270740ca533655366",
+      "status": "FAILED",
+      "latency_seconds": 0.04022395900392439,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1519,
+        "reference_characters": 1519,
+        "word_edits": 409,
+        "reference_words": 409
+      }
+    },
+    {
+      "id": "670",
+      "image_sha256": "b97bd50f13117c7d90e6ea12c4e56005e36783aef5220385bf275a503a5bb094",
+      "status": "FAILED",
+      "latency_seconds": 0.021486500001628883,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2176,
+        "reference_characters": 2176,
+        "word_edits": 381,
+        "reference_words": 381
+      }
+    },
+    {
+      "id": "978",
+      "image_sha256": "1bb414413a12e9275bc82c97f09f5c451ab4de86e1cc8b6036be4d71484995a4",
+      "status": "FAILED",
+      "latency_seconds": 0.030610292000346817,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1680,
+        "reference_characters": 1680,
+        "word_edits": 285,
+        "reference_words": 285
+      }
+    },
+    {
+      "id": "371",
+      "image_sha256": "956aba832b672ebe88d82de49224c3084dc2df5fede411c0237744be04dc0226",
+      "status": "FAILED",
+      "latency_seconds": 0.0003625410026870668,
+      "transcript": "",
+      "error": "ValueError: decoded page exceeds pixel limit",
+      "accuracy": {
+        "character_edits": 1012,
+        "reference_characters": 1012,
+        "word_edits": 155,
+        "reference_words": 155
+      }
+    },
+    {
+      "id": "297",
+      "image_sha256": "4d83a24ee08f47e475ce9657b03dd01889eb5bbea79e599f95ea9caf88c03b76",
+      "status": "FAILED",
+      "latency_seconds": 0.04283616699103732,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1576,
+        "reference_characters": 1576,
+        "word_edits": 432,
+        "reference_words": 432
+      }
+    },
+    {
+      "id": "234",
+      "image_sha256": "9dd8e452719b1b3c98668bc81c83aea8d8bda5572e4de7f3444693b968c5b843",
+      "status": "FAILED",
+      "latency_seconds": 0.04528941700118594,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3573,
+        "reference_characters": 3573,
+        "word_edits": 651,
+        "reference_words": 651
+      }
+    },
+    {
+      "id": "968",
+      "image_sha256": "246ab2931a8b6868aeb7b923cb170c2d3d9ecc0c169b19d3976e42768dae283c",
+      "status": "FAILED",
+      "latency_seconds": 0.03431150001415517,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3276,
+        "reference_characters": 3276,
+        "word_edits": 445,
+        "reference_words": 445
+      }
+    },
+    {
+      "id": "689",
+      "image_sha256": "09d524d8f46411d5e21ad4d046753891cbe56ca5a13d041aa5eff3e818fdc1fb",
+      "status": "FAILED",
+      "latency_seconds": 0.023757291011861525,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1038,
+        "reference_characters": 1038,
+        "word_edits": 192,
+        "reference_words": 192
+      }
+    },
+    {
+      "id": "122",
+      "image_sha256": "fb035c6ad5469ed0515cf35af750a648d205e5945ebf0c498161c4dcf6067577",
+      "status": "FAILED",
+      "latency_seconds": 0.024401249989750795,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1583,
+        "reference_characters": 1583,
+        "word_edits": 301,
+        "reference_words": 301
+      }
+    },
+    {
+      "id": "324",
+      "image_sha256": "5fcd22420565ebd620959df19ff2798312af39e4a9dc05df6de9f2d2e32949bc",
+      "status": "FAILED",
+      "latency_seconds": 0.046285999997053295,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 4814,
+        "reference_characters": 4814,
+        "word_edits": 902,
+        "reference_words": 902
+      }
+    },
+    {
+      "id": "168",
+      "image_sha256": "1a648e44d94628fdf43724d0f5562e52d4600f63502d436f5961456722a99842",
+      "status": "FAILED",
+      "latency_seconds": 0.03771679199417122,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3122,
+        "reference_characters": 3122,
+        "word_edits": 633,
+        "reference_words": 633
+      }
+    },
+    {
+      "id": "672",
+      "image_sha256": "af6db89d8848cc9c7b6bf571e62967d28a3592e71528e11adc521db83ae3d60a",
+      "status": "FAILED",
+      "latency_seconds": 0.03411912500450853,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1912,
+        "reference_characters": 1912,
+        "word_edits": 258,
+        "reference_words": 258
+      }
+    },
+    {
+      "id": "926",
+      "image_sha256": "0407b4053fc81e66f2be873fb1941e12e381eae5c7c82efc7e790100f1ebbc20",
+      "status": "FAILED",
+      "latency_seconds": 0.04445445799501613,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2136,
+        "reference_characters": 2136,
+        "word_edits": 232,
+        "reference_words": 232
+      }
+    },
+    {
+      "id": "853",
+      "image_sha256": "d2e1a109ee04adc393d9569c7e734743a501e88764d55d23eef639877f980ba4",
+      "status": "FAILED",
+      "latency_seconds": 0.012105125002563,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 370,
+        "reference_characters": 370,
+        "word_edits": 49,
+        "reference_words": 49
+      }
+    },
+    {
+      "id": "525",
+      "image_sha256": "78a4786e285bdbd537e407559a60fcab95282e26fc4fb2a257c890f45b4cc18e",
+      "status": "FAILED",
+      "latency_seconds": 0.020534791008685715,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2118,
+        "reference_characters": 2118,
+        "word_edits": 364,
+        "reference_words": 364
+      }
+    },
+    {
+      "id": "310",
+      "image_sha256": "0794423a972e807b28f5f4392dc5ee0fd61fec15f1679ffa67b6add5cbaa583f",
+      "status": "FAILED",
+      "latency_seconds": 0.03570058400509879,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1363,
+        "reference_characters": 1363,
+        "word_edits": 186,
+        "reference_words": 186
+      }
+    },
+    {
+      "id": "409",
+      "image_sha256": "203af5b20b52680767f8cc3c99f7eb3203602b27a05183f016c4c693cc345084",
+      "status": "FAILED",
+      "latency_seconds": 0.01959533299668692,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1165,
+        "reference_characters": 1165,
+        "word_edits": 253,
+        "reference_words": 253
+      }
+    },
+    {
+      "id": "376",
+      "image_sha256": "c934e4de9e22efa81574000491dfaba9778a55c48e747bc27f05905e2dd55d82",
+      "status": "FAILED",
+      "latency_seconds": 0.023589959004311822,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1636,
+        "reference_characters": 1636,
+        "word_edits": 317,
+        "reference_words": 317
+      }
+    },
+    {
+      "id": "570",
+      "image_sha256": "4f171b22361b3f05dfbd54f6a70d1cb43a5c6ecb164955978a88a1424066232b",
+      "status": "FAILED",
+      "latency_seconds": 0.025606833994970657,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 4859,
+        "reference_characters": 4859,
+        "word_edits": 1460,
+        "reference_words": 1460
+      }
+    },
+    {
+      "id": "885",
+      "image_sha256": "30fc9643781533f6efaef53e50709a9a7388dd71002c5852f57ef6494c48bb93",
+      "status": "FAILED",
+      "latency_seconds": 0.02563516699592583,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3482,
+        "reference_characters": 3482,
+        "word_edits": 829,
+        "reference_words": 829
+      }
+    },
+    {
+      "id": "284",
+      "image_sha256": "dd79d620d38f5937498167b5b018c3c04054aacfc966e2e55ac673ec0d768491",
+      "status": "FAILED",
+      "latency_seconds": 0.04507204199035186,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2619,
+        "reference_characters": 2619,
+        "word_edits": 277,
+        "reference_words": 277
+      }
+    },
+    {
+      "id": "916",
+      "image_sha256": "c9d63c05621f2b7413491ca7851f467420f7a7f4e16dc078cf6a93763cd4e4f6",
+      "status": "FAILED",
+      "latency_seconds": 0.04300370799319353,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1653,
+        "reference_characters": 1653,
+        "word_edits": 285,
+        "reference_words": 285
+      }
+    },
+    {
+      "id": "567",
+      "image_sha256": "83d326dcc239fa54f1da3a85530aad74408804385bfbc00adadcd5f47ab6653e",
+      "status": "FAILED",
+      "latency_seconds": 0.03214395898976363,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3568,
+        "reference_characters": 3568,
+        "word_edits": 835,
+        "reference_words": 835
+      }
+    },
+    {
+      "id": "406",
+      "image_sha256": "27b935488ab492a0195de097a75f83b59431e2b5c15b0e0386e7ea8b4f744e8d",
+      "status": "FAILED",
+      "latency_seconds": 0.02533795799536165,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2256,
+        "reference_characters": 2256,
+        "word_edits": 395,
+        "reference_words": 395
+      }
+    },
+    {
+      "id": "59",
+      "image_sha256": "9aa34726df4856aa37ebb66c5eda99c1a49bb10242f74b11c1ca4c0d92dafee2",
+      "status": "FAILED",
+      "latency_seconds": 0.015660249991924502,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 639,
+        "reference_characters": 639,
+        "word_edits": 125,
+        "reference_words": 125
+      }
+    },
+    {
+      "id": "980",
+      "image_sha256": "1b6f28c0ca9cf938c500511b2a5da6872dba6e54f82709dc1965bb2e1a235465",
+      "status": "FAILED",
+      "latency_seconds": 0.030534833000274375,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1574,
+        "reference_characters": 1574,
+        "word_edits": 418,
+        "reference_words": 418
+      }
+    },
+    {
+      "id": "949",
+      "image_sha256": "4de4ceb5e7493bc4b439572a7007ac4c6efcbfc2f48d8dd29b4c57b6f3877267",
+      "status": "FAILED",
+      "latency_seconds": 0.04562508400704246,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2006,
+        "reference_characters": 2006,
+        "word_edits": 387,
+        "reference_words": 387
+      }
+    },
+    {
+      "id": "715",
+      "image_sha256": "de197c5571cd7c610d368b222c6b789a39adc9fd8bd40e915ec2019971c3a5e5",
+      "status": "FAILED",
+      "latency_seconds": 0.05125512499944307,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1372,
+        "reference_characters": 1372,
+        "word_edits": 191,
+        "reference_words": 191
+      }
+    },
+    {
+      "id": "123",
+      "image_sha256": "2187b618df6912a599fab2eebad204ac5e981187a64c0f61962443559ed8c6d2",
+      "status": "FAILED",
+      "latency_seconds": 0.023942250001709908,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2137,
+        "reference_characters": 2137,
+        "word_edits": 377,
+        "reference_words": 377
+      }
+    },
+    {
+      "id": "81",
+      "image_sha256": "e43f7145aab9e176e03ba58ae2b37f6a380a2bfb4611e873411f7fa513225b6c",
+      "status": "FAILED",
+      "latency_seconds": 0.04445524999755435,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1603,
+        "reference_characters": 1603,
+        "word_edits": 349,
+        "reference_words": 349
+      }
+    },
+    {
+      "id": "154",
+      "image_sha256": "bf95d12c8594e16c4351c95ec88beb17a569c2eb50019923649e74d4d8132f2e",
+      "status": "FAILED",
+      "latency_seconds": 0.02126749999297317,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2267,
+        "reference_characters": 2267,
+        "word_edits": 397,
+        "reference_words": 397
+      }
+    },
+    {
+      "id": "998",
+      "image_sha256": "afa138430e2211b8531d6ea838cb4a024fa552e7538a1c512a0da91d79484cb7",
+      "status": "FAILED",
+      "latency_seconds": 0.022464166991994716,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 2568,
+        "reference_characters": 2568,
+        "word_edits": 461,
+        "reference_words": 461
+      }
+    },
+    {
+      "id": "628",
+      "image_sha256": "a7703caeee886b8fcc3999b1041db29457dbc2bdc52675f7c5447e3243ba78a8",
+      "status": "FAILED",
+      "latency_seconds": 0.04203416599193588,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 1477,
+        "reference_characters": 1477,
+        "word_edits": 388,
+        "reference_words": 388
+      }
+    },
+    {
+      "id": "957",
+      "image_sha256": "233fd82cb8bf15c9a560f2268bef9f79b51f141c76393572100e8cd3da31fc2b",
+      "status": "FAILED",
+      "latency_seconds": 0.04463516699615866,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 5194,
+        "reference_characters": 5194,
+        "word_edits": 842,
+        "reference_words": 842
+      }
+    },
+    {
+      "id": "819",
+      "image_sha256": "4a63adce3879ca0f9a8a60f4c429f9ae1930df4c0574a4c566e9848203f62500",
+      "status": "FAILED",
+      "latency_seconds": 0.021883749999688007,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 3813,
+        "reference_characters": 3813,
+        "word_edits": 734,
+        "reference_words": 734
+      }
+    },
+    {
+      "id": "543",
+      "image_sha256": "c78fd8b2316f0024068210c74970b3962cbba030c3137c55a851a893fc88e1f6",
+      "status": "FAILED",
+      "latency_seconds": 0.028846125002019107,
+      "transcript": "",
+      "error": "ValueError: OCR prompt and generation exceed checkpoint context",
+      "accuracy": {
+        "character_edits": 4713,
+        "reference_characters": 4713,
+        "word_edits": 797,
+        "reference_words": 797
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383"
+    },
+    {
+      "path": "README.md",
+      "bytes": 14820,
+      "sha256": "092b90e814cd6c15f734b15a81e294b4d12c92d12bff3c674a9474ca935ecd1c"
+    },
+    {
+      "path": "config.json",
+      "bytes": 2430,
+      "sha256": "c666d0fe0172d46e115e8fba6cd93cd83714575b33a73005cab8d24ce2a3aa8f"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 463221266,
+      "sha256": "58757d657ff44051314c8030b68e04cb1bb618ca9a4885418f111f6fb708185a"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 806,
+      "sha256": "2f5921bbc53c7cc04251e1027b45b1cec726276be6db23d1bb40641bfbe2cf29"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1355863,
+      "sha256": "847bbeab6174d66a88898f729d52fa8d355fafe1bea101cf960dd404581df70e"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 34,
+      "sha256": "79ffcf43af8ebda99d165f61d243180da2e2639952e41e71e11611c18770489c"
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 1099884,
+      "sha256": "394fdc63c71aabe0a9b97117f5d62fb5fcc4d59b2b3ea929a3929e6a53217b3c"
+    }
+  ],
+  "load_seconds": 0.3268712919962127,
+  "precision": {
+    "mode": "floating",
+    "dtypes": [
+      "float16"
+    ]
+  },
+  "warmup_seconds": 0.4247032089915592,
+  "metrics": {
+    "attempted": 100,
+    "completed": 0,
+    "failed": 100,
+    "truncated": 0,
+    "median_latency_seconds": null,
+    "completed_pages_per_second": 0.0,
+    "corpus_cer": 1.0,
+    "corpus_wer": 1.0,
+    "max_peak_mlx_memory_gib": null,
+    "actual_output_tokens": 0,
+    "inference_seconds": 3.087319296973874
+  }
+}

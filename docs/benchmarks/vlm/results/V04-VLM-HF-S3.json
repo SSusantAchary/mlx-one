@@ -1,0 +1,1248 @@
+{
+  "task": "vision_language",
+  "checkpoint": "mlx-community/LFM2-VL-450M-8bit",
+  "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+  "architecture": "lfm2_vl",
+  "precision": "Q8",
+  "workload": "VLM-HF-S3",
+  "protocol": "vlm-hf-s3-v1",
+  "status": "MEASURED",
+  "synthetic": false,
+  "measurement_type": "direct-model",
+  "backend": "native-mlx-metal",
+  "hardware": {
+    "device": "Apple M4",
+    "memory_bytes": 34359738368,
+    "os": "macOS-15.8.1-arm64-arm-64bit",
+    "machine": "arm64"
+  },
+  "mlx_version": "0.32.2",
+  "metal_version": "0.32.2",
+  "generation_options": {
+    "max_tokens": 128,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "top_k": null,
+    "seed": 0,
+    "stop": []
+  },
+  "python_version": "3.12.11",
+  "pillow_version": "12.3.0",
+  "batch_size": 1,
+  "warmups": 1,
+  "repetitions": 5,
+  "statistic": "median",
+  "max_tokens": 128,
+  "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+  "source_sizes": [
+    [
+      512,
+      512
+    ],
+    [
+      512,
+      512
+    ],
+    [
+      512,
+      512
+    ],
+    [
+      512,
+      512
+    ]
+  ],
+  "image_sha256": [
+    "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb",
+    "9365ebde6b4e530ff1d154afb1f164307f9a1c965c107584bf1b6cdeb3a3a3c0",
+    "3223a28d5f3d26b6ab70cb18d7c8d45aeee309bc7e6c8b47ac397fc8ad676b42",
+    "485468517dd71322d050881eb9fd2058f834b59bc011968845ac517c9dfaa0ca"
+  ],
+  "expected_text": null,
+  "weight_sha256": {
+    "model.safetensors": "b67daf504eae7f4815f1b51152d0d363547bacc25f4748f0b24df9440f3f9624"
+  },
+  "asset_sha256": {
+    "chat_template.jinja": "cf0af741b36248dfe460af825b0b3acb3c651cf7dd40a74c29447f60b75d2b9b",
+    "config.json": "0f65ed8fdee9c58cddffc64f1353701fe197eea22679cb5246752927be420fc1",
+    "generation_config.json": "529184b675eb21c69367bb9b96b4b6fab90e02d94a384f5a94f1004903ac2430",
+    "preprocessor_config.json": "a70ef8973bfbb79a429a1e48f3a3674ec5e970d82e52e6c9091381a1a2e48966",
+    "processor_config.json": "dfb538d609add2675159696d441d920b55b9a8e994fa7e294bf8b038bfedb7de",
+    "tokenizer_config.json": "5d460b26aa4512b0c951d735360c6eb443812a3f7974f95abcef67638c0c0df4"
+  },
+  "tokenizer_sha256": "f3910942aa907c48b0cc20ec426ee38bfa8dcda8feecf035ced981918cb30f14",
+  "asset_git_blob": {
+    "tokenizer.json": "1102635fc822bb07f176c9166d176d9df417a457"
+  },
+  "implementation_sha256": "21d0fef3559f869397fd209dd04321fd29e16d013947177688dd7ae173a56bd9",
+  "runner_sha256": "fbf97dcab91c43c4003d1a27161deb93eaeea92f1f6e4546d399ac08d99b9835",
+  "model_load_ms": 185.25933300406905,
+  "timing_scope": "TTFT and total include decode/RGB/resize/normalization/patch work; prefill includes vision encoder, projection and language prefill; no queue/HTTP",
+  "functional_outcome": "inference_completed",
+  "semantic_quality_validated": false,
+  "samples": [
+    {
+      "prompt_tokens": 1056,
+      "text_prompt_tokens": 32,
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ],
+      "output_tokens": 128,
+      "token_ids": [
+        1098,
+        4646,
+        40027,
+        1547,
+        15622,
+        21926,
+        884,
+        768,
+        19993,
+        4256,
+        521,
+        1144,
+        7705,
+        811,
+        874,
+        768,
+        45016,
+        933,
+        768,
+        7784,
+        803,
+        15940,
+        523,
+        941,
+        15622,
+        938,
+        35399,
+        3392,
+        968,
+        3392,
+        521,
+        916,
+        1149,
+        9333,
+        29753,
+        12626,
+        811,
+        779,
+        4256,
+        523,
+        9758,
+        15622,
+        1052,
+        1149,
+        15288,
+        31171,
+        884,
+        779,
+        4256,
+        521,
+        810,
+        1186,
+        938,
+        15145,
+        6185,
+        779,
+        11404,
+        523,
+        941,
+        5641,
+        884,
+        779,
+        3191,
+        1178,
+        768,
+        5823,
+        11091,
+        4810,
+        916,
+        768,
+        8246,
+        803,
+        10800,
+        521,
+        4054,
+        521,
+        810,
+        4290,
+        10470,
+        521,
+        2158,
+        779,
+        5641,
+        884,
+        779,
+        2084,
+        1178,
+        768,
+        1209,
+        11534,
+        4100,
+        852,
+        916,
+        768,
+        2793,
+        7043,
+        41244,
+        523,
+        509,
+        1286,
+        779,
+        6925,
+        521,
+        1413,
+        856,
+        768,
+        9897,
+        7680,
+        916,
+        768,
+        18930,
+        5109,
+        896,
+        1178,
+        768,
+        5935,
+        10800,
+        6212,
+        523,
+        941,
+        5109,
+        856,
+        8557,
+        521,
+        810,
+        779,
+        7680,
+        1178
+      ],
+      "terminal_token_id": null,
+      "finish_reason": "length",
+      "text": "The image depicts two cats lying on a pink surface, which appears to be a blanket or a piece of clothing. The cats are positioned side by side, with their bodies aligned parallel to the surface. Both cats have their heads resting on the surface, and they are facing towards the camera. The cat on the left has a striped pattern with a mix of brown, black, and white fur, while the cat on the right has a more uniform coloration with a light blue hue.\n\nIn the background, there is a yellow wall with a wooden door that has a dark brown frame. The door is closed, and the wall has",
+      "preprocessing_ms": 20.473499993386213,
+      "vision_encoder_ms": null,
+      "vision_projection_ms": null,
+      "language_prefill_ms": null,
+      "visual_prefill_ms": 664.6602079999866,
+      "prefill_tps": 1588.7817373294918,
+      "ttft_ms": 686.0445830025128,
+      "decode_ms": 952.344457997242,
+      "decode_tps": 133.35511004818363,
+      "total_ms": 1638.5624160029693,
+      "peak_mlx_memory_gib": 1.175379442051053,
+      "peak_process_memory_bytes": 781434880,
+      "cleanup": true
+    },
+    {
+      "prompt_tokens": 1056,
+      "text_prompt_tokens": 32,
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ],
+      "output_tokens": 128,
+      "token_ids": [
+        1098,
+        4646,
+        40027,
+        1547,
+        15622,
+        21926,
+        884,
+        768,
+        19993,
+        4256,
+        521,
+        1144,
+        7705,
+        811,
+        874,
+        768,
+        45016,
+        933,
+        768,
+        7784,
+        803,
+        15940,
+        523,
+        941,
+        15622,
+        938,
+        35399,
+        3392,
+        968,
+        3392,
+        521,
+        916,
+        1149,
+        9333,
+        29753,
+        12626,
+        811,
+        779,
+        4256,
+        523,
+        9758,
+        15622,
+        1052,
+        1149,
+        15288,
+        31171,
+        884,
+        779,
+        4256,
+        521,
+        810,
+        1186,
+        938,
+        15145,
+        6185,
+        779,
+        11404,
+        523,
+        941,
+        5641,
+        884,
+        779,
+        3191,
+        1178,
+        768,
+        5823,
+        11091,
+        4810,
+        916,
+        768,
+        8246,
+        803,
+        10800,
+        521,
+        4054,
+        521,
+        810,
+        4290,
+        10470,
+        521,
+        2158,
+        779,
+        5641,
+        884,
+        779,
+        2084,
+        1178,
+        768,
+        1209,
+        11534,
+        4100,
+        852,
+        916,
+        768,
+        2793,
+        7043,
+        41244,
+        523,
+        509,
+        1286,
+        779,
+        6925,
+        521,
+        1413,
+        856,
+        768,
+        9897,
+        7680,
+        916,
+        768,
+        18930,
+        5109,
+        896,
+        1178,
+        768,
+        5935,
+        10800,
+        6212,
+        523,
+        941,
+        5109,
+        856,
+        8557,
+        521,
+        810,
+        779,
+        7680,
+        1178
+      ],
+      "terminal_token_id": null,
+      "finish_reason": "length",
+      "text": "The image depicts two cats lying on a pink surface, which appears to be a blanket or a piece of clothing. The cats are positioned side by side, with their bodies aligned parallel to the surface. Both cats have their heads resting on the surface, and they are facing towards the camera. The cat on the left has a striped pattern with a mix of brown, black, and white fur, while the cat on the right has a more uniform coloration with a light blue hue.\n\nIn the background, there is a yellow wall with a wooden door that has a dark brown frame. The door is closed, and the wall has",
+      "preprocessing_ms": 19.202207993657794,
+      "vision_encoder_ms": null,
+      "vision_projection_ms": null,
+      "language_prefill_ms": null,
+      "visual_prefill_ms": 741.6488750022836,
+      "prefill_tps": 1423.8543812215025,
+      "ttft_ms": 761.9305830012308,
+      "decode_ms": 882.221624997328,
+      "decode_tps": 143.9547574005394,
+      "total_ms": 1644.304542001919,
+      "peak_mlx_memory_gib": 1.175379442051053,
+      "peak_process_memory_bytes": 794722304,
+      "cleanup": true
+    },
+    {
+      "prompt_tokens": 1056,
+      "text_prompt_tokens": 32,
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ],
+      "output_tokens": 128,
+      "token_ids": [
+        1098,
+        4646,
+        40027,
+        1547,
+        15622,
+        21926,
+        884,
+        768,
+        19993,
+        4256,
+        521,
+        1144,
+        7705,
+        811,
+        874,
+        768,
+        45016,
+        933,
+        768,
+        7784,
+        803,
+        15940,
+        523,
+        941,
+        15622,
+        938,
+        35399,
+        3392,
+        968,
+        3392,
+        521,
+        916,
+        1149,
+        9333,
+        29753,
+        12626,
+        811,
+        779,
+        4256,
+        523,
+        9758,
+        15622,
+        1052,
+        1149,
+        15288,
+        31171,
+        884,
+        779,
+        4256,
+        521,
+        810,
+        1186,
+        938,
+        15145,
+        6185,
+        779,
+        11404,
+        523,
+        941,
+        5641,
+        884,
+        779,
+        3191,
+        1178,
+        768,
+        5823,
+        11091,
+        4810,
+        916,
+        768,
+        8246,
+        803,
+        10800,
+        521,
+        4054,
+        521,
+        810,
+        4290,
+        10470,
+        521,
+        2158,
+        779,
+        5641,
+        884,
+        779,
+        2084,
+        1178,
+        768,
+        1209,
+        11534,
+        4100,
+        852,
+        916,
+        768,
+        2793,
+        7043,
+        41244,
+        523,
+        509,
+        1286,
+        779,
+        6925,
+        521,
+        1413,
+        856,
+        768,
+        9897,
+        7680,
+        916,
+        768,
+        18930,
+        5109,
+        896,
+        1178,
+        768,
+        5935,
+        10800,
+        6212,
+        523,
+        941,
+        5109,
+        856,
+        8557,
+        521,
+        810,
+        779,
+        7680,
+        1178
+      ],
+      "terminal_token_id": null,
+      "finish_reason": "length",
+      "text": "The image depicts two cats lying on a pink surface, which appears to be a blanket or a piece of clothing. The cats are positioned side by side, with their bodies aligned parallel to the surface. Both cats have their heads resting on the surface, and they are facing towards the camera. The cat on the left has a striped pattern with a mix of brown, black, and white fur, while the cat on the right has a more uniform coloration with a light blue hue.\n\nIn the background, there is a yellow wall with a wooden door that has a dark brown frame. The door is closed, and the wall has",
+      "preprocessing_ms": 20.909708000544924,
+      "vision_encoder_ms": null,
+      "vision_projection_ms": null,
+      "language_prefill_ms": null,
+      "visual_prefill_ms": 678.5835000046063,
+      "prefill_tps": 1556.182842631499,
+      "ttft_ms": 700.2491659950465,
+      "decode_ms": 845.4818750033155,
+      "decode_tps": 150.2101981778166,
+      "total_ms": 1545.8981659976416,
+      "peak_mlx_memory_gib": 1.175379442051053,
+      "peak_process_memory_bytes": 795639808,
+      "cleanup": true
+    },
+    {
+      "prompt_tokens": 1056,
+      "text_prompt_tokens": 32,
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ],
+      "output_tokens": 128,
+      "token_ids": [
+        1098,
+        4646,
+        40027,
+        1547,
+        15622,
+        21926,
+        884,
+        768,
+        19993,
+        4256,
+        521,
+        1144,
+        7705,
+        811,
+        874,
+        768,
+        45016,
+        933,
+        768,
+        7784,
+        803,
+        15940,
+        523,
+        941,
+        15622,
+        938,
+        35399,
+        3392,
+        968,
+        3392,
+        521,
+        916,
+        1149,
+        9333,
+        29753,
+        12626,
+        811,
+        779,
+        4256,
+        523,
+        9758,
+        15622,
+        1052,
+        1149,
+        15288,
+        31171,
+        884,
+        779,
+        4256,
+        521,
+        810,
+        1186,
+        938,
+        15145,
+        6185,
+        779,
+        11404,
+        523,
+        941,
+        5641,
+        884,
+        779,
+        3191,
+        1178,
+        768,
+        5823,
+        11091,
+        4810,
+        916,
+        768,
+        8246,
+        803,
+        10800,
+        521,
+        4054,
+        521,
+        810,
+        4290,
+        10470,
+        521,
+        2158,
+        779,
+        5641,
+        884,
+        779,
+        2084,
+        1178,
+        768,
+        1209,
+        11534,
+        4100,
+        852,
+        916,
+        768,
+        2793,
+        7043,
+        41244,
+        523,
+        509,
+        1286,
+        779,
+        6925,
+        521,
+        1413,
+        856,
+        768,
+        9897,
+        7680,
+        916,
+        768,
+        18930,
+        5109,
+        896,
+        1178,
+        768,
+        5935,
+        10800,
+        6212,
+        523,
+        941,
+        5109,
+        856,
+        8557,
+        521,
+        810,
+        779,
+        7680,
+        1178
+      ],
+      "terminal_token_id": null,
+      "finish_reason": "length",
+      "text": "The image depicts two cats lying on a pink surface, which appears to be a blanket or a piece of clothing. The cats are positioned side by side, with their bodies aligned parallel to the surface. Both cats have their heads resting on the surface, and they are facing towards the camera. The cat on the left has a striped pattern with a mix of brown, black, and white fur, while the cat on the right has a more uniform coloration with a light blue hue.\n\nIn the background, there is a yellow wall with a wooden door that has a dark brown frame. The door is closed, and the wall has",
+      "preprocessing_ms": 19.696957999258302,
+      "vision_encoder_ms": null,
+      "vision_projection_ms": null,
+      "language_prefill_ms": null,
+      "visual_prefill_ms": 630.5746660000295,
+      "prefill_tps": 1674.662901855227,
+      "ttft_ms": 650.9514580029645,
+      "decode_ms": 878.4454589986126,
+      "decode_tps": 144.57357448779365,
+      "total_ms": 1529.5707080003922,
+      "peak_mlx_memory_gib": 1.175379442051053,
+      "peak_process_memory_bytes": 795803648,
+      "cleanup": true
+    },
+    {
+      "prompt_tokens": 1056,
+      "text_prompt_tokens": 32,
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        },
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "tile_grid": [
+            1,
+            1
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ],
+      "output_tokens": 128,
+      "token_ids": [
+        1098,
+        4646,
+        40027,
+        1547,
+        15622,
+        21926,
+        884,
+        768,
+        19993,
+        4256,
+        521,
+        1144,
+        7705,
+        811,
+        874,
+        768,
+        45016,
+        933,
+        768,
+        7784,
+        803,
+        15940,
+        523,
+        941,
+        15622,
+        938,
+        35399,
+        3392,
+        968,
+        3392,
+        521,
+        916,
+        1149,
+        9333,
+        29753,
+        12626,
+        811,
+        779,
+        4256,
+        523,
+        9758,
+        15622,
+        1052,
+        1149,
+        15288,
+        31171,
+        884,
+        779,
+        4256,
+        521,
+        810,
+        1186,
+        938,
+        15145,
+        6185,
+        779,
+        11404,
+        523,
+        941,
+        5641,
+        884,
+        779,
+        3191,
+        1178,
+        768,
+        5823,
+        11091,
+        4810,
+        916,
+        768,
+        8246,
+        803,
+        10800,
+        521,
+        4054,
+        521,
+        810,
+        4290,
+        10470,
+        521,
+        2158,
+        779,
+        5641,
+        884,
+        779,
+        2084,
+        1178,
+        768,
+        1209,
+        11534,
+        4100,
+        852,
+        916,
+        768,
+        2793,
+        7043,
+        41244,
+        523,
+        509,
+        1286,
+        779,
+        6925,
+        521,
+        1413,
+        856,
+        768,
+        9897,
+        7680,
+        916,
+        768,
+        18930,
+        5109,
+        896,
+        1178,
+        768,
+        5935,
+        10800,
+        6212,
+        523,
+        941,
+        5109,
+        856,
+        8557,
+        521,
+        810,
+        779,
+        7680,
+        1178
+      ],
+      "terminal_token_id": null,
+      "finish_reason": "length",
+      "text": "The image depicts two cats lying on a pink surface, which appears to be a blanket or a piece of clothing. The cats are positioned side by side, with their bodies aligned parallel to the surface. Both cats have their heads resting on the surface, and they are facing towards the camera. The cat on the left has a striped pattern with a mix of brown, black, and white fur, while the cat on the right has a more uniform coloration with a light blue hue.\n\nIn the background, there is a yellow wall with a wooden door that has a dark brown frame. The door is closed, and the wall has",
+      "preprocessing_ms": 21.37349999975413,
+      "vision_encoder_ms": null,
+      "vision_projection_ms": null,
+      "language_prefill_ms": null,
+      "visual_prefill_ms": 636.2948750029318,
+      "prefill_tps": 1659.6078979814733,
+      "ttft_ms": 658.366167001077,
+      "decode_ms": 871.9895419999375,
+      "decode_tps": 145.64394856011828,
+      "total_ms": 1530.5135419985163,
+      "peak_mlx_memory_gib": 1.175379442051053,
+      "peak_process_memory_bytes": 795869184,
+      "cleanup": true
+    }
+  ],
+  "metrics": {
+    "preprocessing_ms": 20.473499993386213,
+    "visual_prefill_ms": 664.6602079999866,
+    "prefill_tps": 1588.7817373294918,
+    "decode_tps": 144.57357448779365,
+    "ttft_ms": 686.0445830025128,
+    "total_ms": 1545.8981659976416,
+    "peak_mlx_memory_gib": 1.175379442051053
+  },
+  "image_provenance": {
+    "dataset": "huggingface/documentation-images",
+    "revision": "c8c3cf72b3b724ce734259e4a086d30618a9198b",
+    "sources": [
+      {
+        "path": "coco_sample.png",
+        "sha256": "cf6f3c4befa148732c7453e0de5afab00f682427435fead2d88b07a9615cdac2",
+        "bytes": 694498
+      },
+      {
+        "path": "transformers/tasks/car.jpg",
+        "sha256": "8cd28b372908bcaa704a438965f8de47238c9514d5efefa89c510b82032f9d18",
+        "bytes": 39080
+      },
+      {
+        "path": "transformers/tasks/cat.jpg",
+        "sha256": "f311fbd22e8a0562a237f0985abe185b2dba82435acebd9b452f1dbdd4387dda",
+        "bytes": 23779
+      },
+      {
+        "path": "transformers/model_doc/ocr_receipt.jpeg",
+        "sha256": "18263c474c033ea1c15532c8060d0fc27ebd670947b50a726e9de151e6dbc077",
+        "bytes": 20603
+      }
+    ],
+    "license": "cc-by-nc-sa-4.0",
+    "transformation": "EXIF transpose; RGB; Pillow ImageOps.pad LANCZOS to source size, white padding, centered; PNG",
+    "pillow_version": "12.3.0"
+  }
+}

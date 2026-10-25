@@ -1,0 +1,51 @@
+[
+  {
+    "checkpoint": "microsoft/trocr-base-printed",
+    "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 479
+  },
+  {
+    "checkpoint": "microsoft/trocr-base-handwritten",
+    "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 479
+  },
+  {
+    "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+    "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 809
+  },
+  {
+    "checkpoint": "microsoft/Florence-2-base-ft",
+    "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 666
+  },
+  {
+    "checkpoint": "mlx-community/PaddleOCR-VL-1.5-4bit",
+    "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 924
+  },
+  {
+    "checkpoint": "lightonai/LightOnOCR-2-1B",
+    "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 532
+  },
+  {
+    "checkpoint": "mlx-community/DeepSeek-OCR-4bit",
+    "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+    "status": "NATIVE_PARAMETER_HEADER_MATCH",
+    "full_checkpoint_executed": false,
+    "tensor_count": 871
+  }
+]

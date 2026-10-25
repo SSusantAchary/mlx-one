@@ -1,0 +1,681 @@
+{
+  "schema_version": "mlx-one-ocr-hand10-v1",
+  "status": "MEASURED",
+  "checkpoint": "microsoft/trocr-base-handwritten",
+  "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+  "id": "O02",
+  "name": "TrOCR Base Handwritten",
+  "precision_label": "FP32",
+  "dataset": "toghrultahirov/handwritten_text_ocr",
+  "dataset_revision": "3762d848764659233b02278e97751de068a1eebf",
+  "sample_sha256": "2496397e2752ca6d7a480721258e6a40f933cdd715de74eda5fda0c396ba5b5d",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.handwriting",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 10,
+    "max_tokens": 128,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized plain-text references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "065e1939c2a8a0806db6b14948f83fabb7dfd1afb750b28286618dc6dcc1984e",
+  "runner_sha256": "e46cc4fac73dca23948d33c8b0d1eff6588c436f11e009469ea17821450fb5c9",
+  "samples": [
+    {
+      "id": "1737",
+      "image_sha256": "9bb0d68afa05f14ad7fc372f39b88066b5214ddc4eeb0b1df62edf3c5674e251",
+      "status": "OK",
+      "latency_seconds": 0.23022033300367184,
+      "transcript": "a promontory , a mass of clean rock crowned with",
+      "output_tokens": 12,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.005113166989758611,
+            "encoder_seconds": 0.05411566700786352,
+            "generation_seconds": 0.16923704200598877,
+            "text_prefill_seconds": 0.022580917007871903,
+            "decode_forward_seconds": 0.14219224898261018,
+            "total_seconds": 0.22850733299856074,
+            "first_token_seconds": 0.08226779199321754
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0012883329909527674,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              4003,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 12,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.39495849609375,
+      "accuracy": {
+        "character_edits": 0,
+        "reference_characters": 48,
+        "word_edits": 0,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1552",
+      "image_sha256": "34bb7adb7f213b246918e47922699d599e8634877fad30d99fd2980106bdb090",
+      "status": "OK",
+      "latency_seconds": 0.17908133400487714,
+      "transcript": "preoccupied , and it seemed that the",
+      "output_tokens": 8,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.003928624995751306,
+            "encoder_seconds": 0.05595654100761749,
+            "generation_seconds": 0.11811104101070669,
+            "text_prefill_seconds": 0.022278749995166436,
+            "decode_forward_seconds": 0.09274658098001964,
+            "total_seconds": 0.17802970900083892,
+            "first_token_seconds": 0.08261466700059827
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0007087499980116263,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2113,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 8,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4034576416015625,
+      "accuracy": {
+        "character_edits": 0,
+        "reference_characters": 36,
+        "word_edits": 0,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "921",
+      "image_sha256": "08190758eb5e323b1d15fda2be31cc11eb89c1c7bd736964c0f84140f6767cb8",
+      "status": "OK",
+      "latency_seconds": 0.17028158299217466,
+      "transcript": "generously enough in his own fashion",
+      "output_tokens": 7,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004336583995609544,
+            "encoder_seconds": 0.05704745900584385,
+            "generation_seconds": 0.10771674998977687,
+            "text_prefill_seconds": 0.022619750001467764,
+            "decode_forward_seconds": 0.08232654200401157,
+            "total_seconds": 0.16914283399819396,
+            "first_token_seconds": 0.0845207499951357
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0007103340030880645,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1449,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 7,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.40374755859375,
+      "accuracy": {
+        "character_edits": 2,
+        "reference_characters": 38,
+        "word_edits": 1,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "802",
+      "image_sha256": "ab5e6666e75c6cdbc24027e285606f72364702f692b6d591b425f86c747d1dc4",
+      "status": "OK",
+      "latency_seconds": 0.17264945901115425,
+      "transcript": "The mere thought of subterranean travel",
+      "output_tokens": 7,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004950125003233552,
+            "encoder_seconds": 0.056028124992735684,
+            "generation_seconds": 0.1103440419974504,
+            "text_prefill_seconds": 0.023355958008323796,
+            "decode_forward_seconds": 0.08387154199590441,
+            "total_seconds": 0.17136345800827257,
+            "first_token_seconds": 0.08483116600837093
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0008638750005047768,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1977,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 7,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.40374755859375,
+      "accuracy": {
+        "character_edits": 0,
+        "reference_characters": 39,
+        "word_edits": 0,
+        "reference_words": 6
+      }
+    },
+    {
+      "id": "2770",
+      "image_sha256": "e848e5d7228b8e291613717ed4208a83adc4be8f5ba106185420a8d8998f0bd8",
+      "status": "OK",
+      "latency_seconds": 0.2617749590135645,
+      "transcript": "\" 5 years ? \" he lowered his eyes and kissed her on the",
+      "output_tokens": 14,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.00521208300779108,
+            "encoder_seconds": 0.05606408299354371,
+            "generation_seconds": 0.19941462499264162,
+            "text_prefill_seconds": 0.02311566700518597,
+            "decode_forward_seconds": 0.1704024609643966,
+            "total_seconds": 0.2607334580097813,
+            "first_token_seconds": 0.08490754100785125
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006302500114543363,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1835,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 14,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4037628173828125,
+      "accuracy": {
+        "character_edits": 4,
+        "reference_characters": 54,
+        "word_edits": 2,
+        "reference_words": 13
+      }
+    },
+    {
+      "id": "2340",
+      "image_sha256": "b8cf6ae9e7c8a979a53226f83b9a9d4c4a4c1c2b86736eb08f76ab8ac5099e2f",
+      "status": "OK",
+      "latency_seconds": 0.22934862499823794,
+      "transcript": "Somewhat embarrassing , what ? \" \" How can the",
+      "output_tokens": 12,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.00493000001006294,
+            "encoder_seconds": 0.05610033399716485,
+            "generation_seconds": 0.1673809589992743,
+            "text_prefill_seconds": 0.022749833995476365,
+            "decode_forward_seconds": 0.14006203798635397,
+            "total_seconds": 0.22845316700113472,
+            "first_token_seconds": 0.08425200000056066
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0004788329970324412,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1536,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 12,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.40380859375,
+      "accuracy": {
+        "character_edits": 0,
+        "reference_characters": 46,
+        "word_edits": 0,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1817",
+      "image_sha256": "50f5e172a695d727a263e7ec40194d4e3fac4e5ebd61c43dadd212765ebe4323",
+      "status": "OK",
+      "latency_seconds": 0.18371679200208746,
+      "transcript": "fortitude , it now filled her with",
+      "output_tokens": 8,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004749333005747758,
+            "encoder_seconds": 0.05608699998992961,
+            "generation_seconds": 0.12164645799202845,
+            "text_prefill_seconds": 0.022694041006616317,
+            "decode_forward_seconds": 0.09579437402135227,
+            "total_seconds": 0.1825291660061339,
+            "first_token_seconds": 0.08401250001043081
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0008156250114552677,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1691,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 8,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.40386962890625,
+      "accuracy": {
+        "character_edits": 0,
+        "reference_characters": 34,
+        "word_edits": 0,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "295",
+      "image_sha256": "9bed68500642ce09d2c08c4bc7c3d63ee7a9de7609771bd924bf7d6ccbed62a5",
+      "status": "OK",
+      "latency_seconds": 0.2962627500091912,
+      "transcript": "( 3 ) I will redeem you . but I will take you to me for a",
+      "output_tokens": 17,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.005037458002334461,
+            "encoder_seconds": 0.056556209005066194,
+            "generation_seconds": 0.2335374169924762,
+            "text_prefill_seconds": 0.02331491700897459,
+            "decode_forward_seconds": 0.20374941804038826,
+            "total_seconds": 0.29517370800022036,
+            "first_token_seconds": 0.08539879099407699
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006336670048767701,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1693,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 17,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4038848876953125,
+      "accuracy": {
+        "character_edits": 5,
+        "reference_characters": 59,
+        "word_edits": 3,
+        "reference_words": 19
+      }
+    },
+    {
+      "id": "1675",
+      "image_sha256": "94dbdb2683ab8c099d03125419f4e939cb6f174e0aa934f494762083e2d33f8b",
+      "status": "OK",
+      "latency_seconds": 0.22106324999185745,
+      "transcript": "minions could also be him would ever made him .",
+      "output_tokens": 11,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.005048334001912735,
+            "encoder_seconds": 0.05635679099941626,
+            "generation_seconds": 0.15774304200022016,
+            "text_prefill_seconds": 0.023031709002680145,
+            "decode_forward_seconds": 0.13058395698317327,
+            "total_seconds": 0.21918949999962933,
+            "first_token_seconds": 0.08493412499956321
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0013348339998628944,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              3111,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 11,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.403900146484375,
+      "accuracy": {
+        "character_edits": 8,
+        "reference_characters": 43,
+        "word_edits": 4,
+        "reference_words": 9
+      }
+    },
+    {
+      "id": "1489",
+      "image_sha256": "d697580269fa585e35de5f92a432904b30ee3f05d51e8bdd7a742c302455b9ec",
+      "status": "OK",
+      "latency_seconds": 0.19682295800885186,
+      "transcript": "He rose from his breakfast-nook bench",
+      "output_tokens": 9,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.005097166998893954,
+            "encoder_seconds": 0.05620770801033359,
+            "generation_seconds": 0.13434541699825786,
+            "text_prefill_seconds": 0.02299933299946133,
+            "decode_forward_seconds": 0.10764062499220017,
+            "total_seconds": 0.19569304199831095,
+            "first_token_seconds": 0.08484187499561813
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.000762624986236915,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1752,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O02",
+            "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+            "architecture": "trocr",
+            "output_tokens": 9,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.403900146484375,
+      "accuracy": {
+        "character_edits": 0,
+        "reference_characters": 37,
+        "word_edits": 0,
+        "reference_words": 6
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "README.md",
+      "bytes": 2999,
+      "sha256": "9f808e1fc12dcb61c89a38f00303506dbc85db8ea988cec441a9324e0c8f2843"
+    },
+    {
+      "path": "config.json",
+      "bytes": 4165,
+      "sha256": "4c779f24e063c437c3dafd5b2e6c9f59f2fa2bd1dbb4ae6a30153bbbbf19e647"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 190,
+      "sha256": "41149cdcffec4d657f32dfcddd9b208037f01286c9e07945c724908c58ed0193"
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 456318,
+      "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1333384464,
+      "sha256": "25a40cddc7e6120140a3d5b9e3dd3878a92ada7b4f312953ab22edc19c2a5acc"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 224,
+      "sha256": "2fcc0da9466ee00be0403b26027373039e032820ebac409e207b32e52e52119d"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 772,
+      "sha256": "c611b1f7d416eb001ee4f293d903ea8c88e703463f1d403f1866a0352743fd00"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 1118,
+      "sha256": "5a1356884c6ae736a621841535264ba7c5bebd52f169258add2c48fcbb32d50a"
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 898822,
+      "sha256": "06b4d46c8e752d410213d9548eb27a54db70fda0319b6271fb8d59dead5e1cab"
+    }
+  ],
+  "load_seconds": 0.24160479099373333,
+  "precision": {
+    "mode": "floating",
+    "dtypes": [
+      "float32"
+    ]
+  },
+  "warmup_seconds": 0.24964529200224206,
+  "metrics": {
+    "attempted": 10,
+    "completed": 10,
+    "failed": 0,
+    "truncated": 0,
+    "median_latency_seconds": 0.20894310400035465,
+    "completed_pages_per_second": 4.6702302699176075,
+    "corpus_cer": 0.04377880184331797,
+    "corpus_wer": 0.10638297872340426,
+    "max_peak_mlx_memory_gib": 1.4878959879279137,
+    "actual_output_tokens": 105,
+    "inference_seconds": 2.1412220430356683
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "mlx-one-ocr-cleanup-v1",
+  "owned_directory": "/private/tmp/mlx-one-ocr-100-20261025",
+  "policy": "only task-owned model/data/cache artifacts; pre-existing caches untouched",
+  "models": [
+    {
+      "id": "O04",
+      "removed_bytes": 465699353,
+      "removed": true
+    },
+    {
+      "id": "O04",
+      "run": "corrected 100-page plus 10-line run",
+      "removed_bytes": 465699350,
+      "removed": true
+    },
+    {
+      "id": "O03",
+      "removed_bytes": 457101054,
+      "removed": true
+    },
+    {
+      "id": "O05",
+      "removed_bytes": 714859146,
+      "removed": true
+    },
+    {
+      "id": "O06",
+      "removed_bytes": 2022813230,
+      "removed": true
+    },
+    {
+      "id": "O06",
+      "removed_bytes": 2022813231,
+      "removed": true
+    },
+    {
+      "id": "O07",
+      "removed_bytes": 2469656778,
+      "removed": true
+    }
+  ],
+  "remaining_cache_and_dataset_removed_bytes": 65395409,
+  "owned_directory_removed": true,
+  "completed_unix_seconds": 1792915382.321376,
+  "included_cleanup_snapshots": [
+    "O04-cleanup.json",
+    "O03-cleanup.json",
+    "O05-O06-first-cleanup.json"
+  ],
+  "shared_cache_audit": "shared-cache-audit.json"
+}

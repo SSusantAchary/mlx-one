@@ -1,0 +1,14 @@
+{
+  "pre_existing_chunk_cache_preserved": true,
+  "task_created_chunk_files_in_shared_cache": 0,
+  "removed_task_process_empty_logs": [
+    "xet_20261025T105834394+0530_32716.log",
+    "xet_20261025T105721418+0530_32616.log",
+    "xet_20261025T105718802+0530_32600.log",
+    "xet_20261025T105556283+0530_32531.log",
+    "xet_20261025T105918775+0530_32794.log"
+  ],
+  "remaining_download_cache_policy": "HF_XET_CACHE and HF_HUB_CACHE inside owned scratch directory",
+  "task_cache_birth_unix_seconds": 1792905956.2633097,
+  "final_shared_cache_audit_passed": true
+}

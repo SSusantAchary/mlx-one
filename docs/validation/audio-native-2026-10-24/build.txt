@@ -1,0 +1,1926 @@
+* Getting build dependencies for sdist...
+running egg_info
+writing src/mlx_one.egg-info/PKG-INFO
+writing dependency_links to src/mlx_one.egg-info/dependency_links.txt
+writing entry points to src/mlx_one.egg-info/entry_points.txt
+writing requirements to src/mlx_one.egg-info/requires.txt
+writing top-level names to src/mlx_one.egg-info/top_level.txt
+reading manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+no previously-included directories found matching 'local'
+no previously-included directories found matching 'calibration'
+no previously-included directories found matching 'references_libs'
+no previously-included directories found matching 'docs'
+no previously-included directories found matching 'qualification'
+no previously-included directories found matching 'benchmarks'
+no previously-included directories found matching 'scripts'
+no previously-included directories found matching 'ui'
+no previously-included directories found matching '.github'
+warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+adding license file 'LICENSE'
+writing manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing src/mlx_one.egg-info/PKG-INFO
+writing dependency_links to src/mlx_one.egg-info/dependency_links.txt
+writing entry points to src/mlx_one.egg-info/entry_points.txt
+writing requirements to src/mlx_one.egg-info/requires.txt
+writing top-level names to src/mlx_one.egg-info/top_level.txt
+reading manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+no previously-included directories found matching 'local'
+no previously-included directories found matching 'calibration'
+no previously-included directories found matching 'references_libs'
+no previously-included directories found matching 'docs'
+no previously-included directories found matching 'qualification'
+no previously-included directories found matching 'benchmarks'
+no previously-included directories found matching 'scripts'
+no previously-included directories found matching 'ui'
+no previously-included directories found matching '.github'
+warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+adding license file 'LICENSE'
+writing manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+running check
+creating mlx_one-0.1.0a1
+creating mlx_one-0.1.0a1/requirements
+creating mlx_one-0.1.0a1/src/mlx_one
+creating mlx_one-0.1.0a1/src/mlx_one.egg-info
+creating mlx_one-0.1.0a1/src/mlx_one/audio
+creating mlx_one-0.1.0a1/src/mlx_one/compat
+creating mlx_one-0.1.0a1/src/mlx_one/core
+creating mlx_one-0.1.0a1/src/mlx_one/data
+creating mlx_one-0.1.0a1/src/mlx_one/data/calibrations
+creating mlx_one-0.1.0a1/src/mlx_one/data/compatibility
+creating mlx_one-0.1.0a1/src/mlx_one/data/hardware
+creating mlx_one-0.1.0a1/src/mlx_one/engine
+creating mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+creating mlx_one-0.1.0a1/src/mlx_one/models
+creating mlx_one-0.1.0a1/src/mlx_one/models/audio
+creating mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+creating mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+creating mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+creating mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+creating mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+creating mlx_one-0.1.0a1/src/mlx_one/models/embeddings
+creating mlx_one-0.1.0a1/src/mlx_one/models/embeddings/bert
+creating mlx_one-0.1.0a1/src/mlx_one/models/embeddings/lfm2_colbert
+creating mlx_one-0.1.0a1/src/mlx_one/models/embeddings/mpnet
+creating mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_embedding
+creating mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_reranker
+creating mlx_one-0.1.0a1/src/mlx_one/models/language
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/gemma3
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/gpt2
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/gpt_oss
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2_moe
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/llama
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/openelm
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/phi3
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2_moe
+creating mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+creating mlx_one-0.1.0a1/src/mlx_one/models/segmentation
+creating mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+creating mlx_one-0.1.0a1/src/mlx_one/models/shared
+creating mlx_one-0.1.0a1/src/mlx_one/models/vision_language
+creating mlx_one-0.1.0a1/src/mlx_one/models/vision_language/lfm2_vl
+creating mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_5_vl
+creating mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_vl
+creating mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+creating mlx_one-0.1.0a1/src/mlx_one/ops
+creating mlx_one-0.1.0a1/src/mlx_one/quantization
+creating mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+creating mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant/kernels
+creating mlx_one-0.1.0a1/src/mlx_one/retrieval
+creating mlx_one-0.1.0a1/src/mlx_one/segmentation
+creating mlx_one-0.1.0a1/src/mlx_one/server
+creating mlx_one-0.1.0a1/src/mlx_one/text
+creating mlx_one-0.1.0a1/src/mlx_one/ui/dist
+creating mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app
+creating mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/assets
+creating mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+creating mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/entry
+creating mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/nodes
+creating mlx_one-0.1.0a1/src/mlx_one/utils
+creating mlx_one-0.1.0a1/src/mlx_one/vision
+copying files to mlx_one-0.1.0a1...
+copying LICENSE -> mlx_one-0.1.0a1
+copying MANIFEST.in -> mlx_one-0.1.0a1
+copying README.md -> mlx_one-0.1.0a1
+copying pyproject.toml -> mlx_one-0.1.0a1
+copying requirements/alpha-tested-constraints.txt -> mlx_one-0.1.0a1/requirements
+copying src/mlx_one/__init__.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/benchmark.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/benchmark_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/calibration.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/calibration_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/cli.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/comparison.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/compatibility.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/conversion.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/conversion_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/datasets.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/diagnostics.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/evaluation.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/evidence.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/generation.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/generation_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/hardware.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/inference_baseline.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/inference_baseline_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/inference_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/inference_qualification_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/inspection.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/native_correctness.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/native_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p0_engine_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p0_engine_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p0_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p1_benchmark.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p1_decode.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p1_profiles.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/p1_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/peak_calibration.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/planning.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/provenance.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/quality_dataset.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/registry.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/run_store.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/runtime_baseline.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/schema_migrations.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/schemas.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/stress_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/task_qualification.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/task_qualification_worker.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/traffic_replay.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/training.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/tuning.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one/workflow.py -> mlx_one-0.1.0a1/src/mlx_one
+copying src/mlx_one.egg-info/PKG-INFO -> mlx_one-0.1.0a1/src/mlx_one.egg-info
+copying src/mlx_one.egg-info/SOURCES.txt -> mlx_one-0.1.0a1/src/mlx_one.egg-info
+copying src/mlx_one.egg-info/dependency_links.txt -> mlx_one-0.1.0a1/src/mlx_one.egg-info
+copying src/mlx_one.egg-info/entry_points.txt -> mlx_one-0.1.0a1/src/mlx_one.egg-info
+copying src/mlx_one.egg-info/requires.txt -> mlx_one-0.1.0a1/src/mlx_one.egg-info
+copying src/mlx_one.egg-info/top_level.txt -> mlx_one-0.1.0a1/src/mlx_one.egg-info
+copying src/mlx_one/audio/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/cli.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/decoding.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/evaluation.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/input.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/lfm.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/loading.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/moonshine.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/parakeet.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/public.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/qwen.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/schemas.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/service.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/streaming.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/audio/weights.py -> mlx_one-0.1.0a1/src/mlx_one/audio
+copying src/mlx_one/compat/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/compat
+copying src/mlx_one/compat/trl.py -> mlx_one-0.1.0a1/src/mlx_one/compat
+copying src/mlx_one/compat/unsloth.py -> mlx_one-0.1.0a1/src/mlx_one/compat
+copying src/mlx_one/core/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/cache.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/capabilities.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/compatibility.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/config.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/outputs.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/precision.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/protocols.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/quantization.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/registry.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/release_support.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/sliding_cache.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/core/weights.py -> mlx_one-0.1.0a1/src/mlx_one/core
+copying src/mlx_one/data/capabilities.json -> mlx_one-0.1.0a1/src/mlx_one/data
+copying src/mlx_one/data/calibrations/m4-air-32gb-text-v1.json -> mlx_one-0.1.0a1/src/mlx_one/data/calibrations
+copying src/mlx_one/data/calibrations/m4-air-32gb-text-v1.matrix.yaml -> mlx_one-0.1.0a1/src/mlx_one/data/calibrations
+copying src/mlx_one/data/compatibility/alpha_release.json -> mlx_one-0.1.0a1/src/mlx_one/data/compatibility
+copying src/mlx_one/data/compatibility/mlx.json -> mlx_one-0.1.0a1/src/mlx_one/data/compatibility
+copying src/mlx_one/data/hardware/m4-air-32gb.yaml -> mlx_one-0.1.0a1/src/mlx_one/data/hardware
+copying src/mlx_one/engine/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/actor.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/adapter_registry.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/adapters.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/admission.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/arena.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/batching.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/block_cache.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/block_kv.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/cache.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/cache_errors.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/cache_manager.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/cache_planner.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/cache_specs.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/cold_prefix.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/components.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/compound.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/construction.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/contracts.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/device_executor.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/dispatch.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/envelope.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/execution_context.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/hybrid.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/kernel_dispatch.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/lifecycle.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/media.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/memory.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/model_pool.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/modes.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/native_adapters.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/observation.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/optimization_policy.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/paged.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/paged_attention.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/parity.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/plugins.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/prefix_cache.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/pressure.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/prompts.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/public.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/qualification.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/reporting.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/runners.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/runtime_specs.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/scheduler.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/selection.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/service.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/sessions.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/speculation.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/tasks.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/timing.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/transactions.py -> mlx_one-0.1.0a1/src/mlx_one/engine
+copying src/mlx_one/engine/task_runners/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/base.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/lfm_audio.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/multimodal.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/retrieval.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/segmentation.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/speech.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/transducer.py -> mlx_one-0.1.0a1/src/mlx_one/engine/task_runners
+copying src/mlx_one/models/UPSTREAM_LICENSE -> mlx_one-0.1.0a1/src/mlx_one/models
+copying src/mlx_one/models/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models
+copying src/mlx_one/models/registry.py -> mlx_one-0.1.0a1/src/mlx_one/models
+copying src/mlx_one/models/audio/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio
+copying src/mlx_one/models/audio/lfm2_audio/UPSTREAM.md -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/UPSTREAM_LICENSE -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/checkpoint_config.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/conformer.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/detokenizer.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/dsp.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/loading.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/native.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/processing.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/transformer.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/moonshine/NOTICE -> mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/loading.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/parakeet/NOTICE -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/loading.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/mlx_export.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/processing.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/qwen3_asr/NOTICE -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/alignment.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/loading.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/processing.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/whisper/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/loading.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/processing.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/tokenizer.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/audio/whisper
+copying src/mlx_one/models/embeddings/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings
+copying src/mlx_one/models/embeddings/bert/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/lfm2_colbert/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/mpnet/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/qwen3_embedding/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_reranker/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/language/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language
+copying src/mlx_one/models/language/gemma3/UPSTREAM_LICENSE -> mlx_one-0.1.0a1/src/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gpt2/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt_oss/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/lfm2/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2_moe/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/llama/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/llama
+copying src/mlx_one/models/language/openelm/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/phi3/UPSTREAM_LICENSE -> mlx_one-0.1.0a1/src/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/qwen2/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2_moe/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen3/UPSTREAM_LICENSE -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/upstream_adapter.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/upstream_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/upstream_model.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/language/qwen3
+copying src/mlx_one/models/segmentation/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation
+copying src/mlx_one/models/segmentation/sam3/NOTICE.md -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/_configuration.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/_runtime.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/tracker.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/tracker_video.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/video.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/shared/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/decoder.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/encoder.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/execution.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/hybrid.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/moe.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/moe_decoder.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/reference_activations.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/sparse.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/transformer.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/vision.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/shared/vlm_weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/shared
+copying src/mlx_one/models/vision_language/UPSTREAM.md -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language
+copying src/mlx_one/models/vision_language/UPSTREAM_LICENSE -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language
+copying src/mlx_one/models/vision_language/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language
+copying src/mlx_one/models/vision_language/lfm2_vl/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen3_5/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/config.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/model.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/reference_delta.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/reference_math.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/weights.py -> mlx_one-0.1.0a1/src/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/ops/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/attention.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/compiled.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/logits.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/numerical_trace.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/profiling.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/quantized_linear.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/ops/reference_tiled.py -> mlx_one-0.1.0a1/src/mlx_one/ops
+copying src/mlx_one/quantization/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/quantization
+copying src/mlx_one/quantization/turboquant/LICENSE.txt -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/NOTICE.txt -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/config.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/dispatch.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/experts.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/linear.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/loading.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/kernels/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_expert_qmv.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_gather_qmm.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_qmm.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_qmv.py -> mlx_one-0.1.0a1/src/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/retrieval/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/retrieval
+copying src/mlx_one/retrieval/loading.py -> mlx_one-0.1.0a1/src/mlx_one/retrieval
+copying src/mlx_one/retrieval/schemas.py -> mlx_one-0.1.0a1/src/mlx_one/retrieval
+copying src/mlx_one/retrieval/service.py -> mlx_one-0.1.0a1/src/mlx_one/retrieval
+copying src/mlx_one/retrieval/tokenizer.py -> mlx_one-0.1.0a1/src/mlx_one/retrieval
+copying src/mlx_one/segmentation/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/cli.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/export.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/inference.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/loading.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/postprocessing.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/processing.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/resizing.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/schemas.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/segmentation/video.py -> mlx_one-0.1.0a1/src/mlx_one/segmentation
+copying src/mlx_one/server/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/admission.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/app.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/audio.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/config.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/generation_engine.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/media.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/model_manager.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/scheduler.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/schemas.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/server/transcription.py -> mlx_one-0.1.0a1/src/mlx_one/server
+copying src/mlx_one/text/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/chat.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/generation.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/harmony.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/harmony_tools.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/loading.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/sampling.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/schemas.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/tokenizer.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/text/tokenizers.py -> mlx_one-0.1.0a1/src/mlx_one/text
+copying src/mlx_one/ui/dist/THIRD_PARTY_NOTICES.txt -> mlx_one-0.1.0a1/src/mlx_one/ui/dist
+copying src/mlx_one/ui/dist/index.html -> mlx_one-0.1.0a1/src/mlx_one/ui/dist
+copying src/mlx_one/ui/dist/mlx-one-logo.png -> mlx_one-0.1.0a1/src/mlx_one/ui/dist
+copying src/mlx_one/ui/dist/_app/version.json -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app
+copying src/mlx_one/ui/dist/_app/immutable/assets/0.g1PcYTVf.css -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/assets
+copying src/mlx_one/ui/dist/_app/immutable/assets/2.B8K-Evu6.css -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/assets
+copying src/mlx_one/ui/dist/_app/immutable/chunks/82h7flzh.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/BauqED68.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/Bij8Ok7U.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/C8pA1lZh.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/DUBjb0lT.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/mo_kpY37.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/qhmwaBmK.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/wbPk3Yxo.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/entry/app.QHeSwbD2.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/entry
+copying src/mlx_one/ui/dist/_app/immutable/entry/start.BA5nnLAR.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/entry
+copying src/mlx_one/ui/dist/_app/immutable/nodes/0.BdtHWFD4.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/nodes
+copying src/mlx_one/ui/dist/_app/immutable/nodes/1.RemD7kSb.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/nodes
+copying src/mlx_one/ui/dist/_app/immutable/nodes/2.C7Aq8Iat.js -> mlx_one-0.1.0a1/src/mlx_one/ui/dist/_app/immutable/nodes
+copying src/mlx_one/utils/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/utils
+copying src/mlx_one/utils/checkpoint.py -> mlx_one-0.1.0a1/src/mlx_one/utils
+copying src/mlx_one/utils/memory.py -> mlx_one-0.1.0a1/src/mlx_one/utils
+copying src/mlx_one/utils/model_loader.py -> mlx_one-0.1.0a1/src/mlx_one/utils
+copying src/mlx_one/vision/__init__.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/generation.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/images.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/lfm_processing.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/loading.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/messages.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/processing.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/public.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+copying src/mlx_one/vision/schemas.py -> mlx_one-0.1.0a1/src/mlx_one/vision
+Writing mlx_one-0.1.0a1/setup.cfg
+Creating tar archive
+removing 'mlx_one-0.1.0a1' (and everything under it)
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+running egg_info
+writing src/mlx_one.egg-info/PKG-INFO
+writing dependency_links to src/mlx_one.egg-info/dependency_links.txt
+writing entry points to src/mlx_one.egg-info/entry_points.txt
+writing requirements to src/mlx_one.egg-info/requires.txt
+writing top-level names to src/mlx_one.egg-info/top_level.txt
+reading manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+no previously-included directories found matching 'local'
+no previously-included directories found matching 'calibration'
+no previously-included directories found matching 'references_libs'
+no previously-included directories found matching 'docs'
+no previously-included directories found matching 'qualification'
+no previously-included directories found matching 'benchmarks'
+no previously-included directories found matching 'tests'
+no previously-included directories found matching 'scripts'
+no previously-included directories found matching 'ui'
+no previously-included directories found matching '.github'
+warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+adding license file 'LICENSE'
+writing manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/mlx_one
+copying src/mlx_one/inference_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/peak_calibration.py -> build/lib/mlx_one
+copying src/mlx_one/p1_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/task_qualification_worker.py -> build/lib/mlx_one
+copying src/mlx_one/compatibility.py -> build/lib/mlx_one
+copying src/mlx_one/native_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/task_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/generation.py -> build/lib/mlx_one
+copying src/mlx_one/benchmark.py -> build/lib/mlx_one
+copying src/mlx_one/registry.py -> build/lib/mlx_one
+copying src/mlx_one/generation_worker.py -> build/lib/mlx_one
+copying src/mlx_one/p0_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/diagnostics.py -> build/lib/mlx_one
+copying src/mlx_one/evaluation.py -> build/lib/mlx_one
+copying src/mlx_one/conversion_worker.py -> build/lib/mlx_one
+copying src/mlx_one/conversion.py -> build/lib/mlx_one
+copying src/mlx_one/datasets.py -> build/lib/mlx_one
+copying src/mlx_one/__init__.py -> build/lib/mlx_one
+copying src/mlx_one/p1_profiles.py -> build/lib/mlx_one
+copying src/mlx_one/native_correctness.py -> build/lib/mlx_one
+copying src/mlx_one/stress_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/inference_baseline.py -> build/lib/mlx_one
+copying src/mlx_one/inspection.py -> build/lib/mlx_one
+copying src/mlx_one/comparison.py -> build/lib/mlx_one
+copying src/mlx_one/p0_engine_worker.py -> build/lib/mlx_one
+copying src/mlx_one/p1_benchmark.py -> build/lib/mlx_one
+copying src/mlx_one/schemas.py -> build/lib/mlx_one
+copying src/mlx_one/cli.py -> build/lib/mlx_one
+copying src/mlx_one/runtime_baseline.py -> build/lib/mlx_one
+copying src/mlx_one/schema_migrations.py -> build/lib/mlx_one
+copying src/mlx_one/hardware.py -> build/lib/mlx_one
+copying src/mlx_one/planning.py -> build/lib/mlx_one
+copying src/mlx_one/p1_decode.py -> build/lib/mlx_one
+copying src/mlx_one/tuning.py -> build/lib/mlx_one
+copying src/mlx_one/workflow.py -> build/lib/mlx_one
+copying src/mlx_one/provenance.py -> build/lib/mlx_one
+copying src/mlx_one/inference_qualification_worker.py -> build/lib/mlx_one
+copying src/mlx_one/benchmark_worker.py -> build/lib/mlx_one
+copying src/mlx_one/quality_dataset.py -> build/lib/mlx_one
+copying src/mlx_one/p0_engine_qualification.py -> build/lib/mlx_one
+copying src/mlx_one/evidence.py -> build/lib/mlx_one
+copying src/mlx_one/run_store.py -> build/lib/mlx_one
+copying src/mlx_one/inference_baseline_worker.py -> build/lib/mlx_one
+copying src/mlx_one/training.py -> build/lib/mlx_one
+copying src/mlx_one/calibration_worker.py -> build/lib/mlx_one
+copying src/mlx_one/calibration.py -> build/lib/mlx_one
+copying src/mlx_one/traffic_replay.py -> build/lib/mlx_one
+creating build/lib/mlx_one/compat
+copying src/mlx_one/compat/unsloth.py -> build/lib/mlx_one/compat
+copying src/mlx_one/compat/__init__.py -> build/lib/mlx_one/compat
+copying src/mlx_one/compat/trl.py -> build/lib/mlx_one/compat
+creating build/lib/mlx_one/core
+copying src/mlx_one/core/compatibility.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/config.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/sliding_cache.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/protocols.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/registry.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/quantization.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/release_support.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/cache.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/__init__.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/precision.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/capabilities.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/weights.py -> build/lib/mlx_one/core
+copying src/mlx_one/core/outputs.py -> build/lib/mlx_one/core
+creating build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/loading.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/__init__.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/export.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/resizing.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/schemas.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/cli.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/inference.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/postprocessing.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/processing.py -> build/lib/mlx_one/segmentation
+copying src/mlx_one/segmentation/video.py -> build/lib/mlx_one/segmentation
+creating build/lib/mlx_one/server
+copying src/mlx_one/server/transcription.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/media.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/config.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/__init__.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/model_manager.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/schemas.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/app.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/audio.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/scheduler.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/admission.py -> build/lib/mlx_one/server
+copying src/mlx_one/server/generation_engine.py -> build/lib/mlx_one/server
+creating build/lib/mlx_one/utils
+copying src/mlx_one/utils/checkpoint.py -> build/lib/mlx_one/utils
+copying src/mlx_one/utils/memory.py -> build/lib/mlx_one/utils
+copying src/mlx_one/utils/__init__.py -> build/lib/mlx_one/utils
+copying src/mlx_one/utils/model_loader.py -> build/lib/mlx_one/utils
+creating build/lib/mlx_one/models
+copying src/mlx_one/models/registry.py -> build/lib/mlx_one/models
+copying src/mlx_one/models/__init__.py -> build/lib/mlx_one/models
+creating build/lib/mlx_one/vision
+copying src/mlx_one/vision/public.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/loading.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/generation.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/__init__.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/schemas.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/images.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/messages.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/lfm_processing.py -> build/lib/mlx_one/vision
+copying src/mlx_one/vision/processing.py -> build/lib/mlx_one/vision
+creating build/lib/mlx_one/quantization
+copying src/mlx_one/quantization/__init__.py -> build/lib/mlx_one/quantization
+creating build/lib/mlx_one/audio
+copying src/mlx_one/audio/service.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/public.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/moonshine.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/parakeet.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/loading.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/evaluation.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/__init__.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/decoding.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/schemas.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/cli.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/input.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/qwen.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/lfm.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/streaming.py -> build/lib/mlx_one/audio
+copying src/mlx_one/audio/weights.py -> build/lib/mlx_one/audio
+creating build/lib/mlx_one/retrieval
+copying src/mlx_one/retrieval/service.py -> build/lib/mlx_one/retrieval
+copying src/mlx_one/retrieval/loading.py -> build/lib/mlx_one/retrieval
+copying src/mlx_one/retrieval/__init__.py -> build/lib/mlx_one/retrieval
+copying src/mlx_one/retrieval/tokenizer.py -> build/lib/mlx_one/retrieval
+copying src/mlx_one/retrieval/schemas.py -> build/lib/mlx_one/retrieval
+creating build/lib/mlx_one/ops
+copying src/mlx_one/ops/quantized_linear.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/attention.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/__init__.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/compiled.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/numerical_trace.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/logits.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/reference_tiled.py -> build/lib/mlx_one/ops
+copying src/mlx_one/ops/profiling.py -> build/lib/mlx_one/ops
+creating build/lib/mlx_one/text
+copying src/mlx_one/text/loading.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/generation.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/__init__.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/harmony.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/tokenizer.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/chat.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/schemas.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/sampling.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/harmony_tools.py -> build/lib/mlx_one/text
+copying src/mlx_one/text/tokenizers.py -> build/lib/mlx_one/text
+creating build/lib/mlx_one/engine
+copying src/mlx_one/engine/cache_specs.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/plugins.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/service.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/observation.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/sessions.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/public.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/batching.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/media.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/block_kv.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/tasks.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/pressure.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/cold_prefix.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/memory.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/parity.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/cache_manager.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/construction.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/device_executor.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/dispatch.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/hybrid.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/cache_errors.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/transactions.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/cache.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/__init__.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/modes.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/prompts.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/speculation.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/optimization_policy.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/runtime_specs.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/kernel_dispatch.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/adapter_registry.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/compound.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/timing.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/block_cache.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/native_adapters.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/lifecycle.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/qualification.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/runners.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/paged_attention.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/contracts.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/model_pool.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/execution_context.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/prefix_cache.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/scheduler.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/cache_planner.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/admission.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/selection.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/actor.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/components.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/envelope.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/arena.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/paged.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/reporting.py -> build/lib/mlx_one/engine
+copying src/mlx_one/engine/adapters.py -> build/lib/mlx_one/engine
+creating build/lib/mlx_one/models/embeddings
+copying src/mlx_one/models/embeddings/__init__.py -> build/lib/mlx_one/models/embeddings
+creating build/lib/mlx_one/models/vision_language
+copying src/mlx_one/models/vision_language/__init__.py -> build/lib/mlx_one/models/vision_language
+creating build/lib/mlx_one/models/segmentation
+copying src/mlx_one/models/segmentation/__init__.py -> build/lib/mlx_one/models/segmentation
+creating build/lib/mlx_one/models/language
+copying src/mlx_one/models/language/__init__.py -> build/lib/mlx_one/models/language
+creating build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/decoder.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/execution.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/vision.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/hybrid.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/__init__.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/encoder.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/transformer.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/reference_activations.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/sparse.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/vlm_weights.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/reference_math.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/moe.py -> build/lib/mlx_one/models/shared
+copying src/mlx_one/models/shared/moe_decoder.py -> build/lib/mlx_one/models/shared
+creating build/lib/mlx_one/models/audio
+copying src/mlx_one/models/audio/__init__.py -> build/lib/mlx_one/models/audio
+creating build/lib/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/config.py -> build/lib/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/__init__.py -> build/lib/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/model.py -> build/lib/mlx_one/models/embeddings/lfm2_colbert
+copying src/mlx_one/models/embeddings/lfm2_colbert/weights.py -> build/lib/mlx_one/models/embeddings/lfm2_colbert
+creating build/lib/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/config.py -> build/lib/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/__init__.py -> build/lib/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/model.py -> build/lib/mlx_one/models/embeddings/qwen3_reranker
+copying src/mlx_one/models/embeddings/qwen3_reranker/weights.py -> build/lib/mlx_one/models/embeddings/qwen3_reranker
+creating build/lib/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/config.py -> build/lib/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/__init__.py -> build/lib/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/model.py -> build/lib/mlx_one/models/embeddings/bert
+copying src/mlx_one/models/embeddings/bert/weights.py -> build/lib/mlx_one/models/embeddings/bert
+creating build/lib/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/config.py -> build/lib/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/__init__.py -> build/lib/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/model.py -> build/lib/mlx_one/models/embeddings/qwen3_embedding
+copying src/mlx_one/models/embeddings/qwen3_embedding/weights.py -> build/lib/mlx_one/models/embeddings/qwen3_embedding
+creating build/lib/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/config.py -> build/lib/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/__init__.py -> build/lib/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/model.py -> build/lib/mlx_one/models/embeddings/mpnet
+copying src/mlx_one/models/embeddings/mpnet/weights.py -> build/lib/mlx_one/models/embeddings/mpnet
+creating build/lib/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/config.py -> build/lib/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/__init__.py -> build/lib/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/model.py -> build/lib/mlx_one/models/vision_language/qwen2_5_vl
+copying src/mlx_one/models/vision_language/qwen2_5_vl/weights.py -> build/lib/mlx_one/models/vision_language/qwen2_5_vl
+creating build/lib/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/config.py -> build/lib/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/__init__.py -> build/lib/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/model.py -> build/lib/mlx_one/models/vision_language/lfm2_vl
+copying src/mlx_one/models/vision_language/lfm2_vl/weights.py -> build/lib/mlx_one/models/vision_language/lfm2_vl
+creating build/lib/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/config.py -> build/lib/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/__init__.py -> build/lib/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/model.py -> build/lib/mlx_one/models/vision_language/qwen2_vl
+copying src/mlx_one/models/vision_language/qwen2_vl/weights.py -> build/lib/mlx_one/models/vision_language/qwen2_vl
+creating build/lib/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/config.py -> build/lib/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/__init__.py -> build/lib/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/reference_delta.py -> build/lib/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/model.py -> build/lib/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/reference_math.py -> build/lib/mlx_one/models/vision_language/qwen3_5
+copying src/mlx_one/models/vision_language/qwen3_5/weights.py -> build/lib/mlx_one/models/vision_language/qwen3_5
+creating build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/config.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/__init__.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/_runtime.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/tracker_video.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/model.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/tracker.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/_configuration.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/weights.py -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/segmentation/sam3/video.py -> build/lib/mlx_one/models/segmentation/sam3
+creating build/lib/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/config.py -> build/lib/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/__init__.py -> build/lib/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/model.py -> build/lib/mlx_one/models/language/gpt_oss
+copying src/mlx_one/models/language/gpt_oss/weights.py -> build/lib/mlx_one/models/language/gpt_oss
+creating build/lib/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/config.py -> build/lib/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/__init__.py -> build/lib/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/model.py -> build/lib/mlx_one/models/language/phi3
+copying src/mlx_one/models/language/phi3/weights.py -> build/lib/mlx_one/models/language/phi3
+creating build/lib/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/config.py -> build/lib/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/__init__.py -> build/lib/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/model.py -> build/lib/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/gemma3/weights.py -> build/lib/mlx_one/models/language/gemma3
+creating build/lib/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/config.py -> build/lib/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/__init__.py -> build/lib/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/model.py -> build/lib/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/reference_math.py -> build/lib/mlx_one/models/language/qwen2
+copying src/mlx_one/models/language/qwen2/weights.py -> build/lib/mlx_one/models/language/qwen2
+creating build/lib/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/config.py -> build/lib/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/__init__.py -> build/lib/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/model.py -> build/lib/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/reference_math.py -> build/lib/mlx_one/models/language/lfm2
+copying src/mlx_one/models/language/lfm2/weights.py -> build/lib/mlx_one/models/language/lfm2
+creating build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/config.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/upstream_model.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/upstream_adapter.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/__init__.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/model.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/reference_math.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/weights.py -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/qwen3/upstream_math.py -> build/lib/mlx_one/models/language/qwen3
+creating build/lib/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/config.py -> build/lib/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/__init__.py -> build/lib/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/model.py -> build/lib/mlx_one/models/language/openelm
+copying src/mlx_one/models/language/openelm/weights.py -> build/lib/mlx_one/models/language/openelm
+creating build/lib/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/config.py -> build/lib/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/__init__.py -> build/lib/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/model.py -> build/lib/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/reference_math.py -> build/lib/mlx_one/models/language/gpt2
+copying src/mlx_one/models/language/gpt2/weights.py -> build/lib/mlx_one/models/language/gpt2
+creating build/lib/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/config.py -> build/lib/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/__init__.py -> build/lib/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/model.py -> build/lib/mlx_one/models/language/lfm2_moe
+copying src/mlx_one/models/language/lfm2_moe/weights.py -> build/lib/mlx_one/models/language/lfm2_moe
+creating build/lib/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/config.py -> build/lib/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/__init__.py -> build/lib/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/model.py -> build/lib/mlx_one/models/language/qwen2_moe
+copying src/mlx_one/models/language/qwen2_moe/weights.py -> build/lib/mlx_one/models/language/qwen2_moe
+creating build/lib/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/config.py -> build/lib/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/__init__.py -> build/lib/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/model.py -> build/lib/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/reference_math.py -> build/lib/mlx_one/models/language/llama
+copying src/mlx_one/models/language/llama/weights.py -> build/lib/mlx_one/models/language/llama
+creating build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/loading.py -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/config.py -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/mlx_export.py -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/__init__.py -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/model.py -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/processing.py -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/parakeet/weights.py -> build/lib/mlx_one/models/audio/parakeet
+creating build/lib/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/loading.py -> build/lib/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/config.py -> build/lib/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/__init__.py -> build/lib/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/model.py -> build/lib/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/moonshine/weights.py -> build/lib/mlx_one/models/audio/moonshine
+creating build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/loading.py -> build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/config.py -> build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/alignment.py -> build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/__init__.py -> build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/model.py -> build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/processing.py -> build/lib/mlx_one/models/audio/qwen3_asr
+copying src/mlx_one/models/audio/qwen3_asr/weights.py -> build/lib/mlx_one/models/audio/qwen3_asr
+creating build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/loading.py -> build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/config.py -> build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/__init__.py -> build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/model.py -> build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/tokenizer.py -> build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/processing.py -> build/lib/mlx_one/models/audio/whisper
+copying src/mlx_one/models/audio/whisper/weights.py -> build/lib/mlx_one/models/audio/whisper
+creating build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/dsp.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/loading.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/config.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/checkpoint_config.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/detokenizer.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/__init__.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/native.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/model.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/transformer.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/processing.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/conformer.py -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/weights.py -> build/lib/mlx_one/models/audio/lfm2_audio
+creating build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/loading.py -> build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/config.py -> build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/dispatch.py -> build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/linear.py -> build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/__init__.py -> build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/experts.py -> build/lib/mlx_one/quantization/turboquant
+creating build/lib/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_gather_qmm.py -> build/lib/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_qmm.py -> build/lib/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/__init__.py -> build/lib/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_expert_qmv.py -> build/lib/mlx_one/quantization/turboquant/kernels
+copying src/mlx_one/quantization/turboquant/kernels/tq3_qmv.py -> build/lib/mlx_one/quantization/turboquant/kernels
+creating build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/transducer.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/multimodal.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/__init__.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/retrieval.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/lfm_audio.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/speech.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/base.py -> build/lib/mlx_one/engine/task_runners
+copying src/mlx_one/engine/task_runners/segmentation.py -> build/lib/mlx_one/engine/task_runners
+running egg_info
+writing src/mlx_one.egg-info/PKG-INFO
+writing dependency_links to src/mlx_one.egg-info/dependency_links.txt
+writing entry points to src/mlx_one.egg-info/entry_points.txt
+writing requirements to src/mlx_one.egg-info/requires.txt
+writing top-level names to src/mlx_one.egg-info/top_level.txt
+reading manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+no previously-included directories found matching 'local'
+no previously-included directories found matching 'calibration'
+no previously-included directories found matching 'references_libs'
+no previously-included directories found matching 'docs'
+no previously-included directories found matching 'qualification'
+no previously-included directories found matching 'benchmarks'
+no previously-included directories found matching 'tests'
+no previously-included directories found matching 'scripts'
+no previously-included directories found matching 'ui'
+no previously-included directories found matching '.github'
+warning: no previously-included files matching '.DS_Store' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+adding license file 'LICENSE'
+writing manifest file 'src/mlx_one.egg-info/SOURCES.txt'
+copying src/mlx_one/models/UPSTREAM_LICENSE -> build/lib/mlx_one/models
+copying src/mlx_one/models/vision_language/UPSTREAM_LICENSE -> build/lib/mlx_one/models/vision_language
+copying src/mlx_one/models/vision_language/UPSTREAM.md -> build/lib/mlx_one/models/vision_language
+copying src/mlx_one/quantization/turboquant/LICENSE.txt -> build/lib/mlx_one/quantization/turboquant
+copying src/mlx_one/quantization/turboquant/NOTICE.txt -> build/lib/mlx_one/quantization/turboquant
+creating build/lib/mlx_one/data
+copying src/mlx_one/data/capabilities.json -> build/lib/mlx_one/data
+creating build/lib/mlx_one/data/hardware
+copying src/mlx_one/data/hardware/m4-air-32gb.yaml -> build/lib/mlx_one/data/hardware
+creating build/lib/mlx_one/data/calibrations
+copying src/mlx_one/data/calibrations/m4-air-32gb-text-v1.matrix.yaml -> build/lib/mlx_one/data/calibrations
+copying src/mlx_one/data/calibrations/m4-air-32gb-text-v1.json -> build/lib/mlx_one/data/calibrations
+creating build/lib/mlx_one/data/compatibility
+copying src/mlx_one/data/compatibility/alpha_release.json -> build/lib/mlx_one/data/compatibility
+copying src/mlx_one/data/compatibility/mlx.json -> build/lib/mlx_one/data/compatibility
+copying src/mlx_one/models/language/qwen3/UPSTREAM_LICENSE -> build/lib/mlx_one/models/language/qwen3
+copying src/mlx_one/models/language/gemma3/UPSTREAM_LICENSE -> build/lib/mlx_one/models/language/gemma3
+copying src/mlx_one/models/language/phi3/UPSTREAM_LICENSE -> build/lib/mlx_one/models/language/phi3
+copying src/mlx_one/models/segmentation/sam3/NOTICE.md -> build/lib/mlx_one/models/segmentation/sam3
+copying src/mlx_one/models/audio/lfm2_audio/UPSTREAM_LICENSE -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/lfm2_audio/UPSTREAM.md -> build/lib/mlx_one/models/audio/lfm2_audio
+copying src/mlx_one/models/audio/parakeet/NOTICE -> build/lib/mlx_one/models/audio/parakeet
+copying src/mlx_one/models/audio/moonshine/NOTICE -> build/lib/mlx_one/models/audio/moonshine
+copying src/mlx_one/models/audio/qwen3_asr/NOTICE -> build/lib/mlx_one/models/audio/qwen3_asr
+creating build/lib/mlx_one/ui/dist
+copying src/mlx_one/ui/dist/index.html -> build/lib/mlx_one/ui/dist
+copying src/mlx_one/ui/dist/mlx-one-logo.png -> build/lib/mlx_one/ui/dist
+copying src/mlx_one/ui/dist/THIRD_PARTY_NOTICES.txt -> build/lib/mlx_one/ui/dist
+creating build/lib/mlx_one/ui/dist/_app
+copying src/mlx_one/ui/dist/_app/version.json -> build/lib/mlx_one/ui/dist/_app
+creating build/lib/mlx_one/ui/dist/_app/immutable/nodes
+copying src/mlx_one/ui/dist/_app/immutable/nodes/0.BdtHWFD4.js -> build/lib/mlx_one/ui/dist/_app/immutable/nodes
+copying src/mlx_one/ui/dist/_app/immutable/nodes/2.C7Aq8Iat.js -> build/lib/mlx_one/ui/dist/_app/immutable/nodes
+copying src/mlx_one/ui/dist/_app/immutable/nodes/1.RemD7kSb.js -> build/lib/mlx_one/ui/dist/_app/immutable/nodes
+creating build/lib/mlx_one/ui/dist/_app/immutable/entry
+copying src/mlx_one/ui/dist/_app/immutable/entry/app.QHeSwbD2.js -> build/lib/mlx_one/ui/dist/_app/immutable/entry
+copying src/mlx_one/ui/dist/_app/immutable/entry/start.BA5nnLAR.js -> build/lib/mlx_one/ui/dist/_app/immutable/entry
+creating build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/mo_kpY37.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/wbPk3Yxo.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/qhmwaBmK.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/82h7flzh.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/Bij8Ok7U.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/C8pA1lZh.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/DUBjb0lT.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+copying src/mlx_one/ui/dist/_app/immutable/chunks/BauqED68.js -> build/lib/mlx_one/ui/dist/_app/immutable/chunks
+creating build/lib/mlx_one/ui/dist/_app/immutable/assets
+copying src/mlx_one/ui/dist/_app/immutable/assets/0.g1PcYTVf.css -> build/lib/mlx_one/ui/dist/_app/immutable/assets
+copying src/mlx_one/ui/dist/_app/immutable/assets/2.B8K-Evu6.css -> build/lib/mlx_one/ui/dist/_app/immutable/assets
+installing to build/bdist.macosx-15.0-arm64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-15.0-arm64/wheel
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one
+copying build/lib/mlx_one/inference_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/peak_calibration.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p1_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist
+copying build/lib/mlx_one/ui/dist/index.html -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist
+copying build/lib/mlx_one/ui/dist/mlx-one-logo.png -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist
+copying build/lib/mlx_one/ui/dist/THIRD_PARTY_NOTICES.txt -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist/_app
+copying build/lib/mlx_one/ui/dist/_app/version.json -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist/_app/immutable
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist/_app/immutable/nodes
+copying build/lib/mlx_one/ui/dist/_app/immutable/nodes/0.BdtHWFD4.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/nodes
+copying build/lib/mlx_one/ui/dist/_app/immutable/nodes/2.C7Aq8Iat.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/nodes
+copying build/lib/mlx_one/ui/dist/_app/immutable/nodes/1.RemD7kSb.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/nodes
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist/_app/immutable/entry
+copying build/lib/mlx_one/ui/dist/_app/immutable/entry/app.QHeSwbD2.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/entry
+copying build/lib/mlx_one/ui/dist/_app/immutable/entry/start.BA5nnLAR.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/entry
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/mo_kpY37.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/wbPk3Yxo.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/qhmwaBmK.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/82h7flzh.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/Bij8Ok7U.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/C8pA1lZh.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/DUBjb0lT.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+copying build/lib/mlx_one/ui/dist/_app/immutable/chunks/BauqED68.js -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/chunks
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ui/dist/_app/immutable/assets
+copying build/lib/mlx_one/ui/dist/_app/immutable/assets/0.g1PcYTVf.css -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/assets
+copying build/lib/mlx_one/ui/dist/_app/immutable/assets/2.B8K-Evu6.css -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ui/dist/_app/immutable/assets
+copying build/lib/mlx_one/task_qualification_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/compatibility.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/native_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/compat
+copying build/lib/mlx_one/compat/unsloth.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/compat
+copying build/lib/mlx_one/compat/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/compat
+copying build/lib/mlx_one/compat/trl.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/compat
+copying build/lib/mlx_one/task_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/core
+copying build/lib/mlx_one/core/compatibility.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/sliding_cache.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/protocols.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/registry.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/quantization.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/release_support.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/cache.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/precision.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/capabilities.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/core/outputs.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/core
+copying build/lib/mlx_one/generation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/benchmark.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/registry.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/export.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/resizing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/cli.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/inference.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/postprocessing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/segmentation/video.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/segmentation
+copying build/lib/mlx_one/generation_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p0_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/diagnostics.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/evaluation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/conversion_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/conversion.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/datasets.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p1_profiles.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/native_correctness.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/server
+copying build/lib/mlx_one/server/transcription.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/media.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/model_manager.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/app.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/audio.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/scheduler.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/admission.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+copying build/lib/mlx_one/server/generation_engine.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/server
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/utils
+copying build/lib/mlx_one/utils/checkpoint.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/utils
+copying build/lib/mlx_one/utils/memory.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/utils
+copying build/lib/mlx_one/utils/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/utils
+copying build/lib/mlx_one/utils/model_loader.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/utils
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/embeddings
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/embeddings/lfm2_colbert
+copying build/lib/mlx_one/models/embeddings/lfm2_colbert/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/lfm2_colbert
+copying build/lib/mlx_one/models/embeddings/lfm2_colbert/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/lfm2_colbert
+copying build/lib/mlx_one/models/embeddings/lfm2_colbert/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/lfm2_colbert
+copying build/lib/mlx_one/models/embeddings/lfm2_colbert/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/lfm2_colbert
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/embeddings/qwen3_reranker
+copying build/lib/mlx_one/models/embeddings/qwen3_reranker/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_reranker
+copying build/lib/mlx_one/models/embeddings/qwen3_reranker/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_reranker
+copying build/lib/mlx_one/models/embeddings/qwen3_reranker/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_reranker
+copying build/lib/mlx_one/models/embeddings/qwen3_reranker/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_reranker
+copying build/lib/mlx_one/models/embeddings/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/embeddings/bert
+copying build/lib/mlx_one/models/embeddings/bert/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/bert
+copying build/lib/mlx_one/models/embeddings/bert/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/bert
+copying build/lib/mlx_one/models/embeddings/bert/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/bert
+copying build/lib/mlx_one/models/embeddings/bert/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/bert
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/embeddings/qwen3_embedding
+copying build/lib/mlx_one/models/embeddings/qwen3_embedding/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_embedding
+copying build/lib/mlx_one/models/embeddings/qwen3_embedding/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_embedding
+copying build/lib/mlx_one/models/embeddings/qwen3_embedding/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_embedding
+copying build/lib/mlx_one/models/embeddings/qwen3_embedding/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/qwen3_embedding
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/embeddings/mpnet
+copying build/lib/mlx_one/models/embeddings/mpnet/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/mpnet
+copying build/lib/mlx_one/models/embeddings/mpnet/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/mpnet
+copying build/lib/mlx_one/models/embeddings/mpnet/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/mpnet
+copying build/lib/mlx_one/models/embeddings/mpnet/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/embeddings/mpnet
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/vision_language
+copying build/lib/mlx_one/models/vision_language/UPSTREAM.md -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language
+copying build/lib/mlx_one/models/vision_language/UPSTREAM_LICENSE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language
+copying build/lib/mlx_one/models/vision_language/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/vision_language/qwen2_5_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_5_vl/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_5_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_5_vl/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_5_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_5_vl/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_5_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_5_vl/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_5_vl
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/vision_language/lfm2_vl
+copying build/lib/mlx_one/models/vision_language/lfm2_vl/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/lfm2_vl
+copying build/lib/mlx_one/models/vision_language/lfm2_vl/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/lfm2_vl
+copying build/lib/mlx_one/models/vision_language/lfm2_vl/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/lfm2_vl
+copying build/lib/mlx_one/models/vision_language/lfm2_vl/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/lfm2_vl
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/vision_language/qwen2_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_vl/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_vl/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_vl/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_vl
+copying build/lib/mlx_one/models/vision_language/qwen2_vl/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen2_vl
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/vision_language/qwen3_5/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/vision_language/qwen3_5/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/vision_language/qwen3_5/reference_delta.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/vision_language/qwen3_5/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/vision_language/qwen3_5/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/vision_language/qwen3_5/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/vision_language/qwen3_5
+copying build/lib/mlx_one/models/UPSTREAM_LICENSE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models
+copying build/lib/mlx_one/models/registry.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/segmentation
+copying build/lib/mlx_one/models/segmentation/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/_runtime.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/tracker_video.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/tracker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/_configuration.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/video.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/segmentation/sam3/NOTICE.md -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/segmentation/sam3
+copying build/lib/mlx_one/models/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/gpt_oss
+copying build/lib/mlx_one/models/language/gpt_oss/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt_oss
+copying build/lib/mlx_one/models/language/gpt_oss/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt_oss
+copying build/lib/mlx_one/models/language/gpt_oss/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt_oss
+copying build/lib/mlx_one/models/language/gpt_oss/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt_oss
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/phi3
+copying build/lib/mlx_one/models/language/phi3/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/phi3
+copying build/lib/mlx_one/models/language/phi3/UPSTREAM_LICENSE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/phi3
+copying build/lib/mlx_one/models/language/phi3/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/phi3
+copying build/lib/mlx_one/models/language/phi3/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/phi3
+copying build/lib/mlx_one/models/language/phi3/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/phi3
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/gemma3
+copying build/lib/mlx_one/models/language/gemma3/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gemma3
+copying build/lib/mlx_one/models/language/gemma3/UPSTREAM_LICENSE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gemma3
+copying build/lib/mlx_one/models/language/gemma3/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gemma3
+copying build/lib/mlx_one/models/language/gemma3/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gemma3
+copying build/lib/mlx_one/models/language/gemma3/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gemma3
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/qwen2
+copying build/lib/mlx_one/models/language/qwen2/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2
+copying build/lib/mlx_one/models/language/qwen2/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2
+copying build/lib/mlx_one/models/language/qwen2/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2
+copying build/lib/mlx_one/models/language/qwen2/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2
+copying build/lib/mlx_one/models/language/qwen2/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/lfm2
+copying build/lib/mlx_one/models/language/lfm2/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2
+copying build/lib/mlx_one/models/language/lfm2/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2
+copying build/lib/mlx_one/models/language/lfm2/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2
+copying build/lib/mlx_one/models/language/lfm2/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2
+copying build/lib/mlx_one/models/language/lfm2/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/upstream_model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/UPSTREAM_LICENSE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/upstream_adapter.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/qwen3/upstream_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen3
+copying build/lib/mlx_one/models/language/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/openelm
+copying build/lib/mlx_one/models/language/openelm/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/openelm
+copying build/lib/mlx_one/models/language/openelm/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/openelm
+copying build/lib/mlx_one/models/language/openelm/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/openelm
+copying build/lib/mlx_one/models/language/openelm/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/openelm
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/gpt2
+copying build/lib/mlx_one/models/language/gpt2/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt2
+copying build/lib/mlx_one/models/language/gpt2/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt2
+copying build/lib/mlx_one/models/language/gpt2/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt2
+copying build/lib/mlx_one/models/language/gpt2/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt2
+copying build/lib/mlx_one/models/language/gpt2/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/gpt2
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/lfm2_moe
+copying build/lib/mlx_one/models/language/lfm2_moe/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2_moe
+copying build/lib/mlx_one/models/language/lfm2_moe/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2_moe
+copying build/lib/mlx_one/models/language/lfm2_moe/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2_moe
+copying build/lib/mlx_one/models/language/lfm2_moe/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/lfm2_moe
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/qwen2_moe
+copying build/lib/mlx_one/models/language/qwen2_moe/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2_moe
+copying build/lib/mlx_one/models/language/qwen2_moe/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2_moe
+copying build/lib/mlx_one/models/language/qwen2_moe/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2_moe
+copying build/lib/mlx_one/models/language/qwen2_moe/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/qwen2_moe
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/language/llama
+copying build/lib/mlx_one/models/language/llama/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/llama
+copying build/lib/mlx_one/models/language/llama/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/llama
+copying build/lib/mlx_one/models/language/llama/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/llama
+copying build/lib/mlx_one/models/language/llama/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/llama
+copying build/lib/mlx_one/models/language/llama/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/language/llama
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/decoder.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/execution.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/vision.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/hybrid.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/encoder.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/transformer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/reference_activations.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/sparse.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/vlm_weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/reference_math.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/moe.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+copying build/lib/mlx_one/models/shared/moe_decoder.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/shared
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/audio
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/mlx_export.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/NOTICE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/parakeet/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/parakeet
+copying build/lib/mlx_one/models/audio/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/audio/moonshine
+copying build/lib/mlx_one/models/audio/moonshine/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/moonshine
+copying build/lib/mlx_one/models/audio/moonshine/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/moonshine
+copying build/lib/mlx_one/models/audio/moonshine/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/moonshine
+copying build/lib/mlx_one/models/audio/moonshine/NOTICE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/moonshine
+copying build/lib/mlx_one/models/audio/moonshine/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/moonshine
+copying build/lib/mlx_one/models/audio/moonshine/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/moonshine
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/alignment.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/NOTICE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+copying build/lib/mlx_one/models/audio/qwen3_asr/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/qwen3_asr
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/tokenizer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+copying build/lib/mlx_one/models/audio/whisper/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/whisper
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/dsp.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/UPSTREAM.md -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/checkpoint_config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/UPSTREAM_LICENSE -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/detokenizer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/native.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/model.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/transformer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/conformer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+copying build/lib/mlx_one/models/audio/lfm2_audio/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/models/audio/lfm2_audio
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/vision
+copying build/lib/mlx_one/vision/public.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/generation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/images.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/messages.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/lfm_processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/vision/processing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/vision
+copying build/lib/mlx_one/stress_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/inference_baseline.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/quantization
+copying build/lib/mlx_one/quantization/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/quantization/turboquant
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/quantization/turboquant/kernels
+copying build/lib/mlx_one/quantization/turboquant/kernels/tq3_gather_qmm.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant/kernels
+copying build/lib/mlx_one/quantization/turboquant/kernels/tq3_qmm.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant/kernels
+copying build/lib/mlx_one/quantization/turboquant/kernels/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant/kernels
+copying build/lib/mlx_one/quantization/turboquant/kernels/tq3_expert_qmv.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant/kernels
+copying build/lib/mlx_one/quantization/turboquant/kernels/tq3_qmv.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant/kernels
+copying build/lib/mlx_one/quantization/turboquant/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/config.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/dispatch.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/linear.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/NOTICE.txt -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/LICENSE.txt -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/quantization/turboquant/experts.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/quantization/turboquant
+copying build/lib/mlx_one/inspection.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/comparison.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p0_engine_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p1_benchmark.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/audio
+copying build/lib/mlx_one/audio/service.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/public.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/moonshine.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/parakeet.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/evaluation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/decoding.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/cli.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/input.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/qwen.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/lfm.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/streaming.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+copying build/lib/mlx_one/audio/weights.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/audio
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/retrieval
+copying build/lib/mlx_one/retrieval/service.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/retrieval
+copying build/lib/mlx_one/retrieval/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/retrieval
+copying build/lib/mlx_one/retrieval/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/retrieval
+copying build/lib/mlx_one/retrieval/tokenizer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/retrieval
+copying build/lib/mlx_one/retrieval/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/retrieval
+copying build/lib/mlx_one/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/cli.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/runtime_baseline.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/schema_migrations.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/hardware.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/planning.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p1_decode.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/tuning.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/ops
+copying build/lib/mlx_one/ops/quantized_linear.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/attention.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/compiled.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/numerical_trace.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/logits.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/reference_tiled.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/ops/profiling.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/ops
+copying build/lib/mlx_one/workflow.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/provenance.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/inference_qualification_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/text
+copying build/lib/mlx_one/text/loading.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/generation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/harmony.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/tokenizer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/chat.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/schemas.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/sampling.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/harmony_tools.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/text/tokenizers.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/text
+copying build/lib/mlx_one/benchmark_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/quality_dataset.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/p0_engine_qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/data
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/data/compatibility
+copying build/lib/mlx_one/data/compatibility/alpha_release.json -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/data/compatibility
+copying build/lib/mlx_one/data/compatibility/mlx.json -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/data/compatibility
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/data/hardware
+copying build/lib/mlx_one/data/hardware/m4-air-32gb.yaml -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/data/hardware
+copying build/lib/mlx_one/data/capabilities.json -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/data
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/data/calibrations
+copying build/lib/mlx_one/data/calibrations/m4-air-32gb-text-v1.json -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/data/calibrations
+copying build/lib/mlx_one/data/calibrations/m4-air-32gb-text-v1.matrix.yaml -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/data/calibrations
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/engine
+copying build/lib/mlx_one/engine/cache_specs.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/plugins.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/service.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/transducer.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/multimodal.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/retrieval.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/lfm_audio.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/speech.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/base.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/task_runners/segmentation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine/task_runners
+copying build/lib/mlx_one/engine/observation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/sessions.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/public.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/batching.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/media.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/block_kv.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/tasks.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/pressure.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/cold_prefix.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/memory.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/parity.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/cache_manager.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/construction.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/device_executor.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/dispatch.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/hybrid.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/cache_errors.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/transactions.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/cache.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/__init__.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/modes.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/prompts.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/speculation.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/optimization_policy.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/runtime_specs.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/kernel_dispatch.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/adapter_registry.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/compound.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/timing.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/block_cache.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/native_adapters.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/lifecycle.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/qualification.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/runners.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/paged_attention.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/contracts.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/model_pool.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/execution_context.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/prefix_cache.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/scheduler.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/cache_planner.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/admission.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/selection.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/actor.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/components.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/envelope.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/arena.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/paged.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/reporting.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/engine/adapters.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one/engine
+copying build/lib/mlx_one/evidence.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/run_store.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/inference_baseline_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/training.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/calibration_worker.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/calibration.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+copying build/lib/mlx_one/traffic_replay.py -> build/bdist.macosx-15.0-arm64/wheel/./mlx_one
+running install_egg_info
+Copying src/mlx_one.egg-info to build/bdist.macosx-15.0-arm64/wheel/./mlx_one-0.1.0a1-py3.12.egg-info
+running install_scripts
+creating build/bdist.macosx-15.0-arm64/wheel/mlx_one-0.1.0a1.dist-info/WHEEL
+creating '/tmp/mlx-one-audio-implementation/dist/.tmp-lyil1hst/mlx_one-0.1.0a1-py3-none-any.whl' and adding 'build/bdist.macosx-15.0-arm64/wheel' to it
+adding 'mlx_one/__init__.py'
+adding 'mlx_one/benchmark.py'
+adding 'mlx_one/benchmark_worker.py'
+adding 'mlx_one/calibration.py'
+adding 'mlx_one/calibration_worker.py'
+adding 'mlx_one/cli.py'
+adding 'mlx_one/comparison.py'
+adding 'mlx_one/compatibility.py'
+adding 'mlx_one/conversion.py'
+adding 'mlx_one/conversion_worker.py'
+adding 'mlx_one/datasets.py'
+adding 'mlx_one/diagnostics.py'
+adding 'mlx_one/evaluation.py'
+adding 'mlx_one/evidence.py'
+adding 'mlx_one/generation.py'
+adding 'mlx_one/generation_worker.py'
+adding 'mlx_one/hardware.py'
+adding 'mlx_one/inference_baseline.py'
+adding 'mlx_one/inference_baseline_worker.py'
+adding 'mlx_one/inference_qualification.py'
+adding 'mlx_one/inference_qualification_worker.py'
+adding 'mlx_one/inspection.py'
+adding 'mlx_one/native_correctness.py'
+adding 'mlx_one/native_qualification.py'
+adding 'mlx_one/p0_engine_qualification.py'
+adding 'mlx_one/p0_engine_worker.py'
+adding 'mlx_one/p0_qualification.py'
+adding 'mlx_one/p1_benchmark.py'
+adding 'mlx_one/p1_decode.py'
+adding 'mlx_one/p1_profiles.py'
+adding 'mlx_one/p1_qualification.py'
+adding 'mlx_one/peak_calibration.py'
+adding 'mlx_one/planning.py'
+adding 'mlx_one/provenance.py'
+adding 'mlx_one/quality_dataset.py'
+adding 'mlx_one/registry.py'
+adding 'mlx_one/run_store.py'
+adding 'mlx_one/runtime_baseline.py'
+adding 'mlx_one/schema_migrations.py'
+adding 'mlx_one/schemas.py'
+adding 'mlx_one/stress_qualification.py'
+adding 'mlx_one/task_qualification.py'
+adding 'mlx_one/task_qualification_worker.py'
+adding 'mlx_one/traffic_replay.py'
+adding 'mlx_one/training.py'
+adding 'mlx_one/tuning.py'
+adding 'mlx_one/workflow.py'
+adding 'mlx_one/audio/__init__.py'
+adding 'mlx_one/audio/cli.py'
+adding 'mlx_one/audio/decoding.py'
+adding 'mlx_one/audio/evaluation.py'
+adding 'mlx_one/audio/input.py'
+adding 'mlx_one/audio/lfm.py'
+adding 'mlx_one/audio/loading.py'
+adding 'mlx_one/audio/moonshine.py'
+adding 'mlx_one/audio/parakeet.py'
+adding 'mlx_one/audio/public.py'
+adding 'mlx_one/audio/qwen.py'
+adding 'mlx_one/audio/schemas.py'
+adding 'mlx_one/audio/service.py'
+adding 'mlx_one/audio/streaming.py'
+adding 'mlx_one/audio/weights.py'
+adding 'mlx_one/compat/__init__.py'
+adding 'mlx_one/compat/trl.py'
+adding 'mlx_one/compat/unsloth.py'
+adding 'mlx_one/core/__init__.py'
+adding 'mlx_one/core/cache.py'
+adding 'mlx_one/core/capabilities.py'
+adding 'mlx_one/core/compatibility.py'
+adding 'mlx_one/core/config.py'
+adding 'mlx_one/core/outputs.py'
+adding 'mlx_one/core/precision.py'
+adding 'mlx_one/core/protocols.py'
+adding 'mlx_one/core/quantization.py'
+adding 'mlx_one/core/registry.py'
+adding 'mlx_one/core/release_support.py'
+adding 'mlx_one/core/sliding_cache.py'
+adding 'mlx_one/core/weights.py'
+adding 'mlx_one/data/capabilities.json'
+adding 'mlx_one/data/calibrations/m4-air-32gb-text-v1.json'
+adding 'mlx_one/data/calibrations/m4-air-32gb-text-v1.matrix.yaml'
+adding 'mlx_one/data/compatibility/alpha_release.json'
+adding 'mlx_one/data/compatibility/mlx.json'
+adding 'mlx_one/data/hardware/m4-air-32gb.yaml'
+adding 'mlx_one/engine/__init__.py'
+adding 'mlx_one/engine/actor.py'
+adding 'mlx_one/engine/adapter_registry.py'
+adding 'mlx_one/engine/adapters.py'
+adding 'mlx_one/engine/admission.py'
+adding 'mlx_one/engine/arena.py'
+adding 'mlx_one/engine/batching.py'
+adding 'mlx_one/engine/block_cache.py'
+adding 'mlx_one/engine/block_kv.py'
+adding 'mlx_one/engine/cache.py'
+adding 'mlx_one/engine/cache_errors.py'
+adding 'mlx_one/engine/cache_manager.py'
+adding 'mlx_one/engine/cache_planner.py'
+adding 'mlx_one/engine/cache_specs.py'
+adding 'mlx_one/engine/cold_prefix.py'
+adding 'mlx_one/engine/components.py'
+adding 'mlx_one/engine/compound.py'
+adding 'mlx_one/engine/construction.py'
+adding 'mlx_one/engine/contracts.py'
+adding 'mlx_one/engine/device_executor.py'
+adding 'mlx_one/engine/dispatch.py'
+adding 'mlx_one/engine/envelope.py'
+adding 'mlx_one/engine/execution_context.py'
+adding 'mlx_one/engine/hybrid.py'
+adding 'mlx_one/engine/kernel_dispatch.py'
+adding 'mlx_one/engine/lifecycle.py'
+adding 'mlx_one/engine/media.py'
+adding 'mlx_one/engine/memory.py'
+adding 'mlx_one/engine/model_pool.py'
+adding 'mlx_one/engine/modes.py'
+adding 'mlx_one/engine/native_adapters.py'
+adding 'mlx_one/engine/observation.py'
+adding 'mlx_one/engine/optimization_policy.py'
+adding 'mlx_one/engine/paged.py'
+adding 'mlx_one/engine/paged_attention.py'
+adding 'mlx_one/engine/parity.py'
+adding 'mlx_one/engine/plugins.py'
+adding 'mlx_one/engine/prefix_cache.py'
+adding 'mlx_one/engine/pressure.py'
+adding 'mlx_one/engine/prompts.py'
+adding 'mlx_one/engine/public.py'
+adding 'mlx_one/engine/qualification.py'
+adding 'mlx_one/engine/reporting.py'
+adding 'mlx_one/engine/runners.py'
+adding 'mlx_one/engine/runtime_specs.py'
+adding 'mlx_one/engine/scheduler.py'
+adding 'mlx_one/engine/selection.py'
+adding 'mlx_one/engine/service.py'
+adding 'mlx_one/engine/sessions.py'
+adding 'mlx_one/engine/speculation.py'
+adding 'mlx_one/engine/tasks.py'
+adding 'mlx_one/engine/timing.py'
+adding 'mlx_one/engine/transactions.py'
+adding 'mlx_one/engine/task_runners/__init__.py'
+adding 'mlx_one/engine/task_runners/base.py'
+adding 'mlx_one/engine/task_runners/lfm_audio.py'
+adding 'mlx_one/engine/task_runners/multimodal.py'
+adding 'mlx_one/engine/task_runners/retrieval.py'
+adding 'mlx_one/engine/task_runners/segmentation.py'
+adding 'mlx_one/engine/task_runners/speech.py'
+adding 'mlx_one/engine/task_runners/transducer.py'
+adding 'mlx_one/models/UPSTREAM_LICENSE'
+adding 'mlx_one/models/__init__.py'
+adding 'mlx_one/models/registry.py'
+adding 'mlx_one/models/audio/__init__.py'
+adding 'mlx_one/models/audio/lfm2_audio/UPSTREAM.md'
+adding 'mlx_one/models/audio/lfm2_audio/UPSTREAM_LICENSE'
+adding 'mlx_one/models/audio/lfm2_audio/__init__.py'
+adding 'mlx_one/models/audio/lfm2_audio/checkpoint_config.py'
+adding 'mlx_one/models/audio/lfm2_audio/config.py'
+adding 'mlx_one/models/audio/lfm2_audio/conformer.py'
+adding 'mlx_one/models/audio/lfm2_audio/detokenizer.py'
+adding 'mlx_one/models/audio/lfm2_audio/dsp.py'
+adding 'mlx_one/models/audio/lfm2_audio/loading.py'
+adding 'mlx_one/models/audio/lfm2_audio/model.py'
+adding 'mlx_one/models/audio/lfm2_audio/native.py'
+adding 'mlx_one/models/audio/lfm2_audio/processing.py'
+adding 'mlx_one/models/audio/lfm2_audio/transformer.py'
+adding 'mlx_one/models/audio/lfm2_audio/weights.py'
+adding 'mlx_one/models/audio/moonshine/NOTICE'
+adding 'mlx_one/models/audio/moonshine/__init__.py'
+adding 'mlx_one/models/audio/moonshine/config.py'
+adding 'mlx_one/models/audio/moonshine/loading.py'
+adding 'mlx_one/models/audio/moonshine/model.py'
+adding 'mlx_one/models/audio/moonshine/weights.py'
+adding 'mlx_one/models/audio/parakeet/NOTICE'
+adding 'mlx_one/models/audio/parakeet/__init__.py'
+adding 'mlx_one/models/audio/parakeet/config.py'
+adding 'mlx_one/models/audio/parakeet/loading.py'
+adding 'mlx_one/models/audio/parakeet/mlx_export.py'
+adding 'mlx_one/models/audio/parakeet/model.py'
+adding 'mlx_one/models/audio/parakeet/processing.py'
+adding 'mlx_one/models/audio/parakeet/weights.py'
+adding 'mlx_one/models/audio/qwen3_asr/NOTICE'
+adding 'mlx_one/models/audio/qwen3_asr/__init__.py'
+adding 'mlx_one/models/audio/qwen3_asr/alignment.py'
+adding 'mlx_one/models/audio/qwen3_asr/config.py'
+adding 'mlx_one/models/audio/qwen3_asr/loading.py'
+adding 'mlx_one/models/audio/qwen3_asr/model.py'
+adding 'mlx_one/models/audio/qwen3_asr/processing.py'
+adding 'mlx_one/models/audio/qwen3_asr/weights.py'
+adding 'mlx_one/models/audio/whisper/__init__.py'
+adding 'mlx_one/models/audio/whisper/config.py'
+adding 'mlx_one/models/audio/whisper/loading.py'
+adding 'mlx_one/models/audio/whisper/model.py'
+adding 'mlx_one/models/audio/whisper/processing.py'
+adding 'mlx_one/models/audio/whisper/tokenizer.py'
+adding 'mlx_one/models/audio/whisper/weights.py'
+adding 'mlx_one/models/embeddings/__init__.py'
+adding 'mlx_one/models/embeddings/bert/__init__.py'
+adding 'mlx_one/models/embeddings/bert/config.py'
+adding 'mlx_one/models/embeddings/bert/model.py'
+adding 'mlx_one/models/embeddings/bert/weights.py'
+adding 'mlx_one/models/embeddings/lfm2_colbert/__init__.py'
+adding 'mlx_one/models/embeddings/lfm2_colbert/config.py'
+adding 'mlx_one/models/embeddings/lfm2_colbert/model.py'
+adding 'mlx_one/models/embeddings/lfm2_colbert/weights.py'
+adding 'mlx_one/models/embeddings/mpnet/__init__.py'
+adding 'mlx_one/models/embeddings/mpnet/config.py'
+adding 'mlx_one/models/embeddings/mpnet/model.py'
+adding 'mlx_one/models/embeddings/mpnet/weights.py'
+adding 'mlx_one/models/embeddings/qwen3_embedding/__init__.py'
+adding 'mlx_one/models/embeddings/qwen3_embedding/config.py'
+adding 'mlx_one/models/embeddings/qwen3_embedding/model.py'
+adding 'mlx_one/models/embeddings/qwen3_embedding/weights.py'
+adding 'mlx_one/models/embeddings/qwen3_reranker/__init__.py'
+adding 'mlx_one/models/embeddings/qwen3_reranker/config.py'
+adding 'mlx_one/models/embeddings/qwen3_reranker/model.py'
+adding 'mlx_one/models/embeddings/qwen3_reranker/weights.py'
+adding 'mlx_one/models/language/__init__.py'
+adding 'mlx_one/models/language/gemma3/UPSTREAM_LICENSE'
+adding 'mlx_one/models/language/gemma3/__init__.py'
+adding 'mlx_one/models/language/gemma3/config.py'
+adding 'mlx_one/models/language/gemma3/model.py'
+adding 'mlx_one/models/language/gemma3/weights.py'
+adding 'mlx_one/models/language/gpt2/__init__.py'
+adding 'mlx_one/models/language/gpt2/config.py'
+adding 'mlx_one/models/language/gpt2/model.py'
+adding 'mlx_one/models/language/gpt2/reference_math.py'
+adding 'mlx_one/models/language/gpt2/weights.py'
+adding 'mlx_one/models/language/gpt_oss/__init__.py'
+adding 'mlx_one/models/language/gpt_oss/config.py'
+adding 'mlx_one/models/language/gpt_oss/model.py'
+adding 'mlx_one/models/language/gpt_oss/weights.py'
+adding 'mlx_one/models/language/lfm2/__init__.py'
+adding 'mlx_one/models/language/lfm2/config.py'
+adding 'mlx_one/models/language/lfm2/model.py'
+adding 'mlx_one/models/language/lfm2/reference_math.py'
+adding 'mlx_one/models/language/lfm2/weights.py'
+adding 'mlx_one/models/language/lfm2_moe/__init__.py'
+adding 'mlx_one/models/language/lfm2_moe/config.py'
+adding 'mlx_one/models/language/lfm2_moe/model.py'
+adding 'mlx_one/models/language/lfm2_moe/weights.py'
+adding 'mlx_one/models/language/llama/__init__.py'
+adding 'mlx_one/models/language/llama/config.py'
+adding 'mlx_one/models/language/llama/model.py'
+adding 'mlx_one/models/language/llama/reference_math.py'
+adding 'mlx_one/models/language/llama/weights.py'
+adding 'mlx_one/models/language/openelm/__init__.py'
+adding 'mlx_one/models/language/openelm/config.py'
+adding 'mlx_one/models/language/openelm/model.py'
+adding 'mlx_one/models/language/openelm/weights.py'
+adding 'mlx_one/models/language/phi3/UPSTREAM_LICENSE'
+adding 'mlx_one/models/language/phi3/__init__.py'
+adding 'mlx_one/models/language/phi3/config.py'
+adding 'mlx_one/models/language/phi3/model.py'
+adding 'mlx_one/models/language/phi3/weights.py'
+adding 'mlx_one/models/language/qwen2/__init__.py'
+adding 'mlx_one/models/language/qwen2/config.py'
+adding 'mlx_one/models/language/qwen2/model.py'
+adding 'mlx_one/models/language/qwen2/reference_math.py'
+adding 'mlx_one/models/language/qwen2/weights.py'
+adding 'mlx_one/models/language/qwen2_moe/__init__.py'
+adding 'mlx_one/models/language/qwen2_moe/config.py'
+adding 'mlx_one/models/language/qwen2_moe/model.py'
+adding 'mlx_one/models/language/qwen2_moe/weights.py'
+adding 'mlx_one/models/language/qwen3/UPSTREAM_LICENSE'
+adding 'mlx_one/models/language/qwen3/__init__.py'
+adding 'mlx_one/models/language/qwen3/config.py'
+adding 'mlx_one/models/language/qwen3/model.py'
+adding 'mlx_one/models/language/qwen3/reference_math.py'
+adding 'mlx_one/models/language/qwen3/upstream_adapter.py'
+adding 'mlx_one/models/language/qwen3/upstream_math.py'
+adding 'mlx_one/models/language/qwen3/upstream_model.py'
+adding 'mlx_one/models/language/qwen3/weights.py'
+adding 'mlx_one/models/segmentation/__init__.py'
+adding 'mlx_one/models/segmentation/sam3/NOTICE.md'
+adding 'mlx_one/models/segmentation/sam3/__init__.py'
+adding 'mlx_one/models/segmentation/sam3/_configuration.py'
+adding 'mlx_one/models/segmentation/sam3/_runtime.py'
+adding 'mlx_one/models/segmentation/sam3/config.py'
+adding 'mlx_one/models/segmentation/sam3/model.py'
+adding 'mlx_one/models/segmentation/sam3/tracker.py'
+adding 'mlx_one/models/segmentation/sam3/tracker_video.py'
+adding 'mlx_one/models/segmentation/sam3/video.py'
+adding 'mlx_one/models/segmentation/sam3/weights.py'
+adding 'mlx_one/models/shared/__init__.py'
+adding 'mlx_one/models/shared/decoder.py'
+adding 'mlx_one/models/shared/encoder.py'
+adding 'mlx_one/models/shared/execution.py'
+adding 'mlx_one/models/shared/hybrid.py'
+adding 'mlx_one/models/shared/moe.py'
+adding 'mlx_one/models/shared/moe_decoder.py'
+adding 'mlx_one/models/shared/reference_activations.py'
+adding 'mlx_one/models/shared/reference_math.py'
+adding 'mlx_one/models/shared/sparse.py'
+adding 'mlx_one/models/shared/transformer.py'
+adding 'mlx_one/models/shared/vision.py'
+adding 'mlx_one/models/shared/vlm_weights.py'
+adding 'mlx_one/models/vision_language/UPSTREAM.md'
+adding 'mlx_one/models/vision_language/UPSTREAM_LICENSE'
+adding 'mlx_one/models/vision_language/__init__.py'
+adding 'mlx_one/models/vision_language/lfm2_vl/__init__.py'
+adding 'mlx_one/models/vision_language/lfm2_vl/config.py'
+adding 'mlx_one/models/vision_language/lfm2_vl/model.py'
+adding 'mlx_one/models/vision_language/lfm2_vl/weights.py'
+adding 'mlx_one/models/vision_language/qwen2_5_vl/__init__.py'
+adding 'mlx_one/models/vision_language/qwen2_5_vl/config.py'
+adding 'mlx_one/models/vision_language/qwen2_5_vl/model.py'
+adding 'mlx_one/models/vision_language/qwen2_5_vl/weights.py'
+adding 'mlx_one/models/vision_language/qwen2_vl/__init__.py'
+adding 'mlx_one/models/vision_language/qwen2_vl/config.py'
+adding 'mlx_one/models/vision_language/qwen2_vl/model.py'
+adding 'mlx_one/models/vision_language/qwen2_vl/weights.py'
+adding 'mlx_one/models/vision_language/qwen3_5/__init__.py'
+adding 'mlx_one/models/vision_language/qwen3_5/config.py'
+adding 'mlx_one/models/vision_language/qwen3_5/model.py'
+adding 'mlx_one/models/vision_language/qwen3_5/reference_delta.py'
+adding 'mlx_one/models/vision_language/qwen3_5/reference_math.py'
+adding 'mlx_one/models/vision_language/qwen3_5/weights.py'
+adding 'mlx_one/ops/__init__.py'
+adding 'mlx_one/ops/attention.py'
+adding 'mlx_one/ops/compiled.py'
+adding 'mlx_one/ops/logits.py'
+adding 'mlx_one/ops/numerical_trace.py'
+adding 'mlx_one/ops/profiling.py'
+adding 'mlx_one/ops/quantized_linear.py'
+adding 'mlx_one/ops/reference_tiled.py'
+adding 'mlx_one/quantization/__init__.py'
+adding 'mlx_one/quantization/turboquant/LICENSE.txt'
+adding 'mlx_one/quantization/turboquant/NOTICE.txt'
+adding 'mlx_one/quantization/turboquant/__init__.py'
+adding 'mlx_one/quantization/turboquant/config.py'
+adding 'mlx_one/quantization/turboquant/dispatch.py'
+adding 'mlx_one/quantization/turboquant/experts.py'
+adding 'mlx_one/quantization/turboquant/linear.py'
+adding 'mlx_one/quantization/turboquant/loading.py'
+adding 'mlx_one/quantization/turboquant/kernels/__init__.py'
+adding 'mlx_one/quantization/turboquant/kernels/tq3_expert_qmv.py'
+adding 'mlx_one/quantization/turboquant/kernels/tq3_gather_qmm.py'
+adding 'mlx_one/quantization/turboquant/kernels/tq3_qmm.py'
+adding 'mlx_one/quantization/turboquant/kernels/tq3_qmv.py'
+adding 'mlx_one/retrieval/__init__.py'
+adding 'mlx_one/retrieval/loading.py'
+adding 'mlx_one/retrieval/schemas.py'
+adding 'mlx_one/retrieval/service.py'
+adding 'mlx_one/retrieval/tokenizer.py'
+adding 'mlx_one/segmentation/__init__.py'
+adding 'mlx_one/segmentation/cli.py'
+adding 'mlx_one/segmentation/export.py'
+adding 'mlx_one/segmentation/inference.py'
+adding 'mlx_one/segmentation/loading.py'
+adding 'mlx_one/segmentation/postprocessing.py'
+adding 'mlx_one/segmentation/processing.py'
+adding 'mlx_one/segmentation/resizing.py'
+adding 'mlx_one/segmentation/schemas.py'
+adding 'mlx_one/segmentation/video.py'
+adding 'mlx_one/server/__init__.py'
+adding 'mlx_one/server/admission.py'
+adding 'mlx_one/server/app.py'
+adding 'mlx_one/server/audio.py'
+adding 'mlx_one/server/config.py'
+adding 'mlx_one/server/generation_engine.py'
+adding 'mlx_one/server/media.py'
+adding 'mlx_one/server/model_manager.py'
+adding 'mlx_one/server/scheduler.py'
+adding 'mlx_one/server/schemas.py'
+adding 'mlx_one/server/transcription.py'
+adding 'mlx_one/text/__init__.py'
+adding 'mlx_one/text/chat.py'
+adding 'mlx_one/text/generation.py'
+adding 'mlx_one/text/harmony.py'
+adding 'mlx_one/text/harmony_tools.py'
+adding 'mlx_one/text/loading.py'
+adding 'mlx_one/text/sampling.py'
+adding 'mlx_one/text/schemas.py'
+adding 'mlx_one/text/tokenizer.py'
+adding 'mlx_one/text/tokenizers.py'
+adding 'mlx_one/ui/dist/THIRD_PARTY_NOTICES.txt'
+adding 'mlx_one/ui/dist/index.html'
+adding 'mlx_one/ui/dist/mlx-one-logo.png'
+adding 'mlx_one/ui/dist/_app/version.json'
+adding 'mlx_one/ui/dist/_app/immutable/assets/0.g1PcYTVf.css'
+adding 'mlx_one/ui/dist/_app/immutable/assets/2.B8K-Evu6.css'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/82h7flzh.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/BauqED68.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/Bij8Ok7U.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/C8pA1lZh.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/DUBjb0lT.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/mo_kpY37.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/qhmwaBmK.js'
+adding 'mlx_one/ui/dist/_app/immutable/chunks/wbPk3Yxo.js'
+adding 'mlx_one/ui/dist/_app/immutable/entry/app.QHeSwbD2.js'
+adding 'mlx_one/ui/dist/_app/immutable/entry/start.BA5nnLAR.js'
+adding 'mlx_one/ui/dist/_app/immutable/nodes/0.BdtHWFD4.js'
+adding 'mlx_one/ui/dist/_app/immutable/nodes/1.RemD7kSb.js'
+adding 'mlx_one/ui/dist/_app/immutable/nodes/2.C7Aq8Iat.js'
+adding 'mlx_one/utils/__init__.py'
+adding 'mlx_one/utils/checkpoint.py'
+adding 'mlx_one/utils/memory.py'
+adding 'mlx_one/utils/model_loader.py'
+adding 'mlx_one/vision/__init__.py'
+adding 'mlx_one/vision/generation.py'
+adding 'mlx_one/vision/images.py'
+adding 'mlx_one/vision/lfm_processing.py'
+adding 'mlx_one/vision/loading.py'
+adding 'mlx_one/vision/messages.py'
+adding 'mlx_one/vision/processing.py'
+adding 'mlx_one/vision/public.py'
+adding 'mlx_one/vision/schemas.py'
+adding 'mlx_one-0.1.0a1.dist-info/licenses/LICENSE'
+adding 'mlx_one-0.1.0a1.dist-info/METADATA'
+adding 'mlx_one-0.1.0a1.dist-info/WHEEL'
+adding 'mlx_one-0.1.0a1.dist-info/entry_points.txt'
+adding 'mlx_one-0.1.0a1.dist-info/top_level.txt'
+adding 'mlx_one-0.1.0a1.dist-info/RECORD'
+removing build/bdist.macosx-15.0-arm64/wheel
+Successfully built mlx_one-0.1.0a1.tar.gz and mlx_one-0.1.0a1-py3-none-any.whl

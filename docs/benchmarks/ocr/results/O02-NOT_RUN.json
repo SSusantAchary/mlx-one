@@ -1,0 +1,17 @@
+{
+  "schema_version": "mlx-one-ocr-benchmark-v1",
+  "status": "NOT_RUN",
+  "checkpoint": "microsoft/trocr-base-handwritten",
+  "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+  "task": "ocr.handwriting",
+  "workload": "OCR-S8",
+  "measurement_type": "direct-model",
+  "hardware": null,
+  "metrics": {
+    "latency_seconds": null,
+    "pages_per_second": null,
+    "cer": null,
+    "peak_mlx_memory_gib": null
+  },
+  "precision": "FP32"
+}

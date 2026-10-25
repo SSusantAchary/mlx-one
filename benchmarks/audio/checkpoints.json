@@ -1,0 +1,335 @@
+{
+  "metadata_checked": "2026-10-24",
+  "no_weights_downloaded": false,
+  "entries": [
+    {
+      "key": "A01",
+      "name": "Whisper Tiny",
+      "checkpoint": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "added_tokens.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 155381758,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real 10-second English fixture completed on Apple M4. Single-clip WER is not corpus accuracy.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A02",
+      "name": "Whisper Large v3 Turbo",
+      "checkpoint": "openai/whisper-large-v3-turbo",
+      "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+      "precision": "FP16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "added_tokens.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1622390673,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real English fixture completed; broader language/translation quality is not established.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A03",
+      "name": "Distil-Whisper Large v3",
+      "checkpoint": "distil-whisper/distil-large-v3",
+      "revision": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+      "precision": "FP16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "added_tokens.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1517211038,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real English fixture completed; distilled English task scope only.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A04",
+      "name": "Moonshine Tiny",
+      "checkpoint": "UsefulSensors/moonshine-tiny",
+      "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "tokenizer.json"
+      ],
+      "download_bytes": 110376023,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real English fixture completed; offline ASR only, no timestamps/translation/streaming.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A05",
+      "name": "Moonshine Base",
+      "checkpoint": "UsefulSensors/moonshine-base",
+      "revision": "7a73d8d55ac0ba2ef3ae761593f6784b51f96dcf",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "tokenizer.json"
+      ],
+      "download_bytes": 248066838,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real English fixture completed; offline ASR only, no timestamps/translation/streaming.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A06",
+      "name": "Qwen3-ASR 0.6B",
+      "checkpoint": "mlx-community/Qwen3-ASR-0.6B-8bit",
+      "revision": "89e96d92ba34aca20b3e29fb10cc284097d1219f",
+      "precision": "Q8 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "chat_template.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1010771234,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real Q8 English fixture completed. Accumulated utterance streaming is a separate workload.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A07",
+      "name": "Qwen3-ASR 1.7B",
+      "checkpoint": "mlx-community/Qwen3-ASR-1.7B-8bit",
+      "revision": "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
+      "precision": "Q8 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "chat_template.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 2467856503,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real Q8 English fixture completed; historical BF16 publisher punctuation discrepancy remains unresolved.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A08",
+      "name": "Parakeet TDT v2",
+      "checkpoint": "nvidia/parakeet-tdt-0.6b-v2",
+      "revision": "ae9ad07059c7c739ffaf932226a8fe64ae2620b0",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "parakeet-tdt-0.6b-v2.nemo"
+      ],
+      "download_bytes": 2472222720,
+      "status": "WIP",
+      "notes": "Pinned NeMo archive converted in isolation; native English fixture completed. Original NeMo parity remains WIP.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A09",
+      "name": "Parakeet TDT v3",
+      "checkpoint": "mlx-community/parakeet-tdt-0.6b-v3",
+      "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "model.safetensors"
+      ],
+      "download_bytes": 2508532829,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real MLX export loaded and English fixture completed; no explicit language conditioning or word timestamp quality claim.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A10",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "audio_detokenizer/config.json",
+        "audio_detokenizer/model.safetensors",
+        "config.json",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "download_bytes": 1407665153,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real Q4 ASR fixture completed; no language-hint/translation/timestamp API.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A11",
+      "name": "Qwen3-ForcedAligner 0.6B",
+      "checkpoint": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+      "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+      "precision": "Q8 / BF16",
+      "task": "align",
+      "workload": "ALIGN-S1",
+      "assets": [
+        "chat_template.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1276473392,
+      "status": "WIP",
+      "notes": "Real Q8 known-text alignment completed, with no unmatched words on this clip. Boundary accuracy unmeasured; historical discrepancy unresolved.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A12",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "synthesize",
+      "workload": "TTS-S1",
+      "assets": [
+        "audio_detokenizer/config.json",
+        "audio_detokenizer/model.safetensors",
+        "config.json",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "download_bytes": 1407665153,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Real Q4 checkpoint generated TTS waveform; automatic Whisper Tiny round-trip is diagnostic only, no listening/MOS score.",
+      "functional_smoke": "PASS_SCOPED"
+    },
+    {
+      "key": "A13",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "speech-to-speech",
+      "workload": "STS-S1",
+      "assets": [
+        "audio_detokenizer/config.json",
+        "audio_detokenizer/model.safetensors",
+        "config.json",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "download_bytes": 1407665153,
+      "status": "WIP",
+      "notes": "WIP: greedy 10-second STS input exceeds 40.96-second output bound; sampled diagnostic has unstable amplitude. Separate 2.04-second spoken question completes.",
+      "functional_smoke": "PARTIAL"
+    }
+  ],
+  "references": [
+    {
+      "checkpoint": "mlx-community/whisper-tiny",
+      "revision": "78c52ab98ca87f570bc57ad852e15ef7060f9f76",
+      "role": "reference / alternate layout",
+      "notes": "mlx-community/whisper-tiny lacks required HF tokenizer/processor assets; use the pinned OpenAI entry."
+    },
+    {
+      "checkpoint": "Qwen/Qwen3-ASR-0.6B",
+      "revision": "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
+      "role": "reference / alternate layout",
+      "notes": "Retained publisher reference; primary manual benchmark choices above remain separate."
+    },
+    {
+      "checkpoint": "Qwen/Qwen3-ASR-1.7B",
+      "revision": "7278e1e70fe206f11671096ffdd38061171dd6e5",
+      "role": "reference / alternate layout",
+      "notes": "Retained publisher reference; primary manual benchmark choices above remain separate."
+    },
+    {
+      "checkpoint": "Qwen/Qwen3-ForcedAligner-0.6B",
+      "revision": "c7cbfc2048c462b0d63a45797104fc9db3ad62b7",
+      "role": "reference / alternate layout",
+      "notes": "Retained publisher reference; primary manual benchmark choices above remain separate."
+    },
+    {
+      "checkpoint": "nvidia/parakeet-tdt-0.6b-v3",
+      "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+      "role": "reference / alternate layout",
+      "notes": "Retained publisher reference; primary manual benchmark choices above remain separate."
+    },
+    {
+      "checkpoint": "LiquidAI/LFM2.5-Audio-1.5B",
+      "revision": "c362a0625dfe45aa588dce5f0ada28a7e5707628",
+      "role": "reference / alternate layout",
+      "notes": "Retained publisher reference; primary manual benchmark choices above remain separate."
+    }
+  ],
+  "hardware_tested_on": "2026-10-24",
+  "hardware_report": "docs/validation/audio-hf-2026-10-24/report.md"
+}

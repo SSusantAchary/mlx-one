@@ -1,0 +1,879 @@
+{
+  "schema": "mlx-one-text-performance-plot-v1",
+  "inventory_count": 13,
+  "size_basis": "Nominal total parameters, never quantized checkpoint bytes",
+  "direct_model_points": [
+    {
+      "id": "M01",
+      "checkpoint": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "parameters": "124M",
+      "parameters_billion": 0.124,
+      "precision": "FP32",
+      "primary": true,
+      "decode_tokens_per_second": 118.0392500653657,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M01-stored-performance.json",
+      "evidence_sha256": "056e47e123cb24d1abb883dfa2ab0aa3452fe5d49bd00b27275b4ce3c823e14e"
+    },
+    {
+      "id": "M02",
+      "checkpoint": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "parameters": "0.5B",
+      "parameters_billion": 0.5,
+      "precision": "Q8",
+      "primary": true,
+      "decode_tokens_per_second": 83.48300351438715,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M02-affine_q8-performance.json",
+      "evidence_sha256": "8288ae266f092717287053499d810f6f8253dfbd54d0417909af828017e8c53c"
+    },
+    {
+      "id": "M02",
+      "checkpoint": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "parameters": "0.5B",
+      "parameters_billion": 0.5,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 50.49331973995007,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M02-stored-performance.json",
+      "evidence_sha256": "1b31366e8b00085fa326af0fdb48b6efd9c2a9216f0c0fca3c6bdd5624db868a"
+    },
+    {
+      "id": "M03",
+      "checkpoint": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "parameters": "0.6B",
+      "parameters_billion": 0.6,
+      "precision": "Q8",
+      "primary": true,
+      "decode_tokens_per_second": 65.4749258358572,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M03-affine_q8-performance.json",
+      "evidence_sha256": "8bc2c7c43215f29c40de82c93da7c996f9cacc8ed330f7e7298cb8087773be38"
+    },
+    {
+      "id": "M03",
+      "checkpoint": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "parameters": "0.6B",
+      "parameters_billion": 0.6,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 33.95186401450452,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M03-stored-performance.json",
+      "evidence_sha256": "1c838379f19746f7b5d4bb48ef0c7b6cfdeb9798954ff64bfca11a93f8694abb"
+    },
+    {
+      "id": "M04",
+      "checkpoint": "LiquidAI/LFM2-350M",
+      "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+      "parameters": "350M",
+      "parameters_billion": 0.35,
+      "precision": "Q4",
+      "primary": true,
+      "decode_tokens_per_second": 185.81297390240155,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M04-affine_q4-performance.json",
+      "evidence_sha256": "b1f3816c1acfbf003c9ddae9a905a1bdf45b399a9fc96fa014e00374cdf79a6c"
+    },
+    {
+      "id": "M04",
+      "checkpoint": "LiquidAI/LFM2-350M",
+      "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+      "parameters": "350M",
+      "parameters_billion": 0.35,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 91.86736499381526,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M04-stored-performance.json",
+      "evidence_sha256": "bea733238e0501ec16de10dd0a50b781c38476efcd907ab23192a6d00ffe9152"
+    },
+    {
+      "id": "M06",
+      "checkpoint": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "revision": "31b70e2e869a7173562077fd711b654946d38674",
+      "parameters": "1.7B",
+      "parameters_billion": 1.7,
+      "precision": "Q4",
+      "primary": true,
+      "decode_tokens_per_second": 55.69001953105133,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M06-affine_q4-performance.json",
+      "evidence_sha256": "71bac1343ba322c7b0f7a9bf4d181ad19714608afc9cf9ceb154d743496c32ff"
+    },
+    {
+      "id": "M06",
+      "checkpoint": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "revision": "31b70e2e869a7173562077fd711b654946d38674",
+      "parameters": "1.7B",
+      "parameters_billion": 1.7,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 19.209294226991812,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M06-stored-performance.json",
+      "evidence_sha256": "7a65f34e221eb16368be22de786bbe728d1624f73a86c68f490c46970f3ff21b"
+    },
+    {
+      "id": "M07",
+      "checkpoint": "meta-llama/Llama-3.2-1B-Instruct",
+      "revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "parameters": "1B",
+      "parameters_billion": 1.0,
+      "precision": "Q4",
+      "primary": true,
+      "decode_tokens_per_second": 65.36302552042494,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M07-affine_q4-performance.json",
+      "evidence_sha256": "afcd41413b6207f73d1b0df9ff7ec83f1a8c4cd1e23a3167a93b9a40ba7092d2"
+    },
+    {
+      "id": "M07",
+      "checkpoint": "meta-llama/Llama-3.2-1B-Instruct",
+      "revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "parameters": "1B",
+      "parameters_billion": 1.0,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 29.75366199383644,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M07-stored-performance.json",
+      "evidence_sha256": "40e4f41de14087ec6902b33e3b37e4441c83c914f1ec58723d79ea06d6e49a9d"
+    },
+    {
+      "id": "M08",
+      "checkpoint": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "parameters": "1.5B",
+      "parameters_billion": 1.5,
+      "precision": "Q4",
+      "primary": true,
+      "decode_tokens_per_second": 53.52208006256743,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M08-affine_q4-performance.json",
+      "evidence_sha256": "45dad54a46e410c89fa004db7ab88d3e74da71130529088ae64eb18d66ccca1f"
+    },
+    {
+      "id": "M08",
+      "checkpoint": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "parameters": "1.5B",
+      "parameters_billion": 1.5,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 21.461548140391763,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M08-stored-performance.json",
+      "evidence_sha256": "d2e44bf87bc42435c609c1e427ab434d8a71bf64eac3fa0c3c94373b5391bd55"
+    },
+    {
+      "id": "M09",
+      "checkpoint": "google/gemma-3-1b-it",
+      "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "parameters": "1B",
+      "parameters_billion": 1.0,
+      "precision": "BF16",
+      "primary": true,
+      "decode_tokens_per_second": 32.167281322310465,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M09-stored-performance.json",
+      "evidence_sha256": "4115060c25aa555d6bfe088d8dcafd239e0539d883bc5d00f7849264794f1093"
+    },
+    {
+      "id": "M10",
+      "checkpoint": "microsoft/Phi-3-mini-4k-instruct",
+      "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+      "parameters": "3.8B",
+      "parameters_billion": 3.8,
+      "precision": "Q4",
+      "primary": true,
+      "decode_tokens_per_second": 29.92392339482586,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M10-affine_q4-performance.json",
+      "evidence_sha256": "34eee50c9661709bd7f5d5abbf65c28def2e34ab65a7e050870bbf58fe127639"
+    },
+    {
+      "id": "M10",
+      "checkpoint": "microsoft/Phi-3-mini-4k-instruct",
+      "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+      "parameters": "3.8B",
+      "parameters_billion": 3.8,
+      "precision": "BF16",
+      "primary": false,
+      "decode_tokens_per_second": 10.868247379836907,
+      "protocol": "historical-128-16",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        16,
+        16,
+        16
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "machine_model": "Mac16,12",
+          "machine_name": "MacBook Air",
+          "number_processors": "proc 10:4:6",
+          "physical_memory": "32 GB"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2",
+          "numpy": "2.5.2",
+          "pytest": "9.1.1"
+        },
+        "platform": "macOS-15.7.9-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX diagnostic dense; full sequence logits; production_fp16 KV",
+        "protocol": "historical-128-16",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "5abf36ab054c349b5cf993bfb9f54b9876d94553439f7adeb8db84ef8683a954",
+      "runner_sha256": "e33774669c378fa308a8943593e3aae0fb6b89c97215d938e2a2c10577d24679",
+      "evidence": "docs/benchmarks/historical/M10-stored-performance.json",
+      "evidence_sha256": "248f9a43c3e068e43e5e6509c55442833c3323f5ae9864408d7c0191d0a5dc4b"
+    },
+    {
+      "id": "M01",
+      "checkpoint": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "parameters": "124M",
+      "parameters_billion": 0.124,
+      "precision": "FP32",
+      "primary": true,
+      "decode_tokens_per_second": 96.48318780457258,
+      "protocol": "standard-128-128",
+      "measurement_type": "direct-model",
+      "actual_input_tokens": [
+        128,
+        128,
+        128
+      ],
+      "actual_output_tokens": [
+        128,
+        128,
+        128
+      ],
+      "environment": {
+        "hardware": {
+          "chip_type": "Apple M4",
+          "physical_memory": "32 GB",
+          "machine_model": "Mac16,12"
+        },
+        "packages": {
+          "mlx": "0.32.2",
+          "mlx-metal": "0.32.2"
+        },
+        "platform": "macOS-15.8.1-arm64-arm-64bit",
+        "python": "3.12.11",
+        "backend": "native MLX direct dense; last_only logits; production_fp16 KV",
+        "protocol": "standard-128-128",
+        "repetitions": 3,
+        "warmups_per_shape": 1,
+        "statistic": "per-column median"
+      },
+      "source_fingerprint": "aad603ce84e24806d565b50a17538f10172ac016877d170896e70d0ecfa2ec6c",
+      "runner_sha256": "b4008453bc42c18f075ab5907151df7109cf8c7d58fdedd9015cfefd9278c2df",
+      "evidence": "docs/benchmarks/runs/M01-direct-128-128.json",
+      "evidence_sha256": "3b6ba8861d24d0ba0050467ce19c3931d164c654f3397a2153e4d26121faf550"
+    }
+  ],
+  "separate_http_context": {
+    "checkpoint": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+    "revision": null,
+    "parameters_billion": 20,
+    "active_parameters_billion": 3.6,
+    "precision": "MXFP4 / Q4–Q8",
+    "measurement_type": "native-http-serving",
+    "input_tokens": 175,
+    "output_tokens": 91,
+    "repetitions": 5,
+    "warmups": 1,
+    "decode_tokens_per_second": 18.96239732645219,
+    "hardware": {
+      "device": "Apple M4",
+      "unified_memory_bytes": 34359738368,
+      "server_python": "3.12"
+    },
+    "mlx_version": null,
+    "limitations": "Local checkpoint revision and MLX version not recorded; context only",
+    "evidence": "docs/validation/gpt-oss-kilo-2026-10-23.json",
+    "evidence_sha256": "859d5678509ebac5e270e5b25f0d5256ea779b8712df9ac5f9aed8e09312b547"
+  },
+  "missing_direct_model": [
+    {
+      "id": "M05",
+      "checkpoint": "Qwen/Qwen3.5-0.8B",
+      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "parameters": "0.8B",
+      "precision": "Affine Q4 (group 64)",
+      "decode_tokens_per_second": null,
+      "status": "No comparable primary-precision measurement"
+    },
+    {
+      "id": "M11",
+      "checkpoint": "LiquidAI/LFM2.5-24B-A2B-MLX-4bit",
+      "revision": "667408d494bde191c2cb9dd4f4549827816b9275",
+      "parameters": "24B / 2B active",
+      "precision": "Mixed affine Q4 / embedding Q6 / FP32 router",
+      "decode_tokens_per_second": null,
+      "status": "No comparable primary-precision measurement"
+    },
+    {
+      "id": "M12",
+      "checkpoint": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+      "revision": "f356f2747216d7e98fee755df25987459fc19089",
+      "parameters": "20B / 3.6B active",
+      "precision": "Mixed MXFP4 / affine Q4–Q8",
+      "decode_tokens_per_second": null,
+      "status": "HTTP only; no comparable direct-model result"
+    },
+    {
+      "id": "M13",
+      "checkpoint": "manjunathshiva/gpt-oss-20b-tq3",
+      "revision": "20ba1835e625264e07366d215933fe31a9940a6a",
+      "parameters": "20B / 3.6B active",
+      "precision": "TurboQuant TQ3",
+      "decode_tokens_per_second": null,
+      "status": "No comparable primary-precision measurement"
+    }
+  ]
+}

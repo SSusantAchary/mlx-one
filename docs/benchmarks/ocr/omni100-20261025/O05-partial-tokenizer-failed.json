@@ -1,0 +1,1636 @@
+{
+  "schema_version": "mlx-one-ocr-omni100-v1",
+  "status": "INTERRUPTED",
+  "checkpoint": "mlx-community/PaddleOCR-VL-1.5-4bit",
+  "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+  "id": "O05",
+  "name": "PaddleOCR-VL 1.5",
+  "precision_label": "Affine Q4",
+  "dataset": "getomni-ai/ocr-benchmark",
+  "dataset_revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+  "sample_sha256": "adbca43d95dc8a4ab050e7b23de61d45c5d091d26d18c54d2049b7905921a8a3",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.document",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 100,
+    "max_tokens": 1023,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized Markdown references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "eeccbb4f38590c7b46e10886df06bde2e1a17f7da8d6286f744801c3fb47964f",
+  "runner_sha256": "9c401a232f540910d41754fedd0beb268ef75e19b561d8b16f35e5e351caf543",
+  "samples": [
+    {
+      "id": "434",
+      "image_sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+      "status": "OK",
+      "latency_seconds": 14.506214915993041,
+      "transcript": "Health History Questionnaire\n\nFirst Name:  \nEmily  \n\nLast Name:  \nDavis  \n\nMarital Status:  \n\u25a1 Single \u25a1 Married \u2611 Divorced \u25a1 Separated \u25a1 Widowed  \n\nAddress:  \n3818A Sycamore Ln  \n\nCity:  \nWaimanalo  \n\nState:  \nHI  \n\nZip:  \n96795  \n\nPhone:  \n492 224-1939  \n\nDOB:  \nOctober 21, 1952  \n\nSpouse Name:  \n\nIs the requested medication \u25a1 NEW or a \u2611 CONTINUATION of THERAPY? If so, start date: ___  \n\nHave you been hospitalized in the past year? \u2611 Yes \u25a1 No  \n\nFinancial Responsibility  \n\nResponsible Party:  \nSelf  \n\nType Of Insurance:  \nAutomobile  \n\nInsurance Company:  \nOscar Health Insurance  \n\nInsurance Address:  \n4672A Maple Way  \n\nInsurance Phone:  \n(658) 760-7828  \n\nGroup #:  \nUNOXZ  \n\nMember ID:  \nGV6SIKX4VR  \n\nPatient Signature:  \n\nSocial Security #:  \n\nDate:  \n\nGuardian Signature:  \n\nGuardian Social Security #:  \n\nDate:  \n\nFamily Health History  \n\nRelation  \nAge If Living  \nAge At Death  \nChronic Health Problems  \n\nSister  \n66  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.028507458002422936,
+            "encoder_seconds": 2.9372375829989323,
+            "generation_seconds": 11.532481792004546,
+            "text_prefill_seconds": 0.38520904099277686,
+            "decode_forward_seconds": 10.53309997683391,
+            "total_seconds": 14.498334332995,
+            "first_token_seconds": 3.3514412499935133
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.006798415997764096,
+            "processed_size": [
+              952,
+              1036
+            ],
+            "visual_tokens": 1258,
+            "prompt_tokens": 1271,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1920,
+              2075
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.384479720145464,
+      "peak_process_memory_gib": 0.948516845703125,
+      "accuracy": {
+        "character_edits": 225,
+        "reference_characters": 1016,
+        "word_edits": 46,
+        "reference_words": 154
+      }
+    },
+    {
+      "id": "388",
+      "image_sha256": "9cfe98c401da955f2572c594ca73b36ce4c84edf8e3b5d0a7979da66c6a19fc1",
+      "status": "OK",
+      "latency_seconds": 14.427775749994908,
+      "transcript": "ACCOUNT SUMMARY\n\nCurrent\n\nBEGINNING OF PERIOD $54,356.00  $507,142.00\nManagement Fees  -$2,845.59  -$20,600.15\nUnrealized Capital Gains  $49,703.10  $116,322.00\nMiscellaneous Changes  $0.00  -$34,510.95\nReinvested Dividends  $11,436.60  $16,662.65\nAdditional Deposits  $44,813.59  $48,420.80\nTOTAL $157,463.70  $683,458.53\n\n/ Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\n\nGETTING IN TOUCH\n\nYour Financial Consultant: Beverly Grimes\n\nID: 1Tc:D12gwt\n\n6/9 Willms Knoll Nikitaland Arizona, 38727-7572\n\n/ YOUR ACCOUNT INFORMATION\n\nBOND AMORTIZATION ELECTIONS\n\nSystematically lower bond premiums with a stable yield ratio:\n\nAccumulate bond discount for non-premium instruments:\n\nIntegrate market discount into taxable earnings every year:\n\nMARGIN ACCOUNT SETTINGS\n\nPermitted margin ratio against overall account value:\n\nWay the broker notifies you of margin calls:\n\nAuthorization to engage in short-selling transactions:\n\nSecurity Identifier\n\nFund Name          EOD Price      Classification    Price Change in Period (YTD)    Avg. Daily Volume    One Day Change\nIEFA                   iShares Core MSCI EAFE ETF    70.32     Equity    0.0332    8199248    -0.0066\nVTV                   Vanguard Value ETF    168.94     Equity    0.1571    1827734    -0.0101\nIJH                   iShares Core S&P Mid-Cap ETF    62.17     Equity    0.1366    7659450    -0.007\nSPY                   SPDR S&P 500 ETF Trust    588.22     Equity    0.2534    46003064    -0.0114\nVWO                   Vanguard FTSE Emerging Markets ETF    44.11     Equity    0.1076    8214263    -0.0088\nIVV                   iShares Core S&P 500 ETF    590.98     Equity    0.2542    5875330    -0.011\nIEMG                   iShares Core MSCI Emerging Markets ETF    52.31     Equity    0.0667    9449047    -0.0082\nVIG                   Vanguard Dividend Appreciation ETF    195.8     Equity    0.1697    965248    -0.0125\nVXUS                   Vanguard Total International Stock ETF    59     Equity    0.052    3544059    -0.0067\nVUG                   Vanguard Growth ETF    414.19     Equity    0.339    1145739    -0.0126\nVOO                   Vanguard S&P 500 ETF    540.99     Equity    0.2548    5594505    -0.0111\nVGT                   Vanguard Information Technology ETF    627.57     Equity    0.305    453405    -0.0125\nXLK                   Technology Select Sector SPDR Fund    234.47     Equity    0.2265    4015302    -0.0127\nVEA                   Vanguard FTSE Developed Markets",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.04617333400528878,
+            "encoder_seconds": 2.805173457993078,
+            "generation_seconds": 11.557965291998698,
+            "text_prefill_seconds": 0.3761549170012586,
+            "decode_forward_seconds": 10.531442801366211,
+            "total_seconds": 14.409400667005684,
+            "first_token_seconds": 3.2281579170085024
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0164504999993369,
+            "processed_size": [
+              756,
+              1260
+            ],
+            "visual_tokens": 1215,
+            "prompt_tokens": 1228,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2430,
+              3994
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.536814022809267,
+      "peak_process_memory_gib": 1.07537841796875,
+      "accuracy": {
+        "character_edits": 1605,
+        "reference_characters": 3612,
+        "word_edits": 362,
+        "reference_words": 638
+      }
+    },
+    {
+      "id": "799",
+      "image_sha256": "336fea21c795c6dfd6789c77af4322f1452e36285419925668b9f87031b392e1",
+      "status": "OK",
+      "latency_seconds": 5.287948707991745,
+      "transcript": "Property Class Overview \u2013 Transactions\n\nCity          Year          Transactions (Total)          Permits Filed          State & Federal Construction          Retail\nDenver          2020          $48M          362          $22.3M          $25.7M\nCharlotte        2020          $54M          85          $12.1M          $41.9M\nDallas          2020          $180M          157          $154.8M          $25.2M\nLos Angeles  2020          $182M          143          $90.5M          $91.5M\nSan Antonio  2020          $41M          215          $22.6M          $18.4M\n\nState & Federal Construction\n\nAvg: $9.8M\nMedian: $10.0M\n\nRetail\n\nAvg: $3.3M\nMedian: $3.0M\n\nQ1-2020                    Q2-2020                    Q3-2020                    Q4-2020                    Q1-2020                    Q2-2020                    Q3-2020                    Q4-2020\n\nCoStar\u2122\n\nPage 17",
+      "output_tokens": 313,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.026827374997083098,
+            "encoder_seconds": 2.8397944579919567,
+            "generation_seconds": 2.4003798329940764,
+            "text_prefill_seconds": 0.3809802920004586,
+            "decode_forward_seconds": 1.8937675780471181,
+            "total_seconds": 5.2670979159884155,
+            "first_token_seconds": 3.248481165996054
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.019675083996844478,
+            "processed_size": [
+              1036,
+              924
+            ],
+            "visual_tokens": 1221,
+            "prompt_tokens": 1234,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1904,
+              1700
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 313,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5409645810723305,
+      "peak_process_memory_gib": 1.0758056640625,
+      "accuracy": {
+        "character_edits": 644,
+        "reference_characters": 1114,
+        "word_edits": 151,
+        "reference_words": 220
+      }
+    },
+    {
+      "id": "230",
+      "image_sha256": "3b8e980800114ab859b20005c6b69c061449189193db7ce78729dbb92dfb8e74",
+      "status": "OK",
+      "latency_seconds": 4.762959292012965,
+      "transcript": "Medical Equipment Inspection Checklist\n\nEquipment ID: CMIBHX35\nModel: Runte Inc O4Qj\nDepartment: Laboratory\nInspection Date: 2025-02-13\nInspector: Matthew VonRueden-Crona\n\nPhysical Condition\n\nCheckpoint\nPass\nFail\nN/A\nNotes\n\nEquipment housing intact\nDisplay screen clear\nControl buttons functional\nPower cord undamaged\nMounting brackets secure\nWheels/casters condition\nLabels and markings legible\nAccessories complete\n\nElectrical Safety\n\nCheckpoint\nPass\nFail\nN/A\nNotes\n\nGround connection\nInsulation resistance\nLeakage current\nPower supply stable\nBattery backup functional\nCircuit breaker operation\nSurge protection\nCable connections secure\n\nPerformance Tests\n\nCheckpoint\nPass\nFail\nN/A\nNotes\n\nSelf-test passed\nCalibration check\nAlarm systems\nBackup systems\nOutput accuracy\nResponse time\nData storage/retrieval\nNetwork connectivity\nSensor accuracy\n\nOverall Status\nInspection Result: \u2612\nNext Inspection Due: 2025-09-23",
+      "output_tokens": 257,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.03368712500378024,
+            "encoder_seconds": 2.8438900420005666,
+            "generation_seconds": 1.8731579579907702,
+            "text_prefill_seconds": 0.3780058339907555,
+            "decode_forward_seconds": 1.4034878002275946,
+            "total_seconds": 4.750780000002123,
+            "first_token_seconds": 3.2560371669969754
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.011267166992183775,
+            "processed_size": [
+              784,
+              1232
+            ],
+            "visual_tokens": 1232,
+            "prompt_tokens": 1245,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1843,
+              2876
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 257,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5488841999322176,
+      "peak_process_memory_gib": 1.0801544189453125,
+      "accuracy": {
+        "character_edits": 578,
+        "reference_characters": 1480,
+        "word_edits": 231,
+        "reference_words": 341
+      }
+    },
+    {
+      "id": "200",
+      "image_sha256": "d8b0632728a9f69294a3b57e57763fb88a3a3ecd877cfc937ed2e68aef40a8f7",
+      "status": "OK",
+      "latency_seconds": 9.389743958003237,
+      "transcript": "DEMOCRATIC DESIGNATING PETITION\n\nCOUNTY OF Hancock County, STATE OF New York\n\nI, the undersigned, do hereby state that I am a duly enrolled voter of the Democratic Party and entitled to vote at the next primary election of such party, to be held on 2026-02-09, that my place of residence is truly stated opposite my signature hereto, and I do hereby designate the following named person (or persons) as a candidate for nomination of such party for public office or for election to a party position of such party.\n\nNAME OF CANDIDATE\nPUBLIC OFFICE OR PARTY POSITION\nPLACE OF RESIDENCE\nLouise Boehm\nNew York State Senator - 6th District\n2716 Amina Ferry, Stephanyside, NY 79688\n\nSIGNATURE OF ENROLLED ELECTOR\nPRINTED NAME OF ELECTOR\nDATE\nRESIDENCE\nTOWN OR CITY\nFaye Wiza\nFaye Wiza\n2025-02-18\n11642 Saurea Radial\nHammillfurt\nConor Stanton\nConor Stanton\n2025-02-18\n54040 Murazik Mills\nBartlett\nInes Howell\nInes Howell\n2025-02-18\n522 Halvorson Hill\nWestusa\nLance Bednar\nLexus Bednar\n2025-02-18\n6832 Kozey Hills\nColemanshire\nLemuel MacGyne\nLemuel MacGyne\n2025-02-18\n17467 Manor Close\nNew Asaburgh\nStephanie Yout\nStephanie Yout\n2025-02-18\n519 Jones Lowners\nNew Imeldachester\nYasmine Trantin\nYasmine Trantin\n2025-02-18\nAT2 Koropcelsi Lodge\nLake Lon\nHolly Coury\nHolly Coury\n2025-02-18\n48283 Quarry Lane\nPort Jorgeberg\nSTATEMENT OF WITNESS\nI, (print name) M9. Evegett Nitzsche\n, state: I am a duly qualified voter of the State of New York and am an enrolled voter of the Democratic Party. I now reside at\n169\u8d21\u5c71\u5bfa\u5c71\u524d\uff0c340519239\nEach of the individuals whose names are subscribed to this petition sheet containing 8 signatures, subscribed the same in my presence on the dates above indicated and identified himself or herself to be the individual who signed this sheet.\n\nDate: 2025-02-18\nSignature of Witness M9. Evegett Nitzsche",
+      "output_tokens": 643,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.022161500004585832,
+            "encoder_seconds": 2.8473462499969173,
+            "generation_seconds": 6.51501879200805,
+            "text_prefill_seconds": 0.38460629199107643,
+            "decode_forward_seconds": 5.797335568015114,
+            "total_seconds": 9.38464054200449,
+            "first_token_seconds": 3.255019207994337
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.004431583001860417,
+            "processed_size": [
+              1176,
+              812
+            ],
+            "visual_tokens": 1218,
+            "prompt_tokens": 1231,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1871,
+              1307
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 643,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5391792189329863,
+      "peak_process_memory_gib": 1.08099365234375,
+      "accuracy": {
+        "character_edits": 301,
+        "reference_characters": 2070,
+        "word_edits": 100,
+        "reference_words": 367
+      }
+    },
+    {
+      "id": "692",
+      "image_sha256": "80d4c6150040ddbe1d463a3baee823ad95106dcbf3594dd98ea7b478ea1891d1",
+      "status": "OK",
+      "latency_seconds": 14.375222167000175,
+      "transcript": "Financial Glossary\n\n5\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of 529 plan that allows families to pay tuition ahead of time for specific colleges or college systems at today's tuition rates.\ntuition plan\n\n529 prepaid Type of",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.020743083994602785,
+            "encoder_seconds": 2.8487733749934705,
+            "generation_seconds": 11.50045137500274,
+            "text_prefill_seconds": 0.4293760000000475,
+            "decode_forward_seconds": 10.42746024383814,
+            "total_seconds": 14.370060959001421,
+            "first_token_seconds": 3.2993070840020664
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.004317790997447446,
+            "processed_size": [
+              644,
+              1484
+            ],
+            "visual_tokens": 1219,
+            "prompt_tokens": 1232,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              726,
+              1620
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5395759753882885,
+      "peak_process_memory_gib": 1.09564208984375,
+      "accuracy": {
+        "character_edits": 2783,
+        "reference_characters": 3226,
+        "word_edits": 593,
+        "reference_words": 510
+      }
+    },
+    {
+      "id": "736",
+      "image_sha256": "5f3a880b66d5ec265d37fc53dee5946dcf6d7affb1d6fe0f6fdbaf95fe5dd541",
+      "status": "OK",
+      "latency_seconds": 14.464529582997784,
+      "transcript": "PERIOD OVERVIEW\n\nThis Period\nYTD Period\nBEGINNING BALANCE          $589,045.00\n$80,150.00\nDeposits                   $58,323.32\n$101,546.60\nPortfolio Rebalancing     $60,233.63\n$102,149.53\nDistributions                  -$21,447.35\n$32,251.35\n$686,154.60\n$1,051,594.75\n\n/ Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\n\nDAILY BALANCES\n\nDate          Amount          Date          Amount\n2023-12-30     $686,611.00    2023-12-15     $690,642.00\n2023-12-29     $686,576.00    2023-12-14     $683,826.00\n2023-12-28     $686,489.00    2023-12-13     $683,523.00\n2023-12-27     $686,280.00    2023-12-12     $690,474.00\n2023-12-26     $686,554.00    2023-12-09     $692,121.00\n2023-12-23     $686,228.00    2023-12-08     $691,983.00\n2023-12-22     $685,716.00    2023-12-07     $695,377.00\n2023-12-21     $684,693.00    2023-12-06     $694,704.00\n2023-12-20     $690,666.00    2023-12-05     $695,155.00\n2023-12-19     $690,484.00    2023-12-02     $695,098.00\n2023-12-16     $690,575.00    2023-12-01     $694,652.00\n\nYOUR ACCOUNT INFORMATION\n\nTAX LOT DEFAULT DISPOSITION METHOD\n\nPreferred tax-lot approach for open-ended and mutual funds:\n\nPreferred disposal approach for dividend reinvested shares:\n\nPrimary disposal method for non-fund, non-DRIP securities:\n\nBENEFICIARY DESIGNATIONS\n\nPrincipal beneficiary for inheritance:\n\nSecondary individual or entity to receive assets:\n\nMARGIN ACCOUNT SETTINGS\n\nPermitted margin ratio against overall account value:\n\nHow margin requirements are communicated:\n\nApproval for borrowing shares to sell short:\n\nCharity Trust\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account\nCharity Account",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.03797750000376254,
+            "encoder_seconds": 3.00384566700086,
+            "generation_seconds": 11.4062091250089,
+            "text_prefill_seconds": 0.3993013750005048,
+            "decode_forward_seconds": 10.38786169681407,
+            "total_seconds": 14.44814912500442,
+            "first_token_seconds": 3.4415949169924716
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.015125250007258728,
+            "processed_size": [
+              756,
+              1316
+            ],
+            "visual_tokens": 1269,
+            "prompt_tokens": 1282,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1995,
+              3451
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.3961071632802486,
+      "peak_process_memory_gib": 1.09619140625,
+      "accuracy": {
+        "character_edits": 1418,
+        "reference_characters": 2999,
+        "word_edits": 361,
+        "reference_words": 514
+      }
+    },
+    {
+      "id": "585",
+      "image_sha256": "dca1ef4b01f7a118657cbbff62ce27cb56379f04adb17735e228b63051c73355",
+      "status": "OK",
+      "latency_seconds": 14.412682416994357,
+      "transcript": "US 8,858,608 A\nPage 3\n\n(27) Int. C  \nF10H 15/04  \nF10H 7/18\n\n(28)\n\nReferences Cited\n\nU.S. PATENT DOCUMENTS\n\n1,264,060 A  \n1,344,131 A  \n1,452,162 A  \n1,553,232 A  \n1,647,700 A  \n1,683,957 A  \n1,763,954 A  \n1,894,329 A  \n2,042,991 A  \n2,140,592 A  \n2,229,711 A  \n2,305,973 A  \n2,328,531 A  \n2,345,621 A  \n2,365,098 A  \n2,441,746 A  \n2,493,765 A  \n2,533,546 A  \n2,683,308 A  \n2,806,638 A  \n2,894,243 A  \n2,984,699 A  \n3,064,957 A  \n3,119,572 A  \n3,258,487 A  \n3,364,432 A  \n3,410,767 A  \n3,534,766 A  \n3,683,997 A  \n3,729,472 A  \n3,799,804 A  \n3,858,502 A  \n3,871,896 A  \n3,912,122 A  \n3,979,519 A  \n4,051,538 A  \n4,090,960 A  \n4,104,259 A  \n4,198,811 A  \n4,271,000 A  \n4,394,488 A  \n4,476,852 A  \n4,584,256 A  \n4,640,354 A  \n4,714,900 A  \n4,740,102 A  \n4,750,377 A  \n4,795,862 A  \n4,823,815 A  \n4,889,125 A  \n4,968,208 A  \n5,045,215 A  \n5,091,655 A  \n\n1/1977  \n2/1977  \n2/1977  \n2/1977  \n4/1977  \n4/1977  \n5/1977  \n6/1977  \n7/1977  \n9/1977  \n10/1977  \n12/1977  \n1/1978  \n1/1978  \n3/1978  \n4/1978  \n6/1978  \n8/1978  \n8/1978  \n8/1978  \n8/1978  \n9/1978  \n10/1978  \n10/1978  \n11/1978  \n11/1978  \n12/1978  \n12/1978  \n12/1978  \n12/1978  \n12/1979  \n11/1979  \n11/1979  \n11/1980  \n3/1980  \n3/1980  \n3/1980  \n5/198",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.03301012500014622,
+            "encoder_seconds": 2.861975874999189,
+            "generation_seconds": 11.484473207994597,
+            "text_prefill_seconds": 0.3796122499916237,
+            "decode_forward_seconds": 10.49836463680549,
+            "total_seconds": 14.379543332994217,
+            "first_token_seconds": 3.2752732079970883
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0314659580035368,
+            "processed_size": [
+              840,
+              1148
+            ],
+            "visual_tokens": 1230,
+            "prompt_tokens": 1243,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1904,
+              2600
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5475108530372381,
+      "peak_process_memory_gib": 1.09832763671875,
+      "accuracy": {
+        "character_edits": 1682,
+        "reference_characters": 2610,
+        "word_edits": 290,
+        "reference_words": 353
+      }
+    },
+    {
+      "id": "900",
+      "image_sha256": "c7a1556431ab4dbe23cb80dbc157f48e58934a4190b3f69b1d7e43b700383ab1",
+      "status": "OK",
+      "latency_seconds": 14.286159082999802,
+      "transcript": "VAT Payment Receipt\n\nDocument Number: FZWUMMBASE\nClient Number: 087128313\nIssue Date: 01-15-1997\nPage: 27 of 33\n\nShipment Number: Sender / Reference Number: Date: 08-14-1955\n\nShipment Station / Receiving Station / Rescission / Receiving / Weight in Kg\n\nNumber of Ships/\n\nDescription of Additional Charges:\n\nBase Charge:\n\nDescription of Additional Charge:\n\nVAT/Code:\n\n0198910091\n\n08-14-1955\n\nCole - Turner\n275531 Leuschke\nRest\n\nKazey - Ankunding\n399 Annama\n\nBypass\n\nMiddletown, 47311\n4518\n\nEvanson, 48952\n1030\n\nDomestic Priority: 5.2\n2\n\n164.52\n\nOut-Of-Hours Delivery Fee: 7.04\n3.81\n19.3\n\nNIGDSGQZ/TP\n02-29-1964\n\nKulas, West And\nMosciski\n32922 Beahan Glen\nElliborough, 19410\n8628\n\nRoberts, Wolff And\nLeannon\n3747 Meta Highway\n\nExpress Worldwide: 45.8\n1\n\n144.87\n\nDelivery Fee:\n\n3.99\n4.57\n21.55\n16.3\n\nGleichner - Leannon\n9540 Hartmann\nFields\n\nKrajcik Group\n93583 Marazik Wall\n\nDurenmouth, 18587\n\nExpress Worldwide: 7.9\n8\n\n75.24\n\nOversized Package Fee: 4.5\n3.96\n42.83\n\nWest Celestino,\n36213-4425\n\nExpress Worldwide: 7.9\n8\n\n75.24\n\nOversized Package Fee: 4.5\n3.96\n42.83\n\nGiovannyton,\n55813-8111\n\nExpress Worldwide: 7.9\n8\n\n75.24\n\nOversized Package Fee: 4.5\n3.96\n42.83\n\n11-03-1976\n\nOkunve - Cremin\n393 Dan Spurs\nLake Orin, 44826\n\nCassin, Block And\nSmith\n\n8089 Grady Forge\n\n8089 Grady Forge\n\nFreidworth, 35295\n\nDomestic Priority: 1.7\n1\n\n67.14\n\nChange Of Address Fee: 9.35\n7.37\n10.94\n\n393 Dan Spurs\nLake Orin, 44826\n\nExpress Worldwide: 21.9\n8\n\n70.03\n\nDangerous Goods Handling Fee: 3.76\n9.71\n4.62\n\n02-22-1978\n\nLillrich, Wisky And Purdy LLC\nHerman\n\n709 Marilou Burg\n75220\nPark\n\n8532\n\n75220\n\n8\n\n70.03\n\nCustoms Duty:\n\nWeekend Pickup Charge: 7.78\n5.17\n4.68\n\nMcAllen, 82368\n8532\n\nWest Covina, 74036\n8797\n\nExpress Worldwide: 21.9\n8\n\n70.03\n\nDangerous Goods Handling Fee: 3.76\n9.71\n4.62\n\n02-22-1978\n\nLillrich, Wisky And Purdy LLC\nHerman\n\n709 Marilou Burg\n75220\nPark\n\n",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.028982292002183385,
+            "encoder_seconds": 2.8707506250066217,
+            "generation_seconds": 11.378158042003633,
+            "text_prefill_seconds": 0.38732495800650213,
+            "decode_forward_seconds": 10.377125922983396,
+            "total_seconds": 14.277991583003313,
+            "first_token_seconds": 3.2875007080001524
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.006962291998206638,
+            "processed_size": [
+              1120,
+              868
+            ],
+            "visual_tokens": 1240,
+            "prompt_tokens": 1253,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2171,
+              1715
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.554881127551198,
+      "peak_process_memory_gib": 1.0985870361328125,
+      "accuracy": {
+        "character_edits": 2388,
+        "reference_characters": 3457,
+        "word_edits": 736,
+        "reference_words": 837
+      }
+    },
+    {
+      "id": "454",
+      "image_sha256": "b156a9119872fe04f3eda70c0ee95de0762b4fc50a101fbc993ebaea7a7544cc",
+      "status": "OK",
+      "latency_seconds": 14.27360724999744,
+      "transcript": "Real Estate Transaction Highlights\n\nMultifamily Housing\nAvg: $31.8M\nMedian: $33.5M\n\nData Centers\nAvg: $15.5M\nMedian: $15.5M\n\nCommercial Office\nAvg: $13.8M\nMedian: $12.0M\n\nHealthcare Facilities\nAvg: $23.0M\nMedian: $25.5M\n\n24 of 26\n\n21\n\n15\n\n0\n\n21\n\n24\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n\n2024\n",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.026593541013426147,
+            "encoder_seconds": 2.8455581669986714,
+            "generation_seconds": 11.39379116598866,
+            "text_prefill_seconds": 0.3783259579940932,
+            "decode_forward_seconds": 10.423524500773055,
+            "total_seconds": 14.266036166009144,
+            "first_token_seconds": 3.2510334580001654
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.006810874998336658,
+            "processed_size": [
+              1036,
+              924
+            ],
+            "visual_tokens": 1221,
+            "prompt_tokens": 1234,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1912,
+              1709
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5409645810723305,
+      "peak_process_memory_gib": 1.0986328125,
+      "accuracy": {
+        "character_edits": 1160,
+        "reference_characters": 1629,
+        "word_edits": 270,
+        "reference_words": 304
+      }
+    },
+    {
+      "id": "73",
+      "image_sha256": "9165218b9ac92eaf74777d6b60663f0238dcf0bbee48e430c263dcae3c392c14",
+      "status": "OK",
+      "latency_seconds": 14.06478375000006,
+      "transcript": "Tax Invoice\n\nDocument Number: FPB52LLSJO\nClient Number: 707903590\nIssue Date: 12-21-1968\nPage: 83 of 98\n\nShipment Number: Sender / Reference Number: VAT / Code: Gross Value\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nKelvinton, 98396-3362\n\nDispatch Station / Sender\n\nViegand - Tretel\n42561 Buckingham Road\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nKelvinton, 98396-3362\n\nDispatch Station / Sender\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 66288\n\n8831798606\nZ4ULXG7W3O\n08-13-1961\n\nVetum Group\n9472 Fore Street\n\nArmstrongcester, 6",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.03278291699825786,
+            "encoder_seconds": 2.885034999999334,
+            "generation_seconds": 11.134829125003307,
+            "text_prefill_seconds": 0.3890039169928059,
+            "decode_forward_seconds": 10.15217264185776,
+            "total_seconds": 14.052760082995519,
+            "first_token_seconds": 3.3075187079957686
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.010803333003423177,
+            "processed_size": [
+              1092,
+              896
+            ],
+            "visual_tokens": 1248,
+            "prompt_tokens": 1261,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2491,
+              2036
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5602371860295534,
+      "peak_process_memory_gib": 1.0994415283203125,
+      "accuracy": {
+        "character_edits": 3878,
+        "reference_characters": 4652,
+        "word_edits": 1095,
+        "reference_words": 1114
+      }
+    },
+    {
+      "id": "836",
+      "image_sha256": "3b87b2a404cc96d66b377ddfd0308fd14c178f5542d57cc0c9ba5522e95017cb",
+      "status": "OK",
+      "latency_seconds": 13.29325424999115,
+      "transcript": "New Patient Form\n\nDavid\nFIRST NAME\nSingle \u2610 Married \u2610 Divorced \u2611 Separated \u2610 Widowed \u2610\nMARITAL STATUS\n5372 1/2 Lark Terrace\n\nADDRESS\nAlbers\nIllinois\n62215\nCITY\nSTATE\nZIP\n+1-329-494-9501\n10-21-1964\n\nPHONE\nDOB\n\nSPOUSE NAME\nSPOUSE PHONE\n\nIs the requested medication NEW \u2611 or a CONTINUATION \u2610 of THERAPY? If so, start date:\n\nHave you been hospitalized in the past year? Yes \u2611 No \u2610\n\nReview of Symptoms\n\nAllergies \u2610\nBlack Outs \u2611\nBlurred Vision \u2611\nChest Pain \u2610\nCoughing \u2611\nDental Problems \u2611\nDouble Vision \u2610\nExcessive Bruising \u2610\nExcessive Thirst \u2610\nFatigue \u2610\nHeadaches \u2610\nIrregular Heart Rate \u2611\nMuscle Pain \u2610\nShortness Of Breath \u2611\nTuberculosis Exposure \u2610\n\nAge If Living\n57\n61\n86\n\nCoughing Up Blood \u2610\nDifficulty Employing Bowel Or Bladder \u2610\nEnlarged Glands \u2610\nExcessive Stress \u2610\nEye Pain \u2610\nFever \u2611\nHearing Loss \u2611\nJoint Swelling \u2611\nSeizures \u2611\nStomach Trouble Or Ulcers \u2610\nWeight Gain Or Loss Greater Than 10 Lbs \u2611\n\nFamily Health History\n\nRelation\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death\nAge If Living\n57\n61\n86\n\nAge At Death",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01292416600335855,
+            "encoder_seconds": 2.095825625001453,
+            "generation_seconds": 11.180819832996349,
+            "text_prefill_seconds": 0.30093983400729485,
+            "decode_forward_seconds": 10.252757609967375,
+            "total_seconds": 13.289713165999274,
+            "first_token_seconds": 2.4105746249988442
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.002717208000831306,
+            "processed_size": [
+              1008,
+              756
+            ],
+            "visual_tokens": 972,
+            "prompt_tokens": 985,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1008,
+              750
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.3862223606556654,
+      "peak_process_memory_gib": 1.0994415283203125,
+      "accuracy": {
+        "character_edits": 1424,
+        "reference_characters": 1238,
+        "word_edits": 383,
+        "reference_words": 218
+      }
+    },
+    {
+      "id": "925",
+      "image_sha256": "9297eecbeb848810ac1bffbe520254ed88eb031054edc1e3686727b898351d9b",
+      "status": "OK",
+      "latency_seconds": 9.880339166993508,
+      "transcript": "DEMOCRATIC DESIGNATING PETITION\n\nCOUNTY OF Greater Manchester, STATE OF New York\n\nI, the undersigned, do hereby state that I am a duly enrolled voter of the Democratic Party and entitled to vote at the next primary election of such party, to be held on 2025-12-07, that my place of residence is truly stated opposite my signature here, and I do hereby designate the following named person (or persons) as a candidate for nomination of such party for public office or for election to a party position of such party.\n\nNAME OF CANDIDATE\nPUBLIC OFFICE OR PARTY POSITION\nPLACE OF RESIDENCE\n\nDaniel Gutkowski-Dietrich\nNew York State Senator - 6th District\n52745 Gregoria Stravenue, Lawrenceton, NY 79367\n\nSIGNATURE OF ENROLLED ELECTOR\nPRINTED NAME OF ELECTOR\nDATE\nRESIDENCE\nTOWN OR CITY\n\nNazmi Lang\nNazmi Lang\n2025-02-18\n527 Brouch Rapid\nChesapeake\nLydia Rodriguez\nLydia Rodriguez\n2025-02-17\n969 Mount Pleasant\nSauerburgh\nAlexius Prowfsson\nAlexius Prowfsson\n2025-02-18\n5864 The Fairway\nEast Market\n\nMaradena Walch\nMaradena Walch\n2025-02-18\n6682 Crosby Street\nNorth Waderview\nBarnes Dach\nBerence Dach\n2025-02-18\n57062 Beachon Pass\nFort Robinson\nDr. Graham\nDr. Graham\n2025-02-18\n36411 McAvin Motorway\nSaan'awskibury\n\nSamson Swainawsk\nSamson Swainawsk\n2025-02-18\n84403 1st Ave Ave\nDagmarville\nAngel Purdy\n2025-02-18\n24698 Seth Ide\nHircheworth\nNoelia Roberts\nNoelia Roberts\n2025-02-18\n79606 Romain Road\nJohnsbury\n\nSTATEMENT OF WITNESS\n1. (print name)\n   Joey Beagstrom\n   , state: I am a duly qualified voter of the State of New York and am an enrolled voter of the Democratic Party. I\n\nnow reside at 754 Walker Valley, 11187\n\nEach of the individuals whose names are subscribed to this petition sheet containing 9 signatures, subscribed the same in my presence on the dates above indicated and identified himself or herself to be the individual who signed this sheet.\n\nDate: 2025-02-18\nSignature of Witness: Joey Beagstrom",
+      "output_tokens": 670,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.02749325000331737,
+            "encoder_seconds": 2.9534974999987753,
+            "generation_seconds": 6.892148624989204,
+            "text_prefill_seconds": 0.3937387500045588,
+            "decode_forward_seconds": 6.146332343952963,
+            "total_seconds": 9.873263415996917,
+            "first_token_seconds": 3.375593666001805
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.006328624993329868,
+            "processed_size": [
+              1064,
+              924
+            ],
+            "visual_tokens": 1254,
+            "prompt_tokens": 1267,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1872,
+              1655
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 670,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.3828469403088093,
+      "peak_process_memory_gib": 1.1002044677734375,
+      "accuracy": {
+        "character_edits": 352,
+        "reference_characters": 2165,
+        "word_edits": 120,
+        "reference_words": 378
+      }
+    },
+    {
+      "id": "418",
+      "image_sha256": "a98ea40e356bc1c3cecb8478e8b48e1cc93700cec36ed3c1d79ffb8720a36708",
+      "status": "OK",
+      "latency_seconds": 14.512282708994462,
+      "transcript": "Janus Henderson\n5898 East Deer Circle Carolina, PR 00983\n(662) 989-1674\nMultiple proxy\n\nThis proxy is submitted by management\u2019s committee for the brokers, banks, and nominees mentioned.\n\nBROKER/BANK/NOMINEE\n448\n\nTOTAL\n1.1 *\n1.2 *\n1.3 *\n1.4 *\n1.5 *\n2. *\n\nE*TRADE (29/DTC 209)\n\nAGST\n293\n7\n0\n268\n466\n242\n\nABST\n51\n0\n729\n428\n644\n\nVote To Date\nFOR\n0\n0\n0\n851\n992\n0\n152\n854\n\nAGST\n0\n380\n15\n0\n0\n0\n108\n\nABST\n0\n312\n0\n383\n0\n0\n0\n928\n\nFOR\n171\n0\n61\n893\n0\n0\n0\n272\n0\n\nFOR\n197\n0\n0\n0\n173\n285\n0\n0\n0\n701\n\nAGST\n312\n0\n0\n0\n402\n855\n687\n\nABST\n357\n0\n54\n0\n0\n0\n687\n\nFOR\n767\n266\n0\n0\n0\n396\n339\n472\n\nAGST\n283\n0\n0\n0\n0\n505\n505\n318\n853\n0\n98\n0\n\nFOR\n151\n0\n656\n0\n0\n0\n265\n853\n98\n\nAGST\n0\n443\n0\n892\n538\n0\n0\n0\n864\n0\n\nFOR\n0\n0\n0\n810\n0\n0\n0\n730\n\nFOR\n0\n185\n474\n543\n379\n864\n0\n\nFOR\n358\n439\n450\n854\n78\n0\n\nFOR\n0\n82\n455\n0\n0\n455\n0\n528\n\nAGST\n923\n168\n160\n0\n706\n0\n0\n0\n\nABST\n818\n0\n0\n0\n901\n528\n\nCUSIP Total:\n78\nFOR\n0\n798\n467\n361\n810\n96\n\nAGST\n0\n0\n0\n827\n93\n968\n139\n\nABST\n298\n0\n0\n274\n662\n870\n\nLegal Proxy:\n123\n\nDocusign Envelope ID: 07faa81b-e644-4f9a-a26d-c2e5b602537B\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.02999937499407679,
+            "encoder_seconds": 2.9705991669907235,
+            "generation_seconds": 11.486645166005474,
+            "text_prefill_seconds": 0.3919212910113856,
+            "decode_forward_seconds": 10.491296211097506,
+            "total_seconds": 14.487354583994602,
+            "first_token_seconds": 3.393233541995869
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.023856791987782344,
+            "processed_size": [
+              952,
+              1036
+            ],
+            "visual_tokens": 1258,
+            "prompt_tokens": 1271,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1854,
+              2026
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.384479720145464,
+      "peak_process_memory_gib": 1.10028076171875,
+      "accuracy": {
+        "character_edits": 1531,
+        "reference_characters": 2319,
+        "word_edits": 523,
+        "reference_words": 695
+      }
+    },
+    {
+      "id": "372",
+      "image_sha256": "a65046c23441063e5db97bbdbe7c6f328334b536b82bef89598daeb69aa9a1c6",
+      "status": "OK",
+      "latency_seconds": 6.311380667000776,
+      "transcript": "Pay-In Sheet - 2025-05\n\nDist: 656424\n\nConsultant Name          ID Number          SFM Code          BB Sales          BB Returns          BB Total          Puer Sales          Puer Returns          Puer Total          Grand Total\nSantos Treutel          3946261825          633904          R1210.00          R1210.00\nJan Zulauf            1047355302          862210\nLorene Cruickshank  8397720556          839098          R605.00          R38.00          R567.00          R85.05          R5.70          R79.35          R646.35\nMamie Abbott          1705057865          316432\nMilton Crooks          7083765014          734843          R2153.00          R316.00          R1837.00\nValerie Thompson      5292304195          305253\nCameron Klocko Jr.    8545047158          484496          R1278.00          R194.00          R1084.00\nNina Friesen          9767565098          578656\nAmber Mosciski  9025523335          876735",
+      "output_tokens": 396,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.022627708996878937,
+            "encoder_seconds": 2.9412030410021544,
+            "generation_seconds": 3.3364995419979095,
+            "text_prefill_seconds": 0.38769112499721814,
+            "decode_forward_seconds": 2.7765241380548105,
+            "total_seconds": 6.300421042004018,
+            "first_token_seconds": 3.3519835000042804
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.010014125000452623,
+            "processed_size": [
+              1400,
+              700
+            ],
+            "visual_tokens": 1250,
+            "prompt_tokens": 1263,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1810,
+              908
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 396,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.3802528567612171,
+      "peak_process_memory_gib": 1.1277923583984375,
+      "accuracy": {
+        "character_edits": 404,
+        "reference_characters": 969,
+        "word_edits": 138,
+        "reference_words": 216
+      }
+    },
+    {
+      "id": "964",
+      "image_sha256": "668218a3932ae8eb2fd4fb594cc971cec96151898fa14f71730269ef9624a112",
+      "status": "OK",
+      "latency_seconds": 11.934569874996669,
+      "transcript": "DEMOCRATIC DESIGNATING PETITION\n\nCOUNTY OF Warren County, STATE OF New York\n\nI, the undersigned, do hereby state that I am a duly enrolled voter of the Democratic Party and entitled to vote at the next primary election of such party, to be held on 2026-01-20, that my place of residence is truly stated opposite my signature here, and I do hereby designate the following named person (or persons) as a candidate for nomination of such party for public office or for election to a party position of such party.\n\nNAME OF CANDIDATE\nPUBLIC OFFICE OR PARTY POSITION\nPLACE OF RESIDENCE\n\nLowell Doyle\nNew York State Senator - 6th District\n8381 E 5th Street, Port Jayneton, NY 14071\n\nSIGNATURE OF ENROLLED ELECTOR\nPRINTED NAME OF ELECTOR\nDATE\nRESIDENCE\nTOWN OR CITY\n\nMekki Doyke\nMekki Doyk\n2025-02-18\n3765 Alysa Point\nRathchester\nAlyssa Hessel\n2026-02-18\n5274 Huel Maddou\nLuke Ian\nWinona Anderson\nWinona Anderson\n2025-02-17\n38511 Kiehn Summit\nElsaborg\nJudie Brown\nAndae Brown\n2025-02-18\n5980 Jaquellin Tria.\nFord Warren\nFriedrich Schmeller\n2025-02-18\n53074 Hansen Road\nFarmington\nKaci Schneider\n2025-02-18\n6435 Esteban Inlet\nYesenia-bury\nCarroll Moran\nLorell Moran\n2025-02-18\n3165 Stacey Village\nTuley Park\nLauelyn Fadel\nL\u5f04\u5c71 Luey Fadel\n2025-02-18\n98924 Schuster Ridges\nEast Richmond North\nAimei Fauve\n2025-02-18\n629 Haguee Dass\nFort Lue\nGuselle Beach\n2025-02-18\n511 Bradlee Lead\nLingrid\nVelma Pomaquera\n2025-02-17\n1627 Ritchie Row\nLuke Codyart\nTyrrell Pollich\n2025-02-18\n515 Commercial Road\nFort Emerson\nJulele Weber\n2025-02-17\n3779 Heaven Point\nMangueritberg\nAlvina Hoggar\n2025-02-17\n8624 Oma Ferry\nKewier\nRina Pauuk\n2025-02-18\n6221 Hector Station\nBenowert\n\nSTATEMENT OF WITNESS\nI, (print name) Lula Emme Rich, state: I am a duly qualified voter of the State of New York and am an enrolled voter of the Democratic Party. I now reside at 63073 Faanekp Throughway, 41019.\nEach of the individuals whose names are subscribed to this petition sheet containing 15 signatures, subscribed the same in my presence on the dates above indicated and identified himself or herself to be the individual who signed this sheet.\n\nDate: 2025-02-18\nSignature of Witness: Lula Emmerich",
+      "output_tokens": 834,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.030057124997256324,
+            "encoder_seconds": 2.9635488339990843,
+            "generation_seconds": 8.914040125004249,
+            "text_prefill_seconds": 0.39214516601350624,
+            "decode_forward_seconds": 8.053015723955468,
+            "total_seconds": 11.907746750002843,
+            "first_token_seconds": 3.386201625005924
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.025687125002150424,
+            "processed_size": [
+              924,
+              1064
+            ],
+            "visual_tokens": 1254,
+            "prompt_tokens": 1267,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1864,
+              2142
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 834,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.3828469403088093,
+      "peak_process_memory_gib": 1.1279449462890625,
+      "accuracy": {
+        "character_edits": 572,
+        "reference_characters": 2640,
+        "word_edits": 191,
+        "reference_words": 474
+      }
+    },
+    {
+      "id": "147",
+      "image_sha256": "10bf1dfaaefeddfa065160120c478ee915118de61d6c46615e20f840730c2e33",
+      "status": "OK",
+      "latency_seconds": 14.379384125000797,
+      "transcript": "DELIVERY NOTE\n\nFrom:\nCompany: Cormier - Powlowski\nRef: DN-AAA58LLE\nAddress: 6510 Middle Street\nTel: (309) 398-4365 x72928\nEmail: Rosanna11@gmail.com\nVAT: VAT-9439967504\n\nDate: 2025-02-12\nProject: Renovation - North Casey Data Center\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\nTo:\nCompany: Koch, Lynch and Ferry\nRef: PO-ATK7JH1B\nAddress: 95710 Abner Stravenue\n\nAddress: Attention: Charlene Borer\n\nTo:\nEmail: Brennan_Sanford@yahoo.com\nVAT: VAT-6320128328\n\nDate: 2025-02-12\nProject: Renovation - North Casey Data Center\n\n1\nJunction Box\nABB\nBUXPQKUTXP\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\nDESCRIPTION\n\n1\nJunction Box\nABB\nBUXPQKUTXP\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n4\nSensor Module\nMean Well\n1Q46BOSNBJ\n\n2\nCable Assembly\nABB\nNG6K6OBVSL\n\n3\nCable Assembly\nMean Well\nDBYNYTVZHX\n\n",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.036006915994221345,
+            "encoder_seconds": 2.876197207995574,
+            "generation_seconds": 11.452146124996943,
+            "text_prefill_seconds": 0.38781004199699964,
+            "decode_forward_seconds": 10.446261680059251,
+            "total_seconds": 14.364499707997311,
+            "first_token_seconds": 3.300889874997665
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.013580333994468674,
+            "processed_size": [
+              840,
+              1148
+            ],
+            "visual_tokens": 1230,
+            "prompt_tokens": 1243,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2182,
+              2932
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5475108530372381,
+      "peak_process_memory_gib": 1.127960205078125,
+      "accuracy": {
+        "character_edits": 2899,
+        "reference_characters": 3702,
+        "word_edits": 381,
+        "reference_words": 423
+      }
+    },
+    {
+      "id": "784",
+      "image_sha256": "a08fea292c5e3072a1700d9937e11468554fef2385cdc5a737eebbd49951e1e2",
+      "status": "OK",
+      "latency_seconds": 14.313580500005628,
+      "transcript": "(31)\nInt. C\n2013.01\nA46R 15/04\n2013.01\nA46R 7/18\n\n(32)\nReferences Cited\n\nU.S. PATENT DOCUMENTS\n\n891.873 A\n2/1932\nWisink\n\n912.409 A\n4/1932\nO'Connell et al.\n\n1019/699 A\n5/1932\nMoore\n\n1,107/685 A\n7/1932\nBojgisch\n\n1,164/026 A\n8/1932\nWitting\n\n1,298.554 A\n9/1932\nLubowitz\n\n1,339/861 A\n10/1932\nBoshm-Heaney\n\n1,381.803 A\n10/1932\nHartmann et al.\n\n1,444.135 A\n11/1932\nJist\n\n1,560.593 A\n11/1932\nCorkery et al.\n\n1,606.904 A\n11/1932\nLarkin et al.\n\n1,617.531 A\n11/1932\nHeathcote\n\n1,666.988 A\n12/1932\nFeest et al.\n\n1,693.583 A\n12/1932\nFraney et al.\n\n1,801/946 A\n12/1932\nBayer et al.\n\n1,858.302 A\n12/1932\nRohan\n\n2,005.938 A\n12/1932\nHamill et al.\n\n2,071.731 A\n2/1933\nLebsack et al.\n\n2,203.035 A\n2/1933\nBrettenberg et al.\n\n2,214.073 A\n3/1933\nMaggio\n\n2,321.547 A\n3/1933\nTorp\n\n2,389.941 A\n4/1933\nLittel\n\n2,537.239 A\n5/1933\nKihn\n\n2,573.544 A\n6/1933\nRumte et al.\n\n2,704.179 A\n8/1933\nKunze et al.\n\n2,827.755 A\n8/1933\nKulhman\n\n2,938.685 A\n9/1933\nKertzmann\n\n2,979.938 A\n9/1933\nDaugherty\n\n3,114.968 A\n10/1933\nDietrich et al.\n\n3,221.408 A\n10/1933\nKihn et al.\n\n3,321.052 A\n10/1933\nKulhman et al.\n\n3,462.344 A\n10/1933\nNikolaus et al.\n\n3,476.093 A\n12/1933\nKrajcik\n\n3,571.665 A\n12/1933\nSteuber-Schmitt et al.\n\n3,602.872 A\n1/1934\nRyan et al.\n\n3,734.691 A\n1/1934\nWeissnat\n\n3,746.124 A\n1/1934\nPfeffer\n\n3,835.203 A\n1/1934\nHill et al.\n\n3,862.258 A\n3/1934",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.021271207995596342,
+            "encoder_seconds": 2.868314624996856,
+            "generation_seconds": 11.41889404199901,
+            "text_prefill_seconds": 0.38470774999586865,
+            "decode_forward_seconds": 10.430408208165318,
+            "total_seconds": 14.308601708005881,
+            "first_token_seconds": 3.274949208003818
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0040638749924255535,
+            "processed_size": [
+              1148,
+              840
+            ],
+            "visual_tokens": 1230,
+            "prompt_tokens": 1243,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1300,
+              952
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5475108530372381,
+      "peak_process_memory_gib": 1.1356353759765625,
+      "accuracy": {
+        "character_edits": 1985,
+        "reference_characters": 3118,
+        "word_edits": 382,
+        "reference_words": 426
+      }
+    },
+    {
+      "id": "706",
+      "image_sha256": "26d9120f9965a2591765faea1de3c63490c5af6985ff92c0b33360e465b79663",
+      "status": "OK",
+      "latency_seconds": 7.4316197500011185,
+      "transcript": "Magali Kuphal\n977 W Broadway Street\nNew Wilmaport, South Dakota 39810\n\nPAY TO THE ORDER OF\nJacobi Inc\n\nThree Thousand One Hundred Seventy Six and 94/100\n\nMEMO Contract payment\n\n: 228 76 734 9: 6 2 7 9 4 6 3 6 8 \u2193 7 2 9 \u2600\n\nJellon Champlin\n427 Vern Loaf\nZboncakville, Massachusetts 18783\n\nPAY TO THE ORDER OF\nDolter, Braun and Toy\n\nTwenty Six Thousand Seven Hundred Sixteen and 8/100\n\nMEMO Services Rendered\n: 3 9 4 5 8 4 4 3 7: 5 3 \u2193 3 2 6 4 8 6 5 \u2193 6 \u2193 3 7 \u2600\n\nCHASE\n\n2025-02-13\n\n$3,176.94\n\nDOLLARS\n\nJemifer Lang\n65760 Farrell Manors\nLonview, Montana 09556-7352\n\nPAY TO THE ORDER OF\nRobb, Greenbelden and Collins\n\nTwenty Three Thousand Twenty and 43/100\n\nMEMO Maintenance service\n\n: 7 9 7 \u2193 3 4 0 5: 5 2 4 4 3 3 \u2193 5 6 8 \u2193 7 6 5 6 \u2600\n\nBANK OF AMERICA\n$26,716.13\n\nDOLLARS\n\nBANK OF AMERICA\n\n2025-02-12\n\n$26,716.13\n\nDOLLARS\n\nBANK OF AMERICA\n\n2 02 5-02-13\n$23,02-043\nDOLLARS",
+      "output_tokens": 485,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.036673333001090214,
+            "encoder_seconds": 2.8869800829997985,
+            "generation_seconds": 4.466589208008372,
+            "text_prefill_seconds": 0.3978875830071047,
+            "decode_forward_seconds": 3.8463607559824595,
+            "total_seconds": 7.390340832993388,
+            "first_token_seconds": 3.322450291001587
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.039360709008178674,
+            "processed_size": [
+              1456,
+              672
+            ],
+            "visual_tokens": 1248,
+            "prompt_tokens": 1261,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              3608,
+              1688
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 485,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5602371860295534,
+      "peak_process_memory_gib": 1.14862060546875,
+      "accuracy": {
+        "character_edits": 714,
+        "reference_characters": 1020,
+        "word_edits": 141,
+        "reference_words": 115
+      }
+    },
+    {
+      "id": "947",
+      "image_sha256": "9a06d9b9659b8d771cba42fffaf5637d13853c53e9611d310e5d92a8a18af5ce",
+      "status": "FAILED",
+      "latency_seconds": 6.757116624998162,
+      "transcript": "",
+      "error": "RuntimeError: tokenizer revised previously committed streaming text",
+      "accuracy": {
+        "character_edits": 1676,
+        "reference_characters": 1676,
+        "word_edits": 285,
+        "reference_words": 285
+      }
+    },
+    {
+      "id": "138",
+      "image_sha256": "6c3a0f33860356cae39925e58d86364db3d98407d081713f02aeb615684ae442",
+      "status": "OK",
+      "latency_seconds": 14.6353010419989,
+      "transcript": "Medical Equipment Inspection Checklist\n\nEquipment ID: IF2SM2RU\nModel: Becker, Gibson and Turcotte vOBA\nDepartment: Emergency Room\nInspection Date: 2025-02-12\nInspector: Shaun Kassulke\n\nPhysical Condition\n\nCheckpoint\nEquipment housing intact\nDisplay screen clear\nControl buttons functional\nPower cord undamaged\nMounting brackets secure\nWheels/casters condition\nLabels and markings legible\nAccessories complete\nElectrical Safety\n\nCheckpoint\nGround connection\nInsulation resistance\nLeakage current\nPower supply stable\nBattery backup functional\nCircuit breaker operation\nSurge protection\n\nCheckpoint\nSelf-test passed\nCalibration check\nAlarm systems\nBackup systems\nOutput accuracy\nResponse time\nData storage/retrieval\nNetwork connectivity\nOverpowering\n\nInspection Result: \u2717\nNext Inspection Due: 2025-12-19\n\nNeeds Service\nDefective\nNot Applicable\nNotes\n\nNeeds Service\nDefective\nNot Applicable\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n\nNotes\n",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.0343419169948902,
+            "encoder_seconds": 2.994165083000553,
+            "generation_seconds": 11.593270334007684,
+            "text_prefill_seconds": 0.3970327920105774,
+            "decode_forward_seconds": 10.581484438080224,
+            "total_seconds": 14.62191395800619,
+            "first_token_seconds": 3.426210417004768
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.011925290993531235,
+            "processed_size": [
+              784,
+              1260
+            ],
+            "visual_tokens": 1260,
+            "prompt_tokens": 1273,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1853,
+              2964
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.38638711348176,
+      "peak_process_memory_gib": 1.1487579345703125,
+      "accuracy": {
+        "character_edits": 1783,
+        "reference_characters": 1864,
+        "word_edits": 365,
+        "reference_words": 395
+      }
+    },
+    {
+      "id": "52",
+      "image_sha256": "136a8c44dda39b96f80787cdba19c267088e8292c9c27cef24abe70f50de4e5a",
+      "status": "OK",
+      "latency_seconds": 5.003967958997237,
+      "transcript": "FEB 25 '98 18:23 FR\n\nFAX TRANSMISSION\n\nDATE: February 25, 1998\n\nCLIENT NO.: L8557.002\n\nMESSAGE TO: Ronald S. Milstein\n\nCOMPANY: Lorillard Tobacco Company\n\nFAX NUMBER: 910/335-7707\n\nPHONE: 910/335-7718\n\nFROM: Andy Zausner\n\nPHONE: 202/828-2259\n\nPAGES (Including Cover Sheet): 12 HARD COPY TO FOLLOW: YES NO\n\nMESSAGE: See attached fax from the Committee on Commerce just received in my office. Call me to discuss.\n\nIf your receipt of this transmission is in error, please notify this firm immediately by collect call to our Facsimile Department at 202-861-9106, and send the original transmission to us by return mail at the address below.\n\nThis transmission is intended for the sole use of the individual and entity to whom it is addressed, and may contain information that is privileged, confidential and exempt from disclosure under applicable law. You are hereby notified that any dissemination, distribution or duplication of this transmission by someone other than the intended addressee or its designated agent is strictly prohibited.\n\n2101 L Street NW Washington, DC 20037-1528 Tel 202-785-9700 Fax 202-887-0689\n83624198",
+      "output_tokens": 360,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01595975000236649,
+            "encoder_seconds": 2.1070760000002338,
+            "generation_seconds": 2.878029167011846,
+            "text_prefill_seconds": 0.30009608301043045,
+            "decode_forward_seconds": 2.4312330699904123,
+            "total_seconds": 5.001141500004451,
+            "first_token_seconds": 2.423868833007873
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0022744580055586994,
+            "processed_size": [
+              756,
+              1008
+            ],
+            "visual_tokens": 972,
+            "prompt_tokens": 985,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              754,
+              1000
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 360,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.38622229360044,
+      "peak_process_memory_gib": 1.148773193359375,
+      "accuracy": {
+        "character_edits": 116,
+        "reference_characters": 1194,
+        "word_edits": 28,
+        "reference_words": 175
+      }
+    },
+    {
+      "id": "347",
+      "image_sha256": "40db1b5502bdd96d5832642479024c780a167a1f2425efd1b61398a4afc4c274",
+      "status": "OK",
+      "latency_seconds": 14.03222879099485,
+      "transcript": "1040\nU.S. Individual Income Tax Return\n\nFor the year Jan. 1\u2013Dec. 31, 2024, or other tax year beginning 1/01, 2024, ending 12/31, 2024\n\nYour first name and middle initial\nMaya A\n\nIf joint return, spouse\u2019s first name and middle initial\nJed J\n\nHome address (number and street). If you have a P.O. box, see instructions.\n99730 Rita Glens\n\nCity, town, or post office. If you have a foreign address, also complete spaces below.\n\nMonicaworth\n\nLast name\n\nDooley-Walker\n\nLast name\n\nMosciski-Mills\n\nCity, town, or post office. If you have a foreign address, also complete spaces below.\n\nForeign province/state/county\n\nHome address (number and street). If you have a P.O. box, see instructions.\n99730 Rita Glens\n\nForeign province/state/county\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nCity, town, or post office. If you have a foreign address, also complete spaces below.\n\nForeign postal code\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nCity, town, or post office. If you have a foreign address, also complete spaces below.\n\nForeign postal code\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O. box, see instructions.\n\nHome address (number and street). If you have a P.O.",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.029683082990231924,
+            "encoder_seconds": 2.8870227500010515,
+            "generation_seconds": 11.10487933299737,
+            "text_prefill_seconds": 0.39868149999529123,
+            "decode_forward_seconds": 10.078321969951503,
+            "total_seconds": 14.021733124987804,
+            "first_token_seconds": 3.316267707996303
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.009659792005550116,
+            "processed_size": [
+              868,
+              1120
+            ],
+            "visual_tokens": 1240,
+            "prompt_tokens": 1253,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1679,
+              2199
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.554881127551198,
+      "peak_process_memory_gib": 1.149017333984375,
+      "accuracy": {
+        "character_edits": 3668,
+        "reference_characters": 5213,
+        "word_edits": 724,
+        "reference_words": 829
+      }
+    },
+    {
+      "id": "451",
+      "image_sha256": "a03d1e69d0a89a60b5fdd0e92fdfa4b8282cebfd20289e53462e80123ece589c",
+      "status": "OK",
+      "latency_seconds": 4.934761415992398,
+      "transcript": "Medical Equipment Inspection Checklist\n\nEquipment ID: NW21100Y\nModel: Carroll LLC HFr\nDepartment: Radiology\nInspection Date: 2025-02-12\nInspector: Hugh Mayer\n\nPhysical Condition\n\nCheckpoint    Pass    Fail    N/A    Notes\n\nEquipment housing intact\n\nDisplay screen clear\n\nControl buttons functional\n\nPower cord undamaged\n\nMounting brackets secure\n\nWheels/casters condition\n\nLabels and markings legible\n\nAccessories complete\n\nElectrical Safety\n\nCheckpoint    Pass    Fail    N/A    Notes\n\nGround connection\n\nInsulation resistance\n\nLeakage current\n\nPower supply stable\n\nBattery backup functional\n\nCircuit breaker operation\n\nSurge protection\n\nCable connections secure\n\nPerformance Tests\n\nCheckpoint    Pass    Fail    N/A    Notes\n\nSelf-test passed\n\nCalibration check\n\nAlarm systems\n\nBackup systems\n\nOutput accuracy\n\nResponse time\n\nData storage/retrieval\n\nNetwork connectivity\n\nSensor accuracy\n\nOverall Status\n\nInspection Result: \u2611\nNext Inspection Due: 2025-12-29",
+      "output_tokens": 274,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.03682929198839702,
+            "encoder_seconds": 2.897820500002126,
+            "generation_seconds": 1.9851936670020223,
+            "text_prefill_seconds": 0.39022524999745656,
+            "decode_forward_seconds": 1.4939271699549863,
+            "total_seconds": 4.919926624992513,
+            "first_token_seconds": 3.3253414999926463
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.013898208999307826,
+            "processed_size": [
+              728,
+              1344
+            ],
+            "visual_tokens": 1248,
+            "prompt_tokens": 1261,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1869,
+              3438
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 274,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5602371860295534,
+      "peak_process_memory_gib": 1.1490936279296875,
+      "accuracy": {
+        "character_edits": 1029,
+        "reference_characters": 1914,
+        "word_edits": 267,
+        "reference_words": 375
+      }
+    },
+    {
+      "id": "398",
+      "image_sha256": "94f489b6e65ccc14b1162908fdd054875dd33ef00e097ef5bef5d2a7d4a78cd7",
+      "status": "OK",
+      "latency_seconds": 14.61959966699942,
+      "transcript": "ACCOUNT OVERVIEW\n\nCurrent Period                  Year-to-Date\nBeginning of Period Value  $120,371.00  $577,267.00\nAccount Transfers Out  $0.00  $47,463.90\nTotal Portfolio Performance  $0.00  $138,049.20\nUnrealized Capital Gains  $88,994.05  $138,029.30\nTactical Rebalancing  $90,484.50  $90,781.32\nDividends  $10,755.94  $35,195.90\nAncillary Transactions  -$603.44  -$54,340.55\nEND OF PERIOD  $310,002.05  $600,519.87\n\n\u2022 Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\n\nDAILY BALANCES\n\nDate          Amount  Date  Amount  Amount  Amount\n2023-12-30  $310,123.00  2023-12-22  $310,529.00  2023-12-14  $310,760.00  2023-12-06  $313,924.00\n2023-12-29  $310,290.00  2023-12-21  $310,711.00  2023-12-13  $314,107.00  2023-12-05  $314,033.00\n2023-12-28  $310,072.00  2023-12-20  $310,653.00  2023-12-12  $314,130.00  2023-12-02  $314,119.00\n2023-12-27  $310,195.00  2023-12-19  $310,514.00  2023-12-09  $314,058.00  2023-12-01  $313,866.00\n2023-12-26  $310,248.00  2023-12-16  $310,322.00  2023-12-08  $313,902.00\n2023-12-23  $310,468.00  2023-12-15  $310,486.00  2023-12-07  $313,941.00\n\nINVESTMENT ELECTIONS\n\nBOND AMORTIZATION ELECTIONS\n\nUse constant-yield calculations to reduce bond premiums:\n\nLeverage an accrual approach to recognize discount across bond categories:\n\nIntegrate market discount into taxable earnings every year:\n\nFund Name          Traded As EOD Price Daily Volume (avg)  YTD Price Change  Category  One Day Change\nVanguard Growth ETF  VUG  414.19  1145739  0.339  Equity  -0.0126\n\nTechnology Select Sector SPDR Fund  XLK  234.47  4015302  0.2265  Equity  -0.0127\n\niShares Core MSCI Emerging Markets ETF  IEMG  52.31  9449047  0.0667  Equity  -0.0082\n\nSPDR S&P 500 ETF Trust  SPY  588",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.038994458998786286,
+            "encoder_seconds": 3.0162898329872405,
+            "generation_seconds": 11.529212708992418,
+            "text_prefill_seconds": 0.39486824999039527,
+            "decode_forward_seconds": 10.52302311285166,
+            "total_seconds": 14.584597791996202,
+            "first_token_seconds": 3.450851083995076
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.03296045800379943,
+            "processed_size": [
+              840,
+              1176
+            ],
+            "visual_tokens": 1260,
+            "prompt_tokens": 1273,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2036,
+              2856
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.38638711348176,
+      "peak_process_memory_gib": 1.1492919921875,
+      "accuracy": {
+        "character_edits": 1526,
+        "reference_characters": 3166,
+        "word_edits": 363,
+        "reference_words": 557
+      }
+    },
+    {
+      "id": "640",
+      "image_sha256": "02ade8fe3d60ec1e90fcbe4ff95a6a3b264c398e6ee5fe35898d7340068bd3fb",
+      "status": "OK",
+      "latency_seconds": 13.216096208998351,
+      "transcript": "Document Number: DZROQ3XKDH\nClient Number: 388975155\nIssue Date: 04-27-1995\nPage: 74 of 98\n\nDocument Number: DZROQ3XKDH\nClient Number: 388975155\nIssue Date: 04-27-1995\nPage: 74 of 98\n\nUps\n\nShipment Number          Seeder / Reference\nNumber\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nIs\u0648\u062d\u0634\u064a\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE MABLISIDE\n9510\n01915-4421\n\nUps\n\nShipment Number\n1131192007\nKYCR/OIG/103\n11:04-1952\n\nWABD KOS AND SAUBER JOHNSON\nKOKG\n599 Tutor Close\nROANOKI 77024-LAKE M",
+      "output_tokens": 1023,
+      "truncated": true,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01712091600347776,
+            "encoder_seconds": 2.087449208003818,
+            "generation_seconds": 11.106847000002745,
+            "text_prefill_seconds": 0.30128945800242946,
+            "decode_forward_seconds": 10.200740004860563,
+            "total_seconds": 13.211554666006123,
+            "first_token_seconds": 2.406731374998344
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0033089589996961877,
+            "processed_size": [
+              728,
+              1036
+            ],
+            "visual_tokens": 962,
+            "prompt_tokens": 975,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              739,
+              1040
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 1023,
+            "finish_reason": "length",
+            "truncated": true,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.465319523587823,
+      "peak_process_memory_gib": 1.149322509765625,
+      "accuracy": {
+        "character_edits": 1591,
+        "reference_characters": 2025,
+        "word_edits": 422,
+        "reference_words": 436
+      }
+    },
+    {
+      "id": "775",
+      "image_sha256": "e813f3af00a5c3b2b236a958dd89c3b27c2561d8e5010989c2330442c8726e50",
+      "status": "FAILED",
+      "latency_seconds": 8.09075504199427,
+      "transcript": "",
+      "error": "RuntimeError: tokenizer revised previously committed streaming text",
+      "accuracy": {
+        "character_edits": 1654,
+        "reference_characters": 1654,
+        "word_edits": 284,
+        "reference_words": 284
+      }
+    },
+    {
+      "id": "77",
+      "image_sha256": "b52160ba1224f045985eacd2362ee16c0004e09d931c230b2242ce1f64dddb3b",
+      "status": "OK",
+      "latency_seconds": 10.295510333002312,
+      "transcript": "DEMOCRATIC DESIGNATING PETITION\n\nCOUNTY OF Polk County, STATE OF New York\n\nI, the undersigned, do hereby state that I am a duly enrolled voter of the Democratic Party and entitled to vote at the next primary election of such party, to be held on 2025-03-16, that my place of residence is truly stated opposite my signature hereto, and I do hereby designate the following named person (or persons) as a candidate for nomination of such party for public office or for election to a party position of such party.\n\nNAME OF CANDIDATE\nPUBLIC OFFICE OR PARTY POSITION\nPLACE OF RESIDENCE\n\nEmanuel Bednar\nNew York State Senator - 6th District\n50114 Princess Street, Milliefield, NY 15195-7608\n\nSIGNATURE OF ENROLLED ELECTOR\nPRINTED NAME OF ELECTOR\nDATE\nRESIDENCE\nTOWN OR CITY\n\nTie Grady\nTie Grady\n2025-02-18\n133 Kihn Canyon\nEast Grovercist\n\nLoblyun Walsh\nAshlyn Walch\n2025-02-18\n226c The Crescent\nSouth Newoyshare\n\nRodrick Leach\nRodrick Leach\n2025-02-18\n854 Jeanne Mission\nLakewood\n\nOlen Roth\nOlen Roth\n2025-02-18\n75622 Pine Street\nWucklowbury\n\nTaylor Lowe\nTaylor Lowe\n2025-02-18\n243 Von Fall\nWest Wilfordton\n\nRocky Sanpond\nRocky Sanpond\n2025-02-18\n127 Sophie Cove\nNew Leanfurt\n\nAnnumoe Hermieston\nAnnumoe Hermieston\n2025-02-18\n6125 Alexander Ways\nCarlsbad\n\nRosella Cartwright\nRosella Cartwright\n2025-02-18\n7481 Rectory Lane\nNew Kendra\n\nRoskilinda Politiere\nRoskilida Balistrieri\n2025-02-18\n450 Mohr River\nSchumabury\n\nGrayce Hvels\nGrayce Hvels\n2025-02-18\n92070 Marlow Extensive\nTavutow\n\nSTATEMENT OF WITNESS\nI, (print name)  Bradford Connelly II, state: I am a duly qualified voter of the State of New York and am an enrolled voter of the Democratic Party. I now reside at 31073 Flatley Square, 11888.\n\nEach of the individuals whose names are subscribed to this petition sheet containing 10 signatures, subscribed the same in my presence on the dates above indicated and identified himself or herself to be the individual who signed this sheet.\n\nDate: 2025-02-17  Signature of Witness  Bradford Connelly II",
+      "output_tokens": 716,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.025195582988089882,
+            "encoder_seconds": 2.9019306670088554,
+            "generation_seconds": 7.349890458004666,
+            "text_prefill_seconds": 0.39262908400269225,
+            "decode_forward_seconds": 6.57630316716677,
+            "total_seconds": 10.277130249989568,
+            "first_token_seconds": 3.320209540994256
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.017576333004399203,
+            "processed_size": [
+              1092,
+              896
+            ],
+            "visual_tokens": 1248,
+            "prompt_tokens": 1261,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1864,
+              1498
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O05",
+            "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+            "architecture": "paddleocr_vl",
+            "output_tokens": 716,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.5602371860295534,
+      "peak_process_memory_gib": 1.1494598388671875,
+      "accuracy": {
+        "character_edits": 329,
+        "reference_characters": 2249,
+        "word_edits": 123,
+        "reference_words": 397
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "README.md",
+      "bytes": 802,
+      "sha256": "5ce3c3b095f2b6ae7cb8cb838fe22f81eda65f430b166ac6ff206d4cd60e327c"
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 25381,
+      "sha256": "f59f889088e0fe21c523e7cf121bb6dca3b0bb148cb7159fbb4572c74dfc5644"
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 1474,
+      "sha256": "2f27812dab7f333e471884e0c803d807f11953d5453140dfb1aaba234f872bc8"
+    },
+    {
+      "path": "config.json",
+      "bytes": 2483,
+      "sha256": "e17df4c3cf9ddad33a8449d65d0da911b4187d4ba565a421e4faecc8d1e488c7"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 133,
+      "sha256": "a6701d78ab3b4d972307cdec3b69d4c13f46e0d5140514f50ab7d84259324b94"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 703562711,
+      "sha256": "f9a45393e2ffe6cbb412c25c82704fbb081e952c4c4517fa01e8a750010d1267"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 69879,
+      "sha256": "7922fd298904bb4271d80f51bc7bb5d4cc7d3a038921cdbf5080bfb6c0556271"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 641,
+      "sha256": "111872ab1e8bb7fd040ac5087bfced7ab8f011f02139b088cba294964c3b1d0e"
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 843,
+      "sha256": "a6037d3ce4f4006163b3b3d9deaa44c8bf4f4086cdc7232647e57e5c80488a1a"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 1151,
+      "sha256": "d3a125c03103deb2acaf7730791bdbbf196f620e5a2213b664511ff9b4b25bab"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11189060,
+      "sha256": "c8a215a59183d0d0781adc33bacd3ce6162716f7fd568fb30234a74d69803a7d"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 876,
+      "sha256": "dbdaa32276c60eb38b7986ba7c63fa5b66def3a06141ff2184ea9923dacea436"
+    }
+  ],
+  "load_seconds": 0.3059289170050761,
+  "precision": {
+    "bits": 4,
+    "group_size": 64,
+    "mode": "affine"
+  },
+  "warmup_seconds": 3.6143939169996884,
+  "metrics": {
+    "attempted": 28,
+    "completed": 26,
+    "failed": 2,
+    "truncated": 16,
+    "median_latency_seconds": 14.048506270497455,
+    "completed_pages_per_second": 0.08178842984671407,
+    "corpus_cer": 0.6048552075282994,
+    "corpus_wer": 0.7776392352452203,
+    "max_peak_mlx_memory_gib": 1.5602371860295534,
+    "actual_output_tokens": 21316,
+    "inference_seconds": 317.8933750009455
+  },
+  "reason": "Retained partial attempt before repairing page-level byte-fallback detokenization."
+}

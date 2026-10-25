@@ -1,0 +1,10 @@
+{
+  "schema_version": "mlx-one-ocr-omni100-v1",
+  "id": "O02",
+  "checkpoint": "microsoft/trocr-base-handwritten",
+  "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+  "name": "TrOCR Base Handwritten",
+  "precision_label": "FP32",
+  "status": "INCOMPATIBLE",
+  "reason": "Cropped-line recognizer; dataset has page images and no annotated line crops. No page benchmark or weight download performed."
+}

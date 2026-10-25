@@ -1,0 +1,1734 @@
+{
+  "schema": "mlx-one-audio-benchmark-v1",
+  "status": "MEASURED",
+  "measured_at": "2026-10-24T14:44:22.491463+00:00",
+  "checkpoint": "mlx-community/parakeet-tdt-0.6b-v3",
+  "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+  "name": "Parakeet TDT v3",
+  "precision": "FP32",
+  "task": "transcribe",
+  "workload": "ASR-S1",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "repetitions": 5,
+    "statistic": "median",
+    "clock": "perf_counter_with_mlx_synchronize",
+    "playback_pacing": false
+  },
+  "backend": "native-mlx-metal",
+  "measurement_type": "direct-model-prepared-pcm",
+  "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368,
+    "machine": "arm64"
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "macos": "15.8.1"
+  },
+  "checkpoint_assets": {
+    "config.json": "f320f1292511f34ec47f513755fe20fd01dbfc09a925d42730e66059a6e1ef4c",
+    "model.safetensors": "05e01c7f396c298cf7d23f61da7b504adeab698f0aaeafd9c82d198625464592"
+  },
+  "load_seconds": 0.38350166600139346,
+  "input": {
+    "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+    "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+    "audio_seconds": 10.0,
+    "sample_rate": 16000,
+    "language": "English",
+    "voice": null
+  },
+  "decoding": {
+    "language_hint": null,
+    "max_tokens_override": null,
+    "settings": "native family defaults; see methodology"
+  },
+  "runs": [
+    {
+      "processing_seconds": 0.17401916700328002,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.017401916700328,
+      "audio_seconds_per_second": 57.46493430698651,
+      "peak_mlx_gib": 2.4172212360426784,
+      "peak_rss_gib": 2.497528076171875,
+      "wer": 0.0,
+      "cer": 0.0,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": null,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "text": "He has grave doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+        "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+        "sample_rate": 16000,
+        "tokens": [
+          8192,
+          8192,
+          1876,
+          2281,
+          1969,
+          507,
+          3362,
+          7886,
+          769,
+          328,
+          1299,
+          1239,
+          7319,
+          6447,
+          901,
+          8192,
+          1413,
+          1333,
+          3720,
+          8192,
+          289,
+          7931,
+          7870,
+          6182,
+          508,
+          5600,
+          4190,
+          377,
+          8192,
+          799,
+          441,
+          1111,
+          7877,
+          575,
+          2059,
+          5371,
+          3230,
+          334,
+          869,
+          2681,
+          7052,
+          592,
+          3341,
+          725,
+          7893,
+          2336,
+          7882,
+          566,
+          7865,
+          8192,
+          7883,
+          8192
+        ],
+        "language": null,
+        "confidence": null,
+        "timestamps": [
+          {
+            "token": "He",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "token": " has",
+            "start": 0.64,
+            "end": 0.88
+          },
+          {
+            "token": " gra",
+            "start": 0.88,
+            "end": 1.12
+          },
+          {
+            "token": "ve",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "token": " dou",
+            "start": 1.28,
+            "end": 1.44
+          },
+          {
+            "token": "b",
+            "start": 1.44,
+            "end": 1.52
+          },
+          {
+            "token": "ts",
+            "start": 1.52,
+            "end": 1.68
+          },
+          {
+            "token": " w",
+            "start": 1.68,
+            "end": 1.76
+          },
+          {
+            "token": "het",
+            "start": 1.76,
+            "end": 1.92
+          },
+          {
+            "token": "her",
+            "start": 1.92,
+            "end": 2.08
+          },
+          {
+            "token": " Sir",
+            "start": 2.08,
+            "end": 2.32
+          },
+          {
+            "token": " Fre",
+            "start": 2.32,
+            "end": 2.4
+          },
+          {
+            "token": "der",
+            "start": 2.4,
+            "end": 2.48
+          },
+          {
+            "token": "ick",
+            "start": 2.64,
+            "end": 2.72
+          },
+          {
+            "token": " Le",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "token": "ight",
+            "start": 2.88,
+            "end": 3.04
+          },
+          {
+            "token": "on",
+            "start": 3.2,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "'",
+            "start": 3.2800000000000002,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "s",
+            "start": 3.36,
+            "end": 3.52
+          },
+          {
+            "token": " work",
+            "start": 3.52,
+            "end": 3.7600000000000002
+          },
+          {
+            "token": " is",
+            "start": 3.7600000000000002,
+            "end": 4.0
+          },
+          {
+            "token": " really",
+            "start": 4.0,
+            "end": 4.32
+          },
+          {
+            "token": " Gre",
+            "start": 4.32,
+            "end": 4.64
+          },
+          {
+            "token": "ek",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "token": " af",
+            "start": 4.88,
+            "end": 5.12
+          },
+          {
+            "token": "ter",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "token": " all",
+            "start": 5.44,
+            "end": 5.76
+          },
+          {
+            "token": ",",
+            "start": 5.76,
+            "end": 5.76
+          },
+          {
+            "token": " and",
+            "start": 6.0,
+            "end": 6.24
+          },
+          {
+            "token": " can",
+            "start": 6.24,
+            "end": 6.48
+          },
+          {
+            "token": " disc",
+            "start": 6.48,
+            "end": 6.8
+          },
+          {
+            "token": "over",
+            "start": 6.8,
+            "end": 6.96
+          },
+          {
+            "token": " in",
+            "start": 6.96,
+            "end": 7.12
+          },
+          {
+            "token": " it",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "token": " but",
+            "start": 7.36,
+            "end": 7.6000000000000005
+          },
+          {
+            "token": " little",
+            "start": 7.6000000000000005,
+            "end": 7.92
+          },
+          {
+            "token": " of",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "token": " Ro",
+            "start": 8.16,
+            "end": 8.4
+          },
+          {
+            "token": "ck",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "token": "y",
+            "start": 8.64,
+            "end": 8.8
+          },
+          {
+            "token": " It",
+            "start": 8.8,
+            "end": 9.040000000000001
+          },
+          {
+            "token": "h",
+            "start": 9.040000000000001,
+            "end": 9.200000000000001
+          },
+          {
+            "token": "ac",
+            "start": 9.200000000000001,
+            "end": 9.36
+          },
+          {
+            "token": "a",
+            "start": 9.36,
+            "end": 9.52
+          },
+          {
+            "token": ".",
+            "start": 9.52,
+            "end": 9.52
+          }
+        ],
+        "task": "transcribe",
+        "timings": {
+          "load_seconds": 1.3750031939707696e-06,
+          "preprocess_seconds": 0.012733415998809505,
+          "decode_seconds": 0.16116937500191852,
+          "wall_seconds": 0.173904166003922
+        },
+        "provenance": {
+          "model_type": "parakeet_tdt",
+          "variant": "v3",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+          "checkpoint_revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+          "weight_dtype": "mlx.core.float32",
+          "decoding": "greedy-tdt",
+          "streaming": false,
+          "timestamp_kind": "token",
+          "timestamp_tick_seconds": 0.08,
+          "qualification": "WIP"
+        },
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.17411404199810931,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.01741140419981093,
+      "audio_seconds_per_second": 57.433621580668316,
+      "peak_mlx_gib": 2.4172212360426784,
+      "peak_rss_gib": 2.4983673095703125,
+      "wer": 0.0,
+      "cer": 0.0,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": null,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "text": "He has grave doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+        "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+        "sample_rate": 16000,
+        "tokens": [
+          8192,
+          8192,
+          1876,
+          2281,
+          1969,
+          507,
+          3362,
+          7886,
+          769,
+          328,
+          1299,
+          1239,
+          7319,
+          6447,
+          901,
+          8192,
+          1413,
+          1333,
+          3720,
+          8192,
+          289,
+          7931,
+          7870,
+          6182,
+          508,
+          5600,
+          4190,
+          377,
+          8192,
+          799,
+          441,
+          1111,
+          7877,
+          575,
+          2059,
+          5371,
+          3230,
+          334,
+          869,
+          2681,
+          7052,
+          592,
+          3341,
+          725,
+          7893,
+          2336,
+          7882,
+          566,
+          7865,
+          8192,
+          7883,
+          8192
+        ],
+        "language": null,
+        "confidence": null,
+        "timestamps": [
+          {
+            "token": "He",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "token": " has",
+            "start": 0.64,
+            "end": 0.88
+          },
+          {
+            "token": " gra",
+            "start": 0.88,
+            "end": 1.12
+          },
+          {
+            "token": "ve",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "token": " dou",
+            "start": 1.28,
+            "end": 1.44
+          },
+          {
+            "token": "b",
+            "start": 1.44,
+            "end": 1.52
+          },
+          {
+            "token": "ts",
+            "start": 1.52,
+            "end": 1.68
+          },
+          {
+            "token": " w",
+            "start": 1.68,
+            "end": 1.76
+          },
+          {
+            "token": "het",
+            "start": 1.76,
+            "end": 1.92
+          },
+          {
+            "token": "her",
+            "start": 1.92,
+            "end": 2.08
+          },
+          {
+            "token": " Sir",
+            "start": 2.08,
+            "end": 2.32
+          },
+          {
+            "token": " Fre",
+            "start": 2.32,
+            "end": 2.4
+          },
+          {
+            "token": "der",
+            "start": 2.4,
+            "end": 2.48
+          },
+          {
+            "token": "ick",
+            "start": 2.64,
+            "end": 2.72
+          },
+          {
+            "token": " Le",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "token": "ight",
+            "start": 2.88,
+            "end": 3.04
+          },
+          {
+            "token": "on",
+            "start": 3.2,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "'",
+            "start": 3.2800000000000002,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "s",
+            "start": 3.36,
+            "end": 3.52
+          },
+          {
+            "token": " work",
+            "start": 3.52,
+            "end": 3.7600000000000002
+          },
+          {
+            "token": " is",
+            "start": 3.7600000000000002,
+            "end": 4.0
+          },
+          {
+            "token": " really",
+            "start": 4.0,
+            "end": 4.32
+          },
+          {
+            "token": " Gre",
+            "start": 4.32,
+            "end": 4.64
+          },
+          {
+            "token": "ek",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "token": " af",
+            "start": 4.88,
+            "end": 5.12
+          },
+          {
+            "token": "ter",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "token": " all",
+            "start": 5.44,
+            "end": 5.76
+          },
+          {
+            "token": ",",
+            "start": 5.76,
+            "end": 5.76
+          },
+          {
+            "token": " and",
+            "start": 6.0,
+            "end": 6.24
+          },
+          {
+            "token": " can",
+            "start": 6.24,
+            "end": 6.48
+          },
+          {
+            "token": " disc",
+            "start": 6.48,
+            "end": 6.8
+          },
+          {
+            "token": "over",
+            "start": 6.8,
+            "end": 6.96
+          },
+          {
+            "token": " in",
+            "start": 6.96,
+            "end": 7.12
+          },
+          {
+            "token": " it",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "token": " but",
+            "start": 7.36,
+            "end": 7.6000000000000005
+          },
+          {
+            "token": " little",
+            "start": 7.6000000000000005,
+            "end": 7.92
+          },
+          {
+            "token": " of",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "token": " Ro",
+            "start": 8.16,
+            "end": 8.4
+          },
+          {
+            "token": "ck",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "token": "y",
+            "start": 8.64,
+            "end": 8.8
+          },
+          {
+            "token": " It",
+            "start": 8.8,
+            "end": 9.040000000000001
+          },
+          {
+            "token": "h",
+            "start": 9.040000000000001,
+            "end": 9.200000000000001
+          },
+          {
+            "token": "ac",
+            "start": 9.200000000000001,
+            "end": 9.36
+          },
+          {
+            "token": "a",
+            "start": 9.36,
+            "end": 9.52
+          },
+          {
+            "token": ".",
+            "start": 9.52,
+            "end": 9.52
+          }
+        ],
+        "task": "transcribe",
+        "timings": {
+          "load_seconds": 7.080016075633466e-07,
+          "preprocess_seconds": 0.013346833999094088,
+          "decode_seconds": 0.16063529100210872,
+          "wall_seconds": 0.17398283300281037
+        },
+        "provenance": {
+          "model_type": "parakeet_tdt",
+          "variant": "v3",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+          "checkpoint_revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+          "weight_dtype": "mlx.core.float32",
+          "decoding": "greedy-tdt",
+          "streaming": false,
+          "timestamp_kind": "token",
+          "timestamp_tick_seconds": 0.08,
+          "qualification": "WIP"
+        },
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.17599820900068153,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.017599820900068154,
+      "audio_seconds_per_second": 56.818760013411705,
+      "peak_mlx_gib": 2.4172212360426784,
+      "peak_rss_gib": 2.4990081787109375,
+      "wer": 0.0,
+      "cer": 0.0,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": null,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "text": "He has grave doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+        "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+        "sample_rate": 16000,
+        "tokens": [
+          8192,
+          8192,
+          1876,
+          2281,
+          1969,
+          507,
+          3362,
+          7886,
+          769,
+          328,
+          1299,
+          1239,
+          7319,
+          6447,
+          901,
+          8192,
+          1413,
+          1333,
+          3720,
+          8192,
+          289,
+          7931,
+          7870,
+          6182,
+          508,
+          5600,
+          4190,
+          377,
+          8192,
+          799,
+          441,
+          1111,
+          7877,
+          575,
+          2059,
+          5371,
+          3230,
+          334,
+          869,
+          2681,
+          7052,
+          592,
+          3341,
+          725,
+          7893,
+          2336,
+          7882,
+          566,
+          7865,
+          8192,
+          7883,
+          8192
+        ],
+        "language": null,
+        "confidence": null,
+        "timestamps": [
+          {
+            "token": "He",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "token": " has",
+            "start": 0.64,
+            "end": 0.88
+          },
+          {
+            "token": " gra",
+            "start": 0.88,
+            "end": 1.12
+          },
+          {
+            "token": "ve",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "token": " dou",
+            "start": 1.28,
+            "end": 1.44
+          },
+          {
+            "token": "b",
+            "start": 1.44,
+            "end": 1.52
+          },
+          {
+            "token": "ts",
+            "start": 1.52,
+            "end": 1.68
+          },
+          {
+            "token": " w",
+            "start": 1.68,
+            "end": 1.76
+          },
+          {
+            "token": "het",
+            "start": 1.76,
+            "end": 1.92
+          },
+          {
+            "token": "her",
+            "start": 1.92,
+            "end": 2.08
+          },
+          {
+            "token": " Sir",
+            "start": 2.08,
+            "end": 2.32
+          },
+          {
+            "token": " Fre",
+            "start": 2.32,
+            "end": 2.4
+          },
+          {
+            "token": "der",
+            "start": 2.4,
+            "end": 2.48
+          },
+          {
+            "token": "ick",
+            "start": 2.64,
+            "end": 2.72
+          },
+          {
+            "token": " Le",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "token": "ight",
+            "start": 2.88,
+            "end": 3.04
+          },
+          {
+            "token": "on",
+            "start": 3.2,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "'",
+            "start": 3.2800000000000002,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "s",
+            "start": 3.36,
+            "end": 3.52
+          },
+          {
+            "token": " work",
+            "start": 3.52,
+            "end": 3.7600000000000002
+          },
+          {
+            "token": " is",
+            "start": 3.7600000000000002,
+            "end": 4.0
+          },
+          {
+            "token": " really",
+            "start": 4.0,
+            "end": 4.32
+          },
+          {
+            "token": " Gre",
+            "start": 4.32,
+            "end": 4.64
+          },
+          {
+            "token": "ek",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "token": " af",
+            "start": 4.88,
+            "end": 5.12
+          },
+          {
+            "token": "ter",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "token": " all",
+            "start": 5.44,
+            "end": 5.76
+          },
+          {
+            "token": ",",
+            "start": 5.76,
+            "end": 5.76
+          },
+          {
+            "token": " and",
+            "start": 6.0,
+            "end": 6.24
+          },
+          {
+            "token": " can",
+            "start": 6.24,
+            "end": 6.48
+          },
+          {
+            "token": " disc",
+            "start": 6.48,
+            "end": 6.8
+          },
+          {
+            "token": "over",
+            "start": 6.8,
+            "end": 6.96
+          },
+          {
+            "token": " in",
+            "start": 6.96,
+            "end": 7.12
+          },
+          {
+            "token": " it",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "token": " but",
+            "start": 7.36,
+            "end": 7.6000000000000005
+          },
+          {
+            "token": " little",
+            "start": 7.6000000000000005,
+            "end": 7.92
+          },
+          {
+            "token": " of",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "token": " Ro",
+            "start": 8.16,
+            "end": 8.4
+          },
+          {
+            "token": "ck",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "token": "y",
+            "start": 8.64,
+            "end": 8.8
+          },
+          {
+            "token": " It",
+            "start": 8.8,
+            "end": 9.040000000000001
+          },
+          {
+            "token": "h",
+            "start": 9.040000000000001,
+            "end": 9.200000000000001
+          },
+          {
+            "token": "ac",
+            "start": 9.200000000000001,
+            "end": 9.36
+          },
+          {
+            "token": "a",
+            "start": 9.36,
+            "end": 9.52
+          },
+          {
+            "token": ".",
+            "start": 9.52,
+            "end": 9.52
+          }
+        ],
+        "task": "transcribe",
+        "timings": {
+          "load_seconds": 8.329952834174037e-07,
+          "preprocess_seconds": 0.013198833003116306,
+          "decode_seconds": 0.16270258399890736,
+          "wall_seconds": 0.17590224999730708
+        },
+        "provenance": {
+          "model_type": "parakeet_tdt",
+          "variant": "v3",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+          "checkpoint_revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+          "weight_dtype": "mlx.core.float32",
+          "decoding": "greedy-tdt",
+          "streaming": false,
+          "timestamp_kind": "token",
+          "timestamp_tick_seconds": 0.08,
+          "qualification": "WIP"
+        },
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.17053033300180687,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.017053033300180688,
+      "audio_seconds_per_second": 58.640593869561286,
+      "peak_mlx_gib": 2.4172212360426784,
+      "peak_rss_gib": 2.4990692138671875,
+      "wer": 0.0,
+      "cer": 0.0,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": null,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "text": "He has grave doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+        "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+        "sample_rate": 16000,
+        "tokens": [
+          8192,
+          8192,
+          1876,
+          2281,
+          1969,
+          507,
+          3362,
+          7886,
+          769,
+          328,
+          1299,
+          1239,
+          7319,
+          6447,
+          901,
+          8192,
+          1413,
+          1333,
+          3720,
+          8192,
+          289,
+          7931,
+          7870,
+          6182,
+          508,
+          5600,
+          4190,
+          377,
+          8192,
+          799,
+          441,
+          1111,
+          7877,
+          575,
+          2059,
+          5371,
+          3230,
+          334,
+          869,
+          2681,
+          7052,
+          592,
+          3341,
+          725,
+          7893,
+          2336,
+          7882,
+          566,
+          7865,
+          8192,
+          7883,
+          8192
+        ],
+        "language": null,
+        "confidence": null,
+        "timestamps": [
+          {
+            "token": "He",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "token": " has",
+            "start": 0.64,
+            "end": 0.88
+          },
+          {
+            "token": " gra",
+            "start": 0.88,
+            "end": 1.12
+          },
+          {
+            "token": "ve",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "token": " dou",
+            "start": 1.28,
+            "end": 1.44
+          },
+          {
+            "token": "b",
+            "start": 1.44,
+            "end": 1.52
+          },
+          {
+            "token": "ts",
+            "start": 1.52,
+            "end": 1.68
+          },
+          {
+            "token": " w",
+            "start": 1.68,
+            "end": 1.76
+          },
+          {
+            "token": "het",
+            "start": 1.76,
+            "end": 1.92
+          },
+          {
+            "token": "her",
+            "start": 1.92,
+            "end": 2.08
+          },
+          {
+            "token": " Sir",
+            "start": 2.08,
+            "end": 2.32
+          },
+          {
+            "token": " Fre",
+            "start": 2.32,
+            "end": 2.4
+          },
+          {
+            "token": "der",
+            "start": 2.4,
+            "end": 2.48
+          },
+          {
+            "token": "ick",
+            "start": 2.64,
+            "end": 2.72
+          },
+          {
+            "token": " Le",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "token": "ight",
+            "start": 2.88,
+            "end": 3.04
+          },
+          {
+            "token": "on",
+            "start": 3.2,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "'",
+            "start": 3.2800000000000002,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "s",
+            "start": 3.36,
+            "end": 3.52
+          },
+          {
+            "token": " work",
+            "start": 3.52,
+            "end": 3.7600000000000002
+          },
+          {
+            "token": " is",
+            "start": 3.7600000000000002,
+            "end": 4.0
+          },
+          {
+            "token": " really",
+            "start": 4.0,
+            "end": 4.32
+          },
+          {
+            "token": " Gre",
+            "start": 4.32,
+            "end": 4.64
+          },
+          {
+            "token": "ek",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "token": " af",
+            "start": 4.88,
+            "end": 5.12
+          },
+          {
+            "token": "ter",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "token": " all",
+            "start": 5.44,
+            "end": 5.76
+          },
+          {
+            "token": ",",
+            "start": 5.76,
+            "end": 5.76
+          },
+          {
+            "token": " and",
+            "start": 6.0,
+            "end": 6.24
+          },
+          {
+            "token": " can",
+            "start": 6.24,
+            "end": 6.48
+          },
+          {
+            "token": " disc",
+            "start": 6.48,
+            "end": 6.8
+          },
+          {
+            "token": "over",
+            "start": 6.8,
+            "end": 6.96
+          },
+          {
+            "token": " in",
+            "start": 6.96,
+            "end": 7.12
+          },
+          {
+            "token": " it",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "token": " but",
+            "start": 7.36,
+            "end": 7.6000000000000005
+          },
+          {
+            "token": " little",
+            "start": 7.6000000000000005,
+            "end": 7.92
+          },
+          {
+            "token": " of",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "token": " Ro",
+            "start": 8.16,
+            "end": 8.4
+          },
+          {
+            "token": "ck",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "token": "y",
+            "start": 8.64,
+            "end": 8.8
+          },
+          {
+            "token": " It",
+            "start": 8.8,
+            "end": 9.040000000000001
+          },
+          {
+            "token": "h",
+            "start": 9.040000000000001,
+            "end": 9.200000000000001
+          },
+          {
+            "token": "ac",
+            "start": 9.200000000000001,
+            "end": 9.36
+          },
+          {
+            "token": "a",
+            "start": 9.36,
+            "end": 9.52
+          },
+          {
+            "token": ".",
+            "start": 9.52,
+            "end": 9.52
+          }
+        ],
+        "task": "transcribe",
+        "timings": {
+          "load_seconds": 7.919952622614801e-07,
+          "preprocess_seconds": 0.01303787500364706,
+          "decode_seconds": 0.15739816700079245,
+          "wall_seconds": 0.17043683399970178
+        },
+        "provenance": {
+          "model_type": "parakeet_tdt",
+          "variant": "v3",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+          "checkpoint_revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+          "weight_dtype": "mlx.core.float32",
+          "decoding": "greedy-tdt",
+          "streaming": false,
+          "timestamp_kind": "token",
+          "timestamp_tick_seconds": 0.08,
+          "qualification": "WIP"
+        },
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.1689419589965837,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.01689419589965837,
+      "audio_seconds_per_second": 59.19192638344046,
+      "peak_mlx_gib": 2.4172212360426784,
+      "peak_rss_gib": 2.4991455078125,
+      "wer": 0.0,
+      "cer": 0.0,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": null,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "text": "He has grave doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+        "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+        "sample_rate": 16000,
+        "tokens": [
+          8192,
+          8192,
+          1876,
+          2281,
+          1969,
+          507,
+          3362,
+          7886,
+          769,
+          328,
+          1299,
+          1239,
+          7319,
+          6447,
+          901,
+          8192,
+          1413,
+          1333,
+          3720,
+          8192,
+          289,
+          7931,
+          7870,
+          6182,
+          508,
+          5600,
+          4190,
+          377,
+          8192,
+          799,
+          441,
+          1111,
+          7877,
+          575,
+          2059,
+          5371,
+          3230,
+          334,
+          869,
+          2681,
+          7052,
+          592,
+          3341,
+          725,
+          7893,
+          2336,
+          7882,
+          566,
+          7865,
+          8192,
+          7883,
+          8192
+        ],
+        "language": null,
+        "confidence": null,
+        "timestamps": [
+          {
+            "token": "He",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "token": " has",
+            "start": 0.64,
+            "end": 0.88
+          },
+          {
+            "token": " gra",
+            "start": 0.88,
+            "end": 1.12
+          },
+          {
+            "token": "ve",
+            "start": 1.12,
+            "end": 1.28
+          },
+          {
+            "token": " dou",
+            "start": 1.28,
+            "end": 1.44
+          },
+          {
+            "token": "b",
+            "start": 1.44,
+            "end": 1.52
+          },
+          {
+            "token": "ts",
+            "start": 1.52,
+            "end": 1.68
+          },
+          {
+            "token": " w",
+            "start": 1.68,
+            "end": 1.76
+          },
+          {
+            "token": "het",
+            "start": 1.76,
+            "end": 1.92
+          },
+          {
+            "token": "her",
+            "start": 1.92,
+            "end": 2.08
+          },
+          {
+            "token": " Sir",
+            "start": 2.08,
+            "end": 2.32
+          },
+          {
+            "token": " Fre",
+            "start": 2.32,
+            "end": 2.4
+          },
+          {
+            "token": "der",
+            "start": 2.4,
+            "end": 2.48
+          },
+          {
+            "token": "ick",
+            "start": 2.64,
+            "end": 2.72
+          },
+          {
+            "token": " Le",
+            "start": 2.72,
+            "end": 2.88
+          },
+          {
+            "token": "ight",
+            "start": 2.88,
+            "end": 3.04
+          },
+          {
+            "token": "on",
+            "start": 3.2,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "'",
+            "start": 3.2800000000000002,
+            "end": 3.2800000000000002
+          },
+          {
+            "token": "s",
+            "start": 3.36,
+            "end": 3.52
+          },
+          {
+            "token": " work",
+            "start": 3.52,
+            "end": 3.7600000000000002
+          },
+          {
+            "token": " is",
+            "start": 3.7600000000000002,
+            "end": 4.0
+          },
+          {
+            "token": " really",
+            "start": 4.0,
+            "end": 4.32
+          },
+          {
+            "token": " Gre",
+            "start": 4.32,
+            "end": 4.64
+          },
+          {
+            "token": "ek",
+            "start": 4.64,
+            "end": 4.8
+          },
+          {
+            "token": " af",
+            "start": 4.88,
+            "end": 5.12
+          },
+          {
+            "token": "ter",
+            "start": 5.12,
+            "end": 5.44
+          },
+          {
+            "token": " all",
+            "start": 5.44,
+            "end": 5.76
+          },
+          {
+            "token": ",",
+            "start": 5.76,
+            "end": 5.76
+          },
+          {
+            "token": " and",
+            "start": 6.0,
+            "end": 6.24
+          },
+          {
+            "token": " can",
+            "start": 6.24,
+            "end": 6.48
+          },
+          {
+            "token": " disc",
+            "start": 6.48,
+            "end": 6.8
+          },
+          {
+            "token": "over",
+            "start": 6.8,
+            "end": 6.96
+          },
+          {
+            "token": " in",
+            "start": 6.96,
+            "end": 7.12
+          },
+          {
+            "token": " it",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "token": " but",
+            "start": 7.36,
+            "end": 7.6000000000000005
+          },
+          {
+            "token": " little",
+            "start": 7.6000000000000005,
+            "end": 7.92
+          },
+          {
+            "token": " of",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "token": " Ro",
+            "start": 8.16,
+            "end": 8.4
+          },
+          {
+            "token": "ck",
+            "start": 8.4,
+            "end": 8.64
+          },
+          {
+            "token": "y",
+            "start": 8.64,
+            "end": 8.8
+          },
+          {
+            "token": " It",
+            "start": 8.8,
+            "end": 9.040000000000001
+          },
+          {
+            "token": "h",
+            "start": 9.040000000000001,
+            "end": 9.200000000000001
+          },
+          {
+            "token": "ac",
+            "start": 9.200000000000001,
+            "end": 9.36
+          },
+          {
+            "token": "a",
+            "start": 9.36,
+            "end": 9.52
+          },
+          {
+            "token": ".",
+            "start": 9.52,
+            "end": 9.52
+          }
+        ],
+        "task": "transcribe",
+        "timings": {
+          "load_seconds": 5.420006345957518e-07,
+          "preprocess_seconds": 0.01314841600105865,
+          "decode_seconds": 0.15569212500122376,
+          "wall_seconds": 0.168841083002917
+        },
+        "provenance": {
+          "model_type": "parakeet_tdt",
+          "variant": "v3",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A09",
+          "checkpoint_revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+          "weight_dtype": "mlx.core.float32",
+          "decoding": "greedy-tdt",
+          "streaming": false,
+          "timestamp_kind": "token",
+          "timestamp_tick_seconds": 0.08,
+          "qualification": "WIP"
+        },
+        "offset_seconds": 0.0
+      }
+    }
+  ],
+  "metrics": {
+    "processing_seconds": 0.17401916700328002,
+    "audio_seconds": 10.0,
+    "real_time_factor": 0.017401916700328,
+    "audio_seconds_per_second": 57.46493430698651,
+    "peak_mlx_gib": 2.4172212360426784,
+    "peak_rss_gib": 2.4990081787109375,
+    "wer": 0.0,
+    "cer": 0.0,
+    "time_to_first_audio_ms": null,
+    "output_audio_seconds": null,
+    "alignment_mean_error_ms": null,
+    "alignment_median_error_ms": null,
+    "alignment_p95_error_ms": null,
+    "alignment_max_error_ms": null,
+    "unmatched_words": null,
+    "first_partial_ms": null,
+    "final_result_ms": null,
+    "finalization_ms": null,
+    "revised_partials": null,
+    "buffer_peak_bytes": null
+  }
+}

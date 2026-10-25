@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/corpus.py", line 239, in run
+    measure(bundle, request(manifest["fixtures"][0], 16))
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/run.py", line 49, in measure
+    next(stream)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/generation.py", line 97, in stream_page
+    prepared = prepare_ocr(bundle, image, request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/processing.py", line 139, in prepare_ocr
+    prompt = template.render(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 69, in render
+    _validate_messages(messages)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 150, in _validate_messages
+    raise ValueError("message content must be text")
+ValueError: message content must be text
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/corpus.py", line 239, in run
+    measure(bundle, request(manifest["fixtures"][0], 16))
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/run.py", line 49, in measure
+    next(stream)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/generation.py", line 97, in stream_page
+    prepared = prepare_ocr(bundle, image, request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/processing.py", line 139, in prepare_ocr
+    prompt = template.render(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 69, in render
+    _validate_messages(messages)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 150, in _validate_messages
+    raise ValueError("message content must be text")
+ValueError: message content must be text

@@ -1,0 +1,362 @@
+{
+  "checkpoint": "mlx-community/Qwen2-VL-2B-Instruct-4bit",
+  "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+  "weight_sha256": {
+    "model.safetensors": "3534d3dcfaacd0cd00e935469bc34b6d692b2ba0749c5d9ee422f3f2175cf992"
+  },
+  "interfaces": {
+    "python": "PASS",
+    "cli": "PASS",
+    "http": "PASS",
+    "sse": "PASS",
+    "auth_alias": "PASS",
+    "disconnect_recovery": "PASS",
+    "startup_warmup": "PASS"
+  },
+  "semantic_review": {
+    "scope": "bounded image-dependent functional spot check, not dataset accuracy",
+    "primary_scene": "Identifies two tabby cats resting on a pink/red couch with remote controls.",
+    "changed_image": "Identifies a turquoise Volkswagen Beetle in front of a yellow wall.",
+    "multiturn": "Answers that two cats are visible.",
+    "receipt": "Benchmark S4 reads document TD01167104, date 25/12/2018 and total 9.00.",
+    "limitations": "Scene descriptions contain minor pose/spatial inaccuracies; no general accuracy claim."
+  },
+  "python": {
+    "image": {
+      "prompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>\nDescribe this image.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "The image shows two cats lying on a pink blanket, which is placed on a red couch. The cats appear to be resting or sleeping, with one cat lying on its side and the other cat lying on its back. Both cats have a similar striped pattern, which is typical of tabby cats. The remote controls are",
+      "prompt_tokens": 350,
+      "generation_tokens": 64,
+      "finish_reason": "length",
+      "model": "/private/tmp/mlx-one-vlm-hardware/models/V01",
+      "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+      "timings": {
+        "total_seconds": 2.2145013330009533
+      },
+      "token_ids": [
+        785,
+        2168,
+        4933,
+        1378,
+        19423,
+        20446,
+        389,
+        264,
+        18217,
+        38039,
+        11,
+        892,
+        374,
+        9099,
+        389,
+        264,
+        2518,
+        26148,
+        13,
+        576,
+        19423,
+        4994,
+        311,
+        387,
+        40119,
+        476,
+        21127,
+        11,
+        448,
+        825,
+        8251,
+        20446,
+        389,
+        1181,
+        3108,
+        323,
+        279,
+        1008,
+        8251,
+        20446,
+        389,
+        1181,
+        1182,
+        13,
+        11733,
+        19423,
+        614,
+        264,
+        4428,
+        67590,
+        5383,
+        11,
+        892,
+        374,
+        14260,
+        315,
+        5651,
+        1694,
+        19423,
+        13,
+        576,
+        8699,
+        11574,
+        525
+      ],
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              504,
+              504
+            ]
+          ],
+          "patches": 1296,
+          "visual_tokens": 324
+        }
+      ]
+    },
+    "changed_image": {
+      "prompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>\nDescribe this image.<|im_end|>\n<|im_start|>assistant\n",
+      "text": "The image features a vintage Volkswagen Beetle, a classic car known for its distinctive shape and color. The Beetle is painted in a light turquoise or mint color, which contrasts with the yellow wall of a building in the background. The building has a",
+      "prompt_tokens": 350,
+      "generation_tokens": 48,
+      "finish_reason": "length",
+      "model": "/private/tmp/mlx-one-vlm-hardware/models/V01",
+      "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+      "timings": {
+        "total_seconds": 1.9350331669993466
+      },
+      "token_ids": [
+        785,
+        2168,
+        4419,
+        264,
+        23790,
+        50839,
+        91696,
+        11,
+        264,
+        11416,
+        1803,
+        3881,
+        369,
+        1181,
+        34847,
+        6083,
+        323,
+        1894,
+        13,
+        576,
+        91696,
+        374,
+        23983,
+        304,
+        264,
+        3100,
+        95947,
+        476,
+        28337,
+        1894,
+        11,
+        892,
+        82279,
+        448,
+        279,
+        13753,
+        7002,
+        315,
+        264,
+        4752,
+        304,
+        279,
+        4004,
+        13,
+        576,
+        4752,
+        702,
+        264
+      ],
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              504,
+              504
+            ]
+          ],
+          "patches": 1296,
+          "visual_tokens": 324
+        }
+      ]
+    },
+    "multiturn": {
+      "prompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>Describe this image.<|im_end|>\n<|im_start|>assistant\nThe image shows two cats lying on a pink blanket, which is placed on a red couch. The cats appear to be resting or sleeping, with one cat lying on its side and the other cat lying on its back. Both cats have a similar striped pattern, which is typical of tabby cats. The remote controls are<|im_end|>\n<|im_start|>user\nHow many cats are visible?<|im_end|>\n<|im_start|>assistant\n",
+      "text": "There are two cats visible in the image.",
+      "prompt_tokens": 429,
+      "generation_tokens": 9,
+      "finish_reason": "stop",
+      "model": "/private/tmp/mlx-one-vlm-hardware/models/V01",
+      "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+      "timings": {
+        "total_seconds": 1.5073284169993713
+      },
+      "token_ids": [
+        3862,
+        525,
+        1378,
+        19423,
+        9434,
+        304,
+        279,
+        2168,
+        13
+      ],
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              504,
+              504
+            ]
+          ],
+          "patches": 1296,
+          "visual_tokens": 324
+        }
+      ]
+    },
+    "post_request_active_bytes": [
+      1251341326,
+      1251341326,
+      1251341326
+    ],
+    "early_stream_close_and_next_request": true
+  },
+  "cli": {
+    "finish_reason": "length",
+    "generation_tokens": 16,
+    "image_metadata": [
+      {
+        "patches": 1296,
+        "processed_sizes": [
+          [
+            504,
+            504
+          ]
+        ],
+        "source_size": [
+          512,
+          512
+        ],
+        "visual_tokens": 324
+      }
+    ],
+    "model": "/private/tmp/mlx-one-vlm-hardware/models/V01",
+    "prompt": "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<image>Describe this image.<|im_end|>\n<|im_start|>assistant\n",
+    "prompt_tokens": 349,
+    "revision": null,
+    "text": "The image shows two cats lying on a pink blanket. The cat on the left",
+    "timings": {
+      "total_seconds": 1.9888192090002121
+    },
+    "token_ids": [
+      785,
+      2168,
+      4933,
+      1378,
+      19423,
+      20446,
+      389,
+      264,
+      18217,
+      38039,
+      13,
+      576,
+      8251,
+      389,
+      279,
+      2115
+    ]
+  },
+  "http": {
+    "id": "chatcmpl-5d0ba1b9bd9a458fbab364ea5d6897dd",
+    "object": "chat.completion",
+    "created": 1792843853,
+    "model": "vlm-smoke",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "The image shows two cats lying on a pink blanket on a couch. The cat on the left has a light-colored tail and is lying on its back, while"
+        },
+        "finish_reason": "length"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 349,
+      "completion_tokens": 32,
+      "total_tokens": 381
+    },
+    "mlx": {
+      "prompt_tokens": 349,
+      "generated_tokens": 32,
+      "tokens_per_second": null,
+      "time_to_first_token_ms": 1305.0753339994117,
+      "generation_latency_ms": 2263.886916996853,
+      "context_used": 381,
+      "memory_used_bytes": null,
+      "memory_peak_bytes": null,
+      "reasoning_tokens": null,
+      "prompt_cache_hit": false,
+      "reused_prompt_tokens": null,
+      "drafted_tokens": null,
+      "accepted_draft_tokens": null,
+      "rejected_draft_tokens": null,
+      "draft_acceptance_ratio": null,
+      "prompt_tokens_per_second": null,
+      "decode_tokens_per_second": 32.33167994975469,
+      "inter_token_latency_ms": null,
+      "cache_bytes": null,
+      "cache_backend": "private-vlm",
+      "cache_logical_bytes": null,
+      "cache_allocated_bytes": null,
+      "cache_reserved_bytes": null,
+      "cache_shared_blocks": null,
+      "cache_lookup_time_ms": null,
+      "cache_allocation_time_ms": null,
+      "avoided_prefill_tokens": null,
+      "server_text_ttft_ms": null,
+      "model_token_count": null,
+      "model_token_gap_p50_ms": null,
+      "model_token_gap_p95_ms": null,
+      "timing_samples_truncated": false,
+      "actual_prefill_tokens": null,
+      "eligible_prefix_tokens": null,
+      "matched_prefix_tokens": null,
+      "prefix_publications": null,
+      "publication_rejections": null,
+      "queue_ms": 0.07599999662488699,
+      "tokenization_ms": null,
+      "prefill_ms": null,
+      "decode_ms": null,
+      "model_token_times_ms": null,
+      "model_generation_started_at": null,
+      "model_forward_batch_sizes": null,
+      "execution_observer": null,
+      "mlx_cached_bytes": null,
+      "actual_logits_dtypes": null,
+      "cache_layers": null
+    }
+  },
+  "sse": "data: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"There\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" are\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" two\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" cats\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" visible\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" in\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" the\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" image\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\".\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-65d6cfdc4ef54c48bd17a6950442881b\",\"object\":\"chat.completion.chunk\",\"created\":1792843856,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}],\"mlx\":{\"prompt_tokens\":397,\"generated_tokens\":9,\"tokens_per_second\":null,\"time_to_first_token_ms\":1345.4533330004779,\"generation_latency_ms\":1610.0991659986903,\"context_used\":406,\"memory_used_bytes\":null,\"memory_peak_bytes\":null,\"reasoning_tokens\":null,\"prompt_cache_hit\":false,\"reused_prompt_tokens\":null,\"drafted_tokens\":null,\"accepted_draft_tokens\":null,\"rejected_draft_tokens\":null,\"draft_acceptance_ratio\":null,\"prompt_tokens_per_second\":null,\"decode_tokens_per_second\":30.229070188246673,\"inter_token_latency_ms\":null,\"cache_bytes\":null,\"cache_backend\":\"private-vlm\",\"cache_logical_bytes\":null,\"cache_allocated_bytes\":null,\"cache_reserved_bytes\":null,\"cache_shared_blocks\":null,\"cache_lookup_time_ms\":null,\"cache_allocation_time_ms\":null,\"avoided_prefill_tokens\":null,\"server_text_ttft_ms\":null,\"model_token_count\":null,\"model_token_gap_p50_ms\":null,\"model_token_gap_p95_ms\":null,\"timing_samples_truncated\":false,\"actual_prefill_tokens\":null,\"eligible_prefix_tokens\":null,\"matched_prefix_tokens\":null,\"prefix_publications\":null,\"publication_rejections\":null,\"queue_ms\":0.10812500113388523,\"tokenization_ms\":null,\"prefill_ms\":null,\"decode_ms\":null,\"model_token_times_ms\":null,\"model_generation_started_at\":null,\"model_forward_batch_sizes\":null,\"execution_observer\":null,\"mlx_cached_bytes\":null,\"actual_logits_dtypes\":null,\"cache_layers\":null}}\n\ndata: [DONE]\n\n",
+  "status": "CHECKPOINT_SMOKE_PASSED"
+}

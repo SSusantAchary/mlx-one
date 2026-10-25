@@ -1,0 +1,18 @@
+[
+  {
+    "file": "A12-sample.wav",
+    "method": "Whisper Tiny automatic round-trip diagnostic; not human/MOS quality",
+    "reference_text": "Hello from MLX One. This short speech sample helps measure native audio generation on Apple Silicon. Please speak clearly and naturally while keeping every sentence easy to understand and follow.\n",
+    "transcript": "Hello from MLX1. This short speech sample helps measure native audio generation on Apple silicon. Please speak clearly and naturally, while keeping every sentence easy to understand and follow.",
+    "wer": 0.06666666666666667,
+    "cer": 0.018404907975460124
+  },
+  {
+    "file": "A13-STS-HF-Q1-direct-model-prepared-pcm-sample.wav",
+    "method": "Whisper Tiny automatic round-trip diagnostic; not human/MOS quality",
+    "reference_text": "I'm sorry, but I can't help with that. If you have any other questions or need assistance with something else, feel free to ask.",
+    "transcript": "I'm sorry, but I can't help with that. If you have any other questions or immediate assistance is something else, feel free to ask.",
+    "wer": 0.08333333333333333,
+    "cer": 0.09900990099009901
+  }
+]

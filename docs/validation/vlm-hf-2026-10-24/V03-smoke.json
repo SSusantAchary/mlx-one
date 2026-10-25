@@ -1,0 +1,364 @@
+{
+  "checkpoint": "mlx-community/Qwen3.5-0.8B-4bit",
+  "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+  "weight_sha256": {
+    "model.safetensors": "f5a0d9dd3efa73510542a8023d610ff26be2b4b020d181cfc4bedaa1fcc5dd9e"
+  },
+  "interfaces": {
+    "python": "PASS",
+    "cli": "PASS",
+    "http": "PASS",
+    "sse": "PASS",
+    "auth_alias": "PASS",
+    "disconnect_recovery": "PASS",
+    "startup_warmup": "PASS"
+  },
+  "semantic_review": {
+    "scope": "bounded image-dependent functional spot check; no dataset accuracy claim",
+    "primary_scene": "Identifies two tabby cats on a pink couch near remote controls.",
+    "changed_image": "Identifies a classic Volkswagen Beetle by a yellow building.",
+    "multiturn": "Correctly answers two cats.",
+    "receipt": "Date 25/12/2018 and total 9.00 are read; document number is misread as TD01167/104 and other fields contain character errors.",
+    "limitations": "Some spatial wording is inaccurate and OCR is not exact; S4 reaches the 128-token budget."
+  },
+  "python": {
+    "image": {
+      "prompt": "<|im_start|>user\n<image>\nDescribe this image.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "text": "This image captures a cozy, playful moment between two tabby cats lounging on a bright pink couch. Both cats are curled up in a relaxed, side-by-side position, appearing to be asleep or deeply resting.\n\nOn the left, a cat with a striped coat lies on its side, its head tucked under its",
+      "prompt_tokens": 275,
+      "generation_tokens": 64,
+      "finish_reason": "length",
+      "model": "/private/tmp/mlx-one-vlm-hardware/models/V03",
+      "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+      "timings": {
+        "total_seconds": 1.6234874580040923
+      },
+      "token_ids": [
+        1919,
+        2099,
+        38823,
+        264,
+        41025,
+        11,
+        54185,
+        4299,
+        1881,
+        1330,
+        5474,
+        1634,
+        18833,
+        80274,
+        286,
+        383,
+        264,
+        9613,
+        17676,
+        25313,
+        13,
+        11396,
+        18833,
+        513,
+        88373,
+        685,
+        303,
+        264,
+        29378,
+        11,
+        3008,
+        13909,
+        23314,
+        2234,
+        11,
+        24572,
+        310,
+        381,
+        31016,
+        466,
+        16739,
+        38787,
+        13,
+        271,
+        1860,
+        279,
+        2047,
+        11,
+        264,
+        7993,
+        440,
+        264,
+        65311,
+        22162,
+        14995,
+        383,
+        1141,
+        3008,
+        11,
+        1141,
+        1901,
+        58091,
+        1172,
+        1141
+      ],
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ]
+    },
+    "changed_image": {
+      "prompt": "<|im_start|>user\n<image>\nDescribe this image.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "text": "This image captures a charming, vintage-style photograph featuring a classic Volkswagen Beetle parked on a paved street in front of a weathered, yellow stucco building.\n\n**The Car:**\nThe central focus is a vintage Volkswagen Beetle, painted",
+      "prompt_tokens": 275,
+      "generation_tokens": 48,
+      "finish_reason": "length",
+      "model": "/private/tmp/mlx-one-vlm-hardware/models/V03",
+      "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+      "timings": {
+        "total_seconds": 1.017000708001433
+      },
+      "token_ids": [
+        1919,
+        2099,
+        38823,
+        264,
+        33266,
+        11,
+        23045,
+        10970,
+        9994,
+        15963,
+        264,
+        11088,
+        49129,
+        88534,
+        40834,
+        383,
+        264,
+        60466,
+        8329,
+        303,
+        3929,
+        314,
+        264,
+        8831,
+        290,
+        11,
+        13358,
+        352,
+        14151,
+        78,
+        4599,
+        13,
+        271,
+        332,
+        760,
+        3156,
+        64700,
+        198,
+        760,
+        8358,
+        5077,
+        369,
+        264,
+        23045,
+        49129,
+        88534,
+        11,
+        23235
+      ],
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ]
+    },
+    "multiturn": {
+      "prompt": "<|im_start|>user\n<image>Describe this image.<|im_end|>\n<|im_start|>assistant\nThis image captures a cozy, playful moment between two tabby cats lounging on a bright pink couch. Both cats are curled up in a relaxed, side-by-side position, appearing to be asleep or deeply resting.\n\nOn the left, a cat with a striped coat lies on its side, its head tucked under its<|im_end|>\n<|im_start|>user\nHow many cats are visible?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "text": "There are **two** cats visible in the image.",
+      "prompt_tokens": 354,
+      "generation_tokens": 11,
+      "finish_reason": "stop",
+      "model": "/private/tmp/mlx-one-vlm-hardware/models/V03",
+      "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+      "timings": {
+        "total_seconds": 0.5771184999975958
+      },
+      "token_ids": [
+        3733,
+        513,
+        2972,
+        19186,
+        332,
+        18833,
+        9155,
+        303,
+        279,
+        2099,
+        13
+      ],
+      "image_metadata": [
+        {
+          "source_size": [
+            512,
+            512
+          ],
+          "processed_sizes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "patches": 1024,
+          "visual_tokens": 256
+        }
+      ]
+    },
+    "post_request_active_bytes": [
+      625124044,
+      625124044,
+      625124044
+    ],
+    "early_stream_close_and_next_request": true
+  },
+  "cli": {
+    "finish_reason": "length",
+    "generation_tokens": 16,
+    "image_metadata": [
+      {
+        "patches": 1024,
+        "processed_sizes": [
+          [
+            512,
+            512
+          ]
+        ],
+        "source_size": [
+          512,
+          512
+        ],
+        "visual_tokens": 256
+      }
+    ],
+    "model": "/private/tmp/mlx-one-vlm-hardware/models/V03",
+    "prompt": "<|im_start|>user\n<image>Describe this image.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "prompt_tokens": 274,
+    "revision": null,
+    "text": "This image captures a cozy and playful moment featuring two tabby cats lounging on",
+    "timings": {
+      "total_seconds": 1.2014047500051674
+    },
+    "token_ids": [
+      1919,
+      2099,
+      38823,
+      264,
+      41025,
+      321,
+      54185,
+      4299,
+      15963,
+      1330,
+      5474,
+      1634,
+      18833,
+      80274,
+      286,
+      383
+    ]
+  },
+  "http": {
+    "id": "chatcmpl-c5bda82ca9014e298f7c13994a94d8ee",
+    "object": "chat.completion",
+    "created": 1792844541,
+    "model": "vlm-smoke",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "This image captures a cozy and humorous moment featuring two tabby cats lounging on a vibrant pink couch, each sharing a remote control.\n\nOn the left,"
+        },
+        "finish_reason": "length"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 274,
+      "completion_tokens": 32,
+      "total_tokens": 306
+    },
+    "mlx": {
+      "prompt_tokens": 274,
+      "generated_tokens": 32,
+      "tokens_per_second": null,
+      "time_to_first_token_ms": 454.60462500341237,
+      "generation_latency_ms": 3409.161542003858,
+      "context_used": 306,
+      "memory_used_bytes": null,
+      "memory_peak_bytes": null,
+      "reasoning_tokens": null,
+      "prompt_cache_hit": false,
+      "reused_prompt_tokens": null,
+      "drafted_tokens": null,
+      "accepted_draft_tokens": null,
+      "rejected_draft_tokens": null,
+      "draft_acceptance_ratio": null,
+      "prompt_tokens_per_second": null,
+      "decode_tokens_per_second": 10.492266247862243,
+      "inter_token_latency_ms": null,
+      "cache_bytes": null,
+      "cache_backend": "private-vlm",
+      "cache_logical_bytes": null,
+      "cache_allocated_bytes": null,
+      "cache_reserved_bytes": null,
+      "cache_shared_blocks": null,
+      "cache_lookup_time_ms": null,
+      "cache_allocation_time_ms": null,
+      "avoided_prefill_tokens": null,
+      "server_text_ttft_ms": null,
+      "model_token_count": null,
+      "model_token_gap_p50_ms": null,
+      "model_token_gap_p95_ms": null,
+      "timing_samples_truncated": false,
+      "actual_prefill_tokens": null,
+      "eligible_prefix_tokens": null,
+      "matched_prefix_tokens": null,
+      "prefix_publications": null,
+      "publication_rejections": null,
+      "queue_ms": 0.10641699918778613,
+      "tokenization_ms": null,
+      "prefill_ms": null,
+      "decode_ms": null,
+      "model_token_times_ms": null,
+      "model_generation_started_at": null,
+      "model_forward_batch_sizes": null,
+      "execution_observer": null,
+      "mlx_cached_bytes": null,
+      "actual_logits_dtypes": null,
+      "cache_layers": null
+    }
+  },
+  "sse": "data: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"There\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" are\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" **\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"two\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"**\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" cats\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" visible\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" in\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" this\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" image\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\".\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"They\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" are\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" lying\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" side\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"-by\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"-side\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" on\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" the\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" pink\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" couch\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" each\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" resting\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" on\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" a\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" remote\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" control\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" (\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"one\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" in\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-614203f2329144b8857754524f44c8fb\",\"object\":\"chat.completion.chunk\",\"created\":1792844544,\"model\":\"vlm-smoke\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}],\"mlx\":{\"prompt_tokens\":322,\"generated_tokens\":32,\"tokens_per_second\":null,\"time_to_first_token_ms\":498.9261250011623,\"generation_latency_ms\":3464.5441660031793,\"context_used\":354,\"memory_used_bytes\":null,\"memory_peak_bytes\":null,\"reasoning_tokens\":null,\"prompt_cache_hit\":false,\"reused_prompt_tokens\":null,\"drafted_tokens\":null,\"accepted_draft_tokens\":null,\"rejected_draft_tokens\":null,\"draft_acceptance_ratio\":null,\"prompt_tokens_per_second\":null,\"decode_tokens_per_second\":10.45313276805293,\"inter_token_latency_ms\":null,\"cache_bytes\":null,\"cache_backend\":\"private-vlm\",\"cache_logical_bytes\":null,\"cache_allocated_bytes\":null,\"cache_reserved_bytes\":null,\"cache_shared_blocks\":null,\"cache_lookup_time_ms\":null,\"cache_allocation_time_ms\":null,\"avoided_prefill_tokens\":null,\"server_text_ttft_ms\":null,\"model_token_count\":null,\"model_token_gap_p50_ms\":null,\"model_token_gap_p95_ms\":null,\"timing_samples_truncated\":false,\"actual_prefill_tokens\":null,\"eligible_prefix_tokens\":null,\"matched_prefix_tokens\":null,\"prefix_publications\":null,\"publication_rejections\":null,\"queue_ms\":0.155083995196037,\"tokenization_ms\":null,\"prefill_ms\":null,\"decode_ms\":null,\"model_token_times_ms\":null,\"model_generation_started_at\":null,\"model_forward_batch_sizes\":null,\"execution_observer\":null,\"mlx_cached_bytes\":null,\"actual_logits_dtypes\":null,\"cache_layers\":null}}\n\ndata: [DONE]\n\n",
+  "status": "CHECKPOINT_SMOKE_PASSED"
+}

@@ -1,0 +1,7 @@
+{
+  "checkpoint": "microsoft/Florence-2-base-ft",
+  "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+  "tensor_header_sha256": "f46a6a946cefd7d26baea7ed8ff3f026b260ecfed43ff4df481844763745e83d",
+  "source_weights_downloaded": false,
+  "validation": "parameter names and shapes only; not numerical correctness"
+}

@@ -1,0 +1,363 @@
+........................................................................ [ 46%]
+........................................................................ [ 92%]
+............                                                             [100%]
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+
+Name                                                            Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------------------
+src/mlx_one/__init__.py                                            17      0   100%
+src/mlx_one/audio/__init__.py                                       6      0   100%
+src/mlx_one/audio/decoding.py                                     299    194    35%   35-40, 46-61, 80-81, 97-129, 146-205, 230-266, 279-310, 314-315, 319-323, 333-375, 383, 400, 414, 429, 443, 481-522
+src/mlx_one/audio/evaluation.py                                    94     34    64%   70, 78-80, 82, 86, 88, 101, 103, 111, 122-133, 144-181
+src/mlx_one/audio/loading.py                                       46      5    89%   59, 64-76, 79
+src/mlx_one/audio/moonshine.py                                     65     39    40%   54-55, 58-108
+src/mlx_one/audio/parakeet.py                                      99     61    38%   36-70, 94, 103-149
+src/mlx_one/audio/qwen.py                                         124     96    23%   35, 41-60, 64, 76-85, 101-138, 157-183, 225-269
+src/mlx_one/audio/schemas.py                                      140      6    96%   34, 36, 38, 40, 42, 45
+src/mlx_one/audio/service.py                                       91     65    29%   69-71, 89-213, 231-232
+src/mlx_one/audio/streaming.py                                    188     33    82%   42, 44, 46, 64-65, 68, 99, 102-115, 144, 174-176, 182, 193-195, 227, 230-240, 260, 263, 266, 298-300, 309-311
+src/mlx_one/audio/weights.py                                       73     16    78%   47, 53, 99-115
+src/mlx_one/benchmark.py                                           72     51    29%   48-135, 139-147, 151-173, 177, 186
+src/mlx_one/benchmark_worker.py                                    38     38     0%   3-82
+src/mlx_one/calibration.py                                        320    264    18%   63-117, 122-171, 185-250, 260-284, 295-325, 335-344, 348-383, 389-437, 455-456, 475, 488-493, 497-504, 508-514, 522-532, 536-538, 542-552, 556-567, 573-593, 597-604, 608-610, 614, 618
+src/mlx_one/calibration_worker.py                                  89     89     0%   3-181
+src/mlx_one/cli.py                                                638    281    56%   85-93, 121-149, 156-157, 184-197, 207-208, 215-219, 225-226, 296, 299, 384-420, 586-790, 819-838, 867-886, 897-903, 931-945, 983-1001, 1031-1049, 1081-1143, 1165-1187, 1209-1227, 1246-1256, 1267-1273, 1285-1290, 1297-1301, 1311-1319, 1343-1352, 1367-1371, 1400-1412, 1427-1431, 1437, 1443, 1447
+src/mlx_one/comparison.py                                          86     61    29%   29, 40, 43-50, 61-88, 99-102, 106-114, 118-121, 133-139, 143
+src/mlx_one/compat/__init__.py                                      2      0   100%
+src/mlx_one/compat/trl.py                                          23     23     0%   3-53
+src/mlx_one/compat/unsloth.py                                      36     27    25%   9-11, 15-17, 32-43, 55-77
+src/mlx_one/compatibility.py                                      103     79    23%   51-52, 57-77, 82-101, 106-135, 140-166, 170-175, 179-193
+src/mlx_one/conversion.py                                         112    112     0%   3-182
+src/mlx_one/conversion_worker.py                                   12     12     0%   3-28
+src/mlx_one/core/__init__.py                                        8      0   100%
+src/mlx_one/core/cache.py                                         369    283    23%   9-16, 25-27, 31, 34-57, 60-62, 69, 73, 76-78, 81-91, 96-100, 104-114, 117-125, 144-153, 157, 161, 167, 170-187, 199-207, 215-229, 232-237, 246-248, 251-274, 279-282, 286-311, 314-322, 325-332, 336-340, 344-353, 359-361, 368-370, 374, 378, 384, 389, 392-398, 401-403, 406-409, 414-419, 425-442, 445, 451-453, 460-464, 468, 472, 477-491, 494-495, 498-500, 505-508, 512-520, 525, 533-540, 558-568
+src/mlx_one/core/capabilities.py                                   18      3    83%   23, 26, 31
+src/mlx_one/core/compatibility.py                                 134     99    26%   40-43, 52-60, 65-125, 141-142, 146-155, 159-214, 218-224
+src/mlx_one/core/config.py                                         43     24    44%   24, 32-57
+src/mlx_one/core/outputs.py                                        42      0   100%
+src/mlx_one/core/precision.py                                      72     64    11%   39-93, 113-154
+src/mlx_one/core/protocols.py                                      10      0   100%
+src/mlx_one/core/quantization.py                                   44     44     0%   3-60
+src/mlx_one/core/registry.py                                       81     18    78%   25, 31, 37, 40-42, 45-47, 50-52, 67, 73, 83-85, 108
+src/mlx_one/core/release_support.py                                 7      7     0%   3-22
+src/mlx_one/core/sliding_cache.py                                  46     46     0%   3-59
+src/mlx_one/core/weights.py                                        26      2    92%   40-44
+src/mlx_one/datasets.py                                           117     95    19%   42-49, 63-85, 94-136, 147-174, 181-186, 203-206
+src/mlx_one/diagnostics.py                                        124     83    33%   43-46, 54-58, 83-126, 131, 135-140, 145-148, 172-190, 194-204, 208-220, 224-227, 231-242, 246, 250-252
+src/mlx_one/engine/__init__.py                                     16      0   100%
+src/mlx_one/engine/actor.py                                       433    433     0%   3-538
+src/mlx_one/engine/adapter_registry.py                            108    108     0%   2-159
+src/mlx_one/engine/adapters.py                                    163    115    29%   18, 33-47, 52-70, 74-82, 102, 111-173, 176-178, 183-192, 197-214, 218-224, 230-245
+src/mlx_one/engine/admission.py                                   102    102     0%   2-173
+src/mlx_one/engine/arena.py                                       168    168     0%   2-225
+src/mlx_one/engine/batching.py                                    294    230    22%   39-46, 75-78, 85-87, 90-117, 122-128, 133-145, 154-157, 165-183, 186-192, 196-203, 210-214, 217-226, 229-234, 237-256, 259-261, 268-422
+src/mlx_one/engine/block_cache.py                                 258    174    33%   21, 25, 29, 47-49, 59-67, 84, 91-95, 99-101, 104-106, 109, 112, 115-118, 131-142, 146-147, 151-152, 159-193, 196, 199-202, 205-211, 214-217, 220-226, 229-233, 236-239, 242-256, 259-266, 269-271, 292-297, 300-301, 304-305, 308-311, 314-318, 321-326, 333, 342-351, 354-356, 360
+src/mlx_one/engine/block_kv.py                                    155    129    17%   16-20, 24, 28-34, 38, 42, 47-61, 64-68, 71-106, 109-113, 116-125, 131-142, 145-168, 173-191, 194-197
+src/mlx_one/engine/cache.py                                       126     98    22%   12-21, 25-32, 36-39, 43-53, 69, 73, 77-78, 82, 85-94, 99-106, 109-112, 115-132, 135-145, 149-161
+src/mlx_one/engine/cache_errors.py                                 11      2    82%   12-13
+src/mlx_one/engine/cache_manager.py                               571    518     9%   42-97, 109-118, 160-215, 224-268, 271-273, 276-281, 290-341, 344-353, 356-362, 366-399, 402-413, 423-497, 500-539, 542-557, 562-576, 579-609, 612-631, 641-668, 671-684, 687-714, 717-725, 728-733, 736-739, 747-783, 813-821, 824-836, 839-842, 847-849, 852-855, 858-859, 863, 867, 871, 875-892
+src/mlx_one/engine/cache_planner.py                                63     55    13%   13-43, 54-82, 113-121
+src/mlx_one/engine/cache_specs.py                                 204     38    81%   46-57, 82-92, 106-114, 135, 139, 143, 146, 153-155, 163-169, 189-204, 228, 298-301
+src/mlx_one/engine/cold_prefix.py                                 184    184     0%   6-240
+src/mlx_one/engine/components.py                                  469    469     0%   3-645
+src/mlx_one/engine/compound.py                                     92     92     0%   2-126
+src/mlx_one/engine/construction.py                                 55     55     0%   3-77
+src/mlx_one/engine/contracts.py                                   342     96    72%   34, 84-91, 116-119, 123, 126-137, 140-144, 148-152, 164-169, 180-188, 198-205, 313, 344, 347-354, 359-361, 374-385, 400-415, 433-438, 452-458
+src/mlx_one/engine/device_executor.py                              97     77    21%   17-26, 30-33, 37, 40-49, 53-60, 63-86, 89-90, 94-98, 103-119
+src/mlx_one/engine/dispatch.py                                     56     56     0%   3-85
+src/mlx_one/engine/envelope.py                                     67     28    58%   42-52, 56-64, 67, 70-74, 78-87
+src/mlx_one/engine/execution_context.py                            12      2    83%   9, 13
+src/mlx_one/engine/hybrid.py                                      182    182     0%   3-252
+src/mlx_one/engine/kernel_dispatch.py                              75     75     0%   2-124
+src/mlx_one/engine/lifecycle.py                                   171    171     0%   2-226
+src/mlx_one/engine/media.py                                        68     68     0%   2-86
+src/mlx_one/engine/memory.py                                       84     46    45%   27-35, 49-56, 69, 72, 86-99, 117-142, 146-150
+src/mlx_one/engine/model_pool.py                                  210    210     0%   2-255
+src/mlx_one/engine/modes.py                                        99     87    12%   21-33, 37, 41-87, 93-168, 172-177
+src/mlx_one/engine/native_adapters.py                             102    102     0%   2-155
+src/mlx_one/engine/observation.py                                  11     11     0%   3-19
+src/mlx_one/engine/optimization_policy.py                          47     13    72%   27, 30, 32, 37, 40-42, 66, 71-77
+src/mlx_one/engine/paged.py                                       292    292     0%   7-417
+src/mlx_one/engine/paged_attention.py                             152    152     0%   3-246
+src/mlx_one/engine/parity.py                                      203    203     0%   3-319
+src/mlx_one/engine/plugins.py                                     130    130     0%   6-179
+src/mlx_one/engine/prefix_cache.py                                264    192    27%   27-28, 39, 44-51, 55-56, 64-78, 87-105, 109-116, 119-122, 125-128, 131-137, 140-141, 151-154, 176, 191-199, 203-210, 213-225, 228-251, 255-258, 261-299, 302-305, 308-309, 316-320, 323-329, 332-334, 337-343, 347-348
+src/mlx_one/engine/pressure.py                                    236    192    19%   26-29, 45-49, 54-81, 89-100, 104-118, 121-124, 127-158, 162, 167, 171-180, 183-190, 194-196, 199-226, 229, 239-271, 277-332
+src/mlx_one/engine/prompts.py                                      59     59     0%   3-71
+src/mlx_one/engine/public.py                                      250    206    18%   46-47, 50-51, 54, 57, 84-241, 245-246, 249-256, 281-304, 308-309, 318-329, 339-352, 358-375, 384-396, 405-410, 418, 424-439, 442-459, 462-463, 466-467, 470, 476-478
+src/mlx_one/engine/qualification.py                               245    245     0%   3-355
+src/mlx_one/engine/reporting.py                                   102     89    13%   16, 20-27, 31-47, 51-67, 74-154
+src/mlx_one/engine/runners.py                                     144    114    21%   24-27, 32, 45-65, 68, 71, 74, 77, 80-84, 87-88, 91-115, 118-140, 146-168, 175-176, 179-180, 183-186, 193, 196, 201-203, 210, 213, 219-221
+src/mlx_one/engine/runtime_specs.py                                27     27     0%   2-86
+src/mlx_one/engine/scheduler.py                                    42     32    24%   15-20, 23-25, 28-65, 68, 71-81
+src/mlx_one/engine/selection.py                                   187    187     0%   3-270
+src/mlx_one/engine/service.py                                     171    171     0%   2-234
+src/mlx_one/engine/sessions.py                                     56     56     0%   2-67
+src/mlx_one/engine/speculation.py                                 162    162     0%   2-211
+src/mlx_one/engine/task_runners/__init__.py                         0      0   100%
+src/mlx_one/engine/task_runners/base.py                            37     37     0%   2-56
+src/mlx_one/engine/task_runners/lfm_audio.py                       17     17     0%   2-26
+src/mlx_one/engine/task_runners/multimodal.py                     123    123     0%   3-221
+src/mlx_one/engine/task_runners/retrieval.py                      160    160     0%   2-227
+src/mlx_one/engine/task_runners/segmentation.py                    96     96     0%   2-129
+src/mlx_one/engine/task_runners/speech.py                         133    133     0%   7-186
+src/mlx_one/engine/task_runners/transducer.py                     144    144     0%   2-185
+src/mlx_one/engine/tasks.py                                       182    182     0%   2-237
+src/mlx_one/engine/timing.py                                       43     43     0%   3-62
+src/mlx_one/engine/transactions.py                                 82     78     5%   7-16, 20-27, 37-108
+src/mlx_one/evaluation.py                                         147    117    20%   52-137, 142-143, 147-185, 189-208, 212, 216, 225-243, 247-251, 255-256, 260-261, 265-270
+src/mlx_one/evidence.py                                            38     28    26%   20-33, 37-50
+src/mlx_one/generation.py                                          35     26    26%   26-72
+src/mlx_one/generation_worker.py                                   15     15     0%   3-32
+src/mlx_one/hardware.py                                            58     44    24%   20-26, 31-45, 50-62, 80, 100-109, 113-121, 125
+src/mlx_one/inference_baseline.py                                 411    411     0%   3-638
+src/mlx_one/inference_baseline_worker.py                          612    612     0%   3-934
+src/mlx_one/inference_qualification.py                            272    272     0%   3-498
+src/mlx_one/inference_qualification_worker.py                     258    258     0%   3-394
+src/mlx_one/inspection.py                                         397    337    15%   98-109, 114-155, 160-170, 179-254, 269-291, 309-371, 402-433, 468-479, 483-494, 498-510, 516-548, 552-559, 563-567, 571-583, 589-622, 640, 642, 653, 655, 669, 671, 676-687, 693-697, 701-708, 712, 717-732, 744-766, 772-784, 788-790, 794, 798-803, 807, 811, 815-819, 823, 827-830, 834, 838-843, 847-852
+src/mlx_one/models/__init__.py                                      0      0   100%
+src/mlx_one/models/audio/__init__.py                                0      0   100%
+src/mlx_one/models/audio/lfm2_audio/__init__.py                     2      2     0%   3-5
+src/mlx_one/models/audio/lfm2_audio/config.py                     117    117     0%   3-154
+src/mlx_one/models/audio/lfm2_audio/model.py                      166    166     0%   10-263
+src/mlx_one/models/audio/lfm2_audio/processing.py                  53     53     0%   3-83
+src/mlx_one/models/audio/lfm2_audio/weights.py                     57     57     0%   3-117
+src/mlx_one/models/audio/moonshine/__init__.py                      0      0   100%
+src/mlx_one/models/audio/moonshine/config.py                       92      8    91%   76, 89, 106-110, 117
+src/mlx_one/models/audio/moonshine/loading.py                      76     30    61%   31, 93-118, 129-162
+src/mlx_one/models/audio/moonshine/model.py                       141    141     0%   8-231
+src/mlx_one/models/audio/moonshine/weights.py                      33      1    97%   14
+src/mlx_one/models/audio/parakeet/__init__.py                       2      0   100%
+src/mlx_one/models/audio/parakeet/config.py                        79     11    86%   36, 68, 73, 78, 80, 83, 91, 93, 97, 101, 107
+src/mlx_one/models/audio/parakeet/loading.py                      110     63    43%   30-33, 40, 48, 60, 74-75, 79-106, 116-176
+src/mlx_one/models/audio/parakeet/model.py                        171    171     0%   7-263
+src/mlx_one/models/audio/parakeet/processing.py                    67     47    30%   25-38, 43-68, 72-104
+src/mlx_one/models/audio/parakeet/weights.py                       57      9    84%   85-96
+src/mlx_one/models/audio/qwen3_asr/__init__.py                      0      0   100%
+src/mlx_one/models/audio/qwen3_asr/alignment.py                    87     24    72%   18-23, 48, 50-57, 68-76, 89-90, 129, 133
+src/mlx_one/models/audio/qwen3_asr/config.py                      121     16    87%   16, 37, 43, 57, 61, 79, 81, 103, 114, 124, 126, 128, 138, 162, 164, 188
+src/mlx_one/models/audio/qwen3_asr/loading.py                      52     34    35%   30-53, 63-118
+src/mlx_one/models/audio/qwen3_asr/model.py                       180    180     0%   8-276
+src/mlx_one/models/audio/qwen3_asr/processing.py                  132     75    43%   32, 49, 52-54, 58-118, 122-139, 143-166, 187, 198, 204-213, 220, 222, 232
+src/mlx_one/models/audio/qwen3_asr/weights.py                      69      7    90%   71, 81-86, 91
+src/mlx_one/models/audio/whisper/__init__.py                        2      0   100%
+src/mlx_one/models/audio/whisper/config.py                         89      2    98%   115, 133
+src/mlx_one/models/audio/whisper/loading.py                       108     45    58%   48, 50-58, 71, 73-112, 120-121, 123, 132-144, 147, 151-160
+src/mlx_one/models/audio/whisper/model.py                         171    171     0%   11-284
+src/mlx_one/models/audio/whisper/processing.py                    153     66    57%   41-42, 93, 136-137, 139, 141-142, 153-155, 162-164, 168-176, 188-206, 212-244, 248-254
+src/mlx_one/models/audio/whisper/tokenizer.py                     161     39    76%   44, 64-65, 70-73, 83-84, 97-116, 135-136, 146, 154, 191-193, 204, 207-208, 210
+src/mlx_one/models/audio/whisper/weights.py                        41      2    95%   17-18
+src/mlx_one/models/embeddings/__init__.py                           0      0   100%
+src/mlx_one/models/embeddings/bert/__init__.py                      2      2     0%   3-5
+src/mlx_one/models/embeddings/bert/config.py                       60     60     0%   3-83
+src/mlx_one/models/embeddings/bert/model.py                       128    128     0%   10-206
+src/mlx_one/models/embeddings/bert/weights.py                      37     37     0%   3-53
+src/mlx_one/models/embeddings/lfm2_colbert/__init__.py              2      2     0%   3-5
+src/mlx_one/models/embeddings/lfm2_colbert/config.py               35     35     0%   3-50
+src/mlx_one/models/embeddings/lfm2_colbert/model.py                31     31     0%   10-57
+src/mlx_one/models/embeddings/lfm2_colbert/weights.py              17     17     0%   3-25
+src/mlx_one/models/embeddings/mpnet/__init__.py                     2      2     0%   3-5
+src/mlx_one/models/embeddings/mpnet/config.py                      82     82     0%   3-122
+src/mlx_one/models/embeddings/mpnet/model.py                      140    140     0%   10-231
+src/mlx_one/models/embeddings/mpnet/weights.py                     34     34     0%   3-53
+src/mlx_one/models/embeddings/qwen3_embedding/__init__.py           2      0   100%
+src/mlx_one/models/embeddings/qwen3_embedding/config.py            88     66    25%   39-59, 62-69, 73-111, 115-126
+src/mlx_one/models/embeddings/qwen3_embedding/model.py             37     37     0%   10-73
+src/mlx_one/models/embeddings/qwen3_embedding/weights.py           10      2    80%   14, 18
+src/mlx_one/models/embeddings/qwen3_reranker/__init__.py            2      0   100%
+src/mlx_one/models/embeddings/qwen3_reranker/config.py             54     36    33%   39-52, 56-83
+src/mlx_one/models/embeddings/qwen3_reranker/model.py              32     32     0%   10-56
+src/mlx_one/models/embeddings/qwen3_reranker/weights.py            10      2    80%   14, 18
+src/mlx_one/models/language/__init__.py                             0      0   100%
+src/mlx_one/models/language/gemma3/__init__.py                      2      2     0%   3-5
+src/mlx_one/models/language/gemma3/config.py                       68     68     0%   3-109
+src/mlx_one/models/language/gemma3/model.py                       105    105     0%   3-180
+src/mlx_one/models/language/gemma3/weights.py                      13     13     0%   3-46
+src/mlx_one/models/language/gpt2/__init__.py                        2      2     0%   3-5
+src/mlx_one/models/language/gpt2/config.py                         85     85     0%   3-101
+src/mlx_one/models/language/gpt2/model.py                         109    109     0%   10-181
+src/mlx_one/models/language/gpt2/reference_math.py                 27     27     0%   11-62
+src/mlx_one/models/language/gpt2/weights.py                        29     29     0%   3-64
+src/mlx_one/models/language/gpt_oss/__init__.py                     0      0   100%
+src/mlx_one/models/language/gpt_oss/config.py                      98     98     0%   3-179
+src/mlx_one/models/language/gpt_oss/model.py                      127    127     0%   9-227
+src/mlx_one/models/language/gpt_oss/weights.py                     46     46     0%   5-74
+src/mlx_one/models/language/lfm2/__init__.py                        2      2     0%   3-5
+src/mlx_one/models/language/lfm2/config.py                        108    108     0%   3-155
+src/mlx_one/models/language/lfm2/model.py                          60     60     0%   10-125
+src/mlx_one/models/language/lfm2/reference_math.py                 93     93     0%   9-179
+src/mlx_one/models/language/lfm2/weights.py                        39     39     0%   3-78
+src/mlx_one/models/language/lfm2_moe/__init__.py                    2      2     0%   3-5
+src/mlx_one/models/language/lfm2_moe/config.py                     66     66     0%   3-114
+src/mlx_one/models/language/lfm2_moe/model.py                      96     96     0%   12-186
+src/mlx_one/models/language/lfm2_moe/weights.py                    47     47     0%   3-83
+src/mlx_one/models/language/llama/__init__.py                       2      2     0%   3-5
+src/mlx_one/models/language/llama/config.py                        91     91     0%   3-130
+src/mlx_one/models/language/llama/model.py                         54     54     0%   11-92
+src/mlx_one/models/language/llama/reference_math.py                71     71     0%   11-136
+src/mlx_one/models/language/llama/weights.py                       19     19     0%   3-55
+src/mlx_one/models/language/openelm/__init__.py                     2      2     0%   3-5
+src/mlx_one/models/language/openelm/config.py                     137    137     0%   3-200
+src/mlx_one/models/language/openelm/model.py                      131    131     0%   11-226
+src/mlx_one/models/language/openelm/weights.py                     22     22     0%   3-53
+src/mlx_one/models/language/phi3/__init__.py                        2      2     0%   3-5
+src/mlx_one/models/language/phi3/config.py                         76     76     0%   3-95
+src/mlx_one/models/language/phi3/model.py                         103    103     0%   3-165
+src/mlx_one/models/language/phi3/weights.py                        14     14     0%   3-37
+src/mlx_one/models/language/qwen2/__init__.py                       2      2     0%   3-5
+src/mlx_one/models/language/qwen2/config.py                        59     59     0%   3-104
+src/mlx_one/models/language/qwen2/model.py                         53     53     0%   10-106
+src/mlx_one/models/language/qwen2/reference_math.py                63     63     0%   11-122
+src/mlx_one/models/language/qwen2/weights.py                       19     19     0%   3-58
+src/mlx_one/models/language/qwen2_moe/__init__.py                   2      2     0%   3-5
+src/mlx_one/models/language/qwen2_moe/config.py                    65     65     0%   3-103
+src/mlx_one/models/language/qwen2_moe/model.py                     68     68     0%   10-142
+src/mlx_one/models/language/qwen2_moe/weights.py                   33     33     0%   3-95
+src/mlx_one/models/language/qwen3/__init__.py                       2      0   100%
+src/mlx_one/models/language/qwen3/config.py                        49      7    86%   37, 62, 66-68, 74, 81
+src/mlx_one/models/language/qwen3/model.py                         55     55     0%   10-98
+src/mlx_one/models/language/qwen3/reference_math.py                65     65     0%   11-123
+src/mlx_one/models/language/qwen3/upstream_adapter.py              35     35     0%   3-78
+src/mlx_one/models/language/qwen3/upstream_math.py                 24     24     0%   11-47
+src/mlx_one/models/language/qwen3/upstream_model.py               123    123     0%   11-183
+src/mlx_one/models/language/qwen3/weights.py                       19     13    32%   12-19, 23-57
+src/mlx_one/models/registry.py                                      6      0   100%
+src/mlx_one/models/segmentation/__init__.py                         0      0   100%
+src/mlx_one/models/segmentation/sam3/__init__.py                    0      0   100%
+src/mlx_one/models/segmentation/sam3/_configuration.py             30     30     0%   3-67
+src/mlx_one/models/segmentation/sam3/_runtime.py                  866    866     0%   9-1336
+src/mlx_one/models/segmentation/sam3/config.py                    371    371     0%   6-718
+src/mlx_one/models/segmentation/sam3/model.py                     981    981     0%   6-1651
+src/mlx_one/models/segmentation/sam3/tracker.py                   438    438     0%   6-807
+src/mlx_one/models/segmentation/sam3/tracker_video.py            1138   1138     0%   6-2098
+src/mlx_one/models/segmentation/sam3/video.py                     808    808     0%   6-1414
+src/mlx_one/models/segmentation/sam3/weights.py                    35     35     0%   3-61
+src/mlx_one/models/shared/__init__.py                              13      7    46%   37-43
+src/mlx_one/models/shared/decoder.py                               42     42     0%   3-76
+src/mlx_one/models/shared/encoder.py                               33     22    33%   11-15, 19-28, 32-35, 41-45, 52
+src/mlx_one/models/shared/execution.py                             42     42     0%   7-80
+src/mlx_one/models/shared/hybrid.py                               127    127     0%   3-180
+src/mlx_one/models/shared/moe.py                                   53     53     0%   3-80
+src/mlx_one/models/shared/moe_decoder.py                           46     46     0%   3-75
+src/mlx_one/models/shared/reference_activations.py                 11     11     0%   5-20
+src/mlx_one/models/shared/reference_math.py                        58     58     0%   9-110
+src/mlx_one/models/shared/sparse.py                                48     48     0%   9-80
+src/mlx_one/models/shared/transformer.py                          174    174     0%   3-296
+src/mlx_one/models/shared/vision.py                               115    115     0%   3-158
+src/mlx_one/models/shared/vlm_weights.py                           37     37     0%   3-53
+src/mlx_one/models/vision_language/__init__.py                      0      0   100%
+src/mlx_one/models/vision_language/lfm2_vl/__init__.py              2      2     0%   3-5
+src/mlx_one/models/vision_language/lfm2_vl/config.py               92     92     0%   3-133
+src/mlx_one/models/vision_language/lfm2_vl/model.py               163    163     0%   10-270
+src/mlx_one/models/vision_language/lfm2_vl/weights.py              51     51     0%   3-91
+src/mlx_one/models/vision_language/qwen2_5_vl/__init__.py           2      2     0%   3-5
+src/mlx_one/models/vision_language/qwen2_5_vl/config.py            99     99     0%   3-144
+src/mlx_one/models/vision_language/qwen2_5_vl/model.py            137    137     0%   11-243
+src/mlx_one/models/vision_language/qwen2_5_vl/weights.py           35     35     0%   3-86
+src/mlx_one/models/vision_language/qwen2_vl/__init__.py             2      2     0%   3-9
+src/mlx_one/models/vision_language/qwen2_vl/config.py             109    109     0%   3-176
+src/mlx_one/models/vision_language/qwen2_vl/model.py              139    139     0%   10-252
+src/mlx_one/models/vision_language/qwen2_vl/weights.py             36     36     0%   3-88
+src/mlx_one/models/vision_language/qwen3_5/__init__.py              2      2     0%   3-5
+src/mlx_one/models/vision_language/qwen3_5/config.py              175    175     0%   3-259
+src/mlx_one/models/vision_language/qwen3_5/model.py               371    371     0%   11-668
+src/mlx_one/models/vision_language/qwen3_5/reference_delta.py     136    136     0%   5-644
+src/mlx_one/models/vision_language/qwen3_5/reference_math.py       42     42     0%   11-86
+src/mlx_one/models/vision_language/qwen3_5/weights.py              73     73     0%   3-218
+src/mlx_one/native_correctness.py                                  70     70     0%   2-136
+src/mlx_one/native_qualification.py                               322    322     0%   2-477
+src/mlx_one/ops/__init__.py                                         0      0   100%
+src/mlx_one/ops/attention.py                                      141    141     0%   2-233
+src/mlx_one/ops/compiled.py                                        25     25     0%   2-36
+src/mlx_one/ops/logits.py                                          42     42     0%   2-59
+src/mlx_one/ops/numerical_trace.py                                132    132     0%   7-238
+src/mlx_one/ops/profiling.py                                       23     23     0%   2-36
+src/mlx_one/ops/quantized_linear.py                                19     19     0%   2-46
+src/mlx_one/ops/reference_tiled.py                                 64     64     0%   7-107
+src/mlx_one/p0_engine_qualification.py                            422    422     0%   2-592
+src/mlx_one/p0_engine_worker.py                                   780    780     0%   2-1119
+src/mlx_one/p0_qualification.py                                   181    181     0%   3-264
+src/mlx_one/p1_benchmark.py                                        92     92     0%   2-130
+src/mlx_one/p1_decode.py                                           73     73     0%   6-107
+src/mlx_one/p1_profiles.py                                         62     62     0%   3-119
+src/mlx_one/p1_qualification.py                                    57     57     0%   2-113
+src/mlx_one/peak_calibration.py                                    75     75     0%   2-116
+src/mlx_one/planning.py                                           248    218    12%   48-144, 172-182, 208-240, 252-276, 281-291, 300-302, 306-308, 312-331, 335-337, 341-355, 359-375, 379-382, 386-396, 402, 420-474, 483-491, 495-500
+src/mlx_one/provenance.py                                          13      7    46%   14-20
+src/mlx_one/quality_dataset.py                                    187    187     0%   2-312
+src/mlx_one/quantization/__init__.py                                0      0   100%
+src/mlx_one/quantization/turboquant/__init__.py                     0      0   100%
+src/mlx_one/quantization/turboquant/config.py                      53     53     0%   3-95
+src/mlx_one/quantization/turboquant/dispatch.py                    23     23     0%   3-35
+src/mlx_one/quantization/turboquant/experts.py                     31     31     0%   3-41
+src/mlx_one/quantization/turboquant/kernels/__init__.py             0      0   100%
+src/mlx_one/quantization/turboquant/kernels/tq3_expert_qmv.py       9      9     0%   3-46
+src/mlx_one/quantization/turboquant/kernels/tq3_gather_qmm.py      48     48     0%   21-194
+src/mlx_one/quantization/turboquant/kernels/tq3_qmm.py             32     32     0%   28-177
+src/mlx_one/quantization/turboquant/kernels/tq3_qmv.py             10     10     0%   3-47
+src/mlx_one/quantization/turboquant/linear.py                      45     45     0%   3-67
+src/mlx_one/quantization/turboquant/loading.py                     62     62     0%   3-82
+src/mlx_one/registry.py                                           212    151    29%   31-33, 37-39, 43-46, 49-55, 59-62, 66-71, 81-128, 134-139, 158-159, 169, 173, 177-178, 210-212, 226, 236, 239, 242, 245, 253-311, 316-389, 393-413
+src/mlx_one/retrieval/__init__.py                                   4      0   100%
+src/mlx_one/retrieval/loading.py                                  243    204    16%   64-152, 165-185, 192-213, 224-243, 255-282, 292-321, 325-331, 335-341, 345-361, 365-396
+src/mlx_one/retrieval/schemas.py                                   32      4    88%   20, 23, 42, 45
+src/mlx_one/retrieval/service.py                                  100     85    15%   36-87, 110-166, 177-190, 194-197, 201-202, 206-210
+src/mlx_one/retrieval/tokenizer.py                                217    197     9%   32-47, 55-98, 109-112, 115-148, 157-192, 195-215, 220-237, 241-247, 253-282, 286-294
+src/mlx_one/run_store.py                                           49     33    33%   19, 22-28, 31-40, 43, 46, 49-51, 55-61, 65-68
+src/mlx_one/runtime_baseline.py                                   175    175     0%   2-278
+src/mlx_one/schema_migrations.py                                   26     18    31%   103-122
+src/mlx_one/schemas.py                                            973    490    50%   199, 203-204, 208-209, 213-221, 225-234, 238-243, 247-251, 255-258, 262-272, 280-283, 287, 303-307, 312, 345-358, 363-369, 374, 403-427, 432-434, 439, 459-479, 484-486, 490, 511-528, 532-538, 542, 559-577, 581-596, 600, 623-649, 654-661, 666, 680-682, 687, 701-707, 712-717, 732-740, 745, 758-770, 774, 795-806, 810-812, 816, 844-873, 877-880, 884, 905-936, 940-949, 967-986, 990-1000, 1014-1016, 1021, 1044-1064, 1068-1080, 1084, 1106-1136, 1141-1159, 1164, 1178-1185, 1194-1196, 1212-1224, 1229-1238, 1243, 1265-1286, 1291-1305, 1310
+src/mlx_one/segmentation/__init__.py                               10      6    40%   21-26
+src/mlx_one/segmentation/cli.py                                   137    107    22%   10-47, 51-64, 68-96, 129-179, 197-240
+src/mlx_one/segmentation/export.py                                 34     34     0%   3-55
+src/mlx_one/segmentation/inference.py                              99     99     0%   3-208
+src/mlx_one/segmentation/loading.py                                75     75     0%   3-121
+src/mlx_one/segmentation/postprocessing.py                         51     51     0%   3-59
+src/mlx_one/segmentation/processing.py                             79     79     0%   3-114
+src/mlx_one/segmentation/resizing.py                               22     22     0%   3-31
+src/mlx_one/segmentation/schemas.py                                23     23     0%   3-32
+src/mlx_one/segmentation/video.py                                 325    325     0%   3-468
+src/mlx_one/server/__init__.py                                      7      7     0%   3-14
+src/mlx_one/server/admission.py                                    22     22     0%   3-60
+src/mlx_one/server/app.py                                         602    602     0%   3-1115
+src/mlx_one/server/config.py                                      102    102     0%   3-133
+src/mlx_one/server/generation_engine.py                           468    468     0%   3-907
+src/mlx_one/server/media.py                                       127    127     0%   3-171
+src/mlx_one/server/model_manager.py                               163    163     0%   3-278
+src/mlx_one/server/scheduler.py                                   281    281     0%   3-358
+src/mlx_one/server/schemas.py                                     172    172     0%   3-221
+src/mlx_one/server/transcription.py                                46     46     0%   3-99
+src/mlx_one/stress_qualification.py                               176    176     0%   2-257
+src/mlx_one/task_qualification.py                                 233    233     0%   2-348
+src/mlx_one/task_qualification_worker.py                          363    363     0%   2-524
+src/mlx_one/text/__init__.py                                        4      0   100%
+src/mlx_one/text/chat.py                                          115     97    16%   18-22, 27-31, 35-59, 62-98, 102-140, 144-150, 155-168
+src/mlx_one/text/generation.py                                    403    383     5%   20-24, 30-41, 65-145, 176-182, 221-238, 246-253, 267-290, 324-708, 712-717
+src/mlx_one/text/harmony.py                                        60     60     0%   8-93
+src/mlx_one/text/harmony_tools.py                                 330    330     0%   8-513
+src/mlx_one/text/loading.py                                       344    294    15%   49-72, 87-163, 193-221, 227-247, 258-260, 264-273, 283-314, 324-349, 353-363, 369-401, 412-422, 436-444, 450-472, 476-493, 497-503, 507-511, 515-525, 529-535, 539-557, 563-571, 575-610
+src/mlx_one/text/sampling.py                                       34     28    18%   13-41
+src/mlx_one/text/schemas.py                                        56     24    57%   20-43, 67, 70
+src/mlx_one/text/tokenizer.py                                     145    127    12%   13-23, 40-57, 61-76, 85-88, 91-124, 127-134, 137-140, 143-165, 169-175, 179-187
+src/mlx_one/text/tokenizers.py                                     80     60    25%   37-43, 47-68, 85-88, 91, 100-118, 122-126, 130-138
+src/mlx_one/traffic_replay.py                                     139    139     0%   2-210
+src/mlx_one/training.py                                           304    256    16%   81-220, 232-237, 242-257, 261-272, 287-302, 309-464, 469-479, 484-489, 500-583, 589-601, 605-606, 610-612, 618, 629-641, 645-647, 651
+src/mlx_one/tuning.py                                             138    138     0%   3-233
+src/mlx_one/utils/__init__.py                                       0      0   100%
+src/mlx_one/utils/checkpoint.py                                    35     35     0%   3-70
+src/mlx_one/utils/memory.py                                        72     51    29%   23-25, 30-40, 45-50, 58-63, 68-71, 76-79, 84-89, 104-112, 116-121, 125-127
+src/mlx_one/utils/model_loader.py                                  95     95     0%   3-192
+src/mlx_one/vision/__init__.py                                      6      6     0%   3-9
+src/mlx_one/vision/generation.py                                   86     86     0%   3-181
+src/mlx_one/vision/images.py                                       43     43     0%   3-55
+src/mlx_one/vision/lfm_processing.py                              119    119     0%   7-219
+src/mlx_one/vision/loading.py                                     108    108     0%   3-171
+src/mlx_one/vision/messages.py                                     44     44     0%   3-67
+src/mlx_one/vision/processing.py                                  126    126     0%   3-231
+src/mlx_one/vision/public.py                                       39     39     0%   3-74
+src/mlx_one/vision/schemas.py                                       6      6     0%   3-11
+src/mlx_one/workflow.py                                            84     67    20%   25-215, 219-252, 262-278, 282-288, 292-294
+---------------------------------------------------------------------------------------------
+TOTAL                                                           40211  35227    12%
+156 passed, 5 skipped in 4.48s

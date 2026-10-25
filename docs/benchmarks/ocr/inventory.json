@@ -1,0 +1,173 @@
+{
+  "checkpoints": [
+    {
+      "id": "O01",
+      "checkpoint": "microsoft/trocr-base-printed",
+      "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+      "family": "trocr",
+      "name": "TrOCR Base Printed",
+      "precision": "FP32",
+      "scope": "Printed line",
+      "primary_task": "ocr.recognize",
+      "primary_workload": "OCR-S1",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "unrecorded; verify model card",
+      "source": "https://huggingface.co/microsoft/trocr-base-printed/tree/93450be3f1ed40a930690d951ef3932687cc1892",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "vocab.json + merges.txt",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O01.json",
+        "handwriting": "hand10-20261025/O01.json"
+      }
+    },
+    {
+      "id": "O02",
+      "checkpoint": "microsoft/trocr-base-handwritten",
+      "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+      "family": "trocr",
+      "name": "TrOCR Base Handwritten",
+      "precision": "FP32",
+      "scope": "Handwritten line",
+      "primary_task": "ocr.handwriting",
+      "primary_workload": "OCR-S8",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "mit",
+      "source": "https://huggingface.co/microsoft/trocr-base-handwritten/tree/eaacaf452b06415df8f10bb6fad3a4c11e609406",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "vocab.json + merges.txt",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O02.json",
+        "handwriting": "hand10-20261025/O02.json"
+      }
+    },
+    {
+      "id": "O03",
+      "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+      "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+      "family": "got_ocr2",
+      "name": "GOT-OCR 2.0",
+      "precision": "Affine Q4",
+      "scope": "Page/crop OCR",
+      "primary_task": "ocr.document",
+      "primary_workload": "OCR-S3",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "apache-2.0",
+      "source": "https://huggingface.co/mlx-community/GOT-OCR2_0-4bit/tree/0e28c87720de5d8af67389a0444cf8397524cb61",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "qwen.tiktoken",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O03.json",
+        "handwriting": "hand10-20261025/O03.json"
+      }
+    },
+    {
+      "id": "O04",
+      "checkpoint": "microsoft/Florence-2-base-ft",
+      "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+      "family": "florence2",
+      "name": "Florence-2 Base FT",
+      "precision": "FP16",
+      "scope": "Page text / region OCR",
+      "primary_task": "ocr.recognize",
+      "primary_workload": "OCR-S3",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "mit",
+      "source": "https://huggingface.co/microsoft/Florence-2-base-ft/tree/f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "tokenizer.json",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O04.json",
+        "handwriting": "hand10-20261025/O04.json"
+      }
+    },
+    {
+      "id": "O05",
+      "checkpoint": "mlx-community/PaddleOCR-VL-1.5-4bit",
+      "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+      "family": "paddleocr_vl",
+      "name": "PaddleOCR-VL 1.5",
+      "precision": "Affine Q4",
+      "scope": "Page/crop transcription",
+      "primary_task": "ocr.document",
+      "primary_workload": "OCR-S3",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "apache-2.0",
+      "source": "https://huggingface.co/mlx-community/PaddleOCR-VL-1.5-4bit/tree/3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "tokenizer.json",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O05.json",
+        "handwriting": "hand10-20261025/O05.json"
+      }
+    },
+    {
+      "id": "O06",
+      "checkpoint": "lightonai/LightOnOCR-2-1B",
+      "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+      "family": "lightonocr",
+      "name": "LightOnOCR 2 1B",
+      "precision": "BF16",
+      "scope": "Page to text/Markdown",
+      "primary_task": "ocr.document",
+      "primary_workload": "OCR-S3",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "apache-2.0",
+      "source": "https://huggingface.co/lightonai/LightOnOCR-2-1B/tree/be7c41313c30e940fe5571de59e5fabc779e00c8",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "tokenizer.json",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O06.json",
+        "handwriting": "hand10-20261025/O06.json"
+      }
+    },
+    {
+      "id": "O07",
+      "checkpoint": "mlx-community/DeepSeek-OCR-4bit",
+      "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+      "family": "deepseek_ocr",
+      "name": "DeepSeek-OCR",
+      "precision": "Affine Q4",
+      "scope": "Page/crop OCR",
+      "primary_task": "ocr.document",
+      "primary_workload": "OCR-S3",
+      "source_status": "NATIVE_IMPLEMENTED",
+      "license": "mit",
+      "source": "https://huggingface.co/mlx-community/DeepSeek-OCR-4bit/tree/4958b6b0d46d7dc3cf27556989dab659996ea426",
+      "tensor_format": "safetensors",
+      "converter_required": false,
+      "tokenizer_assets": "tokenizer.json",
+      "execution_status": "MEASURED",
+      "experimental": true,
+      "benchmark_records": {
+        "pages": "omni100-20261025/O07.json",
+        "handwriting": "hand10-20261025/O07.json"
+      }
+    }
+  ],
+  "alternatives": [
+    {
+      "checkpoint": "stepfun-ai/GOT-OCR-2.0-hf",
+      "revision": "d3017ef2c2c1395888c8d635c5e0508bcb0ac78d",
+      "status": "UNSUPPORTED",
+      "reason": "HF vision/prompt and tensor mapping differs from original GOT; not treated as interchangeable."
+    }
+  ]
+}

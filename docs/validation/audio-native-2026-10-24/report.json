@@ -1,0 +1,523 @@
+{
+  "date": "2026-10-24T13:46:49.337167+00:00",
+  "branch": "chore/alpha-repository-cleanup",
+  "base_commit": "eda7a0b23ecfc14b90a5af28f84dff70b4d7629a",
+  "source_dirty": true,
+  "status": "NATIVE_IMPLEMENTATION_DELIVERED_WITH_EXPLICIT_WIP_AND_MANUAL_CHECKPOINT_VALIDATION",
+  "initial_inventory": [
+    {
+      "family": "Whisper / Distil",
+      "existing": [
+        "models/audio/whisper",
+        "audio/decoding.py",
+        "audio/service.py",
+        "server/transcription.py"
+      ],
+      "initial_gap": "private Whisper-only HTTP route; no shared audio API; segment attention rows/frame offsets and input bounds needed correction",
+      "delivered": "shared Python/CLI/HTTP; first-window language task; word alignment rows/frame windows; bounded local file decoding",
+      "historical": "tiny/turbo/Distil scoped evidence retained; no new real-checkpoint run"
+    },
+    {
+      "family": "Moonshine Tiny/Base",
+      "existing": [
+        "models/audio/moonshine",
+        "audio/moonshine.py"
+      ],
+      "initial_gap": "offline native path existed; no common HTTP/task-facing input API",
+      "delivered": "reuse existing math/loader with common PCM preparation, actor, CLI and HTTP",
+      "historical": "English scoped passes retained; streaming/timestamps remain unsupported"
+    },
+    {
+      "family": "Qwen ASR 0.6B/1.7B",
+      "existing": [
+        "models/audio/qwen3_asr",
+        "audio/qwen.py",
+        "audio/streaming.py"
+      ],
+      "initial_gap": "original thinker.* float layout only; rejects required MLX Q8 exports; API/HTTP gaps",
+      "delivered": "distinct native packed MLX Q8/Q4 path, strict tensor loading, generated language labels and existing bounded utterance sessions",
+      "historical": "1.7B punctuation score ordering discrepancy not rewritten to force identity"
+    },
+    {
+      "family": "Qwen ForcedAligner",
+      "existing": [
+        "models/audio/qwen3_asr/alignment.py",
+        "audio/qwen.py"
+      ],
+      "initial_gap": "required Q8 layout unsupported; historical timestamp disagreement; no unmatched-word field",
+      "delivered": "Q8 strict loader, distinct task/HTTP, real span bounds and explicit unmatched words; unresolved timestamp issue stays WIP",
+      "historical": "up to 800 ms difference vs 80 ms comparison target; existing classifier probe localizes one case upstream, not a fixed offset"
+    },
+    {
+      "family": "Parakeet TDT v2/v3",
+      "existing": [
+        "models/audio/parakeet",
+        "audio/parakeet.py",
+        "benchmarks/parakeet_conversion.py"
+      ],
+      "initial_gap": "NVIDIA/converted layouts only; proposed MLX export config/LSTM/vocabulary mismatch; original NeMo parity/timestamp quality WIP",
+      "delivered": "explicit MLX export mapping to existing TDT, exact duration timebase, existing isolated converter plus verified benchmark manifest registration",
+      "historical": "scoped EN/v3 FR/DE evidence retained; no CTC substitution or original-NeMo parity claim"
+    },
+    {
+      "family": "LFM2.5 Audio",
+      "existing": [
+        "models/audio/lfm2_audio/{config,model,processing}.py",
+        "engine/task_runners/lfm_audio.py"
+      ],
+      "initial_gap": "synthetic architecture only, mismatched publisher schema, fail-closed task adapter, no checkpoint loader or task/codecs pipeline",
+      "delivered": "publisher config and tensor contract, shared LFM2, Conformer, audio adapter, sequential Depthformer, separate actual waveform codec, ASR/TTS/STS plus PCM events",
+      "historical": "no publisher/MLX checkpoint inference or audio quality evidence; only engineered tiny source tests"
+    }
+  ],
+  "task_files": [
+    "README.md",
+    "benchmarks/audio/__init__.py",
+    "benchmarks/audio/checkpoints.json",
+    "benchmarks/audio/convert_manifest.py",
+    "benchmarks/audio/download.py",
+    "benchmarks/audio/readme_generator.py",
+    "benchmarks/audio/result_schema.py",
+    "benchmarks/audio/run.py",
+    "benchmarks/audio/workloads.json",
+    "docs/AUDIO_TESTING.md",
+    "docs/benchmarks/audio/README.md",
+    "docs/benchmarks/audio/coverage.json",
+    "docs/benchmarks/audio/coverage.md",
+    "docs/benchmarks/audio/manual-commands.md",
+    "docs/benchmarks/audio/publication.json",
+    "docs/benchmarks/audio/records/A01-ASR-S1.json",
+    "docs/benchmarks/audio/records/A02-ASR-S1.json",
+    "docs/benchmarks/audio/records/A03-ASR-S1.json",
+    "docs/benchmarks/audio/records/A04-ASR-S1.json",
+    "docs/benchmarks/audio/records/A05-ASR-S1.json",
+    "docs/benchmarks/audio/records/A06-ASR-S1.json",
+    "docs/benchmarks/audio/records/A07-ASR-S1.json",
+    "docs/benchmarks/audio/records/A08-ASR-S1.json",
+    "docs/benchmarks/audio/records/A09-ASR-S1.json",
+    "docs/benchmarks/audio/records/A10-ASR-S1.json",
+    "docs/benchmarks/audio/records/A11-ALIGN-S1.json",
+    "docs/benchmarks/audio/records/A12-TTS-S1.json",
+    "docs/benchmarks/audio/records/A13-STS-S1.json",
+    "pyproject.toml",
+    "scripts/audio_manual_smoke.py",
+    "scripts/release/package_audit.py",
+    "src/mlx_one/__init__.py",
+    "src/mlx_one/audio/__init__.py",
+    "src/mlx_one/audio/cli.py",
+    "src/mlx_one/audio/decoding.py",
+    "src/mlx_one/audio/input.py",
+    "src/mlx_one/audio/lfm.py",
+    "src/mlx_one/audio/loading.py",
+    "src/mlx_one/audio/parakeet.py",
+    "src/mlx_one/audio/public.py",
+    "src/mlx_one/audio/qwen.py",
+    "src/mlx_one/audio/schemas.py",
+    "src/mlx_one/audio/service.py",
+    "src/mlx_one/cli.py",
+    "src/mlx_one/core/registry.py",
+    "src/mlx_one/engine/contracts.py",
+    "src/mlx_one/engine/runtime_specs.py",
+    "src/mlx_one/engine/service.py",
+    "src/mlx_one/engine/task_runners/lfm_audio.py",
+    "src/mlx_one/engine/task_runners/speech.py",
+    "src/mlx_one/models/audio/lfm2_audio/README.md",
+    "src/mlx_one/models/audio/lfm2_audio/UPSTREAM.md",
+    "src/mlx_one/models/audio/lfm2_audio/UPSTREAM_LICENSE",
+    "src/mlx_one/models/audio/lfm2_audio/checkpoint_config.py",
+    "src/mlx_one/models/audio/lfm2_audio/config.py",
+    "src/mlx_one/models/audio/lfm2_audio/conformer.py",
+    "src/mlx_one/models/audio/lfm2_audio/detokenizer.py",
+    "src/mlx_one/models/audio/lfm2_audio/dsp.py",
+    "src/mlx_one/models/audio/lfm2_audio/loading.py",
+    "src/mlx_one/models/audio/lfm2_audio/model.py",
+    "src/mlx_one/models/audio/lfm2_audio/native.py",
+    "src/mlx_one/models/audio/lfm2_audio/transformer.py",
+    "src/mlx_one/models/audio/moonshine/README.md",
+    "src/mlx_one/models/audio/parakeet/README.md",
+    "src/mlx_one/models/audio/parakeet/loading.py",
+    "src/mlx_one/models/audio/parakeet/mlx_export.py",
+    "src/mlx_one/models/audio/qwen3_asr/README.md",
+    "src/mlx_one/models/audio/qwen3_asr/config.py",
+    "src/mlx_one/models/audio/qwen3_asr/loading.py",
+    "src/mlx_one/models/audio/whisper/README.md",
+    "src/mlx_one/models/audio/whisper/processing.py",
+    "src/mlx_one/models/registry.py",
+    "src/mlx_one/server/app.py",
+    "src/mlx_one/server/audio.py",
+    "src/mlx_one/server/model_manager.py",
+    "src/mlx_one/server/transcription.py",
+    "tests/fixtures/audio_checkpoints/LFM2.5-Audio-1.5B-4bit.json",
+    "tests/fixtures/audio_checkpoints/Qwen3-ASR-0.6B-8bit.json",
+    "tests/fixtures/audio_checkpoints/Qwen3-ASR-1.7B-8bit.json",
+    "tests/fixtures/audio_checkpoints/Qwen3-ForcedAligner-0.6B-8bit.json",
+    "tests/fixtures/audio_checkpoints/README.md",
+    "tests/fixtures/audio_checkpoints/parakeet-tdt-0.6b-v3.json",
+    "tests/test_adapter_registry.py",
+    "tests/test_audio_benchmark.py",
+    "tests/test_audio_pipeline.py",
+    "tests/test_audio_pipeline_native.py",
+    "tests/test_native_lfm_architectures.py",
+    "tests/test_native_whisper_mlx.py",
+    "tests/test_runtime_registry.py",
+    "tests/test_task_qualification.py",
+    "tests/test_transducer_task_runtime.py"
+  ],
+  "source_manifest": "source-files.json",
+  "validation": {
+    "baseline": {
+      "passed": 156,
+      "skipped": 5
+    },
+    "full_default_suite": {
+      "passed": 2138,
+      "skipped": 71,
+      "subtests_passed": 9,
+      "warnings": 2
+    },
+    "affected_native_suite": {
+      "passed": 61,
+      "warnings": 2
+    },
+    "new_native_pipeline_subset": {
+      "passed": 20,
+      "overlaps_affected_suite": true
+    },
+    "benchmark_validator_tests": {
+      "passed": 9,
+      "overlaps_full_suite": true
+    },
+    "lint": {
+      "findings": 65,
+      "new_findings": [],
+      "debt_tracker": "docs/qualification/alpha_release/lint-debt.md"
+    },
+    "wheel_and_sdist": "PASS",
+    "fresh_wheel_smoke": "PASS",
+    "all_final_failures": 0
+  },
+  "hardware": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "mlx": "0.32.2",
+  "primary_checkpoint_tasks": [
+    {
+      "key": "A01",
+      "name": "Whisper Tiny",
+      "checkpoint": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "added_tokens.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 155381758,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A02",
+      "name": "Whisper Large v3 Turbo",
+      "checkpoint": "openai/whisper-large-v3-turbo",
+      "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+      "precision": "FP16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "added_tokens.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1622390673,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A03",
+      "name": "Distil-Whisper Large v3",
+      "checkpoint": "distil-whisper/distil-large-v3",
+      "revision": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+      "precision": "FP16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "added_tokens.json",
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.fp32.safetensors",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 4542897414,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A04",
+      "name": "Moonshine Tiny",
+      "checkpoint": "UsefulSensors/moonshine-tiny",
+      "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "tokenizer.json"
+      ],
+      "download_bytes": 110376023,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A05",
+      "name": "Moonshine Base",
+      "checkpoint": "UsefulSensors/moonshine-base",
+      "revision": "7a73d8d55ac0ba2ef3ae761593f6784b51f96dcf",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "preprocessor_config.json",
+        "tokenizer.json"
+      ],
+      "download_bytes": 248066838,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A06",
+      "name": "Qwen3-ASR 0.6B",
+      "checkpoint": "mlx-community/Qwen3-ASR-0.6B-8bit",
+      "revision": "89e96d92ba34aca20b3e29fb10cc284097d1219f",
+      "precision": "Q8 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1010770073,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A07",
+      "name": "Qwen3-ASR 1.7B",
+      "checkpoint": "mlx-community/Qwen3-ASR-1.7B-8bit",
+      "revision": "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
+      "precision": "Q8 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 2467855342,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Q8 source path implemented; historical BF16 publisher path has one punctuation anchor difference."
+    },
+    {
+      "key": "A08",
+      "name": "Parakeet TDT v2",
+      "checkpoint": "nvidia/parakeet-tdt-0.6b-v2",
+      "revision": "ae9ad07059c7c739ffaf932226a8fe64ae2620b0",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "parakeet-tdt-0.6b-v2.nemo"
+      ],
+      "download_bytes": 2472222720,
+      "status": "WIP",
+      "notes": "Original NeMo archive: run existing isolated converter before native inference; conversion remains WIP."
+    },
+    {
+      "key": "A09",
+      "name": "Parakeet TDT v3",
+      "checkpoint": "mlx-community/parakeet-tdt-0.6b-v3",
+      "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "config.json",
+        "model.safetensors"
+      ],
+      "download_bytes": 2508532829,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native implementation; manual smoke required for this exact checkpoint revision."
+    },
+    {
+      "key": "A10",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "assets": [
+        "audio_detokenizer/config.json",
+        "audio_detokenizer/model.safetensors",
+        "config.json",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "download_bytes": 1407665153,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native source and codec path implemented; no real checkpoint smoke or speech quality result yet."
+    },
+    {
+      "key": "A11",
+      "name": "Qwen3-ForcedAligner 0.6B",
+      "checkpoint": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+      "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+      "precision": "Q8 / BF16",
+      "task": "align",
+      "workload": "ALIGN-S1",
+      "assets": [
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "preprocessor_config.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "download_bytes": 1276472231,
+      "status": "WIP",
+      "notes": "WIP: historical timestamp reference discrepancy unresolved; no qualification claim."
+    },
+    {
+      "key": "A12",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "synthesize",
+      "workload": "TTS-S1",
+      "assets": [
+        "audio_detokenizer/config.json",
+        "audio_detokenizer/model.safetensors",
+        "config.json",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "download_bytes": 1407665153,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native source and codec path implemented; no real checkpoint smoke or speech quality result yet."
+    },
+    {
+      "key": "A13",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "speech-to-speech",
+      "workload": "STS-S1",
+      "assets": [
+        "audio_detokenizer/config.json",
+        "audio_detokenizer/model.safetensors",
+        "config.json",
+        "model.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "download_bytes": 1407665153,
+      "status": "NATIVE_IMPLEMENTED",
+      "notes": "Native source and codec path implemented; no real checkpoint smoke or speech quality result yet."
+    }
+  ],
+  "actual_public_audio_measurements": 0,
+  "public_audio_records": 13,
+  "record_status": "NOT_RUN",
+  "preserved_benchmarks": {
+    "text_measurements": 17,
+    "text_checkpoint_revisions": 13,
+    "vlm_records": 40,
+    "vlm_measured_records": 20
+  },
+  "no_large_audio_model_downloads": true,
+  "no_retired_exhaustive_numerical_campaign": true,
+  "no_runtime_reference_inference_imports": true,
+  "no_commit_push_or_release": true,
+  "artifacts": [
+    {
+      "filename": "mlx_one-0.1.0a1-py3-none-any.whl",
+      "sha256": "b82c024b5be0d39872eac87d2601e47d4f85c78a788169f9d0f4ac8d3bfb0cf6",
+      "bytes": 2155920,
+      "status": "PASS"
+    },
+    {
+      "filename": "mlx_one-0.1.0a1.tar.gz",
+      "sha256": "08da4ae79b5a051ef2765d4aa2fa5e50b2623c17f1c084a688df908104fa3f7d",
+      "bytes": 2011756,
+      "status": "PASS"
+    }
+  ],
+  "limitations": [
+    "Qwen forced-alignment timestamp reference discrepancies remain unresolved; WIP, not qualified.",
+    "Historical Qwen 1.7B BF16 punctuation anchor discrepancy retained; new Q8 exact checkpoints not run.",
+    "Original Parakeet v2 NeMo parity and word/timestamp quality remain WIP; converter is isolated.",
+    "LFM exact Q4 checkpoint speech quality and full-model execution still require manual validation.",
+    "LFM output bounded to 512 codec frames / 40.96 seconds; codec streaming recomputes bounded prefixes.",
+    "No Moonshine/Parakeet causal streaming, voice cloning, arbitrary OpenAI voices, speed control or realtime WebSocket protocol.",
+    "Minimal mlx-community/whisper-tiny export lacks required tokenizer/processor assets; primary entry uses OpenAI.",
+    "No new multilingual, noisy/silent corpus accuracy or real-weight alignment correction is claimed."
+  ],
+  "temporary_artifacts": "Only small source/config/header downloads, engineered tiny test models and a fresh dependency environment; no real audio checkpoint weights.",
+  "provenance_note": "Inventory was inspected before edits; this report was assembled after implementation. Logs replace local absolute checkout/home paths. Shared files already contained prior VLM work, which was preserved; the manifest describes current aggregate contents."
+}

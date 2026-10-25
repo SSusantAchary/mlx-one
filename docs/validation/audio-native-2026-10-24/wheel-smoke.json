@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "installed_source": "/private/tmp/mlx-one-audio-implementation/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "scope": "Fresh wheel environment; native engineered tiny checkpoint ASR/TTS, repeat, cancelled stream cleanup, HTTP auth/WAV, CLI; not real-checkpoint quality or performance",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_runtime_imports": "forbidden",
+  "resident_models_after_close": 0,
+  "registry_models": 30,
+  "speech_samples": 8,
+  "speech_sample_rate": 24000
+}

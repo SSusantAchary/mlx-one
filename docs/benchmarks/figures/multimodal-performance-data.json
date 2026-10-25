@@ -1,0 +1,1331 @@
+{
+  "schema": "mlx-one-multimodal-performance-plot-v1",
+  "vlm": [
+    {
+      "evidence": "docs/benchmarks/vlm/results/V01-VLM-HF-S1.json",
+      "evidence_sha256": "9863e36c41b385308ec56a591e0e2f233a01b924584db4d94ce20fa7db49dc1e",
+      "id": "V01",
+      "name": "Qwen2-VL 2B",
+      "checkpoint": "mlx-community/Qwen2-VL-2B-Instruct-4bit",
+      "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+      "nominal_parameters_billion": 2,
+      "size_label": "2B",
+      "size_basis": "Nominal checkpoint-name label from pinned VLM benchmark plan",
+      "precision": "Q4",
+      "status": "MEASURED",
+      "metrics": {
+        "preprocessing_ms": 6.048333998478483,
+        "visual_prefill_ms": 1283.5884999949485,
+        "prefill_tps": 279.6846497155536,
+        "decode_tps": 67.28053417959984,
+        "ttft_ms": 1290.2810000014142,
+        "total_ms": 2955.514708002738,
+        "peak_mlx_memory_gib": 1.7554812161251903
+      },
+      "protocol": "vlm-hf-s1-v1",
+      "measurement_type": "direct-model",
+      "hardware": {
+        "device": "Apple M4",
+        "memory_bytes": 34359738368,
+        "os": "macOS-15.8.1-arm64-arm-64bit",
+        "machine": "arm64"
+      },
+      "mlx_version": "0.32.2",
+      "implementation_sha256": "21d0fef3559f869397fd209dd04321fd29e16d013947177688dd7ae173a56bd9",
+      "runner_sha256": "fbf97dcab91c43c4003d1a27161deb93eaeea92f1f6e4546d399ac08d99b9835",
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "image_sha256": [
+        "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+      ],
+      "source_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "actual_input_tokens": [
+        359,
+        359,
+        359,
+        359,
+        359
+      ],
+      "actual_output_tokens": [
+        112,
+        112,
+        112,
+        112,
+        112
+      ],
+      "batch_size": 1,
+      "warmups": 1,
+      "repetitions": 5,
+      "statistic": "median"
+    },
+    {
+      "evidence": "docs/benchmarks/vlm/results/V02-VLM-HF-S1.json",
+      "evidence_sha256": "a253f41fe975d65ec11025a05d71bc03af8d8e0304d93acc436bb068cae9d80d",
+      "id": "V02",
+      "name": "Qwen2.5-VL 3B",
+      "checkpoint": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+      "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+      "nominal_parameters_billion": 3,
+      "size_label": "3B",
+      "size_basis": "Nominal checkpoint-name label from pinned VLM benchmark plan",
+      "precision": "Q4",
+      "status": "MEASURED",
+      "metrics": {
+        "preprocessing_ms": 6.05258400173625,
+        "visual_prefill_ms": 1663.1265420001,
+        "prefill_tps": 215.85849959935183,
+        "decode_tps": 41.19222172030226,
+        "ttft_ms": 1670.0794580028742,
+        "total_ms": 3588.3515830064425,
+        "peak_mlx_memory_gib": 3.163782256655395
+      },
+      "protocol": "vlm-hf-s1-v1",
+      "measurement_type": "direct-model",
+      "hardware": {
+        "device": "Apple M4",
+        "memory_bytes": 34359738368,
+        "os": "macOS-15.8.1-arm64-arm-64bit",
+        "machine": "arm64"
+      },
+      "mlx_version": "0.32.2",
+      "implementation_sha256": "21d0fef3559f869397fd209dd04321fd29e16d013947177688dd7ae173a56bd9",
+      "runner_sha256": "fbf97dcab91c43c4003d1a27161deb93eaeea92f1f6e4546d399ac08d99b9835",
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "image_sha256": [
+        "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+      ],
+      "source_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "actual_input_tokens": [
+        359,
+        359,
+        359,
+        359,
+        359
+      ],
+      "actual_output_tokens": [
+        79,
+        79,
+        79,
+        79,
+        79
+      ],
+      "batch_size": 1,
+      "warmups": 1,
+      "repetitions": 5,
+      "statistic": "median"
+    },
+    {
+      "evidence": "docs/benchmarks/vlm/results/V03-VLM-HF-S1.json",
+      "evidence_sha256": "9120ef757bccd06eb1dd8686ed86f535c093f7933a8d8a8972f60d2a3e5c7e5d",
+      "id": "V03",
+      "name": "Qwen3.5 0.8B",
+      "checkpoint": "mlx-community/Qwen3.5-0.8B-4bit",
+      "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+      "nominal_parameters_billion": 0.8,
+      "size_label": "0.8B",
+      "size_basis": "Nominal checkpoint-name label from pinned VLM benchmark plan",
+      "precision": "Q4",
+      "status": "MEASURED",
+      "metrics": {
+        "preprocessing_ms": 4.807709003216587,
+        "visual_prefill_ms": 395.68304199929116,
+        "prefill_tps": 717.7462005068915,
+        "decode_tps": 68.78023224032934,
+        "ttft_ms": 401.1601249949308,
+        "total_ms": 1942.8673750007874,
+        "peak_mlx_memory_gib": 1.1286756563931704
+      },
+      "protocol": "vlm-hf-s1-v1",
+      "measurement_type": "direct-model",
+      "hardware": {
+        "device": "Apple M4",
+        "memory_bytes": 34359738368,
+        "os": "macOS-15.8.1-arm64-arm-64bit",
+        "machine": "arm64"
+      },
+      "mlx_version": "0.32.2",
+      "implementation_sha256": "21d0fef3559f869397fd209dd04321fd29e16d013947177688dd7ae173a56bd9",
+      "runner_sha256": "fbf97dcab91c43c4003d1a27161deb93eaeea92f1f6e4546d399ac08d99b9835",
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "image_sha256": [
+        "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+      ],
+      "source_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "actual_input_tokens": [
+        284,
+        284,
+        284,
+        284,
+        284
+      ],
+      "actual_output_tokens": [
+        106,
+        106,
+        106,
+        106,
+        106
+      ],
+      "batch_size": 1,
+      "warmups": 1,
+      "repetitions": 5,
+      "statistic": "median"
+    },
+    {
+      "evidence": "docs/benchmarks/vlm/results/V04-VLM-HF-S1.json",
+      "evidence_sha256": "34f6fbcda1bdb1361b99ce5eab761cef0801df1986e42789f4fd938630b36d95",
+      "id": "V04",
+      "name": "LFM2-VL 450M",
+      "checkpoint": "mlx-community/LFM2-VL-450M-8bit",
+      "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+      "nominal_parameters_billion": 0.45,
+      "size_label": "450M",
+      "size_basis": "Nominal checkpoint-name label from pinned VLM benchmark plan",
+      "precision": "Q8",
+      "status": "MEASURED",
+      "metrics": {
+        "preprocessing_ms": 7.160708999435883,
+        "visual_prefill_ms": 162.15795899915975,
+        "prefill_tps": 1739.0450751878373,
+        "decode_tps": 154.32615248813258,
+        "ttft_ms": 169.9698329975945,
+        "total_ms": 1005.7198340000468,
+        "peak_mlx_memory_gib": 1.1634595282375813
+      },
+      "protocol": "vlm-hf-s1-v1",
+      "measurement_type": "direct-model",
+      "hardware": {
+        "device": "Apple M4",
+        "memory_bytes": 34359738368,
+        "os": "macOS-15.8.1-arm64-arm-64bit",
+        "machine": "arm64"
+      },
+      "mlx_version": "0.32.2",
+      "implementation_sha256": "21d0fef3559f869397fd209dd04321fd29e16d013947177688dd7ae173a56bd9",
+      "runner_sha256": "fbf97dcab91c43c4003d1a27161deb93eaeea92f1f6e4546d399ac08d99b9835",
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "image_sha256": [
+        "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+      ],
+      "source_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "actual_input_tokens": [
+        282,
+        282,
+        282,
+        282,
+        282
+      ],
+      "actual_output_tokens": [
+        128,
+        128,
+        128,
+        128,
+        128
+      ],
+      "batch_size": 1,
+      "warmups": 1,
+      "repetitions": 5,
+      "statistic": "median"
+    },
+    {
+      "evidence": "docs/benchmarks/vlm/results/V05-VLM-HF-S1.json",
+      "evidence_sha256": "c7fd24f3f7bd1ac08f3dcd11afd1f23e90b8c87323b1e9606575197c2fcbe115",
+      "id": "V05",
+      "name": "LFM2.5-VL 3B",
+      "checkpoint": "LiquidAI/LFM2.5-VL-3B-MLX-4bit",
+      "revision": "7fad79d26092c1145aa8dde873896a07d3e96a3b",
+      "nominal_parameters_billion": 3,
+      "size_label": "3B",
+      "size_basis": "Nominal checkpoint-name label from pinned VLM benchmark plan",
+      "precision": "Q4",
+      "status": "MEASURED",
+      "metrics": {
+        "preprocessing_ms": 7.370082996203564,
+        "visual_prefill_ms": 934.3818330016802,
+        "prefill_tps": 300.7335867150734,
+        "decode_tps": 52.00516645327921,
+        "ttft_ms": 942.3825409976416,
+        "total_ms": 2884.9376250000205,
+        "peak_mlx_memory_gib": 2.8013204550370574
+      },
+      "protocol": "vlm-hf-s1-v1",
+      "measurement_type": "direct-model",
+      "hardware": {
+        "device": "Apple M4",
+        "memory_bytes": 34359738368,
+        "os": "macOS-15.8.1-arm64-arm-64bit",
+        "machine": "arm64"
+      },
+      "mlx_version": "0.32.2",
+      "implementation_sha256": "21d0fef3559f869397fd209dd04321fd29e16d013947177688dd7ae173a56bd9",
+      "runner_sha256": "fbf97dcab91c43c4003d1a27161deb93eaeea92f1f6e4546d399ac08d99b9835",
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "image_sha256": [
+        "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+      ],
+      "source_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "actual_input_tokens": [
+        281,
+        281,
+        281,
+        281,
+        281
+      ],
+      "actual_output_tokens": [
+        101,
+        101,
+        101,
+        101,
+        101
+      ],
+      "batch_size": 1,
+      "warmups": 1,
+      "repetitions": 5,
+      "statistic": "median"
+    }
+  ],
+  "asr": [
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json",
+      "evidence_sha256": "12dde2c80a2eafb1d98262f93a2d096e0fb80d85303256279052f5942ffde6ad",
+      "id": "A01",
+      "name": "Whisper Tiny",
+      "checkpoint": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 2.144869291005307,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.2144869291005307,
+        "audio_seconds_per_second": 4.662288766003531,
+        "peak_mlx_gib": 0.48535098880529404,
+        "peak_rss_gib": 0.29949951171875,
+        "wer": 0.041666666666666664,
+        "cer": 0.03636363636363636,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.039,
+      "size_label": "39M",
+      "size_source": "https://huggingface.co/openai/whisper-tiny",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": "en",
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json",
+      "evidence_sha256": "ce00318ae357f514a55a306475dd03c42308163a17ffdd69ebd4c93e40de0ead",
+      "id": "A02",
+      "name": "Whisper Large v3 Turbo",
+      "checkpoint": "openai/whisper-large-v3-turbo",
+      "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+      "precision": "FP16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 7.666961542003264,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.7666961542003264,
+        "audio_seconds_per_second": 1.3042976601897949,
+        "peak_mlx_gib": 2.693696156144142,
+        "peak_rss_gib": 1.7104034423828125,
+        "wer": 0.041666666666666664,
+        "cer": 0.03636363636363636,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.809,
+      "size_label": "809M",
+      "size_source": "https://huggingface.co/openai/whisper-large-v3-turbo",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": "en",
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json",
+      "evidence_sha256": "b6aae5fad725c8849d4efd8cea7b605bc76ccffb0862b2d5e21562c892538a58",
+      "id": "A03",
+      "name": "Distil-Whisper Large v3",
+      "checkpoint": "distil-whisper/distil-large-v3",
+      "revision": "8031d2e6ce6631b7fc45629dddfc00271116d981",
+      "precision": "FP16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 5.433399582994753,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.5433399582994752,
+        "audio_seconds_per_second": 1.840468356367093,
+        "peak_mlx_gib": 2.5959596633911133,
+        "peak_rss_gib": 1.6074676513671875,
+        "wer": 0.0,
+        "cer": 0.0,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.756,
+      "size_label": "756M",
+      "size_source": "https://huggingface.co/distil-whisper/distil-large-v3",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": "en",
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json",
+      "evidence_sha256": "7fdf42c2874cb98c5042783b81f9edb3209437e6ebbe071cc25b42c876dff2f7",
+      "id": "A04",
+      "name": "Moonshine Tiny",
+      "checkpoint": "UsefulSensors/moonshine-tiny",
+      "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.11703766599384835,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.011703766599384834,
+        "audio_seconds_per_second": 85.44257880642982,
+        "peak_mlx_gib": 0.19130732864141464,
+        "peak_rss_gib": 0.23187255859375,
+        "wer": 0.041666666666666664,
+        "cer": 0.03636363636363636,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.027,
+      "size_label": "27M",
+      "size_source": "https://huggingface.co/UsefulSensors/moonshine-tiny",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json",
+      "evidence_sha256": "cb9791ac83e8c8e7d50b8d3ec3dbbc1b5ade7514e46b5f311d0340d01efc6570",
+      "id": "A05",
+      "name": "Moonshine Base",
+      "checkpoint": "UsefulSensors/moonshine-base",
+      "revision": "7a73d8d55ac0ba2ef3ae761593f6784b51f96dcf",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.1535111670018523,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.01535111670018523,
+        "audio_seconds_per_second": 65.14184078790397,
+        "peak_mlx_gib": 0.4228997826576233,
+        "peak_rss_gib": 0.3746795654296875,
+        "wer": 0.125,
+        "cer": 0.12727272727272726,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.061,
+      "size_label": "61M",
+      "size_source": "https://huggingface.co/UsefulSensors/moonshine-base",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json",
+      "evidence_sha256": "560b2ede124f57f8ff93d3f3aa334b7b301d579edafe403486af85dd28b53889",
+      "id": "A06",
+      "name": "Qwen3-ASR 0.6B",
+      "checkpoint": "mlx-community/Qwen3-ASR-0.6B-8bit",
+      "revision": "89e96d92ba34aca20b3e29fb10cc284097d1219f",
+      "precision": "Q8 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.5287259169999743,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.05287259169999743,
+        "audio_seconds_per_second": 18.913390999897754,
+        "peak_mlx_gib": 1.280625231564045,
+        "peak_rss_gib": 1.1537322998046875,
+        "wer": 0.0,
+        "cer": 0.0,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.6,
+      "size_label": "0.6B",
+      "size_source": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": "English",
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json",
+      "evidence_sha256": "db48e75aa8c7ca9934a32966b519edd2948f5ecb4f107e1cedfd56f73f70cd7f",
+      "id": "A07",
+      "name": "Qwen3-ASR 1.7B",
+      "checkpoint": "mlx-community/Qwen3-ASR-1.7B-8bit",
+      "revision": "a8379a2e2f9e313c9292cdf1af4055ab56d50d55",
+      "precision": "Q8 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 1.017307209003775,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.10173072090037749,
+        "audio_seconds_per_second": 9.8298723448473,
+        "peak_mlx_gib": 2.6556056812405586,
+        "peak_rss_gib": 2.5180511474609375,
+        "wer": 0.0,
+        "cer": 0.0,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 1.7,
+      "size_label": "1.7B",
+      "size_source": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": "English",
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json",
+      "evidence_sha256": "c8faf9774b427648b40542dbe27b01c76cf924fea54f84a86b47d9b07b14d86c",
+      "id": "A08",
+      "name": "Parakeet TDT v2",
+      "checkpoint": "nvidia/parakeet-tdt-0.6b-v2",
+      "revision": "ae9ad07059c7c739ffaf932226a8fe64ae2620b0",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.16926491699996404,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.016926491699996403,
+        "audio_seconds_per_second": 59.07898799845289,
+        "peak_mlx_gib": 2.3829996092244983,
+        "peak_rss_gib": 2.4545440673828125,
+        "wer": 0.0,
+        "cer": 0.0,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.6,
+      "size_label": "0.6B",
+      "size_source": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json",
+      "evidence_sha256": "20a26688fb96652f907cd42bcc8f27bdbdd313e2d637729e72e9d5e600e7c997",
+      "id": "A09",
+      "name": "Parakeet TDT v3",
+      "checkpoint": "mlx-community/parakeet-tdt-0.6b-v3",
+      "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+      "precision": "FP32",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.17401916700328002,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.017401916700328,
+        "audio_seconds_per_second": 57.46493430698651,
+        "peak_mlx_gib": 2.4172212360426784,
+        "peak_rss_gib": 2.4990081787109375,
+        "wer": 0.0,
+        "cer": 0.0,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.6,
+      "size_label": "0.6B",
+      "size_source": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json",
+      "evidence_sha256": "8970e4474ae1561e4e7a5ceb13cf3661b35cbeafc5973997319b261bef360d2b",
+      "id": "A10",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "transcribe",
+      "workload": "ASR-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.5476592920022085,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.05476592920022085,
+        "audio_seconds_per_second": 18.259527677218106,
+        "peak_mlx_gib": 1.4722822066396475,
+        "peak_rss_gib": 1.484100341796875,
+        "wer": 0.041666666666666664,
+        "cer": 0.03636363636363636,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 1.5,
+      "size_label": "1.5B",
+      "size_source": "https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    }
+  ],
+  "alignment": [
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json",
+      "evidence_sha256": "8d7bf308a7fa7965ce0286dee546b930343b14ee33e8ac8c8851867cd0fb61ca",
+      "id": "A11",
+      "name": "Qwen3-ForcedAligner 0.6B",
+      "checkpoint": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+      "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+      "precision": "Q8 / BF16",
+      "task": "align",
+      "workload": "ALIGN-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 0.18989191700529773,
+        "audio_seconds": 10.0,
+        "real_time_factor": 0.018989191700529772,
+        "audio_seconds_per_second": 52.66153587633229,
+        "peak_mlx_gib": 1.5460291430354118,
+        "peak_rss_gib": 1.41485595703125,
+        "wer": null,
+        "cer": null,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": 0,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 0.6,
+      "size_label": "0.6B",
+      "size_source": "https://huggingface.co/Qwen/Qwen3-ForcedAligner-0.6B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+        "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+        "audio_seconds": 10.0,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": "English",
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      }
+    }
+  ],
+  "speech": [
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json",
+      "evidence_sha256": "946493010e90347e53ab570a9280b1d2e0b5d5084b95240062e7429257e940b5",
+      "id": "A12",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "synthesize",
+      "workload": "TTS-S1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 3.8412495000011404,
+        "audio_seconds": null,
+        "real_time_factor": 0.3117897321429497,
+        "audio_seconds_per_second": 3.207289711328656,
+        "peak_mlx_gib": 1.8502670601010323,
+        "peak_rss_gib": 1.4906768798828125,
+        "wer": null,
+        "cer": null,
+        "time_to_first_audio_ms": 328.9863750032964,
+        "output_audio_seconds": 12.32,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 1.5,
+      "size_label": "1.5B",
+      "size_source": "https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": null,
+        "text_sha256": "3da36d9f6755c66a012b9c932ee0ec9f146e5f6f835ad1c6c070d6d97fe09acb",
+        "audio_seconds": null,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": "us_male"
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      },
+      "actual_generated_samples": [
+        295680,
+        295680,
+        295680,
+        295680,
+        295680
+      ],
+      "actual_output_sample_rates": [
+        24000,
+        24000,
+        24000,
+        24000,
+        24000
+      ]
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json",
+      "evidence_sha256": "2fbf55ea1844d494bb78390ff9528011ca0d7b2c4f60a260ee7a4a690a8943bb",
+      "id": "A13",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "speech-to-speech",
+      "workload": "STS-S1",
+      "status": "FAILED",
+      "reason": "Actual benchmark attempt failed during warmup: 512-frame (40.96-second) output bound exceeded.",
+      "metrics": {
+        "processing_seconds": null,
+        "audio_seconds": null,
+        "real_time_factor": null,
+        "audio_seconds_per_second": null,
+        "peak_mlx_gib": null,
+        "peak_rss_gib": null,
+        "wer": null,
+        "cer": null,
+        "time_to_first_audio_ms": null,
+        "output_audio_seconds": null,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 1.5,
+      "size_label": "1.5B",
+      "size_source": "https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": null,
+      "software": null
+    },
+    {
+      "evidence": "docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-HF-Q1-direct-model-prepared-pcm.json",
+      "evidence_sha256": "dd11bba43c9237e1c18dc4dbee7f10617219f6330b6cdc82369a3eaf3b890284",
+      "id": "A13",
+      "name": "LFM2.5 Audio 1.5B",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+      "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+      "precision": "Q4 / BF16",
+      "task": "speech-to-speech",
+      "workload": "STS-HF-Q1",
+      "status": "MEASURED",
+      "reason": null,
+      "metrics": {
+        "processing_seconds": 5.358126625003933,
+        "audio_seconds": 2.04,
+        "real_time_factor": 0.3488363688153603,
+        "audio_seconds_per_second": 2.8666735736184146,
+        "peak_mlx_gib": 2.0164570342749357,
+        "peak_rss_gib": 1.528106689453125,
+        "wer": null,
+        "cer": null,
+        "time_to_first_audio_ms": 426.12650000228314,
+        "output_audio_seconds": 15.36,
+        "alignment_mean_error_ms": null,
+        "alignment_median_error_ms": null,
+        "alignment_p95_error_ms": null,
+        "alignment_max_error_ms": null,
+        "unmatched_words": null,
+        "first_partial_ms": null,
+        "final_result_ms": null,
+        "finalization_ms": null,
+        "revised_partials": null,
+        "buffer_peak_bytes": null
+      },
+      "nominal_parameters_billion": 1.5,
+      "size_label": "1.5B",
+      "size_source": "https://huggingface.co/LiquidAI/LFM2.5-Audio-1.5B",
+      "size_basis": "Publisher nominal size label; not a tensor count",
+      "protocol": {
+        "batch_size": 1,
+        "warmups": 1,
+        "repetitions": 5,
+        "statistic": "median",
+        "clock": "perf_counter_with_mlx_synchronize",
+        "playback_pacing": false
+      },
+      "measurement_type": "direct-model-prepared-pcm",
+      "hardware": {
+        "chip": "Apple M4",
+        "memory_bytes": 34359738368,
+        "machine": "arm64"
+      },
+      "software": {
+        "mlx": "0.32.2",
+        "python": "3.12.11",
+        "macos": "15.8.1"
+      },
+      "input": {
+        "audio_sha256": "596b6ea6b67250828227c4975dca20021d7e80a9bf36896d1291cd7ef8c904fa",
+        "text_sha256": null,
+        "audio_seconds": 2.04,
+        "sample_rate": 16000,
+        "language": "English",
+        "voice": null
+      },
+      "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+      "decoding": {
+        "language_hint": null,
+        "max_tokens_override": null,
+        "settings": "native family defaults; see methodology"
+      },
+      "actual_generated_samples": [
+        368640,
+        368640,
+        368640,
+        368640,
+        368640
+      ],
+      "actual_output_sample_rates": [
+        24000,
+        24000,
+        24000,
+        24000,
+        24000
+      ]
+    }
+  ],
+  "size_note": "Nominal publisher size labels. Component scopes differ across families; not total multimodal parameter counts or checkpoint bytes. Peak memory is measured."
+}

@@ -1,0 +1,7 @@
+{
+  "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+  "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+  "tensor_header_sha256": "318d08ea5c1cb8d39b9f1404b8f274c6472a6f2f28c90c4dd96170ff5cba36cb",
+  "source_weights_downloaded": false,
+  "validation": "parameter names and shapes only; not numerical correctness"
+}

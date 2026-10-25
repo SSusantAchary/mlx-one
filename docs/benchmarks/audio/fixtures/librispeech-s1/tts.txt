@@ -1,0 +1,1 @@
+Hello from MLX One. This short speech sample helps measure native audio generation on Apple Silicon. Please speak clearly and naturally while keeping every sentence easy to understand and follow.

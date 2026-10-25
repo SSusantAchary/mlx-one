@@ -1,0 +1,7 @@
+{
+  "checkpoint": "microsoft/trocr-base-handwritten",
+  "revision": "eaacaf452b06415df8f10bb6fad3a4c11e609406",
+  "tensor_header_sha256": "e3b3c10e0e868514f04a8932214780dfc7baab7851b9db01aa0a278bea60d8b4",
+  "source_weights_downloaded": false,
+  "validation": "parameter names and shapes only; not numerical correctness"
+}

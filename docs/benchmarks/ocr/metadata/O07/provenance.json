@@ -1,0 +1,7 @@
+{
+  "checkpoint": "mlx-community/DeepSeek-OCR-4bit",
+  "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+  "tensor_header_sha256": "c7b2597d0c096b34e183f46873855ba2479b40d976c28a31e17e77ecb5147229",
+  "source_weights_downloaded": false,
+  "validation": "parameter names and shapes only; not numerical correctness"
+}

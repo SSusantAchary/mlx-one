@@ -1,0 +1,22 @@
+{
+  "task": "vision_language",
+  "checkpoint": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+  "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+  "architecture": "qwen2_5_vl",
+  "precision": "Q4",
+  "workload": "VLM-S2",
+  "protocol": "vlm-s2-v1",
+  "status": "NOT_RUN",
+  "hardware": null,
+  "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+  "samples": [],
+  "metrics": {
+    "preprocessing_ms": null,
+    "visual_prefill_ms": null,
+    "prefill_tps": null,
+    "decode_tps": null,
+    "ttft_ms": null,
+    "total_ms": null,
+    "peak_mlx_memory_gib": null
+  }
+}

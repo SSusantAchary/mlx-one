@@ -48,6 +48,10 @@ Actual **direct-model inference** measurements; experimental, batch size 1. Pyth
 
 Configured context windows come from the pinned checkpoint configs; they are separate from benchmark input lengths and do not establish full-window validation. See the [config sources](docs/benchmarks/inventory.md).
 
+![MLX-One text-model decode speed by nominal parameter size on Apple M4](docs/benchmarks/figures/text-model-decode-bars.png)
+
+[Model size vs decode speed scatter plot](docs/benchmarks/figures/text-model-size-vs-decode.svg) · [Bar chart SVG](docs/benchmarks/figures/text-model-decode-bars.svg) · [Chart data and reproduction](docs/benchmarks/figures/README.md). Protocols are shown separately; checkpoints without comparable measurements remain unmeasured.
+
 **Historical 128-input / 16-output protocol.** These archived runs are not the new standardized 128-input / 128-output results. Source and primary precision measurements are listed separately; “source” means the stored weights.
 
 **historical-128-16** — Apple M4, 32 GB; macOS-15.7.9-arm64-arm-64bit; Python 3.12.11; MLX 0.32.2 / Metal 0.32.2. Backend: native MLX diagnostic dense; full sequence logits; production_fp16 KV. Actual input: 128 tokens; actual output: 16 tokens per repetition. 1 shape warmup; 3 measured repetitions; per-column median. FP16 KV; fresh state, no prefix reuse. TTFT includes prefill and greedy selection of the first token. Peak MLX resets before each request after load/conversion/warmup; it includes resident model allocations.
@@ -103,15 +107,19 @@ Actual **direct-model native MLX/Metal** inference on pinned checkpoint revision
 
 Q4/Q8 denote the published checkpoint format; vision or projector modules may retain floating-point weights.
 
+![MLX-One VLM decode speed by nominal model size, with time to first token](docs/benchmarks/figures/vlm-model-performance.png)
+
+[VLM size-versus-speed scatter plot](docs/benchmarks/figures/vlm-model-size-vs-decode.svg) · [VLM chart SVG](docs/benchmarks/figures/vlm-model-performance.svg) · [Chart data and reproduction](docs/benchmarks/figures/README.md#vlm-and-audio-charts)
+
 **Measured hardware:** Apple M4, 32 GiB; macOS-15.8.1-arm64-arm-64bit; MLX 0.32.2; Python 3.12.11. Separate execution cohort.
 
-| Model | Precision | Images | Vision processing (ms) | Prefill TPS | Decode TPS | TTFT (ms) | Peak MLX memory (GiB) | Status |
+| Model | Precision | Images | Vision processing (ms) | Prefill TPS | Decode TPS | TTFT (ms) | Peak MLX memory (GiB) | Scores |
 |---|---|---:|---:|---:|---:|---:|---:|---|
-| [Qwen2-VL 2B](docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **279.68** | **67.28** | 1290.28 | 1.755 | Measured; experimental |
-| [Qwen2.5-VL 3B](docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **215.86** | **41.19** | 1670.08 | 3.164 | Measured; experimental |
-| [Qwen3.5 0.8B](docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) | Q4 | 1 | 4.81 | **717.75** | **68.78** | 401.16 | 1.129 | Measured; experimental |
-| [LFM2-VL 450M](docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) | Q8 | 1 | 7.16 | **1739.05** | **154.33** | 169.97 | 1.163 | Measured; experimental |
-| [LFM2.5-VL 3B](docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) | Q4 | 1 | 7.37 | **300.73** | **52.01** | 942.38 | 2.801 | Measured; experimental |
+| [Qwen2-VL 2B](docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **279.68** | **67.28** | 1290.28 | 1.755 | [Scores](docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) |
+| [Qwen2.5-VL 3B](docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **215.86** | **41.19** | 1670.08 | 3.164 | [Scores](docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) |
+| [Qwen3.5 0.8B](docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) | Q4 | 1 | 4.81 | **717.75** | **68.78** | 401.16 | 1.129 | [Scores](docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) |
+| [LFM2-VL 450M](docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) | Q8 | 1 | 7.16 | **1739.05** | **154.33** | 169.97 | 1.163 | [Scores](docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) |
+| [LFM2.5-VL 3B](docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) | Q4 | 1 | 7.37 | **300.73** | **52.01** | 942.38 | 2.801 | [Scores](docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) |
 
 **Actual fused input / emitted output tokens per repetition:** Qwen2-VL 2B: 359 / 112; Qwen2.5-VL 3B: 359 / 79; Qwen3.5 0.8B: 284 / 106; LFM2-VL 450M: 282 / 128; LFM2.5-VL 3B: 281 / 101.
 
@@ -128,35 +136,43 @@ Protocol: batch 1, one warmup, five repetitions, median; actual audio durations.
 
 ### Speech Recognition Performance
 
-| Model | Precision | Audio (s) | Latency (ms) | RTF ↓ | Audio sec/sec ↑ | WER (%) | Peak MLX (GiB) | Status |
+![MLX-One speech recognition throughput by nominal model size, with single-clip WER and peak memory](docs/benchmarks/figures/audio-asr-performance.png)
+
+[ASR size-versus-throughput scatter plot](docs/benchmarks/figures/audio-model-size-vs-asr.svg) · [ASR chart SVG](docs/benchmarks/figures/audio-asr-performance.svg)
+
+| Model | Precision | Audio (s) | Latency (ms) | RTF ↓ | Audio sec/sec ↑ | WER (%) | Peak MLX (GiB) | Scores |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Whisper Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) | FP32 | 10.000 | 2144.869 | 0.214 | **4.662** | 4.167 | 0.485 | Measured; experimental |
-| [Whisper Large v3 Turbo](docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) | FP16 | 10.000 | 7666.962 | 0.767 | **1.304** | 4.167 | 2.694 | Measured; experimental |
-| [Distil-Whisper Large v3](docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) | FP16 | 10.000 | 5433.400 | 0.543 | **1.840** | 0.000 | 2.596 | Measured; experimental |
-| [Moonshine Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) | FP32 | 10.000 | 117.038 | 0.012 | **85.443** | 4.167 | 0.191 | Measured; experimental |
-| [Moonshine Base](docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) | FP32 | 10.000 | 153.511 | 0.015 | **65.142** | 12.500 | 0.423 | Measured; experimental |
-| [Qwen3-ASR 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) | Q8 / BF16 | 10.000 | 528.726 | 0.053 | **18.913** | 0.000 | 1.281 | Measured; experimental |
-| [Qwen3-ASR 1.7B](docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) | Q8 / BF16 | 10.000 | 1017.307 | 0.102 | **9.830** | 0.000 | 2.656 | Measured; experimental |
-| [Parakeet TDT v2](docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) | FP32 | 10.000 | 169.265 | 0.017 | **59.079** | 0.000 | 2.383 | Measured; WIP |
-| [Parakeet TDT v3](docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) | FP32 | 10.000 | 174.019 | 0.017 | **57.465** | 0.000 | 2.417 | Measured; experimental |
-| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) | Q4 / BF16 | 10.000 | 547.659 | 0.055 | **18.260** | 4.167 | 1.472 | Measured; experimental |
+| [Whisper Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) | FP32 | 10.000 | 2144.869 | 0.214 | **4.662** | 4.167 | 0.485 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) |
+| [Whisper Large v3 Turbo](docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) | FP16 | 10.000 | 7666.962 | 0.767 | **1.304** | 4.167 | 2.694 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) |
+| [Distil-Whisper Large v3](docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) | FP16 | 10.000 | 5433.400 | 0.543 | **1.840** | 0.000 | 2.596 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) |
+| [Moonshine Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) | FP32 | 10.000 | 117.038 | 0.012 | **85.443** | 4.167 | 0.191 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) |
+| [Moonshine Base](docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) | FP32 | 10.000 | 153.511 | 0.015 | **65.142** | 12.500 | 0.423 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) |
+| [Qwen3-ASR 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) | Q8 / BF16 | 10.000 | 528.726 | 0.053 | **18.913** | 0.000 | 1.281 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) |
+| [Qwen3-ASR 1.7B](docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) | Q8 / BF16 | 10.000 | 1017.307 | 0.102 | **9.830** | 0.000 | 2.656 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) |
+| [Parakeet TDT v2](docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) | FP32 | 10.000 | 169.265 | 0.017 | **59.079** | 0.000 | 2.383 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) |
+| [Parakeet TDT v3](docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) | FP32 | 10.000 | 174.019 | 0.017 | **57.465** | 0.000 | 2.417 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) |
+| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) | Q4 / BF16 | 10.000 | 547.659 | 0.055 | **18.260** | 4.167 | 1.472 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) |
 
 Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; ASR-S1.
 
 ### Forced Alignment Performance
 
-| Model | Precision | Audio (s) | Latency (ms) | Mean boundary error (ms) | Peak MLX (GiB) | Status |
+| Model | Precision | Audio (s) | Latency (ms) | Mean boundary error (ms) | Peak MLX (GiB) | Scores |
 | --- | --- | --- | --- | --- | --- | --- |
-| [Qwen3-ForcedAligner 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) | Q8 / BF16 | 10.000 | 189.892 | — | 1.546 | Measured; WIP |
+| [Qwen3-ForcedAligner 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) | Q8 / BF16 | 10.000 | 189.892 | — | 1.546 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) |
 
 Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; ALIGN-S1.
 
 ### Speech Generation Performance
 
-| Model | Precision | Task | First audio (ms) | Output (s) | RTF ↓ | Audio sec/sec ↑ | Peak MLX (GiB) | Status |
+![MLX-One speech generation throughput, with separate TTS and speech-to-speech workloads and the failed longer case](docs/benchmarks/figures/audio-speech-generation.png)
+
+[Speech generation chart SVG](docs/benchmarks/figures/audio-speech-generation.svg) · [Chart data and reproduction](docs/benchmarks/figures/README.md#vlm-and-audio-charts). Speech quality and alignment accuracy retain their documented limits.
+
+| Model | Precision | Task | First audio (ms) | Output (s) | RTF ↓ | Audio sec/sec ↑ | Peak MLX (GiB) | Scores |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) | Q4 / BF16 | synthesize | 328.986 | 12.320 | 0.312 | **3.207** | 1.850 | Measured; experimental |
-| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) | Q4 / BF16 | speech-to-speech | — | — | — | — | — | Failed; WIP |
+| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) | Q4 / BF16 | synthesize | 328.986 | 12.320 | 0.312 | **3.207** | 1.850 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) |
+| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) | Q4 / BF16 | speech-to-speech | — | — | — | — | — | [Failed; WIP](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) |
 
 Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; TTS-S1.
 
@@ -174,6 +190,53 @@ Qwen alignment remains WIP because historical timestamp discrepancies are unreso
 
 [Methodology and coverage](docs/benchmarks/audio/README.md) · [Manual download, Python/CLI/HTTP and benchmark commands](docs/AUDIO_TESTING.md)
 <!-- MLX-ONE-AUDIO-BENCHMARK-END -->
+
+<!-- MLX-ONE-OCR-BENCHMARK-START -->
+## OCR Model Performance
+
+Experimental native OCR on **100 randomly selected document images** from [OmniAI OCR Benchmark](https://huggingface.co/datasets/getomni-ai/ocr-benchmark). All page models use the same pinned sample (seed 20261025).
+
+**Apple M4, 32 GiB unified memory · MLX 0.32.2 · direct-model inference · native MLX/Metal · batch 1.** One 16-token warmup, then one timed request per image; image-dependent input lengths and a 1,023-token output cap, greedy decoding. Actual token counts are retained in JSON. Latency is the median of completed requests; pages/s is completed pages divided by total inference time, including failed requests. Peak memory is the maximum observed MLX allocation, including weights.
+
+![OCR throughput on 100 document images](docs/benchmarks/figures/ocr-omni100-performance.png)
+
+| Model | Precision | Completed | Median latency (s) | Pages/s | Markdown-ref. CER ↓ | Peak MLX (GiB) | Truncated |
+|---|---|---:|---:|---:|---:|---:|---:|
+| [TrOCR Base Printed](docs/benchmarks/ocr/omni100-20261025/O01.json) | FP32 | [Line crops required](docs/benchmarks/ocr/omni100-20261025/O01.json) | — | — | — | — | — |
+| [TrOCR Base Handwritten](docs/benchmarks/ocr/omni100-20261025/O02.json) | FP32 | [Line crops required](docs/benchmarks/ocr/omni100-20261025/O02.json) | — | — | — | — | — |
+| [GOT-OCR 2.0](docs/benchmarks/ocr/omni100-20261025/O03.json) | Affine Q4 | [97/100](docs/benchmarks/ocr/omni100-20261025/O03.json) | 12.42 | **0.114** | 74.5% | 1.673 | 56 |
+| [Florence-2 Base FT](docs/benchmarks/ocr/omni100-20261025/O04.json) | FP16 | [97/100](docs/benchmarks/ocr/omni100-20261025/O04.json) | 6.60 | **0.197** | 78.3% | 1.201 | 61 |
+| [PaddleOCR-VL 1.5](docs/benchmarks/ocr/omni100-20261025/O05.json) | Affine Q4 | [97/100](docs/benchmarks/ocr/omni100-20261025/O05.json) | 13.87 | **0.087** | 59.8% | 1.560 | 53 |
+| [LightOnOCR 2 1B](docs/benchmarks/ocr/omni100-20261025/O06.json) | BF16 | [97/100](docs/benchmarks/ocr/omni100-20261025/O06.json) | 31.53 | **0.032** | 67.7% | 8.661 | 64 |
+| [DeepSeek-OCR](docs/benchmarks/ocr/omni100-20261025/O07.json) | Affine Q4 | [97/100](docs/benchmarks/ocr/omni100-20261025/O07.json) | 13.59 | **0.076** | 51.2% | 3.810 | 41 |
+
+CER uses NFKC and whitespace normalization against Markdown references; formatting and reading order affect this score, which can exceed 100%. Failed requests count as empty predictions. This is an MLX-One corpus test, separate from OmniAI’s official leaderboard and the synthetic OCR-S* protocol.
+
+TrOCR requires annotated line crops, absent from this page dataset. PaddleOCR-VL uses direct page transcription; its separate layout pipeline is not included. No layout accuracy or JSON extraction score is claimed by this page test.
+
+[Methodology, per-image predictions and cleanup evidence](docs/benchmarks/ocr/omni100-20261025/README.md) · [OCR limitations and manual commands](docs/OCR_TESTING.md)
+
+### Handwriting: 10 line images
+
+The same seeded sample of 10 test-split images from [handwritten_text_ocr](https://huggingface.co/datasets/toghrultahirov/handwritten_text_ocr). One 16-token warmup; one request per image; image-dependent input lengths; 128-token output cap. Micro CER/WER use the supplied plain-text references after NFKC and whitespace normalization; failed requests count as empty outputs.
+
+**Apple M4, 32 GiB · MLX 0.32.2 · native MLX/Metal · direct-model inference · batch 1.**
+
+![OCR throughput on 10 handwritten lines](docs/benchmarks/figures/ocr-hand10-performance.png)
+
+| Model | Precision | Completed | Median latency (s) | Images/s | CER ↓ | WER ↓ | Peak MLX (GiB) | Truncated |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| [TrOCR Base Printed (printed baseline)](docs/benchmarks/ocr/hand10-20261025/O01.json) | FP32 | [10/10](docs/benchmarks/ocr/hand10-20261025/O01.json) | 0.27 | **3.608** | 80.6% | 100.0% | 1.488 | 0 |
+| [TrOCR Base Handwritten](docs/benchmarks/ocr/hand10-20261025/O02.json) | FP32 | [10/10](docs/benchmarks/ocr/hand10-20261025/O02.json) | 0.21 | **4.670** | 4.4% | 10.6% | 1.488 | 0 |
+| [GOT-OCR 2.0](docs/benchmarks/ocr/hand10-20261025/O03.json) | Affine Q4 | [10/10](docs/benchmarks/ocr/hand10-20261025/O03.json) | 0.67 | **1.491** | 40.6% | 94.7% | 1.673 | 0 |
+| [Florence-2 Base FT](docs/benchmarks/ocr/hand10-20261025/O04.json) | FP16 | [10/10](docs/benchmarks/ocr/hand10-20261025/O04.json) | 0.30 | **3.051** | 97.9% | 143.6% | 1.201 | 1 |
+| [PaddleOCR-VL 1.5](docs/benchmarks/ocr/hand10-20261025/O05.json) | Affine Q4 | [10/10](docs/benchmarks/ocr/hand10-20261025/O05.json) | 1.13 | **0.790** | 13.8% | 43.6% | 1.540 | 0 |
+| [LightOnOCR 2 1B](docs/benchmarks/ocr/hand10-20261025/O06.json) | BF16 | [10/10](docs/benchmarks/ocr/hand10-20261025/O06.json) | 0.98 | **1.102** | 6.9% | 33.0% | 2.766 | 0 |
+| [DeepSeek-OCR](docs/benchmarks/ocr/hand10-20261025/O07.json) | Affine Q4 | [10/10](docs/benchmarks/ocr/hand10-20261025/O07.json) | 6.68 | **0.150** | 24.7% | 48.9% | 3.810 | 0 |
+
+TrOCR Printed is an out-of-domain baseline. Page models process the same cropped lines in their OCR mode; this small sample is not a general handwriting qualification. Handwriting timings are separate from the 100-page workload. [Protocol, predictions, truncations and coverage](docs/benchmarks/ocr/hand10-20261025/README.md).
+
+<!-- MLX-ONE-OCR-BENCHMARK-END -->
 
 ## Architecture
 
@@ -628,6 +691,14 @@ implemented components; architecture coverage does not guarantee an end-to-end t
 | `qwen3_5` | Qwen3.5 0.8B/2B | Hybrid gated-delta/full-attention text tower, learned/interpolated vision positions, multimodal RoPE | ✅ | Text source smoke retained; targeted MLX VLM Q4 checkpoint smoke passed on M4 |
 | `lfm2_vl` | LFM2-VL / LFM2.5-VL | SigLIP2 NaFlex, pixel unshuffle/projector, hybrid language model | ✅ | Pinned Q8 450M / Q4 3B static-image checkpoint smokes passed on M4 |
 
+### OCR and documents
+
+Native source paths cover TrOCR, GOT-OCR 2.0, Florence-2, PaddleOCR-VL 1.5,
+LightOnOCR 2 and DeepSeek-OCR. Full-checkpoint measurements are experimental;
+task limits and per-image results are documented above.
+See [OCR performance and scope](#ocr-model-performance) and the
+[Python/CLI/HTTP guide](docs/OCR_TESTING.md).
+
 ### Embeddings and retrieval
 
 | Registry type | Family | Native components | Architecture | Qualification |
@@ -680,16 +751,16 @@ in the [checkpoint inventory](docs/benchmarks/inventory.md).
 
 | Checkpoint | Primary precision | Status |
 | --- | --- | --- |
-| [openai-community/gpt2](https://huggingface.co/openai-community/gpt2/tree/607a30d783dfa663caf39e06633721c8d4cfcd7e) | float32 | Experimental; bounded functional smoke |
-| [Qwen/Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/tree/7ae557604adf67be50417f59c2c2f167def9a775) | affine_q8 | Experimental; bounded functional smoke |
-| [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B/tree/c1899de289a04d12100db370d81485cdf75e47ca) | affine_q8 | Experimental; bounded functional smoke |
-| [LiquidAI/LFM2-350M](https://huggingface.co/LiquidAI/LFM2-350M/tree/0b6ea934a94b880d1048cbcba45a0d81ca721eb0) | affine_q4 | Experimental; bounded functional smoke |
-| [Qwen/Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B/tree/2fc06364715b967f1860aea9cf38778875588b17) | affine_q4 | Experimental; primary Q4 unqualified |
-| [HuggingFaceTB/SmolLM2-1.7B-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct/tree/31b70e2e869a7173562077fd711b654946d38674) | affine_q4 | Experimental; bounded functional smoke |
-| [meta-llama/Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/tree/9213176726f574b556790deb65791e0c5aa438b6) | affine_q4 | Experimental; bounded functional smoke |
-| [Qwen/Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/tree/989aa7980e4cf806f80c7fef2b1adb7bc71aa306) | affine_q4 | Experimental; bounded functional smoke |
-| [google/gemma-3-1b-it](https://huggingface.co/google/gemma-3-1b-it/tree/dcc83ea841ab6100d6b47a070329e1ba4cf78752) | bfloat16 | Experimental; bounded functional smoke |
-| [microsoft/Phi-3-mini-4k-instruct](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct/tree/f39ac1d28e925b323eae81227eaba4464caced4e) | affine_q4 | Experimental; bounded functional smoke |
+| [openai-community/gpt2](https://huggingface.co/openai-community/gpt2/tree/607a30d783dfa663caf39e06633721c8d4cfcd7e) | float32 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [Qwen/Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/tree/7ae557604adf67be50417f59c2c2f167def9a775) | affine_q8 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B/tree/c1899de289a04d12100db370d81485cdf75e47ca) | affine_q8 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [LiquidAI/LFM2-350M](https://huggingface.co/LiquidAI/LFM2-350M/tree/0b6ea934a94b880d1048cbcba45a0d81ca721eb0) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [Qwen/Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B/tree/2fc06364715b967f1860aea9cf38778875588b17) | affine_q4 | [Experimental; primary Q4 unqualified](docs/benchmarks/inventory.json) |
+| [HuggingFaceTB/SmolLM2-1.7B-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct/tree/31b70e2e869a7173562077fd711b654946d38674) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [meta-llama/Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/tree/9213176726f574b556790deb65791e0c5aa438b6) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [Qwen/Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/tree/989aa7980e4cf806f80c7fef2b1adb7bc71aa306) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [google/gemma-3-1b-it](https://huggingface.co/google/gemma-3-1b-it/tree/dcc83ea841ab6100d6b47a070329e1ba4cf78752) | bfloat16 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
+| [microsoft/Phi-3-mini-4k-instruct](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct/tree/f39ac1d28e925b323eae81227eaba4464caced4e) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
 
 
 ## Capability levels
