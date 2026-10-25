@@ -1,0 +1,39 @@
+{
+  "status": "PASSED",
+  "sample_id": "947",
+  "image_sha256": "9a06d9b9659b8d771cba42fffaf5637d13853c53e9611d310e5d92a8a18af5ce",
+  "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+  "transcript": "CALIFORNIA COMMERCIAL LEASE AGREEMENT\n\nThis Lease Agreement made the 2025-11-12, by and between\n[name of lessor], of\n[street address], State of\n[Street/City]\n[980 ELINOR GREEN]\n[Street address], State of\n[Street/City]\n[980 ELINOR GREEN]\n[CROOKS, GLEICHNER AND BARROWS]\n[name of lessee], of\n[922.9 PATRICK GROVE]\n[street address], State of\n[CULFIRUN]\n, hereinafter referred to as \"Lessee\", collectively referred to herein as the \"Parties\", agree as follows:\n\n1. DESCRIPTION OF LEASED PREMISES:\nThe Lessor agrees to lease the Lessee the following described 2.481 square feet (SF) of\n[space]\n[located at] [Street/City] [TILLMW FORK] [street address], State of California.\n\n2. TERM OF LEASE:\nThe term of this Lease shall be for a period of 5 years (s) \nmonth(s) commencing on the\n12th day of November 2025 day of November 2025 , and expiring at Midnight on the\n12th day of November 2025 day of November 2025 . (\"Initial Term\")\n\n3. BASE RENT:\nThe net monthly payment shall be 824 dollars ($8216) per month. A security deposit of $123 dollars ($5173)\nis required, payable monthly with the first payment due upon the is required, payable monthly with the first payment due upon the\ncommencement of the Lease and each monthly installment payable thereafter on the 1st day of each month\n\n4. Options to Renew (Check one):\n☑ Lessee may not renew the Lease.\n☑ The Lessee may have the right to renew the Lease with a total of \nrenewal period(s) with each term being\nyear(s) \nmonth(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to\nthe expiration of the Lease or renewal period.\n\nPrepared using zipForm@ software\n\nPage 5 of 8",
+  "page_metadata": [
+    {
+      "path": "visual",
+      "exif_oriented": true,
+      "source_page_count": 1,
+      "decode_seconds": 0.0020765829976880923,
+      "processed_size": [
+        1036,
+        924
+      ],
+      "visual_tokens": 1221,
+      "prompt_tokens": 1234,
+      "crop_first": false,
+      "source_crop": [
+        0,
+        0,
+        1109,
+        985
+      ],
+      "model": "/tmp/mlx-one-ocr-100-20261025/models/O05",
+      "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+      "architecture": "paddleocr_vl",
+      "output_tokens": 542,
+      "finish_reason": "stop",
+      "truncated": false,
+      "geometry_predicted": false,
+      "confidence_available": false
+    }
+  ],
+  "elapsed_seconds": 8.01700737500505,
+  "implementation_sha256": "617c4a5ff4e46bb1f18d95a12b3425b10ae26989e04dfed2bba32b87121f3ec9",
+  "publication": "diagnostic only; not included in the corpus aggregate"
+}

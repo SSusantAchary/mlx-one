@@ -1,0 +1,31 @@
+{
+  "source": "validated per-model corpus JSON",
+  "unit": "pages/s",
+  "values": [
+    {
+      "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+      "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+      "throughput": 0.11362377085734554
+    },
+    {
+      "checkpoint": "microsoft/Florence-2-base-ft",
+      "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+      "throughput": 0.1969001904554098
+    },
+    {
+      "checkpoint": "mlx-community/PaddleOCR-VL-1.5-4bit",
+      "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+      "throughput": 0.08725575809657189
+    },
+    {
+      "checkpoint": "lightonai/LightOnOCR-2-1B",
+      "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+      "throughput": 0.032374085067166956
+    },
+    {
+      "checkpoint": "mlx-community/DeepSeek-OCR-4bit",
+      "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+      "throughput": 0.07638530376375884
+    }
+  ]
+}

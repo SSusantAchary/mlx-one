@@ -1,0 +1,227 @@
+{
+  "schema_version": "mlx-one-ocr-hand10-sample-v1",
+  "dataset": "toghrultahirov/handwritten_text_ocr",
+  "revision": "3762d848764659233b02278e97751de068a1eebf",
+  "split": "test",
+  "population": 2915,
+  "seed": 20261025,
+  "sampling": "random.Random(seed).sample(range(2915), 10); original Parquet order",
+  "license": "not declared in pinned dataset card; references only, images not redistributed",
+  "card_sha256": "ac83dbb5e573e24894d0e12e2be7dde0683d0efb85ef52b4731b737a3ae44494",
+  "parquet_reads": [
+    {
+      "path": "data/test-00000-of-00003.parquet",
+      "row_group": 2,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00000-of-00003.parquet",
+      "row_group": 8,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00000-of-00003.parquet",
+      "row_group": 9,
+      "rows": 72,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00001-of-00003.parquet",
+      "row_group": 5,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00001-of-00003.parquet",
+      "row_group": 7,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00001-of-00003.parquet",
+      "row_group": 8,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00002-of-00003.parquet",
+      "row_group": 3,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    },
+    {
+      "path": "data/test-00002-of-00003.parquet",
+      "row_group": 8,
+      "rows": 100,
+      "columns_read": [
+        "text",
+        "image"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "1737",
+      "path": "test/1737.jpeg",
+      "size": [
+        4003,
+        128
+      ],
+      "sha256": "9bb0d68afa05f14ad7fc372f39b88066b5214ddc4eeb0b1df62edf3c5674e251",
+      "reference": "a promontory , a mass of clean rock crowned with",
+      "reference_sha256": "2287f9c9210c5b05753442e3167935a60ee2b72e80b0866af4d0db3d04ad7c40",
+      "parquet": "data/test-00001-of-00003.parquet",
+      "row_group": 7,
+      "file_row": 765
+    },
+    {
+      "id": "1552",
+      "path": "test/1552.jpeg",
+      "size": [
+        2113,
+        128
+      ],
+      "sha256": "34bb7adb7f213b246918e47922699d599e8634877fad30d99fd2980106bdb090",
+      "reference": "preoccupied , and it seemed that the",
+      "reference_sha256": "6668f70460a3b401bed66e878e360b135730433a085eeabc14d7f3f111c9f6e7",
+      "parquet": "data/test-00001-of-00003.parquet",
+      "row_group": 5,
+      "file_row": 580
+    },
+    {
+      "id": "921",
+      "path": "test/921.jpeg",
+      "size": [
+        1449,
+        128
+      ],
+      "sha256": "08190758eb5e323b1d15fda2be31cc11eb89c1c7bd736964c0f84140f6767cb8",
+      "reference": "generously enough in his own fashion ,",
+      "reference_sha256": "bdddb30eb5ab1a99ba6226c4702db6379c895ec2c74e67e40c6cb5e9b35636af",
+      "parquet": "data/test-00000-of-00003.parquet",
+      "row_group": 9,
+      "file_row": 921
+    },
+    {
+      "id": "802",
+      "path": "test/802.jpeg",
+      "size": [
+        1977,
+        128
+      ],
+      "sha256": "ab5e6666e75c6cdbc24027e285606f72364702f692b6d591b425f86c747d1dc4",
+      "reference": "The mere thought of subterranean travel",
+      "reference_sha256": "3695cdada2fc1010600448dccd504e0306df2db8e8e008d4aba190862c48f99d",
+      "parquet": "data/test-00000-of-00003.parquet",
+      "row_group": 8,
+      "file_row": 802
+    },
+    {
+      "id": "2770",
+      "path": "test/2770.jpeg",
+      "size": [
+        1835,
+        128
+      ],
+      "sha256": "e848e5d7228b8e291613717ed4208a83adc4be8f5ba106185420a8d8998f0bd8",
+      "reference": "\" 5Ye-es ? \" he lowered his eyes and kissed her on the",
+      "reference_sha256": "e355a0cb471e5ac92098ee002adde9a0870c15adc284cc9b9e95eb439c8f0957",
+      "parquet": "data/test-00002-of-00003.parquet",
+      "row_group": 8,
+      "file_row": 826
+    },
+    {
+      "id": "2340",
+      "path": "test/2340.jpeg",
+      "size": [
+        1536,
+        128
+      ],
+      "sha256": "b8cf6ae9e7c8a979a53226f83b9a9d4c4a4c1c2b86736eb08f76ab8ac5099e2f",
+      "reference": "Somewhat embarrassing , what ? \" \" How can the",
+      "reference_sha256": "a7400f2a2fb8016d4ed7f6b3a3ce2ae36a3e1a89a23384dda73d10b97a0d7013",
+      "parquet": "data/test-00002-of-00003.parquet",
+      "row_group": 3,
+      "file_row": 396
+    },
+    {
+      "id": "1817",
+      "path": "test/1817.jpeg",
+      "size": [
+        1691,
+        128
+      ],
+      "sha256": "50f5e172a695d727a263e7ec40194d4e3fac4e5ebd61c43dadd212765ebe4323",
+      "reference": "fortitude , it now filled her with",
+      "reference_sha256": "88143f1f6dfe20eea7a3f059d90b03b1cca233ffe228f7c48c8761fb9888e142",
+      "parquet": "data/test-00001-of-00003.parquet",
+      "row_group": 8,
+      "file_row": 845
+    },
+    {
+      "id": "295",
+      "path": "test/295.jpeg",
+      "size": [
+        1693,
+        128
+      ],
+      "sha256": "9bed68500642ce09d2c08c4bc7c3d63ee7a9de7609771bd924bf7d6ccbed62a5",
+      "reference": "( 3 ) I will redeem you . ( 4 ) I will take you to me for a",
+      "reference_sha256": "2f5576f953809fd03aa0f6583c085529c3b034f6961c939686b9379bca7969c2",
+      "parquet": "data/test-00000-of-00003.parquet",
+      "row_group": 2,
+      "file_row": 295
+    },
+    {
+      "id": "1675",
+      "path": "test/1675.jpeg",
+      "size": [
+        3111,
+        128
+      ],
+      "sha256": "94dbdb2683ab8c099d03125419f4e939cb6f174e0aa934f494762083e2d33f8b",
+      "reference": "minions could do to him would ever make him",
+      "reference_sha256": "3646749c84c3a2016db1818a1d09ec100d6baf79f3514ae9ec7ac6a4b3706a09",
+      "parquet": "data/test-00001-of-00003.parquet",
+      "row_group": 7,
+      "file_row": 703
+    },
+    {
+      "id": "1489",
+      "path": "test/1489.jpeg",
+      "size": [
+        1752,
+        128
+      ],
+      "sha256": "d697580269fa585e35de5f92a432904b30ee3f05d51e8bdd7a742c302455b9ec",
+      "reference": "He rose from his breakfast-nook bench",
+      "reference_sha256": "9a41ce3922dde252931343f6a5fe8df8364e65dcde029a9d25abfba2cfbfd955",
+      "parquet": "data/test-00001-of-00003.parquet",
+      "row_group": 5,
+      "file_row": 517
+    }
+  ]
+}

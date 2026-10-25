@@ -1,0 +1,681 @@
+{
+  "schema_version": "mlx-one-ocr-hand10-v1",
+  "status": "MEASURED",
+  "checkpoint": "microsoft/trocr-base-printed",
+  "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+  "id": "O01",
+  "name": "TrOCR Base Printed",
+  "precision_label": "FP32",
+  "dataset": "toghrultahirov/handwritten_text_ocr",
+  "dataset_revision": "3762d848764659233b02278e97751de068a1eebf",
+  "sample_sha256": "2496397e2752ca6d7a480721258e6a40f933cdd715de74eda5fda0c396ba5b5d",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.recognize",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 10,
+    "max_tokens": 128,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized plain-text references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "065e1939c2a8a0806db6b14948f83fabb7dfd1afb750b28286618dc6dcc1984e",
+  "runner_sha256": "e46cc4fac73dca23948d33c8b0d1eff6588c436f11e009469ea17821450fb5c9",
+  "samples": [
+    {
+      "id": "1737",
+      "image_sha256": "9bb0d68afa05f14ad7fc372f39b88066b5214ddc4eeb0b1df62edf3c5674e251",
+      "status": "OK",
+      "latency_seconds": 0.30808883300051093,
+      "transcript": "A PROHENERY, A MARN AT CLASH NO. CLAURED WITH",
+      "output_tokens": 18,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.005099417001474649,
+            "encoder_seconds": 0.05432270799065009,
+            "generation_seconds": 0.24652662499283906,
+            "text_prefill_seconds": 0.022761082989745773,
+            "decode_forward_seconds": 0.21691420901333913,
+            "total_seconds": 0.30601791699882597,
+            "first_token_seconds": 0.08278075000271201
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.001444624998839572,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              4003,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 18,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4021453857421875,
+      "accuracy": {
+        "character_edits": 39,
+        "reference_characters": 48,
+        "word_edits": 10,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1552",
+      "image_sha256": "34bb7adb7f213b246918e47922699d599e8634877fad30d99fd2980106bdb090",
+      "status": "OK",
+      "latency_seconds": 0.2655396250047488,
+      "transcript": "PREOCCIPT AT, AD IT REFUNED FLOT THE",
+      "output_tokens": 15,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.0038368329987861216,
+            "encoder_seconds": 0.055504374991869554,
+            "generation_seconds": 0.20513216599647421,
+            "text_prefill_seconds": 0.022577499999897555,
+            "decode_forward_seconds": 0.1773256659944309,
+            "total_seconds": 0.26452233298914507,
+            "first_token_seconds": 0.08238291599263903
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006618749903282151,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2113,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 15,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 31,
+        "reference_characters": 36,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "921",
+      "image_sha256": "08190758eb5e323b1d15fda2be31cc11eb89c1c7bd736964c0f84140f6767cb8",
+      "status": "OK",
+      "latency_seconds": 0.26714175000961404,
+      "transcript": "GANGIOUSLY ENAYH IN HIS OWN FASHION",
+      "output_tokens": 15,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004638458005501889,
+            "encoder_seconds": 0.05599745799554512,
+            "generation_seconds": 0.205308332995628,
+            "text_prefill_seconds": 0.02246845798799768,
+            "decode_forward_seconds": 0.17726304198731668,
+            "total_seconds": 0.2659899170103017,
+            "first_token_seconds": 0.08358579200285021
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.00072320899926126,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1449,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 15,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 33,
+        "reference_characters": 38,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "802",
+      "image_sha256": "ab5e6666e75c6cdbc24027e285606f72364702f692b6d591b425f86c747d1dc4",
+      "status": "OK",
+      "latency_seconds": 0.2610794159991201,
+      "transcript": "THE MERE CHARPHT OF SUTETZANERY LEVEL",
+      "output_tokens": 14,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.00488458298787009,
+            "encoder_seconds": 0.05672999999660533,
+            "generation_seconds": 0.1981702920020325,
+            "text_prefill_seconds": 0.023209582999697886,
+            "decode_forward_seconds": 0.16957266704412177,
+            "total_seconds": 0.25982566599850543,
+            "first_token_seconds": 0.08534541599510703
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0008348340052179992,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1977,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 14,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 33,
+        "reference_characters": 39,
+        "word_edits": 6,
+        "reference_words": 6
+      }
+    },
+    {
+      "id": "2770",
+      "image_sha256": "e848e5d7228b8e291613717ed4208a83adc4be8f5ba106185420a8d8998f0bd8",
+      "status": "OK",
+      "latency_seconds": 0.33007104200078174,
+      "transcript": "\"SUB-CS? HE ADOTAD HIS EGGS AND TRANSED HER ON THE",
+      "output_tokens": 20,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004730125001515262,
+            "encoder_seconds": 0.05644762500014622,
+            "generation_seconds": 0.26776783300738316,
+            "text_prefill_seconds": 0.02296570799080655,
+            "decode_forward_seconds": 0.23757149900484364,
+            "total_seconds": 0.3289867499988759,
+            "first_token_seconds": 0.0846431669924641
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006314159982139245,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1835,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 20,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 43,
+        "reference_characters": 54,
+        "word_edits": 13,
+        "reference_words": 13
+      }
+    },
+    {
+      "id": "2340",
+      "image_sha256": "b8cf6ae9e7c8a979a53226f83b9a9d4c4a4c1c2b86736eb08f76ab8ac5099e2f",
+      "status": "OK",
+      "latency_seconds": 0.2912945830030367,
+      "transcript": "BOMEWHAT ENBARANSING, WHAT ?\" HOW CAN THE",
+      "output_tokens": 17,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004554166996967979,
+            "encoder_seconds": 0.056821582998964004,
+            "generation_seconds": 0.22882070900232065,
+            "text_prefill_seconds": 0.022958292000112124,
+            "decode_forward_seconds": 0.19953499700932298,
+            "total_seconds": 0.29024200000276323,
+            "first_token_seconds": 0.08481758300331421
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0005787499976577237,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1536,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 17,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 36,
+        "reference_characters": 46,
+        "word_edits": 10,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1817",
+      "image_sha256": "50f5e172a695d727a263e7ec40194d4e3fac4e5ebd61c43dadd212765ebe4323",
+      "status": "OK",
+      "latency_seconds": 0.22098641699994914,
+      "transcript": "LOTILLE, IT MON FULL BEY WITH",
+      "output_tokens": 11,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004841749992920086,
+            "encoder_seconds": 0.05642283298948314,
+            "generation_seconds": 0.15835879200312775,
+            "text_prefill_seconds": 0.022905625010025688,
+            "decode_forward_seconds": 0.13118904098519124,
+            "total_seconds": 0.2196559169969987,
+            "first_token_seconds": 0.08466079199570231
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0009285409905714914,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1691,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 11,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 28,
+        "reference_characters": 34,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "295",
+      "image_sha256": "9bed68500642ce09d2c08c4bc7c3d63ee7a9de7609771bd924bf7d6ccbed62a5",
+      "status": "OK",
+      "latency_seconds": 0.3412337089976063,
+      "transcript": "(3) LAIL RELES YOU. (W) ! WILL TATE YOU TO ME FOR A",
+      "output_tokens": 21,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.004616874997736886,
+            "encoder_seconds": 0.056492417003028095,
+            "generation_seconds": 0.27903791700373404,
+            "text_prefill_seconds": 0.022643541989964433,
+            "decode_forward_seconds": 0.2487590819800971,
+            "total_seconds": 0.3401922079938231,
+            "first_token_seconds": 0.08425025000178721
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0006537080043926835,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1693,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 21,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 41,
+        "reference_characters": 59,
+        "word_edits": 19,
+        "reference_words": 19
+      }
+    },
+    {
+      "id": "1675",
+      "image_sha256": "94dbdb2683ab8c099d03125419f4e939cb6f174e0aa934f494762083e2d33f8b",
+      "status": "OK",
+      "latency_seconds": 0.20737274999555666,
+      "transcript": "MINIONS GOOD TO LOW WELL FACE MAKE FOR",
+      "output_tokens": 10,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.005014458001824096,
+            "encoder_seconds": 0.056516166994697414,
+            "generation_seconds": 0.14393291699525435,
+            "text_prefill_seconds": 0.022960417001741007,
+            "decode_forward_seconds": 0.11665458299103193,
+            "total_seconds": 0.20550349999393802,
+            "first_token_seconds": 0.08499158300401177
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0013280410057632253,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              3111,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 10,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 36,
+        "reference_characters": 43,
+        "word_edits": 9,
+        "reference_words": 9
+      }
+    },
+    {
+      "id": "1489",
+      "image_sha256": "d697580269fa585e35de5f92a432904b30ee3f05d51e8bdd7a742c302455b9ec",
+      "status": "OK",
+      "latency_seconds": 0.27853995899204165,
+      "transcript": "HE IOR FLOW L' BIEATCH-NODE BELD",
+      "output_tokens": 16,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.00467037501221057,
+            "encoder_seconds": 0.056666791992029175,
+            "generation_seconds": 0.21595066699956078,
+            "text_prefill_seconds": 0.023065415996825323,
+            "decode_forward_seconds": 0.18730729301751126,
+            "total_seconds": 0.2773318750114413,
+            "first_token_seconds": 0.08488162500725593
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0007317089912248775,
+            "processed_size": [
+              384,
+              384
+            ],
+            "visual_tokens": 577,
+            "prompt_tokens": 1,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1752,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-hand10-20261025/models/O01",
+            "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+            "architecture": "trocr",
+            "output_tokens": 16,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.4878959879279137,
+      "peak_process_memory_gib": 1.4040679931640625,
+      "accuracy": {
+        "character_edits": 30,
+        "reference_characters": 37,
+        "word_edits": 6,
+        "reference_words": 6
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "README.md",
+      "bytes": 2976,
+      "sha256": "f9976f9bc32cc85bae12346aad6dd60fee70f5df5b9f587bd9cbd0e17ca9647d"
+    },
+    {
+      "path": "config.json",
+      "bytes": 4126,
+      "sha256": "5bda1deab455661feb3d91906656e5600e2ca520d5c00a2a03836614b850c93e"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 190,
+      "sha256": "41149cdcffec4d657f32dfcddd9b208037f01286c9e07945c724908c58ed0193"
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 456318,
+      "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1333384464,
+      "sha256": "1cf4a6eedab26afaaf505f1c7f73d9634944924dbd1ed049d569db98039cd596"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 224,
+      "sha256": "2fcc0da9466ee00be0403b26027373039e032820ebac409e207b32e52e52119d"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 772,
+      "sha256": "c611b1f7d416eb001ee4f293d903ea8c88e703463f1d403f1866a0352743fd00"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 1118,
+      "sha256": "5a1356884c6ae736a621841535264ba7c5bebd52f169258add2c48fcbb32d50a"
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 898822,
+      "sha256": "06b4d46c8e752d410213d9548eb27a54db70fda0319b6271fb8d59dead5e1cab"
+    }
+  ],
+  "load_seconds": 0.2602994999906514,
+  "precision": {
+    "mode": "floating",
+    "dtypes": [
+      "float32"
+    ]
+  },
+  "warmup_seconds": 0.3493286659941077,
+  "metrics": {
+    "attempted": 10,
+    "completed": 10,
+    "failed": 0,
+    "truncated": 0,
+    "median_latency_seconds": 0.27284085450082785,
+    "completed_pages_per_second": 3.6083522159208123,
+    "corpus_cer": 0.8064516129032258,
+    "corpus_wer": 1.0,
+    "max_peak_mlx_memory_gib": 1.4878959879279137,
+    "actual_output_tokens": 157,
+    "inference_seconds": 2.771348084002966
+  }
+}

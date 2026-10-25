@@ -1,0 +1,122 @@
+{
+  "dataset": "huggingface/documentation-images",
+  "revision": "c8c3cf72b3b724ce734259e4a086d30618a9198b",
+  "sources": [
+    {
+      "path": "coco_sample.png",
+      "sha256": "cf6f3c4befa148732c7453e0de5afab00f682427435fead2d88b07a9615cdac2",
+      "bytes": 694498
+    },
+    {
+      "path": "transformers/tasks/car.jpg",
+      "sha256": "8cd28b372908bcaa704a438965f8de47238c9514d5efefa89c510b82032f9d18",
+      "bytes": 39080
+    },
+    {
+      "path": "transformers/tasks/cat.jpg",
+      "sha256": "f311fbd22e8a0562a237f0985abe185b2dba82435acebd9b452f1dbdd4387dda",
+      "bytes": 23779
+    },
+    {
+      "path": "transformers/model_doc/ocr_receipt.jpeg",
+      "sha256": "18263c474c033ea1c15532c8060d0fc27ebd670947b50a726e9de151e6dbc077",
+      "bytes": 20603
+    }
+  ],
+  "license": "cc-by-nc-sa-4.0",
+  "pillow_version": "12.3.0",
+  "transformation": "EXIF transpose; RGB; Pillow ImageOps.pad LANCZOS to source size, white padding, centered; PNG",
+  "workloads": {
+    "VLM-HF-S1": {
+      "images": [
+        {
+          "file": "VLM-HF-S1-1.png",
+          "source": "coco_sample.png",
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+        }
+      ],
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "expected_text": null
+    },
+    "VLM-HF-S2": {
+      "images": [
+        {
+          "file": "VLM-HF-S2-1.png",
+          "source": "coco_sample.png",
+          "size": [
+            1024,
+            1024
+          ],
+          "sha256": "4b8ee96a4ff766708c9eec0b76182fdb21240333a01a2590f8675f289312c460"
+        }
+      ],
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "expected_text": null
+    },
+    "VLM-HF-S3": {
+      "images": [
+        {
+          "file": "VLM-HF-S3-1.png",
+          "source": "coco_sample.png",
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "4f3f8c1a176830d0c40eb1eea89ce3320989f046f1d9e76d4519649c23961fcb"
+        },
+        {
+          "file": "VLM-HF-S3-2.png",
+          "source": "transformers/tasks/car.jpg",
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "9365ebde6b4e530ff1d154afb1f164307f9a1c965c107584bf1b6cdeb3a3a3c0"
+        },
+        {
+          "file": "VLM-HF-S3-3.png",
+          "source": "transformers/tasks/cat.jpg",
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "3223a28d5f3d26b6ab70cb18d7c8d45aeee309bc7e6c8b47ac397fc8ad676b42"
+        },
+        {
+          "file": "VLM-HF-S3-4.png",
+          "source": "transformers/model_doc/ocr_receipt.jpeg",
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "485468517dd71322d050881eb9fd2058f834b59bc011968845ac517c9dfaa0ca"
+        }
+      ],
+      "prompt": "Describe the images accurately, mentioning the main objects and their spatial relationships.",
+      "expected_text": null
+    },
+    "VLM-HF-S4": {
+      "images": [
+        {
+          "file": "VLM-HF-S4-1.png",
+          "source": "transformers/model_doc/ocr_receipt.jpeg",
+          "size": [
+            512,
+            512
+          ],
+          "sha256": "485468517dd71322d050881eb9fd2058f834b59bc011968845ac517c9dfaa0ca"
+        }
+      ],
+      "prompt": "Read the text in this receipt. Return the document number, date, and total if visible.",
+      "expected_text": {
+        "document_number": "TD01167104",
+        "date": "25/12/2018",
+        "total": "9.00"
+      }
+    }
+  }
+}

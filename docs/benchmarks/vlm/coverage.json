@@ -1,0 +1,13 @@
+{
+  "source_status": "NATIVE_IMPLEMENTED",
+  "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+  "measured": 20,
+  "planned": 20,
+  "active_workloads": [
+    "VLM-HF-S1",
+    "VLM-HF-S2",
+    "VLM-HF-S3",
+    "VLM-HF-S4"
+  ],
+  "missing": []
+}

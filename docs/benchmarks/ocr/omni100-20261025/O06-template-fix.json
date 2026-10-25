@@ -1,0 +1,9 @@
+{
+  "checkpoint": "lightonai/LightOnOCR-2-1B",
+  "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+  "template_sha256": "0942a43ee0ba48a608814e0b40ac9cb70bcc29ea72f19c84b1bf2597f05aa2bd",
+  "failure": "Text-only chat validation rejected structured image content before inference.",
+  "correction": "Render the explicitly constructed OCR image message through the existing sandbox compiler; retain strict text-only validation.",
+  "regression": "24 native OCR tests passed, including a structured-image template test.",
+  "publication": "The failed warmup has no performance row; only the full corrected rerun is selected."
+}

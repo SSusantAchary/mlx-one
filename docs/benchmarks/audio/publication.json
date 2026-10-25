@@ -1,0 +1,18 @@
+{
+  "records": [
+    "docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json",
+    "docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-HF-Q1-direct-model-prepared-pcm.json"
+  ]
+}

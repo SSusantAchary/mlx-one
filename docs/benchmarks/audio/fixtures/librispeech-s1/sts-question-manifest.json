@@ -1,0 +1,19 @@
+{
+  "dataset": "hf-internal-testing/librispeech_asr_dummy",
+  "revision": "5be91486e11a2d616f4ec5db8d3fd248585ac07a",
+  "split": "validation",
+  "configuration": "clean",
+  "sample_id": "1272-135031-0012",
+  "parquet_sha256": "4e69a06fa5edc90921e5e7e39a7084881f8b3ed9c805c574f4f39c6fde27c603",
+  "original_flac_sha256": "2da8a3d5a915be58a29cae9520c94e96395619f1dd3a0968486c9d5154b77b12",
+  "original_seconds": 2.04,
+  "prepared_seconds": 2.04,
+  "transform": "FFmpeg decode mono 16k; PCM16 WAV; no padding",
+  "transcript": "WHERE IS MY BROTHER NOW",
+  "language": "English",
+  "audio_sha256": "596b6ea6b67250828227c4975dca20021d7e80a9bf36896d1291cd7ef8c904fa",
+  "text_sha256": "8f8d07887c716bab7257210ad8f6ab0a2b7b0b4bc9e91900e4fd00d14629173d",
+  "license": "LibriSpeech CC BY 4.0",
+  "license_source": "https://www.openslr.org/12/",
+  "workload": "STS-HF-Q1"
+}

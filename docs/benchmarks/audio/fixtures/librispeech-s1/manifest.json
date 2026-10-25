@@ -1,0 +1,18 @@
+{
+  "dataset": "hf-internal-testing/librispeech_asr_dummy",
+  "revision": "5be91486e11a2d616f4ec5db8d3fd248585ac07a",
+  "split": "validation",
+  "configuration": "clean",
+  "sample_id": "1272-128104-0003",
+  "parquet_sha256": "4e69a06fa5edc90921e5e7e39a7084881f8b3ed9c805c574f4f39c6fde27c603",
+  "original_flac_sha256": "60d72657439cd3092fc2313efe0fabd31f0cd2f28f8ca46a21380c290b2e031d",
+  "original_seconds": 9.9,
+  "prepared_seconds": 10,
+  "transform": "FFmpeg decode mono 16k; trailing zero padding to 10s; PCM16 WAV",
+  "transcript": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA",
+  "language": "English",
+  "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+  "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+  "license": "LibriSpeech CC BY 4.0",
+  "license_source": "https://www.openslr.org/12/"
+}

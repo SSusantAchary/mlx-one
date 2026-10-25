@@ -1,0 +1,921 @@
+{
+  "schema": "mlx-one-audio-benchmark-v1",
+  "status": "MEASURED",
+  "measured_at": "2026-10-24T14:44:29.362622+00:00",
+  "checkpoint": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+  "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+  "name": "Qwen3-ForcedAligner 0.6B",
+  "precision": "Q8 / BF16",
+  "task": "align",
+  "workload": "ALIGN-S1",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "repetitions": 5,
+    "statistic": "median",
+    "clock": "perf_counter_with_mlx_synchronize",
+    "playback_pacing": false
+  },
+  "backend": "native-mlx-metal",
+  "measurement_type": "direct-model-prepared-pcm",
+  "implementation_sha256": "d70db2b726d3c099388efe9ac95bae8a85d7e0621a4dc4ba344f747841c696cb",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368,
+    "machine": "arm64"
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "macos": "15.8.1"
+  },
+  "checkpoint_assets": {
+    "chat_template.json": "75a8cfca24f00de72d796fbfed6858fc9614ef3dabd8696684cc3bc03a9c58ff",
+    "config.json": "8dc126e1a4ac001acb02f3a9ca6277c8a20a25485fde293bc99eeab3aedc604d",
+    "generation_config.json": "948d089b23bca1d214e768d59c4438365665f52ec6d33678f4062206b3fbbb8c",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "model.safetensors": "be19ef8ac4326d032e7673342930b14c2df30bd68c1632493b0f563e30829f91",
+    "model.safetensors.index.json": "766eb50873855eeb4d95ab92def358cfd173bfc8c7aabd8635ababa1edf6db79",
+    "preprocessor_config.json": "45e120a4eda2c20c5d7f2ea9354e63536bf35e27aa573fb7cdf78017b378770d",
+    "tokenizer_config.json": "3ab80063f8511deb9566e6ad438d17b7a6277fcffd52d92854112f19d36bd81c",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "load_seconds": 0.3826051659998484,
+  "input": {
+    "audio_sha256": "c5a6f0f7465adc28491bdcb065e5e149ece36938bb7c6e8989479222fce2082e",
+    "text_sha256": "14b4bd22e1c19a9a0e1c005ef2768ce29ee34fb34e6453d753cc7139eb493704",
+    "audio_seconds": 10.0,
+    "sample_rate": 16000,
+    "language": "English",
+    "voice": null
+  },
+  "decoding": {
+    "language_hint": "English",
+    "max_tokens_override": null,
+    "settings": "native family defaults; see methodology"
+  },
+  "runs": [
+    {
+      "processing_seconds": 0.176941750003607,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.0176941750003607,
+      "audio_seconds_per_second": 56.51577425789078,
+      "peak_mlx_gib": 1.5460291430354118,
+      "peak_rss_gib": 1.4101409912109375,
+      "wer": null,
+      "cer": null,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": 0,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "units": [
+          {
+            "text": "HE",
+            "start": 0.48,
+            "end": 0.72
+          },
+          {
+            "text": "HAS",
+            "start": 0.72,
+            "end": 0.72
+          },
+          {
+            "text": "GRAVE",
+            "start": 1.28,
+            "end": 1.28
+          },
+          {
+            "text": "DOUBTS",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "WHETHER",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "SIR",
+            "start": 2.16,
+            "end": 2.16
+          },
+          {
+            "text": "FREDERICK",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "LEIGHTON'S",
+            "start": 3.28,
+            "end": 3.28
+          },
+          {
+            "text": "WORK",
+            "start": 3.28,
+            "end": 3.6
+          },
+          {
+            "text": "IS",
+            "start": 3.6,
+            "end": 3.84
+          },
+          {
+            "text": "REALLY",
+            "start": 3.84,
+            "end": 4.24
+          },
+          {
+            "text": "GREEK",
+            "start": 4.4,
+            "end": 4.8
+          },
+          {
+            "text": "AFTER",
+            "start": 4.8,
+            "end": 5.12
+          },
+          {
+            "text": "ALL",
+            "start": 5.12,
+            "end": 5.6
+          },
+          {
+            "text": "AND",
+            "start": 6.08,
+            "end": 6.32
+          },
+          {
+            "text": "CAN",
+            "start": 6.32,
+            "end": 6.48
+          },
+          {
+            "text": "DISCOVER",
+            "start": 6.48,
+            "end": 6.88
+          },
+          {
+            "text": "IN",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "IT",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.52
+          },
+          {
+            "text": "LITTLE",
+            "start": 7.52,
+            "end": 7.92
+          },
+          {
+            "text": "OF",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "ROCKY",
+            "start": 8.32,
+            "end": 8.8
+          },
+          {
+            "text": "ITHACA",
+            "start": 8.88,
+            "end": 9.52
+          }
+        ],
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+        "language": "English",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+        "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+        "timestamp_tick_seconds": 0.08,
+        "sample_rate": 16000,
+        "task": "align",
+        "provenance": {
+          "model_type": "qwen3_forced_aligner",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+          "checkpoint_revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "audio_attention": "pinned-sdpa-global",
+          "decoding": "greedy",
+          "weight_dtype": "mlx.core.bfloat16",
+          "status": "WIP",
+          "boundary_tolerance_seconds": 0.08,
+          "limitation": "historical timestamp reference disagreement unresolved"
+        },
+        "unmatched_words": [],
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.18623912499606377,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.018623912499606377,
+      "audio_seconds_per_second": 53.694410345899946,
+      "peak_mlx_gib": 1.5460291430354118,
+      "peak_rss_gib": 1.4127044677734375,
+      "wer": null,
+      "cer": null,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": 0,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "units": [
+          {
+            "text": "HE",
+            "start": 0.48,
+            "end": 0.72
+          },
+          {
+            "text": "HAS",
+            "start": 0.72,
+            "end": 0.72
+          },
+          {
+            "text": "GRAVE",
+            "start": 1.28,
+            "end": 1.28
+          },
+          {
+            "text": "DOUBTS",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "WHETHER",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "SIR",
+            "start": 2.16,
+            "end": 2.16
+          },
+          {
+            "text": "FREDERICK",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "LEIGHTON'S",
+            "start": 3.28,
+            "end": 3.28
+          },
+          {
+            "text": "WORK",
+            "start": 3.28,
+            "end": 3.6
+          },
+          {
+            "text": "IS",
+            "start": 3.6,
+            "end": 3.84
+          },
+          {
+            "text": "REALLY",
+            "start": 3.84,
+            "end": 4.24
+          },
+          {
+            "text": "GREEK",
+            "start": 4.4,
+            "end": 4.8
+          },
+          {
+            "text": "AFTER",
+            "start": 4.8,
+            "end": 5.12
+          },
+          {
+            "text": "ALL",
+            "start": 5.12,
+            "end": 5.6
+          },
+          {
+            "text": "AND",
+            "start": 6.08,
+            "end": 6.32
+          },
+          {
+            "text": "CAN",
+            "start": 6.32,
+            "end": 6.48
+          },
+          {
+            "text": "DISCOVER",
+            "start": 6.48,
+            "end": 6.88
+          },
+          {
+            "text": "IN",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "IT",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.52
+          },
+          {
+            "text": "LITTLE",
+            "start": 7.52,
+            "end": 7.92
+          },
+          {
+            "text": "OF",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "ROCKY",
+            "start": 8.32,
+            "end": 8.8
+          },
+          {
+            "text": "ITHACA",
+            "start": 8.88,
+            "end": 9.52
+          }
+        ],
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+        "language": "English",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+        "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+        "timestamp_tick_seconds": 0.08,
+        "sample_rate": 16000,
+        "task": "align",
+        "provenance": {
+          "model_type": "qwen3_forced_aligner",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+          "checkpoint_revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "audio_attention": "pinned-sdpa-global",
+          "decoding": "greedy",
+          "weight_dtype": "mlx.core.bfloat16",
+          "status": "WIP",
+          "boundary_tolerance_seconds": 0.08,
+          "limitation": "historical timestamp reference disagreement unresolved"
+        },
+        "unmatched_words": [],
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.19115254200005438,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.019115254200005437,
+      "audio_seconds_per_second": 52.31424021552983,
+      "peak_mlx_gib": 1.5460291430354118,
+      "peak_rss_gib": 1.41485595703125,
+      "wer": null,
+      "cer": null,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": 0,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "units": [
+          {
+            "text": "HE",
+            "start": 0.48,
+            "end": 0.72
+          },
+          {
+            "text": "HAS",
+            "start": 0.72,
+            "end": 0.72
+          },
+          {
+            "text": "GRAVE",
+            "start": 1.28,
+            "end": 1.28
+          },
+          {
+            "text": "DOUBTS",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "WHETHER",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "SIR",
+            "start": 2.16,
+            "end": 2.16
+          },
+          {
+            "text": "FREDERICK",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "LEIGHTON'S",
+            "start": 3.28,
+            "end": 3.28
+          },
+          {
+            "text": "WORK",
+            "start": 3.28,
+            "end": 3.6
+          },
+          {
+            "text": "IS",
+            "start": 3.6,
+            "end": 3.84
+          },
+          {
+            "text": "REALLY",
+            "start": 3.84,
+            "end": 4.24
+          },
+          {
+            "text": "GREEK",
+            "start": 4.4,
+            "end": 4.8
+          },
+          {
+            "text": "AFTER",
+            "start": 4.8,
+            "end": 5.12
+          },
+          {
+            "text": "ALL",
+            "start": 5.12,
+            "end": 5.6
+          },
+          {
+            "text": "AND",
+            "start": 6.08,
+            "end": 6.32
+          },
+          {
+            "text": "CAN",
+            "start": 6.32,
+            "end": 6.48
+          },
+          {
+            "text": "DISCOVER",
+            "start": 6.48,
+            "end": 6.88
+          },
+          {
+            "text": "IN",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "IT",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.52
+          },
+          {
+            "text": "LITTLE",
+            "start": 7.52,
+            "end": 7.92
+          },
+          {
+            "text": "OF",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "ROCKY",
+            "start": 8.32,
+            "end": 8.8
+          },
+          {
+            "text": "ITHACA",
+            "start": 8.88,
+            "end": 9.52
+          }
+        ],
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+        "language": "English",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+        "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+        "timestamp_tick_seconds": 0.08,
+        "sample_rate": 16000,
+        "task": "align",
+        "provenance": {
+          "model_type": "qwen3_forced_aligner",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+          "checkpoint_revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "audio_attention": "pinned-sdpa-global",
+          "decoding": "greedy",
+          "weight_dtype": "mlx.core.bfloat16",
+          "status": "WIP",
+          "boundary_tolerance_seconds": 0.08,
+          "limitation": "historical timestamp reference disagreement unresolved"
+        },
+        "unmatched_words": [],
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.1909038750018226,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.01909038750018226,
+      "audio_seconds_per_second": 52.382383542002636,
+      "peak_mlx_gib": 1.5460291430354118,
+      "peak_rss_gib": 1.4157867431640625,
+      "wer": null,
+      "cer": null,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": 0,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "units": [
+          {
+            "text": "HE",
+            "start": 0.48,
+            "end": 0.72
+          },
+          {
+            "text": "HAS",
+            "start": 0.72,
+            "end": 0.72
+          },
+          {
+            "text": "GRAVE",
+            "start": 1.28,
+            "end": 1.28
+          },
+          {
+            "text": "DOUBTS",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "WHETHER",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "SIR",
+            "start": 2.16,
+            "end": 2.16
+          },
+          {
+            "text": "FREDERICK",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "LEIGHTON'S",
+            "start": 3.28,
+            "end": 3.28
+          },
+          {
+            "text": "WORK",
+            "start": 3.28,
+            "end": 3.6
+          },
+          {
+            "text": "IS",
+            "start": 3.6,
+            "end": 3.84
+          },
+          {
+            "text": "REALLY",
+            "start": 3.84,
+            "end": 4.24
+          },
+          {
+            "text": "GREEK",
+            "start": 4.4,
+            "end": 4.8
+          },
+          {
+            "text": "AFTER",
+            "start": 4.8,
+            "end": 5.12
+          },
+          {
+            "text": "ALL",
+            "start": 5.12,
+            "end": 5.6
+          },
+          {
+            "text": "AND",
+            "start": 6.08,
+            "end": 6.32
+          },
+          {
+            "text": "CAN",
+            "start": 6.32,
+            "end": 6.48
+          },
+          {
+            "text": "DISCOVER",
+            "start": 6.48,
+            "end": 6.88
+          },
+          {
+            "text": "IN",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "IT",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.52
+          },
+          {
+            "text": "LITTLE",
+            "start": 7.52,
+            "end": 7.92
+          },
+          {
+            "text": "OF",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "ROCKY",
+            "start": 8.32,
+            "end": 8.8
+          },
+          {
+            "text": "ITHACA",
+            "start": 8.88,
+            "end": 9.52
+          }
+        ],
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+        "language": "English",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+        "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+        "timestamp_tick_seconds": 0.08,
+        "sample_rate": 16000,
+        "task": "align",
+        "provenance": {
+          "model_type": "qwen3_forced_aligner",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+          "checkpoint_revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "audio_attention": "pinned-sdpa-global",
+          "decoding": "greedy",
+          "weight_dtype": "mlx.core.bfloat16",
+          "status": "WIP",
+          "boundary_tolerance_seconds": 0.08,
+          "limitation": "historical timestamp reference disagreement unresolved"
+        },
+        "unmatched_words": [],
+        "offset_seconds": 0.0
+      }
+    },
+    {
+      "processing_seconds": 0.18989191700529773,
+      "audio_seconds": 10.0,
+      "real_time_factor": 0.018989191700529772,
+      "audio_seconds_per_second": 52.66153587633229,
+      "peak_mlx_gib": 1.5460291430354118,
+      "peak_rss_gib": 1.417449951171875,
+      "wer": null,
+      "cer": null,
+      "time_to_first_audio_ms": null,
+      "output_audio_seconds": null,
+      "alignment_mean_error_ms": null,
+      "alignment_median_error_ms": null,
+      "alignment_p95_error_ms": null,
+      "alignment_max_error_ms": null,
+      "unmatched_words": 0,
+      "first_partial_ms": null,
+      "final_result_ms": null,
+      "finalization_ms": null,
+      "revised_partials": null,
+      "buffer_peak_bytes": null,
+      "output": {
+        "units": [
+          {
+            "text": "HE",
+            "start": 0.48,
+            "end": 0.72
+          },
+          {
+            "text": "HAS",
+            "start": 0.72,
+            "end": 0.72
+          },
+          {
+            "text": "GRAVE",
+            "start": 1.28,
+            "end": 1.28
+          },
+          {
+            "text": "DOUBTS",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "WHETHER",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "SIR",
+            "start": 2.16,
+            "end": 2.16
+          },
+          {
+            "text": "FREDERICK",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "LEIGHTON'S",
+            "start": 3.28,
+            "end": 3.28
+          },
+          {
+            "text": "WORK",
+            "start": 3.28,
+            "end": 3.6
+          },
+          {
+            "text": "IS",
+            "start": 3.6,
+            "end": 3.84
+          },
+          {
+            "text": "REALLY",
+            "start": 3.84,
+            "end": 4.24
+          },
+          {
+            "text": "GREEK",
+            "start": 4.4,
+            "end": 4.8
+          },
+          {
+            "text": "AFTER",
+            "start": 4.8,
+            "end": 5.12
+          },
+          {
+            "text": "ALL",
+            "start": 5.12,
+            "end": 5.6
+          },
+          {
+            "text": "AND",
+            "start": 6.08,
+            "end": 6.32
+          },
+          {
+            "text": "CAN",
+            "start": 6.32,
+            "end": 6.48
+          },
+          {
+            "text": "DISCOVER",
+            "start": 6.48,
+            "end": 6.88
+          },
+          {
+            "text": "IN",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "IT",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.52
+          },
+          {
+            "text": "LITTLE",
+            "start": 7.52,
+            "end": 7.92
+          },
+          {
+            "text": "OF",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "ROCKY",
+            "start": 8.32,
+            "end": 8.8
+          },
+          {
+            "text": "ITHACA",
+            "start": 8.88,
+            "end": 9.52
+          }
+        ],
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+        "language": "English",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+        "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+        "timestamp_tick_seconds": 0.08,
+        "sample_rate": 16000,
+        "task": "align",
+        "provenance": {
+          "model_type": "qwen3_forced_aligner",
+          "checkpoint_path": "/private/tmp/mlx-one-audio-hardware-20261024/models/A11",
+          "checkpoint_revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "audio_attention": "pinned-sdpa-global",
+          "decoding": "greedy",
+          "weight_dtype": "mlx.core.bfloat16",
+          "status": "WIP",
+          "boundary_tolerance_seconds": 0.08,
+          "limitation": "historical timestamp reference disagreement unresolved"
+        },
+        "unmatched_words": [],
+        "offset_seconds": 0.0
+      }
+    }
+  ],
+  "metrics": {
+    "processing_seconds": 0.18989191700529773,
+    "audio_seconds": 10.0,
+    "real_time_factor": 0.018989191700529772,
+    "audio_seconds_per_second": 52.66153587633229,
+    "peak_mlx_gib": 1.5460291430354118,
+    "peak_rss_gib": 1.41485595703125,
+    "wer": null,
+    "cer": null,
+    "time_to_first_audio_ms": null,
+    "output_audio_seconds": null,
+    "alignment_mean_error_ms": null,
+    "alignment_median_error_ms": null,
+    "alignment_p95_error_ms": null,
+    "alignment_max_error_ms": null,
+    "unmatched_words": 0,
+    "first_partial_ms": null,
+    "final_result_ms": null,
+    "finalization_ms": null,
+    "revised_partials": null,
+    "buffer_peak_bytes": null
+  }
+}

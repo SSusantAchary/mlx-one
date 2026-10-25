@@ -1,0 +1,17 @@
+{
+  "schema_version": "mlx-one-ocr-benchmark-v1",
+  "status": "NOT_RUN",
+  "checkpoint": "microsoft/Florence-2-base-ft",
+  "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+  "task": "ocr.recognize",
+  "workload": "OCR-S3",
+  "measurement_type": "direct-model",
+  "hardware": null,
+  "metrics": {
+    "latency_seconds": null,
+    "pages_per_second": null,
+    "cer": null,
+    "peak_mlx_memory_gib": null
+  },
+  "precision": "FP16"
+}

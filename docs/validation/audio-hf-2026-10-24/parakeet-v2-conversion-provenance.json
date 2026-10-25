@@ -1,0 +1,29 @@
+{
+  "model": "nvidia/parakeet-tdt-0.6b-v2",
+  "revision": "ae9ad07059c7c739ffaf932226a8fe64ae2620b0",
+  "archive_sha256": "d99e39955c9d3d0350d8fb7c75e40c64a2b2eaeb003883d7c941fd2e8747b28c",
+  "reference_commit": "469230357aab0f2b303b0d638c1f8d06edb14184",
+  "reference_source": "https://github.com/huggingface/transformers",
+  "checkpoint_license": "cc-by-4.0",
+  "weight_layout": "canonical",
+  "tensor_count": 723,
+  "assets": {
+    "config.json": "966a2e90bfa5acfe4594c84672aa3ff6f49d242af06ca9c4050d27501b71fd9c",
+    "frontend.safetensors": "261e57e9dd543bc33aa6642dc6d1904a2a0d184a0cdde6b0c48da3e8903fc894",
+    "generation_config.json": "fafd4313cd32de1329ce16d046154d43b30f8e1c166eeb74efcda0afdce763d0",
+    "model.safetensors": "789d2ddf7e2af0dafb6a32df5ac2b5b8fc352dbf9c67dba9f14a4b321309c8c2",
+    "original-model-config.yaml": "43d879d29bf1c56a029074d08eb245e7cbd83a3c0f7798004eb2de2a38885c11",
+    "processor_config.json": "19c5e9a532a493244846904c61354691e70ecc96a14a3dcdd4a2fb0635926162",
+    "tokenizer.json": "f9c87cad82a9f383c663ee9f16c1e24d1208ffe7d907d7f9c6351c041acfaa3e",
+    "tokenizer_config.json": "b57a970a15def5e257b1c0785b15106901b4ab1069ba373686e4485f3a3905e5"
+  },
+  "dependencies": {
+    "torch": "2.7.1",
+    "transformers": "5.19.0.dev0",
+    "safetensors": "0.8.0",
+    "tokenizers": "0.23.3",
+    "sentencepiece": "0.2.2",
+    "pyyaml": "6.0.3"
+  },
+  "neural_fallback": false
+}

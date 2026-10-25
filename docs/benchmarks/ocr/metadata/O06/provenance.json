@@ -1,0 +1,7 @@
+{
+  "checkpoint": "lightonai/LightOnOCR-2-1B",
+  "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+  "tensor_header_sha256": "ebc8dc3c823c121942660acc0d49f2ee210645ba235518aedaf9762e1f2c071b",
+  "source_weights_downloaded": false,
+  "validation": "parameter names and shapes only; not numerical correctness"
+}

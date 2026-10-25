@@ -1,0 +1,675 @@
+{
+  "schema_version": "mlx-one-ocr-hand10-v1",
+  "status": "MEASURED",
+  "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+  "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+  "id": "O03",
+  "name": "GOT-OCR 2.0",
+  "precision_label": "Affine Q4",
+  "dataset": "toghrultahirov/handwritten_text_ocr",
+  "dataset_revision": "3762d848764659233b02278e97751de068a1eebf",
+  "sample_sha256": "2496397e2752ca6d7a480721258e6a40f933cdd715de74eda5fda0c396ba5b5d",
+  "hardware": {
+    "chip": "Apple M4",
+    "memory_bytes": 34359738368
+  },
+  "software": {
+    "mlx": "0.32.2",
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "rapidfuzz": "3.14.6"
+  },
+  "measurement_type": "direct-model",
+  "task": "ocr.document",
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "warmup_max_tokens": 16,
+    "repetitions_per_image": 1,
+    "images": 10,
+    "max_tokens": 128,
+    "timeout_seconds": 180,
+    "temperature": 0,
+    "output_format": "text",
+    "backend": "native MLX/Metal",
+    "timing_scope": "image open/decode, model preprocessing, encode, prefill and decode; excludes scoring and load",
+    "accuracy": "micro CER/WER on NFKC/whitespace normalized plain-text references; failures count as empty output"
+  },
+  "source_commit": "86b5a0c64babcf72b4816223220538fb3eed6b36",
+  "implementation_sha256": "eeccbb4f38590c7b46e10886df06bde2e1a17f7da8d6286f744801c3fb47964f",
+  "runner_sha256": "9c401a232f540910d41754fedd0beb268ef75e19b561d8b16f35e5e351caf543",
+  "samples": [
+    {
+      "id": "1737",
+      "image_sha256": "9bb0d68afa05f14ad7fc372f39b88066b5214ddc4eeb0b1df62edf3c5674e251",
+      "status": "OK",
+      "latency_seconds": 0.6486317500093719,
+      "transcript": "a proamenotomy, a man at clean roof changed with",
+      "output_tokens": 12,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.020154291996732354,
+            "encoder_seconds": 0.45429683300608303,
+            "generation_seconds": 0.1728621250076685,
+            "text_prefill_seconds": 0.10138179200293962,
+            "decode_forward_seconds": 0.06680808195960708,
+            "total_seconds": 0.6473479169944767,
+            "first_token_seconds": 0.5764588339952752
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0009774999925866723,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              4003,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 12,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.986053466796875,
+      "accuracy": {
+        "character_edits": 15,
+        "reference_characters": 48,
+        "word_edits": 6,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1552",
+      "image_sha256": "34bb7adb7f213b246918e47922699d599e8634877fad30d99fd2980106bdb090",
+      "status": "OK",
+      "latency_seconds": 0.7886006250046194,
+      "transcript": "𝑝𝑒  o c c u p  i e d ,  a n d  i t   c e e u d  t l o t  t l o",
+      "output_tokens": 35,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01745304200449027,
+            "encoder_seconds": 0.4637125000008382,
+            "generation_seconds": 0.30659870798990596,
+            "text_prefill_seconds": 0.10588308300066274,
+            "decode_forward_seconds": 0.18676191600388847,
+            "total_seconds": 0.7878354999993462,
+            "first_token_seconds": 0.5880500839994056
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0005288749962346628,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              2113,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 35,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.986053466796875,
+      "accuracy": {
+        "character_edits": 27,
+        "reference_characters": 36,
+        "word_edits": 26,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "921",
+      "image_sha256": "08190758eb5e323b1d15fda2be31cc11eb89c1c7bd736964c0f84140f6767cb8",
+      "status": "OK",
+      "latency_seconds": 0.6218855830084067,
+      "transcript": "莱 FALL  200 ",
+      "output_tokens": 8,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01807774999178946,
+            "encoder_seconds": 0.4628780420025578,
+            "generation_seconds": 0.13997016599751078,
+            "text_prefill_seconds": 0.10093683398736175,
+            "decode_forward_seconds": 0.03604262403678149,
+            "total_seconds": 0.6209772919974057,
+            "first_token_seconds": 0.5823981249995995
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.000494042003992945,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1449,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 8,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.986083984375,
+      "accuracy": {
+        "character_edits": 36,
+        "reference_characters": 38,
+        "word_edits": 7,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "802",
+      "image_sha256": "ab5e6666e75c6cdbc24027e285606f72364702f692b6d591b425f86c747d1dc4",
+      "status": "OK",
+      "latency_seconds": 0.6682508329977281,
+      "transcript": "The mere thought of Subterzanen thevcl",
+      "output_tokens": 11,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.017196916000102647,
+            "encoder_seconds": 0.4641870000050403,
+            "generation_seconds": 0.1861505419947207,
+            "text_prefill_seconds": 0.10524158300540876,
+            "decode_forward_seconds": 0.07581721000315156,
+            "total_seconds": 0.6676045829954091,
+            "first_token_seconds": 0.5876013329980196
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0004066250112373382,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1977,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 11,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 6,
+        "reference_characters": 39,
+        "word_edits": 2,
+        "reference_words": 6
+      }
+    },
+    {
+      "id": "2770",
+      "image_sha256": "e848e5d7228b8e291613717ed4208a83adc4be8f5ba106185420a8d8998f0bd8",
+      "status": "OK",
+      "latency_seconds": 0.6633677919890033,
+      "transcript": "She-es: 'heloweredhiseyesandYcisedheronth",
+      "output_tokens": 16,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.019122166995657608,
+            "encoder_seconds": 0.4641953329992248,
+            "generation_seconds": 0.17940829100552946,
+            "text_prefill_seconds": 0.10093466599937528,
+            "decode_forward_seconds": 0.0728118760016514,
+            "total_seconds": 0.6627810840000166,
+            "first_token_seconds": 0.5847532499901718
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.00032125000143423676,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1835,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 16,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 19,
+        "reference_characters": 54,
+        "word_edits": 13,
+        "reference_words": 13
+      }
+    },
+    {
+      "id": "2340",
+      "image_sha256": "b8cf6ae9e7c8a979a53226f83b9a9d4c4a4c1c2b86736eb08f76ab8ac5099e2f",
+      "status": "OK",
+      "latency_seconds": 0.6777916249993723,
+      "transcript": "Somewhat embarrasing, what? \"How can the",
+      "output_tokens": 12,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.019659832993056625,
+            "encoder_seconds": 0.46623912500217557,
+            "generation_seconds": 0.19104387500556186,
+            "text_prefill_seconds": 0.10571083299873862,
+            "decode_forward_seconds": 0.07981179299531505,
+            "total_seconds": 0.6770132910023676,
+            "first_token_seconds": 0.5925926249910844
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.00030104100005701184,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1536,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 12,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 6,
+        "reference_characters": 46,
+        "word_edits": 7,
+        "reference_words": 10
+      }
+    },
+    {
+      "id": "1817",
+      "image_sha256": "50f5e172a695d727a263e7ec40194d4e3fac4e5ebd61c43dadd212765ebe4323",
+      "status": "OK",
+      "latency_seconds": 0.6197554579994176,
+      "transcript": "latitude, it now filled his with",
+      "output_tokens": 7,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.018325749988434836,
+            "encoder_seconds": 0.4648772080108756,
+            "generation_seconds": 0.1356971670029452,
+            "text_prefill_seconds": 0.101212374996976,
+            "decode_forward_seconds": 0.03167512596701272,
+            "total_seconds": 0.6189551669958746,
+            "first_token_seconds": 0.5849315829982515
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0005478340026456863,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1691,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 7,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 6,
+        "reference_characters": 34,
+        "word_edits": 3,
+        "reference_words": 7
+      }
+    },
+    {
+      "id": "295",
+      "image_sha256": "9bed68500642ce09d2c08c4bc7c3d63ee7a9de7609771bd924bf7d6ccbed62a5",
+      "status": "OK",
+      "latency_seconds": 0.7050782080041245,
+      "transcript": "(3) will redeem you (u) will late you to me for a",
+      "output_tokens": 18,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.01545379200251773,
+            "encoder_seconds": 0.4649627920007333,
+            "generation_seconds": 0.2238509580056416,
+            "text_prefill_seconds": 0.10545387500314973,
+            "decode_forward_seconds": 0.11090749903814867,
+            "total_seconds": 0.7043323749967385,
+            "first_token_seconds": 0.5868427919922397
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.00030041699938010424,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1693,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 18,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 13,
+        "reference_characters": 59,
+        "word_edits": 10,
+        "reference_words": 19
+      }
+    },
+    {
+      "id": "1675",
+      "image_sha256": "94dbdb2683ab8c099d03125419f4e939cb6f174e0aa934f494762083e2d33f8b",
+      "status": "OK",
+      "latency_seconds": 0.6770327919948613,
+      "transcript": "minions out of 6 to 6,500居民的居民的居民",
+      "output_tokens": 18,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.018288292005308904,
+            "encoder_seconds": 0.4645032499975059,
+            "generation_seconds": 0.19307550000667106,
+            "text_prefill_seconds": 0.10123145800025668,
+            "decode_forward_seconds": 0.085085333979805,
+            "total_seconds": 0.6759225420100847,
+            "first_token_seconds": 0.5845225420052884
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0007775830017635599,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              3111,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 18,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 27,
+        "reference_characters": 43,
+        "word_edits": 8,
+        "reference_words": 9
+      }
+    },
+    {
+      "id": "1489",
+      "image_sha256": "d697580269fa585e35de5f92a432904b30ee3f05d51e8bdd7a742c302455b9ec",
+      "status": "OK",
+      "latency_seconds": 0.638369916996453,
+      "transcript": "He lose foul is ideal for all-not all",
+      "output_tokens": 10,
+      "truncated": false,
+      "pages": [
+        {
+          "timings": {
+            "preprocessing_seconds": 0.022160209002322517,
+            "encoder_seconds": 0.46530812499986496,
+            "generation_seconds": 0.15003437499399297,
+            "text_prefill_seconds": 0.10115512499760371,
+            "decode_forward_seconds": 0.045192665987997316,
+            "total_seconds": 0.6375521669979207,
+            "first_token_seconds": 0.5890961249970132
+          },
+          "metadata": {
+            "path": "visual",
+            "exif_oriented": true,
+            "source_page_count": 1,
+            "decode_seconds": 0.0005662910116370767,
+            "processed_size": [
+              1024,
+              1024
+            ],
+            "visual_tokens": 256,
+            "prompt_tokens": 286,
+            "crop_first": false,
+            "source_crop": [
+              0,
+              0,
+              1752,
+              128
+            ],
+            "model": "/private/tmp/mlx-one-ocr-100-20261025/models/O03",
+            "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+            "architecture": "got_ocr2",
+            "output_tokens": 10,
+            "finish_reason": "stop",
+            "truncated": false,
+            "geometry_predicted": false,
+            "confidence_available": false
+          }
+        }
+      ],
+      "peak_mlx_memory_gib": 1.6729705855250359,
+      "peak_process_memory_gib": 0.9861297607421875,
+      "accuracy": {
+        "character_edits": 21,
+        "reference_characters": 37,
+        "word_edits": 7,
+        "reference_words": 6
+      }
+    }
+  ],
+  "checkpoint_files": [
+    {
+      "path": "README.md",
+      "bytes": 5888,
+      "sha256": "0a54462b39d14f47041afdd43d6ff6ca003e2a7646fa33de3eff2619bc4ada59"
+    },
+    {
+      "path": "config.json",
+      "bytes": 1390,
+      "sha256": "c3e0932e0d555b829b7f1e74f224293157e699db1a78b836f1eb195802d8ef82"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 117,
+      "sha256": "64e4f9d67c678c6dd6b1ac2f1b0d2562ae12cec463493ce2951daf1dba4e494f"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 454463407,
+      "sha256": "ba4d1151e3b4ba4bd1c6cf1c1d26b6b6d015ef005e362ed5526d813a47e9a5cf"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 65900,
+      "sha256": "62dff65301bea48401b95627efe80f4c2bcf8e09d7c2184699c14fabad15ab54"
+    },
+    {
+      "path": "qwen.tiktoken",
+      "bytes": 2561218,
+      "sha256": "b2b1b8dfb5cc5f024bafc373121c6aba3f66f9a5a0269e243470a1de16a33186"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 149,
+      "sha256": "337f1a03344485ec7ea2acd6f7021567feab077fd81f96b72423fcd3f8f5fc09"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 372,
+      "sha256": "5058c180033d6cec3aa913c517235d5be2f99363496ced0c7a88a407dcfd7778"
+    }
+  ],
+  "load_seconds": 0.18004649999784306,
+  "precision": {
+    "bits": 4,
+    "group_size": 64,
+    "mode": "affine"
+  },
+  "warmup_seconds": 0.6858091670001158,
+  "metrics": {
+    "attempted": 10,
+    "completed": 10,
+    "failed": 0,
+    "truncated": 0,
+    "median_latency_seconds": 0.6658093124933657,
+    "completed_pages_per_second": 1.4905874064108584,
+    "corpus_cer": 0.4055299539170507,
+    "corpus_wer": 0.9468085106382979,
+    "max_peak_mlx_memory_gib": 1.6729705855250359,
+    "actual_output_tokens": 147,
+    "inference_seconds": 6.708764583003358
+  }
+}

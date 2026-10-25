@@ -1,0 +1,20 @@
+{
+  "schema_version": "mlx-one-ocr-cleanup-v1",
+  "owned_directory": "/private/tmp/mlx-one-ocr-hand10-20261025",
+  "policy": "only task-owned model/data/cache artifacts; pre-existing caches untouched",
+  "models": [
+    {
+      "id": "O01",
+      "removed_bytes": 1334751704,
+      "removed": true
+    },
+    {
+      "id": "O02",
+      "removed_bytes": 1334751768,
+      "removed": true
+    }
+  ],
+  "remaining_cache_and_dataset_removed_bytes": 278564,
+  "owned_directory_removed": true,
+  "completed_unix_seconds": 1792915522.718776
+}

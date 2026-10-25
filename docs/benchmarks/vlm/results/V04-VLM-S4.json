@@ -1,0 +1,22 @@
+{
+  "task": "vision_language",
+  "checkpoint": "mlx-community/LFM2-VL-450M-8bit",
+  "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+  "architecture": "lfm2_vl",
+  "precision": "Q8",
+  "workload": "VLM-S4",
+  "protocol": "vlm-s4-v1",
+  "status": "NOT_RUN",
+  "hardware": null,
+  "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+  "samples": [],
+  "metrics": {
+    "preprocessing_ms": null,
+    "visual_prefill_ms": null,
+    "prefill_tps": null,
+    "decode_tps": null,
+    "ttft_ms": null,
+    "total_ms": null,
+    "peak_mlx_memory_gib": null
+  }
+}

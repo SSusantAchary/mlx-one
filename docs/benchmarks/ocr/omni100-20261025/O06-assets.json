@@ -1,0 +1,52 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 7951,
+    "sha256": "d1f6210e238042fa858dc7a8449b40f7e973c7ceca20b2de9f0b0e5523f68394"
+  },
+  {
+    "path": "added_tokens.json",
+    "bytes": 707,
+    "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+  },
+  {
+    "path": "chat_template.jinja",
+    "bytes": 720,
+    "sha256": "0942a43ee0ba48a608814e0b40ac9cb70bcc29ea72f19c84b1bf2597f05aa2bd"
+  },
+  {
+    "path": "config.json",
+    "bytes": 2363,
+    "sha256": "43b62f9ec0a7207f67fd032f7ef9719fa8b6b44d7b3cf20fbc2346329493ff3a"
+  },
+  {
+    "path": "generation_config.json",
+    "bytes": 219,
+    "sha256": "7d2566b271454af41e9ebc28851888e1ec7ca33a53fe644dac207856df952981"
+  },
+  {
+    "path": "model.safetensors",
+    "bytes": 2011367489,
+    "sha256": "cbe12d0831cca119facce91268fc7c5fb72babdf919a6e352e3131bda85c8fbb"
+  },
+  {
+    "path": "processor_config.json",
+    "bytes": 1023,
+    "sha256": "5292a61a089835ec6884836e3896bba1fc571c60df872e3ca9eb45bd3288910d"
+  },
+  {
+    "path": "special_tokens_map.json",
+    "bytes": 613,
+    "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+  },
+  {
+    "path": "tokenizer.json",
+    "bytes": 11422822,
+    "sha256": "f54b55fa0c3aba0c91ce09ea79ae4e62da24e2a1a630f96c4bae34aba25e234a"
+  },
+  {
+    "path": "tokenizer_config.json",
+    "bytes": 5562,
+    "sha256": "31f5876fbfe2bba0d931d540b84f4ffa03eb7c364d31858c38d1bf2c2fff97f3"
+  }
+]

@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "protocol": {
+    "batch_size": 1,
+    "warmups": 1,
+    "repetitions": 5,
+    "statistic": "median",
+    "max_tokens": 128
+  },
+  "workloads": [
+    "VLM-S1",
+    "VLM-S2",
+    "VLM-S3",
+    "VLM-S4",
+    "VLM-HF-S1",
+    "VLM-HF-S2",
+    "VLM-HF-S3",
+    "VLM-HF-S4"
+  ],
+  "checkpoints": [
+    {
+      "id": "V01",
+      "checkpoint": "mlx-community/Qwen2-VL-2B-Instruct-4bit",
+      "name": "Qwen2-VL 2B",
+      "directory": "qwen2-vl-2b",
+      "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+      "architecture": "qwen2_vl",
+      "precision": "Q4",
+      "implementation_status": "NATIVE_IMPLEMENTED",
+      "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+      "multi_image": true,
+      "weight_sha256": {
+        "model.safetensors": "3534d3dcfaacd0cd00e935469bc34b6d692b2ba0749c5d9ee422f3f2175cf992"
+      },
+      "asset_sha256": {
+        "config.json": "3c6bdaacede67a811e0e122def203d9465301416a3df11835a2f238e1f349b9e",
+        "preprocessor_config.json": "56fd296c1d6dc1ae216c84b39b10381784a02ff42db425dbf02683b42a7e3f65",
+        "tokenizer_config.json": "eb3c5a310899d7d65feec0dee4dff9067d7bc4ad2a17e2005bc9163f1ace0531"
+      },
+      "asset_git_blob": {},
+      "tokenizer_sha256": "091aa7594dc2fcfbfa06b9e3c22a5f0562ac14f30375c13af7309407a0e67b8a",
+      "smoke_evidence": "docs/validation/vlm-hf-2026-10-24/V01-smoke.json"
+    },
+    {
+      "id": "V02",
+      "checkpoint": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+      "name": "Qwen2.5-VL 3B",
+      "directory": "qwen2.5-vl-3b",
+      "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+      "architecture": "qwen2_5_vl",
+      "precision": "Q4",
+      "implementation_status": "NATIVE_IMPLEMENTED",
+      "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+      "multi_image": true,
+      "weight_sha256": {
+        "model.safetensors": "636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4"
+      },
+      "asset_sha256": {
+        "config.json": "7ed631bd2786d251cb38bd2a6a8a78c31bc1316f728bffa84b2d8954d3cfcd63",
+        "preprocessor_config.json": "f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0",
+        "tokenizer_config.json": "2f58f4bbd7bbce15d683f525954ef3a92cd82f5e06415a9c513859bf8ab72436"
+      },
+      "asset_git_blob": {},
+      "tokenizer_sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "smoke_evidence": "docs/validation/vlm-hf-2026-10-24/V02-smoke.json"
+    },
+    {
+      "id": "V03",
+      "checkpoint": "mlx-community/Qwen3.5-0.8B-4bit",
+      "name": "Qwen3.5 0.8B",
+      "directory": "qwen3.5-0.8b",
+      "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+      "architecture": "qwen3_5",
+      "precision": "Q4",
+      "implementation_status": "NATIVE_IMPLEMENTED",
+      "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+      "multi_image": true,
+      "weight_sha256": {
+        "model.safetensors": "f5a0d9dd3efa73510542a8023d610ff26be2b4b020d181cfc4bedaa1fcc5dd9e"
+      },
+      "asset_sha256": {
+        "chat_template.jinja": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+        "config.json": "ba7770da23eae5ebd6827571f086e331956b33f4442a9e876fb4aa10969a6772",
+        "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+        "processor_config.json": "14932921ca485d458a04dafd8069fbb0a4505622a48208d19ed247115801385b",
+        "tokenizer_config.json": "e98f1901ac6f0adff67b1d540bfa0c36ac1a0cf59eb72ed78146ef89aafa1182"
+      },
+      "asset_git_blob": {},
+      "tokenizer_sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+      "smoke_evidence": "docs/validation/vlm-hf-2026-10-24/V03-smoke.json"
+    },
+    {
+      "id": "V04",
+      "checkpoint": "mlx-community/LFM2-VL-450M-8bit",
+      "name": "LFM2-VL 450M",
+      "directory": "lfm2-vl-450m",
+      "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+      "architecture": "lfm2_vl",
+      "precision": "Q8",
+      "implementation_status": "NATIVE_IMPLEMENTED",
+      "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+      "multi_image": true,
+      "weight_sha256": {
+        "model.safetensors": "b67daf504eae7f4815f1b51152d0d363547bacc25f4748f0b24df9440f3f9624"
+      },
+      "asset_sha256": {
+        "chat_template.jinja": "cf0af741b36248dfe460af825b0b3acb3c651cf7dd40a74c29447f60b75d2b9b",
+        "config.json": "0f65ed8fdee9c58cddffc64f1353701fe197eea22679cb5246752927be420fc1",
+        "generation_config.json": "529184b675eb21c69367bb9b96b4b6fab90e02d94a384f5a94f1004903ac2430",
+        "preprocessor_config.json": "a70ef8973bfbb79a429a1e48f3a3674ec5e970d82e52e6c9091381a1a2e48966",
+        "processor_config.json": "dfb538d609add2675159696d441d920b55b9a8e994fa7e294bf8b038bfedb7de",
+        "tokenizer_config.json": "5d460b26aa4512b0c951d735360c6eb443812a3f7974f95abcef67638c0c0df4"
+      },
+      "asset_git_blob": {
+        "tokenizer.json": "1102635fc822bb07f176c9166d176d9df417a457"
+      },
+      "smoke_evidence": "docs/validation/vlm-hf-2026-10-24/V04-smoke.json"
+    },
+    {
+      "id": "V05",
+      "checkpoint": "LiquidAI/LFM2.5-VL-3B-MLX-4bit",
+      "name": "LFM2.5-VL 3B",
+      "directory": "lfm2.5-vl-3b",
+      "revision": "7fad79d26092c1145aa8dde873896a07d3e96a3b",
+      "architecture": "lfm2_vl",
+      "precision": "Q4",
+      "implementation_status": "NATIVE_IMPLEMENTED",
+      "checkpoint_status": "CHECKPOINT_SMOKE_PASSED",
+      "multi_image": true,
+      "weight_sha256": {
+        "model.safetensors": "3a589dedb29bf72b410e49c6f70dca7ee09ce19be63fadaa881f0c7e15677cc8"
+      },
+      "asset_sha256": {
+        "chat_template.jinja": "5fcdedd081557f8bb66330f8e0a03b9c693bf73a3bf1d27e1d977c1c565eb3ca",
+        "config.json": "59537c90d66be937ac866eed4066d48c649b7960f9afa97ae247cb9faa76c6b7",
+        "generation_config.json": "02a6da1a8f062dfd0e5da5c7434e23a365120fb72ea7031ec871c09faf4b8ac4",
+        "processor_config.json": "d3940a1cbf59c227232db7414261257e795fc1f93ae74c2e68bea63f1d3017e0",
+        "tokenizer_config.json": "4cdcf03011d991903dcf9b06023924ac7998fda81ec0021170fb1903b08a7c08"
+      },
+      "asset_git_blob": {},
+      "tokenizer_sha256": "8096ecb9f54599d756c8de728a598a340bc1e43c0deb77ddd62456c38349fcee",
+      "smoke_evidence": "docs/validation/vlm-hf-2026-10-24/V05-smoke.json"
+    }
+  ],
+  "alternatives": [
+    {
+      "model_id": "mlx-community/LFM2-VL-3B-4bit",
+      "revision": "aa86be09cd3bcdfd825252ce702d6afefc1b4201",
+      "files": {
+        "README.md": "3339ccc8d57d859027ce1a57ba5945993d4da485383fbed87c16281eb9891af8",
+        "chat_template.jinja": "cf0af741b36248dfe460af825b0b3acb3c651cf7dd40a74c29447f60b75d2b9b",
+        "config.json": "9273cadf26d8ea7b9b0462ef6cce027311352a696e20d815307647357a21cbe4",
+        "generation_config.json": "40d17f9ec64c97e8fd5400540960b6a9761ed6d6acc0b1ab6a6656055e4755b3",
+        "model.safetensors.index.json": "e89bd46f27b908120a8b24ff49ce9112965992fa4bb69f1f3ab7979a4b9c99f6",
+        "preprocessor_config.json": "7735105461938c6d346c0b7c49086776d01c5721cbe6f5fc582a5a6fb552d4b1",
+        "processor_config.json": "cbce86b74fd703dfddf28e0d1b205f2f167a0e324ffa123d258faaf7b6d889bf",
+        "tokenizer_config.json": "c4c009ead1dc0b6f06f3acbc6d241562a1406816aa935cd3ed3e8a47530c1a78"
+      },
+      "weight_shards": [
+        "model.safetensors"
+      ],
+      "weights_downloaded": false,
+      "weight_sha256": {
+        "model.safetensors": "2c98802c7a1eb3e6e90ad3fb1c1b822bec51d917ccc27468e5a5f879a8d84493"
+      },
+      "asset_git_blob": {
+        "tokenizer.json": "1102635fc822bb07f176c9166d176d9df417a457"
+      }
+    },
+    {
+      "model_id": "mlx-community/Qwen3.5-0.8B-MLX-4bit",
+      "revision": "5d894f8cc4ef3e6c88537bf3746ed262f549da6a",
+      "files": {
+        "README.md": "7024f593c30b51462de050b5cdf938a5b0f0d554901e6ac3af3ed7af92fb5e5f",
+        "chat_template.jinja": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+        "config.json": "ba7770da23eae5ebd6827571f086e331956b33f4442a9e876fb4aa10969a6772",
+        "model.safetensors.index.json": "6e48f2fa5d6f033a6d77bf833abfa9698ca24d1715ecea4c67447bcfaee44650",
+        "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+        "processor_config.json": "14932921ca485d458a04dafd8069fbb0a4505622a48208d19ed247115801385b",
+        "tokenizer_config.json": "e98f1901ac6f0adff67b1d540bfa0c36ac1a0cf59eb72ed78146ef89aafa1182"
+      },
+      "weight_shards": [
+        "model.safetensors"
+      ],
+      "weights_downloaded": false,
+      "weight_sha256": {
+        "model.safetensors": "f5a0d9dd3efa73510542a8023d610ff26be2b4b020d181cfc4bedaa1fcc5dd9e"
+      },
+      "asset_git_blob": {}
+    }
+  ],
+  "active_workloads": [
+    "VLM-HF-S1",
+    "VLM-HF-S2",
+    "VLM-HF-S3",
+    "VLM-HF-S4"
+  ],
+  "readme_workload": "VLM-HF-S1"
+}

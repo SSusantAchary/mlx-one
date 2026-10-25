@@ -1,0 +1,17 @@
+{
+  "schema_version": "mlx-one-ocr-benchmark-v1",
+  "status": "NOT_RUN",
+  "checkpoint": "microsoft/trocr-base-printed",
+  "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+  "task": "ocr.recognize",
+  "workload": "OCR-S1",
+  "measurement_type": "direct-model",
+  "hardware": null,
+  "metrics": {
+    "latency_seconds": null,
+    "pages_per_second": null,
+    "cer": null,
+    "peak_mlx_memory_gib": null
+  },
+  "precision": "FP32"
+}

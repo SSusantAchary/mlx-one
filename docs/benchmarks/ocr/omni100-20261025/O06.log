@@ -1,0 +1,142 @@
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/corpus.py", line 239, in run
+    measure(bundle, request(manifest["fixtures"][0], 16))
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/run.py", line 49, in measure
+    next(stream)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/generation.py", line 97, in stream_page
+    prepared = prepare_ocr(bundle, image, request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/processing.py", line 139, in prepare_ocr
+    prompt = template.render(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 69, in render
+    _validate_messages(messages)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 150, in _validate_messages
+    raise ValueError("message content must be text")
+ValueError: message content must be text
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/corpus.py", line 239, in run
+    measure(bundle, request(manifest["fixtures"][0], 16))
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/benchmarks/ocr/run.py", line 49, in measure
+    next(stream)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/generation.py", line 97, in stream_page
+    prepared = prepare_ocr(bundle, image, request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/ocr/processing.py", line 139, in prepare_ocr
+    prompt = template.render(
+             ^^^^^^^^^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 69, in render
+    _validate_messages(messages)
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/src/mlx_one/text/chat.py", line 150, in _validate_messages
+    raise ValueError("message content must be text")
+ValueError: message content must be text
+O06 1 434 OK 23.59 686
+O06 2 388 OK 24.2 1023
+O06 3 799 OK 19.91 516
+O06 4 230 OK 24.81 1023
+O06 5 200 OK 25.69 1010
+O06 6 692 OK 21.96 1023
+O06 7 736 OK 23.78 1023
+O06 8 585 OK 29.13 1023
+O06 9 900 OK 31.53 1023
+O06 10 454 OK 30.1 789
+O06 11 73 OK 32.61 1023
+O06 12 836 OK 21.91 1023
+O06 13 925 OK 34.73 1023
+O06 14 418 OK 35.9 1023
+O06 15 372 OK 25.54 1023
+O06 16 964 OK 34.31 1023
+O06 17 147 OK 32.9 1023
+O06 18 784 OK 23.93 1023
+O06 19 706 OK 19.73 879
+O06 20 947 OK 12.12 485
+O06 21 138 OK 24.46 1023
+O06 22 52 OK 9.34 422
+O06 23 347 OK 26.75 1023
+O06 24 451 OK 26.57 1023
+O06 25 398 OK 40.46 1023
+O06 26 640 OK 20.3 1023
+O06 27 775 OK 19.09 478
+O06 28 77 OK 46.14 1023
+O06 29 930 OK 36.78 790
+O06 30 366 OK 25.16 1023
+O06 31 596 OK 19.51 480
+O06 32 637 OK 1.15 36
+O06 33 84 OK 23.45 544
+O06 34 711 OK 25.51 1023
+O06 35 495 OK 25.67 1023
+O06 36 594 OK 26.11 745
+O06 37 952 OK 31.27 1023
+O06 38 847 OK 31.5 1023
+O06 39 44 OK 0.2 5
+O06 40 609 OK 35.31 1000
+O06 41 648 OK 8.6 129
+O06 42 942 OK 24.44 482
+O06 43 62 FAILED 0.0 None
+O06 44 102 OK 32.61 1023
+O06 45 32 FAILED 0.0 None
+O06 46 263 OK 26.3 1023
+O06 47 428 OK 31.33 1023
+O06 48 482 OK 32.42 1023
+O06 49 223 OK 26.05 634
+O06 50 504 OK 56.43 1023
+O06 51 41 OK 43.04 715
+O06 52 20 OK 30.82 1023
+O06 53 701 OK 28.12 488
+O06 54 332 OK 38.76 1023
+O06 55 233 OK 33.41 1023
+O06 56 397 OK 24.47 1023
+O06 57 556 OK 31.54 886
+O06 58 474 OK 39.81 1023
+O06 59 279 OK 26.88 479
+O06 60 601 OK 33.82 1023
+O06 61 331 OK 35.54 1023
+O06 62 996 OK 27.1 490
+O06 63 136 OK 34.73 1023
+O06 64 478 OK 41.73 1023
+O06 65 467 OK 46.3 1023
+O06 66 670 OK 36.26 1023
+O06 67 978 OK 28.98 487
+O06 68 371 FAILED 0.0 None
+O06 69 297 OK 40.76 1023
+O06 70 234 OK 32.08 1023
+O06 71 968 OK 36.41 1023
+O06 72 689 OK 27.45 454
+O06 73 122 OK 30.33 556
+O06 74 324 OK 36.2 1023
+O06 75 168 OK 42.14 1023
+O06 76 672 OK 37.13 1023
+O06 77 926 OK 35.59 739
+O06 78 853 OK 4.99 197
+O06 79 525 OK 36.74 1016
+O06 80 310 OK 36.94 1023
+O06 81 409 OK 31.27 1023
+O06 82 376 OK 31.87 622
+O06 83 570 OK 33.68 1023
+O06 84 885 OK 39.48 1023
+O06 85 284 OK 38.89 811
+O06 86 916 OK 30.27 479
+O06 87 567 OK 45.15 1023
+O06 88 406 OK 45.79 1023
+O06 89 59 OK 20.75 711
+O06 90 980 OK 42.28 1023
+O06 91 949 OK 40.42 1023
+O06 92 715 OK 39.6 1023
+O06 93 123 OK 42.38 1023
+O06 94 81 OK 40.3 1023
+O06 95 154 OK 39.49 1023
+O06 96 998 OK 43.39 1023
+O06 97 628 OK 39.55 1023
+O06 98 957 OK 39.07 1023
+O06 99 819 OK 43.98 1023
+O06 100 543 OK 29.27 1023
+O06 1 1737 OK 0.43 12
+O06 2 1552 OK 0.71 8
+O06 3 921 OK 1.12 7
+O06 4 802 OK 0.96 8
+O06 5 2770 OK 1.03 18
+O06 6 2340 OK 1.0 10
+O06 7 1817 OK 1.07 9
+O06 8 295 OK 1.22 19
+O06 9 1675 OK 0.66 10
+O06 10 1489 OK 0.89 8
