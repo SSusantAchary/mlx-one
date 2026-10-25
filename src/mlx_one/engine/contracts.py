@@ -310,6 +310,14 @@ class TaskKind(str, Enum):
     IMAGE_SEGMENTATION = "image-segmentation"
     MASK_GENERATION = "mask-generation"
     VIDEO_SEGMENTATION = "video-segmentation"
+    OCR_RECOGNIZE = "ocr.recognize"
+    OCR_DETECT = "ocr.detect"
+    OCR_DOCUMENT = "ocr.document"
+    OCR_BATCH = "ocr.batch"
+    OCR_HANDWRITING = "ocr.handwriting"
+    OCR_FORMULA = "ocr.formula"
+    OCR_TABLE = "ocr.table"
+    OCR_REGION = "ocr.region"
 
 
 def canonical_task(task: str | TaskKind) -> TaskKind:

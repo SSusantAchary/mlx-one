@@ -13,10 +13,9 @@ from mlx_one.runtime_baseline import registry_inventory
 
 def test_inventory_accounts_for_every_registration_without_promoting_declarations():
     report = registry_inventory()
-    assert report["registration_count"] == 30
+    assert report["registration_count"] == 36
     rows = {r["model_type"]: r for r in report["registrations"]}
-    assert {k for k, r in rows.items() if r["integration_kind"] == "architecture_only"} == {
-        "lfm2_audio"}
+    assert {k for k, r in rows.items() if r["integration_kind"] == "architecture_only"} == set()
     assert rows["sam3_tracker_video"]["integration_kind"] == "component_only"
     assert rows["sam3_tracker_video"]["parent_model_type"] == "sam3_video"
     assert rows["qwen3_5"]["task_status"]["vision-language-generation"] == "loader_declared"
@@ -43,13 +42,13 @@ def test_inventory_imports_neither_mlx_nor_model_math_in_a_fresh_process():
 import json,sys
 from mlx_one.runtime_baseline import registry_inventory
 r=registry_inventory()
-assert len(r['registrations']) == 30
+assert len(r['registrations']) == 36
 assert not any(n == 'mlx' or n.startswith('mlx.') for n in sys.modules)
 assert not any(n.startswith('mlx_one.models.language.') and n.endswith('.model')
                for n in sys.modules)
 print(json.dumps({'count':r['registration_count']}))
 """], env={**os.environ, "PYTHONPATH": "src"}, text=True, capture_output=True, check=True)
-    assert json.loads(result.stdout) == {"count": 30}
+    assert json.loads(result.stdout) == {"count": 36}
 
 
 def test_inventory_cli_persists_checksummed_facts_without_native_preflight(tmp_path, monkeypatch):
@@ -68,7 +67,7 @@ def test_inventory_cli_persists_checksummed_facts_without_native_preflight(tmp_p
     assert snapshot["native_preflight"] == "not_run"
     assert snapshot["source"]["git_revision"]
     assert snapshot["dependencies"]["python"]
-    assert snapshot["registry"]["registration_count"] == 30
+    assert snapshot["registry"]["registration_count"] == 36
 
 
 def test_checkpoint_inventory_is_offline_and_checksums_exact_assets(tmp_path, monkeypatch):

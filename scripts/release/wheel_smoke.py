@@ -47,7 +47,7 @@ def main():
 
     assert mx.metal.is_available() and mx.default_device() == mx.gpu
     assert Path(mlx_one.__file__).resolve().is_relative_to(Path(sys.prefix).resolve())
-    assert len(registered_model_types()) == 30
+    assert len(registered_model_types()) == 36
     asset = next(r for r in json.loads(args.assets.read_text()) if r["id"] == args.model)
     if args.saved_profile_info:
         saved = json.loads(args.saved_profile_info.read_text())
@@ -67,7 +67,7 @@ def main():
         "installed_source": mlx_one.__file__,
         "version": mlx_one.__version__,
         "reference_packages_absent": True,
-        "registrations": 30,
+        "registrations": len(registered_model_types()),
         "source_revision": asset.get("source_revision", asset["revision"]),
         "profile": asset.get("precision", "stored"),
     }

@@ -258,6 +258,8 @@ def test_whisper_ffmpeg_decode_uses_argument_array(monkeypatch, tmp_path) -> Non
         "pcm_f32le",
         "-ar",
         "16000",
+        "-t",
+        "600.0000625",
         "-",
     ]
     assert captured["kwargs"] == {"stdout": subprocess.PIPE, "stderr": subprocess.PIPE}

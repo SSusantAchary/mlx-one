@@ -1,0 +1,18 @@
+{
+  "auto_map": {
+    "AutoProcessor": "processing_lfm2_vl.Lfm2VlProcessor"
+  },
+  "do_image_splitting": true,
+  "downsample_factor": 2,
+  "encoder_patch_size": 16,
+  "max_image_tokens": 256,
+  "max_num_patches": 1024,
+  "max_pixels_tolerance": 2.0,
+  "max_tiles": 10,
+  "min_image_tokens": 64,
+  "min_tiles": 2,
+  "processor_class": "Lfm2VlProcessor",
+  "tile_size": 512,
+  "use_image_special_tokens": true,
+  "use_thumbnail": false
+}

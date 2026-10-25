@@ -227,6 +227,16 @@ def render(inventory, records):
         "they are separate from benchmark input lengths and do not establish "
         "full-window validation. See the [config sources](docs/benchmarks/inventory.md).",
         "",
+        "![MLX-One text-model decode speed by nominal parameter size on Apple M4]"
+        "(docs/benchmarks/figures/text-model-decode-bars.png)",
+        "",
+        "[Model size vs decode speed scatter plot]"
+        "(docs/benchmarks/figures/text-model-size-vs-decode.svg) · "
+        "[Bar chart SVG](docs/benchmarks/figures/text-model-decode-bars.svg) · "
+        "[Chart data and reproduction](docs/benchmarks/figures/README.md). "
+        "Protocols are shown separately; checkpoints without comparable measurements "
+        "remain unmeasured.",
+        "",
         "**Historical 128-input / 16-output protocol.** These archived runs are not "
         "the new standardized 128-input / 128-output results. Source and primary "
         "precision measurements are listed separately; “source” means the stored weights.",

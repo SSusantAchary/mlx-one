@@ -54,7 +54,7 @@ class BodyLimitMiddleware:
         path = str(scope.get("path", ""))
         limit = (
             32 * 1024**2
-            if path == "/v1/chat/completions"
+            if path in {"/v1/chat/completions", "/v1/ocr"}
             else 26 * 1024**2
             if path.startswith("/v1/audio/")
             else self.limit
@@ -208,11 +208,23 @@ def create_app(
     bearer = HTTPBearer(auto_error=False)
     services = dict(task_services or {})
     try:
-        if "image" in getattr(manager.model_info(), "modalities", ()):
+        info = manager.model_info()
+        if "image" in getattr(info, "modalities", ()) and "ocr.recognize" not in info.tasks:
             services.setdefault("vision", engine)
     except RuntimeError:
         pass
     owned_audio_service = None
+    owned_ocr_service = None
+    try:
+        primary_ocr = getattr(manager.current_model(), "ocr", None)
+        if primary_ocr is not None:
+            from mlx_one.ocr import OCREngine, OCRLimits
+
+            owned_ocr_service = OCREngine(primary_ocr, limits=OCRLimits(
+                timeout_seconds=settings.timeout or 300))
+            services.setdefault("ocr", owned_ocr_service)
+    except RuntimeError:
+        pass
     try:
         primary_audio = getattr(manager.current_model(), "audio", None)
         if primary_audio is not None:
@@ -274,6 +286,8 @@ def create_app(
                     clear_caches()
             if owned_audio_service is not None:
                 owned_audio_service.close()
+            if owned_ocr_service is not None:
+                owned_ocr_service.close()
             manager.unload()
 
         try:
@@ -502,6 +516,8 @@ def create_app(
                 return _error(404, f"model {body.model!r} is not loaded", "invalid_request_error")
             if hasattr(bundle, "audio"):
                 return _error(400, "use the audio endpoints for this model", "capability_error")
+            if hasattr(bundle, "ocr"):
+                return _error(400, "use /v1/ocr for this OCR model", "capability_error")
             effective_reasoning = body.reasoning or settings.reasoning
             effective_reasoning_budget = (
                 body.reasoning_budget
@@ -837,6 +853,9 @@ def create_app(
     from mlx_one.server.audio import install_audio_routes
 
     install_audio_routes(app, manager, jobs, services, authorization_dependency)
+    from mlx_one.server.ocr import install_ocr_routes
+
+    install_ocr_routes(app, manager, services, authorization_dependency)
 
     assets = Path(ui_dir) if ui_dir is not None else Path(str(files("mlx_one").joinpath("ui/dist")))
 

@@ -1,0 +1,21 @@
+{
+  "model_id": "LiquidAI/LFM2.5-VL-3B-MLX-4bit",
+  "revision": "7fad79d26092c1145aa8dde873896a07d3e96a3b",
+  "files": {
+    "README.md": "38336aee62a08e186002e3491c1aa9cb1c090c6c4ba57e3cc7fdd337315a8c4b",
+    "chat_template.jinja": "5fcdedd081557f8bb66330f8e0a03b9c693bf73a3bf1d27e1d977c1c565eb3ca",
+    "config.json": "59537c90d66be937ac866eed4066d48c649b7960f9afa97ae247cb9faa76c6b7",
+    "generation_config.json": "02a6da1a8f062dfd0e5da5c7434e23a365120fb72ea7031ec871c09faf4b8ac4",
+    "model.safetensors.index.json": "2a0b968ae8f43ce1d09d9adf547c4fdb414df35a66e058cbcd249f567bc4c7b9",
+    "processor_config.json": "d3940a1cbf59c227232db7414261257e795fc1f93ae74c2e68bea63f1d3017e0",
+    "tokenizer_config.json": "4cdcf03011d991903dcf9b06023924ac7998fda81ec0021170fb1903b08a7c08"
+  },
+  "weight_shards": [
+    "model.safetensors"
+  ],
+  "weights_downloaded": false,
+  "weight_sha256": {
+    "model.safetensors": "3a589dedb29bf72b410e49c6f70dca7ee09ce19be63fadaa881f0c7e15677cc8"
+  },
+  "asset_git_blob": {}
+}

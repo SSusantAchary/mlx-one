@@ -30,15 +30,15 @@ def test_zero_duration_loop_budget_is_explicit():
     assert get_runtime_registration('parakeet_tdt').adapter() is ParakeetTDTAdapter
 
 
-def test_lfm_audio_never_invents_tasks_from_detokenizer():
+def test_lfm_audio_requires_a_real_native_bundle_despite_task_registration():
     from mlx_one.engine.task_runners.lfm_audio import LFM2AudioAdapter
 
     availability=LFM2AudioAdapter.availability()
     assert availability.architecture_implemented
-    assert not any((availability.task_loader,availability.audio_to_text,
+    assert all((availability.task_loader,availability.audio_to_text,
         availability.text_to_audio,availability.speech_to_speech,availability.codec_streaming))
-    with pytest.raises(ValueError,match='codec'):
-        LFM2AudioAdapter()
+    with pytest.raises(ValueError,match='checkpoint'):
+        LFM2AudioAdapter(object())
     binding=get_runtime_registration('lfm2_audio')
-    assert binding.integration_status=='architecture_only'
-    assert binding.specifications()[0]==()
+    assert binding.integration_status=='integrated'
+    assert len(binding.specifications()[0]) == 3

@@ -45,6 +45,7 @@ from mlx_one.inspection import (
     inspect_model,
     write_inspection_result,
 )
+from mlx_one.ocr.cli import ocr_command
 from mlx_one.planning import (
     PlanningError,
     format_plan_result,
@@ -733,7 +734,7 @@ def serve_command(
             memory_admission = MemoryAdmission.detect()
             if inference_mode in ACTOR_MODES:
                 engine.bind_actor(scheduler)
-            if warmup and not hasattr(bundle, "audio"):
+            if warmup and not hasattr(bundle, "audio") and not hasattr(bundle, "ocr"):
                 def warmup_stream(cancel):
                     return engine.stream(
                         model=manager.model_info().id,
@@ -1447,6 +1448,8 @@ def ship() -> None:
 # Keep the existing top-level transcription commands as compatible entry points.
 main.add_command(audio_group)
 
+
+main.add_command(ocr_command)
 
 if __name__ == "__main__":
     main()

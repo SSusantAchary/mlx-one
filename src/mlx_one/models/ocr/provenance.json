@@ -1,0 +1,95 @@
+{
+  "revision": "e9af376626b04ba0cdad23b1476fd7a4a583d721",
+  "files": [
+    {
+      "path": "src/mlx_one/models/ocr/got_ocr2/config.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/got/config.py",
+      "reference_sha256": "059c62db7bd0085665c0badde66f622c1decf7030ddd56a8096e4228ef11db2e"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/got_ocr2/vision.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/got/vision.py",
+      "reference_sha256": "80d1d1c8bd661403a42797b89888d20c96cd6effa2e7099d7e37aba37b5175d5"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/got_ocr2/model.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/got/got.py",
+      "reference_sha256": "ca0f21c32aced4b13da3528994bb18a75b7ae8054a6bfe675e37787fc629e2a5"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/florence2/config.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/florence2/config.py",
+      "reference_sha256": "2bd4de192725c22f2b653c5d0e0bd8d40504ba040e73653dc65f2bd10909d108"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/florence2/vision.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/florence2/vision.py",
+      "reference_sha256": "cc2384e383165d84b4ac7c08e4eaac779837a96eb41f8058f9006d3a4c816ec6"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/florence2/language.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/florence2/language.py",
+      "reference_sha256": "b9b0f4bae24ae2ff64053f93debb0cf4c45ed4ec9af47f3a57b48c1d29d5b4cf"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/florence2/model.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/florence2/florence2.py",
+      "reference_sha256": "2e9718fc676415b435858e44afcab04bae62f0aa757460e528b5c69ad6bff092"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/paddleocr_vl/config.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/paddleocr_vl/config.py",
+      "reference_sha256": "749024144de99a20cc65b22463f12f578e40eb9759d742db395cd214f91b7249"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/paddleocr_vl/vision.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/paddleocr_vl/vision.py",
+      "reference_sha256": "f6822d04d6e83244f0915e6a95734d685cfcec4296e74829b78da2d2e99e937b"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/paddleocr_vl/language.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/paddleocr_vl/language.py",
+      "reference_sha256": "70b18f1df4afa9a8baa58600cda11686638fcdf7b9be2d61c05df4f1a8da0034"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/paddleocr_vl/model.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/paddleocr_vl/paddleocr_vl.py",
+      "reference_sha256": "7e8dfe2eaa5a92f915def364c641c5e579a105a5262221e6a6577271acf6a2f8"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/deepseek_ocr/config.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/deepseekocr/config.py",
+      "reference_sha256": "ef40ebd5fab0b3c2e5a7bad0aebe3a719ec177e9d578215ed3c8ccefa0da2f34"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/deepseek_ocr/vision.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/deepseekocr/vision.py",
+      "reference_sha256": "da7722cd6cd2b653ed3f485579766197cd8d6caab9abd36e4adb83dd80e1e535"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/deepseek_ocr/language.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/deepseekocr/language.py",
+      "reference_sha256": "c72af3b0dcbc22b993b520236207ed3bf35226014558a81d52e29ff2cbc50cb9"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/deepseek_ocr/model.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/deepseekocr/deepseekocr.py",
+      "reference_sha256": "e2ff4215a55d82a4e8c540837ff1e92bb751b36df2a2561495fa5c3adc112f54"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/deepseek_ocr/sam.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/deepseekocr/sam.py",
+      "reference_sha256": "84325d5f831f6206e7a3249055c40b065a8e1293b410b8d94a91916d1f2ede97"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/lightonocr/vision.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/pixtral/vision.py",
+      "reference_sha256": "100e2e64eb139687203d40ac71828b970147887b50e4c381eb1f46f1234ee968"
+    },
+    {
+      "path": "src/mlx_one/models/ocr/lightonocr/vision_config.py",
+      "reference": "https://github.com/Blaizzy/mlx-vlm/blob/e9af376626b04ba0cdad23b1476fd7a4a583d721/mlx_vlm/models/pixtral/config.py",
+      "reference_sha256": "bd48edf8fc597635710b230d5f8837b7598c31fd566195045c8fba12f873734f"
+    }
+  ]
+}

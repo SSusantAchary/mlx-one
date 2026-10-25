@@ -208,6 +208,14 @@ class ModelManager:
 
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
+        if hasattr(bundle, "ocr"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization=bundle.quantization, revision=bundle.revision,
+                tasks=tuple(sorted(bundle.ocr.capabilities.tasks)),
+                modalities=("image", "document"),
+            )
         if hasattr(bundle, "audio"):
             from mlx_one.core.registry import get_registration
 
@@ -264,6 +272,24 @@ def _tokenizer_fingerprint(tokenizer: Any) -> tuple[object, ...]:
 
 def _load_serving_model(model_id, **options):
     import json
+
+    from mlx_one.ocr.loading import load_ocr_model
+    from mlx_one.ocr.registry import ocr_family
+    from mlx_one.server.ocr import OCRServingBundle
+
+    local_ocr = Path(model_id).expanduser()
+    if (local_ocr / "config.json").is_file():
+        payload_ocr = json.loads((local_ocr / "config.json").read_text())
+        try:
+            ocr_family(payload_ocr)
+        except ValueError:
+            pass
+        else:
+            native_ocr = load_ocr_model(
+                model_id, offline=True, revision=options.get("revision"),
+                cache_dir=options.get("cache_dir"),
+            )
+            return OCRServingBundle(native_ocr)
 
     from mlx_one.audio.loading import audio_model_type
     from mlx_one.core.registry import get_registration
