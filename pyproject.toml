@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,6 +9,7 @@ description = "Model-size-agnostic lifecycle tooling for MLX on Apple Silicon."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
     { name = "S Susant Achary" }
 ]
@@ -43,10 +44,10 @@ dependencies = [
     "certifi>=2026.10.19",
     "tokenizers>=0.20,<1",
     "jinja2>=3.1,<4",
-    "tqdm",
-    "safetensors",
-    "pyyaml",
-    "regex",
+    "tqdm>=4.70.0",
+    "safetensors>=0.8.0",
+    "pyyaml>=6.0.3",
+    "regex>=2026.9.3",
     "huggingface-hub>=1.5,<2",
 ]
 
@@ -64,14 +65,20 @@ legacy-mlx-lm = ["mlx-lm>=0.31,<1"]
 server = [
     "fastapi>=0.115,<1",
     "httpx>=0.27,<1",
+    "pydantic>=2.13.5,<3",
     "python-multipart>=0.0.9,<1",
     "uvicorn>=0.30,<1",
 ]
 vision = ["pillow>=10,<13"]
+ocr = ["pillow>=10,<13", "pypdfium2>=4.30,<6", "tiktoken>=0.9,<1"]
+ocr-bench = ["rapidfuzz>=3,<4", "pyarrow>=20,<24"]
 audio = []  # Native MLX/NumPy/tokenizers are core; encoded media additionally requires FFmpeg.
+qwen-align-ja = ["nagisa==0.2.11"]
+qwen-align-ko = ["soynlp==0.0.493"]  # Also requires the pinned checkpoint dictionary.
 dev = [
     "fastapi>=0.115,<1",
     "httpx>=0.27,<1",
+    "pydantic>=2.13.5,<3",
     "uvicorn>=0.30,<1",
     "python-multipart>=0.0.9,<1",
     "pillow>=10,<13",
@@ -91,6 +98,9 @@ mlx_one = [
     "models/UPSTREAM_LICENSE",
     "models/vision_language/UPSTREAM_LICENSE",
     "models/vision_language/UPSTREAM.md",
+    "models/ocr/UPSTREAM_LICENSE",
+    "models/ocr/UPSTREAM.md",
+    "models/ocr/provenance.json",
     "quantization/turboquant/LICENSE.txt",
     "quantization/turboquant/NOTICE.txt",
     "data/*.json",

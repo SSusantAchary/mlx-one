@@ -45,6 +45,11 @@ def load_model(
     The historical result shapes are retained where a native task loader exists.
     No third-party MLX ecosystem package is imported as an execution backend.
     """
+    task = load_kwargs.get("task")
+    if isinstance(task, str) and task.startswith("ocr."):
+        from mlx_one.ocr import OCREngine
+
+        return OCREngine(path_or_repo, **load_kwargs)
     model_ref = _normalize_model_ref(path_or_repo)
     resolved_modality = _resolve_modality(modality)
     _validate_local_path(model_ref)

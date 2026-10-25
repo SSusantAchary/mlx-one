@@ -1,0 +1,19 @@
+{
+  "model_id": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+  "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+  "files": {
+    "README.md": "20e3212074894a87f2e7ba17fd0190d1fffc9869971b901ec33253ee827a59e6",
+    "config.json": "7ed631bd2786d251cb38bd2a6a8a78c31bc1316f728bffa84b2d8954d3cfcd63",
+    "model.safetensors.index.json": "3dacd0399838beaa368c4a4278477096c861defca3cfdcdd6f947b62d349af32",
+    "preprocessor_config.json": "f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0",
+    "tokenizer_config.json": "2f58f4bbd7bbce15d683f525954ef3a92cd82f5e06415a9c513859bf8ab72436"
+  },
+  "weight_shards": [
+    "model.safetensors"
+  ],
+  "weights_downloaded": false,
+  "weight_sha256": {
+    "model.safetensors": "636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4"
+  },
+  "asset_git_blob": {}
+}

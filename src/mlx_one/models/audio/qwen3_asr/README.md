@@ -56,11 +56,36 @@ are recorded in the [follow-up report](../../../../../docs/audio-qualification-m
 
 ## Installation and assets
 
-Install mlx-one on Apple Silicon/macOS and activate `~/venvs/mlx` for native runs.
+Install mlx-one on Apple Silicon/macOS in your virtual environment for native runs.
 FFmpeg is needed only for file inputs; mono waveform arrays require explicit
 `sample_rate=16000`. Other waveform rates and stereo arrays are rejected: resample
 and downmix explicitly. File decoding produces mono 16-kHz PCM. The pinned
 reference uses librosa for file resampling; cross-resampler parity is not qualified.
+
+From the repository root, install the extra for the alignment language you need:
+
+```bash
+python -m pip install -e ".[qwen-align-ja]"  # Japanese: nagisa==0.2.11
+python -m pip install -e ".[qwen-align-ko]"  # Korean: soynlp==0.0.493
+```
+
+These extras apply to known-text alignment; ordinary ASR and alignment in other
+languages do not require them. Runtime checks enforce these exact tokenizer
+versions. Their installation does not establish checkpoint or language qualification.
+
+For Korean alignment, also provide `korean_dict_jieba.dict` at the root of your
+local ForcedAligner checkpoint directory, beside `config.json`. It must have
+SHA-256 `cc157a9ab78f92bf11ed98a69b285768d6627cf5cd57a581e6c06693effce37d`.
+Verify your supplemental file before using that directory:
+
+```bash
+shasum -a 256 /path/to/forced-aligner/korean_dict_jieba.dict
+```
+
+The Python extra does not bundle or download this dictionary, and the Hub loader's
+asset allowlist does not fetch it. Supply the verified file explicitly and pass
+the complete local checkpoint directory to `align_audio` or `mlx-one align`.
+Missing files, changed hashes and unsupported tokenizer versions fail explicitly.
 
 Checkpoints need `config.json`, `preprocessor_config.json`, `generation_config.json`,
 `vocab.json`, `merges.txt`, `tokenizer_config.json`, `chat_template.json`, and the

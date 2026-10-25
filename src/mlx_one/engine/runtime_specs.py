@@ -24,6 +24,8 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.speech:"+adapter
     ("qwen3_asr","Qwen3ASRAdapter"),("qwen3_forced_aligner","Qwen3AlignmentAdapter"))})
 
 BUILTIN_ADAPTERS["lfm2_audio"]="mlx_one.engine.task_runners.lfm_audio:LFM2AudioAdapter"
+BUILTIN_ADAPTERS.update({name: "mlx_one.engine.task_runners.ocr:OCRTaskAdapter"
+    for name in ("trocr", "got_ocr2", "florence2", "paddleocr_vl", "lightonocr", "deepseek_ocr")})
 
 BUILTIN_ADAPTERS["parakeet_tdt"]=(
     "mlx_one.engine.task_runners.transducer:ParakeetTDTAdapter")
@@ -84,6 +86,10 @@ def task_specs(entry):
     if entry.model_type == "parakeet_tdt":
         recipes[TaskKind.TRANSCRIPTION] = ("transducer",
             (StageKind.ENCODE, StageKind.PREDICT, StageKind.JOINT), "audio-ready-steps")
+    for task in TaskKind:
+        if task.value.startswith("ocr."):
+            recipes[task] = ("ocr", (StageKind.ENCODE, StageKind.PREFILL, StageKind.DECODE),
+                             "sequential-pages")
     return tuple(TaskSpec(task, *recipes[task], output_schema=task.value + "-v1")
                  for task in sorted(tasks, key=lambda t: t.value))
 

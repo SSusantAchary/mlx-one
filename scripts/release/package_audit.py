@@ -22,6 +22,10 @@ def audit(root, dist):
         str(p.relative_to(root / "src")): sha(p.read_bytes())
         for p in (root / "src/mlx_one").rglob("*.py")
     }
+    expected_upstream_licenses = {
+        str(p.relative_to(root / "src")): sha(p.read_bytes())
+        for p in (root / "src/mlx_one").rglob("UPSTREAM_LICENSE")
+    }
     for path in sorted(dist.iterdir()):
         if path.suffix == ".whl":
             with zipfile.ZipFile(path) as archive:
@@ -55,6 +59,10 @@ def audit(root, dist):
             if position >= 0 and name.endswith(".py"):
                 actual[name[position:]] = sha(data)
         notices = [n for n in payload if n.endswith("UPSTREAM_LICENSE")]
+        actual_upstream_licenses = {
+            name[name.index("mlx_one/"):]: sha(payload[name])
+            for name in notices if "mlx_one/" in name
+        }
         tq3_notices = [n for n in payload if n.endswith("quantization/turboquant/NOTICE.txt")]
         ui_notices = [n for n in payload if n.endswith("ui/dist/THIRD_PARTY_NOTICES.txt")]
         derived_notices = [n for n in payload if PurePosixPath(n).name in {"NOTICE", "NOTICE.md"}]
@@ -83,6 +91,7 @@ def audit(root, dist):
             "private_paths_or_token_patterns": sensitive,
             "forbidden_payloads": forbidden,
             "mit_notices": notices,
+            "exact_upstream_license_match": actual_upstream_licenses == expected_upstream_licenses,
             "ui_notices": ui_notices,
             "tq3_notices": tq3_notices,
             "derived_source_notices": derived_notices,
@@ -92,7 +101,8 @@ def audit(root, dist):
         record["status"] = (
             "PASS"
             if actual == expected
-            and len(notices) == 6
+            and notices
+            and actual_upstream_licenses == expected_upstream_licenses
             and any(n.endswith("models/vision_language/UPSTREAM_LICENSE") for n in notices)
             and len(ui_notices) == 1
             and len(tq3_notices) == 1

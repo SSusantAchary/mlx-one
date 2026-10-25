@@ -41,6 +41,17 @@ mlx-one is building those pieces as one coherent stack:
 The project owns its supported model math directly. Hugging Face supplies
 configuration, tokenizer/processor assets and safe `safetensors` checkpoints.
 
+<p align="center">
+  <a href="mlx-one_arch.png">
+    <img src="mlx-one_arch.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
+  </a>
+</p>
+
+Click the diagram to view it at full resolution. It shows current and planned
+architecture: MTP, CPT and RL labels do not establish implemented or qualified
+workflows. Checkpoint, task, precision and device validation are tracked separately.
+
+
 <!-- model-performance:start -->
 ## Model Performance
 
@@ -240,16 +251,6 @@ TrOCR Printed is an out-of-domain baseline. Page models process the same cropped
 
 ## Architecture
 
-<p align="center">
-  <a href="mlx-one_arch.png">
-    <img src="mlx-one_arch.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
-  </a>
-</p>
-
-Click the diagram to view it at full resolution. It shows current and planned
-architecture: MTP, CPT and RL labels do not establish implemented or qualified
-workflows. Checkpoint, task, precision and device validation are tracked separately.
-
 The native text inference path is:
 
 ```text
@@ -385,6 +386,24 @@ Install development tools with:
 ```bash
 python -m pip install -e ".[dev]"
 ```
+
+To reproduce the recorded Apple M4 / Python 3.12.11 candidate dependencies, use
+`python -m pip install -c requirements/alpha-tested-constraints.txt -e ".[dev]"`
+inside a Python 3.12.11 environment. These constraints are an environment snapshot,
+not a lockfile for every supported Python version. On Python 3.10, 3.11 or 3.13,
+install without that constraints file and validate the resolved environment.
+See [dependency policy and tested minimums](requirements/README.md).
+
+Qwen known-text alignment has separate optional language dependencies:
+
+```bash
+python -m pip install -e ".[qwen-align-ja]"  # Japanese: nagisa==0.2.11
+python -m pip install -e ".[qwen-align-ko]"  # Korean: soynlp==0.0.493
+```
+
+Korean alignment also needs the checksummed `korean_dict_jieba.dict` in the local
+checkpoint directory. The extra installs only the tokenizer. See the
+[alignment asset instructions](src/mlx_one/models/audio/qwen3_asr/README.md#installation-and-assets).
 
 The native engine and server do not require `mlx-lm`. Install
 `mlx-one[legacy-mlx-lm]` only for legacy compatibility workflows that explicitly

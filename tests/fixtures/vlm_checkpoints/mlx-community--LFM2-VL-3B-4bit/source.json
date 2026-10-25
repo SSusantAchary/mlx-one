@@ -1,0 +1,24 @@
+{
+  "model_id": "mlx-community/LFM2-VL-3B-4bit",
+  "revision": "aa86be09cd3bcdfd825252ce702d6afefc1b4201",
+  "files": {
+    "README.md": "3339ccc8d57d859027ce1a57ba5945993d4da485383fbed87c16281eb9891af8",
+    "chat_template.jinja": "cf0af741b36248dfe460af825b0b3acb3c651cf7dd40a74c29447f60b75d2b9b",
+    "config.json": "9273cadf26d8ea7b9b0462ef6cce027311352a696e20d815307647357a21cbe4",
+    "generation_config.json": "40d17f9ec64c97e8fd5400540960b6a9761ed6d6acc0b1ab6a6656055e4755b3",
+    "model.safetensors.index.json": "e89bd46f27b908120a8b24ff49ce9112965992fa4bb69f1f3ab7979a4b9c99f6",
+    "preprocessor_config.json": "7735105461938c6d346c0b7c49086776d01c5721cbe6f5fc582a5a6fb552d4b1",
+    "processor_config.json": "cbce86b74fd703dfddf28e0d1b205f2f167a0e324ffa123d258faaf7b6d889bf",
+    "tokenizer_config.json": "c4c009ead1dc0b6f06f3acbc6d241562a1406816aa935cd3ed3e8a47530c1a78"
+  },
+  "weight_shards": [
+    "model.safetensors"
+  ],
+  "weights_downloaded": false,
+  "weight_sha256": {
+    "model.safetensors": "2c98802c7a1eb3e6e90ad3fb1c1b822bec51d917ccc27468e5a5f879a8d84493"
+  },
+  "asset_git_blob": {
+    "tokenizer.json": "1102635fc822bb07f176c9166d176d9df417a457"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "model_id": "mlx-community/LFM2-VL-450M-8bit",
+  "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+  "files": {
+    "README.md": "4a41ca2a6acf15f7dfd0548335492852ea57273bb5bf5b342fbb623d480aaf0f",
+    "chat_template.jinja": "cf0af741b36248dfe460af825b0b3acb3c651cf7dd40a74c29447f60b75d2b9b",
+    "config.json": "0f65ed8fdee9c58cddffc64f1353701fe197eea22679cb5246752927be420fc1",
+    "generation_config.json": "529184b675eb21c69367bb9b96b4b6fab90e02d94a384f5a94f1004903ac2430",
+    "model.safetensors.index.json": "976c3b45c9fded9539a00a8fa2a9b761bc7a1d9cd80381af2c40397ade22a74f",
+    "modeling_lfm2_vl.py": "c026644f7a81e86a42f73c4596d772c00348b00beb0cf384608f9957b182e2d5",
+    "preprocessor_config.json": "a70ef8973bfbb79a429a1e48f3a3674ec5e970d82e52e6c9091381a1a2e48966",
+    "processing_lfm2_vl.py": "fa1a408d27e1006d98308a2bb1e477dc52d1b12fff42827661af270e8e33df29",
+    "processor_config.json": "dfb538d609add2675159696d441d920b55b9a8e994fa7e294bf8b038bfedb7de",
+    "tokenizer_config.json": "5d460b26aa4512b0c951d735360c6eb443812a3f7974f95abcef67638c0c0df4"
+  },
+  "weight_shards": [
+    "model.safetensors"
+  ],
+  "weights_downloaded": false,
+  "weight_sha256": {
+    "model.safetensors": "b67daf504eae7f4815f1b51152d0d363547bacc25f4748f0b24df9440f3f9624"
+  },
+  "asset_git_blob": {
+    "tokenizer.json": "1102635fc822bb07f176c9166d176d9df417a457"
+  }
+}

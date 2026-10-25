@@ -19,15 +19,15 @@ from mlx_one.engine.adapter_registry import (
 def test_all_architectures_have_explicit_truthful_runtime_records():
     assert registered_runtime_types() == registered_model_types()
     rows = {row['model_type']: row for row in runtime_coverage()}
-    assert len(rows) == 30
+    assert len(rows) == 36
     assert {name for name, row in rows.items()
-            if row['integration_status']=='architecture_only'} == {
-        'lfm2_audio'}
+            if row['integration_status']=='architecture_only'} == set()
     assert rows['sam3_tracker_video']['component_only']
     assert rows['sam3_tracker_video']['parent_model_type'] == 'sam3_video'
     assert set(rows['qwen3_5']['tasks']) == {'text-generation','vision-language-generation'}
     assert 'vision-language-generation' in rows['qwen3_5']['declared_tasks']
-    assert rows['whisper']['tasks'] == rows['qwen3_asr']['tasks'] == ('transcription',)
+    assert rows['whisper']['tasks'] == rows['qwen3_asr']['tasks'] == (
+        'language-detection', 'transcription')
     assert rows['qwen3_forced_aligner']['tasks'] == ('alignment',)
     from mlx_one.engine.runtime_specs import BUILTIN_ADAPTERS
 
@@ -35,15 +35,14 @@ def test_all_architectures_have_explicit_truthful_runtime_records():
         BUILTIN_ADAPTERS)
     assert all(not row['correctness_qualified'] and not row['performance_qualified']
                for row in rows.values())
-    with pytest.raises(ValueError, match='unavailable'):
-        get_runtime_registration('lfm2_audio').adapter()
+    assert get_runtime_registration('lfm2_audio').adapter().__name__ == 'LFM2AudioAdapter'
 
 
 def test_coverage_is_lazy_in_fresh_interpreter():
     script = """
 import sys
 from mlx_one.engine.adapter_registry import runtime_coverage
-assert len(runtime_coverage())==30
+assert len(runtime_coverage())==36
 assert not any(n=='mlx' or n.startswith('mlx.') for n in sys.modules)
 assert not any(n.startswith('mlx_one.models.') and n.endswith('.model') for n in sys.modules)
 """

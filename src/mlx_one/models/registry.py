@@ -6,6 +6,7 @@ from mlx_one.core.registry import ModelRegistration, register_model
 def builtin_registrations() -> tuple[ModelRegistration, ...]:
     """Architecture metadata is independent of task scheduling and runtime bindings."""
     return (
+        *ocr_registrations(),
         *(
             ModelRegistration(
                 model_type,
@@ -324,3 +325,20 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
 def register_builtin_models() -> None:
     for registration in builtin_registrations():
         register_model(registration)
+
+
+def ocr_registrations():
+    from mlx_one.ocr.registry import CAPABILITIES
+
+    return tuple(
+        ModelRegistration(
+            family,
+            f"mlx_one.models.ocr.{family}.config:"
+            + ("TrOCRConfig" if family == "trocr" else "ModelConfig"),
+            f"mlx_one.models.ocr.{family}.model:" + ("TrOCR" if family == "trocr" else "Model"),
+            "ocr", frozenset({"forward", "cache", "ocr"}),
+            loader_path="mlx_one.ocr.loading:load_ocr_model",
+            tasks=cap.tasks | {"ocr.handwriting"} if family == "trocr" else cap.tasks,
+        )
+        for family, cap in CAPABILITIES.items()
+    )
