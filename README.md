@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
 
-[**Quickstart**](#quick-start) | [**Performance**](#model-performance) | [**Installation**](#installation) | [**Architecture**](#architecture) | [**Repository summary**](docs/REPOSITORY_SUMMARY.md) | [**Model guides**](#model-specific-documentation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
+[**Quickstart**](#quick-start) | [**Performance**](#model-performance) | [**Native tasks**](#experimental-native-task-results) | [**MLXBoost**](#mlxboost-optional-execution-module) | [**Installation**](#installation) | [**Architecture**](#architecture) | [**Repository summary**](docs/REPOSITORY_SUMMARY.md) | [**Model guides**](#model-specific-documentation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
 
 > [!IMPORTANT]
 > mlx-one is under active development. Native architecture support and model
@@ -58,6 +58,11 @@ artwork does not imply a shipped standalone distribution.
 Historical performance figures below use their original, distinct protocols;
 measured does not mean release-qualified. The [claim audit](docs/publication/2026-11-04/audit.md)
 records evidence fields, provenance limits and current verification.
+
+The four new native task profiles have separate [quality results](#experimental-native-task-results)
+and [Python request latencies](#task-latency-historical-not-a-service-sla).
+[MLXBoost HTTP measurements](#mlxboost-optional-execution-module) use complete
+request wall time and their own protocol.
 
 <!-- model-performance:start -->
 ## Model Performance
@@ -115,6 +120,133 @@ Measured on Apple M4 with 32 GB unified memory, Python 3.12, using the native ML
 | [mlx-community/gpt-oss-20b-MXFP4-Q4](docs/validation/gpt-oss-kilo-2026-10-23.json) | 20B / 3.6B active | 131,072 | Mixed MXFP4 / affine Q4–Q8 | **75.95** | **18.96** | 2355.38 | 10.608 |
 
 Native first-token time includes hidden analysis; the median first actionable tool delta arrived at **7.127 seconds**, after argument validation. The configured 131,072-token context was not tested at its full length. See the [full measurements and methodology](docs/GPT_OSS_KILO_COMPATIBILITY.md#measured-performance). Standardized direct-model 128/128 coverage remains unchanged.
+
+<a id="native-model-coverage"></a>
+
+<!-- mlx-one:verified-task-results:start -->
+## Experimental native task results
+
+Four bounded FP32 profiles run through the shared MLX-One registry, Python API,
+CLI and HTTP server. These are **EXPERIMENTAL**, not release-qualified. Results
+below were measured on **2026-11-03**, Apple M4 / 32 GiB, macOS 15.8.1,
+MLX 0.32.2. These historical measurements describe the locally verified
+0.1.0a1 wheel. The [0.1.1 integration candidate](docs/integration/2026-11-04/merge-readiness.md)
+revalidates the bounded task profiles; package publication and wider checkpoint
+qualification remain separate.
+
+| Task / exact checkpoint | Measured quality | Admitted scope and remaining limits |
+|---|---|---|
+| Sentiment — `distilbert/distilbert-base-uncased-finetuned-sst-2-english` | **91.06%** SST-2 validation accuracy (794/872); HF top-1 agreement 872/872 | Python/CLI/HTTP; 1–2 texts, up to 512 tokens each; FP32 only; evaluation data reuse terms unspecified |
+| NER — `dslim/bert-base-NER` | **60.36%** strict entity F1 on 100 reconstructed CoNLL validation sentences; matches HF | Python/CLI/HTTP; NONE/SIMPLE aggregation, 1–2 texts, 512 tokens each; bounded subset, unspecified dataset reuse terms |
+| Zero-shot image classification — `openai/clip-vit-base-patch32` | **6/6** correct with two labels; **5/6** with ten labels, six real images; source/native top-1 agrees on all 18 comparisons | Python/CLI/HTTP; one image, 1–10 labels, fixed prompt template; 100-label profile rejected; separate weight-license review pending |
+| VAD — `snakers4/silero-vad-16k` | Full 60-second source/native probability and recurrent-state parity; clip presence: 10 speech clips + 3 authored negatives correct | Offline Python/CLI/HTTP; stateful Python streaming; mono 16 kHz, 512-sample chunks; human segment-boundary quality and broader noise/music evaluation pending |
+
+Checkpoint revisions, processor/conversion hashes, source commits and individual
+qualification gates are recorded in the [publication evidence map](docs/publication/2026-11-04/evidence-map.json)
+and [task qualification matrix](docs/native_tasks/qualification-matrix.md).
+Transformers reference: v4.57.1 commit
+`8cb5963cc22174954e7dca2c0a3320b7dc2f4edc`; Silero reference:
+`60b7ffa243625ebdc1070275a29f18c87843786a`. Silero's source graph was rebound to
+the selected safetensors weights; this does not claim equality with the original
+JIT's different learned weights. Evaluation text, images and model weights are
+not redistributed in the wheel.
+
+### Task latency (historical, not a service SLA)
+
+| Python task | Median (ms) | p95 (ms) | Workload |
+|---|---:|---:|---|
+| DistilBERT SST-2 | 14.95 | 17.58 | One text |
+| BERT NER | 18.90 | 26.14 | One text, SIMPLE aggregation |
+| CLIP ViT-B/32 | 80.19 | 89.68 | One image, two labels |
+| Silero VAD | 16.35 | 22.97 | One second of mono 16 kHz audio |
+
+Each row is 20 timed Python task calls in one process after one excluded warmup;
+loading is excluded. Median and nearest-rank p95 include task preparation and
+synchronized model execution. These are separate workloads, not HTTP latency,
+concurrent-load measurements or a cross-model speed comparison. See the
+[latency protocol and raw-run locators](docs/native_tasks/task-performance.md).
+
+### Candidates with blocked task admission
+
+| Candidate | Decision | Remaining gate / public task support |
+|---|---|---|
+| ViT-base-patch16-224 | EXPERIMENTAL helper | Intermediate FP32 discrepancy; no shared task/CLI/HTTP admission; shared OCR encoder unchanged |
+| SigLIP2-base-patch16-224 (fixed-resolution SiglipModel) | BLOCKED | Vision-layer intermediate FP32 failures; no task APIs |
+| DETR ResNet50 | BLOCKED | Five of 12 real COCO traces fail decoder/logit gates; no task APIs |
+| RT-DETR | NOT IMPLEMENTED | DETR prerequisite gate remains unresolved |
+| Qwen2.5-VL document QA | BLOCKED | Internal candidate answers 5/6 authored questions on two pages; dense vision parity fails; no dedicated task APIs |
+| Qwen2.5-VL video QA | BLOCKED | Real-video pixel parity fails; full video-answer inference not implemented |
+| Depth Anything V2 Small | BLOCKED | All six whole-trace FP32 comparisons fail; five final maps pass; no task APIs or independently labeled depth-quality result |
+
+Existing VLM, OCR and segmentation support does not establish these task
+qualifications. The [0.1.1 integration verification](docs/integration/2026-11-04/verification.json)
+records **2,238 passed, 79 skipped, 9 subtests** in the default suite and
+**160 passed, 17 skipped** in the native selection; these selections overlap and
+must not be added. Clean-wheel checks pass for Python, CLI and HTTP across all
+four profiles, including four live servers with bearer authentication.
+Source-oracle replay passes 17 real-checkpoint cases covering 1,566 named tensor
+comparisons. The [readiness report](docs/integration/2026-11-04/merge-readiness.md) records
+the remaining skips and qualification limits. These checks did not rerun the
+historical latency benchmarks.
+
+### Sentiment example
+
+Use a local checkpoint matching the locked revision in the evidence map:
+
+```python
+from mlx_one import classify
+result = classify("/local/pinned-distilbert-sst2", "I enjoyed this film.")
+print(result.to_dict())
+```
+
+```sh
+mlx-one classify /local/pinned-distilbert-sst2 "I enjoyed this film." --json-output
+mlx-one serve /local/pinned-distilbert-sst2 --offline --alias sentiment --no-warmup
+```
+
+The server accepts `POST /v1/tasks/text-classification` with JSON
+`{"model":"sentiment","input":"I enjoyed this film."}` and configured bearer
+authentication. HTTP requires the existing `server` extra; CLIP image processing
+requires the `vision` extra. The [API contracts](docs/native_tasks/api-contracts.md) cover all
+four profiles, input limits and score semantics. Clean-wheel verification runs
+outside the checkout with reference frameworks absent and network access disabled.
+<!-- mlx-one:verified-task-results:end -->
+
+<!-- mlx-one:mlxboost-summary:start -->
+## MLXBoost: optional execution module
+
+MLXBoost is an independent optional module **inside MLX-One**. The current
+implementation and defaults are unchanged: `reference_dense` is the default;
+`mlxboost_b1` and `fast_decode` require explicit opt-in and compatible execution
+facts. Unsupported profiles fall back with a recorded reason, or raise when
+strict reference handling is requested. It remains **EXPERIMENTAL**, with no
+production rollout approval.
+
+Historical Apple M4 / 32 GiB HTTP measurements (MLX 0.32.2):
+
+| Checkpoint / precision | Flag off (tok/s) | Flag on (tok/s) | Timed requests per flag |
+|---|---:|---:|---|
+| Qwen2.5-0.5B-Instruct / Q8 | 22.94 | 109.17 | 50: five processes × ten requests |
+| Qwen3-0.6B / Q8 | 21.42 | 96.42 | 50: five processes × ten requests |
+| SmolLM2-1.7B-Instruct / BF16 | 15.39 | 24.56 | 6: three processes × two requests |
+
+These are medians of per-request **output tokens / complete HTTP SSE wall time**,
+not decode-only or direct-model rates. One warmup per process and model loading
+are excluded. Cohorts and run order differ; host load and thermals were not
+controlled. The two Qwen cohorts have 100/100 paired exact-output matches across
+the models. This is bounded evidence, not a general speedup guarantee.
+
+The measured change skips impossible calibration metadata/hash/inventory work
+when no matching activation-peak candidate exists. It adds no custom Metal
+kernel and does not alter model equations. Existing cached-vs-fresh model
+qualification failures remain failed; a source-neutral execution change can be
+evaluated separately under the current policy. See the
+[benchmark evidence and limits](docs/publication/2026-11-04/audit.md#mlxboost-evidence)
+and [module boundary ADR](docs/architecture/mlxboost-module-boundary.md).
+
+A standalone **`mlx-one-boost` distribution is PROPOSED ONLY**. No package split,
+dependency, installation command, import migration or default change is shipped.
+<!-- mlx-one:mlxboost-summary:end -->
 
 <!-- MLX-ONE-VLM-BENCHMARK-START -->
 ## Vision-Language Model Performance
@@ -683,128 +815,6 @@ investigations, checkpoint limitations and remaining validation work.
 The [SAM3 qualification report](docs/sam3-qualification-m4-32gb.md) records exact
 checkpoint/reference revisions, memory measurements, preserved failures, and
 remaining gates. These fixture passes do not qualify all segmentation workflows.
-
-<a id="native-model-coverage"></a>
-
-<!-- mlx-one:verified-task-results:start -->
-## Experimental native task results
-
-Four bounded FP32 profiles run through the shared MLX-One registry, Python API,
-CLI and HTTP server. These are **EXPERIMENTAL**, not release-qualified. Results
-below were measured on **2026-11-03**, Apple M4 / 32 GiB, macOS 15.8.1,
-MLX 0.32.2. These historical measurements describe the locally verified
-0.1.0a1 wheel. The [0.1.1 integration candidate](docs/integration/2026-11-04/merge-readiness.md)
-revalidates the bounded task profiles; package publication and wider checkpoint
-qualification remain separate.
-
-| Task / exact checkpoint | Measured quality | Admitted scope and remaining limits |
-|---|---|---|
-| Sentiment — `distilbert/distilbert-base-uncased-finetuned-sst-2-english` | **91.06%** SST-2 validation accuracy (794/872); HF top-1 agreement 872/872 | Python/CLI/HTTP; 1–2 texts, up to 512 tokens each; FP32 only; evaluation data reuse terms unspecified |
-| NER — `dslim/bert-base-NER` | **60.36%** strict entity F1 on 100 reconstructed CoNLL validation sentences; matches HF | Python/CLI/HTTP; NONE/SIMPLE aggregation, 1–2 texts, 512 tokens each; bounded subset, unspecified dataset reuse terms |
-| Zero-shot image classification — `openai/clip-vit-base-patch32` | **6/6** correct with two labels; **5/6** with ten labels, six real images; source/native top-1 agrees on all 18 comparisons | Python/CLI/HTTP; one image, 1–10 labels, fixed prompt template; 100-label profile rejected; separate weight-license review pending |
-| VAD — `snakers4/silero-vad-16k` | Full 60-second source/native probability and recurrent-state parity; clip presence: 10 speech clips + 3 authored negatives correct | Offline Python/CLI/HTTP; stateful Python streaming; mono 16 kHz, 512-sample chunks; human segment-boundary quality and broader noise/music evaluation pending |
-
-Checkpoint revisions, processor/conversion hashes, source commits and individual
-qualification gates are recorded in the [publication evidence map](docs/publication/2026-11-04/evidence-map.json)
-and [task qualification matrix](docs/native_tasks/qualification-matrix.md).
-Transformers reference: v4.57.1 commit
-`8cb5963cc22174954e7dca2c0a3320b7dc2f4edc`; Silero reference:
-`60b7ffa243625ebdc1070275a29f18c87843786a`. Silero's source graph was rebound to
-the selected safetensors weights; this does not claim equality with the original
-JIT's different learned weights. Evaluation text, images and model weights are
-not redistributed in the wheel.
-
-### Task latency (historical, not a service SLA)
-
-| Python task | Median (ms) | p95 (ms) | Workload |
-|---|---:|---:|---|
-| DistilBERT SST-2 | 14.95 | 17.58 | One text |
-| BERT NER | 18.90 | 26.14 | One text, SIMPLE aggregation |
-| CLIP ViT-B/32 | 80.19 | 89.68 | One image, two labels |
-| Silero VAD | 16.35 | 22.97 | One second of mono 16 kHz audio |
-
-Each row is 20 timed Python task calls in one process after one excluded warmup;
-loading is excluded. Median and nearest-rank p95 include task preparation and
-synchronized model execution. These are separate workloads, not HTTP latency,
-concurrent-load measurements or a cross-model speed comparison. See the
-[latency protocol and raw-run locators](docs/native_tasks/task-performance.md).
-
-### Candidates with blocked task admission
-
-| Candidate | Decision | Remaining gate / public task support |
-|---|---|---|
-| ViT-base-patch16-224 | EXPERIMENTAL helper | Intermediate FP32 discrepancy; no shared task/CLI/HTTP admission; shared OCR encoder unchanged |
-| SigLIP2-base-patch16-224 (fixed-resolution SiglipModel) | BLOCKED | Vision-layer intermediate FP32 failures; no task APIs |
-| DETR ResNet50 | BLOCKED | Five of 12 real COCO traces fail decoder/logit gates; no task APIs |
-| RT-DETR | NOT IMPLEMENTED | DETR prerequisite gate remains unresolved |
-| Qwen2.5-VL document QA | BLOCKED | Internal candidate answers 5/6 authored questions on two pages; dense vision parity fails; no dedicated task APIs |
-| Qwen2.5-VL video QA | BLOCKED | Real-video pixel parity fails; full video-answer inference not implemented |
-| Depth Anything V2 Small | BLOCKED | All six whole-trace FP32 comparisons fail; five final maps pass; no task APIs or independently labeled depth-quality result |
-
-Existing VLM, OCR and segmentation support does not establish these task
-qualifications. The [audit report](docs/publication/2026-11-04/audit.md) separates
-historical evidence from fresh documentation/regression checks. Historical gates
-were **2,238 passed, 79 skipped, 9 subtests** in the default suite and **157 passed**
-in a native selection; these selections overlap and must not be added.
-
-### Sentiment example
-
-Use a local checkpoint matching the locked revision in the evidence map:
-
-```python
-from mlx_one import classify
-result = classify("/local/pinned-distilbert-sst2", "I enjoyed this film.")
-print(result.to_dict())
-```
-
-```sh
-mlx-one classify /local/pinned-distilbert-sst2 "I enjoyed this film." --json-output
-mlx-one serve /local/pinned-distilbert-sst2 --offline --alias sentiment --no-warmup
-```
-
-The server accepts `POST /v1/tasks/text-classification` with JSON
-`{"model":"sentiment","input":"I enjoyed this film."}` and configured bearer
-authentication. HTTP requires the existing `server` extra; CLIP image processing
-requires the `vision` extra. The [API contracts](docs/native_tasks/api-contracts.md) cover all
-four profiles, input limits and score semantics. Clean-wheel verification runs
-outside the checkout with reference frameworks absent and network access disabled.
-<!-- mlx-one:verified-task-results:end -->
-
-<!-- mlx-one:mlxboost-summary:start -->
-## MLXBoost: optional execution module
-
-MLXBoost is an independent optional module **inside MLX-One**. The current
-implementation and defaults are unchanged: `reference_dense` is the default;
-`mlxboost_b1` and `fast_decode` require explicit opt-in and compatible execution
-facts. Unsupported profiles fall back with a recorded reason, or raise when
-strict reference handling is requested. It remains **EXPERIMENTAL**, with no
-production rollout approval.
-
-Historical Apple M4 / 32 GiB HTTP measurements (MLX 0.32.2):
-
-| Checkpoint / precision | Flag off (tok/s) | Flag on (tok/s) | Timed requests per flag |
-|---|---:|---:|---|
-| Qwen2.5-0.5B-Instruct / Q8 | 22.94 | 109.17 | 50: five processes × ten requests |
-| Qwen3-0.6B / Q8 | 21.42 | 96.42 | 50: five processes × ten requests |
-| SmolLM2-1.7B-Instruct / BF16 | 15.39 | 24.56 | 6: three processes × two requests |
-
-These are medians of per-request **output tokens / complete HTTP SSE wall time**,
-not decode-only or direct-model rates. One warmup per process and model loading
-are excluded. Cohorts and run order differ; host load and thermals were not
-controlled. The two Qwen cohorts have 100/100 paired exact-output matches across
-the models. This is bounded evidence, not a general speedup guarantee.
-
-The measured change skips impossible calibration metadata/hash/inventory work
-when no matching activation-peak candidate exists. It adds no custom Metal
-kernel and does not alter model equations. Existing cached-vs-fresh model
-qualification failures remain failed; a source-neutral execution change can be
-evaluated separately under the current policy. See the
-[benchmark evidence and limits](docs/publication/2026-11-04/audit.md#mlxboost-evidence)
-and [module boundary ADR](docs/architecture/mlxboost-module-boundary.md).
-
-A standalone **`mlx-one-boost` distribution is PROPOSED ONLY**. No package split,
-dependency, installation command, import migration or default change is shipped.
-<!-- mlx-one:mlxboost-summary:end -->
 
 ## Supported Models
 
