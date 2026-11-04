@@ -19,7 +19,9 @@ p.add_argument("--fixtures", required=True, type=Path)
 p.add_argument("--python", required=True, type=Path, help="native-only installed wheel interpreter")
 p.add_argument("--output", required=True, type=Path)
 a = p.parse_args()
-root, fixtures, python, output = (x.resolve() for x in (a.checkout, a.fixtures, a.python, a.output))
+root, fixtures, output = (x.resolve() for x in (a.checkout, a.fixtures, a.output))
+# Preserve the venv executable symlink; resolving it selects the system interpreter.
+python = a.python.absolute()
 output.mkdir(parents=True, exist_ok=False)
 assert not subprocess.check_output(["git", "status", "--porcelain"], cwd=root)
 env = {**os.environ, "MLX_ENABLE_TF32": "0", "HF_HUB_OFFLINE": "1"}
