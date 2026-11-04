@@ -1,0 +1,133 @@
+transformers:
+  repository: https://github.com/huggingface/transformers
+  release: v4.57.1
+  commit: 8cb5963cc22174954e7dca2c0a3320b7dc2f4edc
+  license: Apache-2.0
+  files:
+    src/transformers/models/vit/modeling_vit.py:
+      sha256: f6497cc352acb8e29c166ca11759bbba79af69c533925a2bdaffb805e8800852
+    src/transformers/models/vit/configuration_vit.py:
+      sha256: ab38ea9ddb1173a3f277c6224c5bc06def8e2082724523ce75414a552241d858
+    src/transformers/models/vit/image_processing_vit.py:
+      sha256: f14f573808318cec0bb7d1de26dc21a6a18dbc303884cd9988840c8e12ab1e0e
+    src/transformers/models/distilbert/modeling_distilbert.py:
+      sha256: 2d900f7eac999845ccea9c0fee366f7a477bc4424fbc2d97daf17b7c8e828643
+    src/transformers/models/distilbert/configuration_distilbert.py:
+      sha256: 876ac1287fdafda11d443a3ee4910701b57051fd7ee92cbac693518dd2ef8671
+    src/transformers/models/bert/modeling_bert.py:
+      sha256: 89e5e5098b98a206c8835c6c00b52b40d6d078a5994c40f300f98173969137c2
+    src/transformers/models/bert/configuration_bert.py:
+      sha256: 76fe8eb30215a4d52b5ad23b5a63375da000f02f1907e4b72f3b39265f4b9159
+    src/transformers/models/clip/modeling_clip.py:
+      sha256: 3e779a99827618d6e6d57583ec4f5c0d765321dfa5054a4ffca6a56bb004d499
+    src/transformers/models/clip/processing_clip.py:
+      sha256: 21f1be93559bc4c21678aa7600b3996a55c2e46545beff1e060a1d542ae66983
+    src/transformers/models/clip/image_processing_clip.py:
+      sha256: d2c60d6c282e0731c15171d442365c6d06ca6885f3523c791d29390d6f346eca
+    src/transformers/models/siglip2/modeling_siglip2.py:
+      sha256: cb18cd6d8d2e0159d995b4ff954b5963d7eade5aacd0478450fe289ab9b52a1e
+    src/transformers/models/siglip2/modular_siglip2.py:
+      sha256: bed094d2aa4589d8445e44cf323bad22fdbd0e4ad3072e2cf8e8c018f057c46d
+    src/transformers/models/siglip2/processing_siglip2.py:
+      sha256: f688116ff337d9fffa53107fe8666a7f66b4a0dfe1f7363773de865812e26036
+    src/transformers/models/siglip2/image_processing_siglip2.py:
+      sha256: 0a0c44aec5dc3d27fd395b1cfad5d4afce70d65f509b7ee0a9cff37a8f028058
+    src/transformers/models/detr/modeling_detr.py:
+      sha256: 25486f6486e8e1e79acd57e76735c2aeaece6343782cff6f2780ec876ba60715
+    src/transformers/models/detr/image_processing_detr.py:
+      sha256: 339f2710ab96812ce6ba6039ac8a277719e08664a2f88d0afaceaa807f59165c
+    src/transformers/models/rt_detr/modeling_rt_detr.py:
+      sha256: 5bbaf160f380c0acc8014d5bd60d052c85bdf766e8c2bca9d5ae073b361a9a7c
+    src/transformers/models/rt_detr/modular_rt_detr.py:
+      sha256: 53902ce09737e3579412655d69114691e63ab9d84c3373f31a2b1e22a11bcf27
+    src/transformers/models/rt_detr/image_processing_rt_detr.py:
+      sha256: 6b206c7833d12595f83f0799ae7bd1fd92173f3a3d5ce74fc2264b00f18b18b0
+    src/transformers/models/qwen2_5_vl/modeling_qwen2_5_vl.py:
+      sha256: f5051523300145f66de080765c06bd8080350c15692c096d2c38e73fe9d03099
+    src/transformers/models/qwen2_5_vl/modular_qwen2_5_vl.py:
+      sha256: f13e6b90c0c0f412aeac2016066e65e7b92d396c4159880cdd04914969a40e88
+    src/transformers/models/qwen2_5_vl/processing_qwen2_5_vl.py:
+      sha256: 6a88107b85320ca9ee1154731530db584ba048a12aff1ebab2f7bdc77062184d
+    src/transformers/models/qwen2_vl/image_processing_qwen2_vl.py:
+      sha256: 7820a0fcca107e75605e08d9b774285ca2b0316f857bc0225c779794705ecf4f
+    src/transformers/models/qwen2_vl/video_processing_qwen2_vl.py:
+      sha256: 3303475b2c704a17c8d0256ede3c79e3ff09fa43575bf90c7de41b7295878579
+    src/transformers/models/depth_anything/modeling_depth_anything.py:
+      sha256: 5143047845e229ce87064b2ff8efd32b873f34563e01de7198ab19ac3b23167d
+    src/transformers/models/depth_anything/configuration_depth_anything.py:
+      sha256: b3f97038c72b012b88b9de23330f2b067e78bcd9f6cc1cdbd514d5566ff52835
+    src/transformers/models/distilbert/tokenization_distilbert.py:
+      sha256: 869be35456e944a435ac5296f50a06cd47f60ecdc30182defd944b5a2d84742a
+    src/transformers/models/distilbert/tokenization_distilbert_fast.py:
+      sha256: 19f6065eba28705bf045a86bd4a1d3a30cbeaad630a2a7aa9addf531695fd84d
+    src/transformers/models/bert/tokenization_bert.py:
+      sha256: 15f92ca3917a52e2b2150ff8028e28a7493da350dff74a9e03d209a588f6b7df
+    src/transformers/models/bert/tokenization_bert_fast.py:
+      sha256: 404eb49966d46d07fc0fde8be5ebc2aaaacdd2145b2b3e8b297860d877fc4ff0
+    src/transformers/pipelines/token_classification.py:
+      sha256: 10b0ac001de99cc062bb98c1f9eb888da3aff0ba601c529a0b6a17f5af590d73
+    src/transformers/pipelines/zero_shot_image_classification.py:
+      sha256: 6024c80d25839a60a42548f9d0aa671cb6cc679d5c063a60c7fb38ed9727ae3d
+    src/transformers/tokenization_utils_fast.py:
+      sha256: 558e454ee6850e90e8bc5d1782e35878dfda1da9bfdf997ae113fa7ff771a0f3
+    src/transformers/models/siglip/modeling_siglip.py:
+      sha256: da1b862c915b861f211ec6dac7615e28d8642f9905b86165ddbdc23b8093eb1d
+    src/transformers/models/siglip/configuration_siglip.py:
+      sha256: dc6561226cda5b758217243721f0be64cdd9036aa6bc0fc1123999c8d390c9f9
+    src/transformers/models/siglip/processing_siglip.py:
+      sha256: 3a2b7c83ac25331042a7d7e1eaabd2b8d64241c43164196ca16e9aefb1e3cc2e
+    src/transformers/models/siglip/image_processing_siglip.py:
+      sha256: f686c098214b194a88fb970e665fd86cdc9e322d34d6b0356acc36e6a1f6b13e
+    src/transformers/models/gemma/tokenization_gemma_fast.py:
+      sha256: 884266d1b7a34986f50e69976dbe94b9165a7865f448b1b5b82c79bfadb98532
+    src/transformers/models/clip/configuration_clip.py:
+      sha256: 1cd2cc0728697ba2a70c1aceccc51cc85518c0a30865729d31586b9151b9dafb
+    src/transformers/models/dinov2/modeling_dinov2.py:
+      sha256: def22737f3b5bb0d1500e9e41ea39fd8af59b462713ce7ef507e12a57c3dc4a5
+    src/transformers/models/dinov2/configuration_dinov2.py:
+      sha256: d36d05e792619389f06e9cf17c3c738bbecfa1efb93a9b8667e7fe9b11036058
+    src/transformers/models/dpt/image_processing_dpt.py:
+      sha256: 6d969ca3a0c6ed7ed44ad748e5ee568ec97d67cd984f868dabc88d6706710def
+    src/transformers/image_transforms.py:
+      sha256: 88e55f70d49404d85b4cca3b0826bf9e29630eb0afb828d37f4347c1fb07986e
+    src/transformers/image_utils.py:
+      sha256: 4ee4b03eb9bc9d9b2d882c0ec3972d828a0fc1af9620f34ac9d196ddc816c47d
+silero_vad:
+  repository: https://github.com/snakers4/silero-vad
+  release: v6.2.2
+  commit: 60b7ffa243625ebdc1070275a29f18c87843786a
+  tag_verified: true
+  license: MIT
+  files:
+    LICENSE:
+      sha256: 2e63e9a38b6e8fc0c7bc37ce174caca1862870856c6daf5697cfb785e925520b
+      size_bytes: 1075
+    src/silero_vad/model.py:
+      sha256: 40762a80d1278605480f75f90c6510c1a4ab71bd230f45c334e4f9c5e402181d
+      size_bytes: 1504
+    src/silero_vad/utils_vad.py:
+      sha256: 61917c35404b9296b4c3aee8e2f9635c3e6f27916701aa665dd91827418f5660
+      size_bytes: 28483
+    src/silero_vad/tinygrad_model.py:
+      sha256: 79afb8aae28bb9d20735df4053bef1191a85b74a0db335a5fc16c302ddda7e86
+      size_bytes: 2563
+    src/silero_vad/data/silero_vad_16k.safetensors:
+      sha256: c59271c284ae9c8335d795d60e0bfdb71aaaceec578d9bd9ffc1b8153c319ea1
+      size_bytes: 1239748
+    src/silero_vad/data/silero_vad.jit:
+      sha256: e1122837f4154c511485fe0b9c64455f7b929c96fbb8d79fbdb336383ebd3720
+      size_bytes: 2272526
+    tests/data/test.wav:
+      sha256: 89f17d9c94c4b31eb320f424628bcbc920abaddbee6e2760fd868bfb1d9a2e47
+      size_bytes: 1920044
+    tests/test_sequence_parity.py:
+      sha256: 16b83b63643b95bd55d0a2fe9ff28121ad456680ac6c3f927eb643400597e0be
+      size_bytes: 3011
+timm_reference_backbone:
+  version: 1.0.22
+  license: Apache-2.0
+  file: timm/models/resnet.py
+  sha256: dc0e1b7a8c8c268d8e846aa0510ceae129b4e11978c73b3aa471453ac7bf01cf
+  use: isolated DETR ResNet50 reference only; weights supplied by exact DETR checkpoint
+  commit: 78c3724f4545c0067d0b4d2f7df6337196be01ce
+  repository: https://github.com/huggingface/pytorch-image-models

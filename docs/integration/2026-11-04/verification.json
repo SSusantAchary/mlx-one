@@ -1,0 +1,633 @@
+{
+  "version": "0.1.1",
+  "environment": {
+    "python": "3.12.11",
+    "platform": "macOS-15.8.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M4",
+    "memory_bytes": 34359738368,
+    "packages": {
+      "click": "8.5.0",
+      "fastapi": "0.141.1",
+      "packaging": "26.3",
+      "mlx": "0.32.2",
+      "hf-xet": "1.6.0",
+      "numpy": "2.5.2",
+      "pydantic_core": "2.46.5",
+      "tokenizers": "0.23.2",
+      "httpcore": "1.0.9",
+      "starlette": "1.6.0",
+      "fsspec": "2026.7.0",
+      "huggingface_hub": "1.30.0",
+      "safetensors": "0.8.0",
+      "h11": "0.16.0",
+      "pydantic": "2.13.5",
+      "python-multipart": "0.0.32",
+      "PyYAML": "6.0.3",
+      "mlx-one": "0.1.1",
+      "idna": "3.19",
+      "Jinja2": "3.1.6",
+      "annotated-types": "0.8.0",
+      "annotated-doc": "0.0.5",
+      "MarkupSafe": "3.0.3",
+      "mlx-metal": "0.32.2",
+      "typing-inspection": "0.4.4",
+      "tqdm": "4.70.0",
+      "regex": "2026.9.3",
+      "certifi": "2026.10.19",
+      "httpx": "0.28.1",
+      "typing_extensions": "4.16.0",
+      "filelock": "3.32.5",
+      "uvicorn": "0.52.4",
+      "pillow": "12.3.0",
+      "anyio": "4.15.1"
+    }
+  },
+  "date": "2026-11-04",
+  "branch": "integration/native-tasks-publication-20261104",
+  "base": {
+    "frozen_base": "c0bcfba3b0d19cd50a6b547ab170e89592083438",
+    "selected_pr_base": "main",
+    "selected_pr_base_remote_head": "eb8bd3887ace3217ba23dc14525cef9c8a77e50d",
+    "current_remote_main": "eb8bd3887ace3217ba23dc14525cef9c8a77e50d",
+    "merge_base": "c0bcfba3b0d19cd50a6b547ab170e89592083438",
+    "left_right_commit_count": "0\t10",
+    "main_only_commits": [
+      "eb8bd38 Merge pull request #27 from SSusantAchary/chore/alpha-repository-cleanup",
+      "e3b299c Merge pull request #26 from SSusantAchary/chore/alpha-repository-cleanup",
+      "a91b9ba Merge pull request #25 from SSusantAchary/chore/alpha-repository-cleanup",
+      "9e2a3d7 Merge pull request #24 from SSusantAchary/chore/alpha-repository-cleanup",
+      "39ad7dc Merge pull request #23 from SSusantAchary/chore/alpha-repository-cleanup",
+      "b4026cd Merge pull request #22 from SSusantAchary/chore/alpha-repository-cleanup",
+      "7eb437c Merge pull request #21 from SSusantAchary/chore/alpha-repository-cleanup",
+      "26e2b7b Merge pull request #20 from SSusantAchary/chore/alpha-repository-cleanup",
+      "a3b4457 Merge pull request #19 from SSusantAchary/feature/registry-native-inference",
+      "0ccae71 Merge pull request #18 from SSusantAchary/qualification/p1-native-m4"
+    ],
+    "main_only_files": [],
+    "merge_order": [
+      "Review integrated implementation and documentation PR against main",
+      "Maintainer updates base and reruns checks if upstream changes",
+      "Merge only after explicit maintainer review; no automatic merge"
+    ],
+    "automatic_merge": false,
+    "main_source_tree_identical_to_frozen_base": true,
+    "base_alignment_changed_no_files": true,
+    "stale_tracking_ref_corrected_by_explicit_fetch": true
+  },
+  "frozen_identities": {
+    "original_head": "c0bcfba3b0d19cd50a6b547ab170e89592083438",
+    "original_committed_tree": "0d459a7ef5ae26fc21c65cf540db138a03aeb418",
+    "frozen_dirty_tree": "24618d2a9f34d49bd26b204b57c6f698431ee87e",
+    "archive_sha256": "ad8d79cf0d60cdd100249f9efd88bd66fb7fa8d038eb13258fb3f8cc1b9b7aff",
+    "documentation_commit": "81ea77a4db45741aefe8c18a2df6ddec2a5b03d9",
+    "documentation_tree": "a2c2052a5cabf021d179c5e0da4cc0161a829397"
+  },
+  "validated_source_commit": "ad8a940b1caaaee121432dc7a7ae8760ddfebd67",
+  "validated_source_tree": "5aa1c3673b028f60261a0f0fd87b03742ec55896",
+  "implementation": {
+    "original_files_copied": 144,
+    "version_only_exceptions": [
+      "pyproject.toml",
+      "src/mlx_one/__init__.py"
+    ],
+    "no_model_math_changes": true,
+    "no_tolerance_changes": true
+  },
+  "wheel": {
+    "file": "mlx_one-0.1.1-py3-none-any.whl",
+    "sha256": "8876d5b8b86d73df31e3a9e3a5cdabae584a4a2f1b24cb5f34492219a6ca27b0",
+    "bytes": 2326945,
+    "packaged_source_and_installed_files_equal": 496,
+    "package_inventory_sha256": "0e229d92b93473d3ed2754cd40536d7e79d24f0b95e22c0bc1e32448a95345e1",
+    "readme_metadata_equal": true,
+    "no_weights_or_evaluation_assets": true,
+    "native_only": true,
+    "extras": [
+      "server",
+      "vision",
+      "audio"
+    ],
+    "version_metadata": {
+      "package_version": "0.1.1",
+      "distribution_version": "0.1.1",
+      "cli_version": "mlx-one, version 0.1.1",
+      "openapi_version": "0.1.1"
+    }
+  },
+  "tests": {
+    "default": {
+      "passed": 2238,
+      "skipped": 79,
+      "subtests_passed": 9,
+      "warnings": 2,
+      "log": "default-tests-0.1.1.log"
+    },
+    "native": {
+      "passed": 160,
+      "skipped": 17,
+      "warnings": 2,
+      "log": "native-regression-0.1.1.log"
+    },
+    "overlap": "Do not sum these selections",
+    "skips": [
+      "two separately gated Whisper/MiniCPM5 sessions",
+      "15 native checks require an unavailable local reference snapshot"
+    ],
+    "warnings": "Existing Starlette/AnyIO deprecations"
+  },
+  "task_replay": {
+    "parity": [
+      {
+        "case": "distilbert-max32-parity",
+        "tensors": 154,
+        "passed": true,
+        "reference_sha256": "d4ec186ace4668f42bd2d2f36fd3689828027cc88951ab2a397ec0608880d26e"
+      },
+      {
+        "case": "distilbert-b2-parity",
+        "tensors": 154,
+        "passed": true,
+        "reference_sha256": "0a4f6f47db899bdc606b82945d21ecbc9dc10d625c851eee6a300151e928a97c"
+      },
+      {
+        "case": "ner-b1-parity",
+        "tensors": 520,
+        "passed": true,
+        "reference_sha256": "daf10b4f9c33d791ff6ecac279f3c78fe1aa859f98291dc35b98e6655af5cfec"
+      },
+      {
+        "case": "ner-b2-parity",
+        "tensors": 260,
+        "passed": true,
+        "reference_sha256": "ac7e437b7cbc7a8dc5b69e801dbd88e66091323147462c6f19d02154533137eb"
+      },
+      {
+        "case": "clip-astronaut-2-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "2c76b01bc4d32c13f47b01a6d61298e049fb25ea7ca7ae3bee288d0155368c83"
+      },
+      {
+        "case": "clip-astronaut-10-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "050d7113c95aa5134ff4af5ee9e581993effeb7d7d930db7e6637f5485e8b504"
+      },
+      {
+        "case": "clip-coffee-2-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "041ec9dc2ad97f2fb6a903b6052d6d65166f32d68ea1fa00815046781ceb550b"
+      },
+      {
+        "case": "clip-coffee-10-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "97af180ee4c5c1522a7a67d6c551af226b77c02fa70391dc62ef696f6425bf8e"
+      },
+      {
+        "case": "clip-chelsea-2-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "9872954a7ed21918dff3133f9321ceae87c514197d779733a8be827d3c42802d"
+      },
+      {
+        "case": "clip-chelsea-10-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "dd4dd2343b69c4408ecf7632bb624b9f77ac579bf64711669b20fd8dac407e5a"
+      },
+      {
+        "case": "clip-rocket-2-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "c26ad9fdafd86ab3d6726a5f7b2e37410ea0ba297e454aa70dee8449ea85cd63"
+      },
+      {
+        "case": "clip-rocket-10-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "86495ae9a86d45c4bfdd3f60459eb7991247f27d52bee7bedd1a8805eee4080c"
+      },
+      {
+        "case": "clip-camera-2-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "67081d8ec219e6e430df9c497aa7ac51d54158174ade6b6fd6a4c502196582f9"
+      },
+      {
+        "case": "clip-camera-10-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "df461a56697ea2bf4874d745db224260bdeb7ce24b56afbf1582e0102fbc12fe"
+      },
+      {
+        "case": "clip-clock_motion-2-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "d44b58dddf1661b14969f83d3bd8257b837b265700cd22118d8cac2963ea72f7"
+      },
+      {
+        "case": "clip-clock_motion-10-parity",
+        "tensors": 39,
+        "passed": true,
+        "reference_sha256": "2e05b6c2b715fb3ff5070c7268945160f8295a2a3d3eb62b0cc741f8161e4595"
+      },
+      {
+        "case": "silero-full-parity",
+        "tensors": 10,
+        "passed": true,
+        "reference_sha256": "fc3cb49828951ff0543ac984f6b061af27dfb3b9cae01f93aeada0480625ce1b"
+      }
+    ],
+    "parity_cases": 17,
+    "tensors": 1566,
+    "sentiment": {
+      "count": 872,
+      "correct": 794,
+      "accuracy": 0.9105504587155964,
+      "source_top1_agreement": 872
+    },
+    "ner": {
+      "sentences": 100,
+      "tp": 153,
+      "fp": 156,
+      "fn": 45,
+      "strict_entity_f1": 0.6035502958579881,
+      "source_decisions_agree": true,
+      "max_abs_entity_score_error": 6.020069122314453e-06
+    },
+    "clip": {
+      "2": {
+        "images": 6,
+        "correct": 6
+      },
+      "10": {
+        "images": 6,
+        "correct": 5
+      }
+    },
+    "clip_100_labels_rejected": true,
+    "mlxboost": {
+      "default_off": true,
+      "reference_dense_default": true,
+      "explicit_opt_in": true,
+      "unsupported_fallback": true,
+      "strict_raises": true
+    },
+    "forbidden_runtime_imports": [],
+    "wheel_import": true,
+    "vad": {
+      "tp": 10,
+      "fp": 0,
+      "fn": 0,
+      "tn": 3,
+      "source_segments_agree": true
+    },
+    "interfaces": {
+      "sentiment": "Python/CLI/HTTP PASS",
+      "ner": "Python/CLI/HTTP PASS",
+      "clip": "Python/CLI/HTTP PASS",
+      "silero": "Python/CLI/HTTP PASS"
+    },
+    "qualification_promotions": 0,
+    "reference_execution": "none; sealed source oracle artifacts replayed"
+  },
+  "live_http": {
+    "results": [
+      {
+        "task": "text-classification",
+        "http_status": 200,
+        "unauth_status": 401,
+        "python_http_equal": true,
+        "repeat_equal": true,
+        "clean_server_exit": true
+      },
+      {
+        "task": "token-classification",
+        "http_status": 200,
+        "unauth_status": 401,
+        "python_http_equal": true,
+        "repeat_equal": true,
+        "clean_server_exit": true
+      },
+      {
+        "task": "zero-shot-image-classification",
+        "http_status": 200,
+        "unauth_status": 401,
+        "python_http_equal": true,
+        "repeat_equal": true,
+        "clean_server_exit": true
+      },
+      {
+        "task": "voice-activity-detection",
+        "http_status": 200,
+        "unauth_status": 401,
+        "python_http_equal": true,
+        "repeat_equal": true,
+        "clean_server_exit": true
+      }
+    ],
+    "forbidden_runtime_imports": []
+  },
+  "provenance": {
+    "protected_files_unchanged": 46,
+    "original_files_unchanged": 1658,
+    "implementation_copied_exactly": 144,
+    "milestone_seals": [
+      {
+        "milestone": "M1",
+        "files": 114,
+        "manifest_sha256": "15edc85df91b9b9c28090e167add87b2e27f4d4806bdccc8365f73a31bca68ba"
+      },
+      {
+        "milestone": "M2",
+        "files": 335,
+        "manifest_sha256": "767a97c07d1c47e4ef14c8db8e7e8d5b0fec6013b171c7dc5ed0973e23be83a0"
+      },
+      {
+        "milestone": "M3",
+        "files": 365,
+        "manifest_sha256": "b3b7a7670ea0d3cd9c1d627883fe6f1a320b790bb1eb43ee05f1c2b5cd8fe87c"
+      },
+      {
+        "milestone": "M4",
+        "files": 280,
+        "manifest_sha256": "a98cae2d7338a156578f602441845782925592ab63847edbfa3474795b59492b"
+      },
+      {
+        "milestone": "M5",
+        "files": 285,
+        "manifest_sha256": "21ec9d7e56a389d5b7e60e860b6b5fe2ad0ece22c1ed2f231f600d93eebc3426"
+      }
+    ],
+    "sealed_files": 1379,
+    "checkpoints": [
+      {
+        "model_id": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+        "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+        "asset_count": 5,
+        "asset_hashes": {
+          "config.json": "582122c8f414793d131e10022ce9ba04e3811a9da6389137ee2f18665b4f4d15",
+          "tokenizer_config.json": "5ab9097b4149371c5fd52b2d6e26cb6f9c07c0d19fcfdda895b1adad6b57c3e0",
+          "vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "model.safetensors": "7c3919835e442510166d267fe7cbe847e0c51cd26d9ba07b89a57b952b49b8aa",
+          "README.md": "75f17282923fea5b541df92640e2d8646c4ff5e8e3e16ed0a7e4e50ee7588851"
+        }
+      },
+      {
+        "model_id": "dslim/bert-base-NER",
+        "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+        "asset_count": 6,
+        "asset_hashes": {
+          "model.safetensors": "b04492186cfb45a64908487a17a9f8d6ddec3a403ef39db5bca688f0fa702a34",
+          "tokenizer_config.json": "4c052d60b505817149a29e88c5292d7779ddecfadbfc6208729e61403ec558ba",
+          "special_tokens_map.json": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3",
+          "config.json": "a5dc77a0d60dadf5645103017f3c7b8ece4ef1b450bc1ea68e17da1d3ae7e515",
+          "README.md": "f570efa74d5f40eeafa35af45bc20ed6bdf49a5e517782218a23467d3bae576f",
+          "vocab.txt": "eeaa9875b23b04b4c54ef759d03db9d1ba1554838f8fb26c5d96fa551df93d02"
+        }
+      },
+      {
+        "model_id": "openai/clip-vit-base-patch32",
+        "revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+        "asset_count": 9,
+        "asset_hashes": {
+          "model.safetensors": "de1e7e3f5fa864a03f816d496defd31b96ffe818c890fe71ce9893b6e25430a9",
+          "tokenizer_config.json": "34b7336e4bee12e0a9730eaf5189f582ef3c3eea5027f65730e5717256755aad",
+          "special_tokens_map.json": "f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf",
+          "config.json": "b575ef3c36f2a057fa19e221650105052d61cc9c1a972ec15019c6261ec98770",
+          "tokenizer.json": "b556ac8c99757ffb677208af34bc8c6721572114111a6e0aaf5fa69ff0b8d842",
+          "README.md": "8f0e8c678e0afe5f384f3bf8a6694c1cb53c41e52f86277967b6c5354cb0f9f4",
+          "merges.txt": "f526393189112391ce6f9795d4695f704121ce452c3aad1f5335cc41337eba85",
+          "vocab.json": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363",
+          "preprocessor_config.json": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd"
+        }
+      },
+      {
+        "model_id": "snakers4/silero-vad-16k",
+        "revision": "60b7ffa243625ebdc1070275a29f18c87843786a",
+        "asset_count": 7,
+        "asset_hashes": {
+          "LICENSE": "2e63e9a38b6e8fc0c7bc37ce174caca1862870856c6daf5697cfb785e925520b",
+          "src/silero_vad/tinygrad_model.py": "79afb8aae28bb9d20735df4053bef1191a85b74a0db335a5fc16c302ddda7e86",
+          "src/silero_vad/utils_vad.py": "61917c35404b9296b4c3aee8e2f9635c3e6f27916701aa665dd91827418f5660",
+          "src/silero_vad/data/silero_vad_16k.safetensors": "c59271c284ae9c8335d795d60e0bfdb71aaaceec578d9bd9ffc1b8153c319ea1",
+          "src/silero_vad/data/silero_vad.jit": "e1122837f4154c511485fe0b9c64455f7b929c96fbb8d79fbdb336383ebd3720",
+          "tests/data/test.wav": "89f17d9c94c4b31eb320f424628bcbc920abaddbee6e2760fd868bfb1d9a2e47",
+          "tests/test_sequence_parity.py": "16b83b63643b95bd55d0a2fe9ff28121ad456680ac6c3f927eb643400597e0be"
+        }
+      }
+    ],
+    "source_commits": {
+      "transformers": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "silero_vad": "60b7ffa243625ebdc1070275a29f18c87843786a",
+      "timm_reference_backbone": "78c3724f4545c0067d0b4d2f7df6337196be01ce"
+    },
+    "transformers_files_verified": 44,
+    "model_weights_or_evaluation_assets_in_wheel": false
+  },
+  "preservation": {
+    "original_files_unchanged": 1658,
+    "original_dirty_paths_preserved": 268,
+    "main_head_and_index_unchanged": true,
+    "protected_files_unchanged": 46,
+    "model_performance_sha256": "55a401bc1235bfba9fb4db609c3e95c6f1a4eb97a5802532023a4f79290a31e0",
+    "original_worktree_version_unchanged": true
+  },
+  "links": {
+    "external_checked": 24,
+    "external_passed": 24,
+    "external_results": [
+      {
+        "url": "https://github.com/Blaizzy/mlx-vlm/tree/main#model-specific-documentation",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://github.com/Neywa-Labs/mlx-vlm/tree/main",
+        "elapsed_s": 1.202
+      },
+      {
+        "url": "https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml",
+        "elapsed_s": 1.148
+      },
+      {
+        "url": "https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml/badge.svg",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml/badge.svg",
+        "elapsed_s": 0.627
+      },
+      {
+        "url": "https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct/tree/31b70e2e869a7173562077fd711b654946d38674",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct/tree/31b70e2e869a7173562077fd711b654946d38674",
+        "elapsed_s": 0.522
+      },
+      {
+        "url": "https://huggingface.co/LiquidAI/LFM2-350M/tree/0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/LiquidAI/LFM2-350M/tree/0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+        "elapsed_s": 0.484
+      },
+      {
+        "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/tree/7ae557604adf67be50417f59c2c2f167def9a775",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/tree/7ae557604adf67be50417f59c2c2f167def9a775",
+        "elapsed_s": 0.467
+      },
+      {
+        "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/tree/989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/tree/989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+        "elapsed_s": 0.494
+      },
+      {
+        "url": "https://huggingface.co/Qwen/Qwen3-0.6B/tree/c1899de289a04d12100db370d81485cdf75e47ca",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/Qwen/Qwen3-0.6B/tree/c1899de289a04d12100db370d81485cdf75e47ca",
+        "elapsed_s": 0.455
+      },
+      {
+        "url": "https://huggingface.co/Qwen/Qwen3.5-0.8B/tree/2fc06364715b967f1860aea9cf38778875588b17",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/Qwen/Qwen3.5-0.8B/tree/2fc06364715b967f1860aea9cf38778875588b17",
+        "elapsed_s": 0.876
+      },
+      {
+        "url": "https://huggingface.co/datasets/getomni-ai/ocr-benchmark",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/datasets/getomni-ai/ocr-benchmark",
+        "elapsed_s": 0.313
+      },
+      {
+        "url": "https://huggingface.co/datasets/huggingface/documentation-images",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/datasets/huggingface/documentation-images",
+        "elapsed_s": 0.291
+      },
+      {
+        "url": "https://huggingface.co/datasets/toghrultahirov/handwritten_text_ocr",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/datasets/toghrultahirov/handwritten_text_ocr",
+        "elapsed_s": 0.299
+      },
+      {
+        "url": "https://huggingface.co/facebook/sam3",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/facebook/sam3",
+        "elapsed_s": 0.3
+      },
+      {
+        "url": "https://huggingface.co/google/gemma-3-1b-it/tree/dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/google/gemma-3-1b-it/tree/dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+        "elapsed_s": 0.55
+      },
+      {
+        "url": "https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/tree/9213176726f574b556790deb65791e0c5aa438b6",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/tree/9213176726f574b556790deb65791e0c5aa438b6",
+        "elapsed_s": 0.564
+      },
+      {
+        "url": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct/tree/f39ac1d28e925b323eae81227eaba4464caced4e",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct/tree/f39ac1d28e925b323eae81227eaba4464caced4e",
+        "elapsed_s": 0.514
+      },
+      {
+        "url": "https://huggingface.co/openai-community/gpt2/tree/607a30d783dfa663caf39e06633721c8d4cfcd7e",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://huggingface.co/openai-community/gpt2/tree/607a30d783dfa663caf39e06633721c8d4cfcd7e",
+        "elapsed_s": 0.427
+      },
+      {
+        "url": "https://img.shields.io/badge/License-Apache%202.0-blue.svg",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://img.shields.io/badge/License-Apache%202.0-blue.svg",
+        "elapsed_s": 0.056
+      },
+      {
+        "url": "https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white",
+        "elapsed_s": 0.051
+      },
+      {
+        "url": "https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple",
+        "elapsed_s": 0.801
+      },
+      {
+        "url": "https://img.shields.io/badge/status-alpha-orange",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://img.shields.io/badge/status-alpha-orange",
+        "elapsed_s": 0.051
+      },
+      {
+        "url": "https://ml-explore.github.io/mlx/build/html/usage/precision.html",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://ml-explore.github.io/mlx/build/html/usage/precision.html",
+        "elapsed_s": 0.302
+      },
+      {
+        "url": "https://semver.org/spec/v2.0.0.html",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://semver.org/spec/v2.0.0.html",
+        "elapsed_s": 0.502
+      },
+      {
+        "url": "https://www.python.org/",
+        "status": "PASS",
+        "http_status": 200,
+        "final_url": "https://www.python.org/",
+        "elapsed_s": 0.058
+      }
+    ],
+    "markdown": {
+      "files": 39,
+      "local_links_checked": 261,
+      "errors": []
+    }
+  },
+  "publication": {
+    "status": "NOT PUBLISHED",
+    "reason": "No authenticated GitHub CLI, connector or token session",
+    "automatic_merge": false,
+    "ready_for_review": true,
+    "package_release_qualified": false
+  },
+  "limitations": [
+    "All four task profiles remain EXPERIMENTAL; other blocked/not-implemented decisions unchanged",
+    "No fully reproducible historical GPT-OSS revision/weight-lock claim",
+    "SAM3 raw archives not independently verified; report-backed controlled fixtures only",
+    "Raw fixtures remain local and are required for complete replay",
+    "Dataset reuse/CLIP weight license/broader task quality gates remain open"
+  ],
+  "evidence_manifest_sha256": "b03bfcb59588f4de135cc3726905905c2ca504b0a4f7da83e7e22e22bb2f37b4"
+}

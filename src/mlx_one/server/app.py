@@ -54,7 +54,9 @@ class BodyLimitMiddleware:
         path = str(scope.get("path", ""))
         limit = (
             32 * 1024**2
-            if path in {"/v1/chat/completions", "/v1/ocr"}
+            if path in {"/v1/chat/completions", "/v1/ocr",
+                        "/v1/tasks/zero-shot-image-classification",
+                        "/v1/tasks/voice-activity-detection"}
             else 26 * 1024**2
             if path.startswith("/v1/audio/")
             else self.limit
@@ -165,11 +167,21 @@ def create_app(
     manager = model_manager or ModelManager(
         alias=settings.alias, context_length=settings.context_length
     )
+    try:
+        primary = manager.current_model()
+    except RuntimeError:
+        primary = None
+    if primary is not None and (hasattr(primary, "classification") or hasattr(primary, "ner")
+                                or hasattr(primary, "zero_shot") or hasattr(primary, "vad")):
+        if (settings.inference_mode not in {None, "reference_dense"}
+                or settings.execution_dtype not in {None, "float32"}):
+            raise ValueError("classification tasks require native FP32 reference execution")
     engine = generation_engine or GenerationEngine(
         manager,
         prefix_cache_bytes=settings.prefix_cache_bytes,
         cache_backend=settings.cache_backend,
         inference_mode=settings.inference_mode,
+        mlxboost_config=settings.mlxboost_config,
         execution_dtype=settings.execution_dtype,
         prefill_chunk_size=min(settings.prefill_chunk_size or 512, settings.max_prefill_tokens,
                                max((settings.max_batch_tokens or 2048) // 2, 1)),
@@ -209,8 +221,53 @@ def create_app(
     services = dict(task_services or {})
     try:
         info = manager.model_info()
-        if "image" in getattr(info, "modalities", ()) and "ocr.recognize" not in info.tasks:
+        if ("image" in getattr(info, "modalities", ()) and "ocr.recognize" not in info.tasks
+                and "zero-shot-image-classification" not in info.tasks):
             services.setdefault("vision", engine)
+    except RuntimeError:
+        pass
+    owned_vad_service = None
+    try:
+        primary_vad = getattr(manager.current_model(), "vad", None)
+        if primary_vad is not None:
+            from mlx_one.audio.vad import VADEngine
+
+            owned_vad_service = VADEngine(primary_vad, timeout=settings.timeout,
+                                         queue_size=settings.queue_size)
+            services.setdefault("voice-activity-detection", owned_vad_service)
+    except RuntimeError:
+        pass
+    owned_zero_shot_service = None
+    try:
+        primary_zero_shot = getattr(manager.current_model(), "zero_shot", None)
+        if primary_zero_shot is not None:
+            from mlx_one.classification import ZeroShotImageEngine
+
+            owned_zero_shot_service = ZeroShotImageEngine(
+                primary_zero_shot, timeout=settings.timeout, queue_size=settings.queue_size)
+            services.setdefault("zero-shot-image-classification", owned_zero_shot_service)
+    except RuntimeError:
+        pass
+    owned_ner_service = None
+    try:
+        primary_ner = getattr(manager.current_model(), "ner", None)
+        if primary_ner is not None:
+            from mlx_one.classification import TokenClassificationEngine
+
+            owned_ner_service = TokenClassificationEngine(
+                primary_ner, timeout=settings.timeout, queue_size=settings.queue_size)
+            services.setdefault("token-classification", owned_ner_service)
+    except RuntimeError:
+        pass
+    owned_classification_service = None
+    try:
+        primary_classification = getattr(manager.current_model(), "classification", None)
+        if primary_classification is not None:
+            from mlx_one.classification import ClassificationEngine
+
+            owned_classification_service = ClassificationEngine(
+                primary_classification, timeout=settings.timeout, queue_size=settings.queue_size)
+            services.setdefault("text-classification", owned_classification_service)
     except RuntimeError:
         pass
     owned_audio_service = None
@@ -284,6 +341,14 @@ def create_app(
                 clear_caches = getattr(engine, "clear_caches", None)
                 if callable(clear_caches):
                     clear_caches()
+            if owned_vad_service is not None:
+                owned_vad_service.close()
+            if owned_zero_shot_service is not None:
+                owned_zero_shot_service.close()
+            if owned_ner_service is not None:
+                owned_ner_service.close()
+            if owned_classification_service is not None:
+                owned_classification_service.close()
             if owned_audio_service is not None:
                 owned_audio_service.close()
             if owned_ocr_service is not None:
@@ -514,6 +579,12 @@ def create_app(
             exposed_model = manager.model_info().id
             if body.model != exposed_model:
                 return _error(404, f"model {body.model!r} is not loaded", "invalid_request_error")
+            if (hasattr(bundle, "classification") or hasattr(bundle, "ner")
+                    or hasattr(bundle, "zero_shot") or hasattr(bundle, "vad")):
+                return _error(
+                    400, "use the matching /v1/tasks classification endpoint for this model",
+                    "capability_error",
+                )
             if hasattr(bundle, "audio"):
                 return _error(400, "use the audio endpoints for this model", "capability_error")
             if hasattr(bundle, "ocr"):
@@ -850,6 +921,18 @@ def create_app(
             "results": [dict(item) for item in items],
         }
 
+    from mlx_one.server.classification import (
+        install_classification_routes,
+        install_token_classification_routes,
+        install_zero_shot_routes,
+    )
+
+    install_classification_routes(app, manager, services, authorization_dependency)
+    install_token_classification_routes(app, manager, services, authorization_dependency)
+    install_zero_shot_routes(app, manager, services, authorization_dependency)
+    from mlx_one.server.vad import install_vad_routes
+
+    install_vad_routes(app, manager, services, authorization_dependency)
     from mlx_one.server.audio import install_audio_routes
 
     install_audio_routes(app, manager, jobs, services, authorization_dependency)

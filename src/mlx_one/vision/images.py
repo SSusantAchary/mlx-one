@@ -11,7 +11,7 @@ MAX_SOURCE_PIXELS = 20_000_000
 MAX_REQUEST_PIXELS = 22_000_000
 
 
-def decode_image(value):
+def decode_image(value, *, reject_transparency=False):
     """Return an owned, orientation-correct RGB image. Never fetch URLs."""
     from PIL import Image, ImageOps
 
@@ -29,6 +29,8 @@ def decode_image(value):
     else:
         raise ValueError("image must be a local path, PNG/JPEG/WebP bytes, or PIL image")
     try:
+        if reject_transparency and ("A" in source.getbands() or "transparency" in source.info):
+            raise ValueError("transparent images are not qualified for this task")
         if source.format is not None and source.format not in {"PNG", "JPEG", "WEBP"}:
             raise ValueError("only PNG, JPEG and WebP images are supported")
         if getattr(source, "n_frames", 1) != 1:

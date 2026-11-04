@@ -131,6 +131,16 @@ def registered_runtime_types() -> tuple[str, ...]:
         return tuple(sorted(_RUNTIME_REGISTRY))
 
 
+def checkpoint_task_profiles(model_type=None):
+    """Exact-checkpoint evidence fields; architecture availability is not promotion."""
+    import json
+    from importlib.resources import files
+
+    payload = json.loads(files("mlx_one").joinpath("data/native_tasks.json").read_text())
+    return tuple(row for row in payload["profiles"]
+                 if model_type is None or row["model_type"] == model_type)
+
+
 def runtime_coverage() -> tuple[dict, ...]:
     """Every architecture needs a binding; an unresolved plugin is never auto-enabled."""
     rows = []
@@ -143,6 +153,7 @@ def runtime_coverage() -> tuple[dict, ...]:
             "parent_model_type": registration.parent_model_type,
             "adapter_available": registration.adapter_path is not None,
             "shared_service_integrated": registration.integration_status == "integrated",
+            "checkpoint_profiles": checkpoint_task_profiles(model_type),
             "tasks": tuple(t.task.value for t in tasks),
             "declared_tasks": tuple(sorted(get_registration(model_type).tasks)),
             "state_spec_count": len(states), "correctness_qualified": False,

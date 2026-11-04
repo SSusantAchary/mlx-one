@@ -1,0 +1,422 @@
+resolution_date: '2026-11-02'
+resolution: Hugging Face Hub API model sha; not a validation claim
+checkpoints:
+- task: T01
+  model_id: google/vit-base-patch16-224
+  revision: 3f49326eb077187dfe1c2a2bb15fbd74e6ab91e3
+  hub_card_license: apache-2.0
+  asset_hashes:
+    config.json: abdf73cc4ce79495a83f32a8c9265daa7a1363f5a3efa4704c88a6e7f45ad19d
+    preprocessor_config.json: 90d1ae427c27d2b9dcb01f6a62ba96aa67aac2de1697c59cd212055b5035c4a2
+    model.safetensors: 1cea07110a4a47edc51420b2dda6f3b8b58e7256e8f44b4ea6aa9696162ccb5d
+    README.md: edb38cc47675c7320f41d9c9760bb0cc88c5820b482d87e1b5b6b5cc5459938d
+  qualification: EXPERIMENTAL; intermediate FP32 gate fails; no task API
+- task: T02
+  model_id: distilbert/distilbert-base-uncased-finetuned-sst-2-english
+  revision: 714eb0fa89d2f80546fda750413ed43d93601a13
+  hub_card_license: apache-2.0
+  asset_hashes:
+    config.json: 582122c8f414793d131e10022ce9ba04e3811a9da6389137ee2f18665b4f4d15
+    tokenizer_config.json: 5ab9097b4149371c5fd52b2d6e26cb6f9c07c0d19fcfdda895b1adad6b57c3e0
+    vocab.txt: 07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3
+    model.safetensors: 7c3919835e442510166d267fe7cbe847e0c51cd26d9ba07b89a57b952b49b8aa
+    README.md: 75f17282923fea5b541df92640e2d8646c4ff5e8e3e16ed0a7e4e50ee7588851
+  qualification: EXPERIMENTAL; see sealed M1 report
+- task: T03
+  model_id: dslim/bert-base-NER
+  revision: d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc
+  hub_card_license: mit
+  asset_hashes:
+    model.safetensors: b04492186cfb45a64908487a17a9f8d6ddec3a403ef39db5bca688f0fa702a34
+    tokenizer_config.json: 4c052d60b505817149a29e88c5292d7779ddecfadbfc6208729e61403ec558ba
+    special_tokens_map.json: 303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3
+    config.json: a5dc77a0d60dadf5645103017f3c7b8ece4ef1b450bc1ea68e17da1d3ae7e515
+    README.md: f570efa74d5f40eeafa35af45bc20ed6bdf49a5e517782218a23467d3bae576f
+    vocab.txt: eeaa9875b23b04b4c54ef759d03db9d1ba1554838f8fb26c5d96fa551df93d02
+  qualification: EXPERIMENTAL; FP32 B1/B2, none/simple aggregation
+- task: T04
+  model_id: openai/clip-vit-base-patch32
+  revision: 3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268
+  hub_card_license: NOT_REPORTED_BY_API
+  asset_hashes:
+    model.safetensors: de1e7e3f5fa864a03f816d496defd31b96ffe818c890fe71ce9893b6e25430a9
+    tokenizer_config.json: 34b7336e4bee12e0a9730eaf5189f582ef3c3eea5027f65730e5717256755aad
+    special_tokens_map.json: f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf
+    config.json: b575ef3c36f2a057fa19e221650105052d61cc9c1a972ec15019c6261ec98770
+    tokenizer.json: b556ac8c99757ffb677208af34bc8c6721572114111a6e0aaf5fa69ff0b8d842
+    README.md: 8f0e8c678e0afe5f384f3bf8a6694c1cb53c41e52f86277967b6c5354cb0f9f4
+    merges.txt: f526393189112391ce6f9795d4695f704121ce452c3aad1f5335cc41337eba85
+    vocab.json: 5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363
+    preprocessor_config.json: 910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd
+  qualification: EXPERIMENTAL; FP32 single image, 1-10 labels; 100-label trace fails
+  source_weight:
+    file: pytorch_model.bin
+    sha256: a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f
+    size_bytes: 605247071
+  conversion:
+    tool: benchmarks/native_tasks/convert_clip_checkpoint.py
+    round_trip_exact: true
+    source_tensors: 400
+    native_parameters: 398
+  license_note: HF pinned card has no license field; OpenAI repository code MIT; weight
+    license review pending
+- task: T04
+  model_id: google/siglip2-base-patch16-224
+  revision: 75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2
+  hub_card_license: apache-2.0
+  asset_hashes:
+    README.md: 39ac3705d62af9ffa1a14675b8ccb220a75f2d81acd530e564a3b1e3dfe418d8
+    config.json: fe8b5fe6d5734360678fd71c11c21e1ea3364bd8598d34295d9206335973ffd7
+    model.safetensors: 612923381c76ec5a9bed335d1c48827e3f2e506ac31b044b63b2031fadee6a0b
+    preprocessor_config.json: 9b36b57ebaf20f09bf4c22100ccc21877ea6bfe5aead0c00c59f8af8ccefacfc
+    special_tokens_map.json: baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351
+    tokenizer.json: cb9140fae3ac5122c972d37adf83e1248471a38147ad76f8215c8872c6fd8322
+    tokenizer_config.json: 14afe629fe4959b9e0d51e1852b8d9f7ad074f90a1a7125a4fcdd17f06e78fc8
+  qualification: 'BLOCKED: intermediate FP32 trace fails; no task API admission'
+  actual_model_type: siglip (fixed-resolution SigLIP2 checkpoint, not NaFlex siglip2)
+- task: T06
+  model_id: facebook/detr-resnet-50
+  revision: 1d5f47bd3bdd2c4bbfa585418ffe6da5028b4c0b
+  hub_card_license: apache-2.0
+  asset_hashes:
+    model.safetensors: 830f5e2eeaada8c8c8281779dcc8ab12833972eb8514ed0a35be6c1d4420ad81
+    config.json: e7bcf3992363f27717a863f14b193140ad2e41d4338ee012730e58a92cae17e6
+    README.md: bc7d74d96a9101113c06be3a90975510dd19671382eb6fdfc5d1edbb042a723b
+    preprocessor_config.json: 0673fea2a6d3cf92cdbab3c7426c0ecdf8a4729a2a4d5199033dcd66a2b8759b
+  qualification: NOT_MEASURED
+- task: T06
+  model_id: PekingU/rtdetr_r18vd
+  revision: ac77a11ff0170a41b771c03264987f8ce2b0d753
+  hub_card_license: apache-2.0
+  asset_hashes: NOT_MEASURED
+  qualification: NOT_MEASURED
+- task: T07/T08
+  model_id: Qwen/Qwen2.5-VL-3B-Instruct
+  revision: 66285546d2b821cf421d4f5eb2576359d3770cd3
+  hub_card_license: qwen-research (custom); original LICENSE pinned; release review
+    pending
+  asset_hashes:
+    LICENSE: b5c0e5cf74cf51af1ecbc4af597cfcd13fd9925611838884a681070838a14a50
+    tokenizer_config.json: 4abd3520120e266da84c0864fee064d1fb10806f02225911a47253dd38dc5f56
+    chat_template.json: ad60d90252ed0b0705ba14e2d0ad0fec0beac1ea955642b54059b36052d8bc96
+    config.json: 7ed3eed5be6924cc800e8a5e53fc405c1aab1aaf36bad65c33403b36c56827f5
+    tokenizer.json: c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539
+    generation_config.json: 533f191cc257b7de37a4fccd0a7a1706d75e1aa660f93efaa54e5a2a9f9aace9
+    README.md: 0b6da5a154b923da4dc66e416140c9b7f235f9b08fbbcc27fd9df7b586e3150d
+    preprocessor_config.json: f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0
+  qualification: NOT_MEASURED
+- task: T09
+  model_id: depth-anything/Depth-Anything-V2-Small-hf
+  revision: 5426e4f0f36572d16453bbda7a8389317b1bef99
+  hub_card_license: apache-2.0
+  asset_hashes:
+    model.safetensors: 3152477ce0d8d6978d76b995120de97cb5b928701fd0f817769f59e249a16b70
+    config.json: c56698d3643dde1f83ea2212759e6b31a22b8f827246a36dd007ee8a22b3ff75
+    README.md: 319566441daaac0c5ed83e75a8fd19bae0863f3275e23f147c06fe0906edf6fb
+    preprocessor_config.json: d41175c0d889477ca8fc67191e540faef14baf6275157b3fdecf78469e6bbf84
+  qualification: BLOCKED; intermediate FP32 on all6 real fixtures; final resized camera
+    map also fails
+  actual_processor: DPTImageProcessor, keep_aspect_ratio=true, ensure_multiple_of14,
+    bicubic, relative depth
+- task: T05
+  model_id: snakers4/silero-vad-16k
+  revision: 60b7ffa243625ebdc1070275a29f18c87843786a
+  source_license: MIT
+  oracle_note: Official pinned JIT has different learned weights; graph rebound to
+    exact selected safetensors, all mapped parameters verified equal
+  asset_hashes:
+    LICENSE: 2e63e9a38b6e8fc0c7bc37ce174caca1862870856c6daf5697cfb785e925520b
+    src/silero_vad/tinygrad_model.py: 79afb8aae28bb9d20735df4053bef1191a85b74a0db335a5fc16c302ddda7e86
+    src/silero_vad/utils_vad.py: 61917c35404b9296b4c3aee8e2f9635c3e6f27916701aa665dd91827418f5660
+    src/silero_vad/data/silero_vad_16k.safetensors: c59271c284ae9c8335d795d60e0bfdb71aaaceec578d9bd9ffc1b8153c319ea1
+    src/silero_vad/data/silero_vad.jit: e1122837f4154c511485fe0b9c64455f7b929c96fbb8d79fbdb336383ebd3720
+    tests/data/test.wav: 89f17d9c94c4b31eb320f424628bcbc920abaddbee6e2760fd868bfb1d9a2e47
+    tests/test_sequence_parity.py: 16b83b63643b95bd55d0a2fe9ff28121ad456680ac6c3f927eb643400597e0be
+- task: T07/T08
+  model_id: mlx-community/Qwen2.5-VL-3B-Instruct-4bit
+  revision: 46d4cf06a06ffc1a766c214174f9cbed2f45bcab
+  profile: existing validated Q4 checkpoint, no silent substitution for original source
+    BF16
+  hub_card_license: qwen-research (custom); original LICENSE pinned; release review
+    pending
+  asset_hashes:
+    model.safetensors: 636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4
+    tokenizer_config.json: 2f58f4bbd7bbce15d683f525954ef3a92cd82f5e06415a9c513859bf8ab72436
+    chat_template.json: ad60d90252ed0b0705ba14e2d0ad0fec0beac1ea955642b54059b36052d8bc96
+    config.json: 7ed631bd2786d251cb38bd2a6a8a78c31bc1316f728bffa84b2d8954d3cfcd63
+    tokenizer.json: 9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa
+    README.md: 20e3212074894a87f2e7ba17fd0190d1fffc9869971b901ec33253ee827a59e6
+    merges.txt: 8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5
+    vocab.json: ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910
+    model.safetensors.index.json: 3dacd0399838beaa368c4a4278477096c861defca3cfdcdd6f947b62d349af32
+    preprocessor_config.json: f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0
+  expected_weight:
+    name: model.safetensors
+    size: 3073720461
+    lfs:
+      size: 3073720461
+      sha256: 636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4
+      pointer_size: 135
+  qualification: BLOCKED for document/video tasks; dense FP16 vision gate fails; video
+    processor FP32 fails
+evaluation_datasets:
+- dataset_id: stanfordnlp/sst2
+  revision: 8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb
+  split: validation
+  count: 872
+  license: unknown (publisher metadata)
+  use: local evaluation only; raw text not redistributed
+  files:
+    sst2-validation.parquet:
+      sha256: fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529
+      size_bytes: 72813
+    sst2-README.md:
+      sha256: b67282cc0ee148ca5fad017275f5559095cca4252a76a4ae7688377935c862fc
+      size_bytes: 5274
+    sst2-cases.json:
+      sha256: 81d3198454e4e014d7abb1aef5928ca0b48b097fb7c733948ed5d0beb2a731b3
+      size_bytes: 128814
+- dataset_id: tner/conll2003
+  revision: b18612dee0007b1f7129731dbf2f5f2ed4039ad3
+  split: validation, first 100 sentences
+  license: other; concrete reuse terms unspecified by distributor
+  use: local evaluation; raw text not redistributed; join source tokens with single
+    spaces and preserve label strings
+  files:
+    conll-valid.jsonl:
+      sha256: 7d1195d04ca5f4e6537f6fd2dda7e93c42d0d2529718730c02ce7b40f141df02
+      size_bytes: 664534
+    conll-labels.json:
+      sha256: b83e3bdcbd457065a263bc5fc14d524d80dfb0c95442261a01dccd5cac5ac235
+      size_bytes: 106
+    conll-README.md:
+      sha256: fab21bd43371c64a274836cfc2cc090b235c3b94f19f27e1dfe6f3a08524c9d2
+      size_bytes: 2973
+    quality-cases.json:
+      sha256: 6bc57c7b95969259e06e906f197ad329d38db1a49b734b1a37c616096332ff4a
+      size_bytes: 7826
+    quality-gold.json:
+      sha256: 641839a0e57a0be72b8625e23e555f36094d01ea22ebf6ef46a166c4154ad362
+      size_bytes: 9674
+- dataset_id: scikit-image sample images
+  revision: e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae
+  count: 6
+  license: per-image CC0 or public domain; see provenance
+  provenance:
+    source_commit: e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae
+    license_reference: https://scikit-image.org/docs/0.25.x/api/skimage.data.html
+    files:
+      astronaut.png:
+        source_url: https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/astronaut.png
+        sha256: 88431cd9653ccd539741b555fb0a46b61558b301d4110412b5bc28b5e3ea6cb5
+        size: 791555
+        license_attribution: NASA public domain
+      coffee.png:
+        source_url: https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/coffee.png
+        sha256: cc02f8ca188b167c775a7101b5d767d1e71792cf762c33d6fa15a4599b5a8de7
+        size: 466706
+        license_attribution: CC0, Rachel Michetti
+      chelsea.png:
+        source_url: https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/chelsea.png
+        sha256: 596aa1e7cb875eb79f437e310381d26b338a81c2da23439704a73c4651e8c4bb
+        size: 240512
+        license_attribution: CC0, Stefan van der Walt
+      rocket.jpg:
+        source_url: https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/rocket.jpg
+        sha256: c2dd0de7c538df8d111e479619b129464d0269d0ae5fd18ca91d33a7fdfea95c
+        size: 112525
+        license_attribution: SpaceX public domain
+      camera.png:
+        source_url: https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/camera.png
+        sha256: b0793d2adda0fa6ae899c03989482bff9a42d3d5690fc7e3648f2795d730c23a
+        size: 139512
+        license_attribution: CC0, Lav Varshney
+      clock_motion.png:
+        source_url: https://raw.githubusercontent.com/scikit-image/scikit-image/e8a42ba85aaf5fd9322ef9ca51bc21063b22fcae/skimage/data/clock_motion.png
+        sha256: f029226b28b642e80113d86622e9b215ee067a0966feaf5e60604a1e05733955
+        size: 58784
+        license_attribution: Public domain, Stefan van der Walt
+- dataset: openslr/librispeech_asr
+  revision: 71cacbfb7e2354c4226d01e70d77d5fca3d04ba1
+  original_parquet_sha256: 7113aa4c3cf963fb54697145719a7725f984c8836d1c494a554cbb9f1a017df0
+  license: CC-BY-4.0; OpenSLR12; Vassil Panayotov, Guoguo Chen, Daniel Povey, Sanjeev
+    Khudanpur
+  selection: first10 test-clean parquet rows; utterance speech presence, no frame-boundary
+    annotation
+  negative_fixtures: authored silence/Gaussian noise/440Hz tone, seed20261103; no
+    music corpus
+  fixtures:
+  - id: 6930-75918-0000
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0000.npy
+    speech_present: true
+    samples: 56080
+    original_sha256: 9ce35224156f071ab58eb7feb8a5ceae600f6f9f353da2a6cbf797b6b1ac8a23
+    pcm_sha256: 51efadc8c74ac6aed3972c75006d034908a6d73d99bd0af64705693bf1b89909
+  - id: 6930-75918-0001
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0001.npy
+    speech_present: true
+    samples: 227600
+    original_sha256: 3dfad7eb0793eddd5040d04f1f2f3046ceeee39e0ec461794856a350e1bd728e
+    pcm_sha256: 2eaa8fa3fd7b3447b9fbee3eba491873c3a527e8fb634064d5ccd4a866d506bc
+  - id: 6930-75918-0002
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0002.npy
+    speech_present: true
+    samples: 80400
+    original_sha256: 74ecfd628f49dca71995972c075fcc9904df804d49a4eb5b11fb712b3584f789
+    pcm_sha256: 888dd4b8f9863493a07e08fabe8943638bc84d9454c7d146bf306315a0546070
+  - id: 6930-75918-0003
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0003.npy
+    speech_present: true
+    samples: 373040
+    original_sha256: 0ec415739efc00adcbe70838f6c207ee4ae8b31639bad534138c3d26d890f58b
+    pcm_sha256: 276557430f539244a7363c7b574fca46b84636bf4c4136b97d134e9956cc5233
+  - id: 6930-75918-0004
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0004.npy
+    speech_present: true
+    samples: 177040
+    original_sha256: e1c4755c2febfc6b77fde418821c57e2e980d84d4c79a73ff60c6e6dfc794eac
+    pcm_sha256: 654fd8a53d303dcd2b881197237e0011ab7e0f50be1cfd18495cf7df0066ea10
+  - id: 6930-75918-0005
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0005.npy
+    speech_present: true
+    samples: 210560
+    original_sha256: ccc0da025ef4f4596a4e70fbde291527d140364166d19d9bb516a48407b3491e
+    pcm_sha256: 390af71704a72b3600acb9f1dc4c792be1d0ca027ecaefb46a9e2fb8a4fb1fc9
+  - id: 6930-75918-0006
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0006.npy
+    speech_present: true
+    samples: 93600
+    original_sha256: 4bed112ebfdba58ec061abd3fe013f89946863e9c51e8a83b50a5eb7afb9ce65
+    pcm_sha256: e7d84c8968fcc4e6239efa76ed668a0af56ac92a10f5171e0be4ab7dbbe0e7ec
+  - id: 6930-75918-0007
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0007.npy
+    speech_present: true
+    samples: 53040
+    original_sha256: 059969de8f6b780e1a4982805e977c3e73e40d3759c8fa8cb0cb8fabd9eb5b27
+    pcm_sha256: b60614ba02d40c689de879dd805f0fe06d221c3231aedb244ea1333ad1b532d5
+  - id: 6930-75918-0008
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0008.npy
+    speech_present: true
+    samples: 76560
+    original_sha256: ac916dcbcbb3240dcdbf3523b300345e33cdc3ebdfdd3538be49f208c134c4dd
+    pcm_sha256: 6d7d2b9376af4e4921259d0890d69af313c3ed4945f0dc5d0432108b762ca6d1
+  - id: 6930-75918-0009
+    speaker_id: 6930
+    path: local/native_tasks/runs/m3-20261103/quality/6930-75918-0009.npy
+    speech_present: true
+    samples: 116480
+    original_sha256: def314bf5fa2c02ce5101bda550ee003760e4f4c3aa6f96699c3110c66be2048
+    pcm_sha256: 5717adc245a98de60ece1de441f5b206e2802314e5bb372ed6c2f15786da26af
+  - id: silence
+    path: local/native_tasks/runs/m3-20261103/quality/silence.npy
+    speech_present: false
+    samples: 32000
+    pcm_sha256: eec19bc6af0b3b6dfb97a08782c65f4bb3c3203e789a015d2008b0d689ad08be
+  - id: white-noise
+    path: local/native_tasks/runs/m3-20261103/quality/white-noise.npy
+    speech_present: false
+    samples: 32000
+    pcm_sha256: c1aafab176b56955dd63d2230745bd1c658ebb9215c939283e07e4c3e7bbc43b
+  - id: tone
+    path: local/native_tasks/runs/m3-20261103/quality/tone.npy
+    speech_present: false
+    samples: 32000
+    pcm_sha256: cb3b3877bf61e63c2635f9d3da763736dd6d977798445e95489d5a1a995411a4
+- dataset: hf-internal-testing/fixtures-coco
+  revision: 96e8eefb106c94c2e915e64729b553c610207d50
+  files:
+    coco_annotations.txt:
+      sha256: 58b5dab1fe0f8bb497e7e4c363bb6534ded0bfd9883bd8449be4fc12eb768a63
+      size_bytes: 4075
+    PROVENANCE.md:
+      sha256: 3ff6adde8053358d02d4f7fd3d6dc87053da5504a773369037cc043322796f03
+      size_bytes: 1874
+    provenance.jsonl:
+      sha256: 620e6fb469ac3b2a3ccccd3199534730d46e4425243937e78a709cfd4e66186b
+      size_bytes: 2044
+    val2017/000000000776.jpg:
+      sha256: 1dd31e9059c491992be2f562624eb4093e17aee08b4f7baf5ff9ea24543b0a33
+      size_bytes: 176410
+    val2017/000000136466.jpg:
+      sha256: a5fa6720a287411e8c67feea268a9fd833c8c4cfebb0cd7f599a36d7c6bf1e13
+      size_bytes: 100547
+    val2017/000000039769.jpg:
+      sha256: dea9e7ef97386345f7cff32f9055da4982da5471c48d575146c796ab4563b04e
+      size_bytes: 173131
+    val2017/000000000139.jpg:
+      sha256: ffe0f0cec3b2e27aab1967229cdf0a0d7751dcdd5800322f0b8ac0dffb3b8a8d
+      size_bytes: 161811
+    val2017/000000000724.jpg:
+      sha256: 5c0e559c75d3969c8e3e297b61f61063f78045c9d4802b526ba616361f3823fd
+      size_bytes: 130107
+    val2017/000000001000.jpg:
+      sha256: 24bb77a31928404e45a0454b06f6a0bd54a8db103590c9d7917288a1e0269f05
+      size_bytes: 321136
+    val2017/000000000285.jpg:
+      sha256: f3a2974ce3686332609124c70e3e6a2e3aca43fccf1cd1bd7c5c03820977f57d
+      size_bytes: 335861
+    val2017/000000000872.jpg:
+      sha256: c2aa138ee3a59b057a7ba6fc5a6a18e62af531aa7dab78a7bfd33c1cd7e55eb6
+      size_bytes: 317669
+    val2017/000000077595.jpg:
+      sha256: 84be4b8df0a35ce7a85c08d9a506ca3bfa430aca00fcab9650dc25ac1f37c0a9
+      size_bytes: 145034
+    val2017/000000000785.jpg:
+      sha256: 83981537a7baeafbeb9c8cb67b3484dc26433f574b3685d021fa537e277e4726
+      size_bytes: 133674
+    val2017/000000000632.jpg:
+      sha256: a4cd7f45ac1ce27eaafb254b23af7c0b18a064be08870ceaaf03b2147f2ce550
+      size_bytes: 155667
+    val2017/000000000802.jpg:
+      sha256: d5b79e7fa716f85ca86f46e5f518da9b6c5e26414925624d76e6476861aec495
+      size_bytes: 62406
+- dataset_id: hf-internal-testing/fixtures_docvqa
+  revision: 4d9d67a77c9c059b4db9e6e39418f29b17d7a758
+  notes: Two real images; six authored question labels; no declared dataset license;
+    local only
+  files:
+    images.json:
+      sha256: 11b7b846a322e30056ffa47e63b2e5f3806eb15ff97036afc95e8c92fb029116
+      size_bytes: 342
+    README.md:
+      sha256: 4f5effd446a74cdd3f626135a309130f6bbb1fc3363aba833eaca6f42dbba088
+      size_bytes: 661
+    1.png:
+      sha256: 93d73677a876929e7179f571aab400e71e5b13ee5ebe09c0955bb216ddef4c2c
+      size_bytes: 1273081
+    0.png:
+      sha256: fdc7467542ef5c4c230f891c50e74a20392e445836873dcf9414c3878fc6d946
+      size_bytes: 533815
+    data/test-00000-of-00001.parquet:
+      sha256: 6a973bb9fcd4750877cb3adc5635d3efc750680cd2fd84b647a2de40a135e4f4
+      size_bytes: 1806550
+- dataset_id: hf-internal-testing/fixtures_videos
+  revision: e975b1ee56569c79c512e86560b8dab6812d6739
+  notes: 'Big Buck Bunny excerpt: (c)2008 Blender Foundation / www.bigbuckbunny.org;
+    CC-BY3.0 per peach.blender.org/about; mirror metadata claims Apache2.0, original
+    film terms recorded separately'
+  files:
+    selected-metadata.json:
+      sha256: 7da6709a81e61f8f2267584c5a73623c1411b2eb766e497090b05c352df3d70e
+      size_bytes: 315
+    PROVENANCE.md:
+      sha256: 614192cf024ab2a65ed4adc995844ac6b93201b7fa80a17ceffa2ac4b7ccf882
+      size_bytes: 3626
+    Big_Buck_Bunny_720_10s_10MB.mp4:
+      sha256: 881e507cecf827e5abb5da3b4ac86b105af4dea8fa8eb2934b6dded495577fdd
+      size_bytes: 10218838
+    provenance.jsonl:
+      sha256: 0fb5c6d33ad1bed3042b6348e363cba20e8682a23bd38e467e0249c890217be1
+      size_bytes: 5665
+    selected-frames.npy:
+      sha256: 85a89073d81b5e7dfce7a3c090f2008bb45657619559912b82dbaa83edc33411
+      size_bytes: 22118528

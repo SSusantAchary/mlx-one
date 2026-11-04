@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mlx-one"
-version = "0.1.0a1"
-description = "Model-size-agnostic lifecycle tooling for MLX on Apple Silicon."
+version = "0.1.1"
+description = "A unified MLX stack for multimodal AI on Apple Silicon."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
@@ -95,7 +95,9 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 mlx_one = [
+    "mlxboost/provenance/sources.yaml",
     "models/UPSTREAM_LICENSE",
+    "models/classification/NOTICE.md",
     "models/vision_language/UPSTREAM_LICENSE",
     "models/vision_language/UPSTREAM.md",
     "models/ocr/UPSTREAM_LICENSE",
@@ -116,6 +118,9 @@ mlx_one = [
     "models/audio/lfm2_audio/UPSTREAM.md",
     "models/audio/parakeet/NOTICE",
     "models/audio/moonshine/NOTICE",
+    "models/audio/silero/LICENSE",
+    "models/detection/NOTICE.md",
+    "models/depth/NOTICE.md",
     "models/audio/qwen3_asr/NOTICE",
     "ui/dist/**/*",
 ]
