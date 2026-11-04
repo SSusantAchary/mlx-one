@@ -283,8 +283,17 @@ def execution_forecast(runtime, config, *, batch, chunk, history, explicit_bytes
     from mlx_one.engine.optimization_policy import REFERENCE_MATH
 
     policy = getattr(runtime, "math_policy", REFERENCE_MATH)
+    calibration_records = None
+    boost = getattr(runtime, "mlxboost_config", None)
+    if (registry is not None and getattr(boost, "fast_decode", False)
+            and getattr(runtime, "mode", None) == "mlxboost_b1"):
+        # An empty candidate set cannot match any execution scope. Keep live
+        # registry updates visible; do not cache identities or calibrated peaks.
+        calibration_records = tuple(record for record in registry.records()
+                                    if record.feature == "activation_peak")
     if (registry is not None and policy == REFERENCE_MATH
-            and getattr(runtime, "mode", None) != "native_optimized"):
+            and getattr(runtime, "mode", None) != "native_optimized"
+            and (calibration_records is None or calibration_records)):
         import json
         from dataclasses import asdict
         from pathlib import Path
@@ -297,7 +306,7 @@ def execution_forecast(runtime, config, *, batch, chunk, history, explicit_bytes
         scope["cache_precision"] = {"f16": "float16", "bf16": "bfloat16",
                                     "q4_0": "float16,uint8", "q8_0": "float16,uint8"}.get(
                                         runtime.config.key_type)
-        for record in registry.records():
+        for record in (registry.records() if calibration_records is None else calibration_records):
             if (record.feature != "activation_peak" or asdict(record.scope) != scope
                     or registry.report(record.feature, record.scope)["status"] not in {
                         "correctness_passed", "performance_qualified"}):

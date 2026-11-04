@@ -107,6 +107,26 @@ main.add_command(segment_command)
 main.add_command(track_command)
 
 
+@main.command(
+    "vad", help="Detect speech in a local mono 16-kHz PCM16 WAV with pinned native Silero."
+)
+@click.argument("model", type=click.Path(exists=True, file_okay=False))
+@click.argument("audio", type=click.Path(exists=True, dir_okay=False))
+@click.option(
+    "--threshold", type=click.FloatRange(min=0, max=1, min_open=True, max_open=True), default=0.5
+)
+@click.option("--json-output", is_flag=True)
+def vad_command(model, audio, threshold, json_output):
+    from mlx_one.audio.vad import VADEngine
+
+    try:
+        with VADEngine(model) as vad:
+            result = vad.detect(audio, threshold=threshold)
+        click.echo(result.to_json() if json_output else str(result.segments))
+    except (ValueError, OSError) as exc:
+        raise click.ClickException(str(exc)) from exc
+
+
 @main.command("vlm", help="Generate text from local static images using native MLX.")
 @click.option("--model", required=True, help="Checkpoint directory or Hugging Face ID.")
 @click.option("--image", multiple=True, type=click.Path(exists=True, dir_okay=False), required=True)
@@ -479,11 +499,14 @@ def generate_command(
 )
 @click.option(
     "--inference-mode",
-    type=click.Choice(["reference_dense", "experimental_block", "experimental_dense_batch",
+    type=click.Choice(["reference_dense", "mlxboost_b1", "experimental_block",
+                       "experimental_dense_batch",
                        "paged", "experimental_hybrid_batch", "auto"]),
     default=None,
     help="Select an explicit native execution path; unsupported combinations fail.",
 )
+@click.option("--mlxboost-fast-decode/--no-mlxboost-fast-decode", default=False,
+              help="Experimental B1 calibration lookup shortcut; requires mlxboost_b1.")
 @click.option(
     "--execution-dtype", type=click.Choice(["float32", "float16", "bfloat16"]), default=None
 )
@@ -558,6 +581,7 @@ def serve_command(
     prefix_cache_mib: int,
     cache_backend: str | None,
     inference_mode: str | None,
+    mlxboost_fast_decode: bool,
     execution_dtype: str | None,
     max_prefill_tokens: int,
     admission_policy: str,
@@ -591,6 +615,7 @@ def serve_command(
         from mlx_one.engine.modes import ACTOR_MODES
         from mlx_one.engine.pressure import MemoryPressureConfig
         from mlx_one.engine.selection import load_evidence
+        from mlx_one.mlxboost import MLXBoostConfig
         from mlx_one.server import (
             GenerationEngine,
             GenerationScheduler,
@@ -627,6 +652,7 @@ def serve_command(
             prefix_cache_bytes=prefix_cache_mib * 1024**2,
             cache_backend=cache_backend,
             inference_mode=inference_mode,
+            mlxboost_config=MLXBoostConfig(fast_decode=mlxboost_fast_decode),
             execution_dtype=execution_dtype, max_prefill_tokens=max_prefill_tokens,
             admission_policy=admission_policy,
             memory_pressure_config=(MemoryPressureConfig(
@@ -683,6 +709,13 @@ def serve_command(
                     tokenizer_source=tokenizer_source,
                 )
             )
+            if (hasattr(bundle, "classification") or hasattr(bundle, "ner")
+                    or hasattr(bundle, "zero_shot") or hasattr(bundle, "vad")) and (
+                inference_mode not in {None, "reference_dense"}
+                or execution_dtype not in {None, "float32"} or spec_type != "none"
+            ):
+                raise ValueError(
+                    "classification requires native FP32 with no generation optimization")
             transcription_service = None
             if transcription_model is not None:
                 from mlx_one.server.transcription import NativeTranscriptionService
@@ -716,6 +749,7 @@ def serve_command(
                 prefix_cache_bytes=config.prefix_cache_bytes,
                 cache_backend=config.cache_backend,
                 inference_mode=config.inference_mode,
+                mlxboost_config=config.mlxboost_config,
                 execution_dtype=config.execution_dtype,
                 prefill_chunk_size=min(config.prefill_chunk_size or 512, config.max_prefill_tokens,
                                        max((config.max_batch_tokens or 2048) // 2, 1)),
@@ -734,7 +768,9 @@ def serve_command(
             memory_admission = MemoryAdmission.detect()
             if inference_mode in ACTOR_MODES:
                 engine.bind_actor(scheduler)
-            if warmup and not hasattr(bundle, "audio") and not hasattr(bundle, "ocr"):
+            if (warmup and not hasattr(bundle, "audio") and not hasattr(bundle, "ocr")
+                    and not hasattr(bundle, "classification") and not hasattr(bundle, "ner")
+                    and not hasattr(bundle, "zero_shot") and not hasattr(bundle, "vad")):
                 def warmup_stream(cancel):
                     return engine.stream(
                         model=manager.model_info().id,
@@ -790,6 +826,79 @@ def serve_command(
                 "Native serving requires: pip install 'mlx-one[server]'"
             ) from exc
         raise click.ClickException(str(exc)) from exc
+
+
+@main.command(
+    "classify", help="Classify sentiment with the pinned native DistilBERT SST-2 checkpoint.")
+@click.argument("model")
+@click.argument("texts", nargs=-1, required=True)
+@click.option("--revision", help="Exact pinned checkpoint commit.")
+@click.option("--max-length", type=click.IntRange(min=2, max=512), default=512, show_default=True)
+@click.option("--top-k", type=click.IntRange(min=1, max=2), default=2, show_default=True)
+@click.option("--offline/--download", default=True, help="Use local/cached assets by default.")
+@click.option("--cache-dir", type=click.Path(file_okay=False))
+@click.option("--json-output", is_flag=True, help="Emit the versioned structured result.")
+def classify_command(model, texts, revision, max_length, top_k, offline, cache_dir, json_output):
+    from mlx_one.classification import classify
+
+    try:
+        result = classify(model, texts, revision=revision, max_length=max_length,
+                          top_k=top_k, offline=offline, cache_dir=cache_dir)
+    except (ImportError, OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    if json_output:
+        click.echo(result.to_json())
+    else:
+        for item in result.predictions:
+            labels = ", ".join(f"{v['label']}={v['score']:.8f}" for v in item["labels"])
+            click.echo(f"{item['index']}\t{labels}")
+
+
+@main.command("ner", help="Recognize entities with the pinned native BERT NER checkpoint.")
+@click.argument("model")
+@click.argument("texts", nargs=-1, required=True)
+@click.option("--revision", help="Exact pinned checkpoint commit.")
+@click.option("--max-length", type=click.IntRange(min=2, max=512), default=512, show_default=True)
+@click.option("--aggregation-strategy", type=click.Choice(["none", "simple"]), default="none")
+@click.option("--offline/--download", default=True)
+@click.option("--cache-dir", type=click.Path(file_okay=False))
+@click.option("--json-output", is_flag=True)
+def ner_command(
+    model, texts, revision, max_length, aggregation_strategy, offline, cache_dir, json_output
+):
+    from mlx_one.classification import token_classify
+
+    try:
+        result = token_classify(model, texts, revision=revision, max_length=max_length,
+                               aggregation_strategy=aggregation_strategy, offline=offline,
+                               cache_dir=cache_dir)
+    except (ImportError, OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    if json_output:
+        click.echo(result.to_json())
+    else:
+        for item in result.predictions:
+            click.echo(json.dumps(item, ensure_ascii=False))
+
+
+@main.command("zero-shot-image", help="Classify one image with the admitted native CLIP profile.")
+@click.argument("model", type=click.Path(exists=True, file_okay=False))
+@click.argument("image", type=click.Path(exists=True, dir_okay=False))
+@click.option("--label", "labels", multiple=True, required=True, help="Candidate label (1–10).")
+@click.option("--top-k", type=click.IntRange(min=1, max=10))
+@click.option("--json-output", is_flag=True)
+def zero_shot_image_command(model, image, labels, top_k, json_output):
+    from mlx_one.classification import zero_shot_classify
+
+    try:
+        result = zero_shot_classify(model, image, labels, top_k=top_k)
+    except (ImportError, OSError, RuntimeError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    if json_output:
+        click.echo(result.to_json())
+    else:
+        for label in result.labels:
+            click.echo(f"{label['label']}\t{label['score']:.8f}")
 
 
 @main.command("embed", help="Create embeddings with a supported native retrieval model.")
