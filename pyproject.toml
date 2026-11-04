@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mlx-one"
-version = "0.1.0a1"
+version = "0.1.1"
 description = "A unified MLX stack for multimodal AI on Apple Silicon."
 readme = "README.md"
 requires-python = ">=3.10"

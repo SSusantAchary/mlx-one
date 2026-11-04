@@ -6,6 +6,14 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+### 0.1.1 integration candidate — 2026-11-04
+
+- Integrate existing native sentiment, NER, CLIP and Silero task APIs, tests and
+  scoped experimental results with the prepared README and module-boundary ADR.
+- Set package, CLI, HTTP metadata and current citation version to 0.1.1.
+- Preserve numerical gates, model mathematics and optional default-off MLXBoost
+  behavior. No task qualification, release tag or package publication is implied.
+
 ### Proof-based alpha candidate — 2026-10-21
 
 - Add independent cache-position/content controls, long-context shape diagnostics,

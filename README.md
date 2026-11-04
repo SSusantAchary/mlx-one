@@ -28,7 +28,7 @@
 > and synthetic execution tests. It does not automatically mean every checkpoint,
 > task, precision, or device has been qualified.
 >
-> The 0.1.0a1 development candidate uses the [functional model-support policy](docs/model-admission.md).
+> The 0.1.1 development candidate uses the [functional model-support policy](docs/model-admission.md).
 > Checkpoint validation and publication approval remain separate; see the
 > [current checkpoint inventory](docs/benchmarks/inventory.md) for exact revisions and limits.
 
@@ -692,8 +692,10 @@ remaining gates. These fixture passes do not qualify all segmentation workflows.
 Four bounded FP32 profiles run through the shared MLX-One registry, Python API,
 CLI and HTTP server. These are **EXPERIMENTAL**, not release-qualified. Results
 below were measured on **2026-11-03**, Apple M4 / 32 GiB, macOS 15.8.1,
-MLX 0.32.2. They describe the locally verified 0.1.0a1 development wheel, not a
-published package release or every checkpoint in the architecture family.
+MLX 0.32.2. These historical measurements describe the locally verified
+0.1.0a1 wheel. The [0.1.1 integration candidate](docs/integration/2026-11-04/merge-readiness.md)
+revalidates the bounded task profiles; package publication and wider checkpoint
+qualification remain separate.
 
 | Task / exact checkpoint | Measured quality | Admitted scope and remaining limits |
 |---|---|---|
@@ -1254,7 +1256,7 @@ author = {Achary, S. Susant},
 title  = {mlx-one: Unified Native MLX Stack for Apple Silicon},
 year   = {2026},
 url    = {https://github.com/SSusantAchary/mlx-one},
-note   = {Version 0.1.0a1. Native GPU-accelerated machine learning workflows on Apple Silicon}
+note   = {Version 0.1.1. Native GPU-accelerated machine learning workflows on Apple Silicon}
 }
 ```
 
