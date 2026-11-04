@@ -1,0 +1,995 @@
+{
+  "base": "eb8bd3887ace3217ba23dc14525cef9c8a77e50d",
+  "branch": "integration/native-tasks-publication-20261104",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M",
+      "group": "documentation"
+    },
+    {
+      "path": "CITATION.bib",
+      "status": "M",
+      "group": "documentation"
+    },
+    {
+      "path": "README.md",
+      "status": "M",
+      "group": "documentation"
+    },
+    {
+      "path": "benchmarks/mlxboost/ablate.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/ancillary.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/campaign.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/capture.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/diagnose.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/evidence.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/final_campaign.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/http_experiment.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/integrity.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/local_server.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/post_campaign.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/profile_server.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/qualify.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/reference_probe.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/report.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/mlxboost/wheel_smoke.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/benchmark_native_task.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/benchmark_sentiment.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/benchmark_tasks.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/clean_classification_smoke.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/clean_m2_smoke.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/compare_task_outputs.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/compare_tensors.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/convert_clip_checkpoint.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/distilbert_cases.json",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/evaluate_document_qa.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/evaluate_sentiment.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/evaluate_vad.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/evidence.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_clip.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_depth.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_detr.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_distilbert_hf.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_distilbert_mlx.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_hf_reference.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_interpolation_reference.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_mlx_one.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_ner.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_qwen25_processor.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_qwen25_temporal.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_qwen25_video_processor.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_qwen25_vision.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/export_silero.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/live_classification_smoke.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/ner_cases.json",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/run_clip_matrix.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/run_detr_matrix.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/seal_milestone.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/summarize_depth_matrix.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/vit_operator_replay.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/vit_parity_report.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/vit_trace_mlx.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/vit_trace_reference.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "benchmarks/native_tasks/vit_weight_audit.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "docs/architecture/mlxboost-module-boundary.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/changed-files.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/evidence-manifest.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/installed_quality.py",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/live_http.py",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/merge-readiness.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/native-wheel-constraints.txt",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/pr-body.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/pr.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/replay.py",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/reproduce.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/integration/2026-11-04/verification.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/api-regression.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/baseline-reproduction.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/benchmark-comparison.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/deployment-and-rollback.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/numerical-parity.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/optimization-ablation.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/output-parity.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/performance-summary.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/profiling-bottlenecks.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/promotion-policy.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/qualification-matrix.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/source-audit.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/mlxboost/source-diff-map.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/api-contracts.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/api-regression.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/checkpoints.lock.yaml",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/current-capability-audit.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/implementation-status.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/layer-parity.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/processor-parity.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/qualification-matrix.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/source-audit.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/source-parity.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/sources.lock.yaml",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/task-architecture-map.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/task-performance.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/task-quality.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/test-results.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/unresolved-blockers.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/vit-first-divergence.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/native_tasks/weight-mapping.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/publication/2026-11-04/README.preview.html",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/publication/2026-11-04/audit.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/publication/2026-11-04/evidence-map.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/publication/2026-11-04/pr.md",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/publication/2026-11-04/verification.json",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "docs/publication/2026-11-04/verify_publication.py",
+      "status": "A",
+      "group": "documentation"
+    },
+    {
+      "path": "examples/native_tasks/depth_candidate.py",
+      "status": "A",
+      "group": "examples"
+    },
+    {
+      "path": "examples/native_tasks/document_qa_candidate.py",
+      "status": "A",
+      "group": "examples"
+    },
+    {
+      "path": "examples/native_tasks/entities_and_images.py",
+      "status": "A",
+      "group": "examples"
+    },
+    {
+      "path": "examples/native_tasks/experimental_classification.py",
+      "status": "A",
+      "group": "examples"
+    },
+    {
+      "path": "examples/native_tasks/sentiment.py",
+      "status": "A",
+      "group": "examples"
+    },
+    {
+      "path": "examples/native_tasks/vad.py",
+      "status": "A",
+      "group": "examples"
+    },
+    {
+      "path": "pyproject.toml",
+      "status": "M",
+      "group": "packaging"
+    },
+    {
+      "path": "scripts/compare_competators.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "scripts/compare_competators_setup.py",
+      "status": "A",
+      "group": "benchmark/reference harness"
+    },
+    {
+      "path": "src/mlx_one/__init__.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/audio/vad.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/audio/vad_postprocessing.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/classification/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/classification/loading.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/classification/public.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/classification/schemas.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/classification/token_postprocessing.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/cli.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/data/native_tasks.json",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/adapter_registry.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/construction.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/contracts.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/modes.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/pressure.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/public.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/runtime_specs.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/service.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/task_runners/classification.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/task_runners/token_classification.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/task_runners/vad.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/engine/task_runners/zero_shot_image.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/mlxboost/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/mlxboost/config.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/mlxboost/provenance/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/mlxboost/provenance/sources.yaml",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/audio/silero/LICENSE",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/audio/silero/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/audio/silero/config.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/audio/silero/model.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/NOTICE.md",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/bert_ner.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/bert_ner_config.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/clip.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/clip_config.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/config.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/distilbert.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/classification/siglip_fixed.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/depth/NOTICE.md",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/depth/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/depth/depth_anything.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/depth/interpolation.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/detection/NOTICE.md",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/detection/__init__.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/detection/detr.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/registry.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/vision_language/qwen2_5_vl/model.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/models/vision_language/qwen2_5_vl/positions.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/server/app.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/server/classification.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/server/config.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/server/generation_engine.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/server/model_manager.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/server/vad.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/clip_processing.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/depth_processing.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/detr_processing.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/document_qa.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/images.py",
+      "status": "M",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/video_processing.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "src/mlx_one/vision/vit_classification.py",
+      "status": "A",
+      "group": "native model/inference code"
+    },
+    {
+      "path": "tests/mlxboost/__init__.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/mlxboost/test_dispatch.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/mlxboost/test_native.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/mlxboost/test_provenance.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_classification_service.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_clip_service.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_depth_candidate.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_detr_candidate.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_distilbert_classifier.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_ner_service.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_parity_harness.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_qwen25_tasks.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_silero.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_vit_classifier.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/native_tasks/test_vit_diagnostics.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/test_adapter_registry.py",
+      "status": "M",
+      "group": "tests"
+    },
+    {
+      "path": "tests/test_competitor_comparison.py",
+      "status": "A",
+      "group": "tests"
+    },
+    {
+      "path": "tests/test_runtime_registry.py",
+      "status": "M",
+      "group": "tests"
+    },
+    {
+      "path": "tests/test_task_qualification.py",
+      "status": "M",
+      "group": "tests"
+    }
+  ],
+  "counts": {
+    "benchmark/reference harness": 56,
+    "documentation": 52,
+    "examples": 6,
+    "native model/inference code": 62,
+    "packaging": 1,
+    "tests": 19
+  },
+  "unrelated_dirty_paths_excluded": 124
+}
