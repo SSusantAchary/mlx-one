@@ -1,138 +1,83 @@
 ---
 title: Home
-hide:
-  - toc
 ---
 
-<div class="mlx-hero" markdown>
+# MLX-One
 
-<span class="mlx-eyebrow">NATIVE MLX · APPLE SILICON</span>
-
-# One stack. Native MLX.<br>Built for Apple Silicon.
-
-Run text, vision, audio and more through one native inference library.
-Go from your first local generation to a Python application, CLI workflow
-or HTTP service—with the model guides and measurements alongside you.
-{ .mlx-lead }
-
-[Get started](getting-started.md){ .md-button .md-button--primary }
-[Explore the models](models/index.md){ .md-button }
-
-<div class="mlx-install" markdown>
+**One stack. Native MLX. Built for Apple Silicon.** MLX-One brings text generation,
+vision-language inference, audio, OCR, embeddings and segmentation into one native
+MLX library. Load a model, run it from Python or the CLI, and serve a local chat UI
+and HTTP API. Native model implementations share checkpoint loading, execution and
+developer tooling on Apple Silicon.
 
 ```bash
 python -m pip install "mlx-one==0.1.0a1"
 ```
 
-Python 3.10+ · macOS 15+ · Apple Silicon
-{ .mlx-install-note }
+```bash
+# Inspect a checkpoint without loading its weights.
+mlx-one inspect openai-community/gpt2
 
-</div>
-</div>
+# Generate text through the native MLX runtime.
+mlx-one generate openai-community/gpt2 "The future of local AI is" \
+  --max-tokens 64 --temperature 0.8 --seed 0
 
-## From your Mac to your application
+# Start the local chat UI and an OpenAI-compatible HTTP API.
+python -m pip install "mlx-one[server]==0.1.0a1"
+mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
+  --host 127.0.0.1 --port 8888 --inference-mode reference_dense
+```
 
-MLX-One owns its native model implementations, checkpoint loading, tokenization
-and generation. Apple MLX and Metal provide tensor execution on unified memory.
-The same library exposes task-specific Python APIs, a CLI and local HTTP serving.
+[Get started](getting-started.md){ .md-button .md-button--primary }
+[Choose a model](models/index.md){ .md-button }
+[How it works](reference/architecture.md){ .md-button }
 
-=== "Python"
+## What it makes possible
 
-    ```python
-    from mlx_one import Engine
+| Workflow | Native capabilities | Start here |
+| --- | --- | --- |
+| Text generation | Cached decoding, sampling, chat templates and token streaming | [Generate text](guides/generate.md) |
+| Local applications | Python APIs, CLI workflows and HTTP/SSE serving | [Serve an API and chat UI](guides/serve.md) |
+| Vision-language | Supported static-image and text workflows | [Vision-language guide](guides/vision.md) |
+| Audio and speech | ASR, separate known-text alignment and experimental speech generation | [Audio guide](guides/audio.md) |
+| Documents | Line recognition and implemented page-model OCR workflows | [OCR guide](guides/ocr.md) |
+| Retrieval | Embeddings, similarity and Qwen3 reranking | [Embeddings and reranking](guides/retrieval.md) |
+| Segmentation and tracking | SAM3 image prompts and experimental video tracking | [SAM3 guide](models/segmentation/sam3.md) |
 
-    with Engine(model="openai-community/gpt2") as engine:
-        result = engine.generate("The future of local AI is", max_tokens=64)
-        print(result.text)
-    ```
+Exact checkpoint and interface coverage varies. The [model index](models/index.md)
+and [checkpoint inventory](reference/checkpoints.md) record those boundaries;
+[performance reports](performance/index.md) keep measured workloads separate from
+broader qualification claims.
 
-=== "CLI"
+## Find a guide
 
-    ```bash
-    mlx-one generate openai-community/gpt2 "The future of local AI is" \
-      --max-tokens 64 --temperature 0.8 --seed 0
-    ```
+- **New here?** [Get started](getting-started.md): install from PyPI, generate
+  your first response and start the local server.
+- **Choosing a checkpoint?** [Choose a model](models/index.md) for model-family
+  guides, input formats and implementation scope.
+- **Building an application?** Use the [Python and CLI reference](reference/api.md)
+  or [serve an HTTP API](guides/serve.md).
+- **Working with images or documents?** See [vision-language](guides/vision.md)
+  and [OCR](guides/ocr.md).
+- **Working with sound?** [Audio and speech](guides/audio.md) covers the available
+  transcription, alignment and speech-generation paths.
+- **Building search?** Start with [embeddings and reranking](guides/retrieval.md).
+- **Segmenting or tracking?** Use the [dedicated SAM3 workflows](models/segmentation/sam3.md).
+- **Planning memory?** [Inspect and plan](guides/memory.md) before loading weights.
+- **Looking for measurements?** [All-modality performance](performance/index.md)
+  includes text, VLM, audio, OCR, HTTP and task latency, with original evidence.
 
-=== "HTTP server"
+## In one paragraph
 
-    ```bash
-    python -m pip install "mlx-one[server]==0.1.0a1"
-    mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
-      --host 127.0.0.1 --port 8888 --inference-mode reference_dense
-    ```
+MLX-One implements native model workflows on Apple's MLX framework. Family
+packages own model equations, weight contracts and processing; shared runtimes
+manage generation, request lifecycle and caches. Python, CLI and HTTP interfaces
+connect applications to that execution stack. Dense reference execution remains
+the default, and optional [MLXBoost](experimental/mlxboost.md) acceleration has its
+own experimental scope. See [architecture](reference/architecture.md) for the
+implemented components and [experimental documentation](experimental/index.md)
+for investigations, known failures and remaining gates.
 
-## Find your guide
-
-<div class="grid cards" markdown>
-
-- **Generate text**
-
-    Load a checkpoint, sample a response and stream tokens.
-
-    [Text generation →](guides/generate.md)
-
-- **Build a local service**
-
-    Connect the chat UI or your app to the HTTP API.
-
-    [Serving and Web UI →](guides/serve.md)
-
-- **Work with images and documents**
-
-    Explore native vision-language and OCR workflows.
-
-    [Vision-language →](guides/vision.md) · [OCR →](guides/ocr.md)
-
-- **Transcribe and work with audio**
-
-    Find speech recognition, alignment and speech-generation scope.
-
-    [Audio and speech →](guides/audio.md)
-
-- **Embed, retrieve and rerank**
-
-    Create vectors and score candidate documents through native APIs.
-
-    [Retrieval →](guides/retrieval.md)
-
-- **Segment images and track video**
-
-    Use SAM3’s dedicated image and video workflows.
-
-    [Segmentation and tracking →](models/segmentation/sam3.md)
-
-</div>
-
-## See it running locally
-
-[![The current MLX-One chat interface, connected to a local LFM2 model](../../mlx_One_chat_ui.png)](../../mlx_One_chat_ui.png)
-
-A local chat interface backed by the same native model runtime.
-[Run the server](guides/serve.md) to open it in your browser.
-
-## Measurements you can follow back to the source
-
-[Performance across all modalities](performance/index.md) keeps text, VLM,
-audio, OCR, HTTP and task timings visible, with hardware and workload boundaries.
-Detailed reports link the original evidence. Missing measurements remain marked
-as unavailable; a measured workload is distinct from a qualified checkpoint.
-
-[Explore performance](performance/index.md){ .md-button }
-
-## One place to understand model coverage
-
-The [model index](models/index.md) connects family implementations to their
-guides. The [checkpoint inventory](reference/checkpoints.md) records exact
-revisions and precision. Use the [admission policy](reference/admission.md)
-when you need the evidence behind a support claim.
-
-Native MLXBoost acceleration is optional and experimental, with reference
-execution as the default. Detailed optimization work, failures and remaining
-gates live in [experimental documentation](experimental/index.md).
-
----
-
-[GitHub](https://github.com/SSusantAchary/mlx-one) ·
+Apache-2.0 · [GitHub](https://github.com/SSusantAchary/mlx-one) ·
 [PyPI](https://pypi.org/project/mlx-one/0.1.0a1/) ·
-[Architecture](reference/architecture.md) ·
 [Citation and license](reference/citation.md)
