@@ -98,7 +98,7 @@ python -m benchmarks.vlm.readme_generator
 python -m benchmarks.vlm.readme_generator --check
 ```
 
-The generator validates every result before updating only the VLM README markers.
+The generator validates every result before updating the VLM markers in both [README](../../../README.md#vision-language-model-performance) and [the companion report](performance.md).
 It rejects mock/synthetic/incomplete records, absent hardware, unpinned revisions,
 invalid counts, mismatched hashes, wrong protocols/statistics and duplicate
 checkpoint/workload rows. S1 hardware/runtime/implementation cohorts get separate
@@ -130,7 +130,7 @@ checkpoint processors retain their own subsequent resize/tiling rules.
 | VLM-HF-S4 | One padded receipt, 512-square | Read document number, date and total; inspect raw answer |
 
 The HF protocol is separate from the original synthetic `VLM-S1`–`VLM-S4`
-protocol. Earlier pending records remain pending; the README selects measured
+protocol. Earlier pending records remain pending; the [performance report](performance.md) selects measured
 HF-S1 evidence. Batch 1, greedy output up to 128 actual emitted tokens, one warmup,
 five measured repetitions and medians remain unchanged. No results are inferred
 from requested output budgets. Full per-repetition answers, counts, timing,
@@ -161,5 +161,5 @@ python -m benchmarks.vlm.smoke --id V01 \
 
 The validator reads the committed manifest without opening downloaded images, so
 all raw model/image cache files can be removed after the campaign while result
-validation and README regeneration continue to work. Only task-created downloads
+validation and performance-report regeneration continue to work. Only task-created downloads
 are removed; unrelated user checkpoints and caches are preserved.

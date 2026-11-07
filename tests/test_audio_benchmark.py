@@ -85,6 +85,22 @@ def test_generator_only_changes_marked_region(tmp_path):
     assert path.read_text() == "Original intro\n" + START + "\nnew\n" + END + "\nOriginal images\n"
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Homepage\n<!-- MLX-ONE-VLM-BENCHMARK-END -->\n",
+        END + "\n" + START,
+        START + END + START,
+    ],
+)
+def test_generator_rejects_missing_reversed_or_duplicate_audio_markers(tmp_path, text):
+    path = tmp_path / "README.md"
+    path.write_text(text)
+    with pytest.raises(ValueError, match="ordered generated marker pair"):
+        update_readme(path, START + "\nnew\n" + END)
+    assert path.read_text() == text
+
+
 def test_generator_rejects_precision_mismatch():
     value = record()
     catalog = {

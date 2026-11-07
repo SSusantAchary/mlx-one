@@ -1,4 +1,4 @@
-"""Validate VLM evidence and update only the dedicated README marker block."""
+"""Validate VLM evidence and update README and its companion benchmark report."""
 
 from __future__ import annotations
 
@@ -6,10 +6,12 @@ import argparse
 import json
 from pathlib import Path
 
+from benchmarks.documentation import relative_links, replace_block
 from benchmarks.vlm.metrics import EVIDENCE, ROOT, read, require, validate
 
 START = "<!-- MLX-ONE-VLM-BENCHMARK-START -->"
 END = "<!-- MLX-ONE-VLM-BENCHMARK-END -->"
+REPORT = EVIDENCE / "performance.md"
 
 
 def records(evidence=EVIDENCE):
@@ -187,27 +189,31 @@ def render(plan, result):
 
 
 def update(text, block):
-    require(
-        text.count(START) == 1 and text.count(END) == 1 and text.index(START) < text.index(END),
-        "README must contain exactly one ordered VLM marker pair",
-    )
-    start, end = text.index(START) + len(START), text.index(END)
-    return text[:start] + "\n" + block + "\n" + text[end:]
+    return replace_block(text, START, END, START + "\n" + block + "\n" + END)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--readme", type=Path, default=ROOT / "README.md")
+    parser.add_argument(
+        "--readme",
+        type=Path,
+        default=ROOT / "README.md",
+        help="homepage destination; the default also refreshes the detailed report",
+    )
     parser.add_argument("--evidence", type=Path, default=EVIDENCE)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     plan, result = records(args.evidence)
-    original = args.readme.read_text()
-    generated = update(original, render(plan, result))
-    if args.check:
-        require(generated == original, "README VLM table is stale")
-    else:
-        args.readme.write_text(generated)
+    destinations = [args.readme]
+    if args.readme.resolve() == ROOT / "README.md":
+        destinations.append(REPORT)
+    for destination in destinations:
+        original = destination.read_text()
+        generated = update(original, relative_links(render(plan, result), destination.resolve()))
+        if args.check:
+            require(generated == original, f"VLM performance is stale: {destination}")
+        else:
+            destination.write_text(generated)
     coverage = {
         "source_status": "NATIVE_IMPLEMENTED",
         "checkpoint_status": (

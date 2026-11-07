@@ -4,7 +4,7 @@
 
 <h1 align="center">mlx-one</h1>
 
-<p align="center"><strong>Train locally. Prove it on Apple Silicon. Scale when needed.</strong></p>
+<p align="center"><strong>One stack. Native MLX. Built for Apple Silicon.</strong></p>
 
 <p align="center">
   A unified, native MLX stack for language, vision-language, embeddings,
@@ -19,95 +19,146 @@
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
 </p>
 
-[**Quickstart**](#quick-start) | [**Performance**](#model-performance) | [**Installation**](#installation) | [**Architecture**](#architecture) | [**Repository summary**](docs/REPOSITORY_SUMMARY.md) | [**Model guides**](#model-specific-documentation) | [**Documentation**](docs/ui.md) | [**Examples**](#cli)
+[**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
 
-> [!IMPORTANT]
-> mlx-one is under active development. Native architecture support and model
-> qualification are tracked separately. A family marked Architecture ✅ has a
-> validated config, MLX model structure, registry entry, strict weight contract,
-> and synthetic execution tests. It does not automatically mean every checkpoint,
-> task, precision, or device has been qualified.
->
-> The 0.1.0a1 development candidate uses the [functional model-support policy](docs/model-admission.md).
-> Checkpoint validation and publication approval remain separate; see the
-> [current checkpoint inventory](docs/benchmarks/inventory.md) for exact revisions and limits.
+MLX-One is a native inference library built on Apple's MLX framework for Apple
+Silicon. It brings text generation, vision-language inference, audio, OCR,
+embeddings and segmentation into one extensible stack, with shared model
+loading, execution and developer tooling.
 
-## Why mlx-one?
+## Why MLX-One?
 
-MLX is an excellent foundation for machine learning on Apple Silicon, but model
-workflows are often split across separate packages and incompatible task APIs.
-mlx-one is building those pieces as one coherent stack:
+- **Native model implementations:** model math, safe checkpoint loading,
+  tokenization and generation live inside MLX-One.
+- **One developer interface:** use Python, the CLI or HTTP for implemented tasks,
+  with shared request lifecycle and evidence records.
+- **Built for Apple Silicon:** MLX, Metal and unified memory underpin execution;
+  memory planning helps choose bounded workloads for a device.
+- **Extensible architectures:** configuration-driven registration and reusable
+  components support language, vision, audio and retrieval families.
+- **Optional acceleration:** MLXBoost provides an opt-in host-overhead optimization
+  for eligible profiles, with explicit fallback and experimental status.
 
-The project owns its supported model math directly. Hugging Face supplies
-configuration, tokenizer/processor assets and safe `safetensors` checkpoints.
+Hugging Face supplies configuration, tokenizer/processor assets and safe
+`safetensors` checkpoints. Native inference runs through MLX-One and Apple MLX.
 
-<p align="center">
-  <a href="mlx-one_arch.png">
-    <img src="mlx-one_arch.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
-  </a>
-</p>
+## Key Capabilities
 
-Click the diagram to view it at full resolution. It shows current and planned
-architecture: MTP, CPT and RL labels do not establish implemented or qualified
-workflows. Checkpoint, task, precision and device validation are tracked separately.
+| Capability | What is implemented |
+| --- | --- |
+| Text generation | Cached decoding, seeded sampling, stop sequences, streaming and chat templates |
+| Multimodal inference | Native image/text, speech, OCR and segmentation workflows within family-specific limits |
+| Retrieval | Embedding vectors, instructed queries, similarity and native Qwen3 reranking |
+| Developer access | Context-managed Python engine, task CLI, local Web UI and HTTP/SSE serving |
+| Inspection and planning | Safe artifact inspection, hardware profiles and workload memory estimates |
+| Training and evaluation | Experimental LoRA/QLoRA SFT, dataset validation, adapter export and evidence tooling |
 
+Task availability varies by checkpoint and interface. See the
+[model guides](docs/models/index.md) for supported inputs and limitations.
 
-<!-- model-performance:start -->
+## Quick Start
+
+### Installation
+
+Use Python 3.10+ on an Apple Silicon Mac running macOS 15+ for model execution.
+MLX and MLX Metal are pinned to 0.32.2; Python 3.12.11 is the tested development
+version. Install the published alpha from PyPI:
+
+```bash
+python -m pip install "mlx-one==0.1.0a1"
+```
+
+For the HTTP server, vision and OCR dependencies:
+
+```bash
+python -m pip install "mlx-one[server,vision,ocr]==0.1.0a1"
+mlx-one --version
+```
+
+For optional dependencies, audio/video decoding requirements and tested
+constraints, see [getting started](docs/getting-started.md) and the
+[dependency policy](requirements/README.md). For editable development setup, use the
+[source installation](docs/getting-started.md#source-installation-for-development).
+See the [0.1.0a1 release notes](https://github.com/SSusantAchary/mlx-one/releases/tag/0.1.0a1)
+for published artifacts and validation.
+
+### Load a text checkpoint and generate
+
+The native GPT-2 checkpoint has bounded functional smoke evidence in the
+[checkpoint inventory](docs/benchmarks/inventory.md). The engine loads the model
+on entry and releases its resources on exit:
+
+```python
+from mlx_one import Engine
+
+with Engine(model="openai-community/gpt2") as engine:
+    result = engine.generate("The future of local AI is", max_tokens=64)
+    print(result.text)
+```
+
+A local snapshot path also works. Use `revision` to pin an immutable checkpoint
+and `offline=True` when all required assets are already cached.
+
+### Run the CLI
+
+```bash
+mlx-one doctor
+mlx-one generate openai-community/gpt2 "The future of local AI is" \
+  --max-tokens 64 --temperature 0.8 --top-p 0.95 --seed 0
+```
+
+Add `--stream` for incremental text or `--offline` for cached/local assets.
+
+### Start the HTTP server
+
+```bash
+python -m pip install "mlx-one[server]==0.1.0a1"
+mlx-one serve LiquidAI/LFM2-350M --inference-mode reference_dense \
+  --host 127.0.0.1 --port 8888 --alias lfm2-local
+```
+
+Open `http://127.0.0.1:8888` for the bundled chat UI. The same process exposes
+OpenAI-compatible endpoints at `/v1`. The [server guide](docs/ui.md) covers model
+aliases, optional Bearer authentication and runtime configuration.
+
+<!-- model-performance-summary:start -->
 ## Model Performance
 
-Actual **direct-model inference** measurements; experimental, batch size 1. Python Engine, CLI and HTTP serving throughput are separate measurement types and are not represented by these numbers. Parameters are nominal model sizes.
+Historical **direct-model native MLX** measurements on Apple M4 / 32 GB, batch 1; 128 actual input / 16 actual output tokens, one warmup and three measured repetitions; per-column medians. Fresh FP16 KV, no prefix reuse; full-sequence logits.
 
-Configured context windows come from the pinned checkpoint configs; they are separate from benchmark input lengths and do not establish full-window validation. See the [config sources](docs/benchmarks/inventory.md).
+MLX / Metal 0.32.2 / 0.32.2; macOS-15.7.9-arm64-arm-64bit; Python 3.12.11. TTFT includes prefill and first-token selection. Decode excludes that first token.
+
+| Model | Precision | Hardware | TTFT (ms) | Prefill tok/s | Decode tok/s |
+| --- | --- | --- | ---: | ---: | ---: |
+| openai-community/gpt2 | FP32 | Apple M4 / 32 GB | 19.04 | 6722.29 | 118.04 |
+| Qwen/Qwen2.5-0.5B-Instruct | Affine Q8 (group 64) | Apple M4 / 32 GB | 63.94 | 2001.96 | 83.48 |
+| Qwen/Qwen3-0.6B | Affine Q8 (group 64) | Apple M4 / 32 GB | 100.39 | 1275.02 | 65.47 |
+| LiquidAI/LFM2-350M | Affine Q4 (group 64) | Apple M4 / 32 GB | 40.24 | 3180.66 | 185.81 |
+| HuggingFaceTB/SmolLM2-1.7B-Instruct | Affine Q4 (group 64) | Apple M4 / 32 GB | 333.28 | 384.06 | 55.69 |
+| meta-llama/Llama-3.2-1B-Instruct | Affine Q4 (group 64) | Apple M4 / 32 GB | 341.58 | 374.73 | 65.36 |
+| Qwen/Qwen2.5-1.5B-Instruct | Affine Q4 (group 64) | Apple M4 / 32 GB | 311.26 | 411.23 | 53.52 |
+| google/gemma-3-1b-it | BF16 | Apple M4 / 32 GB | 189.47 | 675.56 | 32.17 |
+| microsoft/Phi-3-mini-4k-instruct | Affine Q4 (group 64) | Apple M4 / 32 GB | 801.79 | 159.64 | 29.92 |
+
+Affine Q4/Q8 use group size 64. These bounded experimental measurements are not release qualification, full-context validation or Python/HTTP throughput. Different model architectures and precisions affect comparison.
 
 ![MLX-One text-model decode speed by nominal parameter size on Apple M4](docs/benchmarks/figures/text-model-decode-bars.png)
 
-[Model size vs decode speed scatter plot](docs/benchmarks/figures/text-model-size-vs-decode.svg) · [Bar chart SVG](docs/benchmarks/figures/text-model-decode-bars.svg) · [Chart data and reproduction](docs/benchmarks/figures/README.md). Protocols are shown separately; checkpoints without comparable measurements remain unmeasured.
-
-**Historical 128-input / 16-output protocol.** These archived runs are not the new standardized 128-input / 128-output results. Source and primary precision measurements are listed separately; “source” means the stored weights.
-
-**historical-128-16** — Apple M4, 32 GB; macOS-15.7.9-arm64-arm-64bit; Python 3.12.11; MLX 0.32.2 / Metal 0.32.2. Backend: native MLX diagnostic dense; full sequence logits; production_fp16 KV. Actual input: 128 tokens; actual output: 16 tokens per repetition. 1 shape warmup; 3 measured repetitions; per-column median. FP16 KV; fresh state, no prefix reuse. TTFT includes prefill and greedy selection of the first token. Peak MLX resets before each request after load/conversion/warmup; it includes resident model allocations.
-
-| Model name | Parameters | Configured context (tokens) | Quantization/precision | Prefill tokens/sec | Decode tokens/sec | Time to first token (ms) | Peak MLX memory (GiB) |
-|---|---|---:|---|---:|---:|---:|---:|
-| [openai-community/gpt2](docs/benchmarks/historical/M01-stored-performance.json) | 124M | 1,024 | FP32 | **6722.29** | **118.04** | 19.04 | 0.594 |
-| [Qwen/Qwen2.5-0.5B-Instruct](docs/benchmarks/historical/M02-affine_q8-performance.json) | 0.5B | 32,768 | Affine Q8 (group 64) | **2001.96** | **83.48** | 63.94 | 0.632 |
-| [Qwen/Qwen2.5-0.5B-Instruct](docs/benchmarks/historical/M02-stored-performance.json) | 0.5B | 32,768 | BF16 (source) | **1801.11** | **50.49** | 71.07 | 1.068 |
-| [Qwen/Qwen3-0.6B](docs/benchmarks/historical/M03-affine_q8-performance.json) | 0.6B | 40,960 | Affine Q8 (group 64) | **1275.02** | **65.47** | 100.39 | 0.816 |
-| [Qwen/Qwen3-0.6B](docs/benchmarks/historical/M03-stored-performance.json) | 0.6B | 40,960 | BF16 (source) | **892.22** | **33.95** | 143.46 | 1.312 |
-| [LiquidAI/LFM2-350M](docs/benchmarks/historical/M04-affine_q4-performance.json) | 350M | 128,000 | Affine Q4 (group 64) | **3180.66** | **185.81** | 40.24 | 0.313 |
-| [LiquidAI/LFM2-350M](docs/benchmarks/historical/M04-stored-performance.json) | 350M | 128,000 | BF16 (source) | **3169.32** | **91.87** | 40.39 | 0.783 |
-| [HuggingFaceTB/SmolLM2-1.7B-Instruct](docs/benchmarks/historical/M06-affine_q4-performance.json) | 1.7B | 8,192 | Affine Q4 (group 64) | **384.06** | **55.69** | 333.28 | 1.202 |
-| [HuggingFaceTB/SmolLM2-1.7B-Instruct](docs/benchmarks/historical/M06-stored-performance.json) | 1.7B | 8,192 | BF16 (source) | **309.63** | **19.21** | 413.39 | 3.390 |
-| [meta-llama/Llama-3.2-1B-Instruct](docs/benchmarks/historical/M07-affine_q4-performance.json) | 1B | 131,072 | Affine Q4 (group 64) | **374.73** | **65.36** | 341.58 | 0.886 |
-| [meta-llama/Llama-3.2-1B-Instruct](docs/benchmarks/historical/M07-stored-performance.json) | 1B | 131,072 | BF16 (source) | **572.81** | **29.75** | 223.46 | 2.455 |
-| [Qwen/Qwen2.5-1.5B-Instruct](docs/benchmarks/historical/M08-affine_q4-performance.json) | 1.5B | 32,768 | Affine Q4 (group 64) | **411.23** | **53.52** | 311.26 | 1.034 |
-| [Qwen/Qwen2.5-1.5B-Instruct](docs/benchmarks/historical/M08-stored-performance.json) | 1.5B | 32,768 | BF16 (source) | **375.86** | **21.46** | 340.55 | 3.044 |
-| [google/gemma-3-1b-it](docs/benchmarks/historical/M09-stored-performance.json) | 1B | 32,768 | BF16 | **675.56** | **32.17** | 189.47 | 2.028 |
-| [microsoft/Phi-3-mini-4k-instruct](docs/benchmarks/historical/M10-affine_q4-performance.json) | 3.8B | 4,096 | Affine Q4 (group 64) | **159.64** | **29.92** | 801.79 | 2.357 |
-| [microsoft/Phi-3-mini-4k-instruct](docs/benchmarks/historical/M10-stored-performance.json) | 3.8B | 4,096 | BF16 (source) | **126.13** | **10.87** | 1014.81 | 7.256 |
-
-**standard-128-128** — Apple M4, 32 GB; macOS-15.8.1-arm64-arm-64bit; Python 3.12.11; MLX 0.32.2 / Metal 0.32.2. Backend: native MLX direct dense; last_only logits; production_fp16 KV. Actual input: 128 tokens; actual output: 128 tokens per repetition. 1 shape warmup; 3 measured repetitions; per-column median. FP16 KV; fresh state, no prefix reuse. TTFT includes prefill and greedy selection of the first token. Peak MLX resets before each request after load/conversion/warmup; it includes resident model allocations.
-
-| Model name | Parameters | Configured context (tokens) | Quantization/precision | Prefill tokens/sec | Decode tokens/sec | Time to first token (ms) | Peak MLX memory (GiB) |
-|---|---|---:|---|---:|---:|---:|---:|
-| [openai-community/gpt2](docs/benchmarks/runs/M01-direct-128-128.json) | 124M | 1,024 | FP32 | **4057.67** | **96.48** | 31.55 | 0.570 |
-
-**Standardized 128/128 coverage: 1 / 13 primary configurations.** Remaining runs are pending; see the coverage report.
-
-**Missing primary-precision performance:** `Qwen/Qwen3.5-0.8B`, `LiquidAI/LFM2.5-24B-A2B-MLX-4bit`, `mlx-community/gpt-oss-20b-MXFP4-Q4`, `manjunathshiva/gpt-oss-20b-tq3`. No speed or memory figures are inferred for these checkpoints.
-
-See the [methodology and manual commands](docs/benchmarks/README.md), [checkpoint/precision inventory](docs/benchmarks/inventory.md), and [coverage report](docs/benchmarks/coverage.md). Full samples, output token IDs, immutable revisions, source hashes and hardware evidence live in [docs/benchmarks](docs/benchmarks/).
-<!-- model-performance:end -->
+The chart labels the historical cohort and separate standardized GPT-2 result. [Full tables and exact provenance](docs/benchmarks/text-performance.md), [methodology](docs/benchmarks/README.md) and [chart reproduction](docs/benchmarks/figures/README.md) retain all records. Standardized 128/128 runs, [HTTP serving](docs/benchmarks/http-performance.md), [VLM](docs/benchmarks/vlm/performance.md), [audio](docs/benchmarks/audio/performance.md) and [OCR](docs/benchmarks/ocr/performance.md) use separate protocols.
+<!-- model-performance-summary:end -->
 
 ### GPT-OSS native HTTP serving
 
-Measured on Apple M4 with 32 GB unified memory, Python 3.12, using the native MLX-One server on 2026-10-23. One warmup followed by five sequential tool-call requests; 175 prompt tokens and 91 generated tokens per request. Throughput and TTFT are per-column medians; memory is the observed peak. This serving workload uses a separate protocol from the direct-model tables above.
+Measured on Apple M4 with 32 GB unified memory, Python 3.12, using the native MLX-One server on 2026-10-23. One warmup followed by five sequential tool-call requests; 175 prompt tokens and 91 generated tokens per request. Throughput and TTFT are per-column medians; memory is the observed peak. This serving workload uses a separate protocol from the direct-model text table above.
 
 | Model name | Parameters | Configured context (tokens) | Quantization/precision | Prefill tokens/sec | Decode tokens/sec | Native first-token time (ms) | Peak MLX memory (GiB) |
 |---|---|---:|---|---:|---:|---:|---:|
 | [mlx-community/gpt-oss-20b-MXFP4-Q4](docs/validation/gpt-oss-kilo-2026-10-23.json) | 20B / 3.6B active | 131,072 | Mixed MXFP4 / affine Q4–Q8 | **75.95** | **18.96** | 2355.38 | 10.608 |
 
 Native first-token time includes hidden analysis; the median first actionable tool delta arrived at **7.127 seconds**, after argument validation. The configured 131,072-token context was not tested at its full length. See the [full measurements and methodology](docs/GPT_OSS_KILO_COMPATIBILITY.md#measured-performance). Standardized direct-model 128/128 coverage remains unchanged.
+
+The historical serving report does not record an immutable local checkpoint revision or MLX version; it cannot qualify the current pinned GPT-OSS targets. See [HTTP provenance](docs/benchmarks/http-performance.md).
+
 
 <!-- MLX-ONE-VLM-BENCHMARK-START -->
 ## Vision-Language Model Performance
@@ -137,6 +188,7 @@ Q4/Q8 denote the published checkpoint format; vision or projector modules may re
 
 High-resolution (1024 × 1024), four-image and OCR workloads remain separate. The HF image protocol is not pooled with the earlier synthetic-image protocol. See the [methodology and coverage](docs/benchmarks/vlm/README.md), [pinned checkpoint inventory](docs/benchmarks/vlm/benchmark_plan.json), and [manual download/inference/benchmark runbook](docs/VLM_TESTING.md). Text-model measurements above use different protocols. See the [checkpoint smoke and cleanup report](docs/validation/vlm-hf-2026-10-24/report.md).
 <!-- MLX-ONE-VLM-BENCHMARK-END -->
+
 
 <!-- MLX-ONE-AUDIO-BENCHMARK-START -->
 ## Audio Model Performance
@@ -202,6 +254,7 @@ Qwen alignment remains WIP because historical timestamp discrepancies are unreso
 [Methodology and coverage](docs/benchmarks/audio/README.md) · [Manual download, Python/CLI/HTTP and benchmark commands](docs/AUDIO_TESTING.md)
 <!-- MLX-ONE-AUDIO-BENCHMARK-END -->
 
+
 <!-- MLX-ONE-OCR-BENCHMARK-START -->
 ## OCR Model Performance
 
@@ -249,9 +302,67 @@ TrOCR Printed is an out-of-domain baseline. Page models process the same cropped
 
 <!-- MLX-ONE-OCR-BENCHMARK-END -->
 
+
+## Additional Modality Performance
+
+**Native task latency (2026-11-03) — Apple M4 / 32 GiB, macOS 15.8.1, Python 3.12.11,
+MLX 0.32.2, FP32.** One process, one excluded warmup, 20 timed Python task
+calls per row; model loading excluded. Timing includes preparation and
+synchronized execution. Workloads are distinct; these are not HTTP or
+concurrent-serving rates. p95 uses the nearest-rank method.
+
+| Task | Workload | Median (ms) | p95 (ms) |
+| --- | --- | ---: | ---: |
+| DistilBERT SST-2 | One text | 14.95 | 17.58 |
+| BERT NER | One text, SIMPLE aggregation | 18.90 | 26.14 |
+| CLIP ViT-B/32 | One image, two labels | 80.19 | 89.68 |
+| Silero VAD | One second of decoded mono 16 kHz audio | 16.35 | 22.97 |
+
+[Task measurement protocol and raw-run locators](docs/native_tasks/task-performance.md)
+retain exact workload and provenance details. These bounded profiles remain
+experimental; quality results, rejected profiles and qualification blockers are
+in [experimental task documentation](docs/experimental/native-tasks.md).
+
+| Modality | Available performance evidence | Remaining measurement gap |
+| --- | --- | --- |
+| Embeddings and reranking | No verified latency/throughput measurement in the current published evidence | Latency, throughput and memory unavailable; see [retrieval scope](docs/models/index.md#retrieval-guides) |
+| SAM3 segmentation and tracking | Approximately 8.41 GB peak MLX allocation in controlled 32-frame single-object comparisons on M4 / 32 GB | Isolated latency/throughput not measured; [fixture report](docs/sam3-qualification-m4-32gb.md) is not a general tracking benchmark |
+
+
+## Supported Modalities and Models
+
+| Modality | Implemented capabilities | Documentation |
+| --- | --- | --- |
+| Text | Native completion/chat and streaming for registered language architectures | [Text families](docs/models/index.md#text-generation-guides) |
+| Vision-language | Native static-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL | [VLM families](docs/models/index.md#vision-language-guides) |
+| Audio | ASR, separate known-text alignment, and experimental LFM2.5 speech generation | [Audio families](docs/models/index.md#audio-guides) |
+| OCR | TrOCR line recognition and implemented page-model transcription workflows | [OCR guide](docs/OCR_TESTING.md) |
+| Embeddings | Native embedding and reranking interfaces; ColBERT token-level retrieval | [Retrieval families](docs/models/index.md#retrieval-guides) |
+| Segmentation | SAM3 concept/interactive images and experimental offline/streaming video tracking | [SAM3 guide](src/mlx_one/models/segmentation/sam3/README.md) |
+| Additional tasks | Bounded sentiment, NER, zero-shot image classification and voice activity detection | [Task scope and evidence](docs/experimental/native-tasks.md) |
+
+Detailed checkpoint coverage, execution evidence, and qualification status are
+maintained in the model inventory and experimental documentation.
+See the [checkpoint inventory](docs/benchmarks/inventory.md),
+[qualification policy](docs/model-admission.md) and
+[experimental index](docs/experimental/README.md). An implemented family does not
+qualify every checkpoint, task, precision or device.
+
 ## Architecture
 
-The native text inference path is:
+<p align="center">
+  <a href="mlx-one_arch.png">
+    <img src="mlx-one_arch.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
+  </a>
+</p>
+
+Click the artwork for full resolution. It includes planned workflows such as
+CPT and RL and broader MTP goals. Those labels do not establish implementation
+or qualification; existing bounded Qwen3.5 MTP options have their own scope.
+The optional MLXBoost module ships inside MLX-One; a separate distribution is a
+[proposal](docs/architecture/mlxboost-module-boundary.md).
+
+The implemented native text path is:
 
 ```text
 Python Engine / HTTP + SSE / CLI
@@ -262,866 +373,95 @@ Reference execution or InferenceActor + BatchScheduler
                  ↓
 Native model adapter → dense / paged / hybrid runner
                  ↓
-CacheManager → transactional ownership, prefix index, page arena, hybrid state
+CacheManager → ownership, prefix index, page arena, hybrid state
                  ↓
 MLX + Metal + unified memory
 ```
 
-The actor owns request state, sampling, cancellation and execution barriers.
-Token budgets and chunked prefill coordinate active requests. Cache reservations
-and live memory-pressure telemetry govern admission; matching evidence governs
-qualified backend selection before cache storage is constructed. Native model
-implementations remain within mlx-one.
+The actor owns request state, sampling and cancellation. Cache reservations and
+memory-pressure telemetry govern admission; matching evidence gates optimized
+backend selection. Native model equations stay within family packages.
+See [architecture and principles](docs/architecture/index.md),
+[repository layout](docs/REPOSITORY_SUMMARY.md) and
+[runtime experiments](docs/experimental/inference-runtime.md).
 
-## Native inference engine
+## Native Inference Engine and MLXBoost
 
-mlx-one now exposes a lifecycle-managed Python engine while retaining the
-existing `generate()` and `stream_generate()` functions:
+`mlx_one.Engine` manages a native text model's lifecycle, synchronous generation,
+streaming, asynchronous submission, cooperative cancellation and cleanup. The
+existing `generate()` and `stream_generate()` functions remain available.
+
+Dense reference execution is the default, with one active sequence. Block,
+paged, dense-batch and hybrid-batch paths have explicit capability and evidence
+requirements; source implementation does not establish production qualification.
+See the [runtime guide](docs/experimental/inference-runtime.md).
+
+MLXBoost is an optional execution module. `mlxboost_b1` and `fast_decode` require
+explicit opt-in; feature flags default off. The measured path skips unnecessary
+calibration lookup work for eligible profiles. It adds no custom Metal kernel
+and changes no model equations. Unsupported profiles report fallback or raise
+under strict handling. It remains experimental, with no rollout approval.
+
+[MLXBoost experiments](docs/experimental/mlxboost.md) retain off/on HTTP results,
+failed model qualification gates, methodology and future requirements. The
+[module boundary ADR](docs/architecture/mlxboost-module-boundary.md) explains
+current ownership and the proposed future package boundary.
+
+## Python, CLI and HTTP APIs
+
+Stream text through the Python engine:
 
 ```python
 from mlx_one import Engine
 
 with Engine(model="LiquidAI/LFM2-350M") as engine:
-    result = engine.generate("Explain unified memory briefly.", max_tokens=128)
-    print(result.text)
-
-    for chunk in engine.stream("Name two advantages of MLX."):
+    for chunk in engine.stream("Name two advantages of MLX.", max_tokens=64):
         print(chunk.text, end="", flush=True)
 ```
 
-The runtime includes typed sequence/runner contracts, isolated request RNG,
-bounded output queues, transactional caches, byte-bounded prefix sharing and
-explicit execution modes. HTTP prefix namespaces derive from authenticated
-principals; anonymous requests remain private. Python callers can supply an
-explicit cache namespace.
-
-| Mode | Execution and availability |
-|---|---|
-| `reference_dense` | Existing single-request dense execution; cooperative server slots use separate B=1 forwards. |
-| `experimental_block` | Materialized block-cache path for supported unquantized Qwen2/Qwen2.5; experimental. |
-| `experimental_dense_batch` | Actor-driven dense batching for supported native adapters; experimental and not production-qualified. |
-| `paged` | Direct page-backed attention using the segmented arena and existing Metal kernels; supported contracts only, qualification pending. |
-| `experimental_hybrid_batch` | Native LFM2 attention and request-local convolution state; qualification pending. |
-| `auto` | Opt-in selection from matching performance-qualified evidence; otherwise reference dense with a reported reason. |
-
-Omitting the mode preserves existing behavior. The default active-sequence limit
-remains one; larger batches require explicit configuration. Unsupported explicit
-optimized modes raise capability errors. Native affine INT8 loading and floating
-FP16 conversion preserve packed weight payloads; optimized P1 profiles use FP16 KV.
-Quantized paged KV and 128K-class admission remain evidence-gated.
-
-See the [repository summary](docs/REPOSITORY_SUMMARY.md) for current validation,
-layout and benchmark status, and the
-[native inference-engine roadmap](docs/architecture/inference-engine.md) for broader plans.
-
-## Cache runtime qualification
-
-Cache and optimized execution paths remain experimental; dense B1 is the bounded
-reference scope. Historical P1 results do not certify other checkpoints, longer
-contexts or optimized backends. Model admission now follows the
-[functional support policy](docs/model-admission.md).
-
-For the recorded workloads, numerical investigations, limitations and development
-commands, see the [P1 execution report](docs/p1_execution_report.md),
-[P1 qualification matrix](docs/p1_qualification_matrix.md) and
-[M4 cache report](docs/cache-benchmark-m4-32gb.md).
-
-## What is implemented
-
-- Native MLX architectures across language, vision-language, embeddings,
-  audio-language, ASR, and segmentation.
-- Shared attention, GQA, RoPE, normalization, feed-forward, MoE, vision, hybrid
-  convolution, masking, and KV-cache primitives.
-- Lazy metadata-driven model registration without initializing Metal during
-  lightweight package imports.
-- Strict configuration validation and deterministic weight contracts that reject
-  unknown or shape-incompatible tensors.
-- Safe local and pinned Hugging Face artifact inspection.
-- Native Whisper loading, audio preprocessing, tokenization, decoding, language
-  detection, segment timestamps, word timestamps, and WER/CER evaluation.
-- Distil-Whisper large-v3 through the native Whisper loader, with pinned M4
-  English short-form transcript/segment gates and safe precision-variant selection.
-  See [audio qualification](docs/audio-qualification-m4-32gb.md).
-- Native original Moonshine Tiny/Base waveform encoders and cached greedy
-  transcription, with pinned M4 English short-form gates.
-- Native Qwen3-ASR 0.6B/1.7B, separate known-text ForcedAligner, and bounded
-  accumulated-utterance streaming through Python/CLI. Qwen checkpoint qualification
-  is incomplete; 0.6B has scoped English/French offline passing evidence.
-- Native offline Parakeet TDT v2/v3, strict float32 loading and isolated v2 NeMo
-  conversion. Both English transcript gates and v3 French/German gates pass;
-  original v2 NeMo parity, timestamps and broader qualification remain WIP.
-- Unified native text loading, tokenizer/chat templates, affine 4-bit/8-bit checkpoints,
-  cached greedy and seeded sampling, stop sequences, token streaming, and serving
-  for GPT-2, Qwen2/Qwen3, LFM2, OpenELM, and text-only Qwen3.5 families.
-- Native Qwen3 embedding and reranking with byte-level BPE, safe loading,
-  padding-aware batching, Matryoshka dimensions, normalization, cosine similarity,
-  yes/no pair scoring, and stable ranking.
-- Native Meta SAM3 float32 loading, text/box concept segmentation, interactive
-  point/box/mask prediction, experimental automatic masks, and stateful offline
-  and streaming video tracking through Python and CLI. Qualification is partial;
-  see the [SAM3 model guide](src/mlx_one/models/segmentation/sam3/README.md) and
-  [M4/32 GB results](docs/sam3-qualification-m4-32gb.md).
-- Dataset validation, memory planning, LoRA/QLoRA SFT workflows, adapter export,
-  evaluation, comparison, benchmarking, and evidence records.
-- Backend-free tests plus opt-in Metal and real-checkpoint integration gates.
-- A context-managed `mlx_one.Engine` with streaming, asynchronous submission,
-  cooperative cancellation, runtime capability inspection, and explicit cleanup.
-
-## Installation
-
-mlx-one requires Python 3.10 or newer and an Apple Silicon Mac with macOS 15 or
-later for model execution. The current MLX/Metal pair is pinned to 0.32.2;
-Python 3.12.11 is the tested development environment.
+Inspect a model without loading weights, or transcribe a local recording:
 
 ```bash
-git clone https://github.com/SSusantAchary/mlx-one.git
-cd mlx-one
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e .
+mlx-one inspect Qwen/Qwen2.5-1.5B
+mlx-one transcribe openai/whisper-tiny recording.wav --language en
 ```
 
-Install development tools with:
+Audio files require FFmpeg. Send a chat request to the server started above:
 
 ```bash
-python -m pip install -e ".[dev]"
-```
-
-To reproduce the recorded Apple M4 / Python 3.12.11 candidate dependencies, use
-`python -m pip install -c requirements/alpha-tested-constraints.txt -e ".[dev]"`
-inside a Python 3.12.11 environment. These constraints are an environment snapshot,
-not a lockfile for every supported Python version. On Python 3.10, 3.11 or 3.13,
-install without that constraints file and validate the resolved environment.
-See [dependency policy and tested minimums](requirements/README.md).
-
-Qwen known-text alignment has separate optional language dependencies:
-
-```bash
-python -m pip install -e ".[qwen-align-ja]"  # Japanese: nagisa==0.2.11
-python -m pip install -e ".[qwen-align-ko]"  # Korean: soynlp==0.0.493
-```
-
-Korean alignment also needs the checksummed `korean_dict_jieba.dict` in the local
-checkpoint directory. The extra installs only the tokenizer. See the
-[alignment asset instructions](src/mlx_one/models/audio/qwen3_asr/README.md#installation-and-assets).
-
-The native engine and server do not require `mlx-lm`. Install
-`mlx-one[legacy-mlx-lm]` only for legacy compatibility workflows that explicitly
-request that bridge.
-
-For SAM3 image processing, install the existing vision extra:
-
-```bash
-python -m pip install -e ".[vision]"
-```
-
-Meta's [SAM3 checkpoint](https://huggingface.co/facebook/sam3) requires authorized
-gated access and acceptance of its separate checkpoint license. Authenticate with
-`hf auth login`, or use an authorized complete local snapshot with `--offline`.
-SAM3 runs in float32; quantized checkpoints and SAM3.1 are unsupported.
-
-FFmpeg is required when the Whisper/Moonshine/Qwen/Parakeet API receives an audio file; encoded SAM3
-videos require both FFmpeg and ffprobe. Decoded mono 16-kHz waveforms, SAM3 frame
-directories, and Python RGB frame iterators need no video/audio decoder.
-
-## Quick start
-
-### Native server and Web UI
-
-Load one supported text model and start the bundled local UI:
-
-```bash
-python -m pip install -e ".[server]"
-mlx-one serve Qwen/Qwen3-0.6B --inference-mode reference_dense
+curl http://127.0.0.1:8888/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"lfm2-local","messages":[{"role":"user","content":"Explain MLX briefly."}],"max_tokens":64}'
 ```
 
 <p align="center">
   <a href="mlx_One_chat_ui.png">
-    <img src="mlx_One_chat_ui.png" alt="mlx-one native chat Web UI" width="900">
+    <img src="mlx_One_chat_ui.png" alt="Current MLX-One native chat UI in dark mode, connected to a local LFM2 model" width="900">
   </a>
 </p>
 
-Click the thumbnail to open the full-size UI screenshot.
+Current native chat UI connected to a local model. Click the image for full resolution.
 
-To expose a shorter model name and protect `/v1/*` with a Bearer key:
+Use the [API guide](docs/api/index.md) for retrieval, segmentation, training and
+advanced CLI/Python examples; the [HTTP compatibility reference](docs/api/openai-compatibility.md)
+and [Web UI guide](docs/ui.md) document request formats, streaming and settings.
 
-```bash
-mlx-one serve LiquidAI/LFM2-350M \
-  --host 127.0.0.1 \
-  --port 8181 \
-  --alias lfm2-local \
-  --api-key local-secret
-```
+## Documentation
 
-To enable the UI microphone and audio-file transcription, load a private native Whisper sidecar:
-
-```bash
-mlx-one serve CHAT_MODEL \
-  --transcription-model WHISPER_MODEL \
-  --host 127.0.0.1 \
-  --port 8181
-```
-
-The Whisper model is loaded only when this flag is supplied. Recordings stay local, are
-transcribed through MLX, and the editable transcript is inserted into the composer without being
-sent automatically. FFmpeg is required for browser audio decoding.
-
-Enter `local-secret` in the UI's **API key** field and select **Connect**. Terminal clients must
-send the same key and use the alias as the request model:
-
-```bash
-curl http://127.0.0.1:8181/v1/models \
-  -H 'Authorization: Bearer local-secret'
-
-curl -N http://127.0.0.1:8181/v1/chat/completions \
-  -H 'Authorization: Bearer local-secret' \
-  -H 'Content-Type: application/json' \
-  -d '{"model":"lfm2-local","messages":[{"role":"user","content":"Explain MLX in one sentence."}],"stream":true}'
-```
-
-Authentication is disabled when neither `--api-key` nor `MLX_ONE_API_KEY` is configured. A
-`401 Unauthorized` response from `/v1/*` means the Bearer key is missing or invalid; `/health`
-and the static UI remain public.
-
-The native server also supports model aliases, optional Bearer authentication, effective context
-limits, request deadlines, cooperative parallel slots, prompt/context caching, context shifting,
-reasoning output, quantized KV caches, and Qwen3.5 MTP speculative decoding. Run
-`mlx-one serve --help` for the complete flag list.
-
-Cache Runtime V1 keeps dense KV as the default and exposes the Qwen2/Qwen2.5 block backend as an
-opt-in experimental path:
-
-```bash
-mlx-one serve MODEL --cache-backend block --kv-block-size 32 \
-  --kv-cache-budget-mib 8192 --prefix-cache-mib 512
-```
-
-The block backend currently requires unquantized f16 Qwen2/Qwen2.5 text generation with batch size
-one. Unsupported combinations fail explicitly. Runtime cache ownership, memory, reservation, block,
-and prefix statistics are included in `GET /v1/runtime`.
-
-> [!WARNING]
-> M4/32 GB qualification is incomplete. An unquantized Qwen2.5-0.5B dense run completed through
-> 16K input tokens but failed at approximately 32K under the current memory budget. Dense snapshot
-> APC did not reuse divergent chat-prompt suffixes, so block APC, block sharing, and dense/block
-> parity are not qualified. Keep dense as the recommended backend; use block mode only for
-> development testing. Hybrid LFM models reject block KV and APC intentionally. See the measured
-> [cache qualification report](docs/cache-benchmark-m4-32gb.md) and
-> [runtime support matrix](docs/cache-runtime.md).
-
-With the default port, open `http://127.0.0.1:8888` (or `http://127.0.0.1:8181`
-for the explicit-port examples above). The same process exposes an OpenAI-compatible
-API at `/v1`, including streaming chat completions. Model execution remains inside
-mlx-one's native model, tokenizer, sampling, generation, and MLX runtime. See
-[the Web UI and server guide](docs/ui.md) for API and development details.
-
-### Inspect, plan, and run tasks
-
-Check the machine and inspect a model without loading its weights:
-
-```bash
-mlx-one doctor
-
-mlx-one inspect Qwen/Qwen2.5-1.5B
-```
-
-Build a workload-aware memory plan:
-
-```bash
-mlx-one plan inference \
-  --model Qwen/Qwen2.5-1.5B \
-  --hardware m4-air-32gb \
-  --precision bf16 \
-  --context-length 2048
-```
-
-Generate text through the native GPT-2 stack:
-
-```bash
-mlx-one generate openai-community/gpt2 "The future of local AI is" \
-  --max-tokens 64 \
-  --temperature 0.8 \
-  --top-p 0.95 \
-  --seed 0
-```
-
-Use `--stream` for incremental text, `--json-output` for a structured result,
-or `--offline` with an existing local/cache copy. Model downloads occur only
-when a user explicitly supplies an online repository without `--offline`.
-
-Transcribe audio through the native Whisper stack:
-
-```bash
-mlx-one transcribe openai/whisper-tiny recording.m4a \
-  --language en \
-  --word-timestamps \
-  --json-output
-```
-
-Omit `--language` for automatic detection. Add `--task translate` for
-speech-to-English translation or `--offline` to require local/cached assets.
-
-Create document or instructed query embeddings:
-
-```bash
-mlx-one embed Qwen/Qwen3-Embedding-0.6B "A document to index" \
-  --dimensions 512 \
-  --json-output
-
-mlx-one embed Qwen/Qwen3-Embedding-0.6B "local Apple Silicon training" \
-  --input-type query
-```
-
-Rerank candidate documents while preserving their original indexes:
-
-```bash
-mlx-one rerank Qwen/Qwen3-Reranker-0.6B \
-  "Which Macs support MLX?" \
-  "MLX is designed for Apple silicon." \
-  "CUDA targets NVIDIA GPUs." \
-  --top-k 1 \
-  --json-output
-```
-
-For reproducible evaluation and qualification, add `--revision` with an exact
-model commit. Raw commit hashes are kept in integration tests and evidence
-records rather than introductory examples.
-
-## Model-Specific Documentation
-
-Each registered model type has a guide beside its implementation, with checkpoint
-assets, model architecture diagrams, paper references, input formats, examples,
-settings, troubleshooting, and validation links.
-The organization follows [mlx-vlm's model guides](https://github.com/Blaizzy/mlx-vlm/tree/main#model-specific-documentation);
-the workflows below describe mlx-one's current implementation.
-
-An available loader or integration gate is not a passing qualification result.
-Examples marked as candidates require verification for the exact checkpoint and
-workload. See [capability levels](#capability-levels) and the
-[qualification candidate catalog](docs/model-catalog.md).
-
-### Text generation guides
-
-| Family | Available workflow | Qualification summary | Guide |
-| --- | --- | --- | --- |
-| GPT-2 | Completion, sampling, streaming | 124M bounded functional smoke; larger checkpoints remain candidates | [Docs](src/mlx_one/models/language/gpt2/README.md) |
-| Llama / MiniCPM5 / SmolLM2 | Completion, template chat, quantized loading | MiniCPM5 pinned gate; SmolLM2 M4 LoRA/reload evidence, quality gate failed | [Docs](src/mlx_one/models/language/llama/README.md) |
-| Qwen2 / Qwen2.5 / Qwen2.5-Coder | Completion, template chat, streaming | Coder M4 LoRA/reload evidence, quality gate failed; cache qualification partial | [Docs](src/mlx_one/models/language/qwen2/README.md) |
-| Qwen3 dense | Completion, template chat, streaming | 0.6B bounded functional smoke; other checkpoints remain candidates | [Docs](src/mlx_one/models/language/qwen3/README.md) |
-| Qwen2-MoE | Experimental native text loading/generation | Architecture/synthetic; checkpoint unqualified | [Docs](src/mlx_one/models/language/qwen2_moe/README.md) |
-| OpenELM | Completion with compatible tokenizer assets | Candidate; verify exact release | [Docs](src/mlx_one/models/language/openelm/README.md) |
-| LFM2 / LFM2.5 | Hybrid text generation and chat | Per checkpoint; M4 block-rejection safety result | [Docs](src/mlx_one/models/language/lfm2/README.md) |
-| LFM2-MoE | Experimental hybrid text loading/generation | Architecture/synthetic tests; LFM2.5-24B-A2B full-checkpoint smoke pending | [Docs](src/mlx_one/models/language/lfm2_moe/README.md) |
-| Gemma3 text | Completion/chat, bounded sliding state | 1B bounded functional smoke; numerical/answer-quality limitations disclosed | [Docs](src/mlx_one/models/language/gemma3/README.md) |
-| Phi3 | Completion/chat, bounded sliding state | Mini-4K bounded functional smoke; wider context/precision not qualified | [Status](docs/model-admission.md) |
-| GPT-OSS | Experimental native MXFP4 and TQ3 inference | Architecture/kernel tests; both 20B full-checkpoint runs pending | [Docs](docs/native-moe/manual-inference.md) |
-
-### Vision-language guides
-
-| Family | Available workflow | Qualification summary | Guide |
-| --- | --- | --- | --- |
-| Qwen2-VL | Native Python, image CLI, HTTP chat and SSE | Pinned Q4 checkpoint smoke passed on M4; experimental; static images only | [Docs](src/mlx_one/models/vision_language/qwen2_vl/README.md) |
-| Qwen2.5-VL | Native Python, image CLI, HTTP chat and SSE | Pinned Q4 checkpoint smoke passed on M4; experimental; static images only | [Docs](src/mlx_one/models/vision_language/qwen2_5_vl/README.md) |
-| Qwen3.5 | Native text and static-image generation, CLI, HTTP/SSE | Targeted 0.8B MLX Q4 image checkpoint smoke passed; alternative revisions unqualified | [Docs](src/mlx_one/models/vision_language/qwen3_5/README.md) |
-| LFM2-VL / LFM2.5-VL | Native SigLIP2 NaFlex + hybrid decoder, Python/CLI/HTTP/SSE | Pinned Q8 450M and Q4 3B checkpoint smokes passed on M4; experimental | [Docs](src/mlx_one/models/vision_language/lfm2_vl/README.md) |
-
-### Retrieval guides
-
-| Family | Available workflow | Qualification summary | Guide |
-| --- | --- | --- | --- |
-| BERT / all-MiniLM-L6-v2 | Single-vector embeddings and similarity | Candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/bert/README.md) |
-| MPNet / all-mpnet-base-v2 | Single-vector embeddings and similarity | Candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/mpnet/README.md) |
-| Qwen3 Embedding | Instructed queries, dimensions, normalized vectors | 0.6B candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/qwen3_embedding/README.md) |
-| Qwen3 Reranker | Pair scores, probabilities, stable ranking | 0.6B candidate; synthetic validation | [Docs](src/mlx_one/models/embeddings/qwen3_reranker/README.md) |
-| LFM2 ColBERT | Lower-level token embeddings and masked MaxSim | Candidate; generic single-vector `embed` incompatible | [Docs](src/mlx_one/models/embeddings/lfm2_colbert/README.md) |
-
-### Audio guides
-
-| Family | Available workflow | Qualification summary | Guide |
-| --- | --- | --- | --- |
-| Whisper / Distil-Whisper | Transcription, language detection, timestamps, WER/CER | Tiny/turbo smoke gates; Distil-large-v3 M4 English short-form gates pass; broader qualification pending | [Docs](src/mlx_one/models/audio/whisper/README.md) |
-| Moonshine Tiny / Base | Native offline English transcription, Python/CLI | Both pinned checkpoints pass M4 English short-form gates; streaming/long-form unqualified | [Docs](src/mlx_one/models/audio/moonshine/README.md) |
-| Qwen3-ASR 0.6B / 1.7B | Native transcription and bounded accumulated-utterance streaming, Python/CLI | 0.6B English/French offline gates pass; **WIP**: 1.7B English WER/CER match reference but only 15/16 exact anchors pass; streaming parity and remaining language gates unresolved | [Docs](src/mlx_one/models/audio/qwen3_asr/README.md) |
-| Qwen3-ForcedAligner 0.6B | Native known-text alignment, Python/CLI; not ASR | Float32 components pass; **WIP**: English timestamp differences reach 800 ms against an 80-ms limit; remaining qualification unresolved | [Docs](src/mlx_one/models/audio/qwen3_asr/README.md) |
-| Parakeet TDT v2 / v3 | Native offline transcription, Python/CLI; isolated v2 archive conversion | Float32 components, both English 100-clip/16-anchor gates and v3 French/German 25-clip gates pass; **WIP** original v2 NeMo, timestamp and broader qualification | [Docs](src/mlx_one/models/audio/parakeet/README.md) |
-| LFM2.5 Audio | Native ASR, TTS, speech-to-speech, Python/CLI/HTTP and ordered PCM streaming | Source/tiny native tests; Q4 checkpoint and speech quality validation pending | [Docs](src/mlx_one/models/audio/lfm2_audio/README.md) |
-
-### Audio implementation progress — WIP
-
-The [native audio runbook](docs/AUDIO_TESTING.md) documents the current source
-implementation, exact manual checkpoints and remaining limitations. Standardized
-measurements remain pending; historical investigations below are retained evidence.
-
-As of 2026-10-04, unresolved qualification gates remain **WIP** and no longer
-block implementation of later families. This changes development sequencing,
-not acceptance thresholds: WIP does not mean qualified, and unavailable tasks
-are not advertised as working loaders.
-
-| Stage | Checkpoints | Implementation / qualification status |
-| --- | --- | --- |
-| 3 | Qwen3-ASR 0.6B / 1.7B; ForcedAligner 0.6B | Implemented; **WIP** exact anchors, alignment timestamps, streaming parity and missing language/corpus gates |
-| 4 | Parakeet TDT v2 / v3; Nemotron 3.5 ASR | Parakeet offline implemented; **WIP** full qualification. Nemotron contract frozen; native cached streaming not implemented |
-| 5 | Voxtral Mini 3B; Voxtral Realtime 4B | Checkpoint/tensor/processor contracts frozen; **WIP / not implemented** native offline/streaming transcription and qualification |
-| 6 | Original VibeVoice 1.5B multi-speaker TTS | Checkpoint contract, original source and supplemental tokenizer pinned; **WIP / not implemented** native synthesis, reference parity and fixture permission evidence |
-
-See the [audio report](docs/audio-qualification-m4-32gb.md) for the numerical
-investigations, checkpoint limitations and remaining validation work.
-
-### Segmentation guides
-
-| Family | Available workflow | Qualification summary | Guide |
-| --- | --- | --- | --- |
-| Meta SAM3 (`sam3`, `sam3_tracker`, `sam3_tracker_video`, `sam3_video`) | Concept/interactive images, experimental automatic masks, composite offline/streaming tracking | M4/32 GB single-object 32-frame fixture passes CPU-reference gates; full qualification pending; standalone temporal tracker architecture-only | [Docs](src/mlx_one/models/segmentation/sam3/README.md) |
-
-The [SAM3 qualification report](docs/sam3-qualification-m4-32gb.md) records exact
-checkpoint/reference revisions, memory measurements, preserved failures, and
-remaining gates. These fixture passes do not qualify all segmentation workflows.
-
-<a id="native-model-coverage"></a>
-
-## Supported Models
-
-For checkpoint assets, input formats, and usage limitations, see the
-[model-specific guides](#model-specific-documentation). The tables below summarize
-implemented components; architecture coverage does not guarantee an end-to-end task.
-
-### Language models
-
-| Registry type | Family | Native components | Architecture | Qualification |
-| --- | --- | --- | :---: | --- |
-| `gpt2` | GPT-2 124M, 355M, 774M, 1.5B | Learned positions, fused QKV, byte BPE, safe loading, cache, generation and streaming | ✅ | 124M bounded functional smoke; larger checkpoints remain candidates |
-| `llama` | Llama, MiniCPM5 1B/2B | GQA, explicit head dimensions, RoPE, 4-bit MLX loading, multi-EOS generation | ✅ | MiniCPM5 pinned integration gate |
-| `qwen2` | Qwen2, Qwen2.5, Qwen2.5-Coder | Dense Transformer, GQA, RoPE, cache | ✅ | Per checkpoint |
-| `qwen3` | Qwen3 dense | Bias-free attention, Q/K norm, explicit head dimensions | ✅ | 0.6B bounded functional smoke; other checkpoints remain candidates |
-| `qwen2_moe` | Qwen2-MoE | Top-k experts, shared expert, router outputs | ✅ | Architecture only |
-| `openelm` | OpenELM 270M–3B | Layer-wise heads/FFN widths, fused QKV, GQA | ✅ | Verify release |
-| `lfm2` | LFM2 and LFM2.5 | Hybrid convolution/attention decoder | ✅ | Per checkpoint |
-| `lfm2_moe` | LFM2 / LFM2.5 MoE | Hybrid decoder and sparse expert routing | ✅ | Architecture/synthetic tests; LFM2.5-24B full-checkpoint smoke pending |
-| `gemma3_text` | Gemma3 1B | Native text decoder and sliding attention | ✅ | Bounded functional smoke; known numerical/answer-quality limitations |
-| `phi3` | Phi-3 Mini-4K | Native decoder and sliding attention | ✅ | Bounded functional smoke; wider context/precision not qualified |
-| `gpt_oss` | GPT-OSS 20B | Native MoE, MXFP4 and packed TQ3 projections | ✅ | Architecture/kernel tests; full-checkpoint smoke pending |
-
-### Vision-language models
-
-| Registry type | Family | Native components | Architecture | Qualification |
-| --- | --- | --- | :---: | --- |
-| `qwen2_vl` | Qwen2-VL | Vision Transformer, 3D patches, merger, multimodal RoPE, image/video token insertion | ✅ | Verify exact checkpoint and processor |
-| `qwen2_5_vl` | Qwen2.5-VL-3B | Window/full vision attention, biased SwiGLU vision tower, merger, multimodal RoPE | ✅ | Pinned static-image checkpoint smoke passed on M4 |
-| `qwen3_5` | Qwen3.5 0.8B/2B | Hybrid gated-delta/full-attention text tower, learned/interpolated vision positions, multimodal RoPE | ✅ | Text source smoke retained; targeted MLX VLM Q4 checkpoint smoke passed on M4 |
-| `lfm2_vl` | LFM2-VL / LFM2.5-VL | SigLIP2 NaFlex, pixel unshuffle/projector, hybrid language model | ✅ | Pinned Q8 450M / Q4 3B static-image checkpoint smokes passed on M4 |
-
-### OCR and documents
-
-Native source paths cover TrOCR, GOT-OCR 2.0, Florence-2, PaddleOCR-VL 1.5,
-LightOnOCR 2 and DeepSeek-OCR. Full-checkpoint measurements are experimental;
-task limits and per-image results are documented above.
-See [OCR performance and scope](#ocr-model-performance) and the
-[Python/CLI/HTTP guide](docs/OCR_TESTING.md).
-
-### Embeddings and retrieval
-
-| Registry type | Family | Native components | Architecture | Qualification |
-| --- | --- | --- | :---: | --- |
-| `bert` | all-MiniLM-L6-v2 | BERT encoder, mean pooling, normalization, cosine | ✅ | Candidate |
-| `mpnet` | all-mpnet-base-v2 | MPNet relative positions, mean pooling, normalization, cosine | ✅ | Candidate |
-| `qwen3_embedding` | Qwen3-Embedding-0.6B | Final-token pooling, instructed queries, Matryoshka dimensions, normalization, cosine | ✅ | Candidate; synthetic validation only |
-| `qwen3_reranker` | Qwen3-Reranker-0.6B | Official pair prompt, yes/no logit scoring, probabilities, stable ranking | ✅ | Candidate; synthetic validation only |
-| `lfm2_colbert` | LFM2/LFM2.5 ColBERT | Token embeddings, masks, late-interaction MaxSim | ✅ | Candidate |
-
-### Audio and speech
-
-| Registry type | Family | Native components | Architecture | Qualification |
-| --- | --- | --- | :---: | --- |
-| `whisper` | tiny, base, small, medium, large-v3, turbo, Distil-large-v3 | Encoder-decoder, safe loading, log-Mel, BPE, decoding, language, timestamps, WER/CER | ✅ | Tiny/turbo smoke gates; [Distil M4 English short-form evidence](docs/audio-qualification-m4-32gb.md); broader qualification pending |
-| `moonshine` | Original Tiny 27M / Base 61M | Raw-waveform convolutions, GroupNorm, partial interleaved RoPE, encoder/cached decoder, tokenizer, greedy transcription | ✅ | [M4 English short-form evidence](docs/audio-qualification-m4-32gb.md#moonshine-tinybase-stage-two-results); streaming/long-form unqualified |
-| `qwen3_asr` | Qwen3-ASR 0.6B / 1.7B | Chunked Conv2D/audio encoder, Qwen3 decoder, strict BF16 loading, context/language prompts, accumulated-utterance streaming | ✅ | [0.6B offline passes and remaining failures](docs/audio-qualification-m4-32gb.md#additional-stage-three-checkpoint-runs-and-failures); **WIP** full qualification |
-| `qwen3_forced_aligner` | Qwen3-ForcedAligner 0.6B | Separate 5,000-class timestamp head, known-text units and boundary reconstruction | ✅ | Alignment only; **WIP** timestamp parity (800 ms versus 80-ms limit) |
-| `parakeet_tdt` | Parakeet TDT 0.6B v2 / v3 | Float32 FastConformer, LSTM predictor, joint token/duration heads, greedy offline transcription, strict safetensors loading | ✅ | [Scoped M4 evidence](docs/audio-qualification-m4-32gb.md#parakeet-stage-four-progress--2026-10-04); **WIP** full qualification; offline-only |
-| `lfm2_audio` | LFM2.5-Audio | Native checkpoint loader, Conformer/LFM2, Depthformer and waveform codec | ✅ | Source implementation; real checkpoint smoke and speech quality pending |
-
-### Segmentation and tracking
-
-| Registry type | Family | Native components | Architecture | Qualification |
-| --- | --- | --- | :---: | --- |
-| `sam3` | Meta SAM3 concept detector | ViT, feature pyramid, CLIP text/geometry encoders, DETR, presence scoring, masks | Native | Pinned text-prompt image fixture evidence; box exemplars and full qualification pending |
-| `sam3_tracker` | Meta SAM3 interactive image model | Point/box/mask prompts, two-way decoder, multimask prediction, refinement | Native | Pinned positive-point fixture passes; refinement and automatic-mask parity pending |
-| `sam3_tracker_video` | Meta SAM3 temporal tracker | Memory encoding/attention, object pointers, temporal state | Native | Standalone architecture only; used by the composite video workflow |
-| `sam3_video` | Meta SAM3 composite video model | Shared image backbone, detector/tracker association, object lifecycle, offline/streaming sessions | Native | Separate 32-frame single-object CPU-reference comparisons pass on M4/32 GB; natural multi-object clips unqualified |
-
-Use [`facebook/sam3`](https://huggingface.co/facebook/sam3) through the dedicated
-segmentation API or `segment`/`track` commands, not text generation or the text
-`Engine`. Native components do not imply full task qualification. The measured
-video fixtures achieved minimum mask IoU 0.99998, maximum score difference
-0.00007511, exact boxes, and stable object ID `0`, with approximately 8.41 GB peak
-MLX allocation. These are controlled single-truck clips, not general tracking
-quality or isolated performance benchmarks; see the
-[qualification report](docs/sam3-qualification-m4-32gb.md).
-
-The detailed family backlog and exact status are maintained in
-[model catalog](docs/model-catalog.md). Package ownership and dependency boundaries
-are defined in [repository summary](docs/REPOSITORY_SUMMARY.md).
-
-### Text checkpoint status
-
-The existing text checkpoint scope is dense B1 with FP16 KV. These are bounded
-functional results, not a general quality or maximum-context guarantee. Exact
-revisions, precision limits and the three planned large checkpoints are recorded
-in the [checkpoint inventory](docs/benchmarks/inventory.md).
-
-| Checkpoint | Primary precision | Status |
-| --- | --- | --- |
-| [openai-community/gpt2](https://huggingface.co/openai-community/gpt2/tree/607a30d783dfa663caf39e06633721c8d4cfcd7e) | float32 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [Qwen/Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/tree/7ae557604adf67be50417f59c2c2f167def9a775) | affine_q8 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B/tree/c1899de289a04d12100db370d81485cdf75e47ca) | affine_q8 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [LiquidAI/LFM2-350M](https://huggingface.co/LiquidAI/LFM2-350M/tree/0b6ea934a94b880d1048cbcba45a0d81ca721eb0) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [Qwen/Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B/tree/2fc06364715b967f1860aea9cf38778875588b17) | affine_q4 | [Experimental; primary Q4 unqualified](docs/benchmarks/inventory.json) |
-| [HuggingFaceTB/SmolLM2-1.7B-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct/tree/31b70e2e869a7173562077fd711b654946d38674) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [meta-llama/Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/tree/9213176726f574b556790deb65791e0c5aa438b6) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [Qwen/Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/tree/989aa7980e4cf806f80c7fef2b1adb7bc71aa306) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [google/gemma-3-1b-it](https://huggingface.co/google/gemma-3-1b-it/tree/dcc83ea841ab6100d6b47a070329e1ba4cf78752) | bfloat16 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-| [microsoft/Phi-3-mini-4k-instruct](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct/tree/f39ac1d28e925b323eae81227eaba4464caced4e) | affine_q4 | [Experimental; bounded functional smoke](docs/benchmarks/inventory.json) |
-
-
-## Capability levels
-
-mlx-one deliberately avoids turning one successful test into a broad support
-claim.
-
-| Level | Meaning |
+| Start here | Reference |
 | --- | --- |
-| Architecture ✅ | Config, model math, registry, weight contract, and synthetic tests pass |
-| Candidate | The family or checkpoint still needs full integration evidence |
-| Integration-tested | An exact checkpoint revision passes its task contract |
-| Hardware-verified | A checksummed workload passes on a recorded Apple Silicon profile |
-| Quality-verified | A pinned evaluation protocol passes its quality threshold |
-
-Every evidence claim is scoped to a model revision, operation, precision,
-workload, software environment, and hardware profile.
-
-## CLI
-
-### Inspect and plan
-
-```bash
-mlx-one inspect MODEL [--revision REVISION] [--offline] [--json-output]
-mlx-one hardware list
-mlx-one hardware detect --json-output
-mlx-one plan inference --model MODEL --hardware PROFILE
-mlx-one plan train --model MODEL --hardware PROFILE --method auto
-```
-
-Inspection is metadata-only: it does not execute remote model code or open
-pickle checkpoints.
-
-### Generate text
-
-```bash
-mlx-one generate MODEL PROMPT \
-  [--revision REVISION] [--offline] [--cache-dir DIRECTORY] \
-  [--max-tokens N] [--temperature T] [--top-k K] [--top-p P] \
-  [--seed N] [--stop TEXT] [--stream] [--json-output]
-```
-
-GPT-2 uses the native path for direct generation, evaluation, and inference
-benchmarking. Native GPT-2 training and adapters are intentionally rejected
-until their own implementation and validation gates are complete.
-
-### Embed and rerank
-
-```bash
-mlx-one embed MODEL TEXT... \
-  [--input-type query|document] [--instruction TEXT] [--dimensions N] \
-  [--max-length N] [--batch-size N] [--offline] [--json-output]
-
-mlx-one rerank MODEL QUERY DOCUMENT... \
-  [--instruction TEXT] [--top-k N] [--max-length N] [--batch-size N] \
-  [--offline] [--json-output]
-```
-
-Both commands use the native Qwen3 tokenizer and strict safetensors loader.
-Document embeddings are unprefixed; query embeddings use the documented Qwen3
-instruction format. Reranking returns the original document index, raw yes/no
-logit difference, and two-class probability.
-
-### Segment images and track video
-
-```bash
-mlx-one segment facebook/sam3 image.jpg --mode concept --text "person" \
-  --output results-concept
-mlx-one segment facebook/sam3 image.jpg --mode interactive \
-  --prompts-json prompts.json --output results-interactive
-mlx-one segment facebook/sam3 image.jpg --mode automatic \
-  --points-per-side 32 --output results-automatic
-
-mlx-one track facebook/sam3 video.mp4 --text "person" --output results-offline
-mlx-one track facebook/sam3 frames/ --streaming --text "person" --output results-stream
-```
-
-Both commands accept `--revision`, `--offline`, and `--cache-dir`. The publisher's
-SAM3 checkpoint defaults to the pinned revision recorded in the qualification
-report. An interactive `prompts.json` can contain:
-
-```json
-{"points": [[100, 120]], "point_labels": [1]}
-```
-
-Coordinates must lie within the original image; labels `1` and `0` mean positive
-and negative points. The [SAM3 guide](src/mlx_one/models/segmentation/sam3/README.md)
-documents box exemplars, refinement masks, and timed video prompt JSON for
-corrections/removal. Exports contain mask PNGs and a JSON manifest with scores,
-pixel-space XYXY boxes, identifiers, dimensions, and checkpoint provenance.
-Existing output directories are never overwritten.
-
-Streaming processes frames chronologically and rejects retroactive corrections;
-offline sessions retain frames for replay. Streaming omits future-dependent
-hotstart removal, so its outputs are qualified separately. Automatic generation
-currently uses a single-image point grid and mask-IoU NMS, not a qualified
-crop-layer pipeline. These workflows remain experimental; no SAM3 training,
-HTTP endpoints, or Web UI integration is provided.
-
-### Validate training data
-
-```bash
-mlx-one data validate \
-  --dataset examples/text-sft/train.jsonl \
-  --layout prompt-completion
-```
-
-Supported layouts are `instruction`, `messages`, `prompt-completion`, and
-`text`. A tokenizer can be supplied for truncation and loss-mask previews.
-
-### Train and export
-
-```bash
-mlx-one train \
-  --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
-  --revision PINNED_REVISION \
-  --dataset examples/text-sft/train.jsonl \
-  --config examples/text-sft/train.yaml
-
-mlx-one export \
-  --checkpoint runs/qwen-coder-sft/adapters/mlx-one-checkpoint.json \
-  --output artifacts/qwen-coder-sft
-```
-
-Training is experimental. Start with the planner and pin the model revision.
-
-### Evaluate, compare, and benchmark
-
-```bash
-mlx-one evaluate \
-  --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
-  --revision PINNED_REVISION \
-  --dataset examples/text-sft/eval.jsonl \
-  --predictions examples/text-sft/predictions-smoke.json \
-  --runs-dir runs \
-  --json-output
-
-mlx-one compare runs/base/result.json runs/candidate/result.json \
-  --gate examples/text-sft/quality-gate.yaml \
-  --format markdown
-
-mlx-one benchmark inference \
-  --model Qwen/Qwen2.5-Coder-1.5B-Instruct \
-  --revision PINNED_REVISION \
-  --prompts examples/text-sft/prompts.json
-```
-
-ASR evaluation uses the pinned `whisper-wer-v1` and `whisper-cer-v1` profiles.
-
-### Evidence and registry
-
-```bash
-mlx-one registry list
-mlx-one registry validate registry.json
-mlx-one evidence publish --result runs/example/result.json --output evidence.json
-```
-
-## Python API
-
-Inspect and plan without initializing Metal:
-
-```python
-from mlx_one import (
-    Precision,
-    WorkloadKind,
-    WorkloadSpec,
-    estimate_memory,
-    inspect_model,
-    load_hardware_profile,
-)
-
-model = inspect_model("Qwen/Qwen2.5-1.5B").model
-hardware = load_hardware_profile("m4-air-32gb")
-workload = WorkloadSpec(
-    kind=WorkloadKind.INFERENCE,
-    precision=Precision.BF16,
-    context_length=2048,
-)
-
-estimate = estimate_memory(model, hardware, workload)
-print(estimate.to_json())
-```
-
-Transcribe a file or mono 16-kHz waveform:
-
-```python
-from mlx_one import WhisperDecodeOptions, transcribe
-
-result = transcribe(
-    "openai/whisper-tiny",
-    "recording.wav",
-    language="en",
-    word_timestamps=True,
-    options=WhisperDecodeOptions(seed=0),
-)
-
-print(result.text)
-for segment in result.segments:
-    print(segment.start, segment.end, segment.text)
-```
-
-Embed and rerank through typed native retrieval results:
-
-```python
-from mlx_one import embed, rerank
-
-query = embed(
-    "Qwen/Qwen3-Embedding-0.6B",
-    "How does MLX use unified memory?",
-    input_type="query",
-    dimensions=512,
-)
-
-ranking = rerank(
-    "Qwen/Qwen3-Reranker-0.6B",
-    "How does MLX use unified memory?",
-    ["MLX arrays share CPU and GPU memory.", "A recipe for sourdough."],
-    top_k=1,
-)
-
-print(query.embeddings[0])
-print(ranking.items[0].index, ranking.items[0].score)
-```
-
-Segment an image with Meta SAM3 through the lazy segmentation namespace:
-
-```python
-from mlx_one.segmentation import load_segmentation_model, segment_image
-
-model = load_segmentation_model("facebook/sam3", task="concept")
-result = segment_image(model, "image.jpg", text="person")
-print(result.masks.shape, result.scores, result.boxes)
-```
-
-For interactive masks, load with `task="interactive"` and call
-`predict_masks(model, image, points=..., point_labels=...)`. Interactive
-`predicted_iou` is distinct from concept confidence `scores`; refinement uses
-`low_res_logits`. All masks are original-resolution boolean arrays.
-
-Track lexically ordered, fixed-dimension frames with a session-owned state:
-
-```python
-from mlx_one.segmentation import load_segmentation_model
-
-model = load_segmentation_model("facebook/sam3", task="video", offline=True)
-with model.video_session("frames/") as session:
-    prompt_id = session.add_prompt("person")
-    for result in session.propagate():
-        print(result.frame_index, result.object_ids, result.prompt_ids)
-```
-
-`offline=True` requires a complete cached checkpoint. Use zero-padded frame
-filenames. Python RGB iterators and local encoded-video paths are also accepted.
-For live Python frames, use `model.video_session(streaming=True)` and
-`session.process_frame(frame)`. Context exit releases session resources without
-unloading another session's shared model. SAM3 temporal memory is separate from
-the text dense/APC/block cache runtime. See the
-[model guide](src/mlx_one/models/segmentation/sam3/README.md) for prompt validation,
-corrections, cancellation, and current qualification limits.
-
-Train through the typed SFT contract:
-
-```python
-from mlx_one import SFTTrainer, TrainConfig
-
-trainer = SFTTrainer(
-    model="Qwen/Qwen2.5-Coder-1.5B-Instruct",
-    revision="PINNED_REVISION",
-    train_dataset="examples/text-sft/train.jsonl",
-    args=TrainConfig(
-        output_dir="runs/qwen-coder-sft",
-        max_seq_length=512,
-        method="lora",
-        max_steps=10,
-    ),
-)
-
-result = trainer.train()
-print(result.to_json())
-```
-
-## Architecture principles
-
-- Configuration determines architecture; model-name conditionals do not.
-- Shared operations are implemented once and reused across families.
-- Family-specific classes stay inside their model packages.
-- Weight mapping and sanitization are explicit and deterministic.
-- Unsupported settings and unknown tensors fail visibly.
-- Forward execution, generation, processing, and training remain separate layers.
-- Training and inference converge on the same native model implementation.
-- Lightweight inspection and registry imports do not initialize Metal.
-- Qualification is based on reproducible evidence, never inference from a model
-  name or parameter count.
-
-## Validation
-
-The current repository gates include:
-
-- Backend-free tests covering schemas, configs, registries, weight contracts,
-  tokenization, processing, evaluation, loading policy, and CLI behavior.
-- Opt-in Apple Silicon/Metal tests covering native model execution, shapes, caches,
-  masks, multimodal feature insertion, embeddings, reranking, MoE routing, and ASR
-  components.
-- Pinned real-checkpoint smoke gates for `openai/whisper-tiny` and
-  `openai/whisper-large-v3-turbo`.
-- Whisper log-Mel comparison within `1e-5` against the pinned reference path.
-- SAM3 network-free prompt/export/lifecycle checks, strict pinned checkpoint
-  loading, and separately recorded 32-frame offline/streaming CPU-reference
-  fixture comparisons. Natural multi-object tracking qualification is pending.
-- Ruff, source/wheel builds, and package metadata checks.
-
-These counts describe the current development tree and will change as coverage
-expands.
-
-Run backend-free checks:
-
-```bash
-python scripts/release/check_lint.py
-pytest -q
-python -m build --no-isolation
-python -m twine check dist/*
-```
-
-Run native MLX execution tests on an Apple Silicon host:
-
-```bash
-MLX_ONE_RUN_MLX_TESTS=1 pytest -q
-```
-
-Run pinned Whisper integration gates:
-
-```bash
-MLX_ONE_RUN_WHISPER_INTEGRATION=1 pytest -q \
-  tests/test_native_whisper_integration.py
-```
-
-Ordinary tests are network-free. Integration tests may download only the pinned
-assets needed by their explicit gate.
+| Setup and examples | [Getting started](docs/getting-started.md) |
+| Model families and guides | [Model index](docs/models/index.md), [candidate catalog](docs/model-catalog.md) |
+| Qualification and checkpoints | [Admission policy](docs/model-admission.md), [checkpoint inventory](docs/benchmarks/inventory.md) |
+| Design and package ownership | [Architecture](docs/architecture/index.md), [repository summary](docs/REPOSITORY_SUMMARY.md) |
+| Python, CLI and HTTP | [API guide](docs/api/index.md), [HTTP reference](docs/api/openai-compatibility.md), [Web UI](docs/ui.md) |
+| Measurements and methodology | [Benchmarks](docs/benchmarks/README.md) |
+| Experimental features and blockers | [Experimental index](docs/experimental/README.md), [known limitations](docs/experimental/known-limitations.md) |
+| Development and checks | [Development guide](docs/development.md), [roadmap](docs/roadmap.md), [documentation generation](docs/documentation-generation.md) |
 
 ## Citation
 
-If you use `mlx-one` in your work, please cite it as:
+If you use MLX-One in your work, please cite it as:
 
 ```bibtex
 @software{mlx_one2026,
@@ -1135,26 +475,7 @@ note   = {Version 0.1.0a1. Native GPU-accelerated machine learning workflows on 
 
 See [CITATION.bib](CITATION.bib) for the repository citation file.
 
-## Roadmap
+## License
 
-The implementation proceeds by evidence-backed vertical slices:
-
-1. Complete checkpoint loading, generation, and parity qualification for native
-   language families.
-2. Expand the native retrieval APIs beyond the initial Qwen3 embedding and
-   reranking vertical slice and qualify exact checkpoint revisions.
-3. Add complete image processing, generation, OCR/VQA evaluation, and training
-   paths for native VLMs.
-4. Qualify Whisper revisions and expand native ASR, alignment, audio-language,
-   and TTS coverage.
-5. Add native quantization, advanced training, export, and community evidence
-   workflows.
-
-## Contributing
-
-Contributions should include the smallest relevant config, synthetic execution,
-weight-contract, integration, and documentation updates. Read
-[CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report security
-issues through [SECURITY.md](SECURITY.md), not a public issue.
-
-Released under the [Apache License 2.0](LICENSE).
+MLX-One is released under the [Apache License 2.0](LICENSE).
+Model checkpoints retain their separate terms.

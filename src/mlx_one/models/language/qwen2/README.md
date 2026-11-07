@@ -1,6 +1,6 @@
 # Qwen2, Qwen2.5, and Qwen2.5-Coder
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Overview and status
 

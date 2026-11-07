@@ -1,0 +1,28 @@
+{
+  "schema_version": "mlx-one-ocr-corpus-validation-v1",
+  "page_images": 100,
+  "page_checkpoints": 5,
+  "page_attempts": 500,
+  "page_completed": 485,
+  "handwriting_images": 10,
+  "handwriting_checkpoints": 7,
+  "handwriting_completed": 70,
+  "tests": {
+    "passed": 179,
+    "warnings": 2,
+    "seconds": 8.75,
+    "command": "MLX_ONE_RUN_MLX_TESTS=1 .venv/bin/python -m pytest tests/ocr tests/test_cli.py tests/test_model_loader.py tests/test_server.py tests/test_task_service.py tests/test_registry_plugins.py tests/test_adapter_registry.py tests/test_runtime_registry.py tests/test_vlm_pipeline_native.py tests/test_audio_pipeline_native.py --no-cov -q"
+  },
+  "wheel": {
+    "name": "mlx_one-0.1.0a1-py3-none-any.whl",
+    "bytes": 2251091,
+    "sha256": "102f602c6ee8377154b3ed12fa384b1ede020643637343422feb3117eab68f30",
+    "contains_corrected_ocr_modules": true,
+    "isolated_ocr_cli_help_passed": true,
+    "corrected_source_bytes_verified": true
+  },
+  "scope": "direct-model native MLX/Metal; page and handwriting protocols remain separate",
+  "retired_numerical_qualification_suite_run": false,
+  "implementation_sha256": "065e1939c2a8a0806db6b14948f83fabb7dfd1afb750b28286618dc6dcc1984e",
+  "runner_sha256": "f2cd0be13642ec99a7edf5152b2901a108f6e3dd5fee493e4f496b878ee4c211"
+}

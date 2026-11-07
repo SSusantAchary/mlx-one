@@ -1,15 +1,17 @@
-"""Generate README OCR tables only from selected, validated JSON measurements."""
+"""Generate README and companion OCR tables from validated JSON measurements."""
 
 import argparse
 import json
 from pathlib import Path
 
+from benchmarks.documentation import relative_links, replace_block
 from benchmarks.ocr.metrics import validate
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "docs/benchmarks/ocr"
 START = "<!-- MLX-ONE-OCR-BENCHMARK-START -->"
 END = "<!-- MLX-ONE-OCR-BENCHMARK-END -->"
+REPORT = EVIDENCE / "performance.md"
 
 
 def render(inventory, records):
@@ -135,27 +137,14 @@ def main():
         block = render_corpus(inventory, write_coverage=args.write)
     else:
         block = render(inventory, records)
-    readme = ROOT / "README.md"
-    original = readme.read_text()
-    if START in original:
-        if original.count(START) != 1 or original.count(END) != 1:
-            raise ValueError("ambiguous OCR markers")
-        a, tail = original.split(START)
-        _, b = tail.split(END)
-        updated = a + block + b
-    else:
-        if args.check:
-            raise ValueError("README has no OCR section")
-        anchor = "## Architecture\n"
-        if original.count(anchor) != 1:
-            raise ValueError("README insertion anchor missing")
-        updated = original.replace(anchor, block + "\n\n" + anchor)
-    if args.write:
-        readme.write_text(updated)
-    elif args.check:
-        if original != updated:
-            raise ValueError("README OCR section is stale")
-    else:
+    for destination in (ROOT / "README.md", REPORT):
+        original = destination.read_text()
+        updated = replace_block(original, START, END, relative_links(block, destination))
+        if args.write:
+            destination.write_text(updated)
+        elif args.check and original != updated:
+            raise ValueError(f"OCR performance is stale: {destination}")
+    if not args.write and not args.check:
         print(block)
     coverage = {
         "primary_checkpoints": len(inventory),
@@ -191,7 +180,7 @@ def main():
         f"{coverage['measured']} measured; {len(coverage['missing'])} unmeasured."
     )
     if corpus_selected:
-        print("Validated selected real-image corpus records and README tables separately.")
+        print("Validated selected real-image corpus records and report tables separately.")
 
 
 if __name__ == "__main__":

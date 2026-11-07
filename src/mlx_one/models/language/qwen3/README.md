@@ -1,6 +1,6 @@
 # Qwen3 Dense
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Overview and status
 
@@ -94,5 +94,5 @@ MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_qwen_mlx.py
 ```
 
 Qualification definitions and candidates are in the
-[root README](../../../../../README.md#capability-levels) and
+[root README](../../../../../docs/models/index.md#reading-the-evidence) and
 [model catalog](../../../../../docs/model-catalog.md).

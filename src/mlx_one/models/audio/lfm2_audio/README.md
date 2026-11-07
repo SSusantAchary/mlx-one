@@ -1,6 +1,6 @@
 # LFM2.5 Audio
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 Native source support now includes the **MLX community Q4 export**, a strict task
 loader, the shared MLX-One LFM2 hybrid backbone, FastConformer speech input,

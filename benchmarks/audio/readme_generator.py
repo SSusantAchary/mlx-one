@@ -1,4 +1,4 @@
-"""Publish only validated, explicitly selected audio results inside README markers."""
+"""Publish validated audio results in README and the companion benchmark report."""
 
 from __future__ import annotations
 
@@ -7,9 +7,11 @@ import json
 from pathlib import Path
 
 from benchmarks.audio.result_schema import validate
+from benchmarks.documentation import relative_links, replace_block
 
 START = "<!-- MLX-ONE-AUDIO-BENCHMARK-START -->"
 END = "<!-- MLX-ONE-AUDIO-BENCHMARK-END -->"
+REPORT = Path("docs/benchmarks/audio/performance.md")
 
 
 def render(catalog, records):
@@ -241,18 +243,7 @@ def render(catalog, records):
 
 def update_readme(path, content):
     text = path.read_text()
-    if START in text:
-        if text.count(START) != 1 or text.count(END) != 1:
-            raise ValueError("README must contain exactly one audio marker pair")
-        first, tail = text.split(START)
-        _, last = tail.split(END)
-        path.write_text(first + content.rstrip() + last)
-    else:
-        # Initial insertion after the existing VLM performance section preserves its content.
-        anchor = "<!-- MLX-ONE-VLM-BENCHMARK-END -->"
-        if text.count(anchor) != 1:
-            raise ValueError("README insertion anchor is absent or ambiguous")
-        path.write_text(text.replace(anchor, anchor + "\n\n" + content.rstrip(), 1))
+    path.write_text(replace_block(text, START, END, content))
 
 
 def main():
@@ -267,21 +258,21 @@ def main():
         for path in publication["records"]
     ]
     content = render(catalog, records)
+    for destination in (Path("README.md"), REPORT):
+        generated = relative_links(content, destination.resolve())
+        if args.check:
+            text = destination.read_text()
+            if replace_block(text, START, END, generated) != text:
+                parser.exit(1, f"Audio performance differs from evidence: {destination}\n")
+        elif args.write:
+            update_readme(destination, generated)
     if args.check:
-        text = Path("README.md").read_text()
-        if (
-            START not in text
-            or text.split(START)[1].split(END)[0] != content.split(START)[1].split(END)[0]
-        ):
-            parser.exit(1, "README audio section differs from validated evidence\n")
         print(
             f"Validated {len(records)} audio records; "
             + str(sum(r["status"] == "MEASURED" for r in records))
             + " actual measurements."
         )
-    elif args.write:
-        update_readme(Path("README.md"), content)
-    else:
+    elif not args.write:
         print(content)
     coverage = [
         {

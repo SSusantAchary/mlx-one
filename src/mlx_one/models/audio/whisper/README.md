@@ -1,6 +1,6 @@
 # Whisper
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Overview and status
 
@@ -174,7 +174,7 @@ MLX_ONE_RUN_WHISPER_INTEGRATION=1 pytest -q tests/test_native_whisper_integratio
 
 See [architecture tests](../../../../../tests/test_native_whisper_architecture.py),
 [synthetic Metal tests](../../../../../tests/test_native_whisper_mlx.py), and
-[qualification levels](../../../../../README.md#capability-levels). Integration
+[qualification levels](../../../../../docs/models/index.md#reading-the-evidence). Integration
 execution requires Metal, model storage, and sufficient host memory.
 
 

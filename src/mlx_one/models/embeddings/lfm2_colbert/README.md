@@ -1,6 +1,6 @@
 # LFM2 ColBERT
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Overview and status
 

@@ -1,6 +1,6 @@
 # Qwen2.5-VL 3B
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Status and exact targets
 

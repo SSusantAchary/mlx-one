@@ -8,6 +8,7 @@ from __future__ import annotations
 import ast
 import inspect
 import json
+import os
 import re
 import shlex
 from pathlib import Path
@@ -18,21 +19,43 @@ from mlx_one.cli import main as cli
 from mlx_one.core.registry import get_registration, registered_model_types
 
 ROOT = Path(__file__).resolve().parents[1]
+# These registered families use shared guides instead of adjacent README files.
+SHARED_GUIDES = {
+    **dict.fromkeys(
+        ("bert_token_classification", "clip", "distilbert", "silero_vad"),
+        "docs/native_tasks/api-contracts.md",
+    ),
+    **dict.fromkeys(
+        ("deepseek_ocr", "florence2", "got_ocr2", "lightonocr", "paddleocr_vl", "trocr"),
+        "docs/OCR_TESTING.md",
+    ),
+    "gpt_oss": "docs/native-moe/manual-inference.md",
+    "phi3": "docs/model-admission.md",
+}
 
 
 def check(root: Path = ROOT) -> dict:
     readme = root / "README.md"
-    index = readme.read_text()
+    model_index = root / "docs/models/index.md"
+    index = model_index.read_text()
     files = sorted((root / "src/mlx_one/models").glob("*/*/README.md"))
-    files += [readme, root / "docs/model-catalog.md", root / "docs/audio-qualification-m4-32gb.md"]
+    files += [
+        readme,
+        model_index,
+        root / "docs/model-catalog.md",
+        root / "docs/audio-qualification-m4-32gb.md",
+    ]
     errors, coverage = [], {}
     for kind in registered_model_types():
         registration = get_registration(kind)
         module = registration.config_path.partition(":")[0]
         guide = root / "src" / Path(*module.split(".")).parent / "README.md"
+        if kind in SHARED_GUIDES:
+            guide = root / SHARED_GUIDES[kind]
         relative = guide.relative_to(root).as_posix()
         coverage[kind] = relative
-        if not guide.is_file() or f"]({relative})" not in index:
+        index_target = Path(os.path.relpath(guide, model_index.parent)).as_posix()
+        if not guide.is_file() or f"]({index_target})" not in index:
             errors.append(f"{kind}: missing linked implementation guide {relative}")
     blocks = 0
     for path in files:

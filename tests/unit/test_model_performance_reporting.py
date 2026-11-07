@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import math
+import re
 import shutil
 import tempfile
 import unittest
@@ -48,14 +49,50 @@ class PerformanceReportingTests(unittest.TestCase):
             )
         )
 
-    def test_readme_block_is_current_and_near_top(self):
+    def test_readme_summary_is_current_before_architecture(self):
         text = (ROOT / "README.md").read_text()
-        table = report.render(self.inventory, self.records)
+        table = report.render_summary(self.records)
         self.assertIn(table, text)
-        position = text.index(report.START)
-        self.assertGreater(position, text.index("## Why mlx-one?"))
+        position = text.index(report.SUMMARY_START)
+        self.assertGreater(position, text.index("## Quick Start"))
         self.assertLess(position, text.index("## Architecture"))
-        self.assertLess(len(text[:position].splitlines()), len(text.splitlines()) / 10)
+        self.assertNotIn(report.START, text)
+        self.assertNotIn("Experimental; bounded functional smoke", text)
+
+    def test_detailed_report_retains_all_measurements(self):
+        table = report.relative_links(report.render(self.inventory, self.records), report.REPORT)
+        self.assertIn(table, report.REPORT.read_text())
+
+    def test_readme_retains_all_modality_performance_tables_and_charts(self):
+        homepage = (ROOT / "README.md").read_text()
+        for modality in ("VLM", "AUDIO", "OCR"):
+            start = f"<!-- MLX-ONE-{modality}-BENCHMARK-START -->"
+            end = f"<!-- MLX-ONE-{modality}-BENCHMARK-END -->"
+            detailed = (ROOT / f"docs/benchmarks/{modality.lower()}/performance.md").read_text()
+
+            def content(text, start=start, end=end):
+                self.assertEqual(text.count(start), 1)
+                self.assertEqual(text.count(end), 1)
+                block = text.split(start)[1].split(end)[0]
+                # Link bases differ; every table, value, chart and caveat must match.
+                return re.sub(r"\]\([^)]+\)", "](link)", block)
+
+            self.assertEqual(content(homepage), content(detailed))
+        for section in ("### GPT-OSS native HTTP serving", "## Additional Modality Performance"):
+            self.assertIn(section, homepage)
+
+    def test_summary_uses_one_cohort_without_standard_or_source_rows(self):
+        summary = report.render_summary(self.records)
+        expected = [
+            r
+            for r in self.records
+            if r["primary"] and r["environment"]["protocol"] == "historical-128-16"
+        ]
+        self.assertEqual(len({r["group"] for r in expected}), 1)
+        rows = [line for line in summary.splitlines() if line.startswith("| ")][2:]
+        self.assertEqual(len(rows), len(expected))
+        self.assertNotIn("(source)", summary)
+        self.assertNotIn("96.48", summary)  # Standardized GPT-2 decode is a separate protocol.
 
     def test_actual_count_must_equal_token_ids(self):
         self.samples[0]["generated_tokens"] = 15
