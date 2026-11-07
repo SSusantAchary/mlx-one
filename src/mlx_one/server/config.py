@@ -8,6 +8,7 @@ from typing import Any, Literal, cast
 
 from mlx_one.engine.modes import InferenceMode, ModelCapabilityUnsupported, resolve_backend
 from mlx_one.engine.pressure import MemoryPressureConfig
+from mlx_one.mlxboost import MLXBoostConfig
 
 CacheType = Literal["f16", "bf16", "q4_0", "q8_0"]
 CacheBackend = Literal["dense", "block", "paged", "hybrid"]
@@ -50,8 +51,16 @@ class ServerConfig:
     spec_type: Literal["none", "draft-mtp"] = "none"
     spec_draft_n_max: int = 3
     transcription_enabled: bool = False
+    mlxboost_config: MLXBoostConfig = MLXBoostConfig()
 
     def __post_init__(self) -> None:
+        if not isinstance(self.mlxboost_config, MLXBoostConfig):
+            raise TypeError("mlxboost_config must be MLXBoostConfig")
+        if self.mlxboost_config.enabled and self.inference_mode != "mlxboost_b1":
+            raise ValueError("MLXBoost features require explicit inference_mode=mlxboost_b1")
+        if self.inference_mode == "mlxboost_b1" and (
+                self.parallel != 1 or self.spec_type != "none"):
+            raise ValueError("MLXBoost requires parallel=1 and no speculation")
         if self.inference_mode == "native_optimized":
             raise ModelCapabilityUnsupported(
                 "native_optimized math policy currently requires the Python Engine")

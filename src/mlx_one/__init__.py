@@ -10,6 +10,19 @@ from mlx_one.audio import (
     WhisperDecodeOptions,
     transcribe,
 )
+from mlx_one.audio.vad import VADEngine, VADResult, VADSession
+from mlx_one.classification import (
+    ClassificationEngine,
+    ClassificationResult,
+    TokenClassificationEngine,
+    TokenClassificationResult,
+    ZeroShotImageEngine,
+    classify,
+    load_classification_model,
+    load_token_classification_model,
+    token_classify,
+    zero_shot_classify,
+)
 from mlx_one.compat.unsloth import FastLanguageModel
 from mlx_one.engine.batching import BatchingConfig
 from mlx_one.engine.cache_specs import CacheConfig
@@ -90,9 +103,17 @@ from mlx_one.text import (
 )
 from mlx_one.training import SFTTrainer
 
-__version__ = "0.1.0a1"
+__version__ = "0.1.1"
 
 __all__ = [
+    "VADEngine", "VADResult", "VADSession",
+    "ZeroShotImageEngine", "zero_shot_classify",
+    "TokenClassificationEngine", "TokenClassificationResult", "token_classify",
+    "load_token_classification_model",
+    "ClassificationEngine",
+    "ClassificationResult",
+    "classify",
+    "load_classification_model",
     "AudioEngine",
     "AudioInput",
     "SpeechGenerationResult",

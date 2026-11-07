@@ -297,6 +297,10 @@ class TaskKind(str, Enum):
     """Canonical service tasks; registry aliases remain available in introspection."""
 
     TEXT_GENERATION = "text-generation"
+    TEXT_CLASSIFICATION = "text-classification"
+    TOKEN_CLASSIFICATION = "token-classification"
+    ZERO_SHOT_IMAGE_CLASSIFICATION = "zero-shot-image-classification"
+    VOICE_ACTIVITY_DETECTION = "voice-activity-detection"
     VISION_LANGUAGE = "vision-language-generation"
     EMBEDDING = "embedding"
     LATE_INTERACTION = "late-interaction"

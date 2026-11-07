@@ -89,7 +89,23 @@ class InferenceService:
                 self._task_actor=InferenceActor(self._batching_config)
             actor=self._task_actor
         if loader is None and not hasattr(model,"model"):
-            if task==TaskKind.VISION_LANGUAGE:
+            if task==TaskKind.VOICE_ACTIVITY_DETECTION:
+                from mlx_one.audio.vad import load_vad_model
+
+                loader=load_vad_model
+            elif task==TaskKind.ZERO_SHOT_IMAGE_CLASSIFICATION:
+                from mlx_one.classification.loading import load_zero_shot_image_model
+
+                loader=load_zero_shot_image_model
+            elif task==TaskKind.TOKEN_CLASSIFICATION:
+                from mlx_one.classification.loading import load_token_classification_model
+
+                loader=load_token_classification_model
+            elif task==TaskKind.TEXT_CLASSIFICATION:
+                from mlx_one.classification.loading import load_classification_model
+
+                loader=load_classification_model
+            elif task==TaskKind.VISION_LANGUAGE:
                 from mlx_one.vision.loading import load_vlm_model
 
                 loader=load_vlm_model
@@ -209,7 +225,13 @@ class InferenceService:
             specs,_=binding.specifications()
             available=task in {s.task for s in specs} and not binding.component_only
             descriptor=binding.adapter(task)(bundle).describe(bundle) if available else None
+            from mlx_one.engine.adapter_registry import checkpoint_task_profiles
+            profiles = tuple(row for row in checkpoint_task_profiles(architecture)
+                             if row["task"] == task.value
+                             and row["model_id"] == bundle.model_id
+                             and row["revision"] == bundle.revision)
             return {"architecture":architecture,"task":task.value,
+                "checkpoint_profiles":profiles,
                 "availability":{"implemented":available,"opt_in":available,
                     "reason":binding.reason},"adapter":asdict(descriptor) if descriptor else None,
                 "actual_weight_dtypes":tensor_dtypes(bundle.model.parameters()),

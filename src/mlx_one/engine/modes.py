@@ -6,7 +6,7 @@ from typing import Literal
 
 from mlx_one.engine.cache_specs import CACHE_BACKENDS
 
-InferenceMode = Literal["reference_dense", "native_optimized", "experimental_block",
+InferenceMode = Literal["reference_dense", "mlxboost_b1", "native_optimized", "experimental_block",
                         "experimental_dense_batch",
                         "paged", "experimental_hybrid_batch", "auto"]
 
@@ -18,7 +18,8 @@ class ModelCapabilityUnsupported(ValueError):
 
 
 def resolve_backend(mode: str | None, backend: str | None) -> str:
-    modes = {"reference_dense": "dense", "native_optimized": "dense", "experimental_block": "block",
+    modes = {"reference_dense": "dense", "mlxboost_b1": "dense",
+             "native_optimized": "dense", "experimental_block": "block",
              "experimental_dense_batch": "dense", "paged": "paged",
              "experimental_hybrid_batch": "hybrid", "auto": "dense"}
     if mode is not None and mode not in modes:

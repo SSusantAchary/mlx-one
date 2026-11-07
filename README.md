@@ -469,7 +469,7 @@ author = {Achary, S. Susant},
 title  = {mlx-one: Unified Native MLX Stack for Apple Silicon},
 year   = {2026},
 url    = {https://github.com/SSusantAchary/mlx-one},
-note   = {Version 0.1.0a1. Native GPU-accelerated machine learning workflows on Apple Silicon}
+note   = {Version 0.1.1. Native GPU-accelerated machine learning workflows on Apple Silicon}
 }
 ```
 

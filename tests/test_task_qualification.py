@@ -26,7 +26,7 @@ def profile(tmp_path):
 
 def test_registry_derived_inventory_is_complete_and_lazy():
     inventory=task_inventory()
-    assert len(inventory['entries'])==36
+    assert len(inventory['entries'])==40
     assert inventory['qualification_promoted'] is False
     assert sum(r['component_only'] for r in inventory['entries'])==1
     assert next(r for r in inventory['entries'] if r['model_type']=='lfm2_audio')[
@@ -79,7 +79,7 @@ def test_matrix_includes_unrun_architectures_and_retains_failed_worker(tmp_path)
     (run/'failure.json').write_text(json.dumps({'status':'FAIL','reason':'watchdog timeout'}))
     write_integrity(run)
     rows=export_task_matrix([run],tmp_path/'matrix')
-    assert len({r['model_type'] for r in rows})==36
+    assert len({r['model_type'] for r in rows})==40
     assert next(r for r in rows if r['model_type']=='bert')['status']=='FAIL'
     assert next(r for r in rows if r['model_type']=='sam3_tracker_video')['status']=='SKIPPED'
     assert all(r['qualification_promoted'] is False for r in rows)

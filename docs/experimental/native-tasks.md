@@ -8,8 +8,10 @@
 Four bounded FP32 profiles run through the shared MLX-One registry, Python API,
 CLI and HTTP server. These are **EXPERIMENTAL**, not release-qualified. Results
 below were measured on **2026-11-03**, Apple M4 / 32 GiB, macOS 15.8.1,
-MLX 0.32.2. They describe the locally verified 0.1.0a1 development wheel, not a
-published package release or every checkpoint in the architecture family.
+MLX 0.32.2. These historical measurements describe the locally verified
+0.1.0a1 wheel. The [0.1.1 integration candidate](../integration/2026-11-04/merge-readiness.md)
+revalidates the bounded task profiles; package publication and wider checkpoint
+qualification remain separate.
 
 | Task / exact checkpoint | Measured quality | Admitted scope and remaining limits |
 |---|---|---|
@@ -56,10 +58,15 @@ concurrent-load measurements or a cross-model speed comparison. See the
 | Depth Anything V2 Small | BLOCKED | All six whole-trace FP32 comparisons fail; five final maps pass; no task APIs or independently labeled depth-quality result |
 
 Existing VLM, OCR and segmentation support does not establish these task
-qualifications. The [audit report](../publication/2026-11-04/audit.md) separates
-historical evidence from fresh documentation/regression checks. Historical gates
-were **2,238 passed, 79 skipped, 9 subtests** in the default suite and **157 passed**
-in a native selection; these selections overlap and must not be added.
+qualifications. The [0.1.1 integration verification](../integration/2026-11-04/verification.json)
+records **2,238 passed, 79 skipped, 9 subtests** in the default suite and
+**160 passed, 17 skipped** in the native selection; these selections overlap and
+must not be added. Clean-wheel checks pass for Python, CLI and HTTP across all
+four profiles, including four live servers with bearer authentication.
+Source-oracle replay passes 17 real-checkpoint cases covering 1,566 named tensor
+comparisons. The [readiness report](../integration/2026-11-04/merge-readiness.md) records
+the remaining skips and qualification limits. These checks did not rerun the
+historical latency benchmarks.
 
 ### Sentiment example
 
