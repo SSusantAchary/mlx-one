@@ -105,6 +105,6 @@ python -m benchmarks.ocr.report --check
 ```
 
 The generator reads only selected records, ignores mock entries, rejects incomplete
-provenance and duplicate selections, and preserves all other README sections. Each row
+provenance and duplicate selections, and updates the OCR markers in [README](../../../README.md#ocr-model-performance) and [the companion report](performance.md). Each row
 links to evidence and identifies its workload/hardware cohort; different OCR tasks and
 workloads are not pooled. No chart is generated while all checkpoints remain unmeasured.

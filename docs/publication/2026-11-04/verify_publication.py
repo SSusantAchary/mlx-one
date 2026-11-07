@@ -12,6 +12,7 @@ import csv
 import hashlib
 import json
 import math
+import os
 import re
 import statistics
 import subprocess
@@ -100,13 +101,40 @@ def verify_published_values(md, results, boost):
     assert "distribution is PROPOSED ONLY" not in md or "standalone" in md
 
 
+def published_markdown():
+    """Read relocated presentation blocks in the original root-link coordinate system.
+
+    Historical evidence and frozen-baseline preservation checks stay unchanged.
+    """
+    paths = [
+        ROOT / "README.md",
+        ROOT / "docs/benchmarks/text-performance.md",
+        ROOT / "docs/experimental/native-tasks.md",
+        ROOT / "docs/experimental/mlxboost.md",
+        ROOT / "docs/models/index.md",
+    ]
+    documents = []
+    for path in paths:
+
+        def root_link(match, path=path):
+            url = match[1]
+            parts = urlsplit(url)
+            if parts.scheme or parts.netloc or not parts.path:
+                return match[0]
+            relative = Path(os.path.relpath(path.parent / parts.path, ROOT)).as_posix()
+            return "](" + relative + ("#" + parts.fragment if parts.fragment else "") + ")"
+
+        documents.append(re.sub(r"\]\(([^\s)]+)\)", root_link, path.read_text()))
+    return "\n\n".join(documents)
+
+
 def audit_evidence():
     from benchmarks.audio import readme_generator as audio
     from benchmarks.model_performance import report as text_report
     from benchmarks.ocr import corpus_report as ocr
     from benchmarks.vlm import readme_generator as vlm
 
-    md = (ROOT / "README.md").read_text()
+    md = published_markdown()
     claims = []
     artifacts = {}
 
@@ -688,12 +716,15 @@ def parse_md(path):
 
 
 def audit_markdown():
+    from scripts.release.check_documentation import OWNERS, default_files
+
     files = [
         ROOT / "README.md",
         ROOT / "docs/architecture/mlxboost-module-boundary.md",
         OUT / "audit.md",
     ]
     files += sorted(OUT.glob("*.md"))
+    files += default_files()
     files = list(dict.fromkeys(p for p in files if p.exists()))
     errors = []
     external = set()
@@ -723,13 +754,13 @@ def audit_markdown():
                     errors.append(
                         dict(file=str(path.relative_to(ROOT)), url=url, error="missing anchor")
                     )
-        if path.name == "README.md":
-            for name in ["verified-task-results", "mlxboost-summary"]:
-                block(text, f"<!-- mlx-one:{name}:start -->", f"<!-- mlx-one:{name}:end -->")
+        for start, end in OWNERS.get(path.relative_to(ROOT).as_posix(), []):
+            block(text, f"<!-- {start} -->", f"<!-- {end} -->")
+        if path == ROOT / "README.md":
             preview = (
                 (
                     '<!doctype html><html lang="en"><meta charset="utf-8"><base '
-                    'href="../../../"><title>MLX-One README '
+                    'href="../../../../"><title>MLX-One README '
                     "preview</title><style>body{max-width:1120px;margin:2rem "
                     "auto;padding:0 1rem;font:16px/1.5 "
                     "system-ui}img{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow:auto}th,td{border:1px"
@@ -739,7 +770,7 @@ def audit_markdown():
                 + html
                 + "</html>\n"
             )
-            (OUT / "README.preview.html").write_text(preview)
+            (RUN / "README.preview.html").write_text(preview)
     result = dict(
         files=len(files), local_links_checked=local, errors=errors, external_urls=sorted(external)
     )
@@ -755,7 +786,7 @@ def main():
     args = parser.parse_args()
     RUN.mkdir(parents=True, exist_ok=True)
     if args.self_test:
-        md = (ROOT / "README.md").read_text()
+        md = published_markdown()
         results = read("docs/native_tasks/test-results.json")
         claims = read(OUT / "evidence-map.json")["claims"]
         boost = []

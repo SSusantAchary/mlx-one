@@ -54,7 +54,7 @@ It does not derive speeds from requested output budgets or extrapolate missing d
 
 ## VLM and audio charts
 
-The same visual style is used for three additional README charts. Every image is
+The same visual style is used for three additional README and benchmark-report charts. Every image is
 available as PNG and SVG; links below open the vector versions.
 
 | Chart | Primary measurement | Companion measurements | Separate size view |
@@ -120,5 +120,5 @@ python -m benchmarks.vlm.readme_generator --check
 python -m benchmarks.audio.readme_generator --check
 ```
 
-Only presentation assets, the plotting script and README/documentation links change;
+Chart regeneration updates presentation assets only;
 the recorded measurements and frozen inference/benchmark implementations are retained.

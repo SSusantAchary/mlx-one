@@ -1,6 +1,6 @@
 # GPT-2
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Overview and status
 
@@ -91,4 +91,4 @@ MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_gpt2_mlx.py
 ```
 
 The Metal gate uses synthetic weights. Consult the
-[capability levels](../../../../../README.md#capability-levels) before making a support claim.
+[capability levels](../../../../../docs/models/index.md#reading-the-evidence) before making a support claim.

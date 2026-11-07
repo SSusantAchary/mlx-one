@@ -1,6 +1,6 @@
 # MPNet / all-mpnet-base-v2
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Overview and status
 
@@ -98,5 +98,5 @@ pytest -q tests/test_native_sentence_transformers_architectures.py
 MLX_ONE_RUN_MLX_TESTS=1 pytest -q tests/test_native_sentence_transformers_mlx.py
 ```
 
-See [qualification levels](../../../../../README.md#capability-levels) and the
+See [qualification levels](../../../../../docs/models/index.md#reading-the-evidence) and the
 [family backlog](../../../../../docs/qualification/archived-evidence.md).

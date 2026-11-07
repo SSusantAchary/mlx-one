@@ -47,7 +47,7 @@ def main():
             f"{median('peak_inference_mlx_bytes') / 1024**3:.3f} | "
             f"{median('peak_cache_state_bytes') / 1024**2:.3f} |"
         )
-    readme = ROOT / "README.md"
+    report = ROOT / "docs/benchmarks/alpha-candidates" / run.name / "performance.md"
     section = (
         "\nMeasured on the declared M4 host, dense B1, FP16 KV, prefix reuse disabled; "
         "median of three warm requests after loading/conversion and shape warmup. These are "
@@ -56,7 +56,15 @@ def main():
         "Decode tok/s | Peak inference MLX GiB | Peak state MiB |\n"
         "|---|---|---|---|---|---|---|\n" + "\n".join(rows) + "\n"
     )
-    readme.write_text(readme.read_text() + section)
+    # Candidate snapshots are benchmark documentation, never landing-page content.
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(
+        "# Alpha candidate performance\n\n"
+        + "Candidate run: `"
+        + run.name
+        + "`. Regenerated from this run's hardware records.\n"
+        + section
+    )
     candidate = Path("/tmp") / ("mlx-one-alpha-candidate-" + run.name)
     if candidate.exists():
         raise FileExistsError(candidate)
@@ -92,6 +100,9 @@ def main():
         shutil.copytree(ROOT / folder, target, ignore=selected_ignore)
     for name in ["README.md", "pyproject.toml", "MANIFEST.in", "LICENSE", "CHANGELOG.md"]:
         shutil.copy2(ROOT / name, candidate / name)
+    candidate_report = candidate / report.relative_to(ROOT)
+    candidate_report.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(report, candidate_report)
     subprocess.run(["git", "add", "-A"], cwd=candidate, check=True)
     subprocess.run(
         [

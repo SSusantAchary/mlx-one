@@ -8,12 +8,19 @@ import json
 import math
 import re
 import statistics
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from benchmarks.documentation import relative_links, replace_block  # noqa: E402
+
 EVIDENCE = ROOT / "docs/benchmarks"
 START = "<!-- model-performance:start -->"
 END = "<!-- model-performance:end -->"
+SUMMARY_START = "<!-- model-performance-summary:start -->"
+SUMMARY_END = "<!-- model-performance-summary:end -->"
+REPORT = EVIDENCE / "text-performance.md"
 METRICS = (
     "prefill_tokens_per_second",
     "decode_tokens_per_second",
@@ -325,6 +332,60 @@ def render(inventory, records):
     return "\n".join(parts)
 
 
+def render_summary(records):
+    """Publish primary configurations from one verified historical cohort only."""
+    groups = {}
+    for record in records:
+        if record["primary"] and record["environment"]["protocol"] == "historical-128-16":
+            groups.setdefault(record["group"], []).append(record)
+    require(bool(groups), "README summary needs a measured historical cohort")
+    selected = max(groups.values(), key=len)
+    env = selected[0]["environment"]
+    hardware = f"{env['hardware']['chip_type']} / {env['hardware']['physical_memory']}"
+    parts = [
+        SUMMARY_START,
+        "## Model Performance",
+        "",
+        f"Historical **direct-model native MLX** measurements on {hardware}, batch 1; "
+        "128 actual input / 16 actual output tokens, one warmup and three measured "
+        "repetitions; per-column medians. Fresh FP16 KV, no prefix reuse; full-sequence logits.",
+        "",
+        f"MLX / Metal {env['packages']['mlx']} / {env['packages']['mlx-metal']}; "
+        f"{env['platform']}; Python {env['python']}. "
+        "TTFT includes prefill and first-token selection. Decode excludes that first token.",
+        "",
+        "| Model | Precision | Hardware | TTFT (ms) | Prefill tok/s | Decode tok/s |",
+        "| --- | --- | --- | ---: | ---: | ---: |",
+    ]
+    for record in selected:
+        model = record["model"]
+        values = [statistics.median(s[k] for s in record["samples"]) for k in METRICS]
+        parts.append(
+            f"| {model['model_id']} | {model['primary_precision']} | {hardware} | "
+            f"{values[2]:.2f} | {values[0]:.2f} | {values[1]:.2f} |"
+        )
+    parts += [
+        "",
+        "Affine Q4/Q8 use group size 64. These bounded experimental measurements "
+        "are not release qualification, full-context validation or Python/HTTP throughput. "
+        "Different model architectures and precisions affect comparison.",
+        "",
+        "![MLX-One text-model decode speed by nominal parameter size on Apple M4]"
+        "(docs/benchmarks/figures/text-model-decode-bars.png)",
+        "",
+        "The chart labels the historical cohort and separate standardized GPT-2 result. "
+        "[Full tables and exact provenance](docs/benchmarks/text-performance.md), "
+        "[methodology](docs/benchmarks/README.md) and "
+        "[chart reproduction](docs/benchmarks/figures/README.md) retain all records. "
+        "Standardized 128/128 runs, [HTTP serving](docs/benchmarks/http-performance.md), "
+        "[VLM](docs/benchmarks/vlm/performance.md), "
+        "[audio](docs/benchmarks/audio/performance.md) and "
+        "[OCR](docs/benchmarks/ocr/performance.md) use separate protocols.",
+        SUMMARY_END,
+    ]
+    return "\n".join(parts)
+
+
 def derived(inventory, records):
     intro = "# Text inference checkpoint inventory\n\nPrimary means the support manifest’s "
     intro += "selected configuration, not certification. Q4/Q8 conversions use group size 64. "
@@ -395,16 +456,16 @@ def main():
     parser.add_argument(
         "--check", action="store_true", help="validate evidence and generated files"
     )
-    parser.add_argument("--write", action="store_true", help="update README and coverage files")
+    parser.add_argument("--write", action="store_true", help="update summary, report and coverage")
     args = parser.parse_args()
     inventory, records = load_records()
     table = render(inventory, records)
     readme = ROOT / "README.md"
-    text = readme.read_text()
-    require(text.count(START) == text.count(END) == 1, "README needs one generated table block")
-    replacement = text[: text.index(START)] + table + text[text.index(END) + len(END) :]
     files = {
-        readme: replacement,
+        readme: replace_block(
+            readme.read_text(), SUMMARY_START, SUMMARY_END, render_summary(records)
+        ),
+        REPORT: replace_block(REPORT.read_text(), START, END, relative_links(table, REPORT)),
         **{EVIDENCE / k: v for k, v in derived(inventory, records).items()},
     }
     for path, content in files.items():

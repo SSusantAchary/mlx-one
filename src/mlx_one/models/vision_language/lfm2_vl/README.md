@@ -1,6 +1,6 @@
 # LFM2-VL and LFM2.5-VL
 
-[Model guide index](../../../../../README.md#model-specific-documentation)
+[Model guide index](../../../../../docs/models/index.md)
 
 ## Status and exact targets
 

@@ -1,12 +1,33 @@
-# Model performance methodology
+# Benchmarks and model performance methodology
 
-The [README table](../../README.md#model-performance) is generated from public JSON evidence,
+The [README summary](../../README.md#model-performance) and [full text tables](text-performance.md) are generated from public JSON evidence,
 not example numbers. [Inventory](inventory.md), [machine-readable inventory](inventory.json),
 and [coverage](coverage.md) track all 13 pinned text inference checkpoints in the current
 support manifest. Nominal parameter sizes describe the advertised model class (MoE total /
 active), not the number of packed integers or a count calculated from weight bytes.
 Other task, training and discovery candidates in `docs/model-catalog.md` are outside this
 text inference comparison.
+
+## Reports and separate protocols
+
+| Report | Scope |
+| --- | --- |
+| [Text performance](text-performance.md) | Full historical 128/16 and standardized 128/128 tables; separate cohorts |
+| [Historical HTTP serving](http-performance.md) | GPT-OSS tool calls; unrecorded immutable checkpoint identity |
+| [Vision-language](vlm/performance.md) | Static-image VLM-HF-S1 tables, image/token counts and charts |
+| [Audio](audio/performance.md) | ASR, alignment, synthesis, failed STS and separate short-question case |
+| [OCR](ocr/performance.md) | Separate 100-page and 10-line corpora, failures and truncations |
+| [Native tasks](../experimental/native-tasks.md) | Bounded task quality and Python latency; distinct from serving performance |
+| [MLXBoost](../experimental/mlxboost.md) | Optional host change, full HTTP off/on rates and regressions |
+| [Charts](figures/README.md) | Existing plots, source data and reproduction |
+
+README retains measured text, VLM, audio, OCR, HTTP and additional-task performance.
+Detailed reports retain the original JSON evidence and exact cohort definitions.
+Missing metadata is unavailable, not inferred. Record date/run identity, checkpoint
+revision, precision, MLX/macOS/Python versions, hardware, context/input/output
+counts, KV/cache settings, batch/concurrency and timing scope with new evidence.
+The GPT-OSS HTTP report explicitly documents missing identity/version fields.
+[Generation ownership](../documentation-generation.md) explains report targets.
 
 ## Historical evidence: 128 input / 16 output
 
@@ -160,7 +181,7 @@ python benchmarks/model_performance/report.py --check
 python -m unittest discover -s tests/unit -p test_model_performance_reporting.py
 ```
 
-`--write` updates only the generated README block and inventory/coverage Markdown/JSON.
+`--write` updates the compact README summary, full text performance report and inventory/coverage Markdown/JSON.
 `--check` verifies immutable record hashes, pinned config/revisions, interface, actual token
 counts, durations where recorded, finite metrics, repetitions, cohort boundaries and generated
 file freshness without importing MLX or loading a model. Cohorts also separate runner /

@@ -5,7 +5,7 @@ discovery candidate, not a support claim. Only exact revisions with linked run
 evidence may be promoted in the capability registry.
 
 For current native workflows, checkpoint assets, and family-specific examples,
-see the [model guide index](../README.md#model-specific-documentation). This catalog
+see the [model guide index](models/index.md). This catalog
 tracks qualification candidates; it is not the inventory of implemented architectures.
 
 ## Active qualification targets

@@ -11,7 +11,7 @@ These short functional checks do not establish corpus accuracy or speech quality
 The [checkpoint catalog](../../../benchmarks/audio/checkpoints.json) records exact
 Hub revisions, selected assets, download sizes, task support and remaining limits.
 [coverage.json](coverage.json) distinguishes source support from missing performance.
-[publication.json](publication.json) explicitly selects records for the README.
+[publication.json](publication.json) explicitly selects records for the [README audio tables](../../../README.md#audio-model-performance) and [companion report](performance.md).
 Full measurements and per-run outputs belong in `records/`, outside the landing page.
 
 ## Protocol
@@ -107,8 +107,8 @@ python -m benchmarks.audio.readme_generator --write
 python -m benchmarks.audio.readme_generator --check
 ```
 
-Only `MLX-ONE-AUDIO-BENCHMARK-START/END` is replaced. Text and VLM scores and the
-original README design are preserved. `NOT_RUN` rows contain no fabricated
+Only `MLX-ONE-AUDIO-BENCHMARK-START/END` in README and `performance.md` is replaced.
+Other sections are preserved. `NOT_RUN` rows contain no fabricated
 hardware, speed, latency or memory values. The generator is reusable after each
 manual run; it rejects invalid records, conflicting precisions and mixed cohorts.
 

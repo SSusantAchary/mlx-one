@@ -83,6 +83,6 @@ is part of this documentation change.
 
 The [publication audit](../publication/2026-11-04/audit.md#mlxboost-evidence)
 records raw-run selectors, hashes, request counts, measurement semantics and
-known failures. The [README summary](../../README.md#mlxboost-optional-execution-module)
-uses only the measured off/on cohorts. Tests in `tests/mlxboost/` cover default
+known failures. The [README summary](../../README.md#native-inference-engine-and-mlxboost)
+links to the measured off/on cohorts in the experimental report. Tests in `tests/mlxboost/` cover default
 selection, opt-in eligibility, fallback and the calibration lookup boundary.
