@@ -1,0 +1,2 @@
+# Documentation tooling only; independent of MLX-One runtime dependencies.
+zensical==0.1.0

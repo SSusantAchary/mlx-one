@@ -1,0 +1,99 @@
+[project]
+site_name = "MLX-One"
+site_description = "One stack. Native MLX. Built for Apple Silicon. Native inference, multimodal models, and measured performance."
+site_url = "https://ssusantachary.github.io/mlx-one/"
+site_author = "S Susant Achary"
+repo_url = "https://github.com/SSusantAchary/mlx-one"
+repo_name = "SSusantAchary/mlx-one"
+docs_dir = ".generated"
+site_dir = "dist"
+copyright = "Apache 2.0 · S Susant Achary"
+extra_css = ["assets/stylesheets/extra.css"]
+nav = [
+  { "Home" = "index.md" },
+  { "Get started" = "getting-started.md" },
+  { "Guides" = [
+    { "Generate text" = "guides/generate.md" },
+    { "Serve an HTTP API and chat UI" = "guides/serve.md" },
+    { "Vision-language" = "guides/vision.md" },
+    { "Audio and speech" = "guides/audio.md" },
+    { "OCR and documents" = "guides/ocr.md" },
+    { "Embeddings and reranking" = "guides/retrieval.md" },
+    { "Segmentation and tracking" = "models/segmentation/sam3.md" },
+    { "Inspect and plan memory" = "guides/memory.md" },
+  ] },
+  { "Models" = [
+    { "Model families and guides" = "models/index.md" },
+    { "Checkpoint inventory" = "reference/checkpoints.md" },
+    { "Admission policy" = "reference/admission.md" },
+  ] },
+  { "Performance" = [
+    { "All modalities" = "performance/index.md" },
+    { "Text generation" = "performance/text.md" },
+    { "Vision-language" = "performance/vision.md" },
+    { "Audio" = "performance/audio.md" },
+    { "OCR" = "performance/ocr.md" },
+    { "HTTP serving" = "performance/http.md" },
+    { "Methodology and evidence" = "performance/methodology.md" },
+  ] },
+  { "Reference" = [
+    { "Python and CLI APIs" = "reference/api.md" },
+    { "HTTP compatibility" = "reference/http.md" },
+    { "Architecture" = "reference/architecture.md" },
+    { "Repository layout" = "reference/repository.md" },
+    { "Development roadmap" = "reference/roadmap.md" },
+    { "Citation and license" = "reference/citation.md" },
+    { "Changelog" = "reference/changelog.md" },
+  ] },
+  { "Experimental" = [
+    { "Overview" = "experimental/index.md" },
+    { "Native tasks" = "experimental/native-tasks.md" },
+    { "MLXBoost" = "experimental/mlxboost.md" },
+    { "Inference runtime" = "experimental/runtime.md" },
+    { "Known limitations" = "experimental/limitations.md" },
+  ] },
+]
+
+[project.theme]
+language = "en"
+logo = "assets/brand/mark.png"
+favicon = "assets/brand/mark.png"
+features = [
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.indexes",
+  "navigation.instant",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "teal"
+accent = "teal"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "teal"
+accent = "teal"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+[project.markdown_extensions]
+admonition = {}
+attr_list = {}
+md_in_html = {}
+tables = {}
+toc.permalink = true
+pymdownx.details = {}
+pymdownx.highlight.anchor_linenums = true
+pymdownx.inlinehilite = {}
+pymdownx.superfences = {}
+pymdownx.tabbed.alternate_style = true

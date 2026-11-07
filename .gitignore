@@ -32,6 +32,12 @@ test-results/
 /calibration/results/
 .DS_Store
 
+# Generated documentation website and its isolated development environment
+/website/.generated/
+/website/.cache/
+/website/dist/
+/.venv-docs/
+
 # Historical artifact locations; archives live under ignored local/evidence/
 /docs/qualification/alpha_release/proof-20261021-*
 /docs/qualification/alpha_release/numerical-correction-20261021-*/
