@@ -76,3 +76,16 @@ version and workload identities.
 Restrict the `github-pages` environment to the `main` branch. Keep deployment
 permissions on the deploy job; the build job only needs repository read access.
 The existing project CI and package dependencies remain unchanged.
+
+### If the live page shows the README instead of the documentation
+
+A plain README page without the navigation and search interface is the legacy
+Jekyll/branch deployment, not the generated Zensical site. In **Settings → Pages**,
+set **Build and deployment → Source** to **GitHub Actions**. Then rerun the failed
+**Documentation site** workflow, or merge the reviewed site update to trigger it.
+Check that both the build and deploy jobs succeed.
+
+The `Configure GitHub Pages` step can return `404 Not Found` while Pages is still
+configured for branch deployment. The default workflow token cannot switch that
+repository setting by adding `enablement: true`; choose the Actions source in
+repository settings instead.

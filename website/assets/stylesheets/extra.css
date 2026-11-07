@@ -6,20 +6,6 @@
   --md-primary-fg-color: #59d6a0;
   --md-accent-fg-color: #59d6a0;
 }
-.mlx-hero { padding: 1.1rem 0 1.9rem; }
-.mlx-eyebrow { color: var(--md-accent-fg-color); font-family: var(--md-code-font-family); font-size: .62rem; font-weight: 700; letter-spacing: .14em; }
-.md-typeset .mlx-hero h1 { max-width: 24ch; margin: .8rem 0 1rem; font-size: clamp(1.9rem, 3.8vw, 3rem); font-weight: 700; line-height: 1.13; letter-spacing: -.045em; color: var(--md-default-fg-color); }
-.mlx-lead { max-width: 58ch; font-size: .92rem; line-height: 1.7; color: var(--md-default-fg-color--light); }
-.mlx-hero .md-button { margin: .55rem .4rem .2rem 0; padding: .55em 1.15em; border-radius: .35rem; }
-.mlx-install { margin-top: 1rem; max-width: 36rem; }
-.mlx-install-note { margin: .2rem 0; font-size: .64rem; color: var(--md-default-fg-color--light); }
-.md-typeset .grid.cards > ul > li { border-radius: .45rem; padding: 1rem; }
-.md-typeset .grid.cards > ul > li > :first-child { color: var(--md-default-fg-color); }
+/* Keep the standard Zensical article, navigation and table-of-contents layout. */
+.md-typeset .md-button { margin: .2rem .15rem .2rem 0; border-radius: 2rem; }
 .md-typeset img { border-radius: .4rem; }
-.md-typeset table:not([class]) { font-size: .65rem; }
-.md-typeset table:not([class]) th { white-space: nowrap; }
-@media (max-width: 600px) {
-  .mlx-hero { padding-top: .3rem; }
-  .md-typeset .mlx-hero h1 { font-size: 2rem; }
-  .mlx-hero .md-button { display: inline-block; }
-}
