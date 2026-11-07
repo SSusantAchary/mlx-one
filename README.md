@@ -450,6 +450,7 @@ and [Web UI guide](docs/ui.md) document request formats, streaming and settings.
 
 | Start here | Reference |
 | --- | --- |
+| Searchable documentation website | [MLX-One docs](https://ssusantachary.github.io/mlx-one/), [site maintenance](website/README.md) |
 | Setup and examples | [Getting started](docs/getting-started.md) |
 | Model families and guides | [Model index](docs/models/index.md), [candidate catalog](docs/model-catalog.md) |
 | Qualification and checkpoints | [Admission policy](docs/model-admission.md), [checkpoint inventory](docs/benchmarks/inventory.md) |
