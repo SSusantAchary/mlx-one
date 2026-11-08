@@ -1,0 +1,337 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "lightonocr",
+  "checkpoint": "lightonai/LightOnOCR-2-1B",
+  "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+  "started": 1794151984.0577059,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "3723c82877b730b2ae1b036273440447ae0d5815cd409de792e55021f3c0189c",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/resolution-ocr",
+  "reference_python": null,
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "032267f8ef6d60f4e27882dd36311d673ab520cbf0f5337224010490ee1d82b9",
+  "checkpoint_configuration": {
+    "architectures": [
+      "LightOnOCRForConditionalGeneration"
+    ],
+    "dtype": "bfloat16",
+    "eos_token_id": 151645,
+    "image_token_id": 151655,
+    "model_type": "mistral3",
+    "multimodal_projector_bias": false,
+    "pad_token_id": 151643,
+    "projector_hidden_act": "gelu",
+    "spatial_merge_size": 2,
+    "text_config": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "attention_bias": false,
+      "attention_dropout": 0,
+      "dtype": "bfloat16",
+      "head_dim": 128,
+      "hidden_act": "silu",
+      "hidden_size": 1024,
+      "initializer_range": 0.02,
+      "intermediate_size": 3072,
+      "layer_types": [
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention",
+        "full_attention"
+      ],
+      "max_position_embeddings": 16384,
+      "max_window_layers": 28,
+      "model_type": "qwen3",
+      "num_attention_heads": 16,
+      "num_hidden_layers": 28,
+      "num_key_value_heads": 8,
+      "rms_norm_eps": 1e-06,
+      "rope_parameters": {
+        "rope_theta": 1000000,
+        "rope_type": "default"
+      },
+      "rope_theta": 1000000,
+      "sliding_window": null,
+      "use_cache": true,
+      "use_sliding_window": false,
+      "tie_word_embeddings": true,
+      "vocab_size": 151936,
+      "use_qk_norm": true
+    },
+    "transformers_version": "5.0.0.dev0",
+    "use_cache": false,
+    "vision_config": {
+      "attention_dropout": 0,
+      "dtype": "bfloat16",
+      "head_dim": 64,
+      "hidden_act": "silu",
+      "hidden_size": 1024,
+      "image_size": 1540,
+      "initializer_range": 0.02,
+      "intermediate_size": 4096,
+      "model_type": "pixtral",
+      "num_attention_heads": 16,
+      "num_channels": 3,
+      "num_hidden_layers": 24,
+      "patch_size": 14,
+      "rope_parameters": {
+        "rope_theta": 10000,
+        "rope_type": "default"
+      },
+      "rope_theta": 10000
+    },
+    "vision_feature_layer": -1
+  },
+  "ocr_fixture_sha256": "1fed9cd48d58bb332f220e929220639978f989b41c4d7083e7d1177e00c1c50d",
+  "ocr_fixture": {
+    "dataset": "getomni-ai/ocr-benchmark",
+    "revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+    "id": "434",
+    "image_sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+    "reference_sha256": "50c2358e325c5e81f5c9653d4426b1bd73bbcf83b9c90e5aaf21de08b8d7b939"
+  },
+  "ocr_image_path": "/private/tmp/mlx-one-all40-20261108/fixtures/ocr-corpus/test/images/434.png",
+  "ocr_generation_budget": 1024,
+  "output": {
+    "text": "Health History Questionnaire\nFirst Name:\nEmily\nLast Name:\nDavis\nMarital Status:\n\u25a1 Single \u25a1 Married \u2611 Divorced \u25a1 Separated \u25a1 Widowed\nAddress:\n3818A Sycamore Ln\nCity:\nWaimanalo\nState:\nHI\nZip:\n96795\nPhone:\n492 224-1939\nDOB:\nOctober 21, 1952\nSpouse Name:\nSpouse Phone:\nIs the requested medication \u25a1 NEW or a \u2611 CONTINUATION of THERAPY? If so, start date: _______________\nHave you been hospitalized in the past year? \u2611 Yes \u25a1 No\nFinancial Responsibility\nResponsible Party:\nSelf\nType Of Insurance:\nAutomobile\nInsurance Company:\nOscar Health Insurance\nInsurance Address:\n4672A Maple Way\nInsurance Phone:\n(658) 760-7828\nGroup #:\nUNOXZ\nMember ID:\nGV6SIKX4VR\nPatient Signature:\nSocial Security #:\nDate:\nGuardian Signature:\nGuardian Social Security #:\nDate:\nFamily Health History\nRelation\nAge If Living\nAge At Death\nChronic Health Problems\nSister\n66",
+    "markdown": null,
+    "pages": [
+      {
+        "page": 0,
+        "original_size": [
+          1920,
+          2075
+        ],
+        "rendered_size": [
+          1920,
+          2075
+        ],
+        "text": "Health History Questionnaire\nFirst Name:\nEmily\nLast Name:\nDavis\nMarital Status:\n\u25a1 Single \u25a1 Married \u2611 Divorced \u25a1 Separated \u25a1 Widowed\nAddress:\n3818A Sycamore Ln\nCity:\nWaimanalo\nState:\nHI\nZip:\n96795\nPhone:\n492 224-1939\nDOB:\nOctober 21, 1952\nSpouse Name:\nSpouse Phone:\nIs the requested medication \u25a1 NEW or a \u2611 CONTINUATION of THERAPY? If so, start date: _______________\nHave you been hospitalized in the past year? \u2611 Yes \u25a1 No\nFinancial Responsibility\nResponsible Party:\nSelf\nType Of Insurance:\nAutomobile\nInsurance Company:\nOscar Health Insurance\nInsurance Address:\n4672A Maple Way\nInsurance Phone:\n(658) 760-7828\nGroup #:\nUNOXZ\nMember ID:\nGV6SIKX4VR\nPatient Signature:\nSocial Security #:\nDate:\nGuardian Signature:\nGuardian Social Security #:\nDate:\nFamily Health History\nRelation\nAge If Living\nAge At Death\nChronic Health Problems\nSister\n66",
+        "markdown": null,
+        "elements": [],
+        "tables": [],
+        "formulas": [],
+        "timings": {
+          "preprocessing_seconds": 0.07474908301082905,
+          "encoder_seconds": 9.862113208000665,
+          "generation_seconds": 14.430040874998667,
+          "text_prefill_seconds": 1.4522727080038749,
+          "decode_forward_seconds": 12.73368587695586,
+          "total_seconds": 24.368506208003964,
+          "first_token_seconds": 11.391309917002218
+        },
+        "metadata": {
+          "path": "visual",
+          "exif_oriented": true,
+          "source_page_count": 1,
+          "decode_seconds": 0.006367791997035965,
+          "processed_size": [
+            1428,
+            1540
+          ],
+          "visual_tokens": 2805,
+          "prompt_tokens": 2817,
+          "crop_first": false,
+          "source_crop": [
+            0,
+            0,
+            1920,
+            2075
+          ],
+          "model": "/private/tmp/mlx-one-all40-20261108/models/lightonocr/checkpoint",
+          "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+          "architecture": "lightonocr",
+          "output_tokens": 686,
+          "finish_reason": "stop",
+          "truncated": false,
+          "geometry_predicted": false,
+          "confidence_available": false
+        }
+      }
+    ],
+    "model": "/private/tmp/mlx-one-all40-20261108/models/lightonocr/checkpoint",
+    "task": "ocr.recognize",
+    "language": null,
+    "timings": {
+      "total_seconds": 24.401274290998117
+    },
+    "metadata": {
+      "processed_pages": 1,
+      "page_count": 1,
+      "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+      "capabilities": {
+        "family": "lightonocr",
+        "tasks": [
+          "ocr.batch",
+          "ocr.document",
+          "ocr.recognize",
+          "ocr.region"
+        ],
+        "markdown": true,
+        "geometry": false,
+        "line_only": false,
+        "language_hint": false,
+        "crop_first": true
+      },
+      "measurement_type": "python-engine",
+      "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+      "checkpoint_status": "PENDING_HARDWARE_TEST"
+    },
+    "schema_version": "mlx-one-ocr-v1"
+  },
+  "metric_schema": "ocr-visible-text-v2",
+  "metric_scope": "returned plain text versus rendered HF Markdown reference; content accuracy only",
+  "raw_reference_cer": 0.19783464566929135,
+  "rendered_reference_sha256": "1d22da1068bdcbc7a121acf46d206bea9b99de479fc1a26e0909b543f9619442",
+  "page_cer": 0.1618556701030928,
+  "page_wer": 0.23178807947019867,
+  "quality_status": "PASS_ONE_LABELED_PAGE_TEXT_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"text\": \"Health History Questionnaire\\nFirst Name:\\nEmily\\nLast Name:\\nDavis\\nMarital Status:\\n\u25a1 Single \u25a1 Married \ufffd\",\n  \"markdown\": null,\n  \"pages\": [\n    {\n      \"page\": 0,\n      \"original_size\": [\n        1920,\n        2075\n      ],\n      \"rendered_size\": [\n        1920,\n        2075\n      ],\n      \"text\": \"Health History Questionnaire\\nFirst Name:\\nEmily\\nLast Name:\\nDavis\\nMarital Status:\\n\u25a1 Single \u25a1 Married \ufffd\",\n      \"markdown\": null,\n      \"elements\": [],\n      \"tables\": [],\n      \"formulas\": [],\n      \"timings\": {\n        \"preprocessing_seconds\": 0.04997720799292438,\n        \"encoder_seconds\": 9.219756958002108,\n        \"generation_seconds\": 2.631224041004316,\n        \"text_prefill_seconds\": 1.4597054579935502,\n        \"decode_forward_seconds\": 1.1470236659806687,\n        \"total_seconds\": 11.901112999999896,\n        \"first_token_seconds\": 10.73013812499994\n      },\n      \"metadata\": {\n        \"path\": \"visual\",\n        \"exif_oriented\": true,\n        \"source_page_count\": 1,\n        \"decode_seconds\": 0.006263791990932077,\n        \"processed_size\": [\n          1428,\n          1540\n        ],\n        \"visual_tokens\": 2805,\n        \"prompt_tokens\": 2817,\n        \"crop_first\": false,\n        \"source_crop\": [\n          0,\n          0,\n          1920,\n          2075\n        ],\n        \"model\": \"/private/tmp/mlx-one-all40-20261108/models/lightonocr/checkpoint\",\n        \"revision\": \"be7c41313c30e940fe5571de59e5fabc779e00c8\",\n        \"architecture\": \"lightonocr\",\n        \"output_tokens\": 64,\n        \"finish_reason\": \"length\",\n        \"truncated\": true,\n        \"geometry_predicted\": false,\n        \"confidence_available\": false\n      }\n    }\n  ],\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/lightonocr/checkpoint\",\n  \"task\": \"ocr.recognize\",\n  \"language\": null,\n  \"timings\": {\n    \"total_seconds\": 11.91197149999789\n  },\n  \"metadata\": {\n    \"processed_pages\": 1,\n    \"page_count\": 1,\n    \"revision\": \"be7c41313c30e940fe5571de59e5fabc779e00c8\",\n    \"capabilities\": {\n      \"family\": \"lightonocr\",\n      \"tasks\": [\n        \"ocr.batch\",\n        \"ocr.document\",\n        \"ocr.recognize\",\n        \"ocr.region\"\n      ],\n      \"markdown\": true,\n      \"geometry\": false,\n      \"line_only\": false,\n      \"language_hint\": false,\n      \"crop_first\": true\n    },\n    \"measurement_type\": \"python-engine\",\n    \"coordinate_convention\": \"top-left pixel xyxy, zero-based pages\",\n    \"checkpoint_status\": \"PENDING_HARDWARE_TEST\"\n  },\n  \"schema_version\": \"mlx-one-ocr-v1\"\n}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "text": "Health History Questionnaire\nFirst Name:\nEmily\nLast Name:\nDavis\nMarital Status:\n\u25a1 Single \u25a1 Married \ufffd",
+        "markdown": null,
+        "pages": [
+          {
+            "page": 0,
+            "original_size": [
+              1920,
+              2075
+            ],
+            "rendered_size": [
+              1920,
+              2075
+            ],
+            "text": "Health History Questionnaire\nFirst Name:\nEmily\nLast Name:\nDavis\nMarital Status:\n\u25a1 Single \u25a1 Married \ufffd",
+            "markdown": null,
+            "elements": [],
+            "tables": [],
+            "formulas": [],
+            "timings": {
+              "preprocessing_seconds": 0.053190999999060296,
+              "encoder_seconds": 9.133433834009338,
+              "generation_seconds": 2.6283594590058783,
+              "text_prefill_seconds": 1.4667265830066754,
+              "decode_forward_seconds": 1.1378524550236762,
+              "total_seconds": 11.815161667007487,
+              "first_token_seconds": 10.654109042006894
+            },
+            "metadata": {
+              "path": "visual",
+              "exif_oriented": true,
+              "source_page_count": 1,
+              "decode_seconds": 0.007288374996278435,
+              "processed_size": [
+                1428,
+                1540
+              ],
+              "visual_tokens": 2805,
+              "prompt_tokens": 2817,
+              "crop_first": false,
+              "source_crop": [
+                0,
+                0,
+                1920,
+                2075
+              ],
+              "model": "/private/tmp/mlx-one-all40-20261108/models/lightonocr/checkpoint",
+              "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+              "architecture": "lightonocr",
+              "output_tokens": 64,
+              "finish_reason": "length",
+              "truncated": true,
+              "geometry_predicted": false,
+              "confidence_available": false
+            }
+          }
+        ],
+        "model": "/private/tmp/mlx-one-all40-20261108/models/lightonocr/checkpoint",
+        "task": "ocr.recognize",
+        "language": null,
+        "timings": {
+          "total_seconds": 11.827212832999066
+        },
+        "metadata": {
+          "processed_pages": 1,
+          "page_count": 1,
+          "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+          "capabilities": {
+            "family": "lightonocr",
+            "tasks": [
+              "ocr.batch",
+              "ocr.document",
+              "ocr.recognize",
+              "ocr.region"
+            ],
+            "markdown": true,
+            "geometry": false,
+            "line_only": false,
+            "language_hint": false,
+            "crop_first": true
+          },
+          "measurement_type": "python-engine",
+          "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+          "checkpoint_status": "PENDING_HARDWARE_TEST"
+        },
+        "schema_version": "mlx-one-ocr-v1"
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 6761638664,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 51.26649188995361,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "3723c82877b730b2ae1b036273440447ae0d5815cd409de792e55021f3c0189c"
+}

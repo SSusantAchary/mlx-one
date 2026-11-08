@@ -1,0 +1,24 @@
+{
+  "schema_version": "mlx-one-model-support-policy-v2",
+  "source": "Explicit user instruction to follow MLX-LM and omit requirements MLX-LM does not impose",
+  "standard": "mlx-lm-aligned-functional-v1",
+  "mandatory": [
+    "Architecture, shape/dtype and cache/state correctness tests",
+    "Real checkpoint load and saved native task output",
+    "Working relevant public interfaces",
+    "Regression tests and build/package/import-boundary checks",
+    "Cleanup of task-owned downloaded model weights"
+  ],
+  "diagnostic_not_universal_release_gates": [
+    "Corpus accuracy thresholds, including the campaign CER/WER/F1/PPL floors",
+    "All-device reference parity or a universal numerical tolerance",
+    "Every checkpoint size, quantization or optional task variant",
+    "Broad reliability certification or an automatic experimental label"
+  ],
+  "preserve": "Previously measured failures remain unchanged. Real native loading, execution, invalid-output and state/interface defects remain blockers.",
+  "upstream_sources": {
+    "contributing": "https://github.com/ml-explore/mlx-lm/blob/main/CONTRIBUTING.md",
+    "template": "https://github.com/ml-explore/mlx-lm/blob/main/.github/PULL_REQUEST_TEMPLATE/new_model.md",
+    "ci": "https://github.com/ml-explore/mlx-lm/blob/main/.github/workflows/pull_request.yml"
+  }
+}

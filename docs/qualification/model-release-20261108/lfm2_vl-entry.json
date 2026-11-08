@@ -1,0 +1,83 @@
+{
+  "model_type": "lfm2_vl",
+  "kind": "vlm",
+  "repo": "mlx-community/LFM2-VL-450M-8bit",
+  "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+  "manifest_id": "V04",
+  "profile": "Q8",
+  "gated": false,
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 661,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 434,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 8174,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 132,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 559614320,
+      "sha256": "b67daf504eae7f4815f1b51152d0d363547bacc25f4748f0b24df9440f3f9624"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 45180,
+      "sha256": null
+    },
+    {
+      "path": "modeling_lfm2_vl.py",
+      "bytes": 27396,
+      "sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 535,
+      "sha256": null
+    },
+    {
+      "path": "processing_lfm2_vl.py",
+      "bytes": 24466,
+      "sha256": null
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 436,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 584,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4733040,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 92279,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

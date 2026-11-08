@@ -6,10 +6,11 @@
 
 Registry type: `bert`. The native encoder implements bidirectional attention,
 absolute positions, token-type embeddings, mean pooling, normalization, and
-single-vector retrieval. The primary checkpoint candidate is
+single-vector retrieval. The supported primary checkpoint is
 [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
-Native loading and synthetic validation exist; real-checkpoint parity, retrieval
-quality, and hardware throughput still need qualification.
+Native real-checkpoint embedding and applicable interface checks pass. Retrieval
+accuracy and throughput remain separate measurements. See the
+[current support record](../../../../../status_models_testing.md).
 
 ## Model Architecture
 

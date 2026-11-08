@@ -1,0 +1,6 @@
+{
+  "candidate_wheel_sha256": "af73d98b0602d3060b4b50294853903f0d1e1d81667945065dd7af9574b8fc28",
+  "updated": 1794139758.663347,
+  "exclusive_metal_lock": true,
+  "change": "Qwen MoE selected-expert dispatch and complete per-expert Q4 weight/scale/bias mapping"
+}

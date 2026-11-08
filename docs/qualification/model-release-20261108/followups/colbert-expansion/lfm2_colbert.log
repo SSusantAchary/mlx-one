@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "lfm2_colbert", "status": "PASS_FUNCTIONAL", "quality_status": "PASS_THREE_PAIR_LATE_INTERACTION_SANITY_ONLY", "seconds": 3.305208206176758, "error": null}

@@ -1,0 +1,12 @@
+START qwen2_moe mlx-community/Qwen1.5-MoE-A2.7B-4bit
+FETCH FETCHFETCH qwen2_moe qwen2_moe config.json 2541
+ qwen2_moeREADME.md added_tokens.json  80932
+
+FETCHFETCH qwen2_moe FETCH qwen2_moemerges.txt  qwen2_moe  model-00001-of-00002.safetensorsmodel-00002-of-00002.safetensors  53695469771671853
+
+3132401803
+FETCH qwen2_moe model.safetensors.index.json 1284018
+FETCH qwen2_moe special_tokens_map.json 370
+FETCH qwen2_moe tokenizer.json 7028015
+FETCH qwen2_moe tokenizer_config.json 1168
+FETCH qwen2_moe vocab.json 2776833

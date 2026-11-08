@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "qwen3_reranker"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_reranker",
+  "bytes_removed": 2399077846,
+  "downloaded_bytes_verified": 1207486774,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794141995.266399,
+  "recorded": 1794142122.7549472,
+  "cleanup_complete": true,
+  "finished": 1794142122.787999
+}

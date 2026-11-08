@@ -1,0 +1,71 @@
+{
+  "model_type": "qwen3_embedding",
+  "kind": "retrieval",
+  "repo": "Qwen/Qwen3-Embedding-0.6B",
+  "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1570,
+      "sha256": null
+    },
+    {
+      "path": "1_Pooling/config.json",
+      "bytes": 313,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 17237,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 727,
+      "sha256": null
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 215,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 117,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1191586416,
+      "sha256": "0437e45c94563b09e13cb7a64478fc406947a93cb34a7e05870fc8dcd48e23fd"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 349,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11423705,
+      "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 9706,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

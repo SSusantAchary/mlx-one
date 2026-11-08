@@ -8,15 +8,15 @@ from mlx_one.core.weights import WeightContract
 from mlx_one.models.embeddings.bert.config import BertEmbeddingConfig
 
 
-def sanitize_weights(
-    weights: dict[str, Any], config: BertEmbeddingConfig
-) -> dict[str, Any]:
+def sanitize_weights(weights: dict[str, Any], config: BertEmbeddingConfig) -> dict[str, Any]:
     cleaned = {}
     for name, value in weights.items():
         if name.endswith(("embeddings.position_ids", "embeddings.token_type_ids")):
             continue
         if name.startswith("bert."):
             name = name.removeprefix("bert.")
+        if not config.add_pooling_layer and name in {"pooler.dense.weight", "pooler.dense.bias"}:
+            continue
         name = name.replace(".attention.self.", ".attention.self_attn.")
         cleaned[name] = value
     return cleaned

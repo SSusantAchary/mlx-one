@@ -3,7 +3,9 @@
 Native MLX **offline** automatic speech recognition, registered as
 `parakeet_tdt`. This is not RNNT-only Nemotron, an alignment model, or a streaming
 API. Both checkpoints have independent contracts; loading one never substitutes
-the other. Full qualification remains **WIP**. See the scoped
+the other. The selected v3 checkpoint is supported for native transcription;
+see the [current inventory](../../../../../status_models_testing.md). Older
+reference and v2 conversion investigations retain their own scope in the
 [M4 evidence](../../../../../docs/audio-qualification-m4-32gb.md).
 
 ## Model Architecture

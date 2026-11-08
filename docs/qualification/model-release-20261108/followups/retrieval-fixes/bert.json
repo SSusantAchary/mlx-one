@@ -1,0 +1,779 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "bert",
+  "checkpoint": "sentence-transformers/all-MiniLM-L6-v2",
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "started": 1794140865.066561,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "9fae0f625378421eb144ace804fe23fdc6afe0b169c7409d8465afb0747c80da",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108/followups/retrieval-fixes",
+  "reference_python": null,
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "22eab5e71be08e19bc54dc6894320aa0456bff674efcc93be2dba614542010b9",
+  "checkpoint_configuration": {
+    "_name_or_path": "nreimers/MiniLM-L6-H384-uncased",
+    "architectures": [
+      "BertModel"
+    ],
+    "attention_probs_dropout_prob": 0.1,
+    "gradient_checkpointing": false,
+    "hidden_act": "gelu",
+    "hidden_dropout_prob": 0.1,
+    "hidden_size": 384,
+    "initializer_range": 0.02,
+    "intermediate_size": 1536,
+    "layer_norm_eps": 1e-12,
+    "max_position_embeddings": 512,
+    "model_type": "bert",
+    "num_attention_heads": 12,
+    "num_hidden_layers": 6,
+    "pad_token_id": 0,
+    "position_embedding_type": "absolute",
+    "transformers_version": "4.8.2",
+    "type_vocab_size": 2,
+    "use_cache": true,
+    "vocab_size": 30522
+  },
+  "dimensions": 384,
+  "sample_count": 32,
+  "cosine_similarities": [
+    0.939720467828797,
+    0.9718105437693751,
+    0.9836741739050192,
+    0.9484445730364706,
+    0.7970317379221882,
+    0.8728611324346727,
+    0.9628387391085009,
+    0.9142267517747523,
+    0.9695191806595682,
+    0.8588914877065074,
+    0.8588914877065074,
+    0.9897752472180134,
+    0.9120628445234898,
+    0.9362445524884354,
+    0.9065368275212949,
+    0.8514102076042952,
+    0.9672349946871546,
+    0.9593088573660216,
+    0.9343537536645353,
+    0.8802489164184483,
+    0.8557769146020157,
+    0.8332209689244168,
+    0.986894293906016,
+    0.9516102086516048,
+    0.926497169076028,
+    0.9896760207032635,
+    0.9023357160370888,
+    0.9597398393128913,
+    0.9428323146425931,
+    0.9699188586759493,
+    0.9604774560978687,
+    0.9676441288884089
+  ],
+  "spearman": 0.666606797962949,
+  "embedding_sha256": "00f3303292bcf17784e019cf7e3ddc1bcf7ab25c0663768b7b472dd78e7d7b88",
+  "batched_single_agreement": true,
+  "quality_status": "PASS_32_PAIR_SANITY_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"dimensions\": 384,\n  \"embeddings\": [\n    [\n      0.018872607499361038,\n      0.10887535661458969,\n      0.05603427439928055,\n      0.034760311245918274,\n      -0.024974865838885307,\n      -0.03296994790434837,\n      0.025726446881890297,\n      -0.0563177727162838,\n      0.013764266856014729,\n      -0.001619553891941905,\n      -0.022219447419047356,\n      -0.01627233996987343,\n      0.04747643694281578,\n      -0.10182194411754608,\n      0.040114305913448334,\n      0.04974840581417084,\n      0.01990804262459278,\n      0.03934663161635399,\n      0.059830442070961,\n      0.03304097056388855,\n      -0.056667961180210114,\n      -0.039603862911462784,\n      -0.014083398506045341,\n      0.005033278372138739,\n      -0.007294336799532175,\n      0.018326831981539726,\n      0.013007114641368389,\n      -0.025700215250253677,\n      -0.03406808525323868,\n      -0.0051451814360916615,\n      -0.04150053858757019,\n      -0.04985255375504494,\n      0.06081271916627884,\n      0.0844222903251648,\n      -0.03384217619895935,\n      -0.018636317923665047,\n      0.018790796399116516,\n      0.027994859963655472,\n      -0.03537832200527191,\n      0.007719122339040041,\n      -0.02564997784793377,\n      -0.06519165635108948,\n      0.04541325941681862,\n      -0.022594142705202103,\n      -0.05255945026874542,\n      -0.04840214550495148,\n      0.014990306459367275,\n      0.020678212866187096,\n      0.033885493874549866,\n      0.05965692549943924,\n      0.005240525584667921,\n      -0.055406685918569565,\n      -0.04940271005034447,\n      -0.009913796558976173,\n      0.0626867488026619,\n      0.11161551624536514,\n      -0.019922683015465736,\n      0.030406529083848,\n      -0.00886708777397871,\n      0.013946938328444958,\n      0.058439966291189194,\n      0.011312814429402351,\n      -0.44663336873054504,\n      -0.035920221358537674,\n      -0.07311264425516129,\n      -0.05509830638766289,\n      0.06483820080757141,\n      0.0008357867482118309,\n      0.01076893974095583,\n      -0.05586448311805725,\n      -0.04037674143910408,\n      -0.006663750857114792,\n      -0.08140546828508377,\n      0.059122562408447266,\n      0.012291710823774338,\n      0.004062572959810495,\n      0.06396656483411789,\n      -0.07006244361400604,\n      0.03219134733080864,\n      0.07085693627595901,\n      -0.05793173611164093,\n      -0.057206977158784866,\n      0.029831724241375923,\n      -0.02447960339486599,\n      0.005521452520042658,\n      0.10878273844718933,\n      0.013560428284108639,\n      0.018602194264531136,\n      0.05594725161790848,\n      0.004407813772559166,\n      -0.06818092614412308,\n      -0.035173360258340836,\n      -0.05264934152364731,\n      -0.030832044780254364,\n      0.014750706031918526,\n      0.07653217762708664,\n      -0.04586702585220337,\n      -0.0032146566081792116,\n      0.03474855795502663,\n      0.032055310904979706,\n      -0.03474193066358566,\n      -0.023023806512355804,\n      -0.02698446623980999,\n      -0.03192641958594322,\n      -0.011386442929506302,\n      0.00891533400863409,\n      -0.08352102339267731,\n      0.03915423899888992,\n      0.0033881228882819414,\n      0.038728367537260056,\n      0.008693982847034931,\n      -0.05203081667423248,\n      -0.0836164727807045,\n      0.00969721283763647,\n      -0.009583992883563042,\n      -0.004946302622556686,\n      -0.03531113266944885,\n      0.007245233282446861,\n      -0.042489178478717804,\n      -0.04034498706459999,\n      -0.012584335170686245,\n      -0.021163955330848694,\n      -0.02475387416779995,\n      0.03257981315255165,\n      -0.013688848353922367,\n      0.02555656060576439,\n      -0.0335034541785717,\n      2.254384555513084e-33,\n      0.03897302597761154,\n      0.018514441326260567,\n      0.04920326545834541,\n      -0.0017143178265541792,\n      0.03771444037556648,\n      0.018293501809239388,\n      -0.031465139240026474,\n      -0.08494031429290771,\n      -0.04494954273104668,\n      0.11292506009340286,\n      -0.01612297259271145,\n      -0.061570748686790466,\n      -0.03995439410209656,\n      -0.0036941010039299726,\n      0.05195361375808716,\n      0.007303737569600344,\n      -0.03754495829343796,\n      0.05691677704453468,\n      -0.06652553379535675,\n      0.05035402998328209,\n      -0.012232965789735317,\n      0.17741306126117706,\n      -0.026958301663398743,\n      -0.016481226310133934,\n      -0.07908105850219727,\n      -0.08169355988502502,\n      0.026872724294662476,\n      0.06961329281330109,\n      0.03565436229109764,\n      0.0039245751686394215,\n      0.034988611936569214,\n      -0.06776072084903717,\n      0.014648424461483955,\n      -0.02474549412727356,\n      -0.07644899189472198,\n      -0.03066594898700714,\n      0.040667325258255005,\n      -0.0071710264310240746,\n      0.020028209313750267,\n      -0.02098269574344158,\n      -0.01664573885500431,\n      0.027978288009762764,\n      0.04443902149796486,\n      -0.016392920166254044,\n      -0.007101706229150295,\n      0.02835903689265251,\n      0.003802219172939658,\n      -0.0678468570113182,\n      -0.07136611640453339,\n      -0.019986087456345558,\n      0.03849906474351883,\n      0.012080501765012741,\n      0.05841132253408432,\n      0.03909929096698761,\n      -0.01932569593191147,\n      0.06306271255016327,\n      -0.010913792997598648,\n      0.06899858266115189,\n      0.08941853046417236,\n      -0.008066941052675247,\n      0.022528449073433876,\n      0.02457079291343689,\n      0.05506416782736778,\n      -0.023107320070266724,\n      -0.0353023037314415,\n      -0.06843175739049911,\n      0.04446389526128769,\n      0.04342691972851753,\n      0.0018142082262784243,\n      -0.02760094404220581,\n      0.010127220302820206,\n      -0.005857163108885288,\n      -0.030939357355237007,\n      0.020154479891061783,\n      -0.05024029687047005,\n      0.05651242285966873,\n      0.0145392045378685,\n      -0.04277215525507927,\n      0.06813503056764603,\n      0.004365428816527128,\n      -0.055779747664928436,\n      -0.0032795225270092487,\n      -0.027263374999165535,\n      0.03716537728905678,\n      -0.002615362172946334,\n      0.009604756720364094,\n      0.025490600615739822,\n      0.035326313227415085,\n      -0.03438199684023857,\n      0.03619325906038284,\n      -0.04039246588945389,\n      -0.03391673043370247,\n      -0.1176593005657196,\n      -0.05286402255296707,\n      -0.01112578995525837,\n      -3.457642429862863e-33,\n      -0.04073425382375717,\n      -0.062137749046087265,\n      -0.03564858436584473,\n      0.060525503009557724,\n      0.0026518709491938353,\n      -0.005294824950397015,\n      0.010229067876935005,\n      0.013430817984044552,\n      -0.0038971398025751114,\n      0.00506611680611968,\n      0.06622782349586487,\n      0.023550966754555702,\n      0.0017777642933651805,\n      -0.011059518903493881,\n      -0.08046284317970276,\n      0.0027716292534023523,\n      -0.006226993631571531,\n      0.004215702880173922,\n      -0.005449619609862566,\n      0.005369072314351797,\n      0.030613619834184647,\n      -0.038521915674209595,\n      -0.03481530025601387,\n      -0.030654635280370712,\n      -0.08160021156072617,\n      0.1140550896525383,\n      0.04998401179909706,\n      0.04392283782362938,\n      -0.03574129566550255,\n      -0.022845271974802017,\n      0.09809921681880951,\n      -0.01075973454862833,\n      -0.013360315933823586,\n      0.0729544460773468,\n      -0.023183653131127357,\n      0.11439434438943863,\n      0.008986867032945156,\n      0.0698196068406105,\n      0.01821541227400303,\n      0.01564008556306362,\n      0.011390157975256443,\n      -0.0776827335357666,\n      -0.021568169817328453,\n      -0.0376107431948185,\n      0.033745769411325455,\n      0.0863296389579773,\n      0.060404982417821884,\n      0.031361449509859085,\n      -0.01892082393169403,\n      0.02089158073067665,\n      -0.023864932358264923,\n      0.007096399553120136,\n      0.018975067883729935,\n      -0.03896118327975273,\n      -0.066901795566082,\n      0.04186684638261795,\n      0.026005273684859276,\n      -0.01096798200160265,\n      0.03104214370250702,\n      0.024825643748044968,\n      0.012081634253263474,\n      0.004741572309285402,\n      -0.0639396533370018,\n      0.00999311450868845,\n      -0.03279845416545868,\n      0.042620573192834854,\n      0.027568090707063675,\n      -0.09549055993556976,\n      -0.030065808445215225,\n      0.024760421365499496,\n      -0.03791892156004906,\n      0.008891132660210133,\n      -0.029320694506168365,\n      -0.015126906335353851,\n      0.020725270733237267,\n      0.008904753252863884,\n      -0.0445883683860302,\n      0.01630917564034462,\n      -0.009322121739387512,\n      -0.004113510251045227,\n      -0.05301334336400032,\n      -0.04491296038031578,\n      -0.1229824423789978,\n      0.023398006334900856,\n      0.0407039076089859,\n      -0.012033116072416306,\n      -0.011450947262346745,\n      0.09567204862833023,\n      0.0027856570668518543,\n      0.03702811896800995,\n      -0.04079234600067139,\n      0.10382663458585739,\n      -0.009125866927206516,\n      -0.11917697638273239,\n      -0.009193132631480694,\n      -1.8230254639206578e-08,\n      0.007494492921978235,\n      -0.10520290583372116,\n      0.06523627787828445,\n      0.01749827153980732,\n      0.06404047459363937,\n      0.0413505882024765,\n      0.10016565769910812,\n      0.013109379447996616,\n      0.029099971055984497,\n      -0.08825390040874481,\n      0.004236892331391573,\n      0.06272070109844208,\n      0.06737227737903595,\n      0.03999363258481026,\n      0.03577251359820366,\n      0.0611603781580925,\n      0.06690417975187302,\n      -0.002858080668374896,\n      -0.02886222116649151,\n      -0.03339914605021477,\n      0.01879848912358284,\n      -0.013383956626057625,\n      0.02442220412194729,\n      -0.03899446502327919,\n      -0.01481677033007145,\n      -0.07085522264242172,\n      -0.07232944667339325,\n      0.10445178300142288,\n      0.01684078946709633,\n      0.0252134557813406,\n      -0.031477153301239014,\n      0.007759981323033571,\n      -0.0603131465613842,\n      -0.003202418563887477,\n      0.005600366275757551,\n      0.04117270186543465,\n      -0.008449372835457325,\n      0.003850422566756606,\n      0.026725612580776215,\n      0.03716886043548584,\n      -0.054746586829423904,\n      0.00042497055255807936,\n      -0.027234017848968506,\n      0.013183128088712692,\n      -0.09306284040212631,\n      -0.0604960136115551,\n      -0.005974214524030685,\n      -0.0012102273758500814,\n      -0.08190552145242691,\n      0.03685113415122032,\n      -0.008316128514707088,\n      0.034933120012283325,\n      -0.08569555729627609,\n      0.07028161734342575,\n      -0.04604477435350418,\n      0.03742499276995659,\n      -0.02104678377509117,\n      -0.0009695049375295639,\n      0.04079678654670715,\n      0.032353684306144714,\n      0.0396537259221077,\n      -0.021573571488261223,\n      -0.023165369406342506,\n      -0.03409213945269585\n    ]\n  ],\n  \"input_type\": \"document\",\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/bert/checkpoint\",\n  \"revision\": null,\n  \"texts\": [\n    \"A girl is styling her hair.\"\n  ]\n}\n",
+      "status": "PASS"
+    }
+  },
+  "status": "FAIL",
+  "error": "cannot load native VLM: model type 'bert' has no native VLM task loader",
+  "exception": "VLMModelLoadError",
+  "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/text/loading.py\", line 107, in load_text_model\n    raise ValueError(f\"model type {model_type!r} has no native text loader\")\nValueError: model type 'bert' has no native text loader\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/server/model_manager.py\", line 400, in _load_serving_model\n    bundle = load_text_model(model_id, **options)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/text/loading.py\", line 162, in load_text_model\n    raise TextModelLoadError(f\"cannot load native {model_type or 'text'} model: {exc}\") from exc\nmlx_one.text.loading.TextModelLoadError: cannot load native bert model: model type 'bert' has no native text loader\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/vision/loading.py\", line 73, in load_vlm_model\n    raise ValueError(f\"model type {model_type!r} has no native VLM task loader\")\nValueError: model type 'bert' has no native VLM task loader\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/private/tmp/mlx-one-docs-site/scripts/qualification/model_release_worker.py\", line 921, in main\n    interface_probe(entry, args.model, fixtures, report, data)\n  File \"/private/tmp/mlx-one-docs-site/scripts/qualification/model_release_worker.py\", line 696, in interface_probe\n    manager.load(model, offline=True)\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/server/model_manager.py\", line 70, in load\n    self._bundle_lease = self._pool.acquire(self._bundle_key, lambda: _load_serving_model(\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/engine/model_pool.py\", line 154, in acquire\n    value = self.executor.call(key, loader, evaluate=evaluate)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/engine/device_executor.py\", line 60, in call\n    return self.submit(model_key, function, evaluate=evaluate, cancel=cancel).result()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.12/3.12.11_1/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.12/3.12.11_1/Frameworks/Python.framework/Versions/3.12/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/engine/device_executor.py\", line 78, in _run\n    value = function()\n            ^^^^^^^^^^\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/server/model_manager.py\", line 70, in <lambda>\n    self._bundle_lease = self._pool.acquire(self._bundle_key, lambda: _load_serving_model(\n                                                                      ^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/server/model_manager.py\", line 412, in _load_serving_model\n    return load_vlm_model(\n           ^^^^^^^^^^^^^^^\n  File \"/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/vision/loading.py\", line 115, in load_vlm_model\n    raise VLMModelLoadError(f\"cannot load native VLM: {exc}\") from exc\nmlx_one.vision.loading.VLMModelLoadError: cannot load native VLM: model type 'bert' has no native VLM task loader\n",
+  "checkpoint_tensor_inventory": {
+    "model.safetensors": {
+      "embeddings.position_ids": {
+        "shape": [
+          1,
+          512
+        ],
+        "dtype": "I64"
+      },
+      "embeddings.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "embeddings.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "embeddings.position_embeddings.weight": {
+        "shape": [
+          512,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "embeddings.token_type_embeddings.weight": {
+        "shape": [
+          2,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "embeddings.word_embeddings.weight": {
+        "shape": [
+          30522,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.output.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.self.key.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.self.key.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.self.query.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.self.query.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.self.value.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.attention.self.value.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.intermediate.dense.bias": {
+        "shape": [
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.intermediate.dense.weight": {
+        "shape": [
+          1536,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.0.output.dense.weight": {
+        "shape": [
+          384,
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.output.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.self.key.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.self.key.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.self.query.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.self.query.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.self.value.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.attention.self.value.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.intermediate.dense.bias": {
+        "shape": [
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.intermediate.dense.weight": {
+        "shape": [
+          1536,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.1.output.dense.weight": {
+        "shape": [
+          384,
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.output.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.self.key.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.self.key.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.self.query.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.self.query.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.self.value.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.attention.self.value.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.intermediate.dense.bias": {
+        "shape": [
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.intermediate.dense.weight": {
+        "shape": [
+          1536,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.2.output.dense.weight": {
+        "shape": [
+          384,
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.output.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.self.key.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.self.key.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.self.query.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.self.query.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.self.value.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.attention.self.value.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.intermediate.dense.bias": {
+        "shape": [
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.intermediate.dense.weight": {
+        "shape": [
+          1536,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.3.output.dense.weight": {
+        "shape": [
+          384,
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.output.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.self.key.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.self.key.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.self.query.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.self.query.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.self.value.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.attention.self.value.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.intermediate.dense.bias": {
+        "shape": [
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.intermediate.dense.weight": {
+        "shape": [
+          1536,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.4.output.dense.weight": {
+        "shape": [
+          384,
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.output.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.self.key.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.self.key.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.self.query.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.self.query.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.self.value.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.attention.self.value.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.intermediate.dense.bias": {
+        "shape": [
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.intermediate.dense.weight": {
+        "shape": [
+          1536,
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.output.LayerNorm.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.output.LayerNorm.weight": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.output.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "encoder.layer.5.output.dense.weight": {
+        "shape": [
+          384,
+          1536
+        ],
+        "dtype": "F32"
+      },
+      "pooler.dense.bias": {
+        "shape": [
+          384
+        ],
+        "dtype": "F32"
+      },
+      "pooler.dense.weight": {
+        "shape": [
+          384,
+          384
+        ],
+        "dtype": "F32"
+      }
+    }
+  },
+  "seconds": 10.093168020248413,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "9fae0f625378421eb144ace804fe23fdc6afe0b169c7409d8465afb0747c80da"
+}

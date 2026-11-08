@@ -66,6 +66,9 @@ def load_retrieval_model(
     root = _resolve(model, revision=revision, offline=offline, cache_dir=cache_dir)
     config_data = _read_json(root / "config.json")
     model_type = str(config_data.get("model_type", ""))
+    if model_type == "lfm2" and (root / "modules.json").is_file():
+        config_data = _published_colbert_config(root, config_data)
+        model_type = "lfm2_colbert"
     if model_type in {"lfm2_colbert", "lfm2-colbert"}:
         if task not in {None, "embedding"}:
             raise RetrievalModelLoadError("LFM2 ColBERT supports embedding only")
@@ -73,9 +76,7 @@ def load_retrieval_model(
     if model_type in {"bert", "mpnet"}:
         if task not in {None, "embedding"}:
             raise RetrievalModelLoadError(f"{model_type} supports embedding only")
-        return _load_sentence_encoder(
-            root, model, revision, model_type, config_data
-        )
+        return _load_sentence_encoder(root, model, revision, model_type, config_data)
     if model_type != "qwen3":
         raise RetrievalModelLoadError(f"unsupported native retrieval model type: {model_type!r}")
     try:
@@ -126,9 +127,7 @@ def load_retrieval_model(
         native = Qwen3ForEmbedding(config)
     else:
         try:
-            config = Qwen3RerankerConfig.from_dict(
-                {**config_data, "model_type": "qwen3_reranker"}
-            )
+            config = Qwen3RerankerConfig.from_dict({**config_data, "model_type": "qwen3_reranker"})
             tensors = sanitize_reranker_weights(tensors, config)
             reranker_weight_contract(config).validate(tensors)
         except ValueError as exc:
@@ -150,8 +149,13 @@ def load_retrieval_model(
     if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
         resolved_revision = root.name
     return LoadedRetrievalModel(
-        native, tokenizer, task, root, str(model), resolved_revision,
-        "qwen3_embedding" if task == "embedding" else "qwen3_reranker"
+        native,
+        tokenizer,
+        task,
+        root,
+        str(model),
+        resolved_revision,
+        "qwen3_embedding" if task == "embedding" else "qwen3_reranker",
     )
 
 
@@ -192,7 +196,8 @@ def _sentence_encoder_config(root: Path, config_data: dict[str, Any]) -> dict[st
     pooling = _read_json(root / "1_Pooling" / "config.json")
     if pooling.get("pooling_mode_mean_tokens") is not True or any(
         type(value) is not bool or (key != "pooling_mode_mean_tokens" and value)
-        for key, value in pooling.items() if key.startswith("pooling_mode_")
+        for key, value in pooling.items()
+        if key.startswith("pooling_mode_")
     ):
         raise ValueError("native sentence encoders require mean-token pooling only")
     dimension = pooling.get("word_embedding_dimension")
@@ -202,17 +207,75 @@ def _sentence_encoder_config(root: Path, config_data: dict[str, Any]) -> dict[st
     if (root / "modules.json").is_file():
         modules = _read_json_array(root / "modules.json")
         types = [module.get("type") if isinstance(module, dict) else None for module in modules]
-        prefix = ["sentence_transformers.models.Transformer",
-                  "sentence_transformers.models.Pooling"]
+        prefix = [
+            "sentence_transformers.models.Transformer",
+            "sentence_transformers.models.Pooling",
+        ]
         if types not in (prefix, [*prefix, "sentence_transformers.models.Normalize"]):
             raise ValueError("unsupported Sentence Transformer module pipeline")
         if modules[1].get("path") != "1_Pooling":
             raise ValueError("pooling module path must match the loaded pooling metadata")
         normalize = len(types) == 3
     sentence = _read_json(root / "sentence_bert_config.json")
-    return {**config_data, "sentence_max_length": sentence.get(
-        "max_seq_length", config_data.get("max_position_embeddings", 512)),
-        "add_pooling_layer": False, "normalize_embeddings": normalize}
+    return {
+        **config_data,
+        "sentence_max_length": sentence.get(
+            "max_seq_length", config_data.get("max_position_embeddings", 512)
+        ),
+        "add_pooling_layer": False,
+        "normalize_embeddings": normalize,
+    }
+
+
+def _published_colbert_config(root: Path, backbone: dict[str, Any]) -> dict[str, Any]:
+    modules = _read_json_array(root / "modules.json")
+    if (
+        len(modules) != 2
+        or any(not isinstance(m, dict) for m in modules)
+        or [m.get("type") for m in modules]
+        != ["sentence_transformers.models.Transformer", "pylate.models.Dense.Dense"]
+        or [m.get("path") for m in modules] != ["", "1_Dense"]
+    ):
+        raise RetrievalModelLoadError("unsupported publisher ColBERT module pipeline")
+    dense = _read_json(root / "1_Dense/config.json")
+    if (
+        dense.get("in_features") != backbone.get("hidden_size")
+        or dense.get("bias") is not False
+        or dense.get("activation_function") != "torch.nn.modules.linear.Identity"
+    ):
+        raise RetrievalModelLoadError("unsupported publisher ColBERT projection")
+    recipe = _read_json(root / "config_sentence_transformers.json")
+    if (
+        recipe.get("similarity_fn_name") != "MaxSim"
+        or recipe.get("prompts")
+        or recipe.get("default_prompt_name") is not None
+    ):
+        raise RetrievalModelLoadError("unsupported publisher ColBERT scoring/prompt recipe")
+    required = {
+        "query_prefix",
+        "document_prefix",
+        "query_length",
+        "document_length",
+        "do_query_expansion",
+        "attend_to_expansion_tokens",
+        "skiplist_words",
+    }
+    if not required <= recipe.keys():
+        raise RetrievalModelLoadError("incomplete publisher ColBERT token recipe")
+    return dict(
+        model_type="lfm2_colbert",
+        text_config=backbone,
+        projection_dim=dense.get("out_features"),
+        normalize=True,
+        query_max_length=recipe["query_length"],
+        document_max_length=recipe["document_length"],
+        query_prefix=recipe["query_prefix"],
+        document_prefix=recipe["document_prefix"],
+        do_query_expansion=recipe["do_query_expansion"],
+        attend_to_expansion_tokens=recipe["attend_to_expansion_tokens"],
+        skiplist_words=recipe["skiplist_words"],
+        publisher_colbert=True,
+    )
 
 
 def _load_colbert(
@@ -226,7 +289,29 @@ def _load_colbert(
         registration = get_registration("lfm2_colbert")
         config = registration.config_class().from_dict(config_data)
         tokenizer = HFTokenizerAdapter.from_directory(root)
-        tensors = registration.sanitizer()(_read_safetensors(root), config)
+        tensors = _read_safetensors(root)
+        if config_data.get("publisher_colbert"):
+            tensors = {
+                (
+                    "model." + name
+                    if name.startswith(("embed_tokens.", "layers.", "embedding_norm."))
+                    else name
+                ): value
+                for name, value in tensors.items()
+            }
+            tensors = {
+                (
+                    name.removesuffix(".weight") if name.endswith(".conv.conv.weight") else name
+                ): value
+                for name, value in tensors.items()
+            }
+            projection = _read_safetensors(root / "1_Dense")
+            if set(projection) != {"linear.weight"}:
+                raise ValueError("publisher ColBERT requires exactly one bias-free projection")
+            if "projection.weight" in tensors:
+                raise ValueError("duplicate publisher ColBERT projection tensors")
+            tensors["projection.weight"] = projection["linear.weight"]
+        tensors = registration.sanitizer()(tensors, config)
         native = registration.model_class()(config)
         if quantization:
             _prepare_quantized_model(native, tensors, quantization)
@@ -274,8 +359,7 @@ def detect_retrieval_task(root: str | Path) -> RetrievalTask:
         ):
             return "reranking"
         if pooling_path.exists() and any(
-            isinstance(item, dict)
-            and item.get("type") == "sentence_transformers.models.Pooling"
+            isinstance(item, dict) and item.get("type") == "sentence_transformers.models.Pooling"
             for item in modules
         ):
             return "embedding"
@@ -350,9 +434,7 @@ def _read_safetensors(root: Path) -> dict[str, Any]:
                 if name in result:
                     raise RetrievalModelLoadError(f"duplicate retrieval tensor: {name}")
                 if expected_map is not None and expected_map.get(name) != path.name:
-                    raise RetrievalModelLoadError(
-                        f"safetensors index mismatch for tensor: {name}"
-                    )
+                    raise RetrievalModelLoadError(f"safetensors index mismatch for tensor: {name}")
                 result[name] = tensor
     except (OSError, SafetensorError, ValueError) as exc:
         raise RetrievalModelLoadError(f"cannot read retrieval safetensors: {exc}") from exc
@@ -375,8 +457,7 @@ def _checkpoint_files(root: Path) -> tuple[tuple[Path, ...], dict[str, str] | No
         if not isinstance(value, dict) or not value:
             raise RetrievalModelLoadError("safetensors index requires a non-empty weight_map")
         if any(
-            not isinstance(name, str) or not isinstance(file, str)
-            for name, file in value.items()
+            not isinstance(name, str) or not isinstance(file, str) for name, file in value.items()
         ):
             raise RetrievalModelLoadError("safetensors weight_map must map tensor names to files")
         expected_map = value

@@ -16,7 +16,9 @@ at `2e1fd397ee46e1388853d2af2c993145b0f1098a` has recorded M4 LoRA-training
 and adapter-reload evidence. Its tiny held-out quality gate scored `0.0 → 0.0`
 and failed; the result is not a quality qualification.
 
-Qwen2.5 0.5B/1.5B/3B and additional Coder sizes remain candidates in the
+The selected `Qwen/Qwen2.5-0.5B-Instruct` Q8 profile is supported; see the
+[current inventory](../../../../../status_models_testing.md). Additional
+1.5B/3B and Coder profiles retain their own evidence in the
 [catalog](../../../../../docs/model-catalog.md). The Coder variant uses the same
 architecture, with its own weights and tokenizer/template assets.
 

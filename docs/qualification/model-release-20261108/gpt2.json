@@ -1,0 +1,1575 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "gpt2",
+  "checkpoint": "openai-community/gpt2",
+  "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+  "started": 1794130347.718406,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "dc57573189b970de8e48ea22ec41ca8aec31f47260096565a5cf8604daf73da5",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "functional": {
+    "model_path": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+    "checkpoint_status": "MODEL_SMOKE_TESTED",
+    "scope": "bounded functional smoke, no quality or numerical research gate",
+    "load_seconds": 0.1571692090074066,
+    "architecture": "gpt2",
+    "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+    "revision": null,
+    "configured_maximum": 1024,
+    "smoke_context": 512,
+    "cache_continuation_reset": {
+      "status": "PASS",
+      "tokens": 3,
+      "state_bytes": 221184
+    },
+    "text": " Simpsons . He has appeared in several TV shows including The Simpsons , The Simpsons ,",
+    "metrics": {
+      "prompt_tokens": 28,
+      "generated_tokens": 16,
+      "tokens_per_second": 118.00000987326067,
+      "time_to_first_token_ms": 28.377791997627355,
+      "generation_latency_ms": 135.59320899366867,
+      "context_used": 44,
+      "memory_used_bytes": 507226160,
+      "memory_peak_bytes": 543139932,
+      "reasoning_tokens": 0,
+      "prompt_cache_hit": false,
+      "reused_prompt_tokens": 0,
+      "drafted_tokens": 0,
+      "accepted_draft_tokens": 0,
+      "rejected_draft_tokens": 0,
+      "draft_acceptance_ratio": null,
+      "prompt_tokens_per_second": 1139.5837468267218,
+      "decode_tokens_per_second": 139.96127737021308,
+      "inter_token_latency_ms": 7.144833333829108,
+      "cache_bytes": 9437184,
+      "cache_backend": "dense",
+      "cache_logical_bytes": 1585152,
+      "cache_allocated_bytes": 9437184,
+      "cache_reserved_bytes": 0,
+      "cache_shared_blocks": 0,
+      "cache_lookup_time_ms": 0.0,
+      "cache_allocation_time_ms": 0.019500002963468432,
+      "avoided_prefill_tokens": 0,
+      "server_text_ttft_ms": 28.455624997150153,
+      "model_token_count": 16,
+      "model_token_gap_p50_ms": 7.082333002472296,
+      "model_token_gap_p95_ms": 8.048957999562845,
+      "timing_samples_truncated": false,
+      "actual_prefill_tokens": 28,
+      "eligible_prefix_tokens": 0,
+      "matched_prefix_tokens": 0,
+      "prefix_publications": 0,
+      "publication_rejections": 0,
+      "queue_ms": null,
+      "tokenization_ms": 0.04966599226463586,
+      "prefill_ms": 24.570374996983446,
+      "decode_ms": 98.70682998734992,
+      "model_token_times_ms": [
+        28.377791997627355,
+        36.4267499971902,
+        44.13491699961014,
+        51.21725000208244,
+        57.91562500235159,
+        65.10845900629647,
+        72.75700000172947,
+        79.57229200110305,
+        86.95658399665263,
+        94.47045900742523,
+        101.02808399824426,
+        107.70645900629461,
+        114.30091700458433,
+        121.21891700371634,
+        128.6205840006005,
+        135.55029200506397
+      ],
+      "model_generation_started_at": 90827.568069791,
+      "model_forward_batch_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "execution_observer": "synchronized-forward-v2",
+      "mlx_cached_bytes": 86450235,
+      "actual_logits_dtypes": [
+        "mlx.core.float32"
+      ],
+      "cache_layers": [
+        {
+          "layer_id": 0,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 1,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 2,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 3,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 4,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 6,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 7,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 8,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 9,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 10,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        }
+      ]
+    },
+    "runtime": {
+      "release_support": {
+        "architecture_registered": true,
+        "checkpoint_revision": null,
+        "status": "EXPERIMENTAL_NOT_QUALIFIED",
+        "architecture_status": null,
+        "checkpoint_status": "NOT_VERIFIED",
+        "alpha_supported": false,
+        "numerical_contract": "OPTIONAL_RESEARCH_NOT_AN_ADMISSION_GATE",
+        "admission_policy": "functional-architecture-checkpoint-v1",
+        "release_approval": "PENDING",
+        "candidate_profile": null,
+        "reason": "No exact checkpoint/revision/architecture functional evidence is attached."
+      },
+      "checkpoint_identity": {
+        "canonical_model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+        "path": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+        "revision": null,
+        "weight_hashes": {}
+      },
+      "execution_contract": {
+        "actual_weight_dtypes": [
+          "float32"
+        ],
+        "adapter_version": "native-adapter-v2",
+        "architecture": "gpt2",
+        "components": [
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 0,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 1,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 2,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 3,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 4,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 5,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 6,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 7,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 8,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 9,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 10,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 64,
+            "kind": "full_kv",
+            "layer_id": 11,
+            "num_kv_heads": 12,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 64,
+            "window_tokens": null
+          }
+        ],
+        "execution_mode": "reference_dense",
+        "floating_policy": null,
+        "modules": [],
+        "quantization": {},
+        "quantization_digest": "04347cff055c1e4bd2060c2f5c5aecdac588e71df1a22166a486176f8dfb849c",
+        "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87"
+      },
+      "compatibility_digest": "643f900321116f2dc9afdebefa478354c6c7f5b23a1b70de5332600790f52864",
+      "runtime_schema_version": "native-runtime-v2",
+      "feature_details": {
+        "dense_execution": {
+          "implemented": true,
+          "available_for_opt_in": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "block_storage": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "block_prefix_reuse": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "continuous_batching": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_dense_decode": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_chunked_prefill": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_attention": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_prefill": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_prefix_restore": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_batching": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "quantized_paged_kv": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "long_context": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "weights_identity": "a4fe93a186deb2b39ac68b0e80e59ff74e1c4e81ef117e54419295d3ce143e32",
+      "engine_mode": "reference_dense",
+      "configured_execution_dtype": null,
+      "model_revision": null,
+      "scope": {
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+        "revision": null,
+        "execution_path": "reference_dense",
+        "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+        "weight_precision": "float32",
+        "cache_precision": "float16",
+        "mlx_version": "0.32.2",
+        "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+        "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+      },
+      "actual_weight_dtypes": [
+        "float32"
+      ],
+      "layers": [
+        {
+          "layer_id": 0,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 1,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 2,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 3,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 4,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 6,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 7,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 8,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 9,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 10,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 132096,
+          "allocated_bytes": 786432,
+          "committed_tokens": 43
+        }
+      ],
+      "arena": null,
+      "qualified_workload_envelope": null,
+      "memory_admission": {
+        "schema_version": "native-admission-v1",
+        "timestamp": "2026-11-08T09:32:29.936202+00:00",
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+        "revision": null,
+        "backend": "dense",
+        "execution_mode": "reference_dense",
+        "weight_precision": {},
+        "execution_dtype": null,
+        "attention_kv_precision": {
+          "key_type": "f16",
+          "value_type": "f16"
+        },
+        "requests": [
+          {
+            "prompt_tokens": 28,
+            "requested_output_tokens": 16,
+            "estimated_kv_growth_bytes": 9437184,
+            "estimated_hybrid_carry_growth_bytes": 0,
+            "total_growth_bytes": 9437184,
+            "request_id": "server-1794130349794552000",
+            "handle_id": "cache-7b27bd07e86f49e9bbba6a7f61c4e244",
+            "key_type": "f16",
+            "value_type": "f16",
+            "allocated_bytes": 9437184,
+            "reserved_bytes": 0
+          }
+        ],
+        "transient": true,
+        "attempt": 0,
+        "stage": "host",
+        "attention_kv_tensor_dtypes": [
+          "float16"
+        ],
+        "component_state_dtypes": [],
+        "status": "bounded",
+        "ceiling_bytes": 22906503168,
+        "working_set_bytes": 673103872,
+        "owner_bytes": 507196416,
+        "model_bytes": 497759232,
+        "cache_allocated_bytes": 9437184,
+        "cache_physical_bytes": 9437184,
+        "cache_logical_bytes": 1548288,
+        "reserved_bytes": 0,
+        "active_handles": 1,
+        "retained_prefix_bytes": 0,
+        "reclaimable_pool_bytes": 0,
+        "evictable_bytes": 0,
+        "requested_bytes": 224596,
+        "predicted_transient_bytes": 224596,
+        "forecast": {
+          "bytes": 224596,
+          "source": "conservative-analytical",
+          "measured": false
+        },
+        "telemetry": {
+          "rss_bytes": 673103872,
+          "installed_bytes": 34359738368,
+          "mlx_active_bytes": 507442224,
+          "mlx_cached_bytes": 82990139,
+          "mlx_peak_bytes": 543139932,
+          "recommended_bytes": 22906503168,
+          "os_pressure": "normal",
+          "swap_bytes": 0
+        },
+        "swap_delta_bytes": null,
+        "swap_scope": "host-wide, not uniquely attributed to this request",
+        "host_sample_age_seconds": 0.1294343750050757,
+        "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested",
+        "projected_bytes": 673328468,
+        "decision": "admit",
+        "rejection_reason": null,
+        "retryable": null
+      },
+      "execution_memory_forecast": {
+        "bytes": 224596,
+        "source": "conservative-analytical",
+        "measured": false
+      },
+      "component_capabilities": [
+        {
+          "layer_id": 0,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 1,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 2,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 3,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 4,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 6,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 7,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 8,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 9,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 10,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "num_kv_heads": 12,
+          "key_head_dim": 64,
+          "value_head_dim": 64,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        }
+      ],
+      "configured_cache_precision": {
+        "key_type": "f16",
+        "value_type": "f16"
+      },
+      "capabilities": {
+        "continuous_batching": false,
+        "paged_attention": false,
+        "hybrid_prefix_restore": false
+      },
+      "runner_qualification": {
+        "chunked_prefill": {
+          "feature": "chunked_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "causal_runner_equal_offset_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "equal_offset_batched_decode": {
+          "feature": "equal_offset_batched_decode",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "causal_runner_equal_offset_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "qualification": {
+        "dense_execution": {
+          "feature": "dense_execution",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "block_storage": {
+          "feature": "block_storage",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "block_prefix_reuse": {
+          "feature": "block_prefix_reuse",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "continuous_batching": {
+          "feature": "continuous_batching",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_dense_decode": {
+          "feature": "batched_dense_decode",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_chunked_prefill": {
+          "feature": "batched_chunked_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_attention": {
+          "feature": "paged_attention",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_prefill": {
+          "feature": "paged_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_prefix_restore": {
+          "feature": "hybrid_prefix_restore",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_batching": {
+          "feature": "hybrid_batching",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "quantized_paged_kv": {
+          "feature": "quantized_paged_kv",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "long_context": {
+          "feature": "long_context",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gpt2/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "70073315fb3982275fb14b18a8b747c63233eb11d3a41e016b08dfde99bc9c87",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "latency": {
+        "ttft_p95_ms": null,
+        "decode_gap_p95_ms": null
+      },
+      "throughput": {
+        "aggregate_decode_tok_s": null
+      },
+      "selection": {
+        "requested_mode": "reference_dense",
+        "resolved_mode": "reference_dense",
+        "reason": "explicit configuration",
+        "evidence_scope": null
+      },
+      "metric_definitions": {
+        "tokens_per_second": "output tokens / whole engine request wall time",
+        "decode_tokens_per_second": "output intervals / first-to-last model output-token interval",
+        "inter_token_latency_ms": "mean model output-token gap; excludes prefill and first token",
+        "time_to_first_token_ms": "engine execution start to first accepted model output token",
+        "queue_ms": "enqueue to execution admission",
+        "prefill_ms": "sum of synchronized model prefill forwards",
+        "model_token_gap_percentiles": "bounded last 4096 gaps; truncation is explicit",
+        "sse_delivery_timing": "client wire observations, separate from model-token timing"
+      },
+      "latest_completed_request": {
+        "prompt_tokens": 28,
+        "generated_tokens": 16,
+        "tokens_per_second": 118.00000987326067,
+        "time_to_first_token_ms": 28.377791997627355,
+        "generation_latency_ms": 135.59320899366867,
+        "context_used": 44,
+        "memory_used_bytes": 507226160,
+        "memory_peak_bytes": 543139932,
+        "reasoning_tokens": 0,
+        "prompt_cache_hit": false,
+        "reused_prompt_tokens": 0,
+        "drafted_tokens": 0,
+        "accepted_draft_tokens": 0,
+        "rejected_draft_tokens": 0,
+        "draft_acceptance_ratio": null,
+        "prompt_tokens_per_second": 1139.5837468267218,
+        "decode_tokens_per_second": 139.96127737021308,
+        "inter_token_latency_ms": 7.144833333829108,
+        "cache_bytes": 9437184,
+        "cache_backend": "dense",
+        "cache_logical_bytes": 1585152,
+        "cache_allocated_bytes": 9437184,
+        "cache_reserved_bytes": 0,
+        "cache_shared_blocks": 0,
+        "cache_lookup_time_ms": 0.0,
+        "cache_allocation_time_ms": 0.019500002963468432,
+        "avoided_prefill_tokens": 0,
+        "server_text_ttft_ms": 28.455624997150153,
+        "model_token_count": 16,
+        "model_token_gap_p50_ms": 7.082333002472296,
+        "model_token_gap_p95_ms": 8.048957999562845,
+        "timing_samples_truncated": false,
+        "actual_prefill_tokens": 28,
+        "eligible_prefix_tokens": 0,
+        "matched_prefix_tokens": 0,
+        "prefix_publications": 0,
+        "publication_rejections": 0,
+        "queue_ms": null,
+        "tokenization_ms": 0.04966599226463586,
+        "prefill_ms": 24.570374996983446,
+        "decode_ms": 98.70682998734992,
+        "model_token_times_ms": [
+          28.377791997627355,
+          36.4267499971902,
+          44.13491699961014,
+          51.21725000208244,
+          57.91562500235159,
+          65.10845900629647,
+          72.75700000172947,
+          79.57229200110305,
+          86.95658399665263,
+          94.47045900742523,
+          101.02808399824426,
+          107.70645900629461,
+          114.30091700458433,
+          121.21891700371634,
+          128.6205840006005,
+          135.55029200506397
+        ],
+        "model_generation_started_at": 90827.568069791,
+        "model_forward_batch_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "execution_observer": "synchronized-forward-v2",
+        "mlx_cached_bytes": 86450235,
+        "actual_logits_dtypes": [
+          "mlx.core.float32"
+        ],
+        "cache_layers": [
+          {
+            "layer_id": 0,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 1,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 2,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 3,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 4,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 5,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 6,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 7,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 8,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 9,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 10,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 11,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 132096,
+            "allocated_bytes": 786432,
+            "committed_tokens": 43
+          }
+        ]
+      },
+      "aggregate_metric_scope": "latest_completed_request",
+      "memory_pressure": null
+    },
+    "status": "PASS"
+  },
+  "sample_row_ids": [
+    3
+  ],
+  "quality_status": "PENDING_HELD_OUT_QUALITY",
+  "peak_mlx_bytes": 543139932,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 2.3100130558013916,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "dc57573189b970de8e48ea22ec41ca8aec31f47260096565a5cf8604daf73da5"
+}

@@ -1,0 +1,6 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+SPEECH_TASK tts PASS_FUNCTIONAL
+SPEECH_TASK sts_short PASS_FUNCTIONAL
+SPEECH_TASK sts_10s FAIL
+{"model_type": "lfm2_audio", "status": "FAIL", "quality_status": "ASR_MEASURED_SPEECH_REVIEW_REQUIRED", "seconds": 27.83922576904297, "error": "one or more advertised LFM speech task probes failed"}

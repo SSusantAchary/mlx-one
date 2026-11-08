@@ -6,6 +6,64 @@ from html.parser import HTMLParser
 from mlx_one.ocr.schemas import LayoutElement
 
 
+class _VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts = []
+        self.hidden = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style"}:
+            self.hidden += 1
+        elif tag in {"br", "p", "div", "table", "tr", "td", "th", "li"}:
+            self.parts.append("\n" if tag in {"br", "p", "div", "table", "tr", "li"} else " ")
+
+    def handle_endtag(self, tag):
+        if tag in {"script", "style"}:
+            self.hidden = max(0, self.hidden - 1)
+        elif tag in {"p", "div", "table", "tr", "li"}:
+            self.parts.append("\n")
+        elif tag in {"td", "th"}:
+            self.parts.append(" ")
+
+    def handle_data(self, value):
+        if not self.hidden:
+            self.parts.append(value)
+
+
+def visible_text(value):
+    """Render OCR Markdown/HTML to text without correcting recognized content."""
+    if re.search(r"</?(?:table|tr|td|th|br|div|p)(?:\s|/?>)", value, re.I):
+        parser = _VisibleText()
+        parser.feed(value)
+        value = "".join(parser.parts)
+    # Render pipe tables only when introduced by a valid header/separator pair.
+    # Separator rows are Markdown syntax; cell values, including negatives, stay.
+    lines = value.splitlines()
+    separator = re.compile(r"^\s*\|?\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|?\s*$")
+    rendered, table = [], False
+    for index, line in enumerate(lines):
+        if index + 1 < len(lines) and "|" in line and separator.fullmatch(lines[index + 1]):
+            table = True
+        if table and separator.fullmatch(line):
+            continue
+        if table and "|" in line:
+            cells = re.split(r"(?<!\\)\|", line.strip().strip("|"))
+            rendered.append(" ".join(cell.strip() for cell in cells))
+        else:
+            table = False
+            rendered.append(line)
+    value = "\n".join(rendered)
+    value = re.sub(r"(?m)^\s{0,3}#{1,6}\s+", "", value)
+    value = re.sub(r"(?m)^\s{0,3}(?:-{3,}|\*{3,}|_{3,})\s*$", "", value)
+    value = re.sub(r"(?m)^\s*[-*+]\s+", "", value)
+    value = re.sub(r"\[([ xX])\]", lambda m: "☑" if m[1].casefold() == "x" else "□", value)
+    value = value.replace("☐", "□").replace("☒", "☑")
+    value = re.sub(r"\\([\\`*_{}\[\]()#+.!\-])", r"\1", value)
+    value = re.sub(r"\*\*([^*\n]+)\*\*|__([^_\n]+)__", lambda m: m[1] or m[2], value)
+    return "\n".join(line.strip() for line in value.splitlines() if line.strip())
+
+
 def florence_regions(text, transform, page):
     text = re.sub(r"</?s>|<pad>", "", text)
     pattern = re.compile(r"([^<>]*?)((?:<loc_\d+>){8})")
@@ -101,4 +159,11 @@ def parse_output(bundle, request, raw, prepared, page):
     if request.task == "ocr.formula":
         formulas = [raw] if raw.strip() else []
     markdown = raw if request.output_format == "markdown" and bundle.capabilities.markdown else None
+    if bundle.capabilities.markdown and request.task in {
+        "ocr.recognize",
+        "ocr.region",
+        "ocr.document",
+        "ocr.batch",
+    }:
+        raw = visible_text(raw)
     return raw, markdown, elements, tables, formulas

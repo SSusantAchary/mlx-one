@@ -2,12 +2,20 @@
 
 [Model guide index](../../../../../docs/models/index.md)
 
-Native source support now includes the **MLX community Q4 export**, a strict task
+The **MLX community Q8 checkpoint** has passing native ASR, TTS and short/longer
+speech-to-speech records, including applicable Python/CLI/HTTP and streaming
+lifecycle checks. See the [current support inventory](../../../../../status_models_testing.md)
+and [0.1.1 release notes](../../../../../docs/releases/0.1.1.md).
+
+The native implementation includes compatible Q4/Q8 exports, a strict task
 loader, the shared MLX-One LFM2 hybrid backbone, FastConformer speech input,
 audio adapter, sequential codebook prediction, and the separately supplied LFM
 waveform detokenizer. Tasks are ASR, TTS, and interleaved speech-to-speech, with
-ordered text/PCM streaming. Status: **NATIVE_IMPLEMENTED**, with experimental, input-dependent speech-to-speech
-support. Real Q4 checkpoint transcription and TTS, plus a separate short spoken
+ordered text/PCM streaming.
+
+### Historical Q4 measurements
+
+Real Q4 checkpoint transcription and TTS, plus a separate short spoken
 question, have been exercised on Apple M4; see the
 [hardware report](../../../../../docs/validation/audio-hf-2026-10-24/report.md)
 and [measured performance](../../../../../docs/benchmarks/audio/README.md).

@@ -2,8 +2,12 @@
 
 The commands below use existing repository entrypoints. CLI option names,
 Python/HTTP paths and tiny-model behavior were checked during implementation.
-The two large checkpoints are **NOT_DOWNLOADED / MANUAL_TEST_PENDING**;
-commands using their weights are prepared for the owner and were not executed.
+The pinned LFM2.5 MoE Q4 and GPT-OSS MXFP4 primary checkpoints now have passing
+native generation and applicable interface records in the
+[current support inventory](../../status_models_testing.md). The GPT-OSS TQ3
+alternative remains a separate profile. Commands below retain their manual
+download/inspection purpose; [0.1.1 release notes](../releases/0.1.1.md) describe
+the completed campaign and cleanup.
 Load one model at a time. Start with a 512-token context; 131072 is only the
 configured maximum, not demonstrated M4/32GB capacity.
 

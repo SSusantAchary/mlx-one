@@ -1,0 +1,35 @@
+START florence2 microsoft/Florence-2-large-ft
+FETCH florence2 LICENSE 1141
+FETCH florence2 README.md 14828
+FETCH florence2 config.json 2445
+FETCH florence2 generation_config.json 51
+FETCH florence2 model.safetensors 1540980506
+FETCH florence2 preprocessor_config.json 806
+FETCH florence2 tokenizer.json 1355863
+FETCH florence2 tokenizer_config.json 34
+FETCH florence2 vocab.json 1099884
+RANGE model.safetensors 2 / 23
+RANGE model.safetensors 3 / 23
+RANGE model.safetensors 1 / 23
+RANGE model.safetensors 4 / 23
+RANGE model.safetensors 6 / 23
+RANGE model.safetensors 7 / 23
+RANGE model.safetensors 5 / 23
+RANGE model.safetensors 8 / 23
+RANGE model.safetensors 9 / 23
+RANGE model.safetensors 10 / 23
+RANGE model.safetensors 11 / 23
+RANGE model.safetensors 12 / 23
+RANGE model.safetensors 13 / 23
+RANGE model.safetensors 14 / 23
+RANGE model.safetensors 15 / 23
+RANGE model.safetensors 16 / 23
+RANGE model.safetensors 17 / 23
+RANGE model.safetensors 18 / 23
+RANGE model.safetensors 19 / 23
+RANGE model.safetensors 21 / 23
+RANGE model.safetensors 22 / 23
+RANGE model.safetensors 20 / 23
+RANGE model.safetensors 23 / 23
+RESULT florence2 FAIL labeled HF page normalized CER exceeds declared 25% floor
+CLEANED florence2 3084438042

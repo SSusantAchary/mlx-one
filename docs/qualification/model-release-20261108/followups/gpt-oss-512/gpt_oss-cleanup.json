@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "gpt_oss"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/gpt_oss",
+  "bytes_removed": 35,
+  "downloaded_bytes_verified": 0,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794133117.463059,
+  "recorded": 1794133162.689624,
+  "cleanup_complete": true,
+  "finished": 1794133162.690335
+}

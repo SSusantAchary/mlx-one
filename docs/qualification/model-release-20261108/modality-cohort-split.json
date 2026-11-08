@@ -1,0 +1,11 @@
+{
+  "recorded": 1794139621.37329,
+  "previous_pid": 31599,
+  "completed_audio_preserved": true,
+  "remaining_cohorts": [
+    "ocr",
+    "retrieval-segmentation-classification"
+  ],
+  "exclusive_gpu_lock": true,
+  "no_native_child_active": true
+}

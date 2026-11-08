@@ -1,0 +1,326 @@
+{
+  "builds": [
+    {
+      "build": "dist-resolution1",
+      "installed_record_sha256": "4825ecded3a0900618510f0447e5f44053c18165fb665d7ced57eac05a08f82f",
+      "raw_record_sha256": "6e243c85170a23f2e0a3a19b76e121046e2fdf31a032eb9004093b1ad06309e9",
+      "installed_record_file": "installed-records/resolution-4825ecded3a0900618510f0447e5f44053c18165fb665d7ced57eac05a08f82f.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "0c7ac39178b0e6e54601a20cf8388987839d39aafe64dd93f84335b9769934ec",
+          "bytes": 2318277
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "ea5d8639e2fbe904413f6a08f4646e3d75fa73e1caeccae98aa7d4a28abb97be",
+          "bytes": 2110896
+        }
+      }
+    },
+    {
+      "build": "dist-resolution2",
+      "installed_record_sha256": "2c60e5fe401ba8330d46e7531d07a67dfc0ffdf049b8b02b7ca767da76f0154c",
+      "raw_record_sha256": "9ef16b78b02c5323b6fe631273fd30d8d47bdddd7f0ab44cd566f16c0292271e",
+      "installed_record_file": "installed-records/resolution-2c60e5fe401ba8330d46e7531d07a67dfc0ffdf049b8b02b7ca767da76f0154c.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "dbb99318526852cc9f2a4f06f87c7f0d4f73e4d14d26b6dd7dbcf04b6f6b32d9",
+          "bytes": 2322246
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "580a5f3af3df03d9becadcfaf530268e9b52ca8aa001d5bbf0a4ba0d799cb594",
+          "bytes": 2113893
+        }
+      }
+    },
+    {
+      "build": "dist-resolution3",
+      "installed_record_sha256": "032267f8ef6d60f4e27882dd36311d673ab520cbf0f5337224010490ee1d82b9",
+      "raw_record_sha256": "d1f800ea05abb3c73dae999939bddf02172b79fb6ad3b33a1c9ef85c87447ad1",
+      "installed_record_file": "installed-records/resolution-032267f8ef6d60f4e27882dd36311d673ab520cbf0f5337224010490ee1d82b9.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "9294bd7d3e5fa874fe824e527fd573336e458b177ff61ea4867f02b408cc254b",
+          "bytes": 2322372
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "01eff632b41ee0e858c2898a4392f0676ced7b7dc1f499ee151f0bd7741f2bc1",
+          "bytes": 2113950
+        }
+      }
+    },
+    {
+      "build": "dist-resolution4",
+      "installed_record_sha256": "e4a6aef490169f7c8a1316578349b772d66b60f374ef819d62e1869e8e79c40b",
+      "raw_record_sha256": "1961ca5fcce17577cf84a173fa43bf3953561c04fc3a425610c648aecc26f2c5",
+      "installed_record_file": "installed-records/resolution-e4a6aef490169f7c8a1316578349b772d66b60f374ef819d62e1869e8e79c40b.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "3230f6969bf9591ef0e695c3f096f928fd8ecb20345722b8146cc606f4f9f9ff",
+          "bytes": 2322664
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "752451d333728e63fbf37e1e35c8ca43d3d89bb5a1493e6f956cf9cbeae892f7",
+          "bytes": 2114500
+        }
+      }
+    },
+    {
+      "build": "dist-resolution5",
+      "installed_record_sha256": "b8e985fdcade395caa65efe674b9450dcee8f90ca99ac3c30515aa222f5dfd74",
+      "raw_record_sha256": "0765030245e59c05be0fd89e28e2c3a282b181bbfcb2f8734d186b04609fe9fc",
+      "installed_record_file": "installed-records/resolution-b8e985fdcade395caa65efe674b9450dcee8f90ca99ac3c30515aa222f5dfd74.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "378ef66761f7e6733cc3e560fdd0e96984c6670be23746bf26b92e7536c64ed8",
+          "bytes": 2322672
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "62ccb8275984248c8d9632559641f5c7c1ab1c439359131f08aaae50d7b4ec20",
+          "bytes": 2114391
+        }
+      }
+    },
+    {
+      "build": "dist-resolution6",
+      "installed_record_sha256": "c789f8de65c6d9bfdb8c9e70461511a52478e2d36566bf880143d5591a2d8a7e",
+      "raw_record_sha256": "a4932efa4915242c2bcfaad643ac2b8e9334bef3a19b34a85eac679e9b6dd994",
+      "installed_record_file": "installed-records/resolution-c789f8de65c6d9bfdb8c9e70461511a52478e2d36566bf880143d5591a2d8a7e.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "f69c91771363a8ea624d96c3b8ce21aebc828d3627f1ee4811771b88e5656d22",
+          "bytes": 2324764
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "e76ebd7b065980a0febdb81409218d58e6a523dfafdbfc20355e513b957c662c",
+          "bytes": 2116237
+        }
+      }
+    },
+    {
+      "build": "dist-resolution7",
+      "installed_record_sha256": "493576053e82308fb41dc6ebd20708fc4b40bf1f7efa9b5ff634c75908657756",
+      "raw_record_sha256": "3c0d8a8870492c9ecc9cbf0ed7505bada3a168b9bc147ec51466244473bdeffd",
+      "installed_record_file": "installed-records/resolution-493576053e82308fb41dc6ebd20708fc4b40bf1f7efa9b5ff634c75908657756.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "9d3ed0f6dd85da59e11ffc5b922d97d8cea4f44af89defbd59d7c0299dae4ee7",
+          "bytes": 2325016
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "1563e23d264a6d05d420f9a9ab0506bc5fff0de3539a01e4f63e63b643228df3",
+          "bytes": 2116582
+        }
+      }
+    },
+    {
+      "build": "dist-resolution8",
+      "installed_record_sha256": "54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c",
+      "raw_record_sha256": "066b9e794e54267d8f77ee633b2020e20482242e73286ef21945421bd6baaac2",
+      "installed_record_file": "installed-records/resolution-54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "04ab65ce2817e36e7f7315060549bb40f922e4d96f123e6d88bde4e47e5142f3",
+          "bytes": 2325246
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "596b54d6356bd125664fdafc1fe492f878dec8b3adf5704ea5a19b66d02b7c34",
+          "bytes": 2116774
+        }
+      }
+    },
+    {
+      "build": "dist-resolution-final",
+      "installed_record_sha256": "80350231d12f01c4a453cafde94dbef5aaa27d89ae224f0cbd29f807f9e966b6",
+      "raw_record_sha256": "313e0b08ffd00e9786e4d7d7b316765e2c43001f5f1a9a527fdecedaa6a39d60",
+      "installed_record_file": "installed-records/resolution-80350231d12f01c4a453cafde94dbef5aaa27d89ae224f0cbd29f807f9e966b6.csv",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "597a9a9f902b244e6fe68d9abe0b9c446812b03928405a2e90116b6fd58de3fc",
+          "bytes": 2330091
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "8072c7b6f023feb65637a36dc002155ec27e891b2c0eb977705fd60ca949afbb",
+          "bytes": 2121406
+        }
+      }
+    }
+  ],
+  "probe_identity_matches": {
+    "c3f83ba89685bb8aff1f9ae154ccf19ce59b4f1da06a2c7a129c969a57405fbc": {
+      "build": "dist-v2",
+      "results": [
+        "qwen2_5_vl.json",
+        "openelm.json",
+        "qwen2_vl.json",
+        "gpt_oss.json",
+        "lfm2_moe.json",
+        "followups/gpt-oss-512/gpt_oss.json",
+        "followups/openelm-reference/openelm.json"
+      ]
+    },
+    "22eab5e71be08e19bc54dc6894320aa0456bff674efcc93be2dba614542010b9": {
+      "build": "dist-v5",
+      "results": [
+        "sam3_tracker_video.json",
+        "sam3.json",
+        "bert_token_classification.json",
+        "deepseek_ocr.json",
+        "sam3_tracker.json",
+        "sam3_video.json",
+        "lfm2_colbert.json",
+        "followups/florence-budget/florence2.json",
+        "followups/qwen2-moe-q4/qwen2_moe.json",
+        "followups/retrieval-fixes/qwen3_reranker.json",
+        "followups/retrieval-fixes/mpnet.json",
+        "followups/retrieval-fixes/bert.json",
+        "followups/retrieval-fixes/qwen3_embedding.json"
+      ]
+    },
+    "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279": {
+      "build": "dist-v3",
+      "results": [
+        "lfm2_audio.json",
+        "lfm2_vl.json",
+        "mpnet.json",
+        "qwen2_moe.json",
+        "qwen3_forced_aligner.json",
+        "qwen3_5.json",
+        "parakeet_tdt.json",
+        "bert.json",
+        "silero_vad.json",
+        "qwen3_asr.json",
+        "whisper.json",
+        "trocr.json",
+        "moonshine.json",
+        "got_ocr2.json",
+        "followups/interface-replay/distilbert.json",
+        "followups/interface-replay/llama.json",
+        "followups/interface-replay/gpt2.json",
+        "followups/interface-replay/gemma3_text.json",
+        "followups/interface-replay/qwen3.json",
+        "followups/interface-replay/qwen2.json",
+        "followups/interface-replay/lfm2.json",
+        "followups/openelm-bos/openelm.json"
+      ]
+    },
+    "843e363381dce9153f4ed95fe1647c4cae61d1968079ec9b2f00327fa528a642": {
+      "build": "dist-v4",
+      "results": [
+        "qwen3_reranker.json",
+        "lightonocr.json",
+        "paddleocr_vl.json",
+        "florence2.json",
+        "qwen3_embedding.json"
+      ]
+    },
+    "b217e481c4c2c27a0f565346de4a951cbc9c880fd1cc74e4715eda424d1393af": {
+      "build": "dist-v6",
+      "results": [
+        "clip.json",
+        "followups/clip-cli/clip.json",
+        "followups/retrieval-serving/mpnet.json",
+        "followups/retrieval-serving/bert.json",
+        "followups/retrieval-serving/qwen3_embedding.json"
+      ]
+    },
+    "8107cad617b73bf81760d6154ac4fcd8acc974e55924aa360708b83c9cca55d7": {
+      "build": "dist",
+      "results": [
+        "llama.json",
+        "gemma3_text.json",
+        "phi3.json"
+      ]
+    },
+    "54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c": {
+      "build": "dist-resolution8",
+      "results": [
+        "followups/resolution-sam3/sam3_tracker_video.json",
+        "followups/resolution-sam3/sam3.json",
+        "followups/resolution-sam3/sam3_tracker.json",
+        "followups/resolution-sam3/sam3_video.json",
+        "followups/resolution-florence-large/florence2.json",
+        "followups/resolution-lfm-q8-final/lfm2_audio.json",
+        "followups/functional-sam-video/sam3_tracker_video.json",
+        "followups/functional-sam-video/sam3_video.json",
+        "followups/resolution-lfm-q8/lfm2_audio.json",
+        "followups/resolution-florence-reference/florence2.json",
+        "followups/resolution-florence-regions/florence2.json",
+        "followups/resolution-ocr2/lightonocr.json",
+        "followups/resolution-ocr2/deepseek_ocr.json",
+        "followups/resolution-ner-final/bert_token_classification.json",
+        "followups/functional-florence/florence2.json"
+      ]
+    },
+    "c789f8de65c6d9bfdb8c9e70461511a52478e2d36566bf880143d5591a2d8a7e": {
+      "build": "dist-resolution6",
+      "results": [
+        "followups/resolution-sam2/sam3_tracker_video.json",
+        "followups/resolution-sam2/sam3_tracker.json",
+        "followups/resolution-sam2/sam3_video.json",
+        "followups/resolution-lfm-speech-review/whisper.json",
+        "followups/resolution-lfm-reference/lfm2_audio.json",
+        "followups/resolution-ocr2/florence2.json",
+        "followups/resolution-ocr2/got_ocr2.json",
+        "followups/resolution-lfm-speech-qwen-review/qwen3_asr.json"
+      ]
+    },
+    "4825ecded3a0900618510f0447e5f44053c18165fb665d7ced57eac05a08f82f": {
+      "build": "dist-resolution1",
+      "results": [
+        "followups/resolution-alignment/qwen3_forced_aligner.json",
+        "followups/resolution-embedding/qwen3_embedding.json"
+      ]
+    },
+    "e4a6aef490169f7c8a1316578349b772d66b60f374ef819d62e1869e8e79c40b": {
+      "build": "dist-resolution4",
+      "results": [
+        "followups/resolution-lfm/lfm2_audio.json"
+      ]
+    },
+    "2b8dac9eb81757e7925fcb422e27e2ab4a46b6fe2cca19645fddf299f8f4b432": {
+      "build": "dist-v9",
+      "results": [
+        "followups/qwen3-embedding-backbone/qwen3_embedding.json",
+        "followups/colbert-path/lfm2_colbert.json",
+        "followups/colbert-batch4/lfm2_colbert.json",
+        "followups/qwen3-embedding-diagnostic/qwen3_embedding.json",
+        "followups/retrieval-serving/lfm2_colbert.json"
+      ]
+    },
+    "493576053e82308fb41dc6ebd20708fc4b40bf1f7efa9b5ff634c75908657756": {
+      "build": "dist-resolution7",
+      "results": [
+        "followups/resolution-lfm-reference2/lfm2_audio.json"
+      ]
+    },
+    "032267f8ef6d60f4e27882dd36311d673ab520cbf0f5337224010490ee1d82b9": {
+      "build": "dist-resolution3",
+      "results": [
+        "followups/resolution-sam/sam3_tracker_video.json",
+        "followups/resolution-sam/sam3.json",
+        "followups/resolution-sam/sam3_tracker.json",
+        "followups/resolution-sam/sam3_video.json",
+        "followups/resolution-ocr/lightonocr.json",
+        "followups/resolution-ocr/deepseek_ocr.json",
+        "followups/resolution-ocr/florence2.json",
+        "followups/resolution-ocr/got_ocr2.json"
+      ]
+    },
+    "3a0a128b69d59994064404f4c44e6f33419c63cba27389bd714dea5b03e6074c": {
+      "build": "dist-final2",
+      "results": [
+        "followups/resolution-ner/bert_token_classification.json",
+        "followups/colbert-expansion/lfm2_colbert.json"
+      ]
+    },
+    "ee55ddda19166e3458a18872704a5971dfb2160640d2624c9bfaa18676cf1eee": {
+      "build": "dist-v7",
+      "results": [
+        "followups/lfm2-bos/lfm2.json",
+        "followups/retrieval-serving/qwen3_reranker.json"
+      ]
+    }
+  },
+  "unmatched_installed_records": [],
+  "method": "Immutable wheels reinstalled locally using the original candidate interpreter and pip. RECORD text normalized as importlib.metadata.read_text() used by probe workers. Raw bytes and their checksum archived independently; final wheel restored."
+}

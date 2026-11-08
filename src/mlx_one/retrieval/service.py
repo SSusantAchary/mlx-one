@@ -13,7 +13,7 @@ DEFAULT_RETRIEVAL_INSTRUCTION = (
     "Given a web search query, retrieve relevant passages that answer the query"
 )
 RERANK_PREFIX = (
-    '<|im_start|>system\nJudge whether the Document meets the requirements based on the Query '
+    "<|im_start|>system\nJudge whether the Document meets the requirements based on the Query "
     'and the Instruct provided. Note that the answer can only be "yes" or "no".'
     "<|im_end|>\n<|im_start|>user\n"
 )
@@ -40,6 +40,10 @@ def embed(
         offline=offline,
         cache_dir=cache_dir,
     )
+    if bundle.architecture == "lfm2_colbert":
+        raise ValueError(
+            "ColBERT requires the late-interaction token-feature task, not fixed-vector embed"
+        )
     values = (texts,) if isinstance(texts, str) else tuple(texts)
     _validate_texts(values, "embedding inputs")
     if input_type not in {"query", "document"}:
@@ -76,8 +80,9 @@ def embed(
             bundle.tokenizer.encode(value, add_special_tokens=True, max_length=max_length)
             for value in formatted[start : start + batch_size]
         ]
-        ids, masks = bundle.tokenizer.pad(sequences,
-            padding_side="right" if bundle.architecture == "bert" else "left")
+        ids, masks = bundle.tokenizer.pad(
+            sequences, padding_side="right" if bundle.architecture == "bert" else "left"
+        )
         arguments = {"attention_mask": mx.array(masks)}
         if hasattr(bundle.model.config, "validate_dimensions"):
             arguments["dimensions"] = size
@@ -121,9 +126,7 @@ def rerank(
     values = tuple(documents)
     _validate_texts(values, "documents")
     _validate_batch_options(max_length, batch_size, bundle.model.config.max_seq_length)
-    if top_k is not None and (
-        isinstance(top_k, bool) or not isinstance(top_k, int) or top_k < 1
-    ):
+    if top_k is not None and (isinstance(top_k, bool) or not isinstance(top_k, int) or top_k < 1):
         raise ValueError("top_k must be null or a positive integer")
     task = DEFAULT_RETRIEVAL_INSTRUCTION if instruction is None else instruction
     if not isinstance(task, str) or not task:
@@ -144,8 +147,9 @@ def rerank(
         for document in batch:
             core = f"<Instruct>: {task}\n<Query>: {query}\n<Document>: {document}"
             sequences.append(prefix + bundle.tokenizer.encode(core)[:capacity] + suffix)
-        ids, masks = bundle.tokenizer.pad(sequences,
-            padding_side="right" if bundle.architecture == "bert" else "left")
+        ids, masks = bundle.tokenizer.pad(
+            sequences, padding_side="right" if bundle.architecture == "bert" else "left"
+        )
         output = bundle.model(
             mx.array(ids),
             attention_mask=mx.array(masks),
@@ -157,9 +161,7 @@ def rerank(
             zip(output.scores.tolist(), output.probabilities.tolist(), strict=True)
         ):
             index = start + offset
-            results.append(
-                RerankItem(index, values[index], float(score), float(probability))
-            )
+            results.append(RerankItem(index, values[index], float(score), float(probability)))
     results.sort(key=lambda item: (-item.score, item.index))
     if top_k is not None:
         results = results[:top_k]

@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "qwen3_forced_aligner"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner",
+  "bytes_removed": 2548399794,
+  "downloaded_bytes_verified": 1276473392,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794150185.847397,
+  "recorded": 1794150279.213172,
+  "cleanup_complete": true,
+  "finished": 1794150279.248309
+}

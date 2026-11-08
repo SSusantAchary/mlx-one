@@ -1,0 +1,93 @@
+{
+  "model_type": "deepseek_ocr",
+  "kind": "ocr",
+  "repo": "mlx-community/DeepSeek-OCR-4bit",
+  "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+  "manifest_id": "O07",
+  "profile": "Affine Q4",
+  "gated": false,
+  "license": "mit",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 653,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 191,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.json",
+      "bytes": 217,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 3398,
+      "sha256": null
+    },
+    {
+      "path": "configuration_deepseek_v2.py",
+      "bytes": 10646,
+      "sha256": null
+    },
+    {
+      "path": "conversation.py",
+      "bytes": 9253,
+      "sha256": null
+    },
+    {
+      "path": "deepencoder.py",
+      "bytes": 38008,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 2451214926,
+      "sha256": "cf97cb093ef54cd6847bf088d31fb5b507d5fd6e23f6f14ec486f2ec1e03c2eb"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 72573,
+      "sha256": null
+    },
+    {
+      "path": "modeling_deepseekocr.py",
+      "bytes": 40133,
+      "sha256": null
+    },
+    {
+      "path": "modeling_deepseekv2.py",
+      "bytes": 82224,
+      "sha256": null
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 460,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 801,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 9979544,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 577,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

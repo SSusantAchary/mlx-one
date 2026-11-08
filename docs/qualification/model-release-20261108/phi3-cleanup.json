@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "phi3"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/phi3",
+  "bytes_removed": 9796849101,
+  "downloaded_bytes_verified": 7644666146,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794131103.335849,
+  "recorded": 1794131580.31859,
+  "cleanup_complete": true,
+  "finished": 1794131580.412075
+}

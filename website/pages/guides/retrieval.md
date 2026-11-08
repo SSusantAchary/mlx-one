@@ -1,8 +1,10 @@
 # Embeddings and reranking
 
 Native retrieval includes single-vector embeddings, Qwen3 pairwise reranking,
-and a separate ColBERT token-level path. Architecture and synthetic validation
-do not establish retrieval quality for every checkpoint; see the
+and a separate ColBERT token-level path. All **five retrieval model types** have
+passing real-checkpoint primary workflows in the
+[current inventory](../../../status_models_testing.md). Broader retrieval quality
+and throughput retain their own evidence; see the
 [family index](../../../docs/models/index.md#retrieval-guides).
 
 ## Embed a query

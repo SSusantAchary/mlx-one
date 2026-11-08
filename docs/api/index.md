@@ -1,5 +1,10 @@
 # Python, CLI and HTTP APIs
 
+**0.1.1 approved for release:** [40 model types](../../status_models_testing.md)
+have passing primary-workflow records and applicable interface checks.
+[Release notes](../releases/0.1.1.md) identify the tested scope. Interface
+availability remains task-specific; SAM3 uses its Python/CLI segmentation paths.
+
 [Getting started](../getting-started.md) · [Server and Web UI](../ui.md) · [HTTP compatibility](openai-compatibility.md)
 
 ## CLI
@@ -264,3 +269,21 @@ trainer = SFTTrainer(
 result = trainer.train()
 print(result.to_json())
 ```
+
+
+### Native retrieval serving
+
+Local Sentence Transformer pooling metadata selects the embedding loader when
+starting the server. Bundles without task metadata require an explicit task:
+
+```bash
+mlx-one serve /path/to/pinned-reranker --offline --retrieval-task reranking
+```
+
+`ModelManager.load(path, offline=True, retrieval_task="reranking")` provides the
+same explicit selection in Python. The server wires `/v1/embeddings` or
+`/v1/rerank` to the loaded native retrieval bundle and holds its model lease until
+the scheduled operation completes. ColBERT uses the
+[token-feature workflow](../../src/mlx_one/models/embeddings/lfm2_colbert/README.md)
+with MaxSim. See the [campaign results](../qualification/model-release-20261108/README.md)
+for exact checkpoint passes and failures, including the Qwen3 embedding batch check.

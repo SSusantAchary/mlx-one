@@ -1,0 +1,50 @@
+START openelm apple/OpenELM-270M
+FETCH FETCHopenelm  openelmLICENSEFETCH  openelm config.json 1301
+README.md  5820
+12744
+FETCHFETCH openelm  openelmgeneration_config.json  model.safetensors111 1086123184
+
+RESULT openelm FAIL bounded WikiText perplexity exceeds 1000
+CLEANED openelm 1109653706
+START qwen2_vl mlx-community/Qwen2-VL-2B-Instruct-4bit
+FETCH FETCHqwen2_vl  FETCHqwen2_vlREADME.md qwen2_vl chat_template.json 1049
+  565added_tokens.json
+ 392
+FETCH qwen2_vl config.json 1408
+FETCH qwen2_vl merges.txt 1671853
+FETCH qwen2_vl model.safetensors 1245868907
+FETCH qwen2_vl model.safetensors.index.json 107605
+FETCH qwen2_vl preprocessor_config.json 499
+FETCH qwen2_vl special_tokens_map.json 613
+FETCH qwen2_vl tokenizer.json 11420371
+FETCH qwen2_vl tokenizer_config.json 4297
+FETCH qwen2_vl vocab.json 2776833
+RESULT qwen2_vl PASS_FUNCTIONAL 
+CLEANED qwen2_vl 1261857121
+START qwen2_5_vl mlx-community/Qwen2.5-VL-3B-Instruct-4bit
+FETCHFETCH qwen2_5_vl FETCH  qwen2_5_vlqwen2_5_vl README.md 762
+ added_tokens.json 605
+chat_template.json 1050
+FETCH qwen2_5_vl config.json 1659
+FETCH qwen2_5_vl merges.txt 1671853
+FETCH qwen2_5_vl model.safetensors 3073720461
+FETCH qwen2_5_vl model.safetensors.index.json 108307
+FETCH qwen2_5_vl preprocessor_config.json 350
+FETCH qwen2_5_vl special_tokens_map.json 613
+FETCH qwen2_5_vl tokenizer.json 11421896
+FETCH qwen2_5_vl tokenizer_config.json 7256
+FETCH qwen2_5_vl vocab.json 2776833
+RESULT qwen2_5_vl PASS_FUNCTIONAL 
+CLEANED qwen2_5_vl 3089714373
+START qwen3_5 mlx-community/Qwen3.5-0.8B-4bit
+FETCHFETCH  FETCHqwen3_5qwen3_5   README.md qwen3_5 config.json 678
+chat_template.jinja3112
+ 7755
+FETCH qwen3_5 model.safetensors 625229487
+FETCH qwen3_5 model.safetensors.index.json 71473
+FETCH qwen3_5 preprocessor_config.json 390
+FETCH qwen3_5 processor_config.json 1300
+FETCH qwen3_5 tokenizer.json 19989343
+FETCH qwen3_5 tokenizer_config.json 1139
+FETCH qwen3_5 video_preprocessor_config.json 385
+FETCH qwen3_5 vocab.json 6722759

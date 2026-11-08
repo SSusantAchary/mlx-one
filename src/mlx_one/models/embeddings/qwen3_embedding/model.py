@@ -34,6 +34,7 @@ def last_token_pool(hidden: Any, attention_mask: Any) -> Any:
 
 
 class Qwen3ForEmbedding(nn.Module):
+    execution_dtype = "float32"
     def __init__(self, config: Qwen3EmbeddingConfig) -> None:
         super().__init__()
         self.config = config
@@ -52,8 +53,13 @@ class Qwen3ForEmbedding(nn.Module):
         if input_ids.shape[1] > self.config.max_seq_length:
             raise ValueError("input sequence exceeds max_seq_length")
         mask = mx.ones_like(input_ids, dtype=mx.bool_) if attention_mask is None else attention_mask
+        # Keep checkpoint storage unchanged, but execute the embedding forward
+        # in FP32. BF16 reduction trees vary with batch/padding shape and can
+        # change normalized vectors beyond the retrieval consistency contract.
+        inputs = self.model.embed_tokens(input_ids).astype(mx.float32)
         hidden, _, states = self.model(
-            input_ids,
+            None,
+            input_embeddings=inputs,
             attention_mask=mask,
             output_hidden_states=output_hidden_states,
         )

@@ -1,0 +1,11 @@
+{
+  "findings": 66,
+  "new_findings": [
+    [
+      "scripts/qualification/model_release_fixtures.py",
+      "E501",
+      "Line too long (111 > 100)"
+    ]
+  ],
+  "debt_tracker": "docs/qualification/alpha_release/lint-debt.md"
+}

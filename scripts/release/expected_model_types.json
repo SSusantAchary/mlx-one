@@ -1,0 +1,10 @@
+[
+  "bert", "bert_token_classification", "clip", "deepseek_ocr", "distilbert",
+  "florence2", "gemma3_text", "got_ocr2", "gpt2", "gpt_oss", "lfm2",
+  "lfm2_audio", "lfm2_colbert", "lfm2_moe", "lfm2_vl", "lightonocr", "llama",
+  "moonshine", "mpnet", "openelm", "paddleocr_vl", "parakeet_tdt", "phi3",
+  "qwen2", "qwen2_5_vl", "qwen2_moe", "qwen2_vl", "qwen3", "qwen3_5",
+  "qwen3_asr", "qwen3_embedding", "qwen3_forced_aligner", "qwen3_reranker",
+  "sam3", "sam3_tracker", "sam3_tracker_video", "sam3_video", "silero_vad",
+  "trocr", "whisper"
+]

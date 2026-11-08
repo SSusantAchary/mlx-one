@@ -72,8 +72,9 @@ def stream_lfm(
     max_tokens=1024,
     cancelled=None,
     chunk_frames=12,
-    audio_temperature=0.0,
-    audio_top_k=0,
+    audio_temperature=None,
+    audio_top_k=None,
+    seed=0,
 ):
     """Causal model state; bounded codec prefix recomputation, not a codec KV cache.
 
@@ -94,6 +95,14 @@ def stream_lfm(
         raise ValueError("max_tokens must be between 1 and 4096")
     if type(chunk_frames) is not int or not 1 <= chunk_frames <= 32:
         raise ValueError("codec chunk_frames must be between 1 and 32")
+    # Use the pinned interleaved-chat recipe by default; explicit zero retains
+    # greedy sampling. Sequential ASR/TTS keep their existing greedy profile.
+    if audio_temperature is None:
+        audio_temperature = 1.0 if task == "speech-to-speech" else 0.0
+    if audio_top_k is None:
+        audio_top_k = 4 if task == "speech-to-speech" else 0
+    if type(seed) is not int or not 0 <= seed < 2**32:
+        raise ValueError("speech seed must be an integer in [0, 2**32)")
     if not np.isfinite(audio_temperature) or audio_temperature < 0:
         raise ValueError("audio_temperature must be finite and non-negative")
     if type(audio_top_k) is not int or audio_top_k < 0:
@@ -131,6 +140,7 @@ def stream_lfm(
         cancelled=cancelled,
         audio_temperature=audio_temperature,
         audio_top_k=audio_top_k,
+        seed=seed,
     )
 
     def decode(final=False):

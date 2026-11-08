@@ -1,0 +1,9 @@
+{
+  "repo": "meta-llama/Llama-2-7b-hf",
+  "role": "publisher-recommended tokenizer for apple/OpenELM-270M",
+  "files": {},
+  "revision": "01c7f73d771dfac7d292323805ebc428287df4f9",
+  "status": "BLOCKED",
+  "error": "403 Client Error. (Request ID: Root=1-6af0484f-3b04f5ed64b7ba7129bdd926;47e22805-3b03-48b2-9ea6-a8f6089e5ec9)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-2-7b-hf/resolve/01c7f73d771dfac7d292323805ebc428287df4f9/tokenizer.json.\nAccess to model meta-llama/Llama-2-7b-hf is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Llama-2-7b-hf to ask for access.",
+  "exception": "GatedRepoError"
+}

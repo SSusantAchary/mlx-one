@@ -1,0 +1,49 @@
+{
+  "checkpoint": "dslim/bert-base-NER",
+  "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 6558,
+      "sha256": "f570efa74d5f40eeafa35af45bc20ed6bdf49a5e517782218a23467d3bae576f",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 2,
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 829,
+      "sha256": "a5dc77a0d60dadf5645103017f3c7b8ece4ef1b450bc1ea68e17da1d3ae7e515",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 433292294,
+      "sha256": "b04492186cfb45a64908487a17a9f8d6ddec3a403ef39db5bca688f0fa702a34",
+      "hub_lfs_sha256": "b04492186cfb45a64908487a17a9f8d6ddec3a403ef39db5bca688f0fa702a34"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 112,
+      "sha256": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 59,
+      "sha256": "4c052d60b505817149a29e88c5292d7779ddecfadbfc6208729e61403ec558ba",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 213450,
+      "sha256": "eeaa9875b23b04b4c54ef759d03db9d1ba1554838f8fb26c5d96fa551df93d02",
+      "hub_lfs_sha256": null
+    }
+  ]
+}

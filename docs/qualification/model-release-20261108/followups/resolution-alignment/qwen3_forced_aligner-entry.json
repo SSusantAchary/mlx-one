@@ -1,0 +1,79 @@
+{
+  "model_type": "qwen3_forced_aligner",
+  "kind": "audio",
+  "repo": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+  "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+  "assets": [
+    "chat_template.json",
+    "config.json",
+    "generation_config.json",
+    "merges.txt",
+    "model.safetensors",
+    "model.safetensors.index.json",
+    "preprocessor_config.json",
+    "tokenizer_config.json",
+    "vocab.json"
+  ],
+  "manifest_id": "A11",
+  "profile": "Q8 / BF16",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 1068,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.json",
+      "bytes": 1161,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 6940,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 115,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1271924386,
+      "sha256": "be19ef8ac4326d032e7673342930b14c2df30bd68c1632493b0f563e30829f91"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 79108,
+      "sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 330,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 12666,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

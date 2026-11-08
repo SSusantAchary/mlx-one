@@ -2,6 +2,11 @@
 
 [Experimental index](README.md) · [Model index](../models/index.md)
 
+For the current release, see [supported models and current quality/scope limits](../../status_models_testing.md#known-quality-and-scope-limitations)
+and [0.1.1 release notes](../releases/0.1.1.md). The older investigations below
+retain their exact workloads; current alignment, Q8 speech and standalone SAM
+tracking records supersede earlier primary-workflow gaps.
+
 These are evidence boundaries, not changes to implementation or qualification.
 Dated reports remain authoritative for their exact workloads and failed gates.
 

@@ -1,0 +1,37 @@
+{
+  "checkpoint": "apple/OpenELM-270M",
+  "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 5820,
+      "sha256": "d8f5d9dfbdb60dc81b8f1720421699e7811070f0b46f6668f90253d5ac8c0b20",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 12744,
+      "sha256": "9e8e8dd511b1bebcf9d95f0e8fb70a7aa80ae036f3924187e69371f953d1e0bc",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 1301,
+      "sha256": "5b3dc45252114c1917555f89b0870000b5741d4a022c747a6861e8c296b279df",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 111,
+      "sha256": "bea13ed11ef2fbb7fc97f60eba5b90051e1d4d62064e666ff746936aeb060ad6",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1086123184,
+      "sha256": "afbeade8abad5a1ed4df7dabdf1773aa0215c5bb7563537ac62d33fff9a2ecfa",
+      "hub_lfs_sha256": "afbeade8abad5a1ed4df7dabdf1773aa0215c5bb7563537ac62d33fff9a2ecfa"
+    }
+  ]
+}

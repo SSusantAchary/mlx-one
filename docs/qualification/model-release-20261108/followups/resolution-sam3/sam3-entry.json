@@ -1,0 +1,71 @@
+{
+  "model_type": "sam3",
+  "kind": "segmentation",
+  "repo": "facebook/sam3",
+  "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+  "gated": "manual",
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 7352,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 26038,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 25843,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 524619,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 3439938512,
+      "sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a"
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 1712,
+      "sha256": null
+    },
+    {
+      "path": "sam3.pt",
+      "bytes": 3450062241,
+      "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 588,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 3642073,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 799,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 862328,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

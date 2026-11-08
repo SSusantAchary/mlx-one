@@ -11,7 +11,15 @@ from mlx_one.models.language.qwen3.weights import weight_contract as qwen3_contr
 
 
 def sanitize_weights(weights: dict[str, Any], config: Qwen3EmbeddingConfig) -> dict[str, Any]:
-    return sanitize_qwen3(weights, config.text_config)
+    # AutoModel publisher bundles omit the CausalLM wrapper's `model.` prefix.
+    # Normalize only known backbone roots and reject ambiguous duplicate names.
+    renamed = {}
+    for name, value in weights.items():
+        target = "model." + name if name.startswith(("embed_tokens.", "layers.", "norm.")) else name
+        if target in renamed:
+            raise ValueError(f"duplicate Qwen3 embedding tensor after normalization: {target}")
+        renamed[target] = value
+    return sanitize_qwen3(renamed, config.text_config)
 
 
 def weight_contract(config: Qwen3EmbeddingConfig) -> WeightContract:

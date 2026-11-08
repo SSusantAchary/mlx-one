@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "bert"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/bert",
+  "bytes_removed": 91620392,
+  "downloaded_bytes_verified": 91617680,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794141825.634698,
+  "recorded": 1794141833.54455,
+  "cleanup_complete": true,
+  "finished": 1794141833.5465422
+}

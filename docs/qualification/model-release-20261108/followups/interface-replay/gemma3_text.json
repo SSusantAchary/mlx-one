@@ -1,0 +1,2871 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "gemma3_text",
+  "checkpoint": "google/gemma-3-1b-it",
+  "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+  "started": 1794139528.4670331,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "10d9aad75b76455ca4b67324f10891c75185adce403865d5d9d7e45100d3a30a",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108/followups/interface-replay",
+  "reference_python": "/private/tmp/mlx-one-all40-20261108/reference-env/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279",
+  "checkpoint_configuration": {
+    "architectures": [
+      "Gemma3ForCausalLM"
+    ],
+    "attention_bias": false,
+    "attention_dropout": 0.0,
+    "attn_logit_softcapping": null,
+    "bos_token_id": 2,
+    "cache_implementation": "hybrid",
+    "eos_token_id": [
+      1,
+      106
+    ],
+    "final_logit_softcapping": null,
+    "head_dim": 256,
+    "hidden_activation": "gelu_pytorch_tanh",
+    "hidden_size": 1152,
+    "initializer_range": 0.02,
+    "intermediate_size": 6912,
+    "max_position_embeddings": 32768,
+    "model_type": "gemma3_text",
+    "num_attention_heads": 4,
+    "num_hidden_layers": 26,
+    "num_key_value_heads": 1,
+    "pad_token_id": 0,
+    "query_pre_attn_scalar": 256,
+    "rms_norm_eps": 1e-06,
+    "rope_local_base_freq": 10000,
+    "rope_scaling": null,
+    "rope_theta": 1000000,
+    "sliding_window": 512,
+    "sliding_window_pattern": 6,
+    "torch_dtype": "bfloat16",
+    "transformers_version": "4.50.0.dev0",
+    "use_cache": true,
+    "vocab_size": 262144
+  },
+  "tested_model_path": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+  "functional": {
+    "model_path": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+    "checkpoint_status": "MODEL_SMOKE_TESTED",
+    "scope": "bounded functional smoke, no quality or numerical research gate",
+    "load_seconds": 0.9674798339983681,
+    "architecture": "gemma3_text",
+    "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+    "revision": null,
+    "configured_maximum": 32768,
+    "smoke_context": 512,
+    "cache_continuation_reset": {
+      "status": "PASS",
+      "tokens": 3,
+      "state_bytes": 79872
+    },
+    "text": " actor had a role on the television series The actor had a role on the television",
+    "reasoning_content": "",
+    "metrics": {
+      "prompt_tokens": 27,
+      "generated_tokens": 16,
+      "tokens_per_second": 37.074461903321534,
+      "time_to_first_token_ms": 72.1284590108553,
+      "generation_latency_ms": 431.5639170090435,
+      "context_used": 43,
+      "memory_used_bytes": 2002311452,
+      "memory_peak_bytes": 2058224935,
+      "reasoning_tokens": 0,
+      "prompt_cache_hit": false,
+      "reused_prompt_tokens": 0,
+      "drafted_tokens": 0,
+      "accepted_draft_tokens": 0,
+      "rejected_draft_tokens": 0,
+      "draft_acceptance_ratio": null,
+      "prompt_tokens_per_second": 391.2948943807966,
+      "decode_tokens_per_second": 41.741100208856444,
+      "inter_token_latency_ms": 23.95720273295107,
+      "cache_bytes": 1994752,
+      "cache_backend": "dense",
+      "cache_logical_bytes": 1118208,
+      "cache_allocated_bytes": 1994752,
+      "cache_reserved_bytes": 4820992,
+      "cache_shared_blocks": 0,
+      "cache_lookup_time_ms": 0.0,
+      "cache_allocation_time_ms": 0.021208004909567535,
+      "avoided_prefill_tokens": 0,
+      "server_text_ttft_ms": 72.1648750040913,
+      "model_token_count": 16,
+      "model_token_gap_p50_ms": 23.97245800239034,
+      "model_token_gap_p95_ms": 24.254917007056065,
+      "timing_samples_truncated": false,
+      "actual_prefill_tokens": 27,
+      "eligible_prefix_tokens": 0,
+      "matched_prefix_tokens": 0,
+      "prefix_publications": 0,
+      "publication_rejections": 0,
+      "queue_ms": null,
+      "tokenization_ms": 0.0807510077720508,
+      "prefill_ms": 69.0016669977922,
+      "decode_ms": 350.35508099826984,
+      "model_token_times_ms": [
+        72.1284590108553,
+        95.89658401091583,
+        119.57991700910497,
+        143.46879201184493,
+        167.2428340098122,
+        191.35908401221968,
+        215.24437500920612,
+        239.0095840091817,
+        262.98204201157205,
+        287.06391699961387,
+        311.31883400666993,
+        335.2382500015665,
+        359.2928340076469,
+        383.3869170048274,
+        407.41075000551064,
+        431.48650000512134
+      ],
+      "model_generation_started_at": 96329.871105541,
+      "model_forward_batch_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "execution_observer": "synchronized-forward-v2",
+      "mlx_cached_bytes": 73677530,
+      "actual_logits_dtypes": [
+        "mlx.core.bfloat16"
+      ],
+      "cache_layers": [
+        {
+          "layer_id": 0,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 1,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 2,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 3,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 4,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 6,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 7,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 8,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 9,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 10,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 12,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 13,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 14,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 15,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 16,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 17,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 18,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 19,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 20,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 21,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 22,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 23,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 24,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 25,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        }
+      ]
+    },
+    "runtime": {
+      "release_support": {
+        "architecture_registered": true,
+        "checkpoint_revision": null,
+        "status": "EXPERIMENTAL_NOT_QUALIFIED",
+        "architecture_status": null,
+        "checkpoint_status": "NOT_VERIFIED",
+        "alpha_supported": false,
+        "numerical_contract": "OPTIONAL_RESEARCH_NOT_AN_ADMISSION_GATE",
+        "admission_policy": "functional-architecture-checkpoint-v1",
+        "release_approval": "PENDING",
+        "candidate_profile": null,
+        "reason": "No exact checkpoint/revision/architecture functional evidence is attached."
+      },
+      "checkpoint_identity": {
+        "canonical_model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+        "path": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+        "revision": null,
+        "weight_hashes": {}
+      },
+      "execution_contract": {
+        "actual_weight_dtypes": [
+          "bfloat16"
+        ],
+        "adapter_version": "native-adapter-v2",
+        "architecture": "gemma3_text",
+        "components": [
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 0,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 1,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 2,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 3,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 4,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "full_kv",
+            "layer_id": 5,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": null
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 6,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 7,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 8,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 9,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 10,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "full_kv",
+            "layer_id": 11,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": null
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 12,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 13,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 14,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 15,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 16,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "full_kv",
+            "layer_id": 17,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": null
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 18,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 19,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 20,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 21,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 22,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "full_kv",
+            "layer_id": 23,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": null
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 24,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          },
+          {
+            "can_batch": false,
+            "can_page": false,
+            "can_quantize": false,
+            "can_share_prefix": false,
+            "can_snapshot": false,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 256,
+            "kind": "sliding_kv",
+            "layer_id": 25,
+            "num_kv_heads": 1,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 256,
+            "window_tokens": 512
+          }
+        ],
+        "execution_mode": "reference_dense",
+        "floating_policy": null,
+        "modules": [],
+        "quantization": {},
+        "quantization_digest": "04347cff055c1e4bd2060c2f5c5aecdac588e71df1a22166a486176f8dfb849c",
+        "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15"
+      },
+      "compatibility_digest": "6474dae48f895e17dc0dca0fba69df6c65643a88c7ea1b5214768492b42fd1a0",
+      "runtime_schema_version": "native-runtime-v2",
+      "feature_details": {
+        "dense_execution": {
+          "implemented": true,
+          "available_for_opt_in": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "block_storage": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "block_prefix_reuse": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "continuous_batching": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_dense_decode": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_chunked_prefill": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_attention": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_prefill": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_prefix_restore": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_batching": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "quantized_paged_kv": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "long_context": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "weights_identity": "71ba3cf1f2f47fb771916725718fa4583230f2bcbea8c27f5996ed1fee92c0ed",
+      "engine_mode": "reference_dense",
+      "configured_execution_dtype": null,
+      "model_revision": null,
+      "scope": {
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+        "revision": null,
+        "execution_path": "reference_dense",
+        "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+        "weight_precision": "bfloat16",
+        "cache_precision": "float16",
+        "mlx_version": "0.32.2",
+        "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+        "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+      },
+      "actual_weight_dtypes": [
+        "bfloat16"
+      ],
+      "layers": [
+        {
+          "layer_id": 0,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 1,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 2,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 3,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 4,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 6,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 7,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 8,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 9,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 10,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 12,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 13,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 14,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 15,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 16,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 17,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 18,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 19,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 20,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 21,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 22,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 23,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 262144,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 24,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        },
+        {
+          "layer_id": 25,
+          "kind": "sliding_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 43008,
+          "allocated_bytes": 43008,
+          "committed_tokens": 42
+        }
+      ],
+      "arena": null,
+      "qualified_workload_envelope": null,
+      "memory_admission": {
+        "schema_version": "native-admission-v1",
+        "timestamp": "2026-11-08T12:05:30.869484+00:00",
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+        "revision": null,
+        "backend": "dense",
+        "execution_mode": "reference_dense",
+        "weight_precision": {},
+        "execution_dtype": null,
+        "attention_kv_precision": {
+          "key_type": "f16",
+          "value_type": "f16"
+        },
+        "requests": [
+          {
+            "prompt_tokens": 27,
+            "requested_output_tokens": 16,
+            "estimated_kv_growth_bytes": 6815744,
+            "estimated_hybrid_carry_growth_bytes": 0,
+            "total_growth_bytes": 6815744,
+            "request_id": "server-1794139530447129000",
+            "handle_id": "cache-81913e91d3ea4f88aca5b3bb2247bc67",
+            "key_type": "f16",
+            "value_type": "f16",
+            "allocated_bytes": 1972224,
+            "reserved_bytes": 4843520
+          }
+        ],
+        "transient": true,
+        "attempt": 0,
+        "stage": "host",
+        "attention_kv_tensor_dtypes": [
+          "float16"
+        ],
+        "component_state_dtypes": [],
+        "status": "bounded",
+        "ceiling_bytes": 22906503168,
+        "working_set_bytes": 2413559808,
+        "owner_bytes": 2001744128,
+        "model_bytes": 1999771904,
+        "cache_allocated_bytes": 1972224,
+        "cache_physical_bytes": 1972224,
+        "cache_logical_bytes": 1091584,
+        "reserved_bytes": 4843520,
+        "active_handles": 1,
+        "retained_prefix_bytes": 0,
+        "reclaimable_pool_bytes": 0,
+        "evictable_bytes": 0,
+        "requested_bytes": 1090720,
+        "predicted_transient_bytes": 1090720,
+        "forecast": {
+          "bytes": 1090720,
+          "source": "conservative-analytical",
+          "measured": false
+        },
+        "telemetry": {
+          "rss_bytes": 2413559808,
+          "installed_bytes": 34359738368,
+          "mlx_active_bytes": 2002805276,
+          "mlx_cached_bytes": 73180976,
+          "mlx_peak_bytes": 2058224935,
+          "recommended_bytes": 22906503168,
+          "os_pressure": "normal",
+          "swap_bytes": 3218404802
+        },
+        "swap_delta_bytes": null,
+        "swap_scope": "host-wide, not uniquely attributed to this request",
+        "host_sample_age_seconds": 0.40825274999951944,
+        "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested",
+        "projected_bytes": 2419494048,
+        "decision": "admit",
+        "rejection_reason": null,
+        "retryable": null
+      },
+      "execution_memory_forecast": {
+        "bytes": 1090720,
+        "source": "conservative-analytical",
+        "measured": false
+      },
+      "component_capabilities": [
+        {
+          "layer_id": 0,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 1,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 2,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 3,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 4,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 6,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 7,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 8,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 9,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 10,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 12,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 13,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 14,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 15,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 16,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 17,
+          "kind": "full_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 18,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 19,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 20,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 21,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 22,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 23,
+          "kind": "full_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 24,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 25,
+          "kind": "sliding_kv",
+          "num_kv_heads": 1,
+          "key_head_dim": 256,
+          "value_head_dim": 256,
+          "dtype": null,
+          "window_tokens": 512,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": false,
+          "can_page": false,
+          "can_snapshot": false,
+          "can_quantize": false,
+          "can_share_prefix": false,
+          "state_dtypes": []
+        }
+      ],
+      "configured_cache_precision": {
+        "key_type": "f16",
+        "value_type": "f16"
+      },
+      "capabilities": {
+        "continuous_batching": false,
+        "paged_attention": false,
+        "hybrid_prefix_restore": false
+      },
+      "runner_qualification": {
+        "chunked_prefill": {
+          "feature": "chunked_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "causal_runner_equal_offset_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "qualification": {
+        "dense_execution": {
+          "feature": "dense_execution",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "block_storage": {
+          "feature": "block_storage",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "block_prefix_reuse": {
+          "feature": "block_prefix_reuse",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "continuous_batching": {
+          "feature": "continuous_batching",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_dense_decode": {
+          "feature": "batched_dense_decode",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_chunked_prefill": {
+          "feature": "batched_chunked_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_attention": {
+          "feature": "paged_attention",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_prefill": {
+          "feature": "paged_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_prefix_restore": {
+          "feature": "hybrid_prefix_restore",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_batching": {
+          "feature": "hybrid_batching",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "quantized_paged_kv": {
+          "feature": "quantized_paged_kv",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "long_context": {
+          "feature": "long_context",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "b8f4a770f7d61b16d6b509a84498a8096140a0cbc3ab6cba32f354068327ae15",
+            "weight_precision": "bfloat16",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:dc45356dfd3c2ddf48cdc0beff2a03cf479cf011315b5136a071a31cb6b50ced"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "latency": {
+        "ttft_p95_ms": null,
+        "decode_gap_p95_ms": null
+      },
+      "throughput": {
+        "aggregate_decode_tok_s": null
+      },
+      "selection": {
+        "requested_mode": "reference_dense",
+        "resolved_mode": "reference_dense",
+        "reason": "explicit configuration",
+        "evidence_scope": null
+      },
+      "metric_definitions": {
+        "tokens_per_second": "output tokens / whole engine request wall time",
+        "decode_tokens_per_second": "output intervals / first-to-last model output-token interval",
+        "inter_token_latency_ms": "mean model output-token gap; excludes prefill and first token",
+        "time_to_first_token_ms": "engine execution start to first accepted model output token",
+        "queue_ms": "enqueue to execution admission",
+        "prefill_ms": "sum of synchronized model prefill forwards",
+        "model_token_gap_percentiles": "bounded last 4096 gaps; truncation is explicit",
+        "sse_delivery_timing": "client wire observations, separate from model-token timing"
+      },
+      "latest_completed_request": {
+        "prompt_tokens": 27,
+        "generated_tokens": 16,
+        "tokens_per_second": 37.074461903321534,
+        "time_to_first_token_ms": 72.1284590108553,
+        "generation_latency_ms": 431.5639170090435,
+        "context_used": 43,
+        "memory_used_bytes": 2002311452,
+        "memory_peak_bytes": 2058224935,
+        "reasoning_tokens": 0,
+        "prompt_cache_hit": false,
+        "reused_prompt_tokens": 0,
+        "drafted_tokens": 0,
+        "accepted_draft_tokens": 0,
+        "rejected_draft_tokens": 0,
+        "draft_acceptance_ratio": null,
+        "prompt_tokens_per_second": 391.2948943807966,
+        "decode_tokens_per_second": 41.741100208856444,
+        "inter_token_latency_ms": 23.95720273295107,
+        "cache_bytes": 1994752,
+        "cache_backend": "dense",
+        "cache_logical_bytes": 1118208,
+        "cache_allocated_bytes": 1994752,
+        "cache_reserved_bytes": 4820992,
+        "cache_shared_blocks": 0,
+        "cache_lookup_time_ms": 0.0,
+        "cache_allocation_time_ms": 0.021208004909567535,
+        "avoided_prefill_tokens": 0,
+        "server_text_ttft_ms": 72.1648750040913,
+        "model_token_count": 16,
+        "model_token_gap_p50_ms": 23.97245800239034,
+        "model_token_gap_p95_ms": 24.254917007056065,
+        "timing_samples_truncated": false,
+        "actual_prefill_tokens": 27,
+        "eligible_prefix_tokens": 0,
+        "matched_prefix_tokens": 0,
+        "prefix_publications": 0,
+        "publication_rejections": 0,
+        "queue_ms": null,
+        "tokenization_ms": 0.0807510077720508,
+        "prefill_ms": 69.0016669977922,
+        "decode_ms": 350.35508099826984,
+        "model_token_times_ms": [
+          72.1284590108553,
+          95.89658401091583,
+          119.57991700910497,
+          143.46879201184493,
+          167.2428340098122,
+          191.35908401221968,
+          215.24437500920612,
+          239.0095840091817,
+          262.98204201157205,
+          287.06391699961387,
+          311.31883400666993,
+          335.2382500015665,
+          359.2928340076469,
+          383.3869170048274,
+          407.41075000551064,
+          431.48650000512134
+        ],
+        "model_generation_started_at": 96329.871105541,
+        "model_forward_batch_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "execution_observer": "synchronized-forward-v2",
+        "mlx_cached_bytes": 73677530,
+        "actual_logits_dtypes": [
+          "mlx.core.bfloat16"
+        ],
+        "cache_layers": [
+          {
+            "layer_id": 0,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 1,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 2,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 3,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 4,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 5,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 262144,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 6,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 7,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 8,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 9,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 10,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 11,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 262144,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 12,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 13,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 14,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 15,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 16,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 17,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 262144,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 18,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 19,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 20,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 21,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 22,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 23,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 262144,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 24,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          },
+          {
+            "layer_id": 25,
+            "kind": "sliding_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 43008,
+            "allocated_bytes": 43008,
+            "committed_tokens": 42
+          }
+        ]
+      },
+      "aggregate_metric_scope": "latest_completed_request",
+      "memory_pressure": null
+    },
+    "status": "PASS"
+  },
+  "sample_row_ids": [
+    3
+  ],
+  "text_quality": {
+    "sample_row_ids": [
+      3,
+      4,
+      11,
+      12,
+      16
+    ],
+    "target_tokens": 480,
+    "mean_negative_log_likelihood": 5.4875,
+    "perplexity": 241.65232026409655,
+    "threshold_perplexity": 1000,
+    "scope": "five bounded WikiText excerpts; sanity check, not full test-set perplexity"
+  },
+  "quality_status": "PASS_FIVE_EXCERPT_WIKITEXT_SANITY_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"finish_reason\": \"length\",\n  \"generation_tokens\": 4,\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/gemma3_text/checkpoint\",\n  \"prompt\": \"Robert Boulter is an English film , television and theatre actor . He had a guest @-@ starring role on the television series The\",\n  \"prompt_tokens\": 27,\n  \"revision\": null,\n  \"text\": \" actor had a role\",\n  \"timings\": {\n    \"wall_seconds\": 0.1291865830135066\n  }\n}\n",
+      "status": "PASS"
+    },
+    "sse": "PASS_GREEDY_EQUALS_NONSTREAMING",
+    "http": {
+      "status_code": 200,
+      "body": {
+        "id": "cmpl-f8c2aed5eea4449d8d6763b81cf15d67",
+        "object": "text_completion",
+        "created": 1794139534,
+        "model": "qualification",
+        "choices": [
+          {
+            "index": 0,
+            "text": " was was was was",
+            "logprobs": null,
+            "finish_reason": "length"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3,
+          "completion_tokens": 4,
+          "total_tokens": 7
+        },
+        "mlx": {
+          "prompt_tokens": 3,
+          "generated_tokens": 4,
+          "tokens_per_second": 18.312122082239288,
+          "time_to_first_token_ms": 58.043833007104695,
+          "generation_latency_ms": 218.4345419955207,
+          "context_used": 7,
+          "memory_used_bytes": 2000955684,
+          "memory_peak_bytes": 2184313840,
+          "reasoning_tokens": 0,
+          "prompt_cache_hit": false,
+          "reused_prompt_tokens": 0,
+          "drafted_tokens": 0,
+          "accepted_draft_tokens": 0,
+          "rejected_draft_tokens": 0,
+          "draft_acceptance_ratio": null,
+          "prompt_tokens_per_second": 103.2055364617101,
+          "decode_tokens_per_second": 18.721980334793937,
+          "inter_token_latency_ms": 53.41315299544173,
+          "cache_bytes": 1183744,
+          "cache_backend": "dense",
+          "cache_logical_bytes": 159744,
+          "cache_allocated_bytes": 1183744,
+          "cache_reserved_bytes": 5632000,
+          "cache_shared_blocks": 0,
+          "cache_lookup_time_ms": 0.0,
+          "cache_allocation_time_ms": 0.02474999928381294,
+          "avoided_prefill_tokens": 0,
+          "server_text_ttft_ms": 58.073207997949794,
+          "model_token_count": 4,
+          "model_token_gap_p50_ms": 53.43266698764637,
+          "model_token_gap_p95_ms": 53.664999999455176,
+          "timing_samples_truncated": false,
+          "actual_prefill_tokens": 3,
+          "eligible_prefix_tokens": 0,
+          "matched_prefix_tokens": 0,
+          "prefix_publications": 0,
+          "publication_rejections": 0,
+          "queue_ms": 0.25054199795704335,
+          "tokenization_ms": 0.042790998122654855,
+          "prefill_ms": 29.068207993987016,
+          "decode_ms": 68.94699898839463,
+          "model_token_times_ms": null,
+          "model_generation_started_at": null,
+          "model_forward_batch_sizes": null,
+          "execution_observer": "synchronized-forward-v2",
+          "mlx_cached_bytes": 6096829,
+          "actual_logits_dtypes": [
+            "mlx.core.bfloat16"
+          ],
+          "cache_layers": [
+            {
+              "layer_id": 0,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 1,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 2,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 3,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 4,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 6,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 7,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 8,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 9,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 10,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 12,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 13,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 14,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 15,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 16,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 17,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 18,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 19,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 20,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 21,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 22,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 23,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 24,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 25,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 6144,
+              "allocated_bytes": 6144,
+              "committed_tokens": 6
+            }
+          ]
+        }
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 2184313840,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 7.481812953948975,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "10d9aad75b76455ca4b67324f10891c75185adce403865d5d9d7e45100d3a30a"
+}

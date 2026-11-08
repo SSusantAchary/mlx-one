@@ -1,0 +1,137 @@
+{
+  "dataset": "hf-internal-testing/sam2-fixtures",
+  "revision": "ee201e1a2ba9f944f26ab4b3219a32cf6dd27252",
+  "file": "bedroom.mp4",
+  "sha256": "1be76d5d19b066e8ad7c565d88a98e11a8f8d456a707508a7aa35390def70e30",
+  "frames": [
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/001.png",
+      "sha256": "d83a6cbc5a53a185e5904d2acc324f1030cb7d7aa1cfb017a75f0243ce1efc84"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/002.png",
+      "sha256": "558108347598e7d7ae9487e593cfd6885ced303e11a8c60d9b17611bf57c4cff"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/003.png",
+      "sha256": "181ae1b56b555ddacfd29325bfa79b3c25dda2cf2c77656b7da33b1c8bd38805"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/004.png",
+      "sha256": "0cace5258dbe6ed5a697b8de5b3634e89a9adcb1a3f3645f3fd11cc44e2989fb"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/005.png",
+      "sha256": "4c3a16c1f86551baaa3090b9ef03294230a68b883b89788034e3712e0d6cfe1b"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/006.png",
+      "sha256": "e72d79ba184be732d200d246ee003ff8b0e5a7490022c118f3ae32f8627b844d"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/007.png",
+      "sha256": "af0dc5df8f86645ee7d9fa3c3511322be9b89e54480f432f3a5acf17a666d810"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/008.png",
+      "sha256": "9d4d2bee5313889f60735b7549b2b58aa7be370561ee4bc01b26166b951367df"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/009.png",
+      "sha256": "1966de3b838be33d81e2a45472aafd51c38bf6b2c7b89b4ffabeb08e1113a765"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/010.png",
+      "sha256": "a4464c7a7bde1a9bfc6e09c68e9c68e98a714b47b3a8c549da6380841e6c2c66"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/011.png",
+      "sha256": "26f93957dcc49022a973219f2a66d6b26e64c01752176855a15a5dfe0a468429"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/012.png",
+      "sha256": "54bb8be21fd71edacb4b809f213aeeaa0666cb22abf26a3ad4e140c66e835eb1"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/013.png",
+      "sha256": "2c8cc1bc57ebc2e2204da5cd38486d40b68dc19b6fdb66fbc8e82e60a723eea3"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/014.png",
+      "sha256": "161680f17ee114b09dc0f9d4220999e9262cb938cbd692529c475991f297a86d"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/015.png",
+      "sha256": "a355221dd04e5318d3da3cbffb568009c42dfc6a9fe5fa8bc79d3c665fa7752d"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/016.png",
+      "sha256": "6938df8a9a8e6ffb0519f07b9e189380e2a1d67ba28b52eb81f19ee130785c9e"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/017.png",
+      "sha256": "8e5e159044f9d8803a44a07a93f26bfcaa2028010252655cd3f8040bc4dec2aa"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/018.png",
+      "sha256": "60ac4ffacb3a448af2693a43e5b5fffea6ce31447328a6e1a57ba641a9ee07a4"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/019.png",
+      "sha256": "950ff56accabb2894cf80df9a72598fe472d2585d700f25f82a420872dc6954f"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/020.png",
+      "sha256": "e51b587233a5232ad8aba4653abe63623b9c0940a6cf5e118bfe9b39f59b571b"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/021.png",
+      "sha256": "c16dd398944888a8f0f490f1a7e67bc1f4273ed380b62f97e7feef29e85eaafb"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/022.png",
+      "sha256": "e9070f811cafa7709ac6863276b8c81ed4f491e2fda8f6a799e69c8d6dae52dd"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/023.png",
+      "sha256": "aab20061edf4969aae00a4c85720862b44dc0229185ed424ba80e7679260dbbe"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/024.png",
+      "sha256": "ddfda947618ae4782edf74d2ae83231e050d73b0898f6439a0e7fdf2242f19aa"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/025.png",
+      "sha256": "a4c7934b4bb193a7f7eb8a9ad91bc4e49aaf02fd8365dafa6a971876daca6e5c"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/026.png",
+      "sha256": "9dcaba6e9bda070c15d1b744732385b086ea674e20f9d30caed2673c686b7ba9"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/027.png",
+      "sha256": "4e84fb830017e698a097ee4755d7a754e470f05f70fd3a8fc955e530b846720a"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/028.png",
+      "sha256": "48ddfc837fac3c10295d54d3cd05eec23c9edda83646f36897ee8f74822f9acc"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/029.png",
+      "sha256": "0f655d67dbcd1ff9fc555260cca8d17ea75910d0721b5c22b0f6d17b36d923ed"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/030.png",
+      "sha256": "112e261ed7dfbd6c894f95e25c14a4a0e7cbb92eacf02279c341a65e3c571ff7"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/031.png",
+      "sha256": "0cdcd6da0cf19d3944ded6917aada06f0bf552928f447e3622de19a57abd9a34"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-natural/frames/032.png",
+      "sha256": "54201a916e1574c2b4284ba1905a9be68eff9091911a04f72d39fa8341aab5eb"
+    }
+  ],
+  "selection": "first 32 video frames, frozen before model inference"
+}

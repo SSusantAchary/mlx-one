@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "deepseek_ocr", "status": "FAIL", "quality_status": "MEASURED_ONE_LABELED_PAGE", "seconds": 6.518387317657471, "error": "labeled HF page normalized CER exceeds declared 25% floor"}

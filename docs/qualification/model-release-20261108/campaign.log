@@ -1,0 +1,62 @@
+START qwen2 Qwen/Qwen2.5-0.5B-Instruct
+FETCH FETCHFETCH  qwen2 config.json 659
+qwen2qwen2 LICENSE 11343 README.md 
+4917
+FETCH qwen2 generation_config.json 242
+FETCH qwen2 merges.txt 1671839
+FETCH qwen2 model.safetensors 988097824
+FETCH qwen2 tokenizer.json 7031645
+FETCH qwen2 tokenizer_config.json 7305
+FETCH qwen2 vocab.json 2776833
+RESULT qwen2 PASS_FUNCTIONAL 
+CLEANED qwen2 1536192314
+START qwen3 Qwen/Qwen3-0.6B
+FETCH FETCHqwen3  FETCHqwen3LICENSE  11343 
+qwen3README.md  config.json13965 
+726
+FETCH qwen3 generation_config.json 239
+FETCH qwen3 merges.txt 1671853
+FETCH qwen3 model.safetensors 1503300328
+FETCH qwen3 tokenizer.json 11422654
+FETCH qwen3 tokenizer_config.json 9732
+FETCH qwen3 vocab.json 2776833
+RESULT qwen3 PASS_FUNCTIONAL 
+CLEANED qwen3 2168594039
+START lfm2 LiquidAI/LFM2-350M
+FETCHFETCH  FETCHlfm2 LICENSElfm2 lfm2  10596
+chat_template.jinja  1379README.md 
+18107
+FETCH FETCH lfm2 generation_config.json 137lfm2
+ config.jsonFETCH 999
+ lfm2 model.safetensors 708984464
+FETCHFETCH lfm2 special_tokens_map.json 434
+ lfm2 tokenizer.json 4732426
+FETCH lfm2 tokenizer_config.json 91565
+RESULT lfm2 PASS_FUNCTIONAL 
+CLEANED lfm2 918226196
+START llama HuggingFaceTB/SmolLM2-1.7B-Instruct
+FETCHFETCH  FETCHllama llama llamaREADME.md config.json  908
+ 14928all_results.json
+ 785
+FETCH llama eval_results.json 587
+FETCH llama generation_config.json 132
+FETCH llama merges.txt 466391
+FETCH llama model.safetensors 3422777952
+FETCH llama special_tokens_map.json 655
+FETCH llama tokenizer.json 2104556
+FETCH llama tokenizer_config.json 3764
+FETCH llama train_results.json 232
+FETCH llama trainer_state.json 86369
+FETCH llama vocab.json 800662
+RESULT llama PASS_FUNCTIONAL 
+CLEANED llama 4392630014
+START gemma3_text google/gemma-3-1b-it
+FETCHFETCHFETCH   gemma3_textgemma3_text config.json 899
+gemma3_text  added_tokens.jsonREADME.md 35
+ 24265
+FETCH gemma3_text generation_config.json 215
+FETCH gemma3_text model.safetensors 1999811208
+FETCH gemma3_text special_tokens_map.json 662
+FETCH gemma3_text tokenizer.json 33384568
+FETCH gemma3_text tokenizer.model 4689074
+FETCH gemma3_text tokenizer_config.json 1156999

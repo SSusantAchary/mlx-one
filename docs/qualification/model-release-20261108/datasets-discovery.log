@@ -1,0 +1,8 @@
+Salesforce/wikitext b08601e04326c79dfdd32d625aee71d232d685c3 [('wikitext-103-raw-v1/test-00000-of-00001.parquet', 732610), ('wikitext-103-raw-v1/validation-00000-of-00001.parquet', 657209), ('wikitext-103-v1/test-00000-of-00001.parquet', 721735), ('wikitext-103-v1/validation-00000-of-00001.parquet', 655106), ('wikitext-2-raw-v1/test-00000-of-00001.parquet', 732610), ('wikitext-2-raw-v1/validation-00000-of-00001.parquet', 657209), ('wikitext-2-v1/test-00000-of-00001.parquet', 685430), ('wikitext-2-v1/validation-00000-of-00001.parquet', 617738)]
+sentence-transformers/stsb ab7a5ac0e35aa22088bdcf23e7fd99b220e53308 [('data/test-00000-of-00001.parquet', 108100), ('data/validation-00000-of-00001.parquet', 142187)]
+stanfordnlp/sst2 8d51e7e4887a4caaa95b3fbebbf53c0490b58bbb [('data/test-00000-of-00001.parquet', 147787), ('data/validation-00000-of-00001.parquet', 72813)]
+tner/conll2003 b18612dee0007b1f7129731dbf2f5f2ed4039ad3 [('dataset/test.json', 610396)]
+hf-internal-testing/sam2-fixtures ee201e1a2ba9f944f26ab4b3219a32cf6dd27252 [('truck.jpg', 271475)]
+hf-internal-testing/fixtures_ocr 28fe12cdf7816b5dde94e22051b2ec8dc74267b7 []
+MOE_CANDIDATE mlx-community/Qwen1.5-MoE-A2.7B-4bit
+MOE_CANDIDATE mlx-community/Qwen1.5-MoE-A2.7B-Chat-4bit

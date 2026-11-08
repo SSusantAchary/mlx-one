@@ -1,0 +1,13 @@
+{
+  "checkpoint": "snakers4/silero-vad",
+  "revision": "60b7ffa243625ebdc1070275a29f18c87843786a",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "silero_vad_16k.safetensors",
+      "bytes": 1239748,
+      "sha256": "c59271c284ae9c8335d795d60e0bfdb71aaaceec578d9bd9ffc1b8153c319ea1",
+      "hub_lfs_sha256": "c59271c284ae9c8335d795d60e0bfdb71aaaceec578d9bd9ffc1b8153c319ea1"
+    }
+  ]
+}

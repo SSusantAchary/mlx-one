@@ -1,0 +1,18 @@
+START florence2 microsoft/Florence-2-base-ft
+FETCH florence2 LICENSE 1141
+FETCH florence2 README.md 14820
+FETCH florence2 config.json 2430
+FETCH florence2 model.safetensors 463221266
+FETCH florence2 preprocessor_config.json 806
+FETCH florence2 tokenizer.json 1355863
+FETCH florence2 tokenizer_config.json 34
+FETCH florence2 vocab.json 1099884
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 5 / 7
+RANGE model.safetensors 6 / 7
+RANGE model.safetensors 7 / 7
+RESULT florence2 PASS_FUNCTIONAL 
+CLEANED florence2 928919284

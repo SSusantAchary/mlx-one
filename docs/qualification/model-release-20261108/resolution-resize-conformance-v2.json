@@ -1,0 +1,94 @@
+{
+  "reference": "pinned SAM fast processor uses torchvision.transforms.v2.functional.resize uint8; v1 casts to float first and is not the target",
+  "records": [
+    {
+      "dimensions": [
+        7,
+        11,
+        3,
+        5
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "1dbc2b29ac7df9f3bbb2cbdd36881a79c37a69793cab9214c084e15002c54824"
+    },
+    {
+      "dimensions": [
+        7,
+        11,
+        15,
+        19
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "8879430d601460690654574bc260bc5177a22b2865c2140495aa47a7c14bc18a"
+    },
+    {
+      "dimensions": [
+        7,
+        11,
+        3,
+        19
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "11805c362f54b1eaea3022781df94a994d6e1fe2d7e993a9d5f315243dac55ba"
+    },
+    {
+      "dimensions": [
+        1,
+        11,
+        1,
+        19
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "02a416b14f36219e519e7102f22776a9426fe9e1cbcb74036c3e4e4a490ac847"
+    },
+    {
+      "dimensions": [
+        7,
+        1,
+        15,
+        1
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "81ef8b17d8acf76728cfa689a67212026544b14a82265c213ac79c425c63e3c3"
+    },
+    {
+      "dimensions": [
+        7,
+        11,
+        7,
+        11
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "2d9871ee7da2590abbc8c4a5076bd04c63a5ea17cea9349213cf130d5558c2d3"
+    },
+    {
+      "dimensions": [
+        13,
+        17,
+        1008,
+        1008
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "b00ae45f98a3132af64a854d36cb9d7546752fc4ee9e7bbd7f0001bb835e0067"
+    },
+    {
+      "dimensions": [
+        121,
+        169,
+        31,
+        29
+      ],
+      "max_error": 0,
+      "different": 0,
+      "reference_sha256": "4d6009eb407f6447b4e494e3f2ac6e117cdbb1938ed80c3f0084f5e3f67bbbe3"
+    }
+  ],
+  "passed": true
+}

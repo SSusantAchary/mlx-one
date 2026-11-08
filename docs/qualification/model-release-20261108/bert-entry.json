@@ -1,0 +1,161 @@
+{
+  "model_type": "bert",
+  "kind": "retrieval",
+  "repo": "sentence-transformers/all-MiniLM-L6-v2",
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1229,
+      "sha256": null
+    },
+    {
+      "path": "1_Pooling/config.json",
+      "bytes": 190,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 10502,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 612,
+      "sha256": null
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 116,
+      "sha256": null
+    },
+    {
+      "path": "data_config.json",
+      "bytes": 39265,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 90868376,
+      "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 349,
+      "sha256": null
+    },
+    {
+      "path": "onnx/model.onnx",
+      "bytes": 90405214,
+      "sha256": "6fd5d72fe4589f189f8ebc006442dbb529bb7ce38f8082112682524616046452"
+    },
+    {
+      "path": "onnx/model_O1.onnx",
+      "bytes": 90360328,
+      "sha256": "1391c6fc20b5530250bc15cbe1f47578ffeca55ab0551d335cc668b6299a88ec"
+    },
+    {
+      "path": "onnx/model_O2.onnx",
+      "bytes": 90326566,
+      "sha256": "1de3905029190b398c7d300b530e320cf4b5e7d3dfb9af1429ebd73fd9a16faf"
+    },
+    {
+      "path": "onnx/model_O3.onnx",
+      "bytes": 90326497,
+      "sha256": "a44f671e364dddbac31f203f07b91be6b0a35e51936e5ebfab65b6d9538b83ff"
+    },
+    {
+      "path": "onnx/model_O4.onnx",
+      "bytes": 45212349,
+      "sha256": "1667d7f3ba669048b13a96ee3a44456d5e42c8f44588ae8b603430e16160c485"
+    },
+    {
+      "path": "onnx/model_qint8_arm64.onnx",
+      "bytes": 23026053,
+      "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474"
+    },
+    {
+      "path": "onnx/model_qint8_avx512.onnx",
+      "bytes": 23026053,
+      "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474"
+    },
+    {
+      "path": "onnx/model_qint8_avx512_vnni.onnx",
+      "bytes": 23026053,
+      "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474"
+    },
+    {
+      "path": "onnx/model_quint8_avx2.onnx",
+      "bytes": 23046789,
+      "sha256": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21"
+    },
+    {
+      "path": "openvino/openvino_model.bin",
+      "bytes": 90265744,
+      "sha256": "8b86cab4722e2aefab310cf96d4d5a9eb3b187f7d9670a082afc55c7fa0d392a"
+    },
+    {
+      "path": "openvino/openvino_model.xml",
+      "bytes": 211315,
+      "sha256": null
+    },
+    {
+      "path": "openvino/openvino_model_qint8_quantized.bin",
+      "bytes": 22933664,
+      "sha256": "c92ea4af3c6bc7b4a0f3b3d61b147c850f4dbdd7c9e7beee0c0c70dc12da289b"
+    },
+    {
+      "path": "openvino/openvino_model_qint8_quantized.xml",
+      "bytes": 368006,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 90888945,
+      "sha256": "c3a85f238711653950f6a79ece63eb0ea93d76f6a6284be04019c53733baf256"
+    },
+    {
+      "path": "rust_model.ot",
+      "bytes": 90887379,
+      "sha256": "2d98d96d278348988f2744e6445b8bc16d921c3f6e17c667362f3cb353007aea"
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 53,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 112,
+      "sha256": null
+    },
+    {
+      "path": "tf_model.h5",
+      "bytes": 91005696,
+      "sha256": "24c06a7429b843d46e40c6b167122053921bf94dce2e5550ea5c07fabc597646"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 466247,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 350,
+      "sha256": null
+    },
+    {
+      "path": "train_script.py",
+      "bytes": 13156,
+      "sha256": null
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 231508,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

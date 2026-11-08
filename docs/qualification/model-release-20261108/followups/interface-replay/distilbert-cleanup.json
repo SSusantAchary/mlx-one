@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "distilbert"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/distilbert",
+  "bytes_removed": 535909045,
+  "downloaded_bytes_verified": 268075255,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139536.0843189,
+  "recorded": 1794139599.8041961,
+  "cleanup_complete": true,
+  "finished": 1794139599.808321
+}

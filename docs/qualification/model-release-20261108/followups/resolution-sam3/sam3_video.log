@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "sam3_video", "status": "FAIL", "quality_status": null, "seconds": 1075.0415198802948, "error": "SAM mask/score/box/identity reference gate failed"}

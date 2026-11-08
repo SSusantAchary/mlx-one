@@ -1,0 +1,78 @@
+{
+  "model_type": "qwen2_vl",
+  "kind": "vlm",
+  "repo": "mlx-community/Qwen2-VL-2B-Instruct-4bit",
+  "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+  "manifest_id": "V01",
+  "profile": "Q4",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1570,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 565,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 392,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.json",
+      "bytes": 1049,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 1408,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1245868907,
+      "sha256": "3534d3dcfaacd0cd00e935469bc34b6d692b2ba0749c5d9ee422f3f2175cf992"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 107605,
+      "sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 499,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 613,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11420371,
+      "sha256": "091aa7594dc2fcfbfa06b9e3c22a5f0562ac14f30375c13af7309407a0e67b8a"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 4297,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

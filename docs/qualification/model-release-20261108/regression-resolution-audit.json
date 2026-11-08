@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "exit_code": 0,
+  "mlx_tests_enabled": true,
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "counts": {
+    "tests": 2677,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 95
+  },
+  "xml": "regression-functional-final3.xml",
+  "xml_sha256": "92f8bf9ead526a329e606f9cb9516133128093ee77c43dfd20c0b1499ff7dee5",
+  "skip_scope": "Optional external checkpoint/hardware opt-ins remain skipped and are not counted as passes. Each of the 40 supported types has a separate real checkpoint task record.",
+  "pytest_summary": "2573 passed, 95 skipped, 2 warnings, 9 subtests passed in 73.99s (0:01:13)",
+  "passed": 2573,
+  "subtests_passed": 9
+}

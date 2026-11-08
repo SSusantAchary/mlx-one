@@ -1,0 +1,21 @@
+Collecting scipy
+  Using cached scipy-1.18.1-cp312-cp312-macosx_14_0_arm64.whl.metadata (62 kB)
+Collecting soundfile
+  Downloading soundfile-0.14.0-py2.py3-none-macosx_11_0_arm64.whl.metadata (18 kB)
+Requirement already satisfied: numpy<2.8,>=2.0.0 in /Users/susant-achary/dev_work/git_codes/c_base/mlx-one/.venv/lib/python3.12/site-packages (from scipy) (2.5.2)
+Collecting cffi>=1.0 (from soundfile)
+  Using cached cffi-2.1.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (2.5 kB)
+Requirement already satisfied: typing-extensions in /Users/susant-achary/dev_work/git_codes/c_base/mlx-one/.venv/lib/python3.12/site-packages (from soundfile) (4.16.0)
+Collecting pycparser (from cffi>=1.0->soundfile)
+  Using cached pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Using cached scipy-1.18.1-cp312-cp312-macosx_14_0_arm64.whl (20.5 MB)
+Downloading soundfile-0.14.0-py2.py3-none-macosx_11_0_arm64.whl (1.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 22.5 MB/s  0:00:00
+Using cached cffi-2.1.1-cp312-cp312-macosx_11_0_arm64.whl (184 kB)
+Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Installing collected packages: scipy, pycparser, cffi, soundfile
+
+Successfully installed cffi-2.1.1 pycparser-3.12 scipy-1.18.1 soundfile-0.14.0
+
+[notice] A new release of pip is available: 25.2 -> 26.3
+[notice] To update, run: /private/tmp/mlx-one-all40-20261108/reference-mlx-audio/bin/python -m pip install --upgrade pip

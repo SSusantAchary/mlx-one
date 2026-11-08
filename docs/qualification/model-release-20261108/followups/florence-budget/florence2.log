@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "florence2", "status": "FAIL", "quality_status": "MEASURED_ONE_LABELED_PAGE", "seconds": 1.5281777381896973, "error": "labeled HF page normalized CER exceeds declared 25% floor"}

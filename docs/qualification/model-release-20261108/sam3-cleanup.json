@@ -1,0 +1,17 @@
+{
+  "model_types": [
+    "sam3",
+    "sam3_tracker",
+    "sam3_video",
+    "sam3_tracker_video"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/sam3",
+  "bytes_removed": 6884970519,
+  "downloaded_bytes_verified": 3445029864,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794140937.8956301,
+  "recorded": 1794141739.8107362,
+  "cleanup_complete": true,
+  "finished": 1794141739.8900921
+}

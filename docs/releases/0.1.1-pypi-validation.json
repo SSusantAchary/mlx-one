@@ -1,0 +1,59 @@
+{
+  "schema_version": "mlx-one-pypi-preparation-v1",
+  "prepared_date": "2026-11-09",
+  "version": "0.1.1",
+  "status": "READY_FOR_MAINTAINER_UPLOAD",
+  "upload_performed": false,
+  "source_commit": "fd444163597472668b78076308d51e5499ccba66",
+  "source_is_uncommitted": true,
+  "artifacts_directory": "dist/pypi-0.1.1",
+  "artifacts": {
+    "mlx_one-0.1.1-py3-none-any.whl": {
+      "sha256": "b3cfd5a91a258a4c6175adc212f64a828bf52733c830c215b05b63aefeeabe88",
+      "bytes": 2331155
+    },
+    "mlx_one-0.1.1.tar.gz": {
+      "sha256": "c41604e99f591e7b4e9cdd4d0c46ef8acad27bfb6b85750b043bdcdc846b7003",
+      "bytes": 2134757
+    }
+  },
+  "checksums_sha256": "6e57f9b88e366032287c3d979c28c0be63a7b03e0338a10e144f0b0c027d75ca",
+  "twine_strict": "PASS",
+  "payload_audit": "docs/releases/0.1.1-pypi-payload.json",
+  "payload_audit_sha256": "6c4968b5fc652eea6d60847f004ce3a1f08b0aa407937ff7ef22ac50669fa1d8",
+  "installed_wheel": {
+    "status": "PASS",
+    "version": "0.1.1",
+    "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+    "model_types": 40,
+    "reference_packages_absent": true,
+    "metal_available": true,
+    "pypi_description_matches": true,
+    "installed_record_sha256": "1c9ae3f83e6179d34e1e020ebb117fe77cd0d71a7b1ff74228547d337dd243c9"
+  },
+  "pip_check": "No broken requirements found.",
+  "cli_version": "mlx-one, version 0.1.1",
+  "exact_package_payload_matches_qualified_candidate": true,
+  "package_files": 502,
+  "pypi_availability_at_start": {
+    "published_version": "0.1.0a1",
+    "target_version_exists": false
+  },
+  "scope": "Metadata, source/wheel payload, installed native registry/version/import boundary. No model download or new all-model inference run; package sources exactly match the prior qualified candidate.",
+  "documentation_build": {
+    "html_pages": 61,
+    "local_links": 6873,
+    "errors": []
+  },
+  "website_unit_tests_passed": 22,
+  "targeted_package_tests_passed": 5,
+  "browser": {
+    "status": "PASS",
+    "checks": [
+      "0.1.1 install examples",
+      "publication still pending",
+      "rendered PyPI upload guide"
+    ],
+    "page_errors": []
+  }
+}

@@ -19,22 +19,33 @@ def sanitize_weights(weights: dict[str, Any], config: Qwen2MoeConfig) -> dict[st
     for layer in range(config.num_hidden_layers):
         prefix = f"model.layers.{layer}.mlp"
         for projection in ("gate_proj", "up_proj", "down_proj"):
-            first = f"{prefix}.experts.0.{projection}.weight"
-            if first not in sanitized:
-                continue
-            values = [
-                sanitized.pop(f"{prefix}.experts.{expert}.{projection}.weight")
-                for expert in range(config.num_experts)
-            ]
-            if type(values[0]).__module__.startswith("mlx"):
-                import mlx.core as mx
+            legacy = f"{prefix}.experts.{projection}"
+            if legacy in sanitized:
+                if legacy + ".weight" in sanitized:
+                    raise ValueError("duplicate stacked expert weight layouts")
+                sanitized[legacy + ".weight"] = sanitized.pop(legacy)
+            for suffix in ("weight", "scales", "biases"):
+                names = [
+                    f"{prefix}.experts.{expert}.{projection}.{suffix}"
+                    for expert in range(config.num_experts)
+                ]
+                if not any(name in sanitized for name in names):
+                    continue
+                if not all(name in sanitized for name in names):
+                    raise ValueError(f"incomplete per-expert {projection}.{suffix} tensors")
+                target = f"{legacy}.{suffix}"
+                if target in sanitized:
+                    raise ValueError("duplicate stacked and per-expert tensor layouts")
+                values = [sanitized.pop(name) for name in names]
+                if type(values[0]).__module__.startswith("mlx"):
+                    import mlx.core as mx
 
-                stacked = mx.stack(values)
-            else:
-                import numpy as np
+                    stacked = mx.stack(values)
+                else:
+                    import numpy as np
 
-                stacked = np.stack(values)
-            sanitized[f"{prefix}.experts.{projection}"] = stacked
+                    stacked = np.stack(values)
+                sanitized[target] = stacked
     return sanitized
 
 
@@ -62,17 +73,17 @@ def weight_contract(config: Qwen2MoeConfig) -> WeightContract:
                 f"{prefix}.self_attn.v_proj.bias": (kv_size,),
                 f"{prefix}.self_attn.o_proj.weight": (config.hidden_size, q_size),
                 f"{mlp}.gate.weight": (config.num_experts, config.hidden_size),
-                f"{mlp}.experts.gate_proj": (
+                f"{mlp}.experts.gate_proj.weight": (
                     config.num_experts,
                     config.moe_intermediate_size,
                     config.hidden_size,
                 ),
-                f"{mlp}.experts.up_proj": (
+                f"{mlp}.experts.up_proj.weight": (
                     config.num_experts,
                     config.moe_intermediate_size,
                     config.hidden_size,
                 ),
-                f"{mlp}.experts.down_proj": (
+                f"{mlp}.experts.down_proj.weight": (
                     config.num_experts,
                     config.hidden_size,
                     config.moe_intermediate_size,

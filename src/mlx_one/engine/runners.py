@@ -15,6 +15,7 @@ from mlx_one.engine.contracts import (
     RunnerOutput,
     SequenceState,
 )
+from mlx_one.text.prompts import completion_token_ids
 
 
 class CausalLMRunner:
@@ -47,7 +48,7 @@ class CausalLMRunner:
         prompt = request.payload.get("prompt")
         if not isinstance(prompt, str) or not prompt:
             raise ValueError("text engine request requires a non-empty prompt")
-        tokens = tuple(int(token) for token in self.bundle.tokenizer.encode(prompt))
+        tokens = tuple(int(token) for token in completion_token_ids(self.bundle, prompt))
         if not tokens:
             bos = self.bundle.tokenizer.bos_token_id
             if bos is None:

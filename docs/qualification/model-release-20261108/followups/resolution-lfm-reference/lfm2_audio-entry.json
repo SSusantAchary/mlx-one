@@ -1,0 +1,88 @@
+{
+  "model_type": "lfm2_audio",
+  "kind": "audio",
+  "repo": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+  "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+  "assets": [
+    "audio_detokenizer/config.json",
+    "audio_detokenizer/model.safetensors",
+    "config.json",
+    "model.safetensors",
+    "model.safetensors.index.json",
+    "special_tokens_map.json",
+    "tokenizer.json",
+    "tokenizer_config.json"
+  ],
+  "manifest_id": "A10",
+  "profile": "Q4 / BF16",
+  "gated": false,
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 10390,
+      "sha256": null
+    },
+    {
+      "path": "audio_detokenizer/config.json",
+      "bytes": 1150,
+      "sha256": null
+    },
+    {
+      "path": "audio_detokenizer/model.safetensors",
+      "bytes": 314137512,
+      "sha256": "d294aef1eacaab6dc7a5dab53fc88ac3fdd45c0a1994888489caaacf87d1ac70"
+    },
+    {
+      "path": "audio_detokenizer/tokenizer.json",
+      "bytes": 4732426,
+      "sha256": null
+    },
+    {
+      "path": "audio_detokenizer/tokenizer_config.json",
+      "bytes": 91509,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 3331,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1088588169,
+      "sha256": "73616f26c107680056df4ff0ce3c1f081fe7db792e76da026014f2dc5790afbc"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 110587,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 434,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer-e351c8d8-checkpoint125.safetensors",
+      "bytes": 384644900,
+      "sha256": "09b782f0629851a271227fb9d36db65c041790365f11bbe5d3d59369cf863f50"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4732404,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 91566,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

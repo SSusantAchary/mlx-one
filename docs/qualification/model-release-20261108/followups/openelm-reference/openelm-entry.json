@@ -1,0 +1,56 @@
+{
+  "model_type": "openelm",
+  "kind": "text",
+  "repo": "apple/OpenELM-270M",
+  "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+  "gated": false,
+  "license": "apple-amlr",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 5820,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 12744,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 1301,
+      "sha256": null
+    },
+    {
+      "path": "configuration_openelm.py",
+      "bytes": 14264,
+      "sha256": null
+    },
+    {
+      "path": "generate_openelm.py",
+      "bytes": 7453,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 111,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1086123184,
+      "sha256": "afbeade8abad5a1ed4df7dabdf1773aa0215c5bb7563537ac62d33fff9a2ecfa"
+    },
+    {
+      "path": "modeling_openelm.py",
+      "bytes": 39348,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

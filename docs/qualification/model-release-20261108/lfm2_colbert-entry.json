@@ -1,0 +1,81 @@
+{
+  "model_type": "lfm2_colbert",
+  "kind": "retrieval",
+  "repo": "LiquidAI/LFM2-ColBERT-350M",
+  "revision": "9d727d7964d3e4fd093a0f01c7287ae814264e31",
+  "gated": false,
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "1_Dense/config.json",
+      "bytes": 116,
+      "sha256": null
+    },
+    {
+      "path": "1_Dense/model.safetensors",
+      "bytes": 524376,
+      "sha256": "5e3b6e404581efd18c1d1931b96d2735d0fc7cd94b7c4156fbf9ff070b9296f8"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 10574,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 63051,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 1296,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 1215,
+      "sha256": null
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 693,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1413306600,
+      "sha256": "6a00ba7c169605c03eb50ab1d0805acb44c2c11310ce35cbccfd36b97cfcb5eb"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 216,
+      "sha256": null
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 53,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 323,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4733022,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 91910,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

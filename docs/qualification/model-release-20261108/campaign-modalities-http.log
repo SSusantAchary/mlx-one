@@ -1,0 +1,249 @@
+START qwen3_5 mlx-community/Qwen3.5-0.8B-4bit
+FETCHFETCH FETCH qwen3_5  qwen3_5 config.json 3112
+qwen3_5chat_template.jinja README.md  678
+7755
+FETCH qwen3_5 FETCH model.safetensors 625229487qwen3_5FETCH
+  model.safetensors.index.jsonqwen3_5  71473
+preprocessor_config.json 390
+FETCH qwen3_5 processor_config.json 1300
+FETCH qwen3_5 tokenizer.json 19989343
+FETCH qwen3_5 tokenizer_config.json 1139
+FETCH qwen3_5 video_preprocessor_config.json 385
+FETCH qwen3_5 vocab.json 6722759
+RANGE model.safetensors 2 / 10
+RANGE model.safetensors 1 / 10
+RANGE model.safetensors 4 / 10
+RANGE model.safetensors 3 / 10
+RANGE model.safetensors 5 / 10
+RANGE model.safetensors 7 / 10
+RANGE model.safetensors 10 / 10
+RANGE model.safetensors 9 / 10
+RANGE model.safetensors 8 / 10
+RANGE model.safetensors 6 / 10
+RESULT qwen3_5 PASS_FUNCTIONAL 
+CLEANED qwen3_5 1518902523
+START lfm2_vl mlx-community/LFM2-VL-450M-8bit
+FETCHFETCH  lfm2_vlFETCH  lfm2_vlchat_template.jinja README.md 661
+ lfm2_vl434
+ config.json 8174
+FETCH lfm2_vl generation_config.json 132
+FETCH lfm2_vl model.safetensors 559614320
+FETCH lfm2_vl model.safetensors.index.json 45180
+FETCH lfm2_vl preprocessor_config.json 535
+FETCH lfm2_vl processor_config.json 436
+FETCH lfm2_vl special_tokens_map.json 584
+FETCH lfm2_vl tokenizer.json 4733040
+FETCH lfm2_vl tokenizer_config.json 92279
+RANGE model.safetensors 3 / 9
+RANGE model.safetensors 5 / 9
+RANGE model.safetensors 4 / 9
+RANGE model.safetensors 2 / 9
+RANGE model.safetensors 7 / 9
+RANGE model.safetensors 9 / 9
+RANGE model.safetensors 8 / 9
+RANGE model.safetensors 1 / 9
+RANGE model.safetensors 6 / 9
+RESULT lfm2_vl PASS_FUNCTIONAL 
+CLEANED lfm2_vl 1124112499
+START whisper openai/whisper-tiny
+FETCH whisper FETCHadded_tokens.json  whisperFETCH34604  
+whisperconfig.json  generation_config.json1983 
+3747
+FETCH whisper merges.txt 493869
+FETCH whisper model.safetensors 151061672
+FETCH whisper preprocessor_config.json 184990
+FETCH whisper special_tokens_map.json 2194
+FETCH whisper tokenizer.json 2480466
+FETCH whisper tokenizer_config.json 282683
+FETCH whisper vocab.json 835550
+RANGE model.safetensors 3 / 3
+RANGE model.safetensors 1 / 3
+RANGE model.safetensors 2 / 3
+RESULT whisper PASS_FUNCTIONAL 
+CLEANED whisper 306445606
+START moonshine UsefulSensors/moonshine-tiny
+FETCHFETCH  FETCHmoonshine moonshine  generation_config.json 189
+moonshineconfig.json  model.safetensors897 
+108389192
+FETCH moonshine preprocessor_config.json 215
+FETCH moonshine tokenizer.json 1985530
+RESULT moonshine PASS_FUNCTIONAL 
+CLEANED moonshine 110377371
+START qwen3_asr mlx-community/Qwen3-ASR-0.6B-8bit
+FETCH FETCHqwen3_asr  FETCHqwen3_asrchat_template.json  qwen3_asrconfig.json 7187
+  1161generation_config.json
+ 142
+FETCH qwen3_asr merges.txt 1671853
+FETCH qwen3_asr model.safetensors 1006229426
+FETCH qwen3_asr model.safetensors.index.json 71815
+FETCH qwen3_asr preprocessor_config.json 330
+FETCH qwen3_asr tokenizer_config.json 12487
+FETCH qwen3_asr vocab.json 2776833
+RANGE model.safetensors 1 / 15
+RANGE model.safetensors 3 / 15
+RANGE model.safetensors 5 / 15
+RANGE model.safetensors 6 / 15
+RANGE model.safetensors 8 / 15
+RANGE model.safetensors 4 / 15
+RANGE model.safetensors 2 / 15
+RANGE model.safetensors 7 / 15
+RANGE model.safetensors 10 / 15
+RANGE model.safetensors 9 / 15
+RANGE model.safetensors 11 / 15
+RANGE model.safetensors 12 / 15
+RANGE model.safetensors 14 / 15
+RANGE model.safetensors 15 / 15
+RANGE model.safetensors 13 / 15
+RESULT qwen3_asr PASS_FUNCTIONAL 
+CLEANED qwen3_asr 2017002663
+START parakeet_tdt mlx-community/parakeet-tdt-0.6b-v3
+FETCH FETCHparakeet_tdt  config.json 244093
+parakeet_tdt model.safetensors 2508288736
+RANGE model.safetensors 4 / 38
+RANGE model.safetensors 3 / 38
+RANGE model.safetensors 5 / 38
+RANGE model.safetensors 6 / 38
+RANGE model.safetensors 1 / 38
+RANGE model.safetensors 9 / 38
+RANGE model.safetensors 8 / 38
+RANGE model.safetensors 2 / 38
+RANGE model.safetensors 10 / 38
+RANGE model.safetensors 12 / 38
+RANGE model.safetensors 11 / 38
+RANGE model.safetensors 13 / 38
+RANGE model.safetensors 14 / 38
+RANGE model.safetensors 16 / 38
+RANGE model.safetensors 17 / 38
+RANGE model.safetensors 7 / 38
+RANGE model.safetensors 15 / 38
+RANGE model.safetensors 19 / 38
+RANGE model.safetensors 20 / 38
+RANGE model.safetensors 18 / 38
+RANGE model.safetensors 24 / 38
+RANGE model.safetensors 21 / 38
+RANGE model.safetensors 23 / 38
+RANGE model.safetensors 25 / 38
+RANGE model.safetensors 22 / 38
+RANGE model.safetensors 26 / 38
+RANGE model.safetensors 27 / 38
+RANGE model.safetensors 30 / 38
+RANGE model.safetensors 28 / 38
+RANGE model.safetensors 29 / 38
+RANGE model.safetensors 33 / 38
+RANGE model.safetensors 31 / 38
+RANGE model.safetensors 32 / 38
+RANGE model.safetensors 35 / 38
+RANGE model.safetensors 36 / 38
+RANGE model.safetensors 34 / 38
+RANGE model.safetensors 38 / 38
+RANGE model.safetensors 37 / 38
+RESULT parakeet_tdt PASS_FUNCTIONAL 
+CLEANED parakeet_tdt 5016822205
+START qwen3_forced_aligner mlx-community/Qwen3-ForcedAligner-0.6B-8bit
+FETCH qwen3_forced_alignerFETCH  FETCHqwen3_forced_alignerchat_template.json  config.json1161
+  6940
+qwen3_forced_aligner generation_config.json 115
+FETCH qwen3_forced_aligner merges.txt 1671853
+FETCH qwen3_forced_aligner model.safetensors 1271924386
+FETCH qwen3_forced_aligner model.safetensors.index.json 79108
+FETCH qwen3_forced_aligner preprocessor_config.json 330
+FETCH qwen3_forced_aligner tokenizer_config.json 12666
+FETCH qwen3_forced_aligner vocab.json 2776833
+RANGE model.safetensors 2 / 19
+RANGE model.safetensors 1 / 19
+RANGE model.safetensors 5 / 19
+RANGE model.safetensors 6 / 19
+RANGE model.safetensors 7 / 19
+RANGE model.safetensors 8 / 19
+RANGE model.safetensors 3 / 19
+RANGE model.safetensors 4 / 19
+RANGE model.safetensors 12 / 19
+RANGE model.safetensors 11 / 19
+RANGE model.safetensors 9 / 19
+RANGE model.safetensors 13 / 19
+RANGE model.safetensors 15 / 19
+RANGE model.safetensors 10 / 19
+RANGE model.safetensors 16 / 19
+RANGE model.safetensors 14 / 19
+RANGE model.safetensors 17 / 19
+RANGE model.safetensors 19 / 19
+RANGE model.safetensors 18 / 19
+RESULT qwen3_forced_aligner PASS_FUNCTIONAL 
+CLEANED qwen3_forced_aligner 2548399794
+START lfm2_audio mlx-community/LFM2.5-Audio-1.5B-4bit
+FETCH FETCHFETCH  lfm2_audio config.json 3331
+lfm2_audiolfm2_audio  audio_detokenizer/config.json audio_detokenizer/model.safetensors1150 314137512
+
+FETCHFETCH  lfm2_audio model.safetensors.index.json 110587
+lfm2_audio model.safetensors 1088588169
+FETCH lfm2_audio special_tokens_map.json 434
+FETCH lfm2_audio tokenizer.json 4732404
+FETCH lfm2_audio tokenizer_config.json 91566
+RANGE audio_detokenizer/model.safetensors 4 / 5
+RANGE audio_detokenizer/model.safetensors 1 / 5
+RANGE audio_detokenizer/model.safetensors 5 / 5
+RANGE model.safetensors 3 / 17
+RANGE audio_detokenizer/model.safetensors 3 / 5
+RANGE model.safetensors 1 / 17
+RANGE model.safetensors 4 / 17
+RANGE model.safetensors 2 / 17
+RANGE audio_detokenizer/model.safetensors 2 / 5
+RANGE model.safetensors 5 / 17
+RANGE model.safetensors 7 / 17
+RANGE model.safetensors 9 / 17
+RANGE model.safetensors 10 / 17
+RANGE model.safetensors 6 / 17
+RANGE model.safetensors 8 / 17
+RANGE model.safetensors 11 / 17
+RANGE model.safetensors 12 / 17
+RANGE model.safetensors 16 / 17
+RANGE model.safetensors 15 / 17
+RANGE model.safetensors 17 / 17
+RANGE model.safetensors 13 / 17
+RANGE model.safetensors 14 / 17
+RESULT lfm2_audio FAIL one or more advertised LFM speech task probes failed
+CLEANED lfm2_audio 2810392584
+START silero_vad snakers4/silero-vad
+RESULT silero_vad PASS_FUNCTIONAL 
+CLEANED silero_vad 1239783
+START trocr microsoft/trocr-base-printed
+FETCHFETCH  FETCHtrocrtrocr trocr generation_config.json 190
+  config.json README.md4126 
+2976
+FETCH trocr merges.txt 456318
+FETCH trocr model.safetensors 1333384464
+FETCH trocr preprocessor_config.json 224
+FETCH trocr special_tokens_map.json 772
+FETCH trocr tokenizer_config.json 1118
+FETCH trocr vocab.json 898822
+RANGE model.safetensors 4 / 20
+RANGE model.safetensors 5 / 20
+RANGE model.safetensors 2 / 20
+RANGE model.safetensors 1 / 20
+RANGE model.safetensors 8 / 20
+RANGE model.safetensors 3 / 20
+RANGE model.safetensors 7 / 20
+RANGE model.safetensors 10 / 20
+RANGE model.safetensors 9 / 20
+RANGE model.safetensors 6 / 20
+RANGE model.safetensors 11 / 20
+RANGE model.safetensors 12 / 20
+RANGE model.safetensors 15 / 20
+RANGE model.safetensors 14 / 20
+RANGE model.safetensors 13 / 20
+RANGE model.safetensors 16 / 20
+RANGE model.safetensors 19 / 20
+RANGE model.safetensors 17 / 20
+RANGE model.safetensors 18 / 20
+RANGE model.safetensors 20 / 20
+RESULT trocr PASS_FUNCTIONAL 
+CLEANED trocr 2668135460
+START got_ocr2 mlx-community/GOT-OCR2_0-4bit
+FETCH FETCHFETCH got_ocr2 config.json  got_ocr2 1390
+got_ocr2generation_config.json  117
+README.md 5888
+FETCH got_ocr2 model.safetensors 454463407
+FETCH got_ocr2FETCH  got_ocr2model.safetensors.index.json  qwen.tiktoken 2561218
+65900
+FETCH got_ocr2 special_tokens_map.json 149
+FETCH got_ocr2 tokenizer_config.json 372

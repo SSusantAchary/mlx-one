@@ -1,0 +1,21 @@
+{
+  "findings": 68,
+  "new_findings": [
+    [
+      "scripts/qualification/colbert_reference_probe.py",
+      "E501",
+      "Line too long (148 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_campaign.py",
+      "E501",
+      "Line too long (102 > 100)"
+    ],
+    [
+      "src/mlx_one/server/model_manager.py",
+      "I001",
+      "Import block is un-sorted or un-formatted"
+    ]
+  ],
+  "debt_tracker": "docs/qualification/alpha_release/lint-debt.md"
+}

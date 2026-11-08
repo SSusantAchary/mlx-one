@@ -559,6 +559,8 @@ def generate_command(
 )
 @click.option("--spec-type", type=click.Choice(["none", "draft-mtp"]), default="none")
 @click.option("--spec-draft-n-max", type=click.IntRange(min=1), default=3)
+@click.option("--retrieval-task", type=click.Choice(["embedding", "reranking"]),
+              help="Explicit retrieval task for bundles without task metadata.")
 def serve_command(
     model: str,
     host: str,
@@ -606,6 +608,7 @@ def serve_command(
     cache_type_v: str | None,
     spec_type: str,
     spec_draft_n_max: int,
+    retrieval_task: str | None,
 ) -> None:
     """Load one native model, then run the local mlx-one server."""
 
@@ -707,10 +710,12 @@ def serve_command(
                     offline=offline,
                     cache_dir=cache_dir,
                     tokenizer_source=tokenizer_source,
+                    **({"retrieval_task": retrieval_task} if retrieval_task else {}),
                 )
             )
             if (hasattr(bundle, "classification") or hasattr(bundle, "ner")
-                    or hasattr(bundle, "zero_shot") or hasattr(bundle, "vad")) and (
+                    or hasattr(bundle, "zero_shot") or hasattr(bundle, "vad")
+                    or hasattr(bundle, "retrieval")) and (
                 inference_mode not in {None, "reference_dense"}
                 or execution_dtype not in {None, "float32"} or spec_type != "none"
             ):
@@ -770,7 +775,8 @@ def serve_command(
                 engine.bind_actor(scheduler)
             if (warmup and not hasattr(bundle, "audio") and not hasattr(bundle, "ocr")
                     and not hasattr(bundle, "classification") and not hasattr(bundle, "ner")
-                    and not hasattr(bundle, "zero_shot") and not hasattr(bundle, "vad")):
+                    and not hasattr(bundle, "zero_shot") and not hasattr(bundle, "vad")
+                    and not hasattr(bundle, "retrieval")):
                 def warmup_stream(cancel):
                     return engine.stream(
                         model=manager.model_info().id,

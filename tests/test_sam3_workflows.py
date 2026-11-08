@@ -52,7 +52,7 @@ def test_cli_help_is_backend_free_and_output_guard(tmp_path):
     for command in ("segment", "track"):
         result = runner.invoke(main, [command, "--help"])
         assert result.exit_code == 0
-        assert "unqualified" in result.output
+        assert "SAM3" in result.output
     from PIL import Image
 
     image = tmp_path / "frame.png"

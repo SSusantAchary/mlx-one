@@ -1,0 +1,428 @@
+{
+  "schema_version": "model-release-campaign-v1",
+  "expected_models": 40,
+  "executed_models": 1,
+  "functional_passed": 1,
+  "release_qualified": 0,
+  "results": [
+    {
+      "schema_version": "model-release-probe-v1",
+      "model_type": "florence2",
+      "checkpoint": "microsoft/Florence-2-base-ft",
+      "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+      "release_standard": "mlx-lm-aligned-functional-v1",
+      "started": 1794158893.775072,
+      "release_qualified": false,
+      "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+      "platform": "macOS-15.8.2-arm64-arm-64bit",
+      "worker_sha256": "6b76c26f40ec5bc4cf32c63af8ea6f867e164bc9d0e2e220e34a974926510a13",
+      "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+      "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+      "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+      "evidence_directory": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/functional-florence",
+      "reference_python": null,
+      "gpu_execution_serialized": true,
+      "harness_sources": {
+        "scripts/qualification/embedding_reference_probe.py": "7bda87d3dc4d6270c98815122f7374805e760bba96345bd8025aacaf36aa0a41",
+        "scripts/qualification/run_tiled_feasibility.py": "4523da32cb42ac3efd8c64f97451935ede924f25ec0b8f59766fd3304f280504",
+        "scripts/qualification/revamp_inventory.py": "374b0df68dfcc3f4b9f848bbbe7cb737d5106167f2c0b56251d14d634c83b294",
+        "scripts/qualification/qualify_ten_models.py": "a2fb6cb00f70a4b2f79e758b74ea61c697c64c2e5e84201e040b239fe4550321",
+        "scripts/qualification/numerical_contract_v2.py": "52c9f6c0cd0962df72b305b498e9146edbe7683a7a36373275a270b1a4665aee",
+        "scripts/qualification/lfm_speech_interfaces.py": "6dbafb7c58cf66e630de118900a8b8bfb860ce3d43a5d3d625ad3fff04eb0316",
+        "scripts/qualification/alpha_package.py": "cceb3705a86d9d3da2376f0707b8dbb9318e6b15e59c2e224b5059a521ee49cb",
+        "scripts/qualification/colbert_reference_probe.py": "4eaa9de82d01c567b84b735b114d24757e6a9b39057cd122114b10b05eaa69d2",
+        "scripts/qualification/run_inference_optimization.py": "6e44ed8b72ad316c275def0bd629de2b57eedd46a35627dd4a259b30a0d7947a",
+        "scripts/qualification/operation_selection.py": "1c6071aa96d2930692763dcd48fc10591c45111287acf9ddb6c83cb395b24554",
+        "scripts/qualification/report_ten_models.py": "12d6d721bc9534e505aa303ef1ac52a200377a8586cf668f0ae882177ea2589a",
+        "scripts/qualification/model_release_report.py": "00341a57c026a05ec093ab3370d9e7b1d66fafe0067d5456f7ce0a09b6859198",
+        "scripts/qualification/qwen_fused_causal.py": "59a513c3d9af991531457ec2b1dcf3ff0e8daa348c5837f536ed303bb04994ea",
+        "scripts/qualification/ten_model_worker.py": "ec27e5d04adbd058f9cfa5ab6c6c9ac35a9c5cc968b18ce0c50fc40c1b563aee",
+        "scripts/qualification/model_release_download.py": "38cbd72b4f19e356877826c9bdfd84934625bcc787589741067ff62f49f6d373",
+        "scripts/qualification/florence_reference_probe.py": "883712645cf4ced7741e882898fbceaac7e3fb652812cce389216399b7b104ee",
+        "scripts/qualification/alpha_ui_security.py": "45980e6492447c4f4b223735a77cedfacda311d8e079b72134763cabb19ab39d",
+        "scripts/qualification/lfm2_reference_probe.py": "b1ecd58d2ad86c35882e2a4f2346dcc48cb74b5f86664e3900bdfef51a6fb7cf",
+        "scripts/qualification/lfm_audio_reference_probe.py": "a7865c518e7920b887810a97209202dfe16b1d651b207bb6681b5037198a0ff9",
+        "scripts/qualification/model_release_campaign.py": "0cab112f949165492cc09e70bc8da16572f9353b8146d06ccd22260956881c64",
+        "scripts/qualification/tiled_model_qualification.py": "cf2372ad882241a98c29f13df1448becf75f6c9ec1f44092e43157c4478b5aaf",
+        "scripts/qualification/florence_reference_qualification.py": "ad45e1b2f32e936a7dc99d3b2d6f320071a3cf733a8f1a637ef67d2211364c13",
+        "scripts/qualification/model_release_worker.py": "6b76c26f40ec5bc4cf32c63af8ea6f867e164bc9d0e2e220e34a974926510a13",
+        "scripts/qualification/model_release_candidate.py": "9c4a058ceb9dbd9b3d6531febd22be4a006cae4c9407322918532fd1484621df",
+        "scripts/qualification/model_release_resolution_fixtures.py": "eac84131a0bd069ea7694422ccd80ae8dfd593567837d7fecf2af3a0efc94024",
+        "scripts/qualification/openelm_reference_probe.py": "1b37ac6c531513168a25f81db748422a8f5eee883bb0f0784d6ae0c63c5dc53b",
+        "scripts/qualification/model_release_fixtures.py": "465a0f1f2603ca38d324f81c6e79512f57b09f90e67152b3f48326f189a489a7",
+        "scripts/qualification/ner_reference_qualification.py": "8dc1a96f41cedb2631161b84ed15239591ee3656045783eeb2419678f6d05c41",
+        "scripts/qualification/reference_tiled_attention.py": "6e9ca57978764e4fef420360402734ca2a7989266cb687b37801e118583e690b",
+        "scripts/qualification/lfm_audio_reference_qualification.py": "908bb19fe35f408a5a49af6c7cd4ea72c6686dff5e3275866ab309a3092814bc",
+        "scripts/qualification/functional_checkpoint_smoke.py": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+        "scripts/qualification/verify_http_identity.py": "4b9a83e7779f9f31d4665113e925edd0d85410d10f0d1ff7a2206f7409bbb65d",
+        "scripts/qualification/model_release_inventory.py": "546ba29a967cf110df723a96f82d5ed12ea554e20f8d666f8d0686a07f7bbaf6",
+        "scripts/qualification/turboquant_wheel_smoke.py": "050db4ee799f1a9930fac74e0f948c21b3e05126bea0654f8b384a6795025cda",
+        "scripts/qualification/sam_reference_qualification.py": "da88b133b66fd0912a61dffccd78b81444957f13337be9d5d2933de477887082",
+        "benchmarks/sam3_qualification.py": "6e8a238c5dceb08d51a885abe768716645f65d6fb45e752b66178aa57eb1d04b",
+        "benchmarks/sam3_compare.py": "ddaa3ee2a8fab14fe1d3c7a9ae7ddb61a0bb0ceacc19e43ce281150074c1fe66",
+        "benchmarks/native_tasks/export_ner.py": "86e0d0f7438bb12b4225c11d2e28c3fc4b3483ba8b209e3da77fc1edaa33f3b9"
+      },
+      "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+      "mlx": "0.32.2",
+      "device": {
+        "device_name": "Apple M4",
+        "max_recommended_working_set_size": 22906503168,
+        "memory_size": 34359738368,
+        "architecture": "applegpu_g16g",
+        "max_buffer_length": 17179869184,
+        "resource_limit": 499000
+      },
+      "reference_packages_absent": true,
+      "installed_record_sha256": "54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c",
+      "checkpoint_configuration": {
+        "_name_or_path": "florence2",
+        "architectures": [
+          "Florence2ForConditionalGeneration"
+        ],
+        "auto_map": {
+          "AutoConfig": "configuration_florence2.Florence2Config",
+          "AutoModelForCausalLM": "modeling_florence2.Florence2ForConditionalGeneration"
+        },
+        "bos_token_id": 0,
+        "eos_token_id": 2,
+        "ignore_index": -100,
+        "model_type": "florence2",
+        "pad_token_id": 1,
+        "projection_dim": 768,
+        "text_config": {
+          "vocab_size": 51289,
+          "activation_dropout": 0.1,
+          "activation_function": "gelu",
+          "add_bias_logits": false,
+          "add_final_layer_norm": false,
+          "attention_dropout": 0.1,
+          "bos_token_id": 0,
+          "classif_dropout": 0.1,
+          "classifier_dropout": 0.0,
+          "d_model": 768,
+          "decoder_attention_heads": 12,
+          "decoder_ffn_dim": 3072,
+          "decoder_layerdrop": 0.0,
+          "decoder_layers": 6,
+          "decoder_start_token_id": 2,
+          "dropout": 0.1,
+          "early_stopping": true,
+          "encoder_attention_heads": 12,
+          "encoder_ffn_dim": 3072,
+          "encoder_layerdrop": 0.0,
+          "encoder_layers": 6,
+          "eos_token_id": 2,
+          "forced_eos_token_id": 2,
+          "forced_bos_token_id": 0,
+          "gradient_checkpointing": false,
+          "init_std": 0.02,
+          "is_encoder_decoder": true,
+          "label2id": {
+            "LABEL_0": 0,
+            "LABEL_1": 1,
+            "LABEL_2": 2
+          },
+          "max_position_embeddings": 1024,
+          "no_repeat_ngram_size": 3,
+          "normalize_before": false,
+          "num_hidden_layers": 6,
+          "pad_token_id": 1,
+          "scale_embedding": false,
+          "num_beams": 3
+        },
+        "vision_config": {
+          "model_type": "davit",
+          "drop_path_rate": 0.1,
+          "patch_size": [
+            7,
+            3,
+            3,
+            3
+          ],
+          "patch_stride": [
+            4,
+            2,
+            2,
+            2
+          ],
+          "patch_padding": [
+            3,
+            1,
+            1,
+            1
+          ],
+          "patch_prenorm": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "enable_checkpoint": false,
+          "dim_embed": [
+            128,
+            256,
+            512,
+            1024
+          ],
+          "num_heads": [
+            4,
+            8,
+            16,
+            32
+          ],
+          "num_groups": [
+            4,
+            8,
+            16,
+            32
+          ],
+          "depths": [
+            1,
+            1,
+            9,
+            1
+          ],
+          "window_size": 12,
+          "projection_dim": 768,
+          "visual_temporal_embedding": {
+            "type": "COSINE",
+            "max_temporal_embeddings": 100
+          },
+          "image_pos_embed": {
+            "type": "learned_abs_2d",
+            "max_pos_embeddings": 50
+          },
+          "image_feature_source": [
+            "spatial_avg_pool",
+            "temporal_avg_pool"
+          ]
+        },
+        "vocab_size": 51289,
+        "torch_dtype": "float16",
+        "transformers_version": "4.41.0.dev0",
+        "is_encoder_decoder": true
+      },
+      "ocr_fixture_sha256": "1fed9cd48d58bb332f220e929220639978f989b41c4d7083e7d1177e00c1c50d",
+      "ocr_fixture": {
+        "dataset": "getomni-ai/ocr-benchmark",
+        "revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+        "id": "434",
+        "image_sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+        "reference_sha256": "50c2358e325c5e81f5c9653d4426b1bd73bbcf83b9c90e5aaf21de08b8d7b939"
+      },
+      "ocr_image_path": "/private/tmp/mlx-one-all40-20261108/fixtures/ocr-corpus/test/images/434.png",
+      "ocr_generation_budget": 512,
+      "ocr_task": "ocr.recognize",
+      "output": {
+        "text": "Health History QuestionaireFirst Name:Last Name:Emily DavisEmilyDavidMarital Status:Single D Divided | separated | WidowedAddress:Address:38a Sycamore Lnore LnState:Zip:WainaloHI96795Phone:96795Phone:DOB:2439DOB:October 21,1952Spouse Name:Spouse Phone:Is the requested medication NEW or a CONTINUATION of THERAPY? If so, start:Have you been hospitalized in the past year? Yes NoFinancial ResponsibilitiesResponsible Party:Type Of Insurance:Insurance Company:SelfAutomobileOscar Health InsuranceInsurance Address:4672A Maple WayInsurance Phone:Group #:Member ID:(68) 760-7828UNOXZG/SIKX4VRPatient Signature:Social Security #:Date:Guardian Signature:Guardian Social Security #:Date:Family Health HistoryRelationAge If LivingAge At DeathChronic Health ProblemsSister66Age At DeathChronic Health Problems",
+        "markdown": null,
+        "pages": [
+          {
+            "page": 0,
+            "original_size": [
+              1920,
+              2075
+            ],
+            "rendered_size": [
+              1920,
+              2075
+            ],
+            "text": "Health History QuestionaireFirst Name:Last Name:Emily DavisEmilyDavidMarital Status:Single D Divided | separated | WidowedAddress:Address:38a Sycamore Lnore LnState:Zip:WainaloHI96795Phone:96795Phone:DOB:2439DOB:October 21,1952Spouse Name:Spouse Phone:Is the requested medication NEW or a CONTINUATION of THERAPY? If so, start:Have you been hospitalized in the past year? Yes NoFinancial ResponsibilitiesResponsible Party:Type Of Insurance:Insurance Company:SelfAutomobileOscar Health InsuranceInsurance Address:4672A Maple WayInsurance Phone:Group #:Member ID:(68) 760-7828UNOXZG/SIKX4VRPatient Signature:Social Security #:Date:Guardian Signature:Guardian Social Security #:Date:Family Health HistoryRelationAge If LivingAge At DeathChronic Health ProblemsSister66Age At DeathChronic Health Problems",
+            "markdown": null,
+            "elements": [],
+            "tables": [],
+            "formulas": [],
+            "timings": {
+              "preprocessing_seconds": 0.0211197079916019,
+              "encoder_seconds": 0.2316713339969283,
+              "generation_seconds": 4.1806726249924395,
+              "text_prefill_seconds": 0.008354916993994266,
+              "decode_forward_seconds": 3.582662840068224,
+              "total_seconds": 4.433540916987113,
+              "first_token_seconds": 4.428421416989295
+            },
+            "metadata": {
+              "path": "visual",
+              "exif_oriented": true,
+              "source_page_count": 1,
+              "decode_seconds": 0.00556570800836198,
+              "processed_size": [
+                768,
+                768
+              ],
+              "visual_tokens": 577,
+              "prompt_tokens": 1,
+              "crop_first": false,
+              "source_crop": [
+                0,
+                0,
+                1920,
+                2075
+              ],
+              "num_beams": 3,
+              "model": "/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint",
+              "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+              "architecture": "florence2",
+              "output_tokens": 220,
+              "finish_reason": "stop",
+              "truncated": false,
+              "geometry_predicted": false,
+              "confidence_available": false
+            }
+          }
+        ],
+        "model": "/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint",
+        "task": "ocr.recognize",
+        "language": null,
+        "timings": {
+          "total_seconds": 4.462667250001687
+        },
+        "metadata": {
+          "processed_pages": 1,
+          "page_count": 1,
+          "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+          "capabilities": {
+            "family": "florence2",
+            "tasks": [
+              "ocr.batch",
+              "ocr.detect",
+              "ocr.document",
+              "ocr.recognize",
+              "ocr.region"
+            ],
+            "markdown": false,
+            "geometry": true,
+            "line_only": false,
+            "language_hint": false,
+            "crop_first": true
+          },
+          "measurement_type": "python-engine",
+          "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+          "checkpoint_status": "PENDING_HARDWARE_TEST"
+        },
+        "schema_version": "mlx-one-ocr-v1"
+      },
+      "metric_schema": "ocr-visible-text-v3",
+      "metric_scope": "returned plain text versus rendered HF Markdown reference; content accuracy only",
+      "raw_reference_cer": 0.39763779527559057,
+      "rendered_reference_sha256": "64da2f2754fd1a98850e4443762c0e9470b4f3733f381e84678407bdaaa15615",
+      "page_cer": 0.3287037037037037,
+      "page_wer": 0.7651515151515151,
+      "quality_status": "RECORDED_DIAGNOSTIC_NOT_A_SUPPORT_GATE",
+      "page_quality_diagnostic": {
+        "status": "FAIL",
+        "threshold": 0.25,
+        "metric": "ocr-visible-text-v3 CER"
+      },
+      "functional_status": "PASS",
+      "stage": "interfaces",
+      "interfaces": {
+        "python": "PASS",
+        "cli": {
+          "exit_code": 0,
+          "output": "{\n  \"text\": \"Health History QuestionaireFirst Name:Last Name:Emily DavisEmilyDavidMarital Status:Single D Divided | separated | WidowedAddress:Address:38a Sycamore Lnore LnState:Zip:WainaloHI96795Phone:96795Phone:DOB:24-\",\n  \"markdown\": null,\n  \"pages\": [\n    {\n      \"page\": 0,\n      \"original_size\": [\n        1920,\n        2075\n      ],\n      \"rendered_size\": [\n        1920,\n        2075\n      ],\n      \"text\": \"Health History QuestionaireFirst Name:Last Name:Emily DavisEmilyDavidMarital Status:Single D Divided | separated | WidowedAddress:Address:38a Sycamore Lnore LnState:Zip:WainaloHI96795Phone:96795Phone:DOB:24-\",\n      \"markdown\": null,\n      \"elements\": [],\n      \"tables\": [],\n      \"formulas\": [],\n      \"timings\": {\n        \"preprocessing_seconds\": 0.019640625003376044,\n        \"encoder_seconds\": 0.22262183300335892,\n        \"generation_seconds\": 0.8205544999946142,\n        \"text_prefill_seconds\": 0.008596333995228633,\n        \"decode_forward_seconds\": 0.7040827848686604,\n        \"total_seconds\": 1.0628910000086762,\n        \"first_token_seconds\": 1.0618900420085993\n      },\n      \"metadata\": {\n        \"path\": \"visual\",\n        \"exif_oriented\": true,\n        \"source_page_count\": 1,\n        \"decode_seconds\": 0.0059367499925429,\n        \"processed_size\": [\n          768,\n          768\n        ],\n        \"visual_tokens\": 577,\n        \"prompt_tokens\": 1,\n        \"crop_first\": false,\n        \"source_crop\": [\n          0,\n          0,\n          1920,\n          2075\n        ],\n        \"num_beams\": 3,\n        \"model\": \"/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint\",\n        \"revision\": \"f6c1a25888ffc1d945ee8a1a77ac833c7303d46e\",\n        \"architecture\": \"florence2\",\n        \"output_tokens\": 64,\n        \"finish_reason\": \"length\",\n        \"truncated\": true,\n        \"geometry_predicted\": false,\n        \"confidence_available\": false\n      }\n    }\n  ],\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint\",\n  \"task\": \"ocr.recognize\",\n  \"language\": null,\n  \"timings\": {\n    \"total_seconds\": 1.0710215409926604\n  },\n  \"metadata\": {\n    \"processed_pages\": 1,\n    \"page_count\": 1,\n    \"revision\": \"f6c1a25888ffc1d945ee8a1a77ac833c7303d46e\",\n    \"capabilities\": {\n      \"family\": \"florence2\",\n      \"tasks\": [\n        \"ocr.batch\",\n        \"ocr.detect\",\n        \"ocr.document\",\n        \"ocr.recognize\",\n        \"ocr.region\"\n      ],\n      \"markdown\": false,\n      \"geometry\": true,\n      \"line_only\": false,\n      \"language_hint\": false,\n      \"crop_first\": true\n    },\n    \"measurement_type\": \"python-engine\",\n    \"coordinate_convention\": \"top-left pixel xyxy, zero-based pages\",\n    \"checkpoint_status\": \"PENDING_HARDWARE_TEST\"\n  },\n  \"schema_version\": \"mlx-one-ocr-v1\"\n}\n",
+          "status": "PASS"
+        },
+        "http": {
+          "status_code": 200,
+          "body": {
+            "text": "Health History QuestionaireFirst Name:Last Name:Emily DavisEmilyDavidMarital Status:Single D Divided | separated | WidowedAddress:Address:38a Sycamore Lnore LnState:Zip:WainaloHI96795Phone:96795Phone:DOB:24-",
+            "markdown": null,
+            "pages": [
+              {
+                "page": 0,
+                "original_size": [
+                  1920,
+                  2075
+                ],
+                "rendered_size": [
+                  1920,
+                  2075
+                ],
+                "text": "Health History QuestionaireFirst Name:Last Name:Emily DavisEmilyDavidMarital Status:Single D Divided | separated | WidowedAddress:Address:38a Sycamore Lnore LnState:Zip:WainaloHI96795Phone:96795Phone:DOB:24-",
+                "markdown": null,
+                "elements": [],
+                "tables": [],
+                "formulas": [],
+                "timings": {
+                  "preprocessing_seconds": 0.02111837500706315,
+                  "encoder_seconds": 0.23465641700022388,
+                  "generation_seconds": 0.8148294169950532,
+                  "text_prefill_seconds": 0.008759875010582618,
+                  "decode_forward_seconds": 0.6982060777954757,
+                  "total_seconds": 1.0707081660075346,
+                  "first_token_seconds": 1.0697427910054103
+                },
+                "metadata": {
+                  "path": "visual",
+                  "exif_oriented": true,
+                  "source_page_count": 1,
+                  "decode_seconds": 0.007203333007055335,
+                  "processed_size": [
+                    768,
+                    768
+                  ],
+                  "visual_tokens": 577,
+                  "prompt_tokens": 1,
+                  "crop_first": false,
+                  "source_crop": [
+                    0,
+                    0,
+                    1920,
+                    2075
+                  ],
+                  "num_beams": 3,
+                  "model": "/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint",
+                  "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+                  "architecture": "florence2",
+                  "output_tokens": 64,
+                  "finish_reason": "length",
+                  "truncated": true,
+                  "geometry_predicted": false,
+                  "confidence_available": false
+                }
+              }
+            ],
+            "model": "/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint",
+            "task": "ocr.recognize",
+            "language": null,
+            "timings": {
+              "total_seconds": 1.080383291002363
+            },
+            "metadata": {
+              "processed_pages": 1,
+              "page_count": 1,
+              "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+              "capabilities": {
+                "family": "florence2",
+                "tasks": [
+                  "ocr.batch",
+                  "ocr.detect",
+                  "ocr.document",
+                  "ocr.recognize",
+                  "ocr.region"
+                ],
+                "markdown": false,
+                "geometry": true,
+                "line_only": false,
+                "language_hint": false,
+                "crop_first": true
+              },
+              "measurement_type": "python-engine",
+              "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+              "checkpoint_status": "PENDING_HARDWARE_TEST"
+            },
+            "schema_version": "mlx-one-ocr-v1"
+          },
+          "status": "PASS"
+        },
+        "http_authentication": "PASS"
+      },
+      "peak_mlx_bytes": 1289786560,
+      "status": "PASS_FUNCTIONAL",
+      "seconds": 8.499984741210938,
+      "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+      "campaign_worker_sha256": "6b76c26f40ec5bc4cf32c63af8ea6f867e164bc9d0e2e220e34a974926510a13"
+    }
+  ]
+}

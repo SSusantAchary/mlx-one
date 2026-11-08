@@ -1,0 +1,95 @@
+{
+  "status": "complete",
+  "results": [
+    {
+      "masks": [
+        "frame-000000000-mask-00000.png",
+        "frame-000000000-mask-00001.png"
+      ],
+      "boxes": [
+        [
+          146.0,
+          135.0,
+          291.0,
+          404.0
+        ],
+        [
+          312.0,
+          0.0,
+          514.0,
+          394.0
+        ]
+      ],
+      "original_size": [
+        540,
+        960
+      ],
+      "provenance": {
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/sam3_video/checkpoint",
+        "revision": null,
+        "architecture": "sam3_video",
+        "dtype": "float32",
+        "reference": "transformers@6133195dcb",
+        "qualified": false
+      },
+      "scores": [
+        0.9678663611412048,
+        0.9728288650512695
+      ],
+      "frame_index": 0,
+      "object_ids": [
+        0,
+        1
+      ],
+      "prompt_ids": [
+        0,
+        0
+      ]
+    },
+    {
+      "masks": [
+        "frame-000000001-mask-00000.png",
+        "frame-000000001-mask-00001.png"
+      ],
+      "boxes": [
+        [
+          151.0,
+          123.0,
+          293.0,
+          401.0
+        ],
+        [
+          312.0,
+          13.0,
+          506.0,
+          423.0
+        ]
+      ],
+      "original_size": [
+        540,
+        960
+      ],
+      "provenance": {
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/sam3_video/checkpoint",
+        "revision": null,
+        "architecture": "sam3_video",
+        "dtype": "float32",
+        "reference": "transformers@6133195dcb",
+        "qualified": false
+      },
+      "scores": [
+        0.9678663611412048,
+        0.9728288650512695
+      ],
+      "frame_index": 1,
+      "object_ids": [
+        0,
+        1
+      ],
+      "prompt_ids": [
+        0,
+        0
+      ]
+    }
+  ]
+}

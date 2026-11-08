@@ -1,0 +1,80 @@
+........................................................................ [  2%]
+...................................................................sssss [  5%]
+s.s...s...........................................................ssssss [  8%]
+.....................ss...ssssssss..ss.........sssssssssssssss.......... [ 10%]
+........................................................................ [ 13%]
+.......sssssssssssssssssssss.sssss.....ss.sssss..s.ss................... [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 21%]
+........................................................................ [ 24%]
+............................................sssssss..................... [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 32%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+........................................................................ [ 43%]
+........................................................................ [ 45%]
+...........................................s............................ [ 48%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 78%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+......................................................sss............... [ 89%]
+......................F................................................. [ 91%]
+.................F...F.................................................. [ 94%]
+........................................................................ [ 97%]
+............................................................... [ 99%]
+......                                                                   [100%]
+=================================== FAILURES ===================================
+_________ test_nested_video_tracker_has_no_independent_task_authority __________
+
+>   ???
+E   AssertionError: assert (False)
+E    +  where False = RuntimeRegistration(model_type='sam3_tracker_video', adapter_path='mlx_one.engine.task_runners.segmentation:SAM3Tempor..., reason='Native task service adapter; checkpoint qualification is separate', parent_model_type=None, task_adapters=()).component_only
+
+/private/tmp/mlx-one-docs-site/tests/test_segmentation_task_runtime.py:54: AssertionError
+_____________ test_registry_derived_inventory_is_complete_and_lazy _____________
+
+>   ???
+E   assert 0 == 1
+E    +  where 0 = sum(<generator object test_registry_derived_inventory_is_complete_and_lazy.<locals>.<genexpr> at 0x11e3769b0>)
+
+/private/tmp/mlx-one-docs-site/tests/test_task_qualification.py:31: AssertionError
+______ test_matrix_includes_unrun_architectures_and_retains_failed_worker ______
+
+tmp_path = PosixPath('/private/var/folders/8b/269n41v14fdcwd5wlf7sr3q00000gn/T/pytest-of-susant-achary/pytest-37/test_matrix_includes_unrun_arc0')
+
+>   ???
+E   AssertionError: assert 'NOT_RUN' == 'SKIPPED'
+E     
+E     - SKIPPED
+E     + NOT_RUN
+
+/private/tmp/mlx-one-docs-site/tests/test_task_qualification.py:84: AssertionError
+=============================== warnings summary ===============================
+../mlx-one/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/susant-achary/dev_work/git_codes/c_base/mlx-one/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+../mlx-one/.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /Users/susant-achary/dev_work/git_codes/c_base/mlx-one/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_segmentation_task_runtime.py::test_nested_video_tracker_has_no_independent_task_authority
+FAILED tests/test_task_qualification.py::test_registry_derived_inventory_is_complete_and_lazy
+FAILED tests/test_task_qualification.py::test_matrix_includes_unrun_architectures_and_retains_failed_worker
+3 failed, 2570 passed, 95 skipped, 2 warnings, 9 subtests passed in 58.26s
+{"status": "FAIL", "exit_code": 1, "mlx_tests_enabled": true, "device": {"device_name": "Apple M4", "max_recommended_working_set_size": 22906503168, "memory_size": 34359738368, "architecture": "applegpu_g16g", "max_buffer_length": 17179869184, "resource_limit": 499000}, "counts": {"tests": 2677, "failures": 3, "errors": 0, "skipped": 95}, "xml": "regression-resolution.xml", "xml_sha256": "f054afa5709a3180ec21fccb2e6c8f41ce20f3db4c41a4c96cc9222644977ac3", "skip_scope": "Skipped optional profiles/hardware/checkpoint opt-ins remain unqualified; they are not counted as passes. Real representatives have separate pinned probe evidence."}

@@ -1,0 +1,129 @@
+START got_ocr2 mlx-community/GOT-OCR2_0-4bit
+FETCH FETCHgot_ocr2 FETCHgot_ocr2   config.json 1390
+README.mdgot_ocr2  5888generation_config.json
+ 117
+FETCH got_ocr2 model.safetensors 454463407
+FETCH got_ocr2 model.safetensors.index.json 65900
+FETCH got_ocr2 qwen.tiktoken 2561218
+FETCH got_ocr2 special_tokens_map.json 149
+FETCH got_ocr2 tokenizer_config.json 372
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 5 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 6 / 7
+RESULT got_ocr2 FAIL labeled HF page normalized CER exceeds declared 25% floor
+CLEANED got_ocr2 911563654
+START florence2 microsoft/Florence-2-base-ft
+FETCHFETCH  florence2FETCH LICENSE 1141
+florence2  florence2README.md config.json 14820
+ 2430
+FETCH florence2 model.safetensors 463221266
+FETCH florence2 preprocessor_config.json 806
+FETCH florence2 tokenizer.json 1355863
+FETCH florence2 tokenizer_config.json 34
+FETCH florence2 vocab.json 1099884
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 6 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 5 / 7
+RESULT florence2 FAIL labeled HF page normalized CER exceeds declared 25% floor
+CLEANED florence2 928919286
+START lightonocr lightonai/LightOnOCR-2-1B
+FETCH FETCHlightonocr FETCH lightonocr README.md 7951
+ lightonocradded_tokens.json  chat_template.jinja707 
+720
+FETCH lightonocr config.json 2363
+FETCHFETCH  lightonocr model.safetensors 2011367489
+lightonocr generation_config.json 219
+FETCH lightonocr processor_config.json 1023
+FETCH lightonocr special_tokens_map.json 613
+FETCH lightonocr tokenizer.json 11422822
+FETCH lightonocr tokenizer_config.json 5562
+RANGE model.safetensors 2 / 30
+RANGE model.safetensors 3 / 30
+RANGE model.safetensors 4 / 30
+RANGE model.safetensors 1 / 30
+RANGE model.safetensors 7 / 30
+RANGE model.safetensors 5 / 30
+RANGE model.safetensors 6 / 30
+RANGE model.safetensors 8 / 30
+RANGE model.safetensors 9 / 30
+RANGE model.safetensors 10 / 30
+RANGE model.safetensors 12 / 30
+RANGE model.safetensors 11 / 30
+RANGE model.safetensors 13 / 30
+RANGE model.safetensors 14 / 30
+RANGE model.safetensors 15 / 30
+RANGE model.safetensors 16 / 30
+RANGE model.safetensors 17 / 30
+RANGE model.safetensors 19 / 30
+RANGE model.safetensors 18 / 30
+RANGE model.safetensors 20 / 30
+RANGE model.safetensors 21 / 30
+RANGE model.safetensors 22 / 30
+RANGE model.safetensors 23 / 30
+RANGE model.safetensors 24 / 30
+RANGE model.safetensors 25 / 30
+RANGE model.safetensors 26 / 30
+RANGE model.safetensors 28 / 30
+RANGE model.safetensors 27 / 30
+RANGE model.safetensors 29 / 30
+RANGE model.safetensors 30 / 30
+RESULT lightonocr PASS_FUNCTIONAL 
+CLEANED lightonocr 4034179172
+START deepseek_ocr mlx-community/DeepSeek-OCR-4bit
+FETCHFETCH deepseek_ocr  deepseek_ocr chat_template.jinjaREADME.md FETCH 191 
+deepseek_ocr653 
+chat_template.json 217
+FETCH deepseek_ocr config.json 3398
+FETCH deepseek_ocr model.safetensors 2451214926
+FETCH deepseek_ocr model.safetensors.index.json 72573
+FETCH deepseek_ocr processor_config.json 460
+FETCH deepseek_ocr special_tokens_map.json 801
+FETCH deepseek_ocr tokenizer.json 9979544
+FETCH deepseek_ocr tokenizer_config.json 577
+RANGE model.safetensors 2 / 37
+RANGE model.safetensors 1 / 37
+RANGE model.safetensors 3 / 37
+RANGE model.safetensors 4 / 37
+RANGE model.safetensors 6 / 37
+RANGE model.safetensors 5 / 37
+RANGE model.safetensors 7 / 37
+RANGE model.safetensors 9 / 37
+RANGE model.safetensors 8 / 37
+RANGE model.safetensors 10 / 37
+RANGE model.safetensors 11 / 37
+RANGE model.safetensors 12 / 37
+RANGE model.safetensors 14 / 37
+RANGE model.safetensors 13 / 37
+RANGE model.safetensors 15 / 37
+RANGE model.safetensors 16 / 37
+RANGE model.safetensors 17 / 37
+RANGE model.safetensors 18 / 37
+RANGE model.safetensors 19 / 37
+RANGE model.safetensors 20 / 37
+RANGE model.safetensors 22 / 37
+RANGE model.safetensors 21 / 37
+RANGE model.safetensors 24 / 37
+RANGE model.safetensors 23 / 37
+RANGE model.safetensors 26 / 37
+RANGE model.safetensors 25 / 37
+RANGE model.safetensors 28 / 37
+RANGE model.safetensors 27 / 37
+RANGE model.safetensors 29 / 37
+RANGE model.safetensors 30 / 37
+RANGE model.safetensors 31 / 37
+RANGE model.safetensors 33 / 37
+RANGE model.safetensors 32 / 37
+RANGE model.safetensors 35 / 37
+RANGE model.safetensors 37 / 37
+RANGE model.safetensors 34 / 37
+RANGE model.safetensors 36 / 37
+RESULT deepseek_ocr PASS_FUNCTIONAL 
+CLEANED deepseek_ocr 4912490469

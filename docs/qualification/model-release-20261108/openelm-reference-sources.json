@@ -1,0 +1,8 @@
+{
+  "repo": "apple/OpenELM-270M",
+  "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+  "files": {
+    "configuration_openelm.py": "d0da88fc5fafdfef155052ec4e5483db8d6be2917cb68bdee9e7ead1cb7e6f15",
+    "modeling_openelm.py": "ffb56f297ccb48ba689bc15b352c971eb1337a3604449662303a2d4919aa77c4"
+  }
+}

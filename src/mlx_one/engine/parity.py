@@ -14,6 +14,7 @@ from mlx_one.engine.reporting import describe_cache, normalize_dtype
 from mlx_one.engine.runners import CausalLMRunner
 from mlx_one.inference_baseline import TOLERANCES
 from mlx_one.text.generation import _stream_bundle
+from mlx_one.text.prompts import completion_token_ids
 from mlx_one.text.sampling import select_token
 from mlx_one.text.schemas import TextGenerationOptions
 
@@ -50,7 +51,7 @@ def prefix_failure_diagnostic(bundle, *, prompt=None, count=32, sink=None):
         raise ValueError("prefix diagnostic needs positive forced steps")
     prompt = prompt if prompt is not None else (
         "Native INT8 shared prefix and divergent suffixes. " * 32)
-    ids = tuple(bundle.tokenizer.encode(prompt))
+    ids = tuple(completion_token_ids(bundle, prompt))
     fixture = tuple(bundle.tokenizer.encode(" A deterministic continuation."))
     if len(ids) < 2 or not fixture:
         raise ValueError("prefix diagnostic needs a reusable prompt and continuation")
@@ -303,7 +304,7 @@ def forced_token_parity(bundle, *, prompt="The quick brown fox", count=32,
                       and all(carry_results) and seeded else "failed",
             "dtype": dtype, "atol": atol, "rtol": rtol, "forced_steps": count,
             "seed": seed, "prefill_chunk_tokens": prefill_chunk_tokens,
-            "prompt_tokens": len(bundle.tokenizer.encode(prompt)),
+            "prompt_tokens": len(completion_token_ids(bundle, prompt)),
             "forced_ids_sha256": hashlib.sha256(json.dumps(forced).encode()).hexdigest(),
             "oracle_path": "single_request_dense", "runner_path": "causal_runner_dense",
             "max_error": max(r["max_error"] for r in results),

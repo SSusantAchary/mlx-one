@@ -1,0 +1,18 @@
+F401 [*] `hashlib` imported but unused
+ --> scripts/qualification/model_release_report.py:6:8
+  |
+5 | import argparse
+6 | import hashlib
+  |        ^^^^^^^
+7 | import json
+8 | from collections import Counter
+  |
+help: Remove unused import: `hashlib`
+  |
+5 | import argparse
+  - import hashlib
+6 | import json
+  |
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

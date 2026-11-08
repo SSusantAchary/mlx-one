@@ -1,0 +1,73 @@
+{
+  "model_type": "lfm2_moe",
+  "kind": "text",
+  "repo": "LiquidAI/LFM2.5-24B-A2B-MLX-4bit",
+  "revision": "667408d494bde191c2cb9dd4f4549827816b9275",
+  "profile": "mixed_affine_q4_embedding_q6_router_fp32",
+  "manifest_id": "M11",
+  "gated": false,
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1570,
+      "sha256": null
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 10574,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 3688,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 5496,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 2148,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 329,
+      "sha256": null
+    },
+    {
+      "path": "model-00001-of-00003.safetensors",
+      "bytes": 5318453801,
+      "sha256": "17e953456c62314a498f1ef5ee8a5f1b51ac83f6b6bb684f160dde4f92cd11c0"
+    },
+    {
+      "path": "model-00002-of-00003.safetensors",
+      "bytes": 5344895125,
+      "sha256": "c3ae09dba31b3786c325425435021cf5d5bf06c1a79acb31a741e15a47e5bb14"
+    },
+    {
+      "path": "model-00003-of-00003.safetensors",
+      "bytes": 2903945409,
+      "sha256": "9814144af5045ea8c96e2f1352148fdbe9f8a0085b76df6d6760efbe916e9840"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 80192,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 17905598,
+      "sha256": "695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 363,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

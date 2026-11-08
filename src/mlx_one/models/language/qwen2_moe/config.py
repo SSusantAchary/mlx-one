@@ -33,6 +33,7 @@ class Qwen2MoeConfig:
     rope_theta: float = 1_000_000.0
     tie_word_embeddings: bool = False
     output_router_logits: bool = False
+    norm_topk_prob: bool = False
     router_aux_loss_coef: float = 0.001
     use_sliding_window: bool = False
     sliding_window: int = 4096
@@ -68,6 +69,8 @@ class Qwen2MoeConfig:
         )
         if self.num_experts_per_tok > self.num_experts:
             raise ConfigError("num_experts_per_tok cannot exceed num_experts")
+        if not isinstance(self.norm_topk_prob, bool):
+            raise ConfigError("norm_topk_prob must be a boolean")
         if self.router_aux_loss_coef < 0:
             raise ConfigError("router_aux_loss_coef cannot be negative")
         if self.use_sliding_window:

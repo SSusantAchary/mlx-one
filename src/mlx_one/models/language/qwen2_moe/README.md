@@ -6,8 +6,9 @@
 
 Registry type: `qwen2_moe`. The native decoder combines GQA/RoPE attention with
 top-k routed experts, a shared expert, and router outputs. It has a registered
-native text loader and generation path, but qualification currently covers
-architecture/synthetic contracts rather than an exact real checkpoint.
+native text loader and generation path. The pinned
+`mlx-community/Qwen1.5-MoE-A2.7B-4bit` checkpoint passes real generation and
+applicable interface checks; see the [current support record](../../../../../status_models_testing.md).
 
 [Qwen/Qwen1.5-MoE-A2.7B](https://huggingface.co/Qwen/Qwen1.5-MoE-A2.7B) is an
 upstream family reference, not a qualified mlx-one checkpoint. Its active-parameter

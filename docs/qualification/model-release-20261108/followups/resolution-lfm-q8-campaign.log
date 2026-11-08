@@ -1,0 +1,42 @@
+START lfm2_audio mlx-community/LFM2.5-Audio-1.5B-8bit
+FETCH lfm2_audio audio_detokenizer/config.json 1150
+FETCH lfm2_audio audio_detokenizer/model.safetensors 314137512
+FETCH lfm2_audio config.json 3331
+FETCH lfm2_audio model.safetensors 1732833648
+FETCH lfm2_audio model.safetensors.index.json 110587
+FETCH lfm2_audio special_tokens_map.json 434
+FETCH lfm2_audio tokenizer.json 4732404
+FETCH lfm2_audio tokenizer_config.json 91566
+RANGE audio_detokenizer/model.safetensors 4 / 5
+RANGE model.safetensors 4 / 26
+RANGE model.safetensors 2 / 26
+RANGE audio_detokenizer/model.safetensors 5 / 5
+RANGE audio_detokenizer/model.safetensors 1 / 5
+RANGE audio_detokenizer/model.safetensors 3 / 5
+RANGE model.safetensors 5 / 26
+RANGE model.safetensors 6 / 26
+RANGE model.safetensors 1 / 26
+RANGE model.safetensors 3 / 26
+RANGE model.safetensors 7 / 26
+RANGE model.safetensors 9 / 26
+RANGE model.safetensors 10 / 26
+RANGE audio_detokenizer/model.safetensors 2 / 5
+RANGE model.safetensors 11 / 26
+RANGE model.safetensors 12 / 26
+RANGE model.safetensors 8 / 26
+RANGE model.safetensors 15 / 26
+RANGE model.safetensors 13 / 26
+RANGE model.safetensors 14 / 26
+RANGE model.safetensors 16 / 26
+RANGE model.safetensors 17 / 26
+RANGE model.safetensors 19 / 26
+RANGE model.safetensors 18 / 26
+RANGE model.safetensors 20 / 26
+RANGE model.safetensors 21 / 26
+RANGE model.safetensors 23 / 26
+RANGE model.safetensors 22 / 26
+RANGE model.safetensors 25 / 26
+RANGE model.safetensors 24 / 26
+RANGE model.safetensors 26 / 26
+RESULT lfm2_audio PASS_FUNCTIONAL 
+CLEANED lfm2_audio 4098883540

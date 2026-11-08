@@ -2,6 +2,13 @@
 
 Updated: 2026-10-15. Native MLX tooling for Apple Silicon; Python 3.10+, Apache-2.0.
 
+**Current release update — 8 November 2026:** all 40 registered native model
+types have passing selected primary workflows, and 0.1.1 is approved for release
+with publication pending. See [current support](../status_models_testing.md) and
+[release notes](releases/0.1.1.md). The component-by-component implementation
+chronology below preserves its original stage dates and pending-work statements;
+newer support records supersede earlier primary-workflow gaps.
+
 ## Repository and runtime
 
 - Native model implementations and shared layers: `src/mlx_one/models/`.

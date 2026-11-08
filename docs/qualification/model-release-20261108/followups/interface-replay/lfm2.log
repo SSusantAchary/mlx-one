@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "lfm2", "status": "FAIL", "quality_status": null, "seconds": 1.4216649532318115, "error": "bounded WikiText perplexity exceeds 1000"}

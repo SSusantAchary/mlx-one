@@ -1,0 +1,738 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "distilbert",
+  "checkpoint": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+  "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+  "started": 1794130368.601025,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "dc57573189b970de8e48ea22ec41ca8aec31f47260096565a5cf8604daf73da5",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "outputs": [
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 12,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9998838901519775,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00011603923485381529,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 10,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.998969554901123,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.001030495623126626,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 24,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9996399879455566,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00035998818930238485,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 28,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9996993541717529,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00030070001957938075,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 13,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9996892213821411,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0003108119126409292,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 25,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9998290538787842,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00017090719484258443,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 8,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.999504566192627,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0004954683245159686,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 15,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9917595982551575,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.008240392431616783,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 26,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9926712512969971,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.0073287892155349255,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 40,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9992507100105286,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0007492174045182765,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 23,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9998838901519775,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00011605963663896546,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 39,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9996739625930786,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.00032601167913526297,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 25,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9998156428337097,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.00018437928520143032,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 26,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9570934176445007,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.04290663078427315,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 29,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9997715353965759,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.000228486635023728,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 26,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9998869895935059,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00011302909842925146,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 21,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9994854927062988,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.0005144926253706217,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 44,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.999798595905304,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.0002014097262872383,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 14,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9992817044258118,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0007183485431596637,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 21,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9995865225791931,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.00041350661194883287,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 41,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.977343738079071,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.022656193003058434,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 17,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.95518559217453,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.044814370572566986,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 10,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9907523393630981,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.009247653186321259,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 20,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9998834133148193,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00011661319877021015,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 18,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9965078234672546,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.0034921220503747463,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 35,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9996476173400879,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0003523357736412436,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 35,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9980615973472595,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0019384475890547037,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 28,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9996742010116577,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.0003258605138398707,
+              "index": 0
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 19,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9915094375610352,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.00849060621112585,
+              "index": 1
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 13,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9970059990882874,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0029939725063741207,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 35,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "POSITIVE",
+              "score": 0.9998767375946045,
+              "index": 1
+            },
+            {
+              "label": "NEGATIVE",
+              "score": 0.00012326550495345145,
+              "index": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "token_count": 38,
+          "truncated": false,
+          "labels": [
+            {
+              "label": "NEGATIVE",
+              "score": 0.9966212511062622,
+              "index": 0
+            },
+            {
+              "label": "POSITIVE",
+              "score": 0.0033787956926971674,
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "task": "text-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-classification-v1",
+      "score_semantics": "single-label-softmax"
+    }
+  ],
+  "accuracy": 0.96875,
+  "correct": 31,
+  "count": 32,
+  "quality_status": "PASS_32_EXAMPLE_SANITY_ONLY",
+  "peak_mlx_bytes": 301625728,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 0.8726897239685059,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "dc57573189b970de8e48ea22ec41ca8aec31f47260096565a5cf8604daf73da5"
+}

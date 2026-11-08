@@ -39,14 +39,18 @@ class LoadedSegmentationModel:
         )
 
     def video_session(self, frames=None, **kwargs):
+        if self.task == "tracking":
+            from .temporal import Sam3TemporalSession
+
+            return Sam3TemporalSession(self, frames=frames, **kwargs)
         from .video import Sam3VideoSession
 
         return Sam3VideoSession(self, frames=frames, **kwargs)
 
 
 def load_segmentation_model(model, *, task="concept", revision=None, offline=False, cache_dir=None):
-    if task not in ("concept", "interactive", "video"):
-        raise ValueError("task must be concept, interactive, or video")
+    if task not in ("concept", "interactive", "video", "tracking"):
+        raise ValueError("task must be concept, interactive, video, or tracking")
     try:
         from huggingface_hub import snapshot_download
         from tokenizers import Tokenizer
@@ -74,22 +78,30 @@ def load_segmentation_model(model, *, task="concept", revision=None, offline=Fal
             raise ValueError(f"unsupported segmentation model type {model_type!r}")
         if payload.get("auto_map") or payload.get("quantization_config"):
             raise ValueError("SAM3 remote code and quantized checkpoints are unsupported")
-        target = {"concept": "sam3", "interactive": "sam3_tracker", "video": "sam3_video"}[task]
+        target = {
+            "concept": "sam3",
+            "interactive": "sam3_tracker",
+            "video": "sam3_video",
+            "tracking": "sam3_tracker_video",
+        }[task]
         if model_type != target and model_type != "sam3_video":
             raise ValueError(f"{model_type} does not provide the {task} workflow")
         selected = (
             payload.get("detector_config", payload)
             if task == "concept"
             else payload.get("tracker_config", payload)
-            if task == "interactive"
+            if task in {"interactive", "tracking"}
             else payload
         )
         if task == "interactive":
             selected = {**selected, "model_type": "sam3_tracker"}
+        if task == "tracking":
+            selected = {**selected, "model_type": "sam3_tracker_video"}
         config = {
             "sam3": configs.Sam3Config,
             "sam3_tracker": configs.Sam3TrackerConfig,
             "sam3_video": configs.Sam3VideoConfig,
+            "sam3_tracker_video": configs.Sam3TrackerVideoConfig,
         }[target].from_dict(selected)
         native = model_for_config(config)
         tensors = sanitize_weights(_read_safetensors(root), config)

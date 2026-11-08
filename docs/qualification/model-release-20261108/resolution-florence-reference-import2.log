@@ -1,0 +1,5 @@
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+/private/tmp/mlx-one-all40-20261108/reference-sources/florence-publisher-f6c1a25888ffc1d945ee8a1a77ac833c7303d46e/florence_publisher/processing_florence2.py:515: SyntaxWarning: invalid escape sequence '\d'
+  PATTERN: 'r<time_(\d+)><time_(\d+)>([a-zA-Z0-9 ]+)'
+Pinned publisher source imports PASS

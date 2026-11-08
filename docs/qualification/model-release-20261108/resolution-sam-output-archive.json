@@ -1,0 +1,60 @@
+{
+  "scope": "Semantic model outputs only; no checkpoint weights",
+  "records": [
+    {
+      "source": "video-reference-False.npz",
+      "output": "video-reference-False.npz",
+      "bytes": 138289
+    },
+    {
+      "source": "video-native-False.npz",
+      "output": "video-native-False.npz",
+      "bytes": 138291
+    },
+    {
+      "source": "video-reference-True.npz",
+      "output": "video-reference-True.npz",
+      "bytes": 138318
+    },
+    {
+      "source": "tracking-reference-False.npz",
+      "output": "tracking-reference-False.npz",
+      "bytes": 138486
+    },
+    {
+      "source": "video-native-True.npz",
+      "output": "video-native-True.npz",
+      "bytes": 138273
+    },
+    {
+      "source": "concept-reference-False.npz",
+      "output": "concept-reference-False.npz",
+      "bytes": 25139
+    },
+    {
+      "source": "tracking-native-True.npz",
+      "output": "tracking-native-True.npz",
+      "bytes": 138442
+    },
+    {
+      "source": "interactive-native-False.npz",
+      "output": "interactive-native-False.npz",
+      "bytes": 29953
+    },
+    {
+      "source": "interactive-reference-False.npz",
+      "output": "interactive-reference-False.npz",
+      "bytes": 29723
+    },
+    {
+      "source": "concept-native-False.npz",
+      "output": "concept-native-False.npz",
+      "bytes": 7249
+    },
+    {
+      "source": "tracking-native-False.npz",
+      "output": "tracking-native-False.npz",
+      "bytes": 138442
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "moonshine",
+  "checkpoint": "UsefulSensors/moonshine-tiny",
+  "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+  "started": 1794138249.075988,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "34c0af38e2f9cc658eef9c298e0122f2836f1ab28ff85f23e14d8e73d5a41ec8",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108",
+  "reference_python": "/private/tmp/mlx-one-all40-20261108/reference-env/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279",
+  "output": {
+    "text": "He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+    "duration": 10.0,
+    "model": "/private/tmp/mlx-one-all40-20261108/models/moonshine/checkpoint",
+    "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+    "sample_rate": 16000,
+    "tokens": [
+      940,
+      756,
+      15258,
+      27455,
+      1372,
+      3692,
+      6290,
+      19769,
+      365,
+      388,
+      880,
+      29915,
+      29879,
+      664,
+      338,
+      2289,
+      12311,
+      1156,
+      599,
+      29892,
+      322,
+      508,
+      6523,
+      297,
+      372,
+      541,
+      2217,
+      310,
+      8027,
+      29891,
+      306,
+      386,
+      11989,
+      29889
+    ],
+    "language": null,
+    "confidence": null,
+    "timestamps": null,
+    "task": "transcribe",
+    "timings": {
+      "load_seconds": 5.830079317092896e-07,
+      "preprocess_seconds": 0.08295420899230521,
+      "decode_seconds": 0.08355624999967404,
+      "wall_seconds": 0.16651104199991096
+    },
+    "provenance": {
+      "model_type": "moonshine",
+      "checkpoint_path": "/private/tmp/mlx-one-all40-20261108/models/moonshine/checkpoint",
+      "checkpoint_revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+      "decoding": "greedy",
+      "weight_dtype": "mlx.core.float32"
+    },
+    "offset_seconds": 0.0
+  },
+  "wer": 0.041666666666666664,
+  "cer": 0.03636363636363636,
+  "quality_status": "PASS_ONE_ENGLISH_CLIP_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"confidence\": null,\n  \"duration\": 10.0,\n  \"language\": null,\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/moonshine/checkpoint\",\n  \"offset_seconds\": 0.0,\n  \"provenance\": {\n    \"checkpoint_path\": \"/private/tmp/mlx-one-all40-20261108/models/moonshine/checkpoint\",\n    \"checkpoint_revision\": null,\n    \"decoding\": \"greedy\",\n    \"model_type\": \"moonshine\",\n    \"weight_dtype\": \"mlx.core.float32\"\n  },\n  \"revision\": null,\n  \"sample_rate\": 16000,\n  \"task\": \"transcribe\",\n  \"text\": \"He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.\",\n  \"timestamps\": null,\n  \"timings\": {\n    \"decode_seconds\": 0.09840058299596421,\n    \"load_seconds\": 0.04957720900711138,\n    \"preprocess_seconds\": 0.034297000005608425,\n    \"wall_seconds\": 0.18227479200868402\n  },\n  \"tokens\": [\n    940,\n    756,\n    15258,\n    27455,\n    1372,\n    3692,\n    6290,\n    19769,\n    365,\n    388,\n    880,\n    29915,\n    29879,\n    664,\n    338,\n    2289,\n    12311,\n    1156,\n    599,\n    29892,\n    322,\n    508,\n    6523,\n    297,\n    372,\n    541,\n    2217,\n    310,\n    8027,\n    29891,\n    306,\n    386,\n    11989,\n    29889\n  ]\n}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "text": "He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "mlx": {
+          "duration": 10.0,
+          "timestamps": null,
+          "timings": {
+            "load_seconds": 5.584006430581212e-06,
+            "preprocess_seconds": 0.027630750002572313,
+            "decode_seconds": 0.07597499999974389,
+            "wall_seconds": 0.10361133400874678
+          },
+          "provenance": {
+            "model_type": "moonshine",
+            "checkpoint_path": "/private/tmp/mlx-one-all40-20261108/models/moonshine/checkpoint",
+            "checkpoint_revision": null,
+            "decoding": "greedy",
+            "weight_dtype": "mlx.core.float32"
+          }
+        }
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 235813164,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 1.1211509704589844,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "34c0af38e2f9cc658eef9c298e0122f2836f1ab28ff85f23e14d8e73d5a41ec8"
+}

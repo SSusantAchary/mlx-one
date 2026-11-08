@@ -1,0 +1,3537 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "bert_token_classification",
+  "checkpoint": "dslim/bert-base-NER",
+  "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+  "started": 1794149320.393655,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "ccddfb04f8db24b3ab3d095a26725f1f4183f6419db23dda170ff8641592b63b",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/resolution-ner",
+  "reference_python": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "3a0a128b69d59994064404f4c44e6f33419c63cba27389bd714dea5b03e6074c",
+  "checkpoint_configuration": {
+    "_num_labels": 9,
+    "architectures": [
+      "BertForTokenClassification"
+    ],
+    "attention_probs_dropout_prob": 0.1,
+    "hidden_act": "gelu",
+    "hidden_dropout_prob": 0.1,
+    "hidden_size": 768,
+    "id2label": {
+      "0": "O",
+      "1": "B-MISC",
+      "2": "I-MISC",
+      "3": "B-PER",
+      "4": "I-PER",
+      "5": "B-ORG",
+      "6": "I-ORG",
+      "7": "B-LOC",
+      "8": "I-LOC"
+    },
+    "initializer_range": 0.02,
+    "intermediate_size": 3072,
+    "label2id": {
+      "B-LOC": 7,
+      "B-MISC": 1,
+      "B-ORG": 5,
+      "B-PER": 3,
+      "I-LOC": 8,
+      "I-MISC": 2,
+      "I-ORG": 6,
+      "I-PER": 4,
+      "O": 0
+    },
+    "layer_norm_eps": 1e-12,
+    "max_position_embeddings": 512,
+    "model_type": "bert",
+    "num_attention_heads": 12,
+    "num_hidden_layers": 12,
+    "output_past": true,
+    "pad_token_id": 0,
+    "type_vocab_size": 2,
+    "vocab_size": 28996
+  },
+  "ner_reference": {
+    "passed": true,
+    "maximum_error": 6.580352783203125e-05,
+    "inputs_equal": true,
+    "differences": {
+      "ids": [
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        }
+      ],
+      "mask": [
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        }
+      ],
+      "types": [
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        }
+      ],
+      "offsets": [
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        }
+      ],
+      "special": [
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        },
+        {
+          "exact": true
+        }
+      ],
+      "layer_00": [
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        },
+        {
+          "max_abs": 1.9073486328125e-06
+        }
+      ],
+      "layer_01": [
+        {
+          "max_abs": 1.0967254638671875e-05
+        },
+        {
+          "max_abs": 8.58306884765625e-06
+        },
+        {
+          "max_abs": 1.0013580322265625e-05
+        },
+        {
+          "max_abs": 7.62939453125e-06
+        },
+        {
+          "max_abs": 9.5367431640625e-06
+        },
+        {
+          "max_abs": 1.1920928955078125e-05
+        },
+        {
+          "max_abs": 5.7220458984375e-06
+        },
+        {
+          "max_abs": 5.7220458984375e-06
+        }
+      ],
+      "layer_02": [
+        {
+          "max_abs": 1.1444091796875e-05
+        },
+        {
+          "max_abs": 1.239776611328125e-05
+        },
+        {
+          "max_abs": 1.430511474609375e-05
+        },
+        {
+          "max_abs": 1.1444091796875e-05
+        },
+        {
+          "max_abs": 7.62939453125e-06
+        },
+        {
+          "max_abs": 7.152557373046875e-06
+        },
+        {
+          "max_abs": 1.52587890625e-05
+        },
+        {
+          "max_abs": 7.62939453125e-06
+        }
+      ],
+      "layer_03": [
+        {
+          "max_abs": 8.106231689453125e-06
+        },
+        {
+          "max_abs": 6.67572021484375e-06
+        },
+        {
+          "max_abs": 6.67572021484375e-06
+        },
+        {
+          "max_abs": 6.4373016357421875e-06
+        },
+        {
+          "max_abs": 5.7220458984375e-06
+        },
+        {
+          "max_abs": 6.198883056640625e-06
+        },
+        {
+          "max_abs": 8.106231689453125e-06
+        },
+        {
+          "max_abs": 7.62939453125e-06
+        }
+      ],
+      "layer_04": [
+        {
+          "max_abs": 1.049041748046875e-05
+        },
+        {
+          "max_abs": 9.059906005859375e-06
+        },
+        {
+          "max_abs": 1.0013580322265625e-05
+        },
+        {
+          "max_abs": 9.5367431640625e-06
+        },
+        {
+          "max_abs": 7.62939453125e-06
+        },
+        {
+          "max_abs": 1.049041748046875e-05
+        },
+        {
+          "max_abs": 1.049041748046875e-05
+        },
+        {
+          "max_abs": 8.58306884765625e-06
+        }
+      ],
+      "layer_05": [
+        {
+          "max_abs": 1.6927719116210938e-05
+        },
+        {
+          "max_abs": 1.430511474609375e-05
+        },
+        {
+          "max_abs": 1.1444091796875e-05
+        },
+        {
+          "max_abs": 1.0967254638671875e-05
+        },
+        {
+          "max_abs": 1.1444091796875e-05
+        },
+        {
+          "max_abs": 1.2874603271484375e-05
+        },
+        {
+          "max_abs": 1.33514404296875e-05
+        },
+        {
+          "max_abs": 1.049041748046875e-05
+        }
+      ],
+      "layer_06": [
+        {
+          "max_abs": 1.7404556274414062e-05
+        },
+        {
+          "max_abs": 1.52587890625e-05
+        },
+        {
+          "max_abs": 1.239776611328125e-05
+        },
+        {
+          "max_abs": 1.239776611328125e-05
+        },
+        {
+          "max_abs": 1.52587890625e-05
+        },
+        {
+          "max_abs": 1.52587890625e-05
+        },
+        {
+          "max_abs": 2.09808349609375e-05
+        },
+        {
+          "max_abs": 1.1444091796875e-05
+        }
+      ],
+      "layer_07": [
+        {
+          "max_abs": 2.09808349609375e-05
+        },
+        {
+          "max_abs": 2.384185791015625e-05
+        },
+        {
+          "max_abs": 1.9073486328125e-05
+        },
+        {
+          "max_abs": 1.621246337890625e-05
+        },
+        {
+          "max_abs": 2.47955322265625e-05
+        },
+        {
+          "max_abs": 1.5974044799804688e-05
+        },
+        {
+          "max_abs": 3.528594970703125e-05
+        },
+        {
+          "max_abs": 1.239776611328125e-05
+        }
+      ],
+      "layer_08": [
+        {
+          "max_abs": 2.384185791015625e-05
+        },
+        {
+          "max_abs": 3.337860107421875e-05
+        },
+        {
+          "max_abs": 2.47955322265625e-05
+        },
+        {
+          "max_abs": 2.193450927734375e-05
+        },
+        {
+          "max_abs": 2.288818359375e-05
+        },
+        {
+          "max_abs": 1.71661376953125e-05
+        },
+        {
+          "max_abs": 4.57763671875e-05
+        },
+        {
+          "max_abs": 1.621246337890625e-05
+        }
+      ],
+      "layer_09": [
+        {
+          "max_abs": 3.4332275390625e-05
+        },
+        {
+          "max_abs": 3.910064697265625e-05
+        },
+        {
+          "max_abs": 3.147125244140625e-05
+        },
+        {
+          "max_abs": 2.384185791015625e-05
+        },
+        {
+          "max_abs": 2.2411346435546875e-05
+        },
+        {
+          "max_abs": 2.390146255493164e-05
+        },
+        {
+          "max_abs": 4.482269287109375e-05
+        },
+        {
+          "max_abs": 1.9073486328125e-05
+        }
+      ],
+      "layer_10": [
+        {
+          "max_abs": 4.38690185546875e-05
+        },
+        {
+          "max_abs": 6.580352783203125e-05
+        },
+        {
+          "max_abs": 4.76837158203125e-05
+        },
+        {
+          "max_abs": 3.147125244140625e-05
+        },
+        {
+          "max_abs": 2.765655517578125e-05
+        },
+        {
+          "max_abs": 2.956390380859375e-05
+        },
+        {
+          "max_abs": 4.1961669921875e-05
+        },
+        {
+          "max_abs": 2.384185791015625e-05
+        }
+      ],
+      "layer_11": [
+        {
+          "max_abs": 5.7220458984375e-05
+        },
+        {
+          "max_abs": 6.0558319091796875e-05
+        },
+        {
+          "max_abs": 5.7220458984375e-05
+        },
+        {
+          "max_abs": 3.1948089599609375e-05
+        },
+        {
+          "max_abs": 2.676248550415039e-05
+        },
+        {
+          "max_abs": 4.1961669921875e-05
+        },
+        {
+          "max_abs": 4.291534423828125e-05
+        },
+        {
+          "max_abs": 2.86102294921875e-05
+        }
+      ],
+      "layer_12": [
+        {
+          "max_abs": 2.3126602172851562e-05
+        },
+        {
+          "max_abs": 2.5272369384765625e-05
+        },
+        {
+          "max_abs": 2.4318695068359375e-05
+        },
+        {
+          "max_abs": 1.5020370483398438e-05
+        },
+        {
+          "max_abs": 9.5367431640625e-06
+        },
+        {
+          "max_abs": 2.3126602172851562e-05
+        },
+        {
+          "max_abs": 1.430511474609375e-05
+        },
+        {
+          "max_abs": 1.3828277587890625e-05
+        }
+      ],
+      "logits": [
+        {
+          "max_abs": 3.731250762939453e-05
+        },
+        {
+          "max_abs": 3.2901763916015625e-05
+        },
+        {
+          "max_abs": 2.86102294921875e-05
+        },
+        {
+          "max_abs": 1.71661376953125e-05
+        },
+        {
+          "max_abs": 1.71661376953125e-05
+        },
+        {
+          "max_abs": 1.71661376953125e-05
+        },
+        {
+          "max_abs": 1.2874603271484375e-05
+        },
+        {
+          "max_abs": 2.002716064453125e-05
+        }
+      ],
+      "probabilities": [
+        {
+          "max_abs": 8.881092071533203e-06
+        },
+        {
+          "max_abs": 2.9206275939941406e-06
+        },
+        {
+          "max_abs": 6.109476089477539e-07
+        },
+        {
+          "max_abs": 2.7567148208618164e-07
+        },
+        {
+          "max_abs": 2.384185791015625e-07
+        },
+        {
+          "max_abs": 1.6987323760986328e-06
+        },
+        {
+          "max_abs": 2.4437904357910156e-06
+        },
+        {
+          "max_abs": 3.159046173095703e-06
+        }
+      ]
+    },
+    "outputs": {
+      "native": {
+        "none": [
+          [
+            {
+              "entity": "B-MISC",
+              "score": 0.48013919591903687,
+              "index": 6,
+              "word": "J",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.29028359055519104,
+              "index": 7,
+              "word": "##AP",
+              "start": 10,
+              "end": 12
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.4315680265426636,
+              "index": 11,
+              "word": "L",
+              "start": 19,
+              "end": 20
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.4221237301826477,
+              "index": 12,
+              "word": "##UC",
+              "start": 20,
+              "end": 22
+            },
+            {
+              "entity": "B-ORG",
+              "score": 0.6440014839172363,
+              "index": 18,
+              "word": "CH",
+              "start": 31,
+              "end": 33
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.5127212405204773,
+              "index": 19,
+              "word": "##IN",
+              "start": 33,
+              "end": 35
+            },
+            {
+              "entity": "I-ORG",
+              "score": 0.5850016474723816,
+              "index": 20,
+              "word": "##A",
+              "start": 35,
+              "end": 36
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9973057508468628,
+              "index": 1,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.8018407821655273,
+              "index": 2,
+              "word": "##di",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.6068841218948364,
+              "index": 3,
+              "word": "##m",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.998578667640686,
+              "index": 4,
+              "word": "La",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.7398126125335693,
+              "index": 6,
+              "word": "##ki",
+              "start": 9,
+              "end": 11
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.997665524482727,
+              "index": 1,
+              "word": "AL",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9957873225212097,
+              "index": 2,
+              "word": "-",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9619762301445007,
+              "index": 3,
+              "word": "AI",
+              "start": 3,
+              "end": 5
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9851365089416504,
+              "index": 4,
+              "word": "##N",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.99944669008255,
+              "index": 6,
+              "word": "United",
+              "start": 9,
+              "end": 15
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9993621706962585,
+              "index": 7,
+              "word": "Arab",
+              "start": 16,
+              "end": 20
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.999427855014801,
+              "index": 8,
+              "word": "Emirates",
+              "start": 21,
+              "end": 29
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9998573064804077,
+              "index": 1,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9983799457550049,
+              "index": 7,
+              "word": "Asian",
+              "start": 33,
+              "end": 38
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9979041814804077,
+              "index": 8,
+              "word": "Cup",
+              "start": 39,
+              "end": 42
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9997606873512268,
+              "index": 18,
+              "word": "Syria",
+              "start": 78,
+              "end": 83
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.7004874348640442,
+              "index": 21,
+              "word": "Group",
+              "start": 89,
+              "end": 94
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.8535799980163574,
+              "index": 22,
+              "word": "C",
+              "start": 95,
+              "end": 96
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.99986732006073,
+              "index": 2,
+              "word": "China",
+              "start": 4,
+              "end": 9
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9997265934944153,
+              "index": 27,
+              "word": "Uzbekistan",
+              "start": 119,
+              "end": 129
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9998445510864258,
+              "index": 1,
+              "word": "China",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9956142902374268,
+              "index": 18,
+              "word": "U",
+              "start": 93,
+              "end": 94
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.8329175114631653,
+              "index": 19,
+              "word": "##z",
+              "start": 94,
+              "end": 95
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9415714740753174,
+              "index": 20,
+              "word": "##bek",
+              "start": 95,
+              "end": 98
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9997504353523254,
+              "index": 22,
+              "word": "Igor",
+              "start": 107,
+              "end": 111
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9996241331100464,
+              "index": 23,
+              "word": "S",
+              "start": 112,
+              "end": 113
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9987316727638245,
+              "index": 24,
+              "word": "##h",
+              "start": 113,
+              "end": 114
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9921098351478577,
+              "index": 25,
+              "word": "##k",
+              "start": 114,
+              "end": 115
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9389645457267761,
+              "index": 26,
+              "word": "##vy",
+              "start": 115,
+              "end": 117
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.8237859010696411,
+              "index": 27,
+              "word": "##rin",
+              "start": 117,
+              "end": 120
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.999762237071991,
+              "index": 47,
+              "word": "Chinese",
+              "start": 205,
+              "end": 212
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9989508390426636,
+              "index": 1,
+              "word": "Ole",
+              "start": 0,
+              "end": 3
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.8807217478752136,
+              "index": 2,
+              "word": "##g",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9997761845588684,
+              "index": 3,
+              "word": "S",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9993628859519958,
+              "index": 4,
+              "word": "##hat",
+              "start": 6,
+              "end": 9
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9949919581413269,
+              "index": 5,
+              "word": "##ski",
+              "start": 9,
+              "end": 12
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9876985549926758,
+              "index": 6,
+              "word": "##ku",
+              "start": 12,
+              "end": 14
+            }
+          ],
+          [
+            {
+              "entity": "B-MISC",
+              "score": 0.9995959401130676,
+              "index": 3,
+              "word": "Soviet",
+              "start": 11,
+              "end": 17
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9975504279136658,
+              "index": 9,
+              "word": "Asian",
+              "start": 45,
+              "end": 50
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9973701238632202,
+              "index": 10,
+              "word": "Cup",
+              "start": 51,
+              "end": 54
+            }
+          ],
+          [
+            {
+              "entity": "B-MISC",
+              "score": 0.9946093559265137,
+              "index": 4,
+              "word": "Asian",
+              "start": 20,
+              "end": 25
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9954813718795776,
+              "index": 5,
+              "word": "Games",
+              "start": 26,
+              "end": 31
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9998358488082886,
+              "index": 11,
+              "word": "Uzbekistan",
+              "start": 54,
+              "end": 64
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.999861478805542,
+              "index": 12,
+              "word": "Japan",
+              "start": 64,
+              "end": 69
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9997863173484802,
+              "index": 27,
+              "word": "Syria",
+              "start": 154,
+              "end": 159
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9989996552467346,
+              "index": 1,
+              "word": "Ta",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9190947413444519,
+              "index": 2,
+              "word": "##ku",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9885343909263611,
+              "index": 3,
+              "word": "##ya",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9997871518135071,
+              "index": 4,
+              "word": "Ta",
+              "start": 7,
+              "end": 9
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9951153993606567,
+              "index": 5,
+              "word": "##ka",
+              "start": 9,
+              "end": 11
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9983201622962952,
+              "index": 6,
+              "word": "##gi",
+              "start": 11,
+              "end": 13
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9989458918571472,
+              "index": 20,
+              "word": "Hi",
+              "start": 70,
+              "end": 72
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9952211976051331,
+              "index": 21,
+              "word": "##ros",
+              "start": 72,
+              "end": 75
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.95635986328125,
+              "index": 22,
+              "word": "##hi",
+              "start": 75,
+              "end": 77
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.6809186935424805,
+              "index": 23,
+              "word": "##ge",
+              "start": 77,
+              "end": 79
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9992392063140869,
+              "index": 24,
+              "word": "Yan",
+              "start": 80,
+              "end": 83
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9938767552375793,
+              "index": 25,
+              "word": "##agi",
+              "start": 83,
+              "end": 86
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9536271691322327,
+              "index": 26,
+              "word": "##moto",
+              "start": 86,
+              "end": 90
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9997703433036804,
+              "index": 30,
+              "word": "Syrian",
+              "start": 109,
+              "end": 115
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9997888207435608,
+              "index": 34,
+              "word": "Salem",
+              "start": 138,
+              "end": 143
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9998024106025696,
+              "index": 35,
+              "word": "Bit",
+              "start": 144,
+              "end": 147
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9991980195045471,
+              "index": 36,
+              "word": "##ar",
+              "start": 147,
+              "end": 149
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9998557567596436,
+              "index": 10,
+              "word": "Syria",
+              "start": 36,
+              "end": 41
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9995310306549072,
+              "index": 3,
+              "word": "Hassan",
+              "start": 9,
+              "end": 15
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9996553659439087,
+              "index": 4,
+              "word": "Abbas",
+              "start": 16,
+              "end": 21
+            },
+            {
+              "entity": "B-ORG",
+              "score": 0.9818326234817505,
+              "index": 31,
+              "word": "Bit",
+              "start": 138,
+              "end": 141
+            },
+            {
+              "entity": "I-ORG",
+              "score": 0.9706421494483948,
+              "index": 32,
+              "word": "##ar",
+              "start": 141,
+              "end": 143
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9996823072433472,
+              "index": 1,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9823566675186157,
+              "index": 2,
+              "word": "##der",
+              "start": 2,
+              "end": 5
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9997374415397644,
+              "index": 3,
+              "word": "Jo",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9993109703063965,
+              "index": 4,
+              "word": "##kha",
+              "start": 8,
+              "end": 11
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9970356225967407,
+              "index": 5,
+              "word": "##dar",
+              "start": 11,
+              "end": 14
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9998565912246704,
+              "index": 8,
+              "word": "Syria",
+              "start": 25,
+              "end": 30
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9998321533203125,
+              "index": 1,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9997556805610657,
+              "index": 7,
+              "word": "Syrian",
+              "start": 29,
+              "end": 35
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9997475743293762,
+              "index": 20,
+              "word": "Syrian",
+              "start": 94,
+              "end": 100
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9605487585067749,
+              "index": 1,
+              "word": "Bit",
+              "start": 0,
+              "end": 3
+            }
+          ]
+        ],
+        "simple": [
+          [
+            {
+              "entity_group": "MISC",
+              "score": 0.48013919591903687,
+              "word": "J",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.29028359055519104,
+              "word": "##AP",
+              "start": 10,
+              "end": 12
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.4315680265426636,
+              "word": "L",
+              "start": 19,
+              "end": 20
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.4221237301826477,
+              "word": "##UC",
+              "start": 20,
+              "end": 22
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.6440014839172363,
+              "word": "CH",
+              "start": 31,
+              "end": 33
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.5127212405204773,
+              "word": "##IN",
+              "start": 33,
+              "end": 35
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.5850016474723816,
+              "word": "##A",
+              "start": 35,
+              "end": 36
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9973057508468628,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.8018407821655273,
+              "word": "##di",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.8027313947677612,
+              "word": "##m La",
+              "start": 4,
+              "end": 8
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.7398126125335693,
+              "word": "##ki",
+              "start": 9,
+              "end": 11
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.985141396522522,
+              "word": "AL - AIN",
+              "start": 0,
+              "end": 6
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9994122385978699,
+              "word": "United Arab Emirates",
+              "start": 9,
+              "end": 29
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998573064804077,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9981420636177063,
+              "word": "Asian Cup",
+              "start": 33,
+              "end": 42
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997606873512268,
+              "word": "Syria",
+              "start": 78,
+              "end": 83
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.7770336866378784,
+              "word": "Group C",
+              "start": 89,
+              "end": 96
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.99986732006073,
+              "word": "China",
+              "start": 4,
+              "end": 9
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997265934944153,
+              "word": "Uzbekistan",
+              "start": 119,
+              "end": 129
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998445510864258,
+              "word": "China",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9233677387237549,
+              "word": "Uzbek",
+              "start": 93,
+              "end": 98
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9588277339935303,
+              "word": "Igor Shkvyrin",
+              "start": 107,
+              "end": 120
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.999762237071991,
+              "word": "Chinese",
+              "start": 205,
+              "end": 212
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9989508390426636,
+              "word": "Ole",
+              "start": 0,
+              "end": 3
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9725103378295898,
+              "word": "##g Shatskiku",
+              "start": 3,
+              "end": 14
+            }
+          ],
+          [
+            {
+              "entity_group": "MISC",
+              "score": 0.9995959401130676,
+              "word": "Soviet",
+              "start": 11,
+              "end": 17
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9974602460861206,
+              "word": "Asian Cup",
+              "start": 45,
+              "end": 54
+            }
+          ],
+          [
+            {
+              "entity_group": "MISC",
+              "score": 0.9950453639030457,
+              "word": "Asian Games",
+              "start": 20,
+              "end": 31
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9998358488082886,
+              "word": "Uzbekistan",
+              "start": 54,
+              "end": 64
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.999861478805542,
+              "word": "Japan",
+              "start": 64,
+              "end": 69
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997863173484802,
+              "word": "Syria",
+              "start": 154,
+              "end": 159
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9989996552467346,
+              "word": "Ta",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9190947413444519,
+              "word": "##ku",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9954392910003662,
+              "word": "##ya Takagi",
+              "start": 4,
+              "end": 13
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9989458918571472,
+              "word": "Hi",
+              "start": 70,
+              "end": 72
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9757905006408691,
+              "word": "##roshi",
+              "start": 72,
+              "end": 77
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9069154262542725,
+              "word": "##ge Yanagimoto",
+              "start": 77,
+              "end": 90
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997703433036804,
+              "word": "Syrian",
+              "start": 109,
+              "end": 115
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9995964169502258,
+              "word": "Salem Bitar",
+              "start": 138,
+              "end": 149
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998557567596436,
+              "word": "Syria",
+              "start": 36,
+              "end": 41
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.999593198299408,
+              "word": "Hassan Abbas",
+              "start": 9,
+              "end": 21
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.976237416267395,
+              "word": "Bitar",
+              "start": 138,
+              "end": 143
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9996823072433472,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9946101903915405,
+              "word": "##der Jokhadar",
+              "start": 2,
+              "end": 14
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9998565912246704,
+              "word": "Syria",
+              "start": 25,
+              "end": 30
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998321533203125,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997556805610657,
+              "word": "Syrian",
+              "start": 29,
+              "end": 35
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997475743293762,
+              "word": "Syrian",
+              "start": 94,
+              "end": 100
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9605487585067749,
+              "word": "Bit",
+              "start": 0,
+              "end": 3
+            }
+          ]
+        ]
+      },
+      "reference": {
+        "none": [
+          [
+            {
+              "entity": "B-MISC",
+              "score": 0.4801434874534607,
+              "index": 6,
+              "word": "J",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.29028353095054626,
+              "index": 7,
+              "word": "##AP",
+              "start": 10,
+              "end": 12
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.43156856298446655,
+              "index": 11,
+              "word": "L",
+              "start": 19,
+              "end": 20
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.422126442193985,
+              "index": 12,
+              "word": "##UC",
+              "start": 20,
+              "end": 22
+            },
+            {
+              "entity": "B-ORG",
+              "score": 0.6440016031265259,
+              "index": 18,
+              "word": "CH",
+              "start": 31,
+              "end": 33
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.5127224326133728,
+              "index": 19,
+              "word": "##IN",
+              "start": 33,
+              "end": 35
+            },
+            {
+              "entity": "I-ORG",
+              "score": 0.5850006341934204,
+              "index": 20,
+              "word": "##A",
+              "start": 35,
+              "end": 36
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9973056316375732,
+              "index": 1,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.80184406042099,
+              "index": 2,
+              "word": "##di",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.6068877577781677,
+              "index": 3,
+              "word": "##m",
+              "start": 4,
+              "end": 5
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9985785484313965,
+              "index": 4,
+              "word": "La",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.7398138046264648,
+              "index": 6,
+              "word": "##ki",
+              "start": 9,
+              "end": 11
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9976654052734375,
+              "index": 1,
+              "word": "AL",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9957873225212097,
+              "index": 2,
+              "word": "-",
+              "start": 2,
+              "end": 3
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9619768261909485,
+              "index": 3,
+              "word": "AI",
+              "start": 3,
+              "end": 5
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9851367473602295,
+              "index": 4,
+              "word": "##N",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.99944669008255,
+              "index": 6,
+              "word": "United",
+              "start": 9,
+              "end": 15
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.9993621706962585,
+              "index": 7,
+              "word": "Arab",
+              "start": 16,
+              "end": 20
+            },
+            {
+              "entity": "I-LOC",
+              "score": 0.999427855014801,
+              "index": 8,
+              "word": "Emirates",
+              "start": 21,
+              "end": 29
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9998571872711182,
+              "index": 1,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9983799457550049,
+              "index": 7,
+              "word": "Asian",
+              "start": 33,
+              "end": 38
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9979041814804077,
+              "index": 8,
+              "word": "Cup",
+              "start": 39,
+              "end": 42
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9997606873512268,
+              "index": 18,
+              "word": "Syria",
+              "start": 78,
+              "end": 83
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.700484573841095,
+              "index": 21,
+              "word": "Group",
+              "start": 89,
+              "end": 94
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.8535792231559753,
+              "index": 22,
+              "word": "C",
+              "start": 95,
+              "end": 96
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.99986732006073,
+              "index": 2,
+              "word": "China",
+              "start": 4,
+              "end": 9
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9997265934944153,
+              "index": 27,
+              "word": "Uzbekistan",
+              "start": 119,
+              "end": 129
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.9998444318771362,
+              "index": 1,
+              "word": "China",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9956144094467163,
+              "index": 18,
+              "word": "U",
+              "start": 93,
+              "end": 94
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.8329170346260071,
+              "index": 19,
+              "word": "##z",
+              "start": 94,
+              "end": 95
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9415717720985413,
+              "index": 20,
+              "word": "##bek",
+              "start": 95,
+              "end": 98
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9997504353523254,
+              "index": 22,
+              "word": "Igor",
+              "start": 107,
+              "end": 111
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9996241331100464,
+              "index": 23,
+              "word": "S",
+              "start": 112,
+              "end": 113
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9987316727638245,
+              "index": 24,
+              "word": "##h",
+              "start": 113,
+              "end": 114
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9921098351478577,
+              "index": 25,
+              "word": "##k",
+              "start": 114,
+              "end": 115
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9389646649360657,
+              "index": 26,
+              "word": "##vy",
+              "start": 115,
+              "end": 117
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.8237856030464172,
+              "index": 27,
+              "word": "##rin",
+              "start": 117,
+              "end": 120
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.999762237071991,
+              "index": 47,
+              "word": "Chinese",
+              "start": 205,
+              "end": 212
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9989508390426636,
+              "index": 1,
+              "word": "Ole",
+              "start": 0,
+              "end": 3
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.880721926689148,
+              "index": 2,
+              "word": "##g",
+              "start": 3,
+              "end": 4
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9997761845588684,
+              "index": 3,
+              "word": "S",
+              "start": 5,
+              "end": 6
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9993628859519958,
+              "index": 4,
+              "word": "##hat",
+              "start": 6,
+              "end": 9
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9949919581413269,
+              "index": 5,
+              "word": "##ski",
+              "start": 9,
+              "end": 12
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9876985549926758,
+              "index": 6,
+              "word": "##ku",
+              "start": 12,
+              "end": 14
+            }
+          ],
+          [
+            {
+              "entity": "B-MISC",
+              "score": 0.9995958209037781,
+              "index": 3,
+              "word": "Soviet",
+              "start": 11,
+              "end": 17
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9975504279136658,
+              "index": 9,
+              "word": "Asian",
+              "start": 45,
+              "end": 50
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9973701238632202,
+              "index": 10,
+              "word": "Cup",
+              "start": 51,
+              "end": 54
+            }
+          ],
+          [
+            {
+              "entity": "B-MISC",
+              "score": 0.9946094751358032,
+              "index": 4,
+              "word": "Asian",
+              "start": 20,
+              "end": 25
+            },
+            {
+              "entity": "I-MISC",
+              "score": 0.9954813718795776,
+              "index": 5,
+              "word": "Games",
+              "start": 26,
+              "end": 31
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9998358488082886,
+              "index": 11,
+              "word": "Uzbekistan",
+              "start": 54,
+              "end": 64
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.999861478805542,
+              "index": 12,
+              "word": "Japan",
+              "start": 64,
+              "end": 69
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9997863173484802,
+              "index": 27,
+              "word": "Syria",
+              "start": 154,
+              "end": 159
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9989997744560242,
+              "index": 1,
+              "word": "Ta",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9190949201583862,
+              "index": 2,
+              "word": "##ku",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9885343909263611,
+              "index": 3,
+              "word": "##ya",
+              "start": 4,
+              "end": 6
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9997872710227966,
+              "index": 4,
+              "word": "Ta",
+              "start": 7,
+              "end": 9
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9951153993606567,
+              "index": 5,
+              "word": "##ka",
+              "start": 9,
+              "end": 11
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9983200430870056,
+              "index": 6,
+              "word": "##gi",
+              "start": 11,
+              "end": 13
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9989458918571472,
+              "index": 20,
+              "word": "Hi",
+              "start": 70,
+              "end": 72
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9952211976051331,
+              "index": 21,
+              "word": "##ros",
+              "start": 72,
+              "end": 75
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.95635986328125,
+              "index": 22,
+              "word": "##hi",
+              "start": 75,
+              "end": 77
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.6809174418449402,
+              "index": 23,
+              "word": "##ge",
+              "start": 77,
+              "end": 79
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9992392063140869,
+              "index": 24,
+              "word": "Yan",
+              "start": 80,
+              "end": 83
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9938767552375793,
+              "index": 25,
+              "word": "##agi",
+              "start": 83,
+              "end": 86
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.953626811504364,
+              "index": 26,
+              "word": "##moto",
+              "start": 86,
+              "end": 90
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9997703433036804,
+              "index": 30,
+              "word": "Syrian",
+              "start": 109,
+              "end": 115
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9997888207435608,
+              "index": 34,
+              "word": "Salem",
+              "start": 138,
+              "end": 143
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9998024106025696,
+              "index": 35,
+              "word": "Bit",
+              "start": 144,
+              "end": 147
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9991979002952576,
+              "index": 36,
+              "word": "##ar",
+              "start": 147,
+              "end": 149
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.999855637550354,
+              "index": 10,
+              "word": "Syria",
+              "start": 36,
+              "end": 41
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9995310306549072,
+              "index": 3,
+              "word": "Hassan",
+              "start": 9,
+              "end": 15
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9996553659439087,
+              "index": 4,
+              "word": "Abbas",
+              "start": 16,
+              "end": 21
+            },
+            {
+              "entity": "B-ORG",
+              "score": 0.9818328619003296,
+              "index": 31,
+              "word": "Bit",
+              "start": 138,
+              "end": 141
+            },
+            {
+              "entity": "I-ORG",
+              "score": 0.9706422686576843,
+              "index": 32,
+              "word": "##ar",
+              "start": 141,
+              "end": 143
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9996823072433472,
+              "index": 1,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity": "B-PER",
+              "score": 0.9823567867279053,
+              "index": 2,
+              "word": "##der",
+              "start": 2,
+              "end": 5
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9997374415397644,
+              "index": 3,
+              "word": "Jo",
+              "start": 6,
+              "end": 8
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9993109703063965,
+              "index": 4,
+              "word": "##kha",
+              "start": 8,
+              "end": 11
+            },
+            {
+              "entity": "I-PER",
+              "score": 0.9970356225967407,
+              "index": 5,
+              "word": "##dar",
+              "start": 11,
+              "end": 14
+            },
+            {
+              "entity": "B-LOC",
+              "score": 0.9998565912246704,
+              "index": 8,
+              "word": "Syria",
+              "start": 25,
+              "end": 30
+            }
+          ],
+          [
+            {
+              "entity": "B-LOC",
+              "score": 0.999832034111023,
+              "index": 1,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9997556805610657,
+              "index": 7,
+              "word": "Syrian",
+              "start": 29,
+              "end": 35
+            },
+            {
+              "entity": "B-MISC",
+              "score": 0.9997475743293762,
+              "index": 20,
+              "word": "Syrian",
+              "start": 94,
+              "end": 100
+            }
+          ],
+          [
+            {
+              "entity": "B-PER",
+              "score": 0.9605480432510376,
+              "index": 1,
+              "word": "Bit",
+              "start": 0,
+              "end": 3
+            }
+          ]
+        ],
+        "simple": [
+          [
+            {
+              "entity_group": "MISC",
+              "score": 0.4801434874534607,
+              "word": "J",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.29028353095054626,
+              "word": "##AP",
+              "start": 10,
+              "end": 12
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.43156856298446655,
+              "word": "L",
+              "start": 19,
+              "end": 20
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.422126442193985,
+              "word": "##UC",
+              "start": 20,
+              "end": 22
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.6440016031265259,
+              "word": "CH",
+              "start": 31,
+              "end": 33
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.5127224326133728,
+              "word": "##IN",
+              "start": 33,
+              "end": 35
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.5850006341934204,
+              "word": "##A",
+              "start": 35,
+              "end": 36
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9973056316375732,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.80184406042099,
+              "word": "##di",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.8027331829071045,
+              "word": "##m La",
+              "start": 4,
+              "end": 8
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.7398138046264648,
+              "word": "##ki",
+              "start": 9,
+              "end": 11
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9851415753364563,
+              "word": "AL - AIN",
+              "start": 0,
+              "end": 6
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9994122385978699,
+              "word": "United Arab Emirates",
+              "start": 9,
+              "end": 29
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998571872711182,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9981420636177063,
+              "word": "Asian Cup",
+              "start": 33,
+              "end": 42
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997606873512268,
+              "word": "Syria",
+              "start": 78,
+              "end": 83
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.7770318984985352,
+              "word": "Group C",
+              "start": 89,
+              "end": 96
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.99986732006073,
+              "word": "China",
+              "start": 4,
+              "end": 9
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997265934944153,
+              "word": "Uzbekistan",
+              "start": 119,
+              "end": 129
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998444318771362,
+              "word": "China",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9233677387237549,
+              "word": "Uzbek",
+              "start": 93,
+              "end": 98
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9588277339935303,
+              "word": "Igor Shkvyrin",
+              "start": 107,
+              "end": 120
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.999762237071991,
+              "word": "Chinese",
+              "start": 205,
+              "end": 212
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9989508390426636,
+              "word": "Ole",
+              "start": 0,
+              "end": 3
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9725103378295898,
+              "word": "##g Shatskiku",
+              "start": 3,
+              "end": 14
+            }
+          ],
+          [
+            {
+              "entity_group": "MISC",
+              "score": 0.9995958209037781,
+              "word": "Soviet",
+              "start": 11,
+              "end": 17
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9974602460861206,
+              "word": "Asian Cup",
+              "start": 45,
+              "end": 54
+            }
+          ],
+          [
+            {
+              "entity_group": "MISC",
+              "score": 0.9950454235076904,
+              "word": "Asian Games",
+              "start": 20,
+              "end": 31
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9998358488082886,
+              "word": "Uzbekistan",
+              "start": 54,
+              "end": 64
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.999861478805542,
+              "word": "Japan",
+              "start": 64,
+              "end": 69
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997863173484802,
+              "word": "Syria",
+              "start": 154,
+              "end": 159
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9989997744560242,
+              "word": "Ta",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9190949201583862,
+              "word": "##ku",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9954392910003662,
+              "word": "##ya Takagi",
+              "start": 4,
+              "end": 13
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9989458918571472,
+              "word": "Hi",
+              "start": 70,
+              "end": 72
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9757905006408691,
+              "word": "##roshi",
+              "start": 72,
+              "end": 77
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9069150686264038,
+              "word": "##ge Yanagimoto",
+              "start": 77,
+              "end": 90
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997703433036804,
+              "word": "Syrian",
+              "start": 109,
+              "end": 115
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.999596357345581,
+              "word": "Salem Bitar",
+              "start": 138,
+              "end": 149
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.999855637550354,
+              "word": "Syria",
+              "start": 36,
+              "end": 41
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.999593198299408,
+              "word": "Hassan Abbas",
+              "start": 9,
+              "end": 21
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.9762375354766846,
+              "word": "Bitar",
+              "start": 138,
+              "end": 143
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9996823072433472,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9946101903915405,
+              "word": "##der Jokhadar",
+              "start": 2,
+              "end": 14
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9998565912246704,
+              "word": "Syria",
+              "start": 25,
+              "end": 30
+            }
+          ],
+          [
+            {
+              "entity_group": "LOC",
+              "score": 0.999832034111023,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997556805610657,
+              "word": "Syrian",
+              "start": 29,
+              "end": 35
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997475743293762,
+              "word": "Syrian",
+              "start": 94,
+              "end": 100
+            }
+          ],
+          [
+            {
+              "entity_group": "PER",
+              "score": 0.9605480432510376,
+              "word": "Bit",
+              "start": 0,
+              "end": 3
+            }
+          ]
+        ]
+      }
+    },
+    "subprocesses": {
+      "native": {
+        "exit_code": 0,
+        "log": ""
+      },
+      "reference": {
+        "exit_code": 0,
+        "log": "Some weights of the model checkpoint at /private/tmp/mlx-one-all40-20261108/models/bert_token_classification/checkpoint were not used when initializing BertForTokenClassification: ['bert.pooler.dense.bias', 'bert.pooler.dense.weight']\n- This IS expected if you are initializing BertForTokenClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).\n- This IS NOT expected if you are initializing BertForTokenClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).\nDevice set to use cpu\nDevice set to use cpu\n"
+      }
+    },
+    "reference": "transformers==4.57.1; pinned source weights; CPU FP32"
+  },
+  "outputs": [
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 33,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "MISC",
+              "score": 0.48013943433761597,
+              "word": "J",
+              "start": 9,
+              "end": 10
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.2902832627296448,
+              "word": "##AP",
+              "start": 10,
+              "end": 12
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.4315679967403412,
+              "word": "L",
+              "start": 19,
+              "end": 20
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.42212334275245667,
+              "word": "##UC",
+              "start": 20,
+              "end": 22
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.644001841545105,
+              "word": "CH",
+              "start": 31,
+              "end": 33
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.5127207040786743,
+              "word": "##IN",
+              "start": 33,
+              "end": 35
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.5850015878677368,
+              "word": "##A",
+              "start": 35,
+              "end": 36
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 8,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "PER",
+              "score": 0.9973057508468628,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.8018402457237244,
+              "word": "##di",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.802731454372406,
+              "word": "##m La",
+              "start": 4,
+              "end": 8
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.7398123145103455,
+              "word": "##ki",
+              "start": 9,
+              "end": 11
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 15,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.985141396522522,
+              "word": "AL - AIN",
+              "start": 0,
+              "end": 6
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9994122385978699,
+              "word": "United Arab Emirates",
+              "start": 9,
+              "end": 29
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 29,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998573064804077,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9981420636177063,
+              "word": "Asian Cup",
+              "start": 33,
+              "end": 42
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997606873512268,
+              "word": "Syria",
+              "start": 78,
+              "end": 83
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.7770344018936157,
+              "word": "Group C",
+              "start": 89,
+              "end": 96
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 30,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.99986732006073,
+              "word": "China",
+              "start": 4,
+              "end": 9
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997265934944153,
+              "word": "Uzbekistan",
+              "start": 119,
+              "end": 129
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 56,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998445510864258,
+              "word": "China",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9233675003051758,
+              "word": "Uzbek",
+              "start": 93,
+              "end": 98
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9588277339935303,
+              "word": "Igor Shkvyrin",
+              "start": 107,
+              "end": 120
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.999762237071991,
+              "word": "Chinese",
+              "start": 205,
+              "end": 212
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 31,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "PER",
+              "score": 0.9989508390426636,
+              "word": "Ole",
+              "start": 0,
+              "end": 3
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9725105166435242,
+              "word": "##g Shatskiku",
+              "start": 3,
+              "end": 14
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 19,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "MISC",
+              "score": 0.9995959401130676,
+              "word": "Soviet",
+              "start": 11,
+              "end": 17
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9974602460861206,
+              "word": "Asian Cup",
+              "start": 45,
+              "end": 54
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 21,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "MISC",
+              "score": 0.9950454235076904,
+              "word": "Asian Games",
+              "start": 20,
+              "end": 31
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9998358488082886,
+              "word": "Uzbekistan",
+              "start": 54,
+              "end": 64
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 30,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.999861478805542,
+              "word": "Japan",
+              "start": 64,
+              "end": 69
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9997863173484802,
+              "word": "Syria",
+              "start": 154,
+              "end": 159
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 51,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "PER",
+              "score": 0.9989996552467346,
+              "word": "Ta",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9190941452980042,
+              "word": "##ku",
+              "start": 2,
+              "end": 4
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9954392910003662,
+              "word": "##ya Takagi",
+              "start": 4,
+              "end": 13
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9989458918571472,
+              "word": "Hi",
+              "start": 70,
+              "end": 72
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9757905006408691,
+              "word": "##roshi",
+              "start": 72,
+              "end": 77
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.906915545463562,
+              "word": "##ge Yanagimoto",
+              "start": 77,
+              "end": 90
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997703433036804,
+              "word": "Syrian",
+              "start": 109,
+              "end": 115
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9995964169502258,
+              "word": "Salem Bitar",
+              "start": 138,
+              "end": 149
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 16,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998557567596436,
+              "word": "Syria",
+              "start": 36,
+              "end": 41
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 38,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "PER",
+              "score": 0.999593198299408,
+              "word": "Hassan Abbas",
+              "start": 9,
+              "end": 21
+            },
+            {
+              "entity_group": "ORG",
+              "score": 0.9762372970581055,
+              "word": "Bitar",
+              "start": 138,
+              "end": 143
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 23,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "PER",
+              "score": 0.9996823072433472,
+              "word": "Na",
+              "start": 0,
+              "end": 2
+            },
+            {
+              "entity_group": "PER",
+              "score": 0.9946101903915405,
+              "word": "##der Jokhadar",
+              "start": 2,
+              "end": 14
+            },
+            {
+              "entity_group": "LOC",
+              "score": 0.9998565912246704,
+              "word": "Syria",
+              "start": 25,
+              "end": 30
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 24,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "LOC",
+              "score": 0.9998321533203125,
+              "word": "Japan",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997556805610657,
+              "word": "Syrian",
+              "start": 29,
+              "end": 35
+            },
+            {
+              "entity_group": "MISC",
+              "score": 0.9997475743293762,
+              "word": "Syrian",
+              "start": 94,
+              "end": 100
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    },
+    {
+      "predictions": [
+        {
+          "index": 0,
+          "token_count": 12,
+          "truncated": false,
+          "entities": [
+            {
+              "entity_group": "PER",
+              "score": 0.9605488777160645,
+              "word": "Bit",
+              "start": 0,
+              "end": 3
+            }
+          ]
+        }
+      ],
+      "model": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "aggregation_strategy": "simple",
+      "task": "token-classification",
+      "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+      "schema_version": "mlx-one-token-classification-v1",
+      "offsets": "unicode-codepoint-end-exclusive",
+      "score_semantics": "token-softmax-or-source-group-mean"
+    }
+  ],
+  "ner_quality": {
+    "examples": 16,
+    "tp": 25,
+    "fp": 24,
+    "fn": 9,
+    "precision": 0.5102040816326531,
+    "recall": 0.7352941176470589,
+    "strict_span_f1": 0.6024096385542169,
+    "label_mapping_sha256": "b83e3bdcbd457065a263bc5fc14d524d80dfb0c95442261a01dccd5cac5ac235"
+  },
+  "quality_status": "MEASURED_STRICT_SPAN_F1_REVIEW_REQUIRED",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\"predictions\": [{\"index\": 0, \"token_count\": 33, \"truncated\": false, \"entities\": [{\"entity_group\": \"MISC\", \"score\": 0.48013943433761597, \"word\": \"J\", \"start\": 9, \"end\": 10}, {\"entity_group\": \"LOC\", \"score\": 0.2902832627296448, \"word\": \"##AP\", \"start\": 10, \"end\": 12}, {\"entity_group\": \"PER\", \"score\": 0.4315679967403412, \"word\": \"L\", \"start\": 19, \"end\": 20}, {\"entity_group\": \"LOC\", \"score\": 0.42212334275245667, \"word\": \"##UC\", \"start\": 20, \"end\": 22}, {\"entity_group\": \"ORG\", \"score\": 0.644001841545105, \"word\": \"CH\", \"start\": 31, \"end\": 33}, {\"entity_group\": \"LOC\", \"score\": 0.5127207040786743, \"word\": \"##IN\", \"start\": 33, \"end\": 35}, {\"entity_group\": \"ORG\", \"score\": 0.5850015878677368, \"word\": \"##A\", \"start\": 35, \"end\": 36}]}], \"model\": \"dslim/bert-base-NER\", \"revision\": \"d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc\", \"aggregation_strategy\": \"simple\", \"task\": \"token-classification\", \"source_commit\": \"8cb5963cc22174954e7dca2c0a3320b7dc2f4edc\", \"schema_version\": \"mlx-one-token-classification-v1\", \"offsets\": \"unicode-codepoint-end-exclusive\", \"score_semantics\": \"token-softmax-or-source-group-mean\"}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "predictions": [
+          {
+            "index": 0,
+            "token_count": 33,
+            "truncated": false,
+            "entities": [
+              {
+                "entity": "B-MISC",
+                "score": 0.48013943433761597,
+                "index": 6,
+                "word": "J",
+                "start": 9,
+                "end": 10
+              },
+              {
+                "entity": "I-LOC",
+                "score": 0.2902832627296448,
+                "index": 7,
+                "word": "##AP",
+                "start": 10,
+                "end": 12
+              },
+              {
+                "entity": "B-PER",
+                "score": 0.4315679967403412,
+                "index": 11,
+                "word": "L",
+                "start": 19,
+                "end": 20
+              },
+              {
+                "entity": "I-LOC",
+                "score": 0.42212334275245667,
+                "index": 12,
+                "word": "##UC",
+                "start": 20,
+                "end": 22
+              },
+              {
+                "entity": "B-ORG",
+                "score": 0.644001841545105,
+                "index": 18,
+                "word": "CH",
+                "start": 31,
+                "end": 33
+              },
+              {
+                "entity": "I-LOC",
+                "score": 0.5127207040786743,
+                "index": 19,
+                "word": "##IN",
+                "start": 33,
+                "end": 35
+              },
+              {
+                "entity": "I-ORG",
+                "score": 0.5850015878677368,
+                "index": 20,
+                "word": "##A",
+                "start": 35,
+                "end": 36
+              }
+            ]
+          }
+        ],
+        "model": "dslim/bert-base-NER",
+        "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+        "aggregation_strategy": "none",
+        "task": "token-classification",
+        "source_commit": "8cb5963cc22174954e7dca2c0a3320b7dc2f4edc",
+        "schema_version": "mlx-one-token-classification-v1",
+        "offsets": "unicode-codepoint-end-exclusive",
+        "score_semantics": "token-softmax-or-source-group-mean"
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 484089232,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 5.006546974182129,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "ccddfb04f8db24b3ab3d095a26725f1f4183f6419db23dda170ff8641592b63b"
+}

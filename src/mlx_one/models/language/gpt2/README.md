@@ -9,8 +9,9 @@ fused QKV attention, GELU feed-forward layers, byte-level BPE, and per-layer KV
 caches. Configuration profiles cover 124M, 355M, 774M, and 1.5B variants.
 
 [openai-community/gpt2](https://huggingface.co/openai-community/gpt2) is the
-124M checkpoint candidate. Architecture and synthetic execution tests exist;
-this guide does not establish real-checkpoint, performance, or quality qualification.
+supported 124M primary checkpoint. Architecture tests, real native generation and
+applicable interface checks pass. Larger variants and broad quality claims retain
+their own scope. See the [current support record](../../../../../status_models_testing.md).
 
 ## Model Architecture
 

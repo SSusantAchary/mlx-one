@@ -1,0 +1,40 @@
+{"stage": "loaded", "task": "video", "seconds": 0.5619872499955818, "tensor_count": 1797, "peak_mlx_bytes": 3440198532}
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/benchmarks/sam3_qualification.py", line 446, in <module>
+    main()
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/benchmarks/sam3_qualification.py", line 403, in main
+    for result in iterator:
+                  ^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/segmentation/video.py", line 398, in propagate
+    output = self._offline_frame(index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/segmentation/video.py", line 123, in call
+    return function(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/segmentation/video.py", line 411, in _offline_frame
+    return self.bundle.model(self._state, frame_idx=index)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/_runtime.py", line 513, in __call__
+    return self.forward(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 1228, in forward
+    obj_id_to_mask, obj_id_to_score, tracker_metadata_new, _ = self._det_track_one_frame(
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 1180, in _det_track_one_frame
+    tracker_update_plan, tracker_metadata_new = self.run_tracker_update_planning_phase(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 1011, in run_tracker_update_planning_phase
+    self._tracker_update_memories(
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 851, in _tracker_update_memories
+    high_res_masks = self._suppress_object_pw_area_shrinkage(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 818, in _suppress_object_pw_area_shrinkage
+    pred_masks_grouped[indices] = self._suppress_object_pw_area_shrinkage_impl(
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 826, in _suppress_object_pw_area_shrinkage_impl
+    pixel_level_non_overlapping_masks = self._apply_non_overlapping_constraints(pred_masks)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/models/segmentation/sam3/video.py", line 791, in _apply_non_overlapping_constraints
+    max_obj_inds = ops.argmax(pred_masks, dim=0, keepdim=True)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Ops.argmax() got an unexpected keyword argument 'keepdim'

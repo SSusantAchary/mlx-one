@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "llama"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/llama",
+  "bytes_removed": 7815407848,
+  "downloaded_bytes_verified": 3426257921,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794138784.862725,
+  "recorded": 1794139303.767083,
+  "cleanup_complete": true,
+  "finished": 1794139303.8415701
+}

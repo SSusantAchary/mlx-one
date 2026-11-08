@@ -1,0 +1,81 @@
+{
+  "model_type": "qwen3_reranker",
+  "kind": "retrieval",
+  "repo": "Qwen/Qwen3-Reranker-0.6B",
+  "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1570,
+      "sha256": null
+    },
+    {
+      "path": "1_LogitScore/config.json",
+      "bytes": 57,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 14742,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 741,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 727,
+      "sha256": null
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 325,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 214,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1191588280,
+      "sha256": "27cd75a405b9c1b46b59abfd88aaa209e6fed2a1972cde9b70e7659537c5e65b"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 280,
+      "sha256": null
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 362,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11422654,
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 9706,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

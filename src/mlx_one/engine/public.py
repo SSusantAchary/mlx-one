@@ -37,6 +37,7 @@ from mlx_one.text import (
     load_text_model,
     stream_generate,
 )
+from mlx_one.text.prompts import completion_token_ids
 
 
 class EngineRequestHandle:
@@ -384,7 +385,7 @@ class Engine:
                 self._cache_manager.fingerprint(namespace=self._cache_namespace,
                                                 key_type=self._cache_manager.config.key_type,
                                                 value_type=self._cache_manager.config.value_type),
-                tuple(bundle.tokenizer.encode(prompt)))
+                tuple(completion_token_ids(bundle, prompt)))
         return factory
 
     def submit(
@@ -440,7 +441,7 @@ class Engine:
         result = GenerationResult(
             prompt=prompt,
             text="".join(chunk.text for chunk in chunks),
-            prompt_tokens=len(bundle.tokenizer.encode(prompt)) or 1,
+            prompt_tokens=len(completion_token_ids(bundle, prompt)) or 1,
             generation_tokens=sum(chunk.token_id is not None for chunk in chunks),
             finish_reason=("stop" if cancel is not None and cancel.is_set() else
                            (terminal.finish_reason if terminal else None) or "length"),

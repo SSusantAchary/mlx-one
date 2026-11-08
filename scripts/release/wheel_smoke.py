@@ -47,7 +47,10 @@ def main():
 
     assert mx.metal.is_available() and mx.default_device() == mx.gpu
     assert Path(mlx_one.__file__).resolve().is_relative_to(Path(sys.prefix).resolve())
-    assert len(registered_model_types()) == 36
+    expected = json.loads((Path(__file__).with_name("expected_model_types.json")).read_text())
+    assert list(registered_model_types()) == expected, (
+        "installed model registry differs from release inventory"
+    )
     asset = next(r for r in json.loads(args.assets.read_text()) if r["id"] == args.model)
     if args.saved_profile_info:
         saved = json.loads(args.saved_profile_info.read_text())

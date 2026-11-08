@@ -1,0 +1,25 @@
+START openelm apple/OpenELM-270M
+FETCH openelmFETCH  FETCH openelmLICENSE openelm  5820config.json 1301
+
+README.md 12744
+FETCH openelm generation_config.json 111
+FETCH openelm model.safetensors 1086123184
+RANGE model.safetensors 3 / 17
+RANGE model.safetensors 4 / 17
+RANGE model.safetensors 2 / 17
+RANGE model.safetensors 5 / 17
+RANGE model.safetensors 1 / 17
+RANGE model.safetensors 6 / 17
+RANGE model.safetensors 8 / 17
+RANGE model.safetensors 7 / 17
+RANGE model.safetensors 9 / 17
+RANGE model.safetensors 10 / 17
+RANGE model.safetensors 12 / 17
+RANGE model.safetensors 11 / 17
+RANGE model.safetensors 15 / 17
+RANGE model.safetensors 13 / 17
+RANGE model.safetensors 17 / 17
+RANGE model.safetensors 16 / 17
+RANGE model.safetensors 14 / 17
+RESULT openelm PASS_FUNCTIONAL 
+CLEANED openelm 2194818545

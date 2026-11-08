@@ -137,6 +137,43 @@ def test_lfm_colbert_normalization_and_maxsim() -> None:
     assert score.shape == (1,)
 
 
+def test_colbert_publisher_expansion_keeps_query_vectors_and_masks_document_tokens():
+    config = Lfm2ColBERTConfig.from_dict({
+        **dense_config().__dict__, "model_type": "lfm2_colbert", "projection_dim": 8,
+        "query_prefix": "[Q] ", "document_prefix": "[D] ", "do_query_expansion": True,
+    })
+    model = Lfm2ColBERTModel(config)
+    ids = mx.array([[1, 3, 4, 0, 0]])
+    attention = mx.array([[True, True, True, False, False]])
+    query = model(ids, attention_mask=attention, embedding_mask=mx.ones_like(attention))
+    document = model(ids, attention_mask=attention, embedding_mask=attention)
+    mx.eval(query.embeddings, document.embeddings)
+    norms = mx.sum(query.embeddings ** 2, axis=-1)
+    assert mx.max(mx.abs(norms - 1)).item() < 1e-5
+    assert mx.max(mx.abs(document.embeddings[:, 3:])).item() == 0
+    assert mx.max(mx.abs(query.embeddings[:, :3] - document.embeddings[:, :3])).item() < 1e-5
+
+
+def test_colbert_expansion_tokens_retain_publisher_convolution_states():
+    config = Lfm2ColBERTConfig.from_dict({
+        **dense_config().__dict__,
+        "model_type": "lfm2_colbert", "projection_dim": 8,
+        "query_prefix": "[Q] ", "document_prefix": "[D] ", "do_query_expansion": True,
+    })
+    model = Lfm2ColBERTModel(config)
+    # Isolate convolution semantics while retaining a valid hybrid architecture.
+    for layer in model.model.layers:
+        if layer.is_attention_layer:
+            layer.self_attn.out_proj.weight = mx.zeros_like(layer.self_attn.out_proj.weight)
+    ids = mx.array([[1, 3, 4, 0, 0]])
+    all_tokens = mx.ones_like(ids, dtype=mx.bool_)
+    attention = mx.array([[True, True, True, False, False]])
+    expanded = model(ids, attention_mask=attention, embedding_mask=all_tokens)
+    unmasked = model(ids, attention_mask=all_tokens, embedding_mask=all_tokens)
+    mx.eval(expanded.embeddings, unmasked.embeddings)
+    assert mx.max(mx.abs(expanded.embeddings - unmasked.embeddings)).item() < 1e-6
+
+
 def test_lfm_audio_waveform_to_logits_and_detokenized_waveform() -> None:
     config = Lfm2AudioConfig.from_dict(
         {

@@ -1,0 +1,19 @@
+{
+  "repo": "microsoft/Florence-2-base-ft",
+  "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+  "files": [
+    {
+      "file": "configuration_florence2.py",
+      "sha256": "653bafddc9651eaff1583a16db4a2bb27d33ec7d541dfab7201aaa4ecaa1cfbf"
+    },
+    {
+      "file": "modeling_florence2.py",
+      "sha256": "5bb7aa72c6ba62e96e1bbae6bc1aaf7b4e8e28cdfc62e670de3d5b67eeab1fdf"
+    },
+    {
+      "file": "processing_florence2.py",
+      "sha256": "4bd7158536cbf1c7891fc8efd94437d79fd09f07f539c7398fab8a885d7d8bca"
+    }
+  ],
+  "execution_scope": "isolated validation interpreter only; never production"
+}

@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
 
 from insights import fallback_markdown, make_data, modality_cards_html, summary_html
+from support import support_table
 
 ROOT = Path(__file__).resolve().parents[1]
 HERE = Path(__file__).resolve().parent
@@ -22,6 +23,10 @@ REPOSITORY = "https://github.com/SSusantAchary/mlx-one"
 PAGES = {
     "website/pages/index.md": "index.md",
     "website/pages/insights.md": "insights/index.md",
+    "status_models_testing.md": "models/support.md",
+    "docs/releases/0.1.1.md": "releases/0.1.1.md",
+    "docs/releases/0.1.1-pypi.md": "releases/pypi.md",
+    "docs/qualification/history/model-status-before-20261108.md": "history/model-support.md",
     "website/pages/guides/generate.md": "guides/generate.md",
     "website/pages/guides/retrieval.md": "guides/retrieval.md",
     "website/pages/guides/memory.md": "guides/memory.md",
@@ -151,7 +156,10 @@ def stage():
         text = source.read_text().replace("<!-- insights:summary -->", summary_html(insights))
         text = text.replace("<!-- insights:modalities -->", modality_cards_html(insights))
         text = text.replace("<!-- insights:catalog -->", fallback_markdown(insights))
+        # Evidence paths in the generated support table are rooted at the repository.
+        support_catalog = render(support_table(insights), ROOT / "README.md", destination)
         content = render(text, source, destination)
+        content = content.replace("<!-- insights:supported -->", support_catalog)
         content += f"\n\n---\n\n[Edit this page]({REPOSITORY}/edit/main/{quote(name, safe='/')})\n"
         output = GENERATED / destination
         output.parent.mkdir(parents=True, exist_ok=True)

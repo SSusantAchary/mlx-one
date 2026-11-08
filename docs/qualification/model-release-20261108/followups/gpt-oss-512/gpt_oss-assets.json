@@ -1,0 +1,67 @@
+{
+  "checkpoint": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+  "revision": "f356f2747216d7e98fee755df25987459fc19089",
+  "preserved_existing": true,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 838,
+      "sha256": "b9cdaf33f7a1854bb49346c80d56fc8f4544155bfbcafdd0af40afa0a0fa5099",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 33998,
+      "sha256": "e8ec3c105ab83e913a75baf587de778083ada1af3fac68d807e75ff926240e38",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 177,
+      "sha256": "f9970ada892d2d1f72e3ed0a6535ccebadd11897318794ca671d8c7014c957da",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model-00001-of-00003.safetensors",
+      "bytes": 5306798277,
+      "sha256": "ec8571f6f8adba2d7d92a1f6029a69aecd18ab4e82404a306ceb063d9ae1362d",
+      "hub_lfs_sha256": "ec8571f6f8adba2d7d92a1f6029a69aecd18ab4e82404a306ceb063d9ae1362d"
+    },
+    {
+      "path": "model-00002-of-00003.safetensors",
+      "bytes": 5263518916,
+      "sha256": "9a32623d891d6f64694fdaaaeecf145d8796d17c238b9b99af953077d0f63837",
+      "hub_lfs_sha256": "9a32623d891d6f64694fdaaaeecf145d8796d17c238b9b99af953077d0f63837"
+    },
+    {
+      "path": "model-00003-of-00003.safetensors",
+      "bytes": 608251966,
+      "sha256": "3fb80743340b3dbeb649e50b5fd1b5f063e98c143759025284344988d8fa0a95",
+      "hub_lfs_sha256": "3fb80743340b3dbeb649e50b5fd1b5f063e98c143759025284344988d8fa0a95"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 67046,
+      "sha256": "065001869dd5ffd332419a432127467191b1bb0fd5c463dd0dc51f1359728a27",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 440,
+      "sha256": "8464cabd6eda239fe46ebf8ae63b46c417721784a961a022f6b59174a2cda0e2",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 27868174,
+      "sha256": "0614fe83cadab421296e664e1f48f4261fa8fef6e03e63bb75c20f38e37d07d3",
+      "hub_lfs_sha256": "0614fe83cadab421296e664e1f48f4261fa8fef6e03e63bb75c20f38e37d07d3"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 21694,
+      "sha256": "2d8386578f85ea1fa698e78c58b2d8503e8122d6b110b61f93d3995601b07d91",
+      "hub_lfs_sha256": null
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS_COMPATIBLE_PUBLIC_TOKENIZER",
+  "repo": "hf-internal-testing/llama-tokenizer",
+  "revision": "d02ad6cb9dd2c2296a6332199fa2fdca5938fef0",
+  "publisher_tokenizer_repo": "meta-llama/Llama-2-7b-hf",
+  "publisher_revision": "01c7f73d771dfac7d292323805ebc428287df4f9",
+  "official_sentencepiece_sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347",
+  "public_sentencepiece_matches_official_hub_metadata": true,
+  "vocabulary_ids_identical": 32000,
+  "sample_encodings_identical": 10,
+  "scope": "base completion, not instruction/chat qualification",
+  "files": {
+    "tokenizer.json": "8eea70c4866c4f1320ba096fc986ac82038a8374dbe135212ba7628835b4a6f1",
+    "tokenizer_config.json": "c43a787e4eb83e0167f36aff633ebe8523f073e98d684e05f189a2a4e784293d",
+    "special_tokens_map.json": "ff3b4a612c4e447acb02d40071bddd989fe0da87eb5b7fe0dbadfc4f74de7531"
+  }
+}

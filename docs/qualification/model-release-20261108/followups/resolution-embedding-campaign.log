@@ -1,0 +1,32 @@
+START qwen3_embedding Qwen/Qwen3-Embedding-0.6B
+FETCHFETCH  qwen3_embeddingqwen3_embeddingFETCH   1_Pooling/config.json 313
+README.mdqwen3_embedding 17237 
+config.json 727
+FETCH qwen3_embedding config_sentence_transformers.json 215
+FETCH qwen3_embedding generation_config.json 117
+FETCH qwen3_embedding merges.txt 1671853
+FETCH qwen3_embedding model.safetensors 1191586416
+FETCH qwen3_embedding modules.json 349
+FETCH qwen3_embedding tokenizer.json 11423705
+FETCH qwen3_embedding tokenizer_config.json 9706
+FETCH qwen3_embedding vocab.json 2776833
+RANGE model.safetensors 2 / 18
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 3 / 18
+RANGE model.safetensors 1 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 14 / 18
+RANGE model.safetensors 15 / 18
+RANGE model.safetensors 16 / 18
+RANGE model.safetensors 18 / 18
+RANGE model.safetensors 17 / 18
+RESULT qwen3_embedding PASS_FUNCTIONAL 
+CLEANED qwen3_embedding 2399308879

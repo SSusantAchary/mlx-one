@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "moonshine"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/moonshine",
+  "bytes_removed": 110377371,
+  "downloaded_bytes_verified": 110376023,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794138124.778069,
+  "recorded": 1794138250.272854,
+  "cleanup_complete": true,
+  "finished": 1794138250.289085
+}

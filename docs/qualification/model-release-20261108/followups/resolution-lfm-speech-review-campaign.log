@@ -1,0 +1,16 @@
+START whisper openai/whisper-tiny
+FETCH whisper added_tokens.json 34604
+FETCH whisper config.json 1983
+FETCH whisper generation_config.json 3747
+FETCH whisper merges.txt 493869
+FETCH whisper model.safetensors 151061672
+FETCH whisper preprocessor_config.json 184990
+FETCH whisper special_tokens_map.json 2194
+FETCH whisper tokenizer.json 2480466
+FETCH whisper tokenizer_config.json 282683
+FETCH whisper vocab.json 835550
+RANGE model.safetensors 3 / 3
+RANGE model.safetensors 1 / 3
+RANGE model.safetensors 2 / 3
+RESULT whisper FAIL independent Whisper speech transcription exceeds declared WER limit
+CLEANED whisper 306445604

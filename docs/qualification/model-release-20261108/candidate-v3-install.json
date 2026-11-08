@@ -1,0 +1,6 @@
+{
+  "candidate_wheel_sha256": "d4c0a20c937c3b9c78bd7efca181d2b5a0ee6a6629c83f02c4a209f3edefa831",
+  "updated": 1794137733.760013,
+  "exclusive_metal_lock": true,
+  "change": "OpenELM mandatory BOS in API, CLI, serving and prompt accounting"
+}

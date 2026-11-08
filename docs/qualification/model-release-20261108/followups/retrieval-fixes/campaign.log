@@ -1,0 +1,103 @@
+START bert sentence-transformers/all-MiniLM-L6-v2
+FETCHFETCH FETCHbert   1_Pooling/config.json 190
+bertbert README.md  config.json 10502612
+
+FETCH bert config_sentence_transformers.json 116
+FETCH bert data_config.json 39265
+FETCH bert model.safetensors 90868376
+FETCH bert modules.json 349
+FETCH bert sentence_bert_config.json 53
+FETCH bert special_tokens_map.json 112
+FETCH bert tokenizer.json 466247
+FETCH bert tokenizer_config.json 350
+FETCH bert vocab.txt 231508
+RESULT bert FAIL cannot load native VLM: model type 'bert' has no native VLM task loader
+CLEANED bert 91620393
+START mpnet sentence-transformers/all-mpnet-base-v2
+FETCH FETCHmpnet FETCH  mpnet mpnet1_Pooling/config.jsonconfig.json 571
+  190
+README.md 11612
+FETCH mpnet config_sentence_transformers.json 116
+FETCH mpnet data_config.json 39265
+FETCH mpnet model.safetensors 437971872
+FETCH mpnet modules.json 349
+FETCH mpnet sentence_bert_config.json 53
+FETCH mpnet special_tokens_map.json 239
+FETCH mpnet tokenizer.json 466021
+FETCH mpnet tokenizer_config.json 363
+FETCH mpnet vocab.txt 231536
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 5 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 6 / 7
+RESULT mpnet FAIL cannot load native VLM: model type 'mpnet' has no native VLM task loader
+CLEANED mpnet 876696649
+START qwen3_embedding Qwen/Qwen3-Embedding-0.6B
+FETCHFETCH  qwen3_embeddingqwen3_embeddingFETCH   README.mdqwen3_embedding 1_Pooling/config.json  config.json313 
+72717237
+
+FETCH qwen3_embedding config_sentence_transformers.json 215
+FETCH qwen3_embedding generation_config.json 117
+FETCH qwen3_embedding merges.txt 1671853
+FETCH qwen3_embedding model.safetensors 1191586416
+FETCH qwen3_embedding modules.json 349
+FETCH qwen3_embedding tokenizer.json 11423705
+FETCH qwen3_embedding tokenizer_config.json 9706
+FETCH qwen3_embedding vocab.json 2776833
+RANGE model.safetensors 1 / 18
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 3 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 2 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 14 / 18
+RANGE model.safetensors 16 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 18 / 18
+RANGE model.safetensors 17 / 18
+RANGE model.safetensors 15 / 18
+RESULT qwen3_embedding FAIL invalid Qwen3 tokenizer assets: Qwen3 tokenizer supports only TemplateProcessing or ByteLevel post-processors
+CLEANED qwen3_embedding 2399076281
+START qwen3_reranker Qwen/Qwen3-Reranker-0.6B
+FETCH qwen3_rerankerFETCH FETCH  qwen3_reranker chat_template.jinja1_LogitScore/config.json 57
+ qwen3_reranker README.md741
+ 14742
+FETCH qwen3_reranker config.json 727
+FETCH qwen3_reranker config_sentence_transformers.json 325
+FETCH qwen3_reranker generation_config.json 214
+FETCH qwen3_reranker merges.txt 1671853
+FETCH qwen3_reranker model.safetensors 1191588280
+FETCH qwen3_reranker modules.json 280
+FETCH qwen3_reranker sentence_bert_config.json 362
+FETCH qwen3_reranker tokenizer.json 11422654
+FETCH qwen3_reranker tokenizer_config.json 9706
+FETCH qwen3_reranker vocab.json 2776833
+RANGE model.safetensors 3 / 18
+RANGE model.safetensors 2 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 1 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 14 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 15 / 18
+RANGE model.safetensors 16 / 18
+RANGE model.safetensors 18 / 18
+RANGE model.safetensors 17 / 18
+RESULT qwen3_reranker FAIL {"error":{"message":"the loaded model does not support reranking","type":"capability_error","code":400}}
+CLEANED qwen3_reranker 2399077849

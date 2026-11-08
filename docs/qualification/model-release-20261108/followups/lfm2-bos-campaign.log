@@ -1,0 +1,23 @@
+START lfm2 LiquidAI/LFM2-350M
+FETCHFETCHFETCH  lfm2 lfm2 LICENSE 10596
+README.md lfm2 chat_template.jinja 18107 1379
+
+FETCH lfm2 config.json 999
+FETCH lfm2 generation_config.json 137
+FETCH lfm2 model.safetensors 708984464
+FETCH lfm2 special_tokens_map.json 434
+FETCH lfm2 tokenizer.json 4732426
+FETCH lfm2 tokenizer_config.json 91565
+RANGE model.safetensors 4 / 11
+RANGE model.safetensors 1 / 11
+RANGE model.safetensors 3 / 11
+RANGE model.safetensors 5 / 11
+RANGE model.safetensors 6 / 11
+RANGE model.safetensors 7 / 11
+RANGE model.safetensors 2 / 11
+RANGE model.safetensors 8 / 11
+RANGE model.safetensors 11 / 11
+RANGE model.safetensors 9 / 11
+RANGE model.safetensors 10 / 11
+RESULT lfm2 PASS_FUNCTIONAL 
+CLEANED lfm2 1627217496

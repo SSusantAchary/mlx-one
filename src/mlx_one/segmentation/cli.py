@@ -96,7 +96,7 @@ def _apply(session, index, records):
             raise ValueError("add/update requires text or an object-specific spatial prompt")
 
 
-@click.command("segment", help="Segment an image with native SAM3 (experimental, unqualified).")
+@click.command("segment", help="Segment an image with native SAM3.")
 @click.argument("model")
 @click.argument("image", type=click.Path(exists=True, dir_okay=False))
 @click.option(
@@ -180,19 +180,25 @@ def segment_command(
 
 
 @click.command(
-    "track", help="Track SAM3 masks through local video/frames (experimental, unqualified)."
+    "track", help="Track SAM3 masks through local video/frames."
 )
 @click.argument("model")
 @click.argument("video", type=click.Path(exists=True))
 @click.option("--text", multiple=True)
 @click.option("--prompts-json", type=click.Path(exists=True, dir_okay=False))
 @click.option("--streaming", is_flag=True)
+@click.option(
+    "--mode",
+    type=click.Choice(["concept", "tracking"]),
+    default="concept",
+    help="Concept detection or standalone point/box temporal tracking.",
+)
 @click.option("--revision")
 @click.option("--offline", is_flag=True)
 @click.option("--cache-dir", type=click.Path(file_okay=False))
 @click.option("--output", required=True, type=click.Path())
 def track_command(
-    model, video, text, prompts_json, streaming, revision, offline, cache_dir, output
+    model, video, text, prompts_json, streaming, mode, revision, offline, cache_dir, output
 ):
     try:
         from .export import ResultWriter
@@ -202,12 +208,18 @@ def track_command(
         if Path(output).exists():
             raise FileExistsError("output already exists; overwriting is refused")
         prompts = _prompts(prompts_json, video=True)
+        if mode == "tracking" and text:
+            raise ValueError("standalone tracking accepts spatial object prompts, not text")
         if not text and not any(
             p.get("frame_index", 0) == 0 and p.get("action", "add") != "remove" for p in prompts
         ):
             raise ValueError("tracking requires a text or spatial prompt at frame zero")
         bundle = load_segmentation_model(
-            model, task="video", revision=revision, offline=offline, cache_dir=cache_dir
+            model,
+            task="tracking" if mode == "tracking" else "video",
+            revision=revision,
+            offline=offline,
+            cache_dir=cache_dir,
         )
         writer = ResultWriter(output)
         with bundle.video_session(None if streaming else video, streaming=streaming) as session:

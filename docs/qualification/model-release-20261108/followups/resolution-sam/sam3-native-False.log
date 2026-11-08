@@ -1,0 +1,2 @@
+{"stage": "loaded", "task": "concept", "seconds": 0.6626736670004902, "tensor_count": 1468, "peak_mlx_bytes": 3361971552}
+{"stage": "inferred", "task": "concept", "seconds": 3.3853348749980796, "mask_count": 1, "peak_mlx_bytes": 7378519328, "peak_process_bytes": 3789963264, "qualified": false}

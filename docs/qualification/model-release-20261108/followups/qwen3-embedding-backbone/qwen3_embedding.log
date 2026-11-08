@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "qwen3_embedding", "status": "FAIL", "quality_status": null, "seconds": 1.1864569187164307, "error": "batch/padding disagreement"}

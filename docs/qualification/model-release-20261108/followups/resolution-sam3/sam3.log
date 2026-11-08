@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "sam3", "status": "PASS_FUNCTIONAL", "quality_status": "PASS_PINNED_IMAGE_MASK_REFERENCE", "seconds": 38.54097390174866, "error": null}

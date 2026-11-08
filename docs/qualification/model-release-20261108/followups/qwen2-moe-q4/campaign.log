@@ -1,0 +1,142 @@
+START qwen2_moe mlx-community/Qwen1.5-MoE-A2.7B-4bit
+FETCH FETCHFETCH  qwen2_moe qwen2_moe config.jsonREADME.md  2541
+932qwen2_moe
+ added_tokens.json 80
+FETCH qwen2_moe merges.txt 1671853
+FETCH qwen2_moe model-00001-of-00002.safetensors 5369546977
+FETCH qwen2_moe model-00002-of-00002.safetensors 3132401803
+FETCH qwen2_moe model.safetensors.index.json 1284018
+FETCH qwen2_moe special_tokens_map.json 370
+FETCH qwen2_moe tokenizer.json 7028015
+FETCH qwen2_moe tokenizer_config.json 1168
+FETCH qwen2_moe vocab.json 2776833
+RANGE model-00001-of-00002.safetensors 3 / 81
+RANGE model-00002-of-00002.safetensors 3 / 47
+RANGE model-00001-of-00002.safetensors 2 / 81
+RANGE model-00002-of-00002.safetensors 5 / 47
+RANGE model-00002-of-00002.safetensors 2 / 47
+RANGE model-00001-of-00002.safetensors 1 / 81
+RANGE model-00001-of-00002.safetensors 6 / 81
+RANGE model-00001-of-00002.safetensors 5 / 81
+RANGE model-00002-of-00002.safetensors 7 / 47
+RANGE model-00001-of-00002.safetensors 4 / 81
+RANGE model-00001-of-00002.safetensors 7 / 81
+RANGE model-00002-of-00002.safetensors 1 / 47
+RANGE model-00002-of-00002.safetensors 8 / 47
+RANGE model-00001-of-00002.safetensors 10 / 81
+RANGE model-00001-of-00002.safetensors 8 / 81
+RANGE model-00002-of-00002.safetensors 4 / 47
+RANGE model-00001-of-00002.safetensors 12 / 81
+RANGE model-00002-of-00002.safetensors 10 / 47
+RANGE model-00002-of-00002.safetensors 9 / 47
+RANGE model-00001-of-00002.safetensors 9 / 81
+RANGE model-00002-of-00002.safetensors 13 / 47
+RANGE model-00002-of-00002.safetensors 12 / 47
+RANGE model-00001-of-00002.safetensors 14 / 81
+RANGE model-00001-of-00002.safetensors 15 / 81
+RANGE model-00002-of-00002.safetensors 11 / 47
+RANGE model-00001-of-00002.safetensors 11 / 81
+RANGE model-00001-of-00002.safetensors 13 / 81
+RANGE model-00002-of-00002.safetensors 6 / 47
+RANGE model-00001-of-00002.safetensors 17 / 81
+RANGE model-00002-of-00002.safetensors 15 / 47
+RANGE model-00001-of-00002.safetensors 16 / 81
+RANGE model-00001-of-00002.safetensors 18 / 81
+RANGE model-00001-of-00002.safetensors 19 / 81
+RANGE model-00001-of-00002.safetensors 21 / 81
+RANGE model-00001-of-00002.safetensors 22 / 81
+RANGE model-00002-of-00002.safetensors 17 / 47
+RANGE model-00001-of-00002.safetensors 20 / 81
+RANGE model-00002-of-00002.safetensors 18 / 47
+RANGE model-00002-of-00002.safetensors 14 / 47
+RANGE model-00001-of-00002.safetensors 25 / 81
+RANGE model-00002-of-00002.safetensors 16 / 47
+RANGE model-00001-of-00002.safetensors 23 / 81
+RANGE model-00001-of-00002.safetensors 26 / 81
+RANGE model-00001-of-00002.safetensors 28 / 81
+RANGE model-00002-of-00002.safetensors 19 / 47
+RANGE model-00002-of-00002.safetensors 22 / 47
+RANGE model-00001-of-00002.safetensors 24 / 81
+RANGE model-00001-of-00002.safetensors 30 / 81
+RANGE model-00002-of-00002.safetensors 21 / 47
+RANGE model-00001-of-00002.safetensors 29 / 81
+RANGE model-00002-of-00002.safetensors 20 / 47
+RANGE model-00001-of-00002.safetensors 31 / 81
+RANGE model-00002-of-00002.safetensors 26 / 47
+RANGE model-00001-of-00002.safetensors 27 / 81
+RANGE model-00001-of-00002.safetensors 34 / 81
+RANGE model-00002-of-00002.safetensors 27 / 47
+RANGE model-00001-of-00002.safetensors 36 / 81
+RANGE model-00001-of-00002.safetensors 32 / 81
+RANGE model-00001-of-00002.safetensors 35 / 81
+RANGE model-00002-of-00002.safetensors 24 / 47
+RANGE model-00002-of-00002.safetensors 25 / 47
+RANGE model-00002-of-00002.safetensors 23 / 47
+RANGE model-00001-of-00002.safetensors 33 / 81
+RANGE model-00002-of-00002.safetensors 30 / 47
+RANGE model-00002-of-00002.safetensors 31 / 47
+RANGE model-00002-of-00002.safetensors 32 / 47
+RANGE model-00001-of-00002.safetensors 38 / 81
+RANGE model-00002-of-00002.safetensors 29 / 47
+RANGE model-00002-of-00002.safetensors 33 / 47
+RANGE model-00002-of-00002.safetensors 28 / 47
+RANGE model-00002-of-00002.safetensors 37 / 47
+RANGE model-00002-of-00002.safetensors 35 / 47
+RANGE model-00002-of-00002.safetensors 34 / 47
+RANGE model-00001-of-00002.safetensors 40 / 81
+RANGE model-00002-of-00002.safetensors 36 / 47
+RANGE model-00002-of-00002.safetensors 38 / 47
+RANGE model-00001-of-00002.safetensors 37 / 81
+RANGE model-00002-of-00002.safetensors 39 / 47
+RANGE model-00001-of-00002.safetensors 42 / 81
+RANGE model-00001-of-00002.safetensors 41 / 81
+RANGE model-00002-of-00002.safetensors 42 / 47
+RANGE model-00002-of-00002.safetensors 43 / 47
+RANGE model-00001-of-00002.safetensors 44 / 81
+RANGE model-00001-of-00002.safetensors 39 / 81
+RANGE model-00002-of-00002.safetensors 41 / 47
+RANGE model-00001-of-00002.safetensors 45 / 81
+RANGE model-00002-of-00002.safetensors 45 / 47
+RANGE model-00002-of-00002.safetensors 46 / 47
+RANGE model-00002-of-00002.safetensors 47 / 47
+RANGE model-00002-of-00002.safetensors 44 / 47
+RANGE model-00001-of-00002.safetensors 48 / 81
+RANGE model-00002-of-00002.safetensors 40 / 47
+RANGE model-00001-of-00002.safetensors 43 / 81
+RANGE model-00001-of-00002.safetensors 47 / 81
+RANGE model-00001-of-00002.safetensors 50 / 81
+RANGE model-00001-of-00002.safetensors 46 / 81
+RANGE model-00001-of-00002.safetensors 51 / 81
+RANGE model-00001-of-00002.safetensors 53 / 81
+RANGE model-00001-of-00002.safetensors 52 / 81
+RANGE model-00001-of-00002.safetensors 54 / 81
+RANGE model-00001-of-00002.safetensors 49 / 81
+RANGE model-00001-of-00002.safetensors 55 / 81
+RANGE model-00001-of-00002.safetensors 59 / 81
+RANGE model-00001-of-00002.safetensors 58 / 81
+RANGE model-00001-of-00002.safetensors 57 / 81
+RANGE model-00001-of-00002.safetensors 61 / 81
+RANGE model-00001-of-00002.safetensors 56 / 81
+RANGE model-00001-of-00002.safetensors 62 / 81
+RANGE model-00001-of-00002.safetensors 60 / 81
+RANGE model-00001-of-00002.safetensors 64 / 81
+RANGE model-00001-of-00002.safetensors 66 / 81
+RANGE model-00001-of-00002.safetensors 63 / 81
+RANGE model-00001-of-00002.safetensors 67 / 81
+RANGE model-00001-of-00002.safetensors 69 / 81
+RANGE model-00001-of-00002.safetensors 65 / 81
+RANGE model-00001-of-00002.safetensors 71 / 81
+RANGE model-00001-of-00002.safetensors 72 / 81
+RANGE model-00001-of-00002.safetensors 68 / 81
+RANGE model-00001-of-00002.safetensors 74 / 81
+RANGE model-00001-of-00002.safetensors 75 / 81
+RANGE model-00001-of-00002.safetensors 70 / 81
+RANGE model-00001-of-00002.safetensors 76 / 81
+RANGE model-00001-of-00002.safetensors 73 / 81
+RANGE model-00001-of-00002.safetensors 77 / 81
+RANGE model-00001-of-00002.safetensors 81 / 81
+RANGE model-00001-of-00002.safetensors 78 / 81
+RANGE model-00001-of-00002.safetensors 79 / 81
+RANGE model-00001-of-00002.safetensors 80 / 81
+RESULT qwen2_moe PASS_FUNCTIONAL 
+CLEANED qwen2_moe 17016665680

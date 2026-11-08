@@ -10,12 +10,15 @@ The interactive path uses point/box/mask prompts and a two-way decoder. The
 composite video path shares the image backbone and adds temporal memory,
 association, reconditioning, and object lifecycle state.
 
-**Partial qualification only.** The pinned checkpoint passes the controlled
-32-frame single-object CPU-reference comparisons separately for offline and
-streaming on M4/32 GB. This is not natural-video or multi-object qualification.
-See [measured results and remaining gates](../../../../../docs/sam3-qualification-m4-32gb.md).
-Standalone `sam3_tracker_video` is architecture-only: use the composite checkpoint
-for the public video API. Training, text generation, HTTP/UI integration,
+**All four registered SAM3 types are supported for their recorded primary workflows.**
+The current campaign includes image/point prompts, native composite and standalone
+offline/streaming video sessions, actual CLI output and a 32-frame natural-video
+standalone tracker/reference run. See the
+[current inventory](../../../../../status_models_testing.md) and
+[repairs and diagnostic limits](../../../../../docs/qualification/model-release-20261108/RESOLUTIONS.md).
+An optional MPS reference streaming discrepancy remains recorded. Earlier
+[controlled fixture results](../../../../../docs/sam3-qualification-m4-32gb.md)
+retain their original scope. Training, text generation, HTTP/UI integration,
 quantization, reduced-precision defaults, and SAM3.1 are unsupported.
 
 ## Model Architecture

@@ -1,0 +1,7 @@
+{
+  "model_type": "silero_vad",
+  "kind": "vad",
+  "repo": "snakers4/silero-vad",
+  "revision": "60b7ffa243625ebdc1070275a29f18c87843786a",
+  "source": "github"
+}

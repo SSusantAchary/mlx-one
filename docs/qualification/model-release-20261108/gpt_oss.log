@@ -1,0 +1,1 @@
+{"model_type": "gpt_oss", "status": "FAIL", "quality_status": null, "seconds": 11.642823934555054, "error": "ValueError: no visible final chat text within this output budget"}

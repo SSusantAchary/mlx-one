@@ -1,0 +1,113 @@
+{
+  "model_type": "phi3",
+  "kind": "text",
+  "repo": "microsoft/Phi-3-mini-4k-instruct",
+  "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+  "profile": "affine_q4",
+  "manifest_id": "M10",
+  "gated": false,
+  "license": "mit",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1554,
+      "sha256": null
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "bytes": 453,
+      "sha256": null
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1105,
+      "sha256": null
+    },
+    {
+      "path": "NOTICE.md",
+      "bytes": 1809,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 21733,
+      "sha256": null
+    },
+    {
+      "path": "SECURITY.md",
+      "bytes": 2697,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 306,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 967,
+      "sha256": null
+    },
+    {
+      "path": "configuration_phi3.py",
+      "bytes": 11153,
+      "sha256": null
+    },
+    {
+      "path": "data_summary_card.md",
+      "bytes": 4619,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 181,
+      "sha256": null
+    },
+    {
+      "path": "model-00001-of-00002.safetensors",
+      "bytes": 4972489328,
+      "sha256": "b7492726c01287bf6e13c3d74c65ade3d436d50da1cf5bb6925bc962419d6610"
+    },
+    {
+      "path": "model-00002-of-00002.safetensors",
+      "bytes": 2669692552,
+      "sha256": "3f311787aa136e858556caa8543015161edcad85ba81b6a36072443d7fa73c87"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 16533,
+      "sha256": null
+    },
+    {
+      "path": "modeling_phi3.py",
+      "bytes": 73193,
+      "sha256": null
+    },
+    {
+      "path": "sample_finetune.py",
+      "bytes": 6401,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 599,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1937869,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.model",
+      "bytes": 499723,
+      "sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 3441,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

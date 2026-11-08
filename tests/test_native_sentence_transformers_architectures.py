@@ -210,3 +210,21 @@ def test_pooler_can_be_excluded_from_both_weight_contracts() -> None:
     mpnet = mpnet_weight_contract(mpnet_config(add_pooling_layer=False))
     assert not any(name.startswith("pooler.") for name in bert.expected)
     assert not any(name.startswith("pooler.") for name in mpnet.expected)
+
+
+@pytest.mark.parametrize("family", ["bert", "mpnet"])
+def test_unused_publisher_pooler_is_removed_only_for_mean_pooling(family):
+    factory = bert_config if family == "bert" else mpnet_config
+    sanitize = sanitize_bert_weights if family == "bert" else sanitize_mpnet_weights
+    tensors = {
+        family + ".pooler.dense.weight": Shaped((16, 16)),
+        family + ".pooler.dense.bias": Shaped((16,)),
+    }
+    assert sanitize(tensors, factory(add_pooling_layer=False)) == {}
+    assert set(sanitize(tensors, factory(add_pooling_layer=True))) == {
+        "pooler.dense.weight",
+        "pooler.dense.bias",
+    }
+    assert len(tensors) == 2
+    unknown = {family + ".classifier.weight": Shaped((2, 16))}
+    assert "classifier.weight" in sanitize(unknown, factory(add_pooling_layer=False))

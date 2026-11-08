@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "silero_vad"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/silero_vad",
+  "bytes_removed": 1239783,
+  "downloaded_bytes_verified": 1239748,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139439.2848809,
+  "recorded": 1794139442.8609338,
+  "cleanup_complete": true,
+  "finished": 1794139442.861307
+}

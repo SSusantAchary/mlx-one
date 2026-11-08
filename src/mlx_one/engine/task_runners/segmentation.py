@@ -117,7 +117,8 @@ class SAM3VideoAdapter(NativeTaskAdapter):
     supported_tasks=(TaskKind.VIDEO_SEGMENTATION,)
 
     def __init__(self,bundle):
-        if bundle.architecture!=self.family or bundle.task!='video':
+        expected = 'tracking' if self.family == 'sam3_tracker_video' else 'video'
+        if bundle.architecture!=self.family or bundle.task!=expected:
             raise ValueError('video task requires complete video bundle')
         self.bundle=bundle
 
@@ -127,3 +128,7 @@ class SAM3VideoAdapter(NativeTaskAdapter):
         # Stateful streaming admission uses open_video_session. Do not eagerly
         # decode or collect an unbounded input iterator in the task queue.
         raise ValueError('use open_video_session for ordered, bounded frame execution')
+
+
+class SAM3TemporalAdapter(SAM3VideoAdapter):
+    family = 'sam3_tracker_video'

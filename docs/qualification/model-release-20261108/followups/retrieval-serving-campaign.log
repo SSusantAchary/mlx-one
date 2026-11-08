@@ -1,0 +1,141 @@
+START bert sentence-transformers/all-MiniLM-L6-v2
+FETCHFETCHFETCH bert  bertbert 1_Pooling/config.json  config.json190
+  612
+README.md 10502
+FETCH bert config_sentence_transformers.json 116
+FETCH bert data_config.json 39265
+FETCH bert model.safetensors 90868376
+FETCH bert modules.json 349
+FETCH bert sentence_bert_config.json 53
+FETCH bert special_tokens_map.json 112
+FETCH bert tokenizer.json 466247
+FETCH bert tokenizer_config.json 350
+FETCH bert vocab.txt 231508
+RESULT bert PASS_FUNCTIONAL 
+CLEANED bert 91620392
+START mpnet sentence-transformers/all-mpnet-base-v2
+FETCH FETCHmpnet  mpnetFETCH 1_Pooling/config.json  README.mdmpnet 19011612
+
+ config.json 571
+FETCH mpnet config_sentence_transformers.json 116
+FETCH mpnet data_config.json 39265
+FETCH mpnet model.safetensors 437971872
+FETCH mpnet modules.json 349
+FETCH mpnet sentence_bert_config.json 53
+FETCH mpnet special_tokens_map.json 239
+FETCH mpnet tokenizer.json 466021
+FETCH mpnet tokenizer_config.json 363
+FETCH mpnet vocab.txt 231536
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 5 / 7
+RANGE model.safetensors 6 / 7
+RESULT mpnet PASS_FUNCTIONAL 
+CLEANED mpnet 876696647
+START qwen3_embedding Qwen/Qwen3-Embedding-0.6B
+FETCHFETCH  qwen3_embeddingqwen3_embeddingFETCH   README.mdqwen3_embedding1_Pooling/config.json config.json  727
+17237 
+313
+FETCH qwen3_embedding config_sentence_transformers.json 215
+FETCH qwen3_embedding generation_config.json 117
+FETCH qwen3_embedding merges.txt 1671853
+FETCH qwen3_embedding model.safetensors 1191586416
+FETCH qwen3_embedding modules.json 349
+FETCH qwen3_embedding tokenizer.json 11423705
+FETCH qwen3_embedding tokenizer_config.json 9706
+FETCH qwen3_embedding vocab.json 2776833
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 3 / 18
+RANGE model.safetensors 1 / 18
+RANGE model.safetensors 2 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 14 / 18
+RANGE model.safetensors 18 / 18
+RANGE model.safetensors 17 / 18
+RANGE model.safetensors 15 / 18
+RANGE model.safetensors 16 / 18
+RESULT qwen3_embedding FAIL invalid Qwen3 embedding architecture or weights: missing tensors: model.embed_tokens.weight, model.layers.0.input_layernorm.weight, model.layers.0.mlp.down_proj.weight, model.layers.0.mlp.gate_proj.we
+CLEANED qwen3_embedding 2399076277
+START qwen3_reranker Qwen/Qwen3-Reranker-0.6B
+FETCH FETCH qwen3_rerankerqwen3_reranker FETCH  1_LogitScore/config.jsonREADME.md 14742qwen3_reranker 
+chat_template.jinja  74157
+
+FETCH qwen3_reranker config.json 727
+FETCH qwen3_reranker config_sentence_transformers.json 325
+FETCH qwen3_reranker generation_config.json 214
+FETCH qwen3_reranker merges.txt 1671853
+FETCH qwen3_reranker model.safetensors 1191588280
+FETCH qwen3_reranker modules.json 280
+FETCH qwen3_reranker sentence_bert_config.json 362
+FETCH qwen3_reranker tokenizer.json 11422654
+FETCH qwen3_reranker tokenizer_config.json 9706
+FETCH qwen3_reranker vocab.json 2776833
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 2 / 18
+RANGE RANGE model.safetensors 1 / 18
+model.safetensors 3 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 14 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 15 / 18
+RANGE model.safetensors 16 / 18
+RANGE model.safetensors 18 / 18
+RANGE model.safetensors 17 / 18
+RESULT qwen3_reranker PASS_FUNCTIONAL 
+CLEANED qwen3_reranker 2399077846
+START lfm2_colbert LiquidAI/LFM2-ColBERT-350M
+FETCH FETCHlfm2_colbert  lfm2_colbert1_Dense/config.jsonFETCH   116lfm2_colbert LICENSE 105741_Dense/model.safetensors
+ 
+524376
+FETCH lfm2_colbert README.md 63051
+FETCH lfm2_colbert chat_template.jinja 1296
+FETCH lfm2_colbert config.json 1215
+FETCH lfm2_colbert config_sentence_transformers.json 693
+FETCH lfm2_colbert model.safetensors 1413306600
+FETCH lfm2_colbert modules.json 216
+FETCH lfm2_colbert sentence_bert_config.json 53
+FETCH lfm2_colbert special_tokens_map.json 323
+FETCH lfm2_colbert tokenizer.json 4733022
+FETCH lfm2_colbert tokenizer_config.json 91910
+RANGE model.safetensors 2 / 22
+RANGE model.safetensors 4 / 22
+RANGE model.safetensors 1 / 22
+RANGE model.safetensors 3 / 22
+RANGE model.safetensors 5 / 22
+RANGE model.safetensors 7 / 22
+RANGE model.safetensors 6 / 22
+RANGE model.safetensors 8 / 22
+RANGE model.safetensors 9 / 22
+RANGE model.safetensors 10 / 22
+RANGE model.safetensors 11 / 22
+RANGE model.safetensors 12 / 22
+RANGE model.safetensors 14 / 22
+RANGE model.safetensors 13 / 22
+RANGE model.safetensors 15 / 22
+RANGE model.safetensors 16 / 22
+RANGE model.safetensors 18 / 22
+RANGE model.safetensors 17 / 22
+RANGE model.safetensors 19 / 22
+RANGE model.safetensors 22 / 22
+RANGE model.safetensors 20 / 22
+RANGE model.safetensors 21 / 22
+RESULT lfm2_colbert FAIL There is no Stream(cpu, 0) in current thread.
+CLEANED lfm2_colbert 2832042842

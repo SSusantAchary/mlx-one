@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "lfm2"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/lfm2",
+  "bytes_removed": 918226196,
+  "downloaded_bytes_verified": 713840107,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794130596.828989,
+  "recorded": 1794130649.19229,
+  "cleanup_complete": true,
+  "finished": 1794130649.19924
+}

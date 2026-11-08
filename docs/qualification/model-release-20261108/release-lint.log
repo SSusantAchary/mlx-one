@@ -1,0 +1,51 @@
+{
+  "findings": 74,
+  "new_findings": [
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (113 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (113 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (114 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (137 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (106 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (147 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (111 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (107 > 100)"
+    ],
+    [
+      "scripts/qualification/model_release_report.py",
+      "E501",
+      "Line too long (110 > 100)"
+    ]
+  ],
+  "debt_tracker": "docs/qualification/alpha_release/lint-debt.md"
+}

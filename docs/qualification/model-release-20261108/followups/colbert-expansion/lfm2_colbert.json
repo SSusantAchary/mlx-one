@@ -1,0 +1,166 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "lfm2_colbert",
+  "checkpoint": "LiquidAI/LFM2-ColBERT-350M",
+  "revision": "9d727d7964d3e4fd093a0f01c7287ae814264e31",
+  "started": 1794142996.7583518,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "8bb84c409d73fc52d64aa1a55e284f819428e4418faf95f9d1faa4cc873e13b6",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108/followups/colbert-expansion",
+  "reference_python": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "3a0a128b69d59994064404f4c44e6f33419c63cba27389bd714dea5b03e6074c",
+  "checkpoint_configuration": {
+    "architectures": [
+      "Lfm2Model"
+    ],
+    "block_auto_adjust_ff_dim": true,
+    "block_dim": 1024,
+    "block_ff_dim": 6656,
+    "block_ffn_dim_multiplier": 1.0,
+    "block_mlp_init_scale": 1.0,
+    "block_multiple_of": 256,
+    "block_norm_eps": 1e-05,
+    "block_out_init_scale": 1.0,
+    "block_use_swiglu": true,
+    "block_use_xavier_init": true,
+    "bos_token_id": 1,
+    "conv_L_cache": 3,
+    "conv_bias": false,
+    "conv_dim": 1024,
+    "conv_use_xavier_init": true,
+    "dtype": "float32",
+    "eos_token_id": 7,
+    "hidden_size": 1024,
+    "initializer_range": 0.02,
+    "intermediate_size": 6656,
+    "layer_types": [
+      "conv",
+      "conv",
+      "full_attention",
+      "conv",
+      "conv",
+      "full_attention",
+      "conv",
+      "conv",
+      "full_attention",
+      "conv",
+      "full_attention",
+      "conv",
+      "full_attention",
+      "conv",
+      "full_attention",
+      "conv"
+    ],
+    "max_position_embeddings": 128000,
+    "model_type": "lfm2",
+    "norm_eps": 1e-05,
+    "num_attention_heads": 16,
+    "num_heads": 16,
+    "num_hidden_layers": 16,
+    "num_key_value_heads": 8,
+    "pad_token_id": 0,
+    "rope_theta": 1000000.0,
+    "tie_embedding": true,
+    "transformers_version": "4.56.2",
+    "use_cache": true,
+    "use_pos_enc": true,
+    "vocab_size": 64402
+  },
+  "outputs": [
+    {
+      "row_id": 2,
+      "scores": [
+        30.471557027399296,
+        29.83993296702228
+      ]
+    },
+    {
+      "row_id": 3,
+      "scores": [
+        30.17025431479063,
+        29.61415517765245
+      ]
+    },
+    {
+      "row_id": 11,
+      "scores": [
+        30.290577223027235,
+        29.790778279427638
+      ]
+    }
+  ],
+  "dimensions": 128,
+  "batched_single_agreement": true,
+  "public_workflow": "InferenceService.run_task(late-interaction), maxsim",
+  "reference_exit_code": 0,
+  "reference_helper_sha256": "4eaa9de82d01c567b84b735b114d24757e6a9b39057cd122114b10b05eaa69d2",
+  "reference_log": "`torch_dtype` is deprecated! Use `dtype` instead!\n",
+  "publisher_reference_comparison": {
+    "transformers": "4.57.1",
+    "torch": "2.15.0",
+    "reference_batch_size": 2,
+    "loading_info": {
+      "missing_keys": [],
+      "unexpected_keys": [],
+      "mismatched_keys": [],
+      "error_msgs": []
+    },
+    "comparisons": [
+      {
+        "input_type": "query",
+        "tokens": 32,
+        "max_abs": 3.650784492492676e-07,
+        "mean_abs": 6.664651841514768e-08,
+        "stock_forward_error": null,
+        "comparison_method": "stock_forward"
+      },
+      {
+        "input_type": "document",
+        "tokens": 10,
+        "max_abs": 3.5762786865234375e-07,
+        "mean_abs": 5.254046868685691e-08,
+        "stock_forward_error": null,
+        "comparison_method": "stock_forward"
+      },
+      {
+        "input_type": "document",
+        "tokens": 9,
+        "max_abs": 3.5762786865234375e-07,
+        "mean_abs": 5.307987609942049e-08,
+        "stock_forward_error": null,
+        "comparison_method": "stock_forward"
+      }
+    ],
+    "scope": "independent tokenizer recipe and publisher backbone/projection; stock AutoModel forward with independent token recipe and bias-free projection"
+  },
+  "quality_status": "PASS_THREE_PAIR_LATE_INTERACTION_SANITY_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS_TASK_SERVICE_MAXSIM",
+    "cli": "NOT_ADVERTISED_FOR_TOKEN_FEATURES",
+    "http": "NOT_ADVERTISED_FOR_TOKEN_FEATURES"
+  },
+  "peak_mlx_bytes": 1495643832,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 3.305208206176758,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "8bb84c409d73fc52d64aa1a55e284f819428e4418faf95f9d1faa4cc873e13b6"
+}

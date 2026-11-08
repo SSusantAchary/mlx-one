@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "mlx-one"
 version = "0.1.1"
 description = "A unified MLX stack for multimodal AI on Apple Silicon."
-readme = "README.md"
+readme = "README.pypi.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
@@ -19,6 +19,11 @@ keywords = [
     "llm",
     "vlm",
     "audio",
+    "speech",
+    "ocr",
+    "embeddings",
+    "segmentation",
+    "classification",
     "training",
     "conversion",
     "evaluation",
@@ -53,6 +58,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/SSusantAchary/mlx-one"
+Documentation = "https://ssusantachary.github.io/mlx-one/"
+"Model support" = "https://ssusantachary.github.io/mlx-one/models/support/"
+"Release notes" = "https://ssusantachary.github.io/mlx-one/releases/0.1.1/"
 Repository = "https://github.com/SSusantAchary/mlx-one"
 Issues = "https://github.com/SSusantAchary/mlx-one/issues"
 Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"

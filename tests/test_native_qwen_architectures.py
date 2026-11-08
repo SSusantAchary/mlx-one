@@ -148,9 +148,7 @@ def test_dense_configs_validate_architecture_invariants() -> None:
     scaled = qwen2_config(rope_parameters={"rope_type": "linear", "factor": 2})
     assert scaled.rope_scaling_factor == 2
     with pytest.raises(ConfigError, match="not supported"):
-        qwen3_config(
-            rope_scaling={"type": "mrope", "mrope_section": [1, 1, 1]}
-        )
+        qwen3_config(rope_scaling={"type": "mrope", "mrope_section": [1, 1, 1]})
 
 
 def test_moe_config_validates_routing_and_explicit_limitations() -> None:
@@ -164,9 +162,7 @@ def test_moe_config_validates_routing_and_explicit_limitations() -> None:
 def test_moe_tied_head_cleanup_matches_weight_contract() -> None:
     config = moe_config(tie_word_embeddings=True)
     assert "lm_head.weight" not in moe_weights(config).expected
-    assert sanitize_moe_weights(
-        {"lm_head.weight": Shaped((64, 16))}, config
-    ) == {}
+    assert sanitize_moe_weights({"lm_head.weight": Shaped((64, 16))}, config) == {}
 
 
 def test_moe_sanitizer_stacks_hugging_face_expert_weights() -> None:
@@ -179,12 +175,12 @@ def test_moe_sanitizer_stacks_hugging_face_expert_weights() -> None:
     }
     for projection, shape in shapes.items():
         for expert in range(config.num_experts):
-            weights[f"model.layers.0.mlp.experts.{expert}.{projection}.weight"] = (
-                np.full(shape, expert)
+            weights[f"model.layers.0.mlp.experts.{expert}.{projection}.weight"] = np.full(
+                shape, expert
             )
     sanitized = sanitize_moe_weights(weights, config)
     for projection, shape in shapes.items():
-        stacked = sanitized[f"model.layers.0.mlp.experts.{projection}"]
+        stacked = sanitized[f"model.layers.0.mlp.experts.{projection}.weight"]
         assert stacked.shape == (config.num_experts, *shape)
         assert np.all(stacked[1] == 1)
 
@@ -246,10 +242,20 @@ def test_vl_weight_contract_and_patch_sanitizer() -> None:
     )
     assert sanitized["visual.patch_embed.proj.weight"].shape == (
         vision.embed_dim,
-        vision.in_channels
-        * vision.temporal_patch_size
-        * vision.patch_size
-        * vision.patch_size,
+        vision.in_channels * vision.temporal_patch_size * vision.patch_size * vision.patch_size,
     )
     assert "language_model.embed_tokens.weight" in sanitized
     assert "visual.merger.mlp_0.weight" in sanitized
+
+
+def test_moe_sanitizer_retains_old_stacked_float_layout_and_rejects_partial_quantization():
+    config = moe_config(num_hidden_layers=1, num_experts=2)
+    legacy = "model.layers.0.mlp.experts.gate_proj"
+    values = np.zeros((2, config.moe_intermediate_size, config.hidden_size))
+    assert sanitize_moe_weights({legacy: values}, config)[legacy + ".weight"] is values
+    with pytest.raises(ValueError, match="incomplete per-expert"):
+        sanitize_moe_weights(
+            {"model.layers.0.mlp.experts.0.gate_proj.scales": np.zeros((2, 2))}, config
+        )
+    with pytest.raises(ConfigError, match="norm_topk_prob"):
+        moe_config(norm_topk_prob="yes")

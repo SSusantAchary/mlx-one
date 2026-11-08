@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/scripts/qualification/model_release_sam_functional.py", line 234, in <module>
+    main()
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/scripts/qualification/model_release_sam_functional.py", line 54, in main
+    from mlx_one.cli import cli
+ImportError: cannot import name 'cli' from 'mlx_one.cli' (/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/cli.py)

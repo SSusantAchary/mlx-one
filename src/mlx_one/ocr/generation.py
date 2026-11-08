@@ -134,11 +134,19 @@ def stream_page(bundle, image, request, *, page=0, page_metadata=None, cancelled
                 stages[name] += event["duration_ms"] / 1000
 
         generation_started = time.perf_counter()
-        # ByteFallback can temporarily replace a whole byte run (including an
-        # already decoded newline) when a later UTF-8 code point is incomplete.
-        # Public OCR streaming emits complete pages, so decode Paddle's token
-        # sequence once at page completion instead of committing unstable text.
-        buffered_decode = bundle.architecture == "paddleocr_vl"
+        # OCR transport emits completed pages. Decode the complete token sequence
+        # once so an incomplete UTF-8 byte run cannot corrupt committed text.
+        buffered_decode = True
+        processor = None
+        if bundle.architecture == "got_ocr2":
+            from functools import partial
+
+            from mlx_one.text.sampling import block_repeated_ngrams
+
+            # The pinned publisher's modeling_GOT.py chat recipe uses this exact
+            # no-repeat constraint with greedy decoding.
+            processor = partial(block_repeated_ngrams, size=20)
+            prepared.metadata["no_repeat_ngram_size"] = 20
         stream = _stream_bundle(
             text,
             "",
@@ -149,7 +157,19 @@ def stream_page(bundle, image, request, *, page=0, page_metadata=None, cancelled
             _forced_token_ids=forced,
             on_execution=observe,
             _token_events_only=buffered_decode,
+            _logits_processor=processor,
         )
+        if bundle.architecture == "florence2":
+            from mlx_one.text.beam import stream_beam_search
+
+            # Pinned microsoft/Florence-2-base-ft model-card inference recipe.
+            stream = stream_beam_search(
+                forward, prepared.ids, state.entries,
+                eos_token_ids=bundle.eos_token_ids, max_tokens=request.max_tokens,
+                beam_size=3, forced_first_token=bundle.config.text_config.bos_token_id,
+                cancelled=cancelled, on_execution=observe,
+            )
+            prepared.metadata["num_beams"] = 3
         chunks = []
         first = None
         for chunk in stream:

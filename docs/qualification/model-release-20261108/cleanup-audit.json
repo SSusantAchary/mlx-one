@@ -1,0 +1,73 @@
+{
+  "timestamp": 1794143224.389688,
+  "status": "PASS",
+  "cleanup_records": 65,
+  "model_type_results_recorded": 40,
+  "all_owned_containers_removed": true,
+  "remaining_owned_files": [],
+  "remaining_task_checkpoint_files": [],
+  "bytes_removed_including_chunks_conversions_and_retests": 185546917376,
+  "protected_native_gpt_oss": {
+    "path": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+    "all_assets_hash_unchanged": true,
+    "files": [
+      {
+        "path": "README.md",
+        "unchanged": true,
+        "bytes": 838
+      },
+      {
+        "path": "config.json",
+        "unchanged": true,
+        "bytes": 33998
+      },
+      {
+        "path": "generation_config.json",
+        "unchanged": true,
+        "bytes": 177
+      },
+      {
+        "path": "model-00001-of-00003.safetensors",
+        "unchanged": true,
+        "bytes": 5306798277
+      },
+      {
+        "path": "model-00002-of-00003.safetensors",
+        "unchanged": true,
+        "bytes": 5263518916
+      },
+      {
+        "path": "model-00003-of-00003.safetensors",
+        "unchanged": true,
+        "bytes": 608251966
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "unchanged": true,
+        "bytes": 67046
+      },
+      {
+        "path": "special_tokens_map.json",
+        "unchanged": true,
+        "bytes": 440
+      },
+      {
+        "path": "tokenizer.json",
+        "unchanged": true,
+        "bytes": 27868174
+      },
+      {
+        "path": "tokenizer_config.json",
+        "unchanged": true,
+        "bytes": 21694
+      }
+    ]
+  },
+  "protected_gguf_folder_exists": true,
+  "disk_bytes": {
+    "total": 494384795648,
+    "used": 282854404096,
+    "free": 211530391552
+  },
+  "scope": "Only campaign-owned model directories were removed. Raw HF dataset fixtures, candidate wheels, test environments and evidence retained."
+}

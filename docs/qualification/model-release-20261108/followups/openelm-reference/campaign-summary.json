@@ -1,0 +1,1962 @@
+{
+  "schema_version": "model-release-campaign-v1",
+  "expected_models": 40,
+  "executed_models": 1,
+  "functional_passed": 0,
+  "release_qualified": 0,
+  "results": [
+    {
+      "schema_version": "model-release-probe-v1",
+      "model_type": "openelm",
+      "checkpoint": "apple/OpenELM-270M",
+      "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+      "started": 1794133386.09654,
+      "release_qualified": false,
+      "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+      "platform": "macOS-15.8.2-arm64-arm-64bit",
+      "worker_sha256": "68deeb0abd075faf53f77a11430749ae410756b77cd5c2e663e7f88af2c851fc",
+      "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+      "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+      "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+      "reference_python": "/private/tmp/mlx-one-all40-20261108/reference-env/bin/python",
+      "gpu_execution_serialized": true,
+      "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+      "mlx": "0.32.2",
+      "device": {
+        "device_name": "Apple M4",
+        "max_recommended_working_set_size": 22906503168,
+        "memory_size": 34359738368,
+        "architecture": "applegpu_g16g",
+        "max_buffer_length": 17179869184,
+        "resource_limit": 499000
+      },
+      "reference_packages_absent": true,
+      "installed_record_sha256": "c3f83ba89685bb8aff1f9ae154ccf19ce59b4f1da06a2c7a129c969a57405fbc",
+      "tokenizer_provenance": {
+        "status": "PASS_COMPATIBLE_PUBLIC_TOKENIZER",
+        "repo": "hf-internal-testing/llama-tokenizer",
+        "revision": "d02ad6cb9dd2c2296a6332199fa2fdca5938fef0",
+        "publisher_tokenizer_repo": "meta-llama/Llama-2-7b-hf",
+        "publisher_revision": "01c7f73d771dfac7d292323805ebc428287df4f9",
+        "official_sentencepiece_sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347",
+        "public_sentencepiece_matches_official_hub_metadata": true,
+        "vocabulary_ids_identical": 32000,
+        "sample_encodings_identical": 10,
+        "scope": "base completion, not instruction/chat qualification",
+        "files": {
+          "tokenizer.json": "8eea70c4866c4f1320ba096fc986ac82038a8374dbe135212ba7628835b4a6f1",
+          "tokenizer_config.json": "c43a787e4eb83e0167f36aff633ebe8523f073e98d684e05f189a2a4e784293d",
+          "special_tokens_map.json": "ff3b4a612c4e447acb02d40071bddd989fe0da87eb5b7fe0dbadfc4f74de7531"
+        }
+      },
+      "tested_model_path": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+      "functional": {
+        "model_path": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+        "checkpoint_status": "MODEL_SMOKE_TESTED",
+        "scope": "bounded functional smoke, no quality or numerical research gate",
+        "load_seconds": 0.22026316598930862,
+        "architecture": "openelm",
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+        "revision": null,
+        "configured_maximum": 2048,
+        "smoke_context": 512,
+        "cache_continuation_reset": {
+          "status": "PASS",
+          "tokens": 3,
+          "state_bytes": 96768
+        },
+        "text": "It It It It It",
+        "reasoning_content": "",
+        "metrics": {
+          "prompt_tokens": 29,
+          "generated_tokens": 5,
+          "tokens_per_second": 55.129400389804026,
+          "time_to_first_token_ms": 24.812916002701968,
+          "generation_latency_ms": 90.69570800056681,
+          "context_used": 34,
+          "memory_used_bytes": 1090270216,
+          "memory_peak_bytes": 1151277272,
+          "reasoning_tokens": 0,
+          "prompt_cache_hit": false,
+          "reused_prompt_tokens": 0,
+          "drafted_tokens": 0,
+          "accepted_draft_tokens": 0,
+          "rejected_draft_tokens": 0,
+          "draft_acceptance_ratio": null,
+          "prompt_tokens_per_second": 1360.9352918205952,
+          "decode_tokens_per_second": 75.64904516769836,
+          "inter_token_latency_ms": 13.218937499914318,
+          "cache_bytes": 4128768,
+          "cache_backend": "dense",
+          "cache_logical_bytes": 548352,
+          "cache_allocated_bytes": 4128768,
+          "cache_reserved_bytes": 0,
+          "cache_shared_blocks": 0,
+          "cache_lookup_time_ms": 0.0,
+          "cache_allocation_time_ms": 0.018708989955484867,
+          "avoided_prefill_tokens": 0,
+          "server_text_ttft_ms": 24.85437500581611,
+          "model_token_count": 5,
+          "model_token_gap_p50_ms": 13.054832990746945,
+          "model_token_gap_p95_ms": 13.74233400565572,
+          "timing_samples_truncated": false,
+          "actual_prefill_tokens": 29,
+          "eligible_prefix_tokens": 0,
+          "matched_prefix_tokens": 0,
+          "prefix_publications": 0,
+          "publication_rejections": 0,
+          "queue_ms": null,
+          "tokenization_ms": 0.08029199671000242,
+          "prefill_ms": 21.3088749878807,
+          "decode_ms": 62.8528350207489,
+          "model_token_times_ms": [
+            24.812916002701968,
+            38.55525000835769,
+            51.610082999104634,
+            64.58116600697394,
+            77.68866600235924
+          ],
+          "model_generation_started_at": 93864.815864625,
+          "model_forward_batch_sizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "execution_observer": "synchronized-forward-v2",
+          "mlx_cached_bytes": 74485316,
+          "actual_logits_dtypes": [
+            "mlx.core.float32"
+          ],
+          "cache_layers": [
+            {
+              "layer_id": 0,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 2,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 4,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 6,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 8,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 10,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 12,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 14,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            }
+          ]
+        },
+        "runtime": {
+          "release_support": {
+            "architecture_registered": true,
+            "checkpoint_revision": null,
+            "status": "EXPERIMENTAL_NOT_QUALIFIED",
+            "architecture_status": null,
+            "checkpoint_status": "NOT_VERIFIED",
+            "alpha_supported": false,
+            "numerical_contract": "OPTIONAL_RESEARCH_NOT_AN_ADMISSION_GATE",
+            "admission_policy": "functional-architecture-checkpoint-v1",
+            "release_approval": "PENDING",
+            "candidate_profile": null,
+            "reason": "No exact checkpoint/revision/architecture functional evidence is attached."
+          },
+          "checkpoint_identity": {
+            "canonical_model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+            "path": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+            "revision": null,
+            "weight_hashes": {}
+          },
+          "execution_contract": {
+            "actual_weight_dtypes": [
+              "float32"
+            ],
+            "adapter_version": "native-adapter-v2",
+            "architecture": "openelm",
+            "components": [
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 0,
+                "num_kv_heads": 3,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 1,
+                "num_kv_heads": 3,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 2,
+                "num_kv_heads": 3,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 3,
+                "num_kv_heads": 3,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 4,
+                "num_kv_heads": 3,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 5,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 6,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 7,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 8,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 9,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 10,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 11,
+                "num_kv_heads": 4,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 12,
+                "num_kv_heads": 5,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 13,
+                "num_kv_heads": 5,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 14,
+                "num_kv_heads": 5,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 15,
+                "num_kv_heads": 5,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              }
+            ],
+            "execution_mode": "reference_dense",
+            "floating_policy": null,
+            "modules": [],
+            "quantization": {},
+            "quantization_digest": "49a77b4e01476a690cb1027466d6ea03cd563a1908a7a3ae7a4fe0aafb9e9df6",
+            "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89"
+          },
+          "compatibility_digest": "14ad23c205cd434245e3a183885d218548707546102df136ad459e437a5b32ca",
+          "runtime_schema_version": "native-runtime-v2",
+          "feature_details": {
+            "dense_execution": {
+              "implemented": true,
+              "available_for_opt_in": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "block_storage": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "block_prefix_reuse": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "continuous_batching": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_dense_decode": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_chunked_prefill": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_attention": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_prefill": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_prefix_restore": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_batching": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "quantized_paged_kv": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "long_context": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            }
+          },
+          "weights_identity": "36fbb20da30965bef2e1cb9ad1e0a7ddf21552cc9f230ee72c27d7eba0cab131",
+          "engine_mode": "reference_dense",
+          "configured_execution_dtype": null,
+          "model_revision": null,
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+            "weight_precision": "float32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "actual_weight_dtypes": [
+            "float32"
+          ],
+          "layers": [
+            {
+              "layer_id": 0,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 2,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 4,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 26112,
+              "allocated_bytes": 196608,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 6,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 8,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 10,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 34816,
+              "allocated_bytes": 262144,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 12,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 14,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 43520,
+              "allocated_bytes": 327680,
+              "committed_tokens": 34
+            }
+          ],
+          "arena": null,
+          "qualified_workload_envelope": null,
+          "memory_admission": {
+            "schema_version": "native-admission-v1",
+            "timestamp": "2026-11-08T10:23:07.127902+00:00",
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+            "revision": null,
+            "backend": "dense",
+            "execution_mode": "reference_dense",
+            "weight_precision": {},
+            "execution_dtype": null,
+            "attention_kv_precision": {
+              "key_type": "f16",
+              "value_type": "f16"
+            },
+            "requests": [
+              {
+                "prompt_tokens": 29,
+                "requested_output_tokens": 16,
+                "estimated_kv_growth_bytes": 4128768,
+                "estimated_hybrid_carry_growth_bytes": 0,
+                "total_growth_bytes": 4128768,
+                "request_id": "server-1794133387036766000",
+                "handle_id": "cache-894f79b9d70a422e84bfb5f725f3c793",
+                "key_type": "f16",
+                "value_type": "f16",
+                "allocated_bytes": 4128768,
+                "reserved_bytes": 0
+              }
+            ],
+            "transient": true,
+            "attempt": 0,
+            "stage": "host",
+            "attention_kv_tensor_dtypes": [
+              "float16"
+            ],
+            "component_state_dtypes": [],
+            "status": "bounded",
+            "ceiling_bytes": 22906503168,
+            "working_set_bytes": 1299185664,
+            "owner_bytes": 1090237440,
+            "model_bytes": 1086108672,
+            "cache_allocated_bytes": 4128768,
+            "cache_physical_bytes": 4128768,
+            "cache_logical_bytes": 532224,
+            "reserved_bytes": 0,
+            "active_handles": 1,
+            "retained_prefix_bytes": 0,
+            "reclaimable_pool_bytes": 0,
+            "evictable_bytes": 0,
+            "requested_bytes": 166560,
+            "predicted_transient_bytes": 166560,
+            "forecast": {
+              "bytes": 166560,
+              "source": "conservative-analytical",
+              "measured": false
+            },
+            "telemetry": {
+              "rss_bytes": 1299185664,
+              "installed_bytes": 34359738368,
+              "mlx_active_bytes": 1090406408,
+              "mlx_cached_bytes": 74343684,
+              "mlx_peak_bytes": 1151277272,
+              "recommended_bytes": 22906503168,
+              "os_pressure": "normal",
+              "swap_bytes": 3277125058
+            },
+            "swap_delta_bytes": null,
+            "swap_scope": "host-wide, not uniquely attributed to this request",
+            "host_sample_age_seconds": 0.07839874998899177,
+            "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested",
+            "projected_bytes": 1299352224,
+            "decision": "admit",
+            "rejection_reason": null,
+            "retryable": null
+          },
+          "execution_memory_forecast": {
+            "bytes": 166560,
+            "source": "conservative-analytical",
+            "measured": false
+          },
+          "component_capabilities": [
+            {
+              "layer_id": 0,
+              "kind": "full_kv",
+              "num_kv_heads": 3,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "num_kv_heads": 3,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 2,
+              "kind": "full_kv",
+              "num_kv_heads": 3,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "num_kv_heads": 3,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 4,
+              "kind": "full_kv",
+              "num_kv_heads": 3,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 6,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 8,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 10,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "num_kv_heads": 4,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 12,
+              "kind": "full_kv",
+              "num_kv_heads": 5,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "num_kv_heads": 5,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 14,
+              "kind": "full_kv",
+              "num_kv_heads": 5,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "num_kv_heads": 5,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            }
+          ],
+          "configured_cache_precision": {
+            "key_type": "f16",
+            "value_type": "f16"
+          },
+          "capabilities": {
+            "continuous_batching": false,
+            "paged_attention": false,
+            "hybrid_prefix_restore": false
+          },
+          "runner_qualification": {
+            "chunked_prefill": {
+              "feature": "chunked_prefill",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "causal_runner_equal_offset_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "experimental",
+              "evidence": [],
+              "implemented": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "equal_offset_batched_decode": {
+              "feature": "equal_offset_batched_decode",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "causal_runner_equal_offset_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "experimental",
+              "evidence": [],
+              "implemented": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            }
+          },
+          "qualification": {
+            "dense_execution": {
+              "feature": "dense_execution",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "experimental",
+              "evidence": [],
+              "implemented": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "block_storage": {
+              "feature": "block_storage",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "block_prefix_reuse": {
+              "feature": "block_prefix_reuse",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "continuous_batching": {
+              "feature": "continuous_batching",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_dense_decode": {
+              "feature": "batched_dense_decode",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_chunked_prefill": {
+              "feature": "batched_chunked_prefill",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_attention": {
+              "feature": "paged_attention",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_prefill": {
+              "feature": "paged_prefill",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_prefix_restore": {
+              "feature": "hybrid_prefix_restore",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_batching": {
+              "feature": "hybrid_batching",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "quantized_paged_kv": {
+              "feature": "quantized_paged_kv",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "long_context": {
+              "feature": "long_context",
+              "scope": {
+                "model_id": "/private/tmp/mlx-one-all40-20261108/models/openelm/checkpoint",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "fa615e857f488298f578bc9d7cdbb5e20c6f1710af2e26491421673a5c2f2a89",
+                "weight_precision": "float32",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            }
+          },
+          "latency": {
+            "ttft_p95_ms": null,
+            "decode_gap_p95_ms": null
+          },
+          "throughput": {
+            "aggregate_decode_tok_s": null
+          },
+          "selection": {
+            "requested_mode": "reference_dense",
+            "resolved_mode": "reference_dense",
+            "reason": "explicit configuration",
+            "evidence_scope": null
+          },
+          "metric_definitions": {
+            "tokens_per_second": "output tokens / whole engine request wall time",
+            "decode_tokens_per_second": "output intervals / first-to-last model output-token interval",
+            "inter_token_latency_ms": "mean model output-token gap; excludes prefill and first token",
+            "time_to_first_token_ms": "engine execution start to first accepted model output token",
+            "queue_ms": "enqueue to execution admission",
+            "prefill_ms": "sum of synchronized model prefill forwards",
+            "model_token_gap_percentiles": "bounded last 4096 gaps; truncation is explicit",
+            "sse_delivery_timing": "client wire observations, separate from model-token timing"
+          },
+          "latest_completed_request": {
+            "prompt_tokens": 29,
+            "generated_tokens": 5,
+            "tokens_per_second": 55.129400389804026,
+            "time_to_first_token_ms": 24.812916002701968,
+            "generation_latency_ms": 90.69570800056681,
+            "context_used": 34,
+            "memory_used_bytes": 1090270216,
+            "memory_peak_bytes": 1151277272,
+            "reasoning_tokens": 0,
+            "prompt_cache_hit": false,
+            "reused_prompt_tokens": 0,
+            "drafted_tokens": 0,
+            "accepted_draft_tokens": 0,
+            "rejected_draft_tokens": 0,
+            "draft_acceptance_ratio": null,
+            "prompt_tokens_per_second": 1360.9352918205952,
+            "decode_tokens_per_second": 75.64904516769836,
+            "inter_token_latency_ms": 13.218937499914318,
+            "cache_bytes": 4128768,
+            "cache_backend": "dense",
+            "cache_logical_bytes": 548352,
+            "cache_allocated_bytes": 4128768,
+            "cache_reserved_bytes": 0,
+            "cache_shared_blocks": 0,
+            "cache_lookup_time_ms": 0.0,
+            "cache_allocation_time_ms": 0.018708989955484867,
+            "avoided_prefill_tokens": 0,
+            "server_text_ttft_ms": 24.85437500581611,
+            "model_token_count": 5,
+            "model_token_gap_p50_ms": 13.054832990746945,
+            "model_token_gap_p95_ms": 13.74233400565572,
+            "timing_samples_truncated": false,
+            "actual_prefill_tokens": 29,
+            "eligible_prefix_tokens": 0,
+            "matched_prefix_tokens": 0,
+            "prefix_publications": 0,
+            "publication_rejections": 0,
+            "queue_ms": null,
+            "tokenization_ms": 0.08029199671000242,
+            "prefill_ms": 21.3088749878807,
+            "decode_ms": 62.8528350207489,
+            "model_token_times_ms": [
+              24.812916002701968,
+              38.55525000835769,
+              51.610082999104634,
+              64.58116600697394,
+              77.68866600235924
+            ],
+            "model_generation_started_at": 93864.815864625,
+            "model_forward_batch_sizes": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "execution_observer": "synchronized-forward-v2",
+            "mlx_cached_bytes": 74485316,
+            "actual_logits_dtypes": [
+              "mlx.core.float32"
+            ],
+            "cache_layers": [
+              {
+                "layer_id": 0,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 26112,
+                "allocated_bytes": 196608,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 1,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 26112,
+                "allocated_bytes": 196608,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 2,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 26112,
+                "allocated_bytes": 196608,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 3,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 26112,
+                "allocated_bytes": 196608,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 4,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 26112,
+                "allocated_bytes": 196608,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 5,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 6,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 7,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 8,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 9,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 10,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 11,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 34816,
+                "allocated_bytes": 262144,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 12,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 43520,
+                "allocated_bytes": 327680,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 13,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 43520,
+                "allocated_bytes": 327680,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 14,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 43520,
+                "allocated_bytes": 327680,
+                "committed_tokens": 34
+              },
+              {
+                "layer_id": 15,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 43520,
+                "allocated_bytes": 327680,
+                "committed_tokens": 34
+              }
+            ]
+          },
+          "aggregate_metric_scope": "latest_completed_request",
+          "memory_pressure": null
+        },
+        "status": "PASS"
+      },
+      "sample_row_ids": [
+        3
+      ],
+      "reference_source_provenance": {
+        "repo": "apple/OpenELM-270M",
+        "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+        "files": {
+          "configuration_openelm.py": "d0da88fc5fafdfef155052ec4e5483db8d6be2917cb68bdee9e7ead1cb7e6f15",
+          "modeling_openelm.py": "ffb56f297ccb48ba689bc15b352c971eb1337a3604449662303a2d4919aa77c4"
+        }
+      },
+      "reference_exit_code": 0,
+      "reference_log": "{\"torch\": \"2.15.0\", \"max_abs_logits\": 0.000118255615234375, \"mean_abs_logits\": 1.8667227777768858e-05, \"reference_nll\": 11.879561424255371, \"top1_agreement\": 1.0, \"layers\": [{\"index\": 0, \"max_abs\": 0.0, \"mean_abs\": 0.0, \"reference_abs_max\": 0.21879489719867706}, {\"index\": 1, \"max_abs\": 3.337860107421875e-06, \"mean_abs\": 1.2391950576784438e-07, \"reference_abs_max\": 2.831284284591675}, {\"index\": 2, \"max_abs\": 5.7220458984375e-06, \"mean_abs\": 2.245355688046402e-07, \"reference_abs_max\": 7.605543613433838}, {\"index\": 3, \"max_abs\": 1.7642974853515625e-05, \"mean_abs\": 4.689507875355048e-07, \"reference_abs_max\": 12.314504623413086}, {\"index\": 4, \"max_abs\": 2.09808349609375e-05, \"mean_abs\": 6.963198870835186e-07, \"reference_abs_max\": 12.513566017150879}, {\"index\": 5, \"max_abs\": 1.9073486328125e-05, \"mean_abs\": 9.234286721948592e-07, \"reference_abs_max\": 15.625831604003906}, {\"index\": 6, \"max_abs\": 2.002716064453125e-05, \"mean_abs\": 1.266426693291578e-06, \"reference_abs_max\": 15.907462120056152}, {\"index\": 7, \"max_abs\": 2.765655517578125e-05, \"mean_abs\": 1.6440113768112496e-06, \"reference_abs_max\": 22.52841567993164}, {\"index\": 8, \"max_abs\": 4.00543212890625e-05, \"mean_abs\": 2.3279801553144353e-06, \"reference_abs_max\": 24.849157333374023}, {\"index\": 9, \"max_abs\": 0.000118255615234375, \"mean_abs\": 3.077289875363931e-06, \"reference_abs_max\": 33.35958480834961}, {\"index\": 10, \"max_abs\": 0.0001068115234375, \"mean_abs\": 4.554450242721941e-06, \"reference_abs_max\": 38.871150970458984}, {\"index\": 11, \"max_abs\": 0.000125885009765625, \"mean_abs\": 5.8298751355323475e-06, \"reference_abs_max\": 49.638397216796875}, {\"index\": 12, \"max_abs\": 0.0001373291015625, \"mean_abs\": 7.3583569246693514e-06, \"reference_abs_max\": 69.4373779296875}, {\"index\": 13, \"max_abs\": 0.00020599365234375, \"mean_abs\": 9.704874173621647e-06, \"reference_abs_max\": 89.23612213134766}, {\"index\": 14, \"max_abs\": 0.000335693359375, \"mean_abs\": 1.549060471006669e-05, \"reference_abs_max\": 223.44361877441406}, {\"index\": 15, \"max_abs\": 0.000518798828125, \"mean_abs\": 1.9778153728111647e-05, \"reference_abs_max\": 388.3253173828125}, {\"index\": 16, \"max_abs\": 0.0003509521484375, \"mean_abs\": 3.4997733564523514e-06, \"reference_abs_max\": 157.69566345214844}]}\n",
+      "publisher_reference_comparison": {
+        "torch": "2.15.0",
+        "max_abs_logits": 0.000118255615234375,
+        "mean_abs_logits": 1.8667227777768858e-05,
+        "reference_nll": 11.879561424255371,
+        "top1_agreement": 1.0,
+        "layers": [
+          {
+            "index": 0,
+            "max_abs": 0.0,
+            "mean_abs": 0.0,
+            "reference_abs_max": 0.21879489719867706
+          },
+          {
+            "index": 1,
+            "max_abs": 3.337860107421875e-06,
+            "mean_abs": 1.2391950576784438e-07,
+            "reference_abs_max": 2.831284284591675
+          },
+          {
+            "index": 2,
+            "max_abs": 5.7220458984375e-06,
+            "mean_abs": 2.245355688046402e-07,
+            "reference_abs_max": 7.605543613433838
+          },
+          {
+            "index": 3,
+            "max_abs": 1.7642974853515625e-05,
+            "mean_abs": 4.689507875355048e-07,
+            "reference_abs_max": 12.314504623413086
+          },
+          {
+            "index": 4,
+            "max_abs": 2.09808349609375e-05,
+            "mean_abs": 6.963198870835186e-07,
+            "reference_abs_max": 12.513566017150879
+          },
+          {
+            "index": 5,
+            "max_abs": 1.9073486328125e-05,
+            "mean_abs": 9.234286721948592e-07,
+            "reference_abs_max": 15.625831604003906
+          },
+          {
+            "index": 6,
+            "max_abs": 2.002716064453125e-05,
+            "mean_abs": 1.266426693291578e-06,
+            "reference_abs_max": 15.907462120056152
+          },
+          {
+            "index": 7,
+            "max_abs": 2.765655517578125e-05,
+            "mean_abs": 1.6440113768112496e-06,
+            "reference_abs_max": 22.52841567993164
+          },
+          {
+            "index": 8,
+            "max_abs": 4.00543212890625e-05,
+            "mean_abs": 2.3279801553144353e-06,
+            "reference_abs_max": 24.849157333374023
+          },
+          {
+            "index": 9,
+            "max_abs": 0.000118255615234375,
+            "mean_abs": 3.077289875363931e-06,
+            "reference_abs_max": 33.35958480834961
+          },
+          {
+            "index": 10,
+            "max_abs": 0.0001068115234375,
+            "mean_abs": 4.554450242721941e-06,
+            "reference_abs_max": 38.871150970458984
+          },
+          {
+            "index": 11,
+            "max_abs": 0.000125885009765625,
+            "mean_abs": 5.8298751355323475e-06,
+            "reference_abs_max": 49.638397216796875
+          },
+          {
+            "index": 12,
+            "max_abs": 0.0001373291015625,
+            "mean_abs": 7.3583569246693514e-06,
+            "reference_abs_max": 69.4373779296875
+          },
+          {
+            "index": 13,
+            "max_abs": 0.00020599365234375,
+            "mean_abs": 9.704874173621647e-06,
+            "reference_abs_max": 89.23612213134766
+          },
+          {
+            "index": 14,
+            "max_abs": 0.000335693359375,
+            "mean_abs": 1.549060471006669e-05,
+            "reference_abs_max": 223.44361877441406
+          },
+          {
+            "index": 15,
+            "max_abs": 0.000518798828125,
+            "mean_abs": 1.9778153728111647e-05,
+            "reference_abs_max": 388.3253173828125
+          },
+          {
+            "index": 16,
+            "max_abs": 0.0003509521484375,
+            "mean_abs": 3.4997733564523514e-06,
+            "reference_abs_max": 157.69566345214844
+          }
+        ]
+      },
+      "text_quality": {
+        "sample_row_ids": [
+          3,
+          4,
+          11,
+          12,
+          16
+        ],
+        "target_tokens": 480,
+        "mean_negative_log_likelihood": 12.4556640625,
+        "perplexity": 256700.1785710474,
+        "threshold_perplexity": 1000,
+        "scope": "five bounded WikiText excerpts; sanity check, not full test-set perplexity"
+      },
+      "status": "FAIL",
+      "error": "bounded WikiText perplexity exceeds 1000",
+      "exception": "AssertionError",
+      "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/mlx-one-docs-site/scripts/qualification/model_release_worker.py\", line 761, in main\n    probe(entry, args.model, fixtures, report)\n  File \"/private/tmp/mlx-one-docs-site/scripts/qualification/model_release_worker.py\", line 157, in text_probe\n    assert math.isfinite(mean_nll) and mean_nll < math.log(1000), (\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: bounded WikiText perplexity exceeds 1000\n",
+      "seconds": 6.939860820770264,
+      "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+      "campaign_worker_sha256": "68deeb0abd075faf53f77a11430749ae410756b77cd5c2e663e7f88af2c851fc"
+    }
+  ]
+}

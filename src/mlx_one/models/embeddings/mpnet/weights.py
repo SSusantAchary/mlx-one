@@ -8,15 +8,15 @@ from mlx_one.core.weights import WeightContract
 from mlx_one.models.embeddings.mpnet.config import MPNetEmbeddingConfig
 
 
-def sanitize_weights(
-    weights: dict[str, Any], config: MPNetEmbeddingConfig
-) -> dict[str, Any]:
+def sanitize_weights(weights: dict[str, Any], config: MPNetEmbeddingConfig) -> dict[str, Any]:
     cleaned = {}
     for name, value in weights.items():
         if name.endswith("embeddings.position_ids"):
             continue
         if name.startswith("mpnet."):
             name = name.removeprefix("mpnet.")
+        if not config.add_pooling_layer and name in {"pooler.dense.weight", "pooler.dense.bias"}:
+            continue
         cleaned[name] = value
     return cleaned
 

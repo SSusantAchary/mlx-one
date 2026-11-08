@@ -41,11 +41,12 @@ BUILTIN_ADAPTERS["parakeet_tdt"]=(
 
 BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.segmentation:"+adapter
     for name,adapter in (("sam3","SAM3ConceptAdapter"),
-        ("sam3_tracker","SAM3InteractiveAdapter"),("sam3_video","SAM3VideoAdapter"))})
+        ("sam3_tracker","SAM3InteractiveAdapter"),("sam3_video","SAM3VideoAdapter"),
+        ("sam3_tracker_video", "SAM3TemporalAdapter"))})
 
 
 def builtin_runtime(entry):
-    component = entry.model_type == "sam3_tracker_video"
+    component = entry.model_type == "sam3_tracker_video" and entry.loader_path is None
     status = ("component_only" if component else "architecture_only" if not entry.loader_path
               and not entry.tasks else "not_integrated" if not entry.loader_path
               else "loader_declared")

@@ -1,0 +1,68 @@
+{
+  "model_type": "trocr",
+  "kind": "ocr",
+  "repo": "microsoft/trocr-base-printed",
+  "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+  "manifest_id": "O01",
+  "profile": "FP32",
+  "gated": false,
+  "license": null,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1229,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 2976,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 4126,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 190,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 456318,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1333384464,
+      "sha256": "1cf4a6eedab26afaaf505f1c7f73d9634944924dbd1ed049d569db98039cd596"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 224,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 1333508485,
+      "sha256": "a67665277b31df7da142e76e5247d2f464d9914cd5ccf7edaf83c1e79547a130"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 772,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 1118,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 898822,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

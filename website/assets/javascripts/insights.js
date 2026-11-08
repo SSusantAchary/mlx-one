@@ -47,6 +47,95 @@
     const option = node('option', label); option.value = value; select.append(option);
   });
 
+  function renderSupport(host, data) {
+    const search = host.querySelector('[data-support-search]');
+    const modality = host.querySelector('[data-support-modality]');
+    const precision = host.querySelector('[data-support-precision]');
+    const reset = host.querySelector('[data-support-reset]');
+    const models = data.support.models;
+    options(modality, [...new Set(models.map(r => r.modality))].sort().map(v => [v, v]));
+    options(precision, [...new Set(models.map(r => r.precision))].sort().map(v => [v, v]));
+    const render = () => {
+      const query = search.value.trim().toLowerCase();
+      const rows = models.filter(row => (!modality.value || row.modality === modality.value)
+        && (!precision.value || row.precision === precision.value)
+        && (!query || [row.model_type, row.checkpoint, row.task, row.precision].join(' ').toLowerCase().includes(query)));
+      host.querySelector('[data-support-count]').textContent = `${rows.length} of ${models.length} supported model types shown.`;
+      const container = host.querySelector('[data-support-table]');
+      container.replaceChildren();
+      if (!rows.length) { container.append(node('p', 'No models match. Reset filters to show all supported models.')); return; }
+      container.append(table(['Model and checkpoint', 'Primary operations', 'Precision', 'Support and evidence'], rows.map(row => {
+        const identity = node('div');
+        identity.append(node('strong', row.model_type), node('div', row.checkpoint), node('code', row.revision));
+        const evidence = node('div');
+        evidence.append(node('span', 'Supported', 'insights-badge insights-status-supported'), document.createTextNode(' '),
+          link('Passing task record', `https://github.com/SSusantAchary/mlx-one/blob/${data.source_commit}/${row.evidence}`),
+          details('Operations and diagnostics', { operations: row.primary_operations, result_sha256: row.evidence_sha256,
+            interfaces: row.interfaces, quality_status: row.quality_status, execution_dtype: row.execution_dtype || 'Recorded profile' }));
+        return [identity, row.task, row.precision, evidence];
+      }), 'Current native model support: selected checkpoints and primary workflows'));
+    };
+    [search, modality, precision].forEach(control => {
+      control.disabled = false;
+      control.addEventListener(control === search ? 'input' : 'change', render);
+    });
+    reset.disabled = false;
+    reset.addEventListener('click', () => { [search, modality, precision].forEach(control => { control.value = ''; }); render(); });
+    render();
+  }
+
+  function renderRegistrationHistory(host, data) {
+    const target = host.querySelector('[data-registration-chart]');
+    const registered = data.support.registration_history;
+    const admissions = data.support.history;
+    if (!registered.points.length) { target.textContent = 'No registry snapshots are available in this checkout.'; return; }
+    const points = registered.points;
+    const firstTime = Date.parse(points[0].date);
+    const lastTime = Math.max(...[...points, ...admissions].map(p => Date.parse(p.date)));
+    const maximum = Math.max(...points.map(p => p.registered), ...admissions.map(p => p.supported), 1);
+    const x = p => 48 + (Date.parse(p.date) - firstTime) / Math.max(lastTime - firstTime, 86400000) * 680;
+    const y = value => 210 - value / maximum * 170;
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 760 270'); svg.setAttribute('role', 'img');
+    const add = (tag, attrs, text) => {
+      const el = document.createElementNS(ns, tag);
+      Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, String(value)));
+      if (text != null) el.textContent = text;
+      svg.append(el); return el;
+    };
+    add('title', {}, 'Registered native types and separately dated primary-workflow admissions');
+    add('desc', {}, data.support.history_note);
+    [0, Math.round(maximum / 2), maximum].forEach(value => {
+      add('line', { x1: 48, x2: 728, y1: y(value), y2: y(value), class: 'insights-gridline' });
+      add('text', { x: 38, y: y(value) + 4, 'text-anchor': 'end', class: 'insights-chart-label' }, value);
+    });
+    add('path', { d: points.map((p, i) => `${i ? 'H' : 'M'} ${x(p)}${i ? ` V ${y(p.registered)}` : ` ${y(p.registered)}`}`).join(' '),
+      fill: 'none', 'stroke-width': 3, class: 'insights-catalog-line' });
+    points.forEach(p => {
+      const dot = add('circle', { cx: x(p), cy: y(p.registered), r: 3, class: 'insights-catalog-line' });
+      const tooltip = document.createElementNS(ns, 'title'); tooltip.textContent = `${p.date}: ${p.registered} registered types`; dot.append(tooltip);
+    });
+    admissions.forEach(p => {
+      const dot = add('circle', { cx: x(p), cy: y(p.supported), r: 6, class: 'insights-admission-point' });
+      const tooltip = document.createElementNS(ns, 'title'); tooltip.textContent = `${p.date}: ${p.supported} supported primary workflows`; dot.append(tooltip);
+      add('text', { x: x(p), y: y(p.supported) - 14, 'text-anchor': 'end', class: 'insights-chart-label' }, `${p.supported} workflows · ${p.date}`);
+    });
+    add('text', { x: 48, y: 235, class: 'insights-chart-label' }, points[0].date);
+    add('text', { x: 728, y: 235, 'text-anchor': 'end', class: 'insights-chart-label' }, new Date(lastTime).toISOString().slice(0, 10));
+    target.append(svg);
+    const legend = node('p', null, 'insights-legend');
+    legend.append(node('span', '━ Registered native types', 'insights-catalog-key'), node('span', '● Dated passing primary workflows', 'insights-smoke-key'));
+    target.append(legend);
+    host.querySelector('[data-registration-table]').append(table(
+      ['Month', 'Registered types', 'Registry snapshot', 'Passing primary workflows', 'Campaign date'],
+      registered.monthly.map(p => {
+        const cohort = admissions.filter(a => a.date.slice(0, 7) === p.month).at(-1);
+        return [p.month, p.registered, link(p.date, `https://github.com/SSusantAchary/mlx-one/commit/${p.commit}`),
+          cohort ? cohort.supported : 'Unrecorded', cohort ? cohort.date : 'Unrecorded'];
+      }), 'Monthly recorded coverage: registration and workflow admission use separate evidence'));
+  }
+
   function renderGrowth(host, data) {
     const target = host.querySelector('[data-growth-chart]');
     const points = data.history.points;
@@ -240,7 +329,9 @@
       if (!root.isConnected) return;
       if (data.schema_version !== 1) throw new Error('Unsupported dashboard data version');
       provenance.replaceChildren(document.createTextNode('Built from '), link(data.source_commit.slice(0, 7), data.source_url),
-        document.createTextNode(` · source commit date ${data.source_date.slice(0, 10)}. ${data.scope}`));
+        document.createTextNode(` · support campaign ${data.support.release.support_recorded_date} · ${data.support.standard}. Historical catalogs and performance retain their own dates.`));
+      renderSupport(host, data);
+      renderRegistrationHistory(host, data);
       renderGrowth(host, data);
       renderModels(host, data);
       renderPerformance(host, data);

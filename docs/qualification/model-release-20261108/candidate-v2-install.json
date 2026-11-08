@@ -1,0 +1,6 @@
+{
+  "candidate_wheel_sha256": "72f87455877f4be8137f30475c1e906a4b3281171f08ec314364ba9a30e87570",
+  "updated": 1794132497.6382148,
+  "no_inference_active": true,
+  "reason": "release-version data corrected; inference Python sources unchanged"
+}

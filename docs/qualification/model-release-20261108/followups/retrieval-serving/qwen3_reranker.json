@@ -1,0 +1,152 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "qwen3_reranker",
+  "checkpoint": "Qwen/Qwen3-Reranker-0.6B",
+  "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+  "started": 1794142120.353816,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "8ebdb1aeb5df379c11de2bbc00f055f1cffd69885c60ca636fb983c4fd586be5",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108/followups/retrieval-serving",
+  "reference_python": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "ee55ddda19166e3458a18872704a5971dfb2160640d2624c9bfaa18676cf1eee",
+  "checkpoint_configuration": {
+    "architectures": [
+      "Qwen3ForCausalLM"
+    ],
+    "attention_bias": false,
+    "attention_dropout": 0.0,
+    "bos_token_id": 151643,
+    "eos_token_id": 151645,
+    "head_dim": 128,
+    "hidden_act": "silu",
+    "hidden_size": 1024,
+    "initializer_range": 0.02,
+    "intermediate_size": 3072,
+    "max_position_embeddings": 40960,
+    "max_window_layers": 28,
+    "model_type": "qwen3",
+    "num_attention_heads": 16,
+    "num_hidden_layers": 28,
+    "num_key_value_heads": 8,
+    "rms_norm_eps": 1e-06,
+    "rope_scaling": null,
+    "rope_theta": 1000000,
+    "sliding_window": null,
+    "tie_word_embeddings": true,
+    "torch_dtype": "bfloat16",
+    "transformers_version": "4.51.3",
+    "use_cache": true,
+    "use_sliding_window": false,
+    "vocab_size": 151669
+  },
+  "outputs": [
+    {
+      "query": "One woman is measuring another woman's ankle.",
+      "items": [
+        {
+          "index": 0,
+          "document": "A woman measures another woman's ankle.",
+          "score": 7.6875,
+          "probability": 1.0
+        },
+        {
+          "index": 1,
+          "document": "The stock market closed lower today.",
+          "score": -10.8125,
+          "probability": 1.9669532775878906e-05
+        }
+      ],
+      "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_reranker/checkpoint",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473"
+    },
+    {
+      "query": "A man is cutting up a cucumber.",
+      "items": [
+        {
+          "index": 0,
+          "document": "A man is slicing a cucumber.",
+          "score": 8.125,
+          "probability": 1.0
+        },
+        {
+          "index": 1,
+          "document": "The stock market closed lower today.",
+          "score": -10.625,
+          "probability": 2.467632293701172e-05
+        }
+      ],
+      "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_reranker/checkpoint",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473"
+    },
+    {
+      "query": "A man is cutting an onion.",
+      "items": [
+        {
+          "index": 0,
+          "document": "A man cuts an onion.",
+          "score": 9.1875,
+          "probability": 1.0
+        },
+        {
+          "index": 1,
+          "document": "The stock market closed lower today.",
+          "score": -10.375,
+          "probability": 3.170967102050781e-05
+        }
+      ],
+      "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_reranker/checkpoint",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473"
+    }
+  ],
+  "quality_status": "PASS_THREE_PAIR_SANITY_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"items\": [\n    {\n      \"document\": \"A girl is brushing her hair.\",\n      \"index\": 0,\n      \"probability\": 1.0,\n      \"score\": 6.6875\n    },\n    {\n      \"document\": \"Unrelated stock prices.\",\n      \"index\": 1,\n      \"probability\": 1.6689300537109375e-05,\n      \"score\": -11.0\n    }\n  ],\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/qwen3_reranker/checkpoint\",\n  \"query\": \"A girl is styling her hair.\",\n  \"revision\": null\n}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "id": "rerank-0d74520dfc854118a4cb2a615ac63801",
+        "object": "list",
+        "model": "qualification",
+        "results": [
+          {
+            "index": 0,
+            "document": "A girl is brushing her hair.",
+            "score": 6.6875,
+            "probability": 1.0
+          }
+        ]
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 1421167608,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 2.3298299312591553,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "8ebdb1aeb5df379c11de2bbc00f055f1cffd69885c60ca636fb983c4fd586be5"
+}

@@ -1,0 +1,496 @@
+{
+  "schema_version": "mlx-one-model-support-v1",
+  "support_standard": "mlx-lm-aligned-functional-v1",
+  "model_type_count": 40,
+  "meaning": "Implementation, real checkpoint task and applicable interface checks passed. Corpus/reference benchmarks are recorded diagnostics, not universal model-support gates.",
+  "models": [
+    {
+      "model_type": "gpt2",
+      "status": "SUPPORTED",
+      "checkpoint": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "precision": "float32",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/interface-replay/gpt2.json",
+      "evidence_sha256": "e2f263365b2a925fd13e5ba09140b7a2d5016b1a0462fe65947dadf37399730f"
+    },
+    {
+      "model_type": "qwen2",
+      "status": "SUPPORTED",
+      "checkpoint": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "precision": "affine_q8",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/interface-replay/qwen2.json",
+      "evidence_sha256": "1c7406760490cabb25097625c28d476a2d46aab8660b010c77076b496eb03aa7"
+    },
+    {
+      "model_type": "qwen3",
+      "status": "SUPPORTED",
+      "checkpoint": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "precision": "affine_q8",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/interface-replay/qwen3.json",
+      "evidence_sha256": "8b382831da7dbc85086e022285f9708efec3a044d35c35fa29e8d55f42a4ac46"
+    },
+    {
+      "model_type": "lfm2",
+      "status": "SUPPORTED",
+      "checkpoint": "LiquidAI/LFM2-350M",
+      "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+      "precision": "affine_q4",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/lfm2-bos/lfm2.json",
+      "evidence_sha256": "58d149d9b3908176c8fbaf1a497a9cc26344c8e3e58d48d11edf4ed9295cf738"
+    },
+    {
+      "model_type": "llama",
+      "status": "SUPPORTED",
+      "checkpoint": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "revision": "31b70e2e869a7173562077fd711b654946d38674",
+      "precision": "affine_q4",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/interface-replay/llama.json",
+      "evidence_sha256": "1e869fc2f701b8f0e422b3d164ba77d2619bb1b4fb6e8d00a84f76c310d329c2"
+    },
+    {
+      "model_type": "gemma3_text",
+      "status": "SUPPORTED",
+      "checkpoint": "google/gemma-3-1b-it",
+      "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "precision": "bfloat16",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/interface-replay/gemma3_text.json",
+      "evidence_sha256": "da0865ea7c1576bff2ee0b267e95289cdd1bf9f7e86833711693784aee5d0df9"
+    },
+    {
+      "model_type": "phi3",
+      "status": "SUPPORTED",
+      "checkpoint": "microsoft/Phi-3-mini-4k-instruct",
+      "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+      "precision": "affine_q4",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/phi3.json",
+      "evidence_sha256": "c2d94d5825ef69b8c5ac2e3b89afbb8de41caeba16e75b044fc6e5f957dc2c64"
+    },
+    {
+      "model_type": "lfm2_moe",
+      "status": "SUPPORTED",
+      "checkpoint": "LiquidAI/LFM2.5-24B-A2B-MLX-4bit",
+      "revision": "667408d494bde191c2cb9dd4f4549827816b9275",
+      "precision": "mixed_affine_q4_embedding_q6_router_fp32",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/lfm2_moe.json",
+      "evidence_sha256": "c112e6cca23c4bc45668f33a7c26c20d134c5f80abd60b9ceb511ed0abba0506"
+    },
+    {
+      "model_type": "gpt_oss",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+      "revision": "f356f2747216d7e98fee755df25987459fc19089",
+      "precision": "mixed_mxfp4_affine_q4_q8",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/gpt-oss-512/gpt_oss.json",
+      "evidence_sha256": "432f67e11f99492bdb530151435eb6aa4c44c5a847c628b3c0cf1e05647e4e03"
+    },
+    {
+      "model_type": "openelm",
+      "status": "SUPPORTED",
+      "checkpoint": "apple/OpenELM-270M",
+      "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/openelm-bos/openelm.json",
+      "evidence_sha256": "098e3d89cead4f44d49ce3782bdb7f2a99c68bed75cbca4b2419a056b7158b04"
+    },
+    {
+      "model_type": "qwen2_moe",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/Qwen1.5-MoE-A2.7B-4bit",
+      "revision": "11aaad5b454a361ae33f19fb47b72bc74b3c3b55",
+      "precision": "stored_affine_q4",
+      "primary_operations": [
+        "text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/qwen2-moe-q4/qwen2_moe.json",
+      "evidence_sha256": "fce1c661210f913c53e7f3e4f1fc52e8f483345452d7e6edab2b46695b1989e2"
+    },
+    {
+      "model_type": "qwen2_vl",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/Qwen2-VL-2B-Instruct-4bit",
+      "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+      "precision": "Q4",
+      "primary_operations": [
+        "image-text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/qwen2_vl.json",
+      "evidence_sha256": "fcf942808eb30b9a532336cceff676617aa05858dcdc7b2927d189411af3109b"
+    },
+    {
+      "model_type": "qwen2_5_vl",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+      "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+      "precision": "Q4",
+      "primary_operations": [
+        "image-text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/qwen2_5_vl.json",
+      "evidence_sha256": "8595c10b69b409e490afca24d1c025edb6dbc3d25488a7cb173505b3b6bd3611"
+    },
+    {
+      "model_type": "qwen3_5",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/Qwen3.5-0.8B-4bit",
+      "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+      "precision": "Q4",
+      "primary_operations": [
+        "image-text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/qwen3_5.json",
+      "evidence_sha256": "51e28f875be35f127204b7615d6125ed79c46810bc4a7a2ab0b42687f064558f"
+    },
+    {
+      "model_type": "lfm2_vl",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/LFM2-VL-450M-8bit",
+      "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+      "precision": "Q8",
+      "primary_operations": [
+        "image-text-generation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/lfm2_vl.json",
+      "evidence_sha256": "99504a5e3b6df0f8b9f91bded6867bc1e0c820055ab459cb5a2071a69359b3f7"
+    },
+    {
+      "model_type": "whisper",
+      "status": "SUPPORTED",
+      "checkpoint": "openai/whisper-tiny",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "precision": "FP32",
+      "primary_operations": [
+        "transcription"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/whisper.json",
+      "evidence_sha256": "5656ebee25817fa95851a49124560917999d6454d9b97b1b685519478eee7c0b"
+    },
+    {
+      "model_type": "moonshine",
+      "status": "SUPPORTED",
+      "checkpoint": "UsefulSensors/moonshine-tiny",
+      "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+      "precision": "FP32",
+      "primary_operations": [
+        "transcription"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/moonshine.json",
+      "evidence_sha256": "ca84143f429c568c730a2f6eb7180533110a8dcf979a2c75df137cc296ad045b"
+    },
+    {
+      "model_type": "qwen3_asr",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/Qwen3-ASR-0.6B-8bit",
+      "revision": "89e96d92ba34aca20b3e29fb10cc284097d1219f",
+      "precision": "Q8 / BF16",
+      "primary_operations": [
+        "transcription"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/qwen3_asr.json",
+      "evidence_sha256": "8d8af6aef303435fd2bd6b2fb4a9876c923b1565921b04c3fc6f06a506d9ff54"
+    },
+    {
+      "model_type": "parakeet_tdt",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/parakeet-tdt-0.6b-v3",
+      "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+      "precision": "FP32",
+      "primary_operations": [
+        "transcription"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/parakeet_tdt.json",
+      "evidence_sha256": "4a24b01319341e96bced0b4d0ed4dae0d62367f73dfcf73567bbba1967c573af"
+    },
+    {
+      "model_type": "qwen3_forced_aligner",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+      "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+      "precision": "Q8 / BF16",
+      "primary_operations": [
+        "forced-alignment"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-alignment/qwen3_forced_aligner.json",
+      "evidence_sha256": "698e22fce9bf3d03d6f72592162595fe916952c8a9de54beb1f70dd1cda587d9"
+    },
+    {
+      "model_type": "lfm2_audio",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-8bit",
+      "revision": "a569a7805a8e3eae954c244e54ba811d479a12c2",
+      "precision": "Q8 / BF16",
+      "primary_operations": [
+        "transcription",
+        "text-to-speech",
+        "speech-to-speech"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-lfm-q8-final/lfm2_audio.json",
+      "evidence_sha256": "f70ec8740d9ac802b507837b9eed410c50818f872f29d06608748573ce31f7cd"
+    },
+    {
+      "model_type": "silero_vad",
+      "status": "SUPPORTED",
+      "checkpoint": "snakers4/silero-vad",
+      "revision": "60b7ffa243625ebdc1070275a29f18c87843786a",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "voice-activity-detection"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/silero_vad.json",
+      "evidence_sha256": "698626ef8b628c1e185c1b6e09a5f1f33d234338b8c1f5133561e25664e0b3ff"
+    },
+    {
+      "model_type": "trocr",
+      "status": "SUPPORTED",
+      "checkpoint": "microsoft/trocr-base-printed",
+      "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+      "precision": "FP32",
+      "primary_operations": [
+        "line-ocr"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/trocr.json",
+      "evidence_sha256": "e511cb91ceaa57521644802fe3c510b87dc473ba744f716bd4577a3d2a52c80f"
+    },
+    {
+      "model_type": "got_ocr2",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+      "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+      "precision": "Affine Q4",
+      "primary_operations": [
+        "ocr.recognize"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-ocr2/got_ocr2.json",
+      "evidence_sha256": "a4bf5f0532e95762cefcbe3a782f03ead306fa6744dda9b76f07197ccf84f1c1"
+    },
+    {
+      "model_type": "florence2",
+      "status": "SUPPORTED",
+      "checkpoint": "microsoft/Florence-2-base-ft",
+      "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+      "precision": "FP16",
+      "primary_operations": [
+        "ocr.recognize"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/functional-florence/florence2.json",
+      "evidence_sha256": "9879f96ef93ebea265b8254b2bb459feb6f7ece68e0092fb5d6a291fb4eae3cc"
+    },
+    {
+      "model_type": "paddleocr_vl",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/PaddleOCR-VL-1.5-4bit",
+      "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+      "precision": "Affine Q4",
+      "primary_operations": [
+        "ocr.recognize"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/paddleocr_vl.json",
+      "evidence_sha256": "0ffc43facc9faec6f8488ffebc272cc99d3c98cb0e4f33300b737989fd94320a"
+    },
+    {
+      "model_type": "lightonocr",
+      "status": "SUPPORTED",
+      "checkpoint": "lightonai/LightOnOCR-2-1B",
+      "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+      "precision": "BF16",
+      "primary_operations": [
+        "ocr.recognize"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-ocr2/lightonocr.json",
+      "evidence_sha256": "32d269103dcf1fe4cff93385c83cb2c4170111e1d0c4ae72947376bc7600b6a1"
+    },
+    {
+      "model_type": "deepseek_ocr",
+      "status": "SUPPORTED",
+      "checkpoint": "mlx-community/DeepSeek-OCR-4bit",
+      "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+      "precision": "Affine Q4",
+      "primary_operations": [
+        "ocr.recognize"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-ocr2/deepseek_ocr.json",
+      "evidence_sha256": "3951af1892fb59271110531087fbbada9aca719e87fdee92c7506982156f56b2"
+    },
+    {
+      "model_type": "bert",
+      "status": "SUPPORTED",
+      "checkpoint": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "embedding"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/retrieval-serving/bert.json",
+      "evidence_sha256": "66a1118ea84828acaa176f60659e74e06cfaf40b81b203f3f22e37b4ba9ac51e"
+    },
+    {
+      "model_type": "mpnet",
+      "status": "SUPPORTED",
+      "checkpoint": "sentence-transformers/all-mpnet-base-v2",
+      "revision": "e8c3b32edf5434bc2275fc9bab85f82640a19130",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "embedding"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/retrieval-serving/mpnet.json",
+      "evidence_sha256": "25a62470e3c2eac620c636d7078a0fe353874028a1103e0d18a63181f9d7c095"
+    },
+    {
+      "model_type": "qwen3_embedding",
+      "status": "SUPPORTED",
+      "checkpoint": "Qwen/Qwen3-Embedding-0.6B",
+      "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "embedding"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-embedding/qwen3_embedding.json",
+      "evidence_sha256": "5b211ec3548e1015e1af4101303d45d23e087faf0ba0b8bf9f7f11bc5cdeccef",
+      "execution_dtype": "float32"
+    },
+    {
+      "model_type": "qwen3_reranker",
+      "status": "SUPPORTED",
+      "checkpoint": "Qwen/Qwen3-Reranker-0.6B",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "reranking"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/retrieval-serving/qwen3_reranker.json",
+      "evidence_sha256": "8393c75a9c24d9fdd7c1a44057c3c3ca2c8daaa3f105f012ae46c282f7bffd8d"
+    },
+    {
+      "model_type": "lfm2_colbert",
+      "status": "SUPPORTED",
+      "checkpoint": "LiquidAI/LFM2-ColBERT-350M",
+      "revision": "9d727d7964d3e4fd093a0f01c7287ae814264e31",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "token-embedding",
+        "maxsim-scoring"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/colbert-expansion/lfm2_colbert.json",
+      "evidence_sha256": "08c718a11dcb275caab86e20c4431685cd8d3c122723c317de706206a77c5eaa"
+    },
+    {
+      "model_type": "sam3",
+      "status": "SUPPORTED",
+      "checkpoint": "facebook/sam3",
+      "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "image-segmentation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-sam3/sam3.json",
+      "evidence_sha256": "8e327f734b9ed7efa91b11547ca5fc7cfb079125e8a69886abef070bfe5e55ea"
+    },
+    {
+      "model_type": "sam3_tracker",
+      "status": "SUPPORTED",
+      "checkpoint": "facebook/sam3",
+      "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "point-prompted-image-segmentation"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-sam3/sam3_tracker.json",
+      "evidence_sha256": "49b52f590294ae1277e8d1510d37219a1e3bcdf2b47113bb34471b7b0863b5c7"
+    },
+    {
+      "model_type": "sam3_video",
+      "status": "SUPPORTED",
+      "checkpoint": "facebook/sam3",
+      "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "video-segmentation",
+        "offline",
+        "streaming"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/functional-sam-video/sam3_video.json",
+      "evidence_sha256": "8a06091d732cc490eacdc9fb288ed67aaa7ebb31012a898f74117c2ca8f56874"
+    },
+    {
+      "model_type": "sam3_tracker_video",
+      "status": "SUPPORTED",
+      "checkpoint": "facebook/sam3",
+      "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+      "precision": "publisher storage precision",
+      "primary_operations": [
+        "point-prompted-video-tracking",
+        "offline",
+        "streaming"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-sam3/sam3_tracker_video.json",
+      "evidence_sha256": "0c9ee22dd6a11dafb39aae24e34a58a962a3560cfabfb9b8aff45840b5dcf679"
+    },
+    {
+      "model_type": "distilbert",
+      "status": "SUPPORTED",
+      "checkpoint": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+      "precision": "float32",
+      "primary_operations": [
+        "text-classification"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/interface-replay/distilbert.json",
+      "evidence_sha256": "a10d223253bb9493f0d2dd50bd0e65c6d26003d125832cfe67100d5760755116"
+    },
+    {
+      "model_type": "bert_token_classification",
+      "status": "SUPPORTED",
+      "checkpoint": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "precision": "float32",
+      "primary_operations": [
+        "token-classification"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/resolution-ner-final/bert_token_classification.json",
+      "evidence_sha256": "ba6f75167017b02c744b14066a439460d100cbe1804c5ec912d8fce04bb37df9"
+    },
+    {
+      "model_type": "clip",
+      "status": "SUPPORTED",
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+      "precision": "float32",
+      "primary_operations": [
+        "zero-shot-image-classification"
+      ],
+      "evidence": "docs/qualification/model-release-20261108/followups/clip-cli/clip.json",
+      "evidence_sha256": "2811efa0c13726094292233634781b97ef38f1805fae6355273a085bb0039094"
+    }
+  ]
+}

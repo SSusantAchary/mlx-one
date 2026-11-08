@@ -1,0 +1,37 @@
+/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/lib/python3.14/site-packages/torch/jit/_script.py:1485: FutureWarning: `torch.jit.script` is not supported in Python 3.14+ and may break. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/1797 [00:00<?, ?it/s]Loading weights:  51%|█████▏    | 924/1797 [00:00<00:00, 9238.51it/s]Loading weights: 100%|██████████| 1797/1797 [00:00<00:00, 11154.35it/s]
+{"stage": "reference_loaded", "seconds": 3.7521546670031967}
+{"stage": "reference_video_frame", "index": 0, "objects": 2}
+{"stage": "reference_video_frame", "index": 1, "objects": 2}
+{"stage": "reference_video_frame", "index": 2, "objects": 2}
+{"stage": "reference_video_frame", "index": 3, "objects": 2}
+{"stage": "reference_video_frame", "index": 4, "objects": 2}
+{"stage": "reference_video_frame", "index": 5, "objects": 2}
+{"stage": "reference_video_frame", "index": 6, "objects": 2}
+{"stage": "reference_video_frame", "index": 7, "objects": 2}
+{"stage": "reference_video_frame", "index": 8, "objects": 2}
+{"stage": "reference_video_frame", "index": 9, "objects": 2}
+{"stage": "reference_video_frame", "index": 10, "objects": 2}
+{"stage": "reference_video_frame", "index": 11, "objects": 2}
+{"stage": "reference_video_frame", "index": 12, "objects": 2}
+{"stage": "reference_video_frame", "index": 13, "objects": 2}
+{"stage": "reference_video_frame", "index": 14, "objects": 2}
+{"stage": "reference_video_frame", "index": 15, "objects": 2}
+{"stage": "reference_video_frame", "index": 16, "objects": 2}
+{"stage": "reference_video_frame", "index": 17, "objects": 2}
+{"stage": "reference_video_frame", "index": 18, "objects": 2}
+{"stage": "reference_video_frame", "index": 19, "objects": 2}
+{"stage": "reference_video_frame", "index": 20, "objects": 2}
+{"stage": "reference_video_frame", "index": 21, "objects": 2}
+{"stage": "reference_video_frame", "index": 22, "objects": 2}
+{"stage": "reference_video_frame", "index": 23, "objects": 2}
+{"stage": "reference_video_frame", "index": 24, "objects": 2}
+{"stage": "reference_video_frame", "index": 25, "objects": 2}
+{"stage": "reference_video_frame", "index": 26, "objects": 2}
+{"stage": "reference_video_frame", "index": 27, "objects": 2}
+{"stage": "reference_video_frame", "index": 28, "objects": 2}
+{"stage": "reference_video_frame", "index": 29, "objects": 2}
+{"stage": "reference_video_frame", "index": 30, "objects": 2}
+{"stage": "reference_video_frame", "index": 31, "objects": 2}
+{"stage": "reference_video_inferred", "frames": 32, "seconds": 349.33350529200106, "device": "mps", "kernel_policy": "numpy mask-NMS and eight-connected components", "peak_process_bytes": 1284096000}

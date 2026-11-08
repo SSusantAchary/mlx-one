@@ -7,6 +7,8 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.models.shared.sparse import SelectedExperts
+
 
 class StackedExperts(nn.Module):
     def __init__(self, hidden_size: int, intermediate_size: int, num_experts: int) -> None:
@@ -29,6 +31,21 @@ class StackedExperts(nn.Module):
         return mx.einsum("...eh,edh->...ed", activated, self.down_proj)
 
 
+class RoutedExperts(SelectedExperts):
+    """Quantizable expert projections with optional all-expert diagnostic output."""
+
+    def __init__(self, inputs, hidden, experts):
+        super().__init__(inputs, hidden, experts)
+        self._expert_count = experts
+
+    def __call__(self, value, indices=None):
+        if indices is None:
+            indices = mx.broadcast_to(
+                mx.arange(self._expert_count), value.shape[:-1] + (self._expert_count,)
+            )
+        return super().__call__(value, indices)
+
+
 class SparseMoeBlock(nn.Module):
     def __init__(self, config: Any) -> None:
         super().__init__()
@@ -36,8 +53,9 @@ class SparseMoeBlock(nn.Module):
 
         self.num_experts = config.num_experts
         self.top_k = config.num_experts_per_tok
+        self.norm_topk_prob = config.norm_topk_prob
         self.gate = nn.Linear(config.hidden_size, config.num_experts, bias=False)
-        self.experts = StackedExperts(
+        self.experts = RoutedExperts(
             config.hidden_size, config.moe_intermediate_size, config.num_experts
         )
         self.shared_expert = SwiGLU(config.hidden_size, config.shared_expert_intermediate_size)
@@ -50,15 +68,17 @@ class SparseMoeBlock(nn.Module):
             mx.argpartition(-probabilities, kth=self.top_k - 1, axis=-1)[..., : self.top_k]
         )
         scores = mx.take_along_axis(probabilities, indices, axis=-1)
-        expert_outputs = self.experts(value)
-        selected = mx.take_along_axis(expert_outputs, indices[..., None], axis=-2)
+        if self.norm_topk_prob:
+            scores = scores / mx.sum(scores, axis=-1, keepdims=True)
+        selected = self.experts(value, indices)
         sparse_output = mx.sum(selected * scores[..., None], axis=-2)
         shared_output = mx.sigmoid(self.shared_expert_gate(value)) * self.shared_expert(value)
         return sparse_output + shared_output, router_logits, indices
 
 
-def router_auxiliary_loss(router_logits: tuple[Any, ...], num_experts: int, top_k: int,
-                          attention_mask: Any | None = None) -> Any:
+def router_auxiliary_loss(
+    router_logits: tuple[Any, ...], num_experts: int, top_k: int, attention_mask: Any | None = None
+) -> Any:
     if not router_logits:
         return mx.array(0.0)
     losses = []
@@ -72,7 +92,7 @@ def router_auxiliary_loss(router_logits: tuple[Any, ...], num_experts: int, top_
             probability_mean = mx.mean(probabilities, axis=0)
             assignment_mean = mx.mean(assignment, axis=0)
         else:
-            valid = attention_mask[:, -logits.shape[1]:].reshape(-1, 1).astype(mx.float32)
+            valid = attention_mask[:, -logits.shape[1] :].reshape(-1, 1).astype(mx.float32)
             denominator = mx.maximum(mx.sum(valid), 1)
             probability_mean = mx.sum(probabilities * valid, axis=0) / denominator
             assignment_mean = mx.sum(assignment * valid, axis=0) / denominator

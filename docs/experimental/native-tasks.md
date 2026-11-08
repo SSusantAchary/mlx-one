@@ -1,5 +1,11 @@
 # Experimental native tasks
 
+**Current support:** the selected sentiment, NER, CLIP and Silero workflows are
+included in the [40-model support inventory](../../status_models_testing.md).
+[0.1.1 is approved for release](../releases/0.1.1.md); publication is pending.
+The November 3 measurements and optional blocked profiles below retain their
+original historical labels, accuracy results and workload bounds.
+
 [Experimental index](README.md) · [Known limitations](known-limitations.md)
 
 <!-- mlx-one:verified-task-results:start -->

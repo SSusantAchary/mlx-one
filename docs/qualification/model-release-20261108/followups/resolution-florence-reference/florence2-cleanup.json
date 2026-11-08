@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "florence2"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/florence2",
+  "bytes_removed": 937159280,
+  "downloaded_bytes_verified": 465696244,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794155118.550171,
+  "recorded": 1794155238.0012438,
+  "cleanup_complete": true,
+  "finished": 1794155238.007914
+}

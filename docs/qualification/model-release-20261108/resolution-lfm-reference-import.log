@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/sts/models/__init__.py", line 11, in <module>
+    from .lfm_audio import (
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/sts/models/lfm_audio/__init__.py", line 13, in <module>
+    from .processor import AudioPreprocessor, ChatState, LFM2AudioProcessor
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/sts/models/lfm_audio/processor.py", line 14, in <module>
+    from mlx_audio.codec.models.mimi import Mimi, MimiStreamingDecoder
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/codec/__init__.py", line 1, in <module>
+    from .models import (
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/codec/models/__init__.py", line 5, in <module>
+    from .mimo_audio_tokenizer import MiMoAudioTokenizer
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/codec/models/mimo_audio_tokenizer/__init__.py", line 2, in <module>
+    from .model import MiMoAudioTokenizer, Model
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/codec/models/mimo_audio_tokenizer/model.py", line 11, in <module>
+    from .audio import load_waveform, log_mel_spectrogram, same_istft
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/codec/models/mimo_audio_tokenizer/audio.py", line 10, in <module>
+    from mlx_audio.resample import resample_audio_array
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d/mlx_audio/resample.py", line 8, in <module>
+    from scipy import signal
+ModuleNotFoundError: No module named 'scipy'

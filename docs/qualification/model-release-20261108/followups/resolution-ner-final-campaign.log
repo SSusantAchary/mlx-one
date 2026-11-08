@@ -1,0 +1,17 @@
+START bert_token_classification dslim/bert-base-NER
+FETCH bert_token_classification README.md 6558
+FETCH bert_token_classification added_tokens.json 2
+FETCH bert_token_classification config.json 829
+FETCH bert_token_classification model.safetensors 433292294
+FETCH bert_token_classification special_tokens_map.json 112
+FETCH bert_token_classification tokenizer_config.json 59
+FETCH bert_token_classification vocab.txt 213450
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 5 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 6 / 7
+RESULT bert_token_classification PASS_FUNCTIONAL 
+CLEANED bert_token_classification 913714716

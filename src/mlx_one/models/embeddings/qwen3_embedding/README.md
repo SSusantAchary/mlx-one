@@ -9,8 +9,17 @@ Registry type: `qwen3_embedding`. The retrieval loader maps a publisher
 It uses final-token pooling, instruction-formatted queries, normalized vectors,
 and configurable Matryoshka dimensions.
 [Qwen/Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
-is the implemented profile/candidate. Synthetic validation is available;
-real-checkpoint retrieval quality, parity, and hardware results remain unqualified.
+is the implemented profile. The pinned 0.6B checkpoint has a bounded native
+qualification run on Apple M4: 32 STS-B pairs, public Python/CLI/HTTP calls, and
+an eight-input comparison with the publisher's Transformers implementation.
+See the [recorded result](../../../../../docs/qualification/model-release-20261108/followups/resolution-embedding/qwen3_embedding.json).
+These samples do not establish full-corpus retrieval quality or long-context support.
+
+Weights retain their published BF16 storage. The native backbone computes in
+FP32 to keep padded batches consistent with individual inputs. The recorded
+maximum batch/single difference is 2.4e-7, within the unchanged 2e-4 tolerance;
+the publisher comparison differs by at most 4.4e-7. FP32 execution uses more
+activation/cache memory than BF16; no throughput improvement is claimed.
 
 ## Model Architecture
 
@@ -53,7 +62,7 @@ the generic text loader's MLX quantization preparation to this profile.
 
 `input_type="query"` formats text as `Instruct: {instruction}\nQuery:{text}`.
 Documents remain unformatted. Do not pre-add this prefix when using the query API.
-These candidate examples may download weights; pin an immutable revision for
+These examples may download weights; pin an immutable revision for
 reproducible retrieval experiments.
 
 ```bash

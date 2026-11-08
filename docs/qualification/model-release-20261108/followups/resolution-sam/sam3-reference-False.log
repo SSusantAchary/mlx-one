@@ -1,0 +1,5 @@
+/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/lib/python3.14/site-packages/torch/jit/_script.py:1485: FutureWarning: `torch.jit.script` is not supported in Python 3.14+ and may break. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/1468 [00:00<?, ?it/s]Loading weights: 100%|██████████| 1468/1468 [00:00<00:00, 27075.02it/s]
+{"stage": "reference_loaded", "seconds": 0.47849204200610984}
+{"stage": "reference_inferred", "seconds": 9.215401166002266, "mask_count": 1, "peak_process_bytes": 5579177984}

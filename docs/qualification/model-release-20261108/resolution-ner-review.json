@@ -1,0 +1,15 @@
+{
+  "schema_version": "model-release-evidence-review-v1",
+  "source_result": "followups/resolution-ner/bert_token_classification.json",
+  "source_sha256": "265c179f1c52ef6d52528057ddcdec1faf281ab3927756e24b65938c64e6f7a9",
+  "reviewed": 1794150395.029411,
+  "checkpoint": "dslim/bert-base-NER",
+  "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+  "status": "PASS_BOUNDED_REFERENCE_EQUIVALENCE",
+  "numeric_max_abs": 6.580352783203125e-05,
+  "tokenizer_exact": true,
+  "entity_spans_exact": true,
+  "strict_span_f1": 0.6024096385542169,
+  "allowed_scope": "Pinned FP32 NONE/SIMPLE token classification; measured 16-row CoNLL sample only; same modest F1 as publisher; no general high-accuracy claim",
+  "basis": "Existing release guide requires preserving modest measured F1, reference/aggregation correctness and scoped limits; it does not declare an absolute F1 floor."
+}

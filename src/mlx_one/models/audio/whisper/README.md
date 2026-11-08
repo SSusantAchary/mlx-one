@@ -19,8 +19,10 @@ The root README reports passing pinned tiny/turbo smoke gates. The
 | [distil-whisper/distil-large-v3](https://huggingface.co/distil-whisper/distil-large-v3) | `8031d2e6ce6631b7fc45629dddfc00271116d981` |
 
 These smoke contracts do not establish general transcription quality, WER,
-timestamp accuracy, or throughput for all variants. The family remains a candidate
-for broader task/hardware qualification.
+timestamp accuracy, or throughput for all variants. The selected Whisper Tiny
+checkpoint is supported for transcription in the
+[current inventory](../../../../../status_models_testing.md); broader variant/task
+claims remain separate.
 
 ## Model Architecture
 

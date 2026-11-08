@@ -1,0 +1,4717 @@
+{
+  "schema_version": "model-release-campaign-v1",
+  "expected_models": 40,
+  "executed_models": 1,
+  "functional_passed": 1,
+  "release_qualified": 0,
+  "results": [
+    {
+      "schema_version": "model-release-probe-v1",
+      "model_type": "gpt_oss",
+      "checkpoint": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+      "revision": "f356f2747216d7e98fee755df25987459fc19089",
+      "started": 1794133121.453135,
+      "release_qualified": false,
+      "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+      "platform": "macOS-15.8.2-arm64-arm-64bit",
+      "worker_sha256": "25c63e0a546a1d8b39cab7fb48c5966b4b0dd81893bc94008aeaf354eea1a7d3",
+      "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+      "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+      "gpu_execution_serialized": true,
+      "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+      "mlx": "0.32.2",
+      "device": {
+        "device_name": "Apple M4",
+        "max_recommended_working_set_size": 22906503168,
+        "memory_size": 34359738368,
+        "architecture": "applegpu_g16g",
+        "max_buffer_length": 17179869184,
+        "resource_limit": 499000
+      },
+      "reference_packages_absent": true,
+      "installed_record_sha256": "c3f83ba89685bb8aff1f9ae154ccf19ce59b4f1da06a2c7a129c969a57405fbc",
+      "tested_model_path": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+      "functional": {
+        "model_path": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+        "checkpoint_status": "MODEL_SMOKE_TESTED",
+        "scope": "bounded functional smoke, no quality or numerical research gate",
+        "load_seconds": 2.55316799999855,
+        "architecture": "gpt_oss",
+        "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+        "revision": null,
+        "configured_maximum": 131072,
+        "smoke_context": 1024,
+        "cache_continuation_reset": {
+          "status": "PASS",
+          "tokens": 3,
+          "state_bytes": 147456
+        },
+        "reasoning_effort": "low",
+        "text": "Robert Boulter is an English film, television and theatre actor. He had a guest\u2011starring role on the television series *The Office*, playing a quirky accountant who inadvertently becomes the centre of a chaotic office prank. His performance was praised for its dry wit and subtle physical comedy, and it helped cement his reputation as a reliable character actor in the UK television scene.",
+        "reasoning_content": "",
+        "metrics": {
+          "prompt_tokens": 100,
+          "generated_tokens": 214,
+          "tokens_per_second": 28.068257279966527,
+          "time_to_first_token_ms": 1742.8749999962747,
+          "generation_latency_ms": 7624.270999993314,
+          "context_used": 314,
+          "memory_used_bytes": 11197640572,
+          "memory_peak_bytes": 11297672494,
+          "reasoning_tokens": 0,
+          "prompt_cache_hit": false,
+          "reused_prompt_tokens": 0,
+          "drafted_tokens": 0,
+          "accepted_draft_tokens": 0,
+          "rejected_draft_tokens": 0,
+          "draft_acceptance_ratio": null,
+          "prompt_tokens_per_second": 57.508230195056576,
+          "decode_tokens_per_second": 36.38528765029705,
+          "inter_token_latency_ms": 27.4836359577835,
+          "cache_bytes": 15728640,
+          "cache_backend": "dense",
+          "cache_logical_bytes": 10862592,
+          "cache_allocated_bytes": 15728640,
+          "cache_reserved_bytes": 22020096,
+          "cache_shared_blocks": 0,
+          "cache_lookup_time_ms": 0.0,
+          "cache_allocation_time_ms": 0.04066700057592243,
+          "avoided_prefill_tokens": 0,
+          "server_text_ttft_ms": 5508.758041993133,
+          "model_token_count": 214,
+          "model_token_gap_p50_ms": 26.340541007812135,
+          "model_token_gap_p95_ms": 32.19899999385234,
+          "timing_samples_truncated": false,
+          "actual_prefill_tokens": 100,
+          "eligible_prefix_tokens": 0,
+          "matched_prefix_tokens": 0,
+          "prefix_publications": 0,
+          "publication_rejections": 0,
+          "queue_ms": null,
+          "tokenization_ms": 15.94049998675473,
+          "prefill_ms": 1738.8815420126775,
+          "decode_ms": 5666.865914012305,
+          "model_token_times_ms": [
+            1742.8749999962747,
+            1815.290124999592,
+            1841.5784590033581,
+            1867.4879589962075,
+            1892.9304999910528,
+            1918.4387499990407,
+            1944.2759999947157,
+            1969.738250001683,
+            1995.6635419948725,
+            2021.4764589909464,
+            2047.033291994012,
+            2072.8432500036433,
+            2098.7909590039635,
+            2124.5907499978784,
+            2150.3620839939686,
+            2176.1964589968557,
+            2202.3991250025574,
+            2228.551124993828,
+            2254.572208999889,
+            2280.4753340024035,
+            2306.676749998587,
+            2333.0094589910004,
+            2359.141583991004,
+            2385.2218340034597,
+            2411.4324590045726,
+            2437.5064999912865,
+            2464.0118340030313,
+            2490.4745840030955,
+            2516.7497920047026,
+            2543.054124995251,
+            2569.398999999976,
+            2595.932541997172,
+            2622.2041250002803,
+            2648.4671249927487,
+            2674.688999992213,
+            2700.9518749982817,
+            2727.258583996445,
+            2753.7149999989197,
+            2779.793249996146,
+            2820.8905840001535,
+            2846.6553339967504,
+            2872.8785419953056,
+            2899.1667090012925,
+            2925.6420000019716,
+            2951.7457089968957,
+            2977.85179199127,
+            3004.215958993882,
+            3030.532459000824,
+            3056.7413749959087,
+            3082.9629590007244,
+            3109.0447919996222,
+            3135.1630839926656,
+            3161.16620899993,
+            3187.496625003405,
+            3213.56362500228,
+            3239.818749992992,
+            3266.178083998966,
+            3292.3003750038333,
+            3318.5221669991734,
+            3344.6557089919224,
+            3371.3322499970673,
+            3397.6154169940855,
+            3424.1169589950005,
+            3450.4989169945475,
+            3476.7685839906335,
+            3503.114541992545,
+            3529.3683339987183,
+            3555.575749996933,
+            3581.8046670028707,
+            3607.939459005138,
+            3634.378041999298,
+            3660.6785420008237,
+            3686.8635839928174,
+            3712.7595839992864,
+            3738.816708995728,
+            3764.890167003614,
+            3791.1102090001805,
+            3817.308124998817,
+            3859.122166992165,
+            3885.384916997282,
+            3911.486041994067,
+            3937.691500002984,
+            3963.8376670045545,
+            3990.2687499998137,
+            4016.552375003812,
+            4042.506792000495,
+            4068.562792002922,
+            4094.801416998962,
+            4120.841166994069,
+            4146.771749990876,
+            4172.971749998396,
+            4199.096541997278,
+            4225.275791992317,
+            4254.164833997493,
+            4280.555624995031,
+            4307.268874996225,
+            4333.759208995616,
+            4360.22824999236,
+            4386.517749997438,
+            4412.74837499077,
+            4438.793499997701,
+            4465.38654199685,
+            4492.024749997654,
+            4518.518875003792,
+            4544.966208995902,
+            4571.326624994981,
+            4597.971041992423,
+            4624.42354200175,
+            4650.705833992106,
+            4677.1253750048345,
+            4703.480583993951,
+            4729.767833996448,
+            4755.9126669948455,
+            4782.135834000655,
+            4808.4839999937685,
+            4834.759541990934,
+            4876.090999998269,
+            4902.288666999084,
+            4928.584084002068,
+            4954.501000000164,
+            4980.708250004682,
+            5007.23512499826,
+            5033.783624996431,
+            5060.264083993388,
+            5086.390084004961,
+            5112.543249997543,
+            5139.1345000010915,
+            5165.506000004825,
+            5191.964541998459,
+            5218.483709002612,
+            5245.348249998642,
+            5271.963958992274,
+            5298.136458994122,
+            5324.477000001934,
+            5350.8610839926405,
+            5376.951833997737,
+            5403.306209002039,
+            5429.577208997216,
+            5455.844625001191,
+            5482.315749992267,
+            5508.69554199744,
+            5534.917958997539,
+            5561.23474999913,
+            5587.478417000966,
+            5614.053958997829,
+            5640.6190839916235,
+            5666.990666999482,
+            5693.378958996618,
+            5719.818917001248,
+            5745.890584003064,
+            5772.335624991683,
+            5799.612041999353,
+            5826.144916994963,
+            5852.464625000721,
+            5897.35312499397,
+            5923.85354200087,
+            5950.0434170040535,
+            5976.891208993038,
+            6003.635333996499,
+            6030.369000000064,
+            6056.515459000366,
+            6082.787209001253,
+            6108.911542003625,
+            6135.450708999997,
+            6161.603999993531,
+            6187.771208991762,
+            6214.043333995505,
+            6244.333166992874,
+            6275.290083998698,
+            6306.540083998698,
+            6336.984958994435,
+            6369.942083998467,
+            6402.1191249921685,
+            6434.234792002826,
+            6465.346666998812,
+            6496.237125000334,
+            6527.826916993945,
+            6559.65858399577,
+            6591.179875002126,
+            6622.897291992558,
+            6655.2484999992885,
+            6687.447499993141,
+            6719.390458994894,
+            6751.418959000148,
+            6783.821959004854,
+            6816.282917003264,
+            6848.3492090017535,
+            6876.966124997125,
+            6916.564416998881,
+            6942.701749998378,
+            6969.542499995441,
+            6997.030333994189,
+            7024.12162499968,
+            7050.966916998732,
+            7077.945375000127,
+            7104.964999991353,
+            7131.98854199436,
+            7159.036375000142,
+            7185.985374992015,
+            7213.546874991152,
+            7240.710625002976,
+            7267.822374997195,
+            7294.861542002764,
+            7322.523084003478,
+            7349.911958997836,
+            7377.519999994547,
+            7405.0699999934295,
+            7432.536334003089,
+            7460.114667002927,
+            7487.489334002021,
+            7514.637833999586,
+            7542.261209004209,
+            7569.5462500007125,
+            7596.88945900416
+          ],
+          "model_generation_started_at": 93607.696447041,
+          "model_forward_batch_sizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "execution_observer": "synchronized-forward-v2",
+          "mlx_cached_bytes": 148477864,
+          "actual_logits_dtypes": [
+            "mlx.core.bfloat16"
+          ],
+          "cache_layers": [
+            {
+              "layer_id": 0,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 2,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 4,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 6,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 8,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 10,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 12,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 14,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 16,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 17,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 18,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 19,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 20,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 21,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 22,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 23,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            }
+          ]
+        },
+        "runtime": {
+          "release_support": {
+            "architecture_registered": true,
+            "checkpoint_revision": null,
+            "status": "EXPERIMENTAL_NOT_QUALIFIED",
+            "architecture_status": null,
+            "checkpoint_status": "NOT_VERIFIED",
+            "alpha_supported": false,
+            "numerical_contract": "OPTIONAL_RESEARCH_NOT_AN_ADMISSION_GATE",
+            "admission_policy": "functional-architecture-checkpoint-v1",
+            "release_approval": "PENDING",
+            "candidate_profile": null,
+            "reason": "No exact checkpoint/revision/architecture functional evidence is attached."
+          },
+          "checkpoint_identity": {
+            "canonical_model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+            "path": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+            "revision": null,
+            "weight_hashes": {}
+          },
+          "execution_contract": {
+            "actual_weight_dtypes": [
+              "bfloat16",
+              "uint32",
+              "uint8"
+            ],
+            "adapter_version": "native-adapter-v2",
+            "architecture": "gpt_oss",
+            "components": [
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 0,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 1,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 2,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 3,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 4,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 5,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 6,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 7,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 8,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 9,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 10,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 11,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 12,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 13,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 14,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 15,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 16,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 17,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 18,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 19,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 20,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 21,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              },
+              {
+                "can_batch": false,
+                "can_page": false,
+                "can_quantize": false,
+                "can_share_prefix": false,
+                "can_snapshot": false,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "sliding_kv",
+                "layer_id": 22,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": 128
+              },
+              {
+                "can_batch": true,
+                "can_page": false,
+                "can_quantize": true,
+                "can_share_prefix": true,
+                "can_snapshot": true,
+                "checkpoint_semantics": null,
+                "dtype": null,
+                "key_head_dim": 64,
+                "kind": "full_kv",
+                "layer_id": 23,
+                "num_kv_heads": 8,
+                "state_dtypes": [],
+                "state_shapes": [],
+                "storage": "dense",
+                "value_head_dim": 64,
+                "window_tokens": null
+              }
+            ],
+            "execution_mode": "reference_dense",
+            "floating_policy": null,
+            "modules": [],
+            "quantization": {
+              "bits": 4,
+              "group_size": 32,
+              "lm_head": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "mode": "mxfp4",
+              "model.embed_tokens": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              }
+            },
+            "quantization_digest": "8d15b6921c915da7b48844ebede676ef35e91c87f010f7dba0c8748672ec3f0a",
+            "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468"
+          },
+          "compatibility_digest": "c1a984ebc3e3b72f9fa5e6f4246b26aba975ecbe6c87d80fae79b4515f10e51b",
+          "runtime_schema_version": "native-runtime-v2",
+          "feature_details": {
+            "dense_execution": {
+              "implemented": true,
+              "available_for_opt_in": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "block_storage": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "block_prefix_reuse": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "continuous_batching": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_dense_decode": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_chunked_prefill": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_attention": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_prefill": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_prefix_restore": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_batching": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "quantized_paged_kv": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            },
+            "long_context": {
+              "implemented": true,
+              "available_for_opt_in": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "reason": "native checkpoint and hardware validation pending"
+            }
+          },
+          "weights_identity": "2dbe2160390a142b64fe7e678dd96734fa697ea57d1f2e61232edc13b3f1df7e",
+          "engine_mode": "reference_dense",
+          "configured_execution_dtype": null,
+          "model_revision": null,
+          "scope": {
+            "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+            "weight_precision": "bfloat16,uint32,uint8",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+          },
+          "actual_weight_dtypes": [
+            "bfloat16",
+            "uint32",
+            "uint8"
+          ],
+          "layers": [
+            {
+              "layer_id": 0,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 2,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 4,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 6,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 8,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 10,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 12,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 14,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 16,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 17,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 18,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 19,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 20,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 21,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 22,
+              "kind": "sliding_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 262144,
+              "allocated_bytes": 262144,
+              "committed_tokens": 314
+            },
+            {
+              "layer_id": 23,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 643072,
+              "allocated_bytes": 1048576,
+              "committed_tokens": 314
+            }
+          ],
+          "arena": null,
+          "qualified_workload_envelope": null,
+          "memory_admission": {
+            "schema_version": "native-admission-v1",
+            "timestamp": "2026-11-08T10:18:57.528157+00:00",
+            "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+            "revision": null,
+            "backend": "dense",
+            "execution_mode": "reference_dense",
+            "weight_precision": {
+              "bits": 4,
+              "group_size": 32,
+              "mode": "mxfp4",
+              "model.embed_tokens": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.0.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.1.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.2.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.3.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.4.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.5.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.6.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.7.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.8.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.9.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.10.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.11.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.12.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.13.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.14.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.15.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.16.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.17.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.18.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.19.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.20.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.21.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.22.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.q_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.k_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.v_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.self_attn.o_proj": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "model.layers.23.mlp.router": {
+                "bits": 8,
+                "group_size": 64,
+                "mode": "affine"
+              },
+              "lm_head": {
+                "bits": 4,
+                "group_size": 64,
+                "mode": "affine"
+              }
+            },
+            "execution_dtype": null,
+            "attention_kv_precision": {
+              "key_type": "f16",
+              "value_type": "f16"
+            },
+            "requests": [
+              {
+                "prompt_tokens": 100,
+                "requested_output_tokens": 512,
+                "estimated_kv_growth_bytes": 37748736,
+                "estimated_hybrid_carry_growth_bytes": 0,
+                "total_growth_bytes": 37748736,
+                "request_id": "server-1794133129913959000",
+                "handle_id": "cache-1fba395e8af948a8b4705881528b6fd6",
+                "key_type": "f16",
+                "value_type": "f16",
+                "allocated_bytes": 15728640,
+                "reserved_bytes": 22020096
+              }
+            ],
+            "transient": true,
+            "attempt": 0,
+            "stage": "host",
+            "attention_kv_tensor_dtypes": [
+              "float16"
+            ],
+            "component_state_dtypes": [],
+            "status": "bounded",
+            "ceiling_bytes": 22906503168,
+            "working_set_bytes": 11346118436,
+            "owner_bytes": 11194209408,
+            "model_bytes": 11178480768,
+            "cache_allocated_bytes": 15728640,
+            "cache_physical_bytes": 15728640,
+            "cache_logical_bytes": 10838016,
+            "reserved_bytes": 22020096,
+            "active_handles": 1,
+            "retained_prefix_bytes": 0,
+            "reclaimable_pool_bytes": 0,
+            "evictable_bytes": 0,
+            "requested_bytes": 930816,
+            "predicted_transient_bytes": 930816,
+            "forecast": {
+              "bytes": 930816,
+              "source": "conservative-analytical",
+              "measured": false
+            },
+            "telemetry": {
+              "rss_bytes": 138674176,
+              "installed_bytes": 34359738368,
+              "mlx_active_bytes": 11198055932,
+              "mlx_cached_bytes": 148062504,
+              "mlx_peak_bytes": 11297672494,
+              "recommended_bytes": 22906503168,
+              "os_pressure": "normal",
+              "swap_bytes": 3277125058
+            },
+            "swap_delta_bytes": 0,
+            "swap_scope": "host-wide, not uniquely attributed to this request",
+            "host_sample_age_seconds": 0.7072136670030886,
+            "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested",
+            "projected_bytes": 11369069348,
+            "decision": "admit",
+            "rejection_reason": null,
+            "retryable": null
+          },
+          "execution_memory_forecast": {
+            "bytes": 930816,
+            "source": "conservative-analytical",
+            "measured": false
+          },
+          "component_capabilities": [
+            {
+              "layer_id": 0,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 2,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 4,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 6,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 8,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 10,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 12,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 14,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 16,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 17,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 18,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 19,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 20,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 21,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 22,
+              "kind": "sliding_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": 128,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": false,
+              "can_page": false,
+              "can_snapshot": false,
+              "can_quantize": false,
+              "can_share_prefix": false,
+              "state_dtypes": []
+            },
+            {
+              "layer_id": 23,
+              "kind": "full_kv",
+              "num_kv_heads": 8,
+              "key_head_dim": 64,
+              "value_head_dim": 64,
+              "dtype": null,
+              "window_tokens": null,
+              "state_shapes": [],
+              "checkpoint_semantics": null,
+              "can_batch": true,
+              "can_page": false,
+              "can_snapshot": true,
+              "can_quantize": true,
+              "can_share_prefix": true,
+              "state_dtypes": []
+            }
+          ],
+          "configured_cache_precision": {
+            "key_type": "f16",
+            "value_type": "f16"
+          },
+          "capabilities": {
+            "continuous_batching": false,
+            "paged_attention": false,
+            "hybrid_prefix_restore": false
+          },
+          "runner_qualification": {
+            "chunked_prefill": {
+              "feature": "chunked_prefill",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "causal_runner_equal_offset_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "experimental",
+              "evidence": [],
+              "implemented": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            }
+          },
+          "qualification": {
+            "dense_execution": {
+              "feature": "dense_execution",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "experimental",
+              "evidence": [],
+              "implemented": true,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "block_storage": {
+              "feature": "block_storage",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "block_prefix_reuse": {
+              "feature": "block_prefix_reuse",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "continuous_batching": {
+              "feature": "continuous_batching",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_dense_decode": {
+              "feature": "batched_dense_decode",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "batched_chunked_prefill": {
+              "feature": "batched_chunked_prefill",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_attention": {
+              "feature": "paged_attention",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "paged_prefill": {
+              "feature": "paged_prefill",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_prefix_restore": {
+              "feature": "hybrid_prefix_restore",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "hybrid_batching": {
+              "feature": "hybrid_batching",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "quantized_paged_kv": {
+              "feature": "quantized_paged_kv",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            },
+            "long_context": {
+              "feature": "long_context",
+              "scope": {
+                "model_id": "/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4",
+                "revision": null,
+                "execution_path": "reference_dense",
+                "topology_digest": "079198afdf698a2b3ad1b7ef8fcfeab31d712ca3b878b6d0918d55e47562c468",
+                "weight_precision": "bfloat16,uint32,uint8",
+                "cache_precision": "float16",
+                "mlx_version": "0.32.2",
+                "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+                "source_revision": "source-sha256:8b7633eace4ae2a583b94366c00ac8206ca53b27c0c0c99b33ad7f0d08c5b4ac"
+              },
+              "status": "not_implemented",
+              "evidence": [],
+              "implemented": false,
+              "checkpoint_correctness_passed": false,
+              "hardware_correctness_passed": false,
+              "performance_qualified": false,
+              "validation_reason": "native checkpoint and hardware validation pending"
+            }
+          },
+          "latency": {
+            "ttft_p95_ms": null,
+            "decode_gap_p95_ms": null
+          },
+          "throughput": {
+            "aggregate_decode_tok_s": null
+          },
+          "selection": {
+            "requested_mode": "reference_dense",
+            "resolved_mode": "reference_dense",
+            "reason": "explicit configuration",
+            "evidence_scope": null
+          },
+          "metric_definitions": {
+            "tokens_per_second": "output tokens / whole engine request wall time",
+            "decode_tokens_per_second": "output intervals / first-to-last model output-token interval",
+            "inter_token_latency_ms": "mean model output-token gap; excludes prefill and first token",
+            "time_to_first_token_ms": "engine execution start to first accepted model output token",
+            "queue_ms": "enqueue to execution admission",
+            "prefill_ms": "sum of synchronized model prefill forwards",
+            "model_token_gap_percentiles": "bounded last 4096 gaps; truncation is explicit",
+            "sse_delivery_timing": "client wire observations, separate from model-token timing"
+          },
+          "latest_completed_request": {
+            "prompt_tokens": 100,
+            "generated_tokens": 214,
+            "tokens_per_second": 28.068257279966527,
+            "time_to_first_token_ms": 1742.8749999962747,
+            "generation_latency_ms": 7624.270999993314,
+            "context_used": 314,
+            "memory_used_bytes": 11197640572,
+            "memory_peak_bytes": 11297672494,
+            "reasoning_tokens": 0,
+            "prompt_cache_hit": false,
+            "reused_prompt_tokens": 0,
+            "drafted_tokens": 0,
+            "accepted_draft_tokens": 0,
+            "rejected_draft_tokens": 0,
+            "draft_acceptance_ratio": null,
+            "prompt_tokens_per_second": 57.508230195056576,
+            "decode_tokens_per_second": 36.38528765029705,
+            "inter_token_latency_ms": 27.4836359577835,
+            "cache_bytes": 15728640,
+            "cache_backend": "dense",
+            "cache_logical_bytes": 10862592,
+            "cache_allocated_bytes": 15728640,
+            "cache_reserved_bytes": 22020096,
+            "cache_shared_blocks": 0,
+            "cache_lookup_time_ms": 0.0,
+            "cache_allocation_time_ms": 0.04066700057592243,
+            "avoided_prefill_tokens": 0,
+            "server_text_ttft_ms": 5508.758041993133,
+            "model_token_count": 214,
+            "model_token_gap_p50_ms": 26.340541007812135,
+            "model_token_gap_p95_ms": 32.19899999385234,
+            "timing_samples_truncated": false,
+            "actual_prefill_tokens": 100,
+            "eligible_prefix_tokens": 0,
+            "matched_prefix_tokens": 0,
+            "prefix_publications": 0,
+            "publication_rejections": 0,
+            "queue_ms": null,
+            "tokenization_ms": 15.94049998675473,
+            "prefill_ms": 1738.8815420126775,
+            "decode_ms": 5666.865914012305,
+            "model_token_times_ms": [
+              1742.8749999962747,
+              1815.290124999592,
+              1841.5784590033581,
+              1867.4879589962075,
+              1892.9304999910528,
+              1918.4387499990407,
+              1944.2759999947157,
+              1969.738250001683,
+              1995.6635419948725,
+              2021.4764589909464,
+              2047.033291994012,
+              2072.8432500036433,
+              2098.7909590039635,
+              2124.5907499978784,
+              2150.3620839939686,
+              2176.1964589968557,
+              2202.3991250025574,
+              2228.551124993828,
+              2254.572208999889,
+              2280.4753340024035,
+              2306.676749998587,
+              2333.0094589910004,
+              2359.141583991004,
+              2385.2218340034597,
+              2411.4324590045726,
+              2437.5064999912865,
+              2464.0118340030313,
+              2490.4745840030955,
+              2516.7497920047026,
+              2543.054124995251,
+              2569.398999999976,
+              2595.932541997172,
+              2622.2041250002803,
+              2648.4671249927487,
+              2674.688999992213,
+              2700.9518749982817,
+              2727.258583996445,
+              2753.7149999989197,
+              2779.793249996146,
+              2820.8905840001535,
+              2846.6553339967504,
+              2872.8785419953056,
+              2899.1667090012925,
+              2925.6420000019716,
+              2951.7457089968957,
+              2977.85179199127,
+              3004.215958993882,
+              3030.532459000824,
+              3056.7413749959087,
+              3082.9629590007244,
+              3109.0447919996222,
+              3135.1630839926656,
+              3161.16620899993,
+              3187.496625003405,
+              3213.56362500228,
+              3239.818749992992,
+              3266.178083998966,
+              3292.3003750038333,
+              3318.5221669991734,
+              3344.6557089919224,
+              3371.3322499970673,
+              3397.6154169940855,
+              3424.1169589950005,
+              3450.4989169945475,
+              3476.7685839906335,
+              3503.114541992545,
+              3529.3683339987183,
+              3555.575749996933,
+              3581.8046670028707,
+              3607.939459005138,
+              3634.378041999298,
+              3660.6785420008237,
+              3686.8635839928174,
+              3712.7595839992864,
+              3738.816708995728,
+              3764.890167003614,
+              3791.1102090001805,
+              3817.308124998817,
+              3859.122166992165,
+              3885.384916997282,
+              3911.486041994067,
+              3937.691500002984,
+              3963.8376670045545,
+              3990.2687499998137,
+              4016.552375003812,
+              4042.506792000495,
+              4068.562792002922,
+              4094.801416998962,
+              4120.841166994069,
+              4146.771749990876,
+              4172.971749998396,
+              4199.096541997278,
+              4225.275791992317,
+              4254.164833997493,
+              4280.555624995031,
+              4307.268874996225,
+              4333.759208995616,
+              4360.22824999236,
+              4386.517749997438,
+              4412.74837499077,
+              4438.793499997701,
+              4465.38654199685,
+              4492.024749997654,
+              4518.518875003792,
+              4544.966208995902,
+              4571.326624994981,
+              4597.971041992423,
+              4624.42354200175,
+              4650.705833992106,
+              4677.1253750048345,
+              4703.480583993951,
+              4729.767833996448,
+              4755.9126669948455,
+              4782.135834000655,
+              4808.4839999937685,
+              4834.759541990934,
+              4876.090999998269,
+              4902.288666999084,
+              4928.584084002068,
+              4954.501000000164,
+              4980.708250004682,
+              5007.23512499826,
+              5033.783624996431,
+              5060.264083993388,
+              5086.390084004961,
+              5112.543249997543,
+              5139.1345000010915,
+              5165.506000004825,
+              5191.964541998459,
+              5218.483709002612,
+              5245.348249998642,
+              5271.963958992274,
+              5298.136458994122,
+              5324.477000001934,
+              5350.8610839926405,
+              5376.951833997737,
+              5403.306209002039,
+              5429.577208997216,
+              5455.844625001191,
+              5482.315749992267,
+              5508.69554199744,
+              5534.917958997539,
+              5561.23474999913,
+              5587.478417000966,
+              5614.053958997829,
+              5640.6190839916235,
+              5666.990666999482,
+              5693.378958996618,
+              5719.818917001248,
+              5745.890584003064,
+              5772.335624991683,
+              5799.612041999353,
+              5826.144916994963,
+              5852.464625000721,
+              5897.35312499397,
+              5923.85354200087,
+              5950.0434170040535,
+              5976.891208993038,
+              6003.635333996499,
+              6030.369000000064,
+              6056.515459000366,
+              6082.787209001253,
+              6108.911542003625,
+              6135.450708999997,
+              6161.603999993531,
+              6187.771208991762,
+              6214.043333995505,
+              6244.333166992874,
+              6275.290083998698,
+              6306.540083998698,
+              6336.984958994435,
+              6369.942083998467,
+              6402.1191249921685,
+              6434.234792002826,
+              6465.346666998812,
+              6496.237125000334,
+              6527.826916993945,
+              6559.65858399577,
+              6591.179875002126,
+              6622.897291992558,
+              6655.2484999992885,
+              6687.447499993141,
+              6719.390458994894,
+              6751.418959000148,
+              6783.821959004854,
+              6816.282917003264,
+              6848.3492090017535,
+              6876.966124997125,
+              6916.564416998881,
+              6942.701749998378,
+              6969.542499995441,
+              6997.030333994189,
+              7024.12162499968,
+              7050.966916998732,
+              7077.945375000127,
+              7104.964999991353,
+              7131.98854199436,
+              7159.036375000142,
+              7185.985374992015,
+              7213.546874991152,
+              7240.710625002976,
+              7267.822374997195,
+              7294.861542002764,
+              7322.523084003478,
+              7349.911958997836,
+              7377.519999994547,
+              7405.0699999934295,
+              7432.536334003089,
+              7460.114667002927,
+              7487.489334002021,
+              7514.637833999586,
+              7542.261209004209,
+              7569.5462500007125,
+              7596.88945900416
+            ],
+            "model_generation_started_at": 93607.696447041,
+            "model_forward_batch_sizes": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "execution_observer": "synchronized-forward-v2",
+            "mlx_cached_bytes": 148477864,
+            "actual_logits_dtypes": [
+              "mlx.core.bfloat16"
+            ],
+            "cache_layers": [
+              {
+                "layer_id": 0,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 1,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 2,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 3,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 4,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 5,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 6,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 7,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 8,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 9,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 10,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 11,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 12,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 13,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 14,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 15,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 16,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 17,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 18,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 19,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 20,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 21,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 22,
+                "kind": "sliding_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 262144,
+                "allocated_bytes": 262144,
+                "committed_tokens": 314
+              },
+              {
+                "layer_id": 23,
+                "kind": "full_kv",
+                "actual_dtypes": [
+                  "float16"
+                ],
+                "logical_bytes": 643072,
+                "allocated_bytes": 1048576,
+                "committed_tokens": 314
+              }
+            ]
+          },
+          "aggregate_metric_scope": "latest_completed_request",
+          "memory_pressure": null
+        },
+        "status": "PASS"
+      },
+      "sample_row_ids": [
+        3
+      ],
+      "text_quality": {
+        "sample_row_ids": [
+          3,
+          4,
+          11,
+          12,
+          16
+        ],
+        "target_tokens": 480,
+        "mean_negative_log_likelihood": 3.35,
+        "perplexity": 28.502733643767282,
+        "threshold_perplexity": 1000,
+        "scope": "five bounded WikiText excerpts; sanity check, not full test-set perplexity"
+      },
+      "quality_status": "PASS_FIVE_EXCERPT_WIKITEXT_SANITY_ONLY",
+      "functional_status": "PASS",
+      "stage": "interfaces",
+      "interfaces": {
+        "python": "PASS",
+        "cli": {
+          "exit_code": 0,
+          "output": "{\n  \"finish_reason\": \"length\",\n  \"generation_tokens\": 4,\n  \"model\": \"/Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4\",\n  \"prompt\": \"Robert Boulter is an English film , television and theatre actor . He had a guest @-@ starring role on the television series The\",\n  \"prompt_tokens\": 28,\n  \"revision\": null,\n  \"text\": \"\",\n  \"timings\": {\n    \"wall_seconds\": 1.2225905839877669\n  }\n}\n",
+          "status": "PASS"
+        },
+        "sse": "PASS_GREEDY_EQUALS_NONSTREAMING",
+        "http": {
+          "status_code": 200,
+          "body": {
+            "id": "cmpl-79f2af00dcb44705b74b0bcd8517cc29",
+            "object": "text_completion",
+            "created": 1794133156,
+            "model": "qualification",
+            "choices": [
+              {
+                "index": 0,
+                "text": "",
+                "logprobs": null,
+                "finish_reason": "length"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3,
+              "completion_tokens": 4,
+              "total_tokens": 7
+            },
+            "mlx": {
+              "prompt_tokens": 3,
+              "generated_tokens": 4,
+              "tokens_per_second": 2.8815335816788075,
+              "time_to_first_token_ms": 1193.9209169941023,
+              "generation_latency_ms": 1388.1497080001282,
+              "context_used": 7,
+              "memory_used_bytes": 11187984260,
+              "memory_peak_bytes": 11335209578,
+              "reasoning_tokens": 0,
+              "prompt_cache_hit": false,
+              "reused_prompt_tokens": 0,
+              "drafted_tokens": 0,
+              "accepted_draft_tokens": 0,
+              "rejected_draft_tokens": 0,
+              "draft_acceptance_ratio": null,
+              "prompt_tokens_per_second": 2.5800038600004984,
+              "decode_tokens_per_second": 15.462605754738222,
+              "inter_token_latency_ms": 64.67215266699593,
+              "cache_bytes": 6438912,
+              "cache_backend": "dense",
+              "cache_logical_bytes": 294912,
+              "cache_allocated_bytes": 6438912,
+              "cache_reserved_bytes": 6144000,
+              "cache_shared_blocks": 0,
+              "cache_lookup_time_ms": 0.0,
+              "cache_allocation_time_ms": 0.02995900285895914,
+              "avoided_prefill_tokens": 0,
+              "server_text_ttft_ms": null,
+              "model_token_count": 4,
+              "model_token_gap_p50_ms": 62.43312500009779,
+              "model_token_gap_p95_ms": 72.67883300664835,
+              "timing_samples_truncated": false,
+              "actual_prefill_tokens": 3,
+              "eligible_prefix_tokens": 0,
+              "matched_prefix_tokens": 0,
+              "prefix_publications": 0,
+              "publication_rejections": 0,
+              "queue_ms": 0.06504199700430036,
+              "tokenization_ms": 0.016125006368383765,
+              "prefill_ms": 1162.7889579976909,
+              "decode_ms": 82.52191700739786,
+              "model_token_times_ms": null,
+              "model_generation_started_at": null,
+              "model_forward_batch_sizes": null,
+              "execution_observer": "synchronized-forward-v2",
+              "mlx_cached_bytes": 8204183,
+              "actual_logits_dtypes": [
+                "mlx.core.bfloat16"
+              ],
+              "cache_layers": [
+                {
+                  "layer_id": 0,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 1,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 2,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 3,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 4,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 5,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 6,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 7,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 8,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 9,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 10,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 11,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 12,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 13,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 14,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 15,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 16,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 17,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 18,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 19,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 20,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 21,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 22,
+                  "kind": "sliding_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 12288,
+                  "committed_tokens": 6
+                },
+                {
+                  "layer_id": 23,
+                  "kind": "full_kv",
+                  "actual_dtypes": [
+                    "float16"
+                  ],
+                  "logical_bytes": 12288,
+                  "allocated_bytes": 524288,
+                  "committed_tokens": 6
+                }
+              ]
+            }
+          },
+          "status": "PASS"
+        },
+        "http_authentication": "PASS"
+      },
+      "peak_mlx_bytes": 11335209578,
+      "status": "PASS_FUNCTIONAL",
+      "seconds": 41.15559506416321,
+      "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+      "campaign_worker_sha256": "25c63e0a546a1d8b39cab7fb48c5966b4b0dd81893bc94008aeaf354eea1a7d3"
+    }
+  ]
+}

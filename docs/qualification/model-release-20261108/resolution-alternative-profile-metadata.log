@@ -1,0 +1,5 @@
+lfm2_audio mlx-community/LFM2.5-Audio-1.5B-8bit a569a7805a8e3eae954c244e54ba811d479a12c2
+florence2 microsoft/Florence-2-large-ft 4a12a2b54b7016a48a22037fbd62da90cd566f2a
+SOURCE configuration_florence2.py 15125
+SOURCE modeling_florence2.py 127415
+SOURCE processing_florence2.py 46372

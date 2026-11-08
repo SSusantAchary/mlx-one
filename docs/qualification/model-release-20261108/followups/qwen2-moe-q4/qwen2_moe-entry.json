@@ -1,0 +1,78 @@
+{
+  "model_type": "qwen2_moe",
+  "kind": "text",
+  "repo": "mlx-community/Qwen1.5-MoE-A2.7B-4bit",
+  "revision": "11aaad5b454a361ae33f19fb47b72bc74b3c3b55",
+  "gated": false,
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 932,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 80,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 2541,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": null
+    },
+    {
+      "path": "model-00001-of-00002.safetensors",
+      "bytes": 5369546977,
+      "sha256": "6c761190d7da1d1bc3528d4a4a69d1cdca18d07a3e023ae54a622fa4530daeac"
+    },
+    {
+      "path": "model-00002-of-00002.safetensors",
+      "bytes": 3132401803,
+      "sha256": "5c524b4b732840f2f406e137f5ee37b621f901bfcbd27b8acc8fc4c7ed30d7ef"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 1284018,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 370,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 7028015,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 1168,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS",
+  "publisher_reference": {
+    "repo": "Qwen/Qwen1.5-MoE-A2.7B",
+    "revision": "1a758c50ecb6350748b9ce0a99d2352fd9fc11c9",
+    "scope": "original dense-storage checkpoint; 28.63GB weights exceed recommended 22.91GB working set before cache"
+  },
+  "profile": "stored_affine_q4",
+  "selection_reason": "native MLX Q4 family representative selected before execution to fit M4 32GB; distinct from untested publisher BF16"
+}

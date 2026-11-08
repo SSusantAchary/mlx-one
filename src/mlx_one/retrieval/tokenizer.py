@@ -92,9 +92,7 @@ class Qwen3Tokenizer:
         config = _json_object(root / "tokenizer_config.json", required=False)
         pad_token = _token_text(config.get("pad_token"), "<|endoftext|>")
         encoder = {**vocabulary, **added}
-        post_prefix, post_suffix = _post_processor_tokens(
-            payload.get("post_processor"), encoder
-        )
+        post_prefix, post_suffix = _post_processor_tokens(payload.get("post_processor"), encoder)
         return cls(
             {str(key): int(value) for key, value in vocabulary.items()},
             merges,
@@ -172,9 +170,7 @@ class Qwen3Tokenizer:
                 result.append(self.encoder[piece])
                 continue
             for segment in self._PATTERN.findall(piece):
-                encoded = "".join(
-                    self.byte_encoder[value] for value in segment.encode("utf-8")
-                )
+                encoded = "".join(self.byte_encoder[value] for value in segment.encode("utf-8"))
                 for token in self.bpe(encoded):
                     try:
                         result.append(self.encoder[token])
@@ -252,8 +248,35 @@ def _post_processor_tokens(
 ) -> tuple[tuple[int, ...], tuple[int, ...]]:
     if value is None:
         return (), ()
+    if isinstance(value, dict) and value.get("type") == "Sequence":
+        processors = value.get("processors")
+        if (
+            set(value) != {"type", "processors"}
+            or not isinstance(processors, list)
+            or not processors
+        ):
+            raise ValueError("invalid Qwen3 post-processor sequence")
+        prefix, suffix = (), ()
+        for processor in processors:
+            if not isinstance(processor, dict) or processor.get("type") not in {
+                "ByteLevel",
+                "TemplateProcessing",
+            }:
+                raise ValueError("unsupported Qwen3 post-processor sequence member")
+            before, after = _post_processor_tokens(processor, encoder)
+            prefix, suffix = before + prefix, suffix + after
+        return prefix, suffix
+    if isinstance(value, dict) and value.get("type") == "ByteLevel":
+        # This post-processor changes offsets, not token IDs. Encoding/padding
+        # uses the separately validated byte-level BPE pre-tokenization recipe.
+        keys = {"type", "add_prefix_space", "trim_offsets", "use_regex"}
+        if set(value) - keys or any(type(v) is not bool for k, v in value.items() if k != "type"):
+            raise ValueError("invalid Qwen3 ByteLevel post-processor")
+        return (), ()
     if not isinstance(value, dict) or value.get("type") != "TemplateProcessing":
-        raise ValueError("Qwen3 tokenizer supports only TemplateProcessing post-processors")
+        raise ValueError(
+            "Qwen3 tokenizer supports only TemplateProcessing or ByteLevel post-processors"
+        )
     template = value.get("single")
     if not isinstance(template, list):
         raise ValueError("Qwen3 tokenizer post-processor requires a single template")

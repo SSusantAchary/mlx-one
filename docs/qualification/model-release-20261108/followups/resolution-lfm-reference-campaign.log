@@ -1,0 +1,33 @@
+START lfm2_audio mlx-community/LFM2.5-Audio-1.5B-4bit
+FETCH lfm2_audio audio_detokenizer/config.json 1150
+FETCH lfm2_audio audio_detokenizer/model.safetensors 314137512
+FETCH lfm2_audio config.json 3331
+FETCH lfm2_audio model.safetensors 1088588169
+FETCH lfm2_audio model.safetensors.index.json 110587
+FETCH lfm2_audio special_tokens_map.json 434
+FETCH lfm2_audio tokenizer.json 4732404
+FETCH lfm2_audio tokenizer_config.json 91566
+RANGE audio_detokenizer/model.safetensors 1 / 5
+RANGE audio_detokenizer/model.safetensors 2 / 5
+RANGE model.safetensors 2 / 17
+RANGE model.safetensors 3 / 17
+RANGE audio_detokenizer/model.safetensors 5 / 5
+RANGE model.safetensors 4 / 17
+RANGE model.safetensors 1 / 17
+RANGE model.safetensors 5 / 17
+RANGE audio_detokenizer/model.safetensors 3 / 5
+RANGE audio_detokenizer/model.safetensors 4 / 5
+RANGE model.safetensors 7 / 17
+RANGE model.safetensors 8 / 17
+RANGE model.safetensors 6 / 17
+RANGE model.safetensors 9 / 17
+RANGE model.safetensors 10 / 17
+RANGE model.safetensors 11 / 17
+RANGE model.safetensors 12 / 17
+RANGE model.safetensors 14 / 17
+RANGE model.safetensors 13 / 17
+RANGE model.safetensors 17 / 17
+RANGE model.safetensors 15 / 17
+RANGE model.safetensors 16 / 17
+RESULT lfm2_audio FAIL No module named 'soundfile'
+CLEANED lfm2_audio 2810392583

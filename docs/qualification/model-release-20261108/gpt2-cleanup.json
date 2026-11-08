@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "gpt2"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/gpt2",
+  "bytes_removed": 550969846,
+  "downloaded_bytes_verified": 550967953,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794130308.110346,
+  "recorded": 1794130350.092368,
+  "cleanup_complete": true,
+  "finished": 1794130350.100251
+}

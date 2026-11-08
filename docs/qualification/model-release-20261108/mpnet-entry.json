@@ -1,0 +1,151 @@
+{
+  "model_type": "mpnet",
+  "kind": "retrieval",
+  "repo": "sentence-transformers/all-mpnet-base-v2",
+  "revision": "e8c3b32edf5434bc2275fc9bab85f82640a19130",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1229,
+      "sha256": null
+    },
+    {
+      "path": "1_Pooling/config.json",
+      "bytes": 190,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 11612,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 571,
+      "sha256": null
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 116,
+      "sha256": null
+    },
+    {
+      "path": "data_config.json",
+      "bytes": 39265,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 437971872,
+      "sha256": "78c0197b6159d92658e319bc1d72e4c73a9a03dd03815e70e555c5ef05615658"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 349,
+      "sha256": null
+    },
+    {
+      "path": "onnx/model.onnx",
+      "bytes": 435826548,
+      "sha256": "74187b16d9c946fea252e120cfd7a12c5779d8b8b86838a2e4c56573c47941bd"
+    },
+    {
+      "path": "onnx/model_O1.onnx",
+      "bytes": 435730180,
+      "sha256": "5c0b47004076ab40bf15a2c52b98a53e985ebb84faaeeb6d2551768f96e384b0"
+    },
+    {
+      "path": "onnx/model_O2.onnx",
+      "bytes": 435666661,
+      "sha256": "14d01256f5f3d2245b15b596173bca4367c9405fde5700dd7fb4e110708c1793"
+    },
+    {
+      "path": "onnx/model_O3.onnx",
+      "bytes": 435666516,
+      "sha256": "dd55510706038d0817b7d41bf2078f01472e4865190584ad624e8ab79bbcb310"
+    },
+    {
+      "path": "onnx/model_O4.onnx",
+      "bytes": 217894954,
+      "sha256": "cab2a54139fc4fd5b8e2a23cb5729ee28dc44cfde685ad3356d533653e635310"
+    },
+    {
+      "path": "onnx/model_qint8_arm64.onnx",
+      "bytes": 110124379,
+      "sha256": "c392a9c545c7d4438a16fed8287a76a576b27eaf029c1c23bbf78a7a666d197f"
+    },
+    {
+      "path": "onnx/model_qint8_avx512.onnx",
+      "bytes": 110124379,
+      "sha256": "c392a9c545c7d4438a16fed8287a76a576b27eaf029c1c23bbf78a7a666d197f"
+    },
+    {
+      "path": "onnx/model_qint8_avx512_vnni.onnx",
+      "bytes": 110124379,
+      "sha256": "c392a9c545c7d4438a16fed8287a76a576b27eaf029c1c23bbf78a7a666d197f"
+    },
+    {
+      "path": "onnx/model_quint8_avx2.onnx",
+      "bytes": 110207323,
+      "sha256": "aa5c27172d77bbd1cbae3628cbac4b26d7c12adabff25d2d4285d0f29159b237"
+    },
+    {
+      "path": "openvino/openvino_model.bin",
+      "bytes": 435583684,
+      "sha256": "5c3279d833888eaab745e24b652126c5a71375af185ac21aa47e112e2468dec0"
+    },
+    {
+      "path": "openvino/openvino_model.xml",
+      "bytes": 432773,
+      "sha256": null
+    },
+    {
+      "path": "openvino/openvino_model_qint8_quantized.bin",
+      "bytes": 109974792,
+      "sha256": "fde0c650018f5e244f793316b666aaf4758d4e19072f430e59eb2bcc414895ce"
+    },
+    {
+      "path": "openvino/openvino_model_qint8_quantized.xml",
+      "bytes": 741875,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 438011953,
+      "sha256": "a8fd120b1a0032e70ff3d4b8ab8e46a6d01c2cb08ffe7c007a021c1788928146"
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 53,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 239,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 466021,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 363,
+      "sha256": null
+    },
+    {
+      "path": "train_script.py",
+      "bytes": 13123,
+      "sha256": null
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 231536,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

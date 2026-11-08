@@ -1,0 +1,111 @@
+{
+  "model_type": "florence2",
+  "kind": "ocr",
+  "repo": "microsoft/Florence-2-large-ft",
+  "revision": "4a12a2b54b7016a48a22037fbd62da90cd566f2a",
+  "manifest_id": "O04-alternate",
+  "profile": "FP16",
+  "gated": false,
+  "license": "mit",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1560,
+      "sha256": null
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "bytes": 444,
+      "sha256": null
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1141,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 14828,
+      "sha256": null
+    },
+    {
+      "path": "SECURITY.md",
+      "bytes": 2656,
+      "sha256": null
+    },
+    {
+      "path": "SUPPORT.md",
+      "bytes": 1244,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 2445,
+      "sha256": null
+    },
+    {
+      "path": "configuration_florence2.py",
+      "bytes": 15125,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 51,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1540980506,
+      "sha256": "8b4e610c952eef90a836c56cda0f398a672a3a6ca7b4d96b0e09a86dee42e2c3"
+    },
+    {
+      "path": "modeling_florence2.py",
+      "bytes": 127415,
+      "sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 806,
+      "sha256": null
+    },
+    {
+      "path": "processing_florence2.py",
+      "bytes": 46372,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 1543106435,
+      "sha256": "4188ce5a9364c358c3e28eb3e4155985867ef70bb3ae628f1f289d6a3538310a"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1355863,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 34,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 1099884,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS",
+  "alternative_profile": true,
+  "selection_reason": "Investigate quality/capacity/precision using the same frozen inputs and unchanged task quality limits; original failed profile remains excluded and immutable.",
+  "original_profile": {
+    "model_type": "florence2",
+    "kind": "ocr",
+    "repo": "microsoft/Florence-2-base-ft",
+    "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+    "manifest_id": "O04",
+    "profile": "FP16",
+    "gated": false,
+    "license": "mit",
+    "metadata_status": "PASS"
+  }
+}
