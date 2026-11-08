@@ -16,6 +16,8 @@ on:
       - src/mlx_one/data/**
       - benchmarks/audio/checkpoints.json
       - src/mlx_one/models/registry.py
+      - src/mlx_one/core/registry.py
+      - src/mlx_one/ocr/registry.py
       - .github/workflows/docs-site.yml
   pull_request:
     paths:
@@ -31,6 +33,8 @@ on:
       - src/mlx_one/data/**
       - benchmarks/audio/checkpoints.json
       - src/mlx_one/models/registry.py
+      - src/mlx_one/core/registry.py
+      - src/mlx_one/ocr/registry.py
       - .github/workflows/docs-site.yml
   workflow_dispatch:
 

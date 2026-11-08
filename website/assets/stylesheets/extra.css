@@ -60,3 +60,19 @@ circle.insights-smoke-line { fill: var(--md-primary-fg-color); }
   .insights-controls label { flex-basis: 100%; }
   .insights-panel { padding: .65rem; }
 }
+
+/* Homepage modality overview: model counts and workflows in the site's palette. */
+.modality-intro { margin-bottom: 1rem; }
+.modality-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin: 1.2rem 0 .7rem; }
+.md-typeset a.modality-card { display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1.25rem .8rem; border: 1px solid var(--md-default-fg-color--lightest); border-radius: .7rem; background: var(--md-code-bg-color); color: var(--md-default-fg-color); text-align: center; text-decoration: none; transition: border-color .15s ease, background-color .15s ease; }
+.md-typeset a.modality-card:hover { border-color: var(--md-primary-fg-color); background: var(--md-default-bg-color); }
+.md-typeset a.modality-card:focus-visible { outline: 2px solid var(--md-accent-fg-color); outline-offset: 3px; }
+.modality-card svg { width: 1.65rem; height: 1.65rem; flex: none; color: var(--md-default-fg-color--light); }
+.modality-title { display: flex; align-items: center; justify-content: center; min-height: 3em; font-size: .85rem; line-height: 1.5; font-weight: 600; }
+.modality-count { display: flex; flex-direction: column; align-items: center; gap: .12rem; font-size: .64rem; color: var(--md-default-fg-color--light); }
+.modality-count strong { font-size: 1.9rem; line-height: 1.2; color: var(--md-primary-fg-color); }
+.modality-description { margin-top: .2rem; font-size: .62rem; line-height: 1.55; color: var(--md-default-fg-color--light); }
+.modality-additional { border: 1px solid var(--md-default-fg-color--lightest); border-radius: .5rem; padding: .75rem; font-size: .7rem; }
+@media (max-width: 760px) { .modality-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 400px) { .modality-cards { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .md-typeset a.modality-card { transition: none; } }

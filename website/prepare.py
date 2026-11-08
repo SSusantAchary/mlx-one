@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
 
-from insights import fallback_markdown, make_data, summary_html
+from insights import fallback_markdown, make_data, modality_cards_html, summary_html
 
 ROOT = Path(__file__).resolve().parents[1]
 HERE = Path(__file__).resolve().parent
@@ -149,6 +149,7 @@ def stage():
         source = ROOT / name
         record(source)
         text = source.read_text().replace("<!-- insights:summary -->", summary_html(insights))
+        text = text.replace("<!-- insights:modalities -->", modality_cards_html(insights))
         text = text.replace("<!-- insights:catalog -->", fallback_markdown(insights))
         content = render(text, source, destination)
         content += f"\n\n---\n\n[Edit this page]({REPOSITORY}/edit/main/{quote(name, safe='/')})\n"

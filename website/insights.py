@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import ast
 from datetime import date, timedelta
 import hashlib
 import html
 import json
 import math
 from pathlib import Path
+import runpy
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +30,89 @@ STATUSES = {
     'not-implemented': ('Not implemented', 'The manifest explicitly records that this task is not implemented.'),
     'unqualified': ('Unqualified / unrecorded', 'No recognized qualifying status is recorded. Unknown statuses are never promoted to supported.'),
 }
+
+MODALITIES = (
+    ('text', 'Text generation', {'text'}, 'models/index.md#text-generation-guides',
+     'GPT-OSS, Llama, Qwen, Gemma and more',
+     '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="m10 7-3 3 3 3m4-6 3 3-3 3"/>'),
+    ('vision', 'Vision-language', {'vision-language'}, 'models/index.md#vision-language-guides',
+     'Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL',
+     '<path d="M3 7V5a2 2 0 0 1 2-2h2m10 0h2a2 2 0 0 1 2 2v2M3 17v2a2 2 0 0 0 2 2h2m10 0h2a2 2 0 0 0 2-2v-2"/><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2"/>'),
+    ('audio', 'Audio & speech', {'asr', 'audio', 'audio-language'}, 'models/index.md#audio-guides',
+     'Whisper, Moonshine, Qwen ASR, Parakeet, LFM2 Audio and Silero',
+     '<path d="M3 10v4m4-7v10m5-15v20m5-15v10m4-7v4"/>'),
+    ('ocr', 'OCR & documents', {'ocr'}, 'models/index.md#ocr-and-documents',
+     'TrOCR, GOT-OCR, Florence, PaddleOCR, LightOnOCR and DeepSeek',
+     '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h5M14 2v6h6M14 2l6 6"/><path d="M15 13h-1a1 1 0 0 0-1 1v1m6-2h1a1 1 0 0 1 1 1v1m-8 4v1a1 1 0 0 0 1 1h1m4 0h1a1 1 0 0 0 1-1v-1"/>'),
+    ('retrieval', 'Embeddings & reranking', {'embedding', 'reranking'}, 'models/index.md#retrieval-guides',
+     'BERT, MPNet, Qwen3 Embedding, Qwen3 Reranker and ColBERT',
+     '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>'),
+    ('segmentation', 'Segmentation', {'segmentation'}, 'models/index.md#segmentation-guides',
+     'SAM3 image, interactive prompts and video tracking',
+     '<path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"/>'),
+)
+
+
+def modality_coverage(record):
+    """Read the real lazy registry without importing the MLX-One package/runtime."""
+    paths = {key: ROOT / path for key, path in {
+        'models': 'src/mlx_one/models/registry.py',
+        'core': 'src/mlx_one/core/registry.py',
+        'ocr': 'src/mlx_one/ocr/registry.py',
+    }.items()}
+    for path in paths.values():
+        record(path)
+    core = runpy.run_path(str(paths['core']))
+    ocr = runpy.run_path(str(paths['ocr']))
+    source = ast.parse(paths['models'].read_text())
+    functions = [item for item in source.body if isinstance(item, ast.FunctionDef)
+                 and item.name in {'builtin_registrations', 'ocr_registrations'}]
+
+    class RegistryFunctions(ast.NodeTransformer):
+        def visit_ImportFrom(self, node):
+            # OCR's backend-free metadata is supplied directly, avoiding package __init__.
+            if node.module == 'mlx_one.ocr.registry':
+                return None
+            return node
+
+    module = RegistryFunctions().visit(ast.Module(body=functions, type_ignores=[]))
+    namespace = {'ModelRegistration': core['ModelRegistration'], 'CAPABILITIES': ocr['CAPABILITIES']}
+    exec(compile(ast.fix_missing_locations(module), str(paths['models']), 'exec'), namespace)
+    registrations = namespace['builtin_registrations']()
+    if len({r.model_type for r in registrations}) != len(registrations):
+        raise ValueError('Duplicate built-in model type in modality coverage')
+    groups = []
+    assigned = set()
+    for key, title, kinds, target, description, _ in MODALITIES:
+        members = sorted(r.model_type for r in registrations if r.modality in kinds)
+        assigned.update(members)
+        groups.append({'id': key, 'title': title, 'count': len(members), 'model_types': members,
+                       'target': target, 'description': description})
+    additional = sorted(r.model_type for r in registrations if r.modality == 'classification')
+    assigned.update(additional)
+    if assigned != {r.model_type for r in registrations}:
+        raise ValueError('A new registry modality needs a homepage coverage group')
+    return {'total_model_types': len(registrations), 'groups': groups,
+            'classification': {'count': len(additional), 'model_types': additional},
+            'count_basis': 'Distinct registered native model types, counted once by primary modality. Checkpoint sizes, revisions and quantizations do not add to this count. Implementation scope and checkpoint qualification vary.'}
+
+
+def modality_cards_html(data):
+    coverage = data['modality_coverage']
+    output = [f'<p class="modality-intro"><strong>{coverage["total_model_types"]} native model types</strong> '
+              'for generation, perception, speech and retrieval on Apple Silicon.</p>',
+              '<div class="modality-cards" aria-label="Native model types by modality">']
+    for group, spec in zip(coverage['groups'], MODALITIES):
+        icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + spec[-1] + '</svg>'
+        output.append(f'<a class="modality-card" href="{group["target"]}">{icon}'
+                      f'<span class="modality-title">{html.escape(group["title"])}</span>'
+                      f'<span class="modality-count"><strong>{group["count"]}</strong> native model types</span>'
+                      f'<span class="modality-description">{html.escape(group["description"])}</span></a>')
+    additional = coverage['classification']['count']
+    output.append('</div>')
+    output.append(f'<p class="modality-additional"><a href="models/index.md#additional-experimental-tasks">'
+                  f'<strong>+ {additional} classification model types</strong></a> · DistilBERT sentiment, BERT NER and CLIP zero-shot image classification.</p>')
+    return '\n'.join(output)
 
 
 def git(*args):
@@ -232,6 +317,7 @@ def make_data(record):
         record(ROOT / path)
     return {
         'schema_version': 1, 'source_commit': revision, 'source_url': f'{REPOSITORY}/tree/{revision}',
+        'modality_coverage': modality_coverage(record),
         'source_date': git('show', '-s', '--format=%cI', 'HEAD'),
         'scope': 'Five versioned catalogs: text, VLM, audio, OCR and native task candidates. Counts are checkpoint/task/precision profiles, not all architecture families or a blanket support claim. Refreshed at each documentation build; no model download or inference.',
         'summary': {'profiles': len(models), 'unique_revisions': len({(r['model_id'], r['revision']) for r in models}),
