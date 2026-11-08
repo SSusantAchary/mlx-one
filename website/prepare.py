@@ -11,6 +11,8 @@ import subprocess
 from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
 
+from insights import fallback_markdown, make_data, summary_html
+
 ROOT = Path(__file__).resolve().parents[1]
 HERE = Path(__file__).resolve().parent
 GENERATED = HERE / ".generated"
@@ -19,6 +21,7 @@ REPOSITORY = "https://github.com/SSusantAchary/mlx-one"
 # One destination per maintained source. New model-family READMEs are discovered below.
 PAGES = {
     "website/pages/index.md": "index.md",
+    "website/pages/insights.md": "insights/index.md",
     "website/pages/guides/generate.md": "guides/generate.md",
     "website/pages/guides/retrieval.md": "guides/retrieval.md",
     "website/pages/guides/memory.md": "guides/memory.md",
@@ -80,6 +83,8 @@ def stage():
     def record(path):
         sources[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
 
+    insights = make_data(record)
+
     def relative(target, destination):
         return posixpath.relpath(target, posixpath.dirname(destination) or ".")
 
@@ -115,6 +120,8 @@ def stage():
             return relative(asset, destination) + suffix
         # Authored site pages can link directly to another generated site destination.
         local = posixpath.normpath(posixpath.join(posixpath.dirname(destination), unquote(parts.path)))
+        if local in {"assets/data/insights.json", "source-manifest.json"}:
+            return parts.path + suffix
         if local in targets and not path.exists():
             return parts.path + suffix
         if not path.exists():
@@ -141,7 +148,9 @@ def stage():
     for name, destination in pages.items():
         source = ROOT / name
         record(source)
-        content = render(source.read_text(), source, destination)
+        text = source.read_text().replace("<!-- insights:summary -->", summary_html(insights))
+        text = text.replace("<!-- insights:catalog -->", fallback_markdown(insights))
+        content = render(text, source, destination)
         content += f"\n\n---\n\n[Edit this page]({REPOSITORY}/edit/main/{quote(name, safe='/')})\n"
         output = GENERATED / destination
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -175,6 +184,14 @@ def stage():
     styles.mkdir(parents=True)
     shutil.copyfile(HERE / "assets/stylesheets/extra.css", styles / "extra.css")
     record(HERE / "assets/stylesheets/extra.css")
+    scripts = GENERATED / "assets/javascripts"
+    scripts.mkdir(parents=True)
+    script = HERE / "assets/javascripts/insights.js"
+    shutil.copyfile(script, scripts / script.name)
+    record(script)
+    data = GENERATED / "assets/data"
+    data.mkdir(parents=True)
+    (data / "insights.json").write_text(json.dumps(insights, indent=2, allow_nan=False) + "\n")
     brand = GENERATED / "assets/brand"
     brand.mkdir(parents=True)
     logo = ROOT / "ui/static/mlx-one-logo.png"

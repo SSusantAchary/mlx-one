@@ -9,3 +9,54 @@
 /* Keep the standard Zensical article, navigation and table-of-contents layout. */
 .md-typeset .md-button { margin: .2rem .15rem .2rem 0; border-radius: 2rem; }
 .md-typeset img { border-radius: .4rem; }
+
+/* Coverage dashboard: reuse the documentation palette in both color schemes. */
+.insights-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; margin: 1.2rem 0; }
+.insights-card { border: 1px solid var(--md-default-fg-color--lightest); border-radius: .5rem; padding: .9rem; background: var(--md-code-bg-color); }
+.insights-card strong { display: block; font-size: 1.8rem; line-height: 1.2; color: var(--md-primary-fg-color); }
+.insights-card span { display: block; margin-top: .35rem; font-size: .68rem; }
+.insights-provenance, .insights-muted { color: var(--md-default-fg-color--light); font-size: .7rem; }
+.insights-panel { border: 1px solid var(--md-default-fg-color--lightest); padding: 1rem; border-radius: .5rem; margin: 1rem 0; }
+.insights-panel:empty { display: none; }
+.insights-panel svg { display: block; width: 100%; height: auto; }
+.insights-gridline { stroke: var(--md-default-fg-color--lightest); }
+.insights-chart-label { fill: var(--md-default-fg-color); font-size: 12px; }
+.insights-catalog-line { stroke: var(--md-default-fg-color--light); }
+circle.insights-catalog-line { fill: var(--md-default-fg-color--light); }
+.insights-smoke-line { stroke: var(--md-primary-fg-color); }
+circle.insights-smoke-line { fill: var(--md-primary-fg-color); }
+.insights-legend { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .7rem; }
+.insights-catalog-key { color: var(--md-default-fg-color--light); }
+.insights-smoke-key { color: var(--md-primary-fg-color); }
+.insights-controls { display: flex; flex-wrap: wrap; gap: .6rem; align-items: end; margin: 1rem 0; }
+.insights-controls label { display: flex; flex-direction: column; gap: .3rem; font-size: .7rem; flex: 1 1 140px; }
+.insights-controls input, .insights-controls select, .insights-controls button { font: inherit; color: var(--md-default-fg-color); background: var(--md-default-bg-color); border: 1px solid var(--md-default-fg-color--lighter); border-radius: .25rem; padding: .55rem; min-height: 2.1rem; max-width: 100%; }
+.insights-controls button { cursor: pointer; font-size: .7rem; }
+.insights-controls input:focus-visible, .insights-controls select:focus-visible, .insights-controls button:focus-visible { outline: 2px solid var(--md-accent-fg-color); outline-offset: 2px; }
+.insights-table { overflow-x: auto; margin: .8rem 0; }
+.insights-table table { width: 100%; min-width: 600px; table-layout: fixed; font-size: .65rem !important; }
+.insights-table caption { text-align: left; padding: .5rem 0; font-weight: 600; }
+.insights-table td, .insights-table th { overflow-wrap: anywhere; vertical-align: top; }
+.insights-table code { word-break: break-all; font-size: .58rem; }
+.insights-table details { margin-top: .4rem; max-width: 22rem; }
+.insights-table pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 16rem; overflow: auto; font-size: .6rem; }
+.insights-badge { display: inline-block; border: 1px solid currentColor; border-radius: 1rem; padding: .12rem .45rem; font-size: .6rem; font-weight: 600; }
+.insights-status-scoped-smoke { color: var(--md-primary-fg-color); }
+.insights-status-blocked, .insights-status-not-implemented { color: #aa3a35; }
+[data-md-color-scheme="slate"] .insights-status-blocked, [data-md-color-scheme="slate"] .insights-status-not-implemented { color: #ff9d94; }
+.insights-definitions dt { font-weight: 700; }
+.insights-definitions dd { margin: .25rem 0 .7rem; font-size: .75rem; }
+.insights-bar-item { display: grid; grid-template-columns: minmax(7rem, 1fr) minmax(4rem, 1.5fr) minmax(5rem, auto); align-items: center; gap: .6rem; margin: .7rem 0; font-size: .65rem; }
+.insights-bar-label { overflow-wrap: anywhere; }
+.insights-bar-track { height: .65rem; background: var(--md-code-bg-color); border-radius: .2rem; overflow: hidden; }
+.insights-bar { display: block; height: 100%; background: var(--md-primary-fg-color); border-radius: .2rem; }
+.insights-bar-off { background: var(--md-default-fg-color--light); }
+.insights-week { border-bottom: 1px solid var(--md-default-fg-color--lightest); padding: .6rem 0; }
+.insights-week summary, .insights-history summary { cursor: pointer; font-weight: 600; }
+@media (max-width: 600px) {
+  .insights-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .insights-bar-item { grid-template-columns: 1fr auto; }
+  .insights-bar-track { grid-column: 1 / -1; grid-row: 2; }
+  .insights-controls label { flex-basis: 100%; }
+  .insights-panel { padding: .65rem; }
+}
