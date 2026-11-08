@@ -89,6 +89,26 @@ class DatasetTests(unittest.TestCase):
     def test_generated_json_has_no_nonfinite_numbers(self):
         json.dumps(self.data, allow_nan=False)
 
+    def test_modality_counts_cover_each_registered_type_once(self):
+        coverage = self.data['modality_coverage']
+        members = [name for group in coverage['groups'] for name in group['model_types']]
+        members.extend(coverage['classification']['model_types'])
+        self.assertEqual(len(members), len(set(members)))
+        self.assertEqual(len(members), coverage['total_model_types'])
+        self.assertTrue(all(group['count'] == len(group['model_types']) for group in coverage['groups']))
+
+    def test_modality_overview_includes_retrieval_segmentation_and_classification(self):
+        groups = {group['id']: group['model_types'] for group in self.data['modality_coverage']['groups']}
+        self.assertIn('gpt_oss', groups['text'])
+        self.assertIn('qwen3_reranker', groups['retrieval'])
+        self.assertIn('sam3_tracker_video', groups['segmentation'])
+        self.assertIn('clip', self.data['modality_coverage']['classification']['model_types'])
+        self.assertNotIn('rt_detr', [model for models in groups.values() for model in models])
+
+    def test_registry_counts_do_not_load_the_runtime(self):
+        self.assertNotIn('mlx', sys.modules)
+        self.assertNotIn('mlx_one', sys.modules)
+
 
 if __name__ == '__main__':
     unittest.main()

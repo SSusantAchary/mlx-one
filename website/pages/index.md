@@ -34,12 +34,13 @@ mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
 
 ## What it makes possible
 
-<!-- insights:summary -->
+<!-- insights:modalities -->
 
 [Explore model coverage, benchmarks and development progress](insights/index.md){ .md-button }
 
-Counts are refreshed from the repository manifests on each site build. Scoped
-smoke evidence, blocked tasks and release qualification remain separate.
+Counts show distinct native model types and refresh from the registry on each
+build. Checkpoint sizes and quantizations share a model type. The coverage
+dashboard records validation status and limitations for individual checkpoints.
 
 | Workflow | Native capabilities | Start here |
 | --- | --- | --- |

@@ -97,11 +97,17 @@ repository settings instead.
 `website/pages/insights.md` owns the layout; `website/insights.py` builds
 `assets/data/insights.json` from five existing catalogs (text, VLM, audio, OCR and
 native tasks), published benchmark summaries and the repository history. The
-homepage summary uses the same generated data. No model, runtime import, package
-release, network request or benchmark execution is needed for this build.
+homepage modality cards count distinct registered native model types from
+`models/registry.py`, with OCR metadata from `ocr/registry.py`. Each type is counted
+once under its primary modality; checkpoint variants do not increase the count.
+Classification types appear alongside the six main modality cards. This includes
+retrieval and segmentation, which are outside the five checkpoint catalogs.
+Registry metadata is evaluated in isolation without importing the MLX-One package
+or model runtime. No model download, package release, network request or benchmark
+execution is needed to generate the dashboard data.
 
-Counts are checkpoint/task/precision profiles and unique pinned revisions, not
-architecture-family counts. Status labels preserve blockers, WIP and experimental
+Dashboard counts are checkpoint/task/precision profiles and unique pinned
+revisions; the homepage counts registered model types. Status labels preserve blockers, WIP and experimental
 scopes. Missing release-qualification fields remain unknown. No manifest status
 or benchmark result is rewritten.
 
