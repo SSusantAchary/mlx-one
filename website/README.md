@@ -28,6 +28,7 @@ and the home page. Never edit `.generated/` or `dist/`.
 From the repository root, with the docs environment active:
 
 ```bash
+python -m unittest discover -s website/tests -v
 python website/build.py
 python website/check.py
 ```
@@ -45,6 +46,7 @@ SHA-256 and the source-to-page mapping. No benchmark JSON or evidence is rewritt
 | Installation, APIs, architecture and experiments | Existing Markdown under `docs/` |
 | Family implementation guides | `src/mlx_one/models/*/*/README.md`, discovered automatically |
 | All-modality performance page | Performance sections extracted from the current README |
+| Coverage, explorer, history and performance dashboard | `website/insights.py`, versioned manifests, benchmark JSON and Git history |
 | Detailed performance | Existing `docs/benchmarks/**/performance.md` reports |
 | Citation | `CITATION.bib` |
 | Navigation, theme and deployment URL | `website/zensical.toml` |
@@ -89,3 +91,37 @@ The `Configure GitHub Pages` step can return `404 Not Found` while Pages is stil
 configured for branch deployment. The default workflow token cannot switch that
 repository setting by adding `enablement: true`; choose the Actions source in
 repository settings instead.
+
+## Coverage and progress dashboard
+
+`website/pages/insights.md` owns the layout; `website/insights.py` builds
+`assets/data/insights.json` from five existing catalogs (text, VLM, audio, OCR and
+native tasks), published benchmark summaries and the repository history. The
+homepage summary uses the same generated data. No model, runtime import, package
+release, network request or benchmark execution is needed for this build.
+
+Counts are checkpoint/task/precision profiles and unique pinned revisions, not
+architecture-family counts. Status labels preserve blockers, WIP and experimental
+scopes. Missing release-qualification fields remain unknown. No manifest status
+or benchmark result is rewritten.
+
+The growth curve uses first-parent snapshots of the versioned manifests. Its
+first-recorded and first-smoke dates are when evidence reached the branch, not
+original test execution or general support admission dates. Counts may change
+when profiles are removed or replaced. GitHub Actions checks out full history;
+local shallow clones display a history limitation. Weekly milestones use
+first-parent commit dates and dated changelog headings.
+
+Performance cohorts retain distinct units, workload identities, precision,
+hardware/software details, failures and source SHA-256 values. Missing metrics
+stay null. MLXBoost's flag comparison uses existing complete HTTP SSE wall-time
+rates, with its original request/process counts and experimental limitations;
+it is not a direct-model or kernel speedup comparison.
+
+The explorer filters by text, modality, status and precision. Native browser SVG
+and CSS render charts without new frontend dependencies. The complete catalog
+also renders in the HTML for users without JavaScript. All original evidence
+links are pinned to the build's source commit, and `source-manifest.json` records
+every input hash. The Pages workflow refreshes the site when its data inputs
+change. Merge or push this website branch through your normal review workflow;
+only `main` deploys to GitHub Pages.

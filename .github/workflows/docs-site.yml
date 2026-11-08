@@ -13,6 +13,9 @@ on:
       - mlx_One_chat_ui.png
       - ui/static/mlx-one-logo.png
       - src/mlx_one/models/**/README.md
+      - src/mlx_one/data/**
+      - benchmarks/audio/checkpoints.json
+      - src/mlx_one/models/registry.py
       - .github/workflows/docs-site.yml
   pull_request:
     paths:
@@ -25,6 +28,9 @@ on:
       - mlx_One_chat_ui.png
       - ui/static/mlx-one-logo.png
       - src/mlx_one/models/**/README.md
+      - src/mlx_one/data/**
+      - benchmarks/audio/checkpoints.json
+      - src/mlx_one/models/registry.py
       - .github/workflows/docs-site.yml
   workflow_dispatch:
 
@@ -40,6 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -48,7 +56,9 @@ jobs:
       - name: Install documentation tools
         run: python -m pip install -r website/requirements.txt
       - name: Build and verify the documentation
-        run: python website/build.py
+        run: |
+          python -m unittest discover -s website/tests -v
+          python website/build.py
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

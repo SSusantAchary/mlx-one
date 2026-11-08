@@ -34,6 +34,13 @@ mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
 
 ## What it makes possible
 
+<!-- insights:summary -->
+
+[Explore model coverage, benchmarks and development progress](insights/index.md){ .md-button }
+
+Counts are refreshed from the repository manifests on each site build. Scoped
+smoke evidence, blocked tasks and release qualification remain separate.
+
 | Workflow | Native capabilities | Start here |
 | --- | --- | --- |
 | Text generation | Cached decoding, sampling, chat templates and token streaming | [Generate text](guides/generate.md) |
