@@ -1,0 +1,8 @@
+{
+  "status": "SUPERSEDED_NOT_A_PASS",
+  "reason": "Native pixel-exact processor and flat public temporal score vector fixes require a new installed candidate; stop the obsolete temporal reference run and retain its failure/cleanup.",
+  "owned_reference_pids": [
+    51892
+  ],
+  "recorded": 1794154518.031826
+}

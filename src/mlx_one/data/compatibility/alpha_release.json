@@ -1,6 +1,6 @@
 {
   "schema_version": "alpha-release-scope-v1",
-  "proposed_version": "0.1.0a1",
+  "proposed_version": "0.1.1",
   "release_approval": "PENDING",
   "numerical_contract": "OPTIONAL_RESEARCH_NOT_AN_ADMISSION_GATE",
   "minimum_subset": [

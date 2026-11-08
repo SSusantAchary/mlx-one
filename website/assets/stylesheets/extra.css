@@ -41,7 +41,8 @@ circle.insights-smoke-line { fill: var(--md-primary-fg-color); }
 .insights-table details { margin-top: .4rem; max-width: 22rem; }
 .insights-table pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 16rem; overflow: auto; font-size: .6rem; }
 .insights-badge { display: inline-block; border: 1px solid currentColor; border-radius: 1rem; padding: .12rem .45rem; font-size: .6rem; font-weight: 600; }
-.insights-status-scoped-smoke { color: var(--md-primary-fg-color); }
+.insights-status-scoped-smoke, .insights-status-supported { color: var(--md-primary-fg-color); }
+.insights-admission-point { fill: var(--md-primary-fg-color); stroke: var(--md-default-bg-color); stroke-width: 2; }
 .insights-status-blocked, .insights-status-not-implemented { color: #aa3a35; }
 [data-md-color-scheme="slate"] .insights-status-blocked, [data-md-color-scheme="slate"] .insights-status-not-implemented { color: #ff9d94; }
 .insights-definitions dt { font-weight: 700; }
@@ -72,7 +73,8 @@ circle.insights-smoke-line { fill: var(--md-primary-fg-color); }
 .modality-count { display: flex; flex-direction: column; align-items: center; gap: .12rem; font-size: .64rem; color: var(--md-default-fg-color--light); }
 .modality-count strong { font-size: 1.9rem; line-height: 1.2; color: var(--md-primary-fg-color); }
 .modality-description { margin-top: .2rem; font-size: .62rem; line-height: 1.55; color: var(--md-default-fg-color--light); }
+.modality-card:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
 .modality-additional { border: 1px solid var(--md-default-fg-color--lightest); border-radius: .5rem; padding: .75rem; font-size: .7rem; }
-@media (max-width: 760px) { .modality-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .modality-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .modality-card:last-child:nth-child(3n + 1) { grid-column: auto; } .modality-card:last-child:nth-child(2n + 1) { grid-column: 1 / -1; } }
 @media (max-width: 400px) { .modality-cards { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .md-typeset a.modality-card { transition: none; } }

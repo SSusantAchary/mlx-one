@@ -12,6 +12,8 @@ from pathlib import Path
 import runpy
 import subprocess
 
+from support import current_support, registration_history
+
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = 'https://github.com/SSusantAchary/mlx-one'
 CATALOGS = {
@@ -50,6 +52,9 @@ MODALITIES = (
     ('segmentation', 'Segmentation', {'segmentation'}, 'models/index.md#segmentation-guides',
      'SAM3 image, interactive prompts and video tracking',
      '<path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"/>'),
+    ('classification', 'Classification', {'classification'}, 'models/index.md#classification-guides',
+     'DistilBERT sentiment, BERT NER and CLIP zero-shot images',
+     '<path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zm11 3 2 2 4-5"/>'),
 )
 
 
@@ -106,12 +111,9 @@ def modality_cards_html(data):
         icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + spec[-1] + '</svg>'
         output.append(f'<a class="modality-card" href="{group["target"]}">{icon}'
                       f'<span class="modality-title">{html.escape(group["title"])}</span>'
-                      f'<span class="modality-count"><strong>{group["count"]}</strong> native model types</span>'
+                      f'<span class="modality-count"><strong>{group["supported"]}/{group["count"]}</strong> model types supported</span>'
                       f'<span class="modality-description">{html.escape(group["description"])}</span></a>')
-    additional = coverage['classification']['count']
     output.append('</div>')
-    output.append(f'<p class="modality-additional"><a href="models/index.md#additional-experimental-tasks">'
-                  f'<strong>+ {additional} classification model types</strong></a> · DistilBERT sentiment, BERT NER and CLIP zero-shot image classification.</p>')
     return '\n'.join(output)
 
 
@@ -315,9 +317,12 @@ def make_data(record):
     record(changelog)
     for path in ['website/insights.py', 'src/mlx_one/models/registry.py']:
         record(ROOT / path)
+    coverage = modality_coverage(record)
+    support = current_support(record, coverage)
+    support['registration_history'] = registration_history()
     return {
         'schema_version': 1, 'source_commit': revision, 'source_url': f'{REPOSITORY}/tree/{revision}',
-        'modality_coverage': modality_coverage(record),
+        'modality_coverage': coverage, 'support': support,
         'source_date': git('show', '-s', '--format=%cI', 'HEAD'),
         'scope': 'Five versioned catalogs: text, VLM, audio, OCR and native task candidates. Counts are checkpoint/task/precision profiles, not all architecture families or a blanket support claim. Refreshed at each documentation build; no model download or inference.',
         'summary': {'profiles': len(models), 'unique_revisions': len({(r['model_id'], r['revision']) for r in models}),
@@ -335,9 +340,14 @@ def make_data(record):
 
 
 def summary_html(data):
-    summary = data['summary']
-    cards = [(summary['profiles'], 'Checkpoint/task profiles'), (summary['unique_revisions'], 'Unique pinned revisions'),
-             (summary['scoped_smoke'], 'Scoped smoke evidence'), (summary['by_status'].get('blocked', 0), 'Blocked task profiles')]
+    support = data['support']
+    release = support['release']
+    cards = [(support['model_types'], 'Native model types'), (support['modalities'], 'Modality categories'),
+             (f'{support["supported"]}/{support["model_types"]}', 'Primary workflows passed'),
+             (release['version'],
+              'Approved for release · publication pending' if not release['published']
+              and release['release_approval'] == 'APPROVED' else 'Published release'
+              if release['published'] else 'Release candidate')]
     return '<div class="insights-cards">' + ''.join(
         f'<div class="insights-card"><strong>{value}</strong><span>{html.escape(label)}</span></div>' for value, label in cards) + '</div>'
 

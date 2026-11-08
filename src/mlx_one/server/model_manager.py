@@ -57,12 +57,15 @@ class ModelManager:
         tokenizer_source: str | Path | None = None,
         checkpoint_path: str | Path | None = None,
         expected_files: dict[str, str] | None = None,
+        retrieval_task: str | None = None,
     ) -> LoadedTextModel:
         with self._lock:
             if self._bundle is not None or self._unloading:
                 raise RuntimeError("a model is already loaded or draining")
             self._bundle_key = str(model_id) + "@" + str(revision) + ":" + str(checkpoint_path)
             identity_options = {}
+            if retrieval_task is not None:
+                identity_options["retrieval_task"] = retrieval_task
             if checkpoint_path is not None:
                 identity_options["checkpoint_path"] = checkpoint_path
             if expected_files is not None:
@@ -208,6 +211,13 @@ class ModelManager:
 
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
+        if hasattr(bundle, "retrieval"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization={}, revision=bundle.revision,
+                tasks=(bundle.retrieval.task,), modalities=("text",),
+            )
         if hasattr(bundle, "vad"):
             return ModelMetadata(
                 id=self._alias or bundle.model_id, architecture=bundle.architecture,
@@ -300,6 +310,33 @@ def _tokenizer_fingerprint(tokenizer: Any) -> tuple[object, ...]:
 
 def _load_serving_model(model_id, **options):
     import json
+
+    from mlx_one.retrieval.loading import (
+        RetrievalModelLoadError,
+        detect_retrieval_task,
+        load_retrieval_model,
+    )
+
+    retrieval_task = options.pop("retrieval_task", None)
+    local_retrieval = Path(model_id).expanduser()
+    if retrieval_task is None and (local_retrieval / "config.json").is_file():
+        try:
+            retrieval_task = detect_retrieval_task(local_retrieval)
+        except RetrievalModelLoadError:
+            pass
+    if retrieval_task is not None:
+        if retrieval_task not in {"embedding", "reranking"}:
+            raise ValueError("retrieval_task must be embedding or reranking")
+        if any(options.get(k) for k in ("checkpoint_path", "expected_files", "tokenizer_source")):
+            raise ValueError("retrieval requires its complete checkpoint and tokenizer bundle")
+        from mlx_one.server.retrieval import RetrievalServingBundle
+
+        bundle = load_retrieval_model(model_id, task=retrieval_task, **{
+            k: v for k, v in options.items() if k in {"revision", "offline", "cache_dir"}
+        })
+        if bundle.architecture == "lfm2_colbert":
+            raise ValueError("ColBERT uses the late-interaction Python task, not fixed-vector HTTP")
+        return RetrievalServingBundle(bundle)
 
     if (Path(model_id).expanduser() / "silero_vad_16k.safetensors").is_file():
         if any(options.get(k) for k in ("checkpoint_path", "expected_files", "tokenizer_source")):

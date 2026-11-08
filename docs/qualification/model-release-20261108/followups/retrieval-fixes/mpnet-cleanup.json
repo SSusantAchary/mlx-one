@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "mpnet"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/mpnet",
+  "bytes_removed": 876696649,
+  "downloaded_bytes_verified": 438722187,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794140875.2341409,
+  "recorded": 1794140993.080943,
+  "cleanup_complete": true,
+  "finished": 1794140993.087328
+}

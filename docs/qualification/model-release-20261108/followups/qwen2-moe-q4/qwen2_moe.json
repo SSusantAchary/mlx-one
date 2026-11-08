@@ -1,0 +1,2808 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "qwen2_moe",
+  "checkpoint": "mlx-community/Qwen1.5-MoE-A2.7B-4bit",
+  "revision": "11aaad5b454a361ae33f19fb47b72bc74b3c3b55",
+  "started": 1794141061.1985888,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "9fae0f625378421eb144ace804fe23fdc6afe0b169c7409d8465afb0747c80da",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108/followups/qwen2-moe-q4",
+  "reference_python": null,
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "22eab5e71be08e19bc54dc6894320aa0456bff674efcc93be2dba614542010b9",
+  "checkpoint_configuration": {
+    "add_cross_attention": false,
+    "architectures": [
+      "Qwen2MoeForCausalLM"
+    ],
+    "attention_dropout": 0.0,
+    "bad_words_ids": null,
+    "begin_suppress_tokens": null,
+    "bos_token_id": 151643,
+    "chunk_size_feed_forward": 0,
+    "cross_attention_hidden_size": null,
+    "decoder_sparse_step": 1,
+    "decoder_start_token_id": null,
+    "diversity_penalty": 0.0,
+    "do_sample": false,
+    "early_stopping": false,
+    "encoder_no_repeat_ngram_size": 0,
+    "eos_token_id": 151643,
+    "exponential_decay_length_penalty": null,
+    "finetuning_task": null,
+    "forced_bos_token_id": null,
+    "forced_eos_token_id": null,
+    "hidden_act": "silu",
+    "hidden_size": 2048,
+    "id2label": {
+      "0": "LABEL_0",
+      "1": "LABEL_1"
+    },
+    "initializer_range": 0.02,
+    "intermediate_size": 5632,
+    "is_decoder": false,
+    "is_encoder_decoder": false,
+    "label2id": {
+      "LABEL_0": 0,
+      "LABEL_1": 1
+    },
+    "length_penalty": 1.0,
+    "max_length": 20,
+    "max_position_embeddings": 8192,
+    "max_window_layers": 21,
+    "min_length": 0,
+    "model_type": "qwen2_moe",
+    "moe_intermediate_size": 1408,
+    "no_repeat_ngram_size": 0,
+    "norm_topk_prob": false,
+    "num_attention_heads": 16,
+    "num_beam_groups": 1,
+    "num_beams": 1,
+    "num_experts": 60,
+    "num_experts_per_tok": 4,
+    "num_hidden_layers": 24,
+    "num_key_value_heads": 16,
+    "num_return_sequences": 1,
+    "output_attentions": false,
+    "output_hidden_states": false,
+    "output_router_logits": false,
+    "output_scores": false,
+    "pad_token_id": null,
+    "prefix": null,
+    "problem_type": null,
+    "pruned_heads": {},
+    "quantization": {
+      "group_size": 64,
+      "bits": 4
+    },
+    "remove_invalid_values": false,
+    "repetition_penalty": 1.0,
+    "return_dict": true,
+    "return_dict_in_generate": false,
+    "rms_norm_eps": 1e-06,
+    "rope_theta": 1000000.0,
+    "router_aux_loss_coef": 0.001,
+    "sep_token_id": null,
+    "shared_expert_intermediate_size": 5632,
+    "sliding_window": 32768,
+    "suppress_tokens": null,
+    "task_specific_params": null,
+    "temperature": 1.0,
+    "tf_legacy_loss": false,
+    "tie_encoder_decoder": false,
+    "tie_word_embeddings": false,
+    "tokenizer_class": null,
+    "top_k": 50,
+    "top_p": 1.0,
+    "torch_dtype": "bfloat16",
+    "torchscript": false,
+    "transformers_version": "4.40.0.dev0",
+    "typical_p": 1.0,
+    "use_bfloat16": false,
+    "use_cache": true,
+    "use_sliding_window": false,
+    "vocab_size": 151936
+  },
+  "tested_model_path": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+  "functional": {
+    "model_path": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+    "checkpoint_status": "MODEL_SMOKE_TESTED",
+    "scope": "bounded functional smoke, no quality or numerical research gate",
+    "load_seconds": 1.8113088749960298,
+    "architecture": "qwen2_moe",
+    "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+    "revision": null,
+    "configured_maximum": 8192,
+    "smoke_context": 512,
+    "cache_continuation_reset": {
+      "status": "PASS",
+      "tokens": 3,
+      "state_bytes": 589824
+    },
+    "text": " Bill as Detective Sergeant Peter Boyd and has also appeared in the television series The Bill",
+    "reasoning_content": "",
+    "metrics": {
+      "prompt_tokens": 28,
+      "generated_tokens": 16,
+      "tokens_per_second": 32.02700145187477,
+      "time_to_first_token_ms": 218.69541601336095,
+      "generation_latency_ms": 499.57845800963696,
+      "context_used": 44,
+      "memory_used_bytes": 8550730760,
+      "memory_peak_bytes": 8617446872,
+      "reasoning_tokens": 0,
+      "prompt_cache_hit": false,
+      "reused_prompt_tokens": 0,
+      "drafted_tokens": 0,
+      "accepted_draft_tokens": 0,
+      "rejected_draft_tokens": 0,
+      "draft_acceptance_ratio": null,
+      "prompt_tokens_per_second": 131.72056678441234,
+      "decode_tokens_per_second": 53.4117733431009,
+      "inter_token_latency_ms": 18.722463932742055,
+      "cache_bytes": 50331648,
+      "cache_backend": "dense",
+      "cache_logical_bytes": 8454144,
+      "cache_allocated_bytes": 50331648,
+      "cache_reserved_bytes": 0,
+      "cache_shared_blocks": 0,
+      "cache_lookup_time_ms": 0.0,
+      "cache_allocation_time_ms": 0.026792011340148747,
+      "avoided_prefill_tokens": 0,
+      "server_text_ttft_ms": 218.7556660064729,
+      "model_token_count": 16,
+      "model_token_gap_p50_ms": 18.674124992685392,
+      "model_token_gap_p95_ms": 19.297916995128617,
+      "timing_samples_truncated": false,
+      "actual_prefill_tokens": 28,
+      "eligible_prefix_tokens": 0,
+      "matched_prefix_tokens": 0,
+      "prefix_publications": 0,
+      "publication_rejections": 0,
+      "queue_ms": null,
+      "tokenization_ms": 0.11654199624899775,
+      "prefill_ms": 212.57120800146367,
+      "decode_ms": 272.0090010407148,
+      "model_token_times_ms": [
+        218.69541601336095,
+        237.7935830008937,
+        256.30083300347906,
+        274.8135830042884,
+        293.6042500077747,
+        312.5217910128413,
+        331.8197080079699,
+        350.4240410111379,
+        369.0981660038233,
+        387.78466600342654,
+        406.4059580123285,
+        424.84741601219866,
+        443.34995800454635,
+        461.9705000077374,
+        480.8464580128202,
+        499.53237500449177
+      ],
+      "model_generation_started_at": 97865.800937125,
+      "model_forward_batch_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "execution_observer": "synchronized-forward-v2",
+      "mlx_cached_bytes": 267328610,
+      "actual_logits_dtypes": [
+        "mlx.core.float16"
+      ],
+      "cache_layers": [
+        {
+          "layer_id": 0,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 1,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 2,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 3,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 4,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 6,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 7,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 8,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 9,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 10,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 12,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 13,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 14,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 15,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 16,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 17,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 18,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 19,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 20,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 21,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 22,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 23,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        }
+      ]
+    },
+    "runtime": {
+      "release_support": {
+        "architecture_registered": true,
+        "checkpoint_revision": null,
+        "status": "EXPERIMENTAL_NOT_QUALIFIED",
+        "architecture_status": null,
+        "checkpoint_status": "NOT_VERIFIED",
+        "alpha_supported": false,
+        "numerical_contract": "OPTIONAL_RESEARCH_NOT_AN_ADMISSION_GATE",
+        "admission_policy": "functional-architecture-checkpoint-v1",
+        "release_approval": "PENDING",
+        "candidate_profile": null,
+        "reason": "No exact checkpoint/revision/architecture functional evidence is attached."
+      },
+      "checkpoint_identity": {
+        "canonical_model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+        "path": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+        "revision": null,
+        "weight_hashes": {}
+      },
+      "execution_contract": {
+        "actual_weight_dtypes": [
+          "float16",
+          "uint32"
+        ],
+        "adapter_version": "native-adapter-v2",
+        "architecture": "qwen2_moe",
+        "components": [
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 0,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 1,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 2,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 3,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 4,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 5,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 6,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 7,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 8,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 9,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 10,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 11,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 12,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 13,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 14,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 15,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 16,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 17,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 18,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 19,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 20,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 21,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 22,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          },
+          {
+            "can_batch": true,
+            "can_page": false,
+            "can_quantize": true,
+            "can_share_prefix": true,
+            "can_snapshot": true,
+            "checkpoint_semantics": null,
+            "dtype": null,
+            "key_head_dim": 128,
+            "kind": "full_kv",
+            "layer_id": 23,
+            "num_kv_heads": 16,
+            "state_dtypes": [],
+            "state_shapes": [],
+            "storage": "dense",
+            "value_head_dim": 128,
+            "window_tokens": null
+          }
+        ],
+        "execution_mode": "reference_dense",
+        "floating_policy": null,
+        "modules": [],
+        "quantization": {
+          "bits": 4,
+          "group_size": 64,
+          "mode": "affine"
+        },
+        "quantization_digest": "685582c7079af9e3f24d046ac18829b0f96aa2db4e107082b517447e95b9773a",
+        "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a"
+      },
+      "compatibility_digest": "d0619e1cc066947c45dffe688d79c241be25f50d3e6747079f615be0d8921dc3",
+      "runtime_schema_version": "native-runtime-v2",
+      "feature_details": {
+        "dense_execution": {
+          "implemented": true,
+          "available_for_opt_in": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "block_storage": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "block_prefix_reuse": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "continuous_batching": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_dense_decode": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_chunked_prefill": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_attention": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_prefill": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_prefix_restore": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_batching": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "quantized_paged_kv": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        },
+        "long_context": {
+          "implemented": true,
+          "available_for_opt_in": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "weights_identity": "79d4771ddcaeae706a4f789c3589bf63defc06ba93d0cf4f99daaebd53a99b5c",
+      "engine_mode": "reference_dense",
+      "configured_execution_dtype": null,
+      "model_revision": null,
+      "scope": {
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+        "revision": null,
+        "execution_path": "reference_dense",
+        "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+        "weight_precision": "float16,uint32",
+        "cache_precision": "float16",
+        "mlx_version": "0.32.2",
+        "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+        "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+      },
+      "actual_weight_dtypes": [
+        "float16",
+        "uint32"
+      ],
+      "layers": [
+        {
+          "layer_id": 0,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 1,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 2,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 3,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 4,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 6,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 7,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 8,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 9,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 10,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 12,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 13,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 14,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 15,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 16,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 17,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 18,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 19,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 20,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 21,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 22,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        },
+        {
+          "layer_id": 23,
+          "kind": "full_kv",
+          "actual_dtypes": [
+            "float16"
+          ],
+          "logical_bytes": 352256,
+          "allocated_bytes": 2097152,
+          "committed_tokens": 43
+        }
+      ],
+      "arena": null,
+      "qualified_workload_envelope": null,
+      "memory_admission": {
+        "schema_version": "native-admission-v1",
+        "timestamp": "2026-11-08T12:31:06.879681+00:00",
+        "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+        "revision": null,
+        "backend": "dense",
+        "execution_mode": "reference_dense",
+        "weight_precision": {
+          "bits": 4,
+          "group_size": 64,
+          "mode": "affine"
+        },
+        "execution_dtype": null,
+        "attention_kv_precision": {
+          "key_type": "f16",
+          "value_type": "f16"
+        },
+        "requests": [
+          {
+            "prompt_tokens": 28,
+            "requested_output_tokens": 16,
+            "estimated_kv_growth_bytes": 50331648,
+            "estimated_hybrid_carry_growth_bytes": 0,
+            "total_growth_bytes": 50331648,
+            "request_id": "server-1794141066378616000",
+            "handle_id": "cache-45d905aedc294dfba1c7cc5557637da2",
+            "key_type": "f16",
+            "value_type": "f16",
+            "allocated_bytes": 50331648,
+            "reserved_bytes": 0
+          }
+        ],
+        "transient": true,
+        "attempt": 0,
+        "stage": "host",
+        "attention_kv_tensor_dtypes": [
+          "float16"
+        ],
+        "component_state_dtypes": [],
+        "status": "bounded",
+        "ceiling_bytes": 22906503168,
+        "working_set_bytes": 8818043846,
+        "owner_bytes": 8550616064,
+        "model_bytes": 8500284416,
+        "cache_allocated_bytes": 50331648,
+        "cache_physical_bytes": 50331648,
+        "cache_logical_bytes": 8257536,
+        "reserved_bytes": 0,
+        "active_handles": 1,
+        "retained_prefix_bytes": 0,
+        "reclaimable_pool_bytes": 0,
+        "evictable_bytes": 0,
+        "requested_bytes": 657600,
+        "predicted_transient_bytes": 657600,
+        "forecast": {
+          "bytes": 657600,
+          "source": "conservative-analytical",
+          "measured": false
+        },
+        "telemetry": {
+          "rss_bytes": 1998454784,
+          "installed_bytes": 34359738368,
+          "mlx_active_bytes": 8551046152,
+          "mlx_cached_bytes": 266997694,
+          "mlx_peak_bytes": 8617446872,
+          "recommended_bytes": 22906503168,
+          "os_pressure": "normal",
+          "swap_bytes": 3184850370
+        },
+        "swap_delta_bytes": null,
+        "swap_scope": "host-wide, not uniquely attributed to this request",
+        "host_sample_age_seconds": 0.48210329200082924,
+        "formula": "max(RSS, MLX active+cached, owner) + outstanding + requested",
+        "projected_bytes": 8818701446,
+        "decision": "admit",
+        "rejection_reason": null,
+        "retryable": null
+      },
+      "execution_memory_forecast": {
+        "bytes": 657600,
+        "source": "conservative-analytical",
+        "measured": false
+      },
+      "component_capabilities": [
+        {
+          "layer_id": 0,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 1,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 2,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 3,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 4,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 5,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 6,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 7,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 8,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 9,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 10,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 11,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 12,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 13,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 14,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 15,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 16,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 17,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 18,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 19,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 20,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 21,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 22,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        },
+        {
+          "layer_id": 23,
+          "kind": "full_kv",
+          "num_kv_heads": 16,
+          "key_head_dim": 128,
+          "value_head_dim": 128,
+          "dtype": null,
+          "window_tokens": null,
+          "state_shapes": [],
+          "checkpoint_semantics": null,
+          "can_batch": true,
+          "can_page": false,
+          "can_snapshot": true,
+          "can_quantize": true,
+          "can_share_prefix": true,
+          "state_dtypes": []
+        }
+      ],
+      "configured_cache_precision": {
+        "key_type": "f16",
+        "value_type": "f16"
+      },
+      "capabilities": {
+        "continuous_batching": false,
+        "paged_attention": false,
+        "hybrid_prefix_restore": false
+      },
+      "runner_qualification": {
+        "chunked_prefill": {
+          "feature": "chunked_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "causal_runner_equal_offset_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "equal_offset_batched_decode": {
+          "feature": "equal_offset_batched_decode",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "causal_runner_equal_offset_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "qualification": {
+        "dense_execution": {
+          "feature": "dense_execution",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "experimental",
+          "evidence": [],
+          "implemented": true,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "block_storage": {
+          "feature": "block_storage",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "block_prefix_reuse": {
+          "feature": "block_prefix_reuse",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "continuous_batching": {
+          "feature": "continuous_batching",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_dense_decode": {
+          "feature": "batched_dense_decode",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "batched_chunked_prefill": {
+          "feature": "batched_chunked_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_attention": {
+          "feature": "paged_attention",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "paged_prefill": {
+          "feature": "paged_prefill",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_prefix_restore": {
+          "feature": "hybrid_prefix_restore",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "hybrid_batching": {
+          "feature": "hybrid_batching",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "quantized_paged_kv": {
+          "feature": "quantized_paged_kv",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        },
+        "long_context": {
+          "feature": "long_context",
+          "scope": {
+            "model_id": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint",
+            "revision": null,
+            "execution_path": "reference_dense",
+            "topology_digest": "6999f6d68ac52254f6947d791c5a269162cad68b76ffd9f9f361dc2539ea0c3a",
+            "weight_precision": "float16,uint32",
+            "cache_precision": "float16",
+            "mlx_version": "0.32.2",
+            "hardware": "{\"chip\": \"Apple M4\", \"os\": \"macOS-15.8.2-arm64-arm-64bit\", \"ram\": \"34359738368\"}",
+            "source_revision": "source-sha256:29def0e687b5ad9c213cf0892893c2221ff9b1fcfae1b141b65d81ab7c8f1f96"
+          },
+          "status": "not_implemented",
+          "evidence": [],
+          "implemented": false,
+          "checkpoint_correctness_passed": false,
+          "hardware_correctness_passed": false,
+          "performance_qualified": false,
+          "validation_reason": "native checkpoint and hardware validation pending"
+        }
+      },
+      "latency": {
+        "ttft_p95_ms": null,
+        "decode_gap_p95_ms": null
+      },
+      "throughput": {
+        "aggregate_decode_tok_s": null
+      },
+      "selection": {
+        "requested_mode": "reference_dense",
+        "resolved_mode": "reference_dense",
+        "reason": "explicit configuration",
+        "evidence_scope": null
+      },
+      "metric_definitions": {
+        "tokens_per_second": "output tokens / whole engine request wall time",
+        "decode_tokens_per_second": "output intervals / first-to-last model output-token interval",
+        "inter_token_latency_ms": "mean model output-token gap; excludes prefill and first token",
+        "time_to_first_token_ms": "engine execution start to first accepted model output token",
+        "queue_ms": "enqueue to execution admission",
+        "prefill_ms": "sum of synchronized model prefill forwards",
+        "model_token_gap_percentiles": "bounded last 4096 gaps; truncation is explicit",
+        "sse_delivery_timing": "client wire observations, separate from model-token timing"
+      },
+      "latest_completed_request": {
+        "prompt_tokens": 28,
+        "generated_tokens": 16,
+        "tokens_per_second": 32.02700145187477,
+        "time_to_first_token_ms": 218.69541601336095,
+        "generation_latency_ms": 499.57845800963696,
+        "context_used": 44,
+        "memory_used_bytes": 8550730760,
+        "memory_peak_bytes": 8617446872,
+        "reasoning_tokens": 0,
+        "prompt_cache_hit": false,
+        "reused_prompt_tokens": 0,
+        "drafted_tokens": 0,
+        "accepted_draft_tokens": 0,
+        "rejected_draft_tokens": 0,
+        "draft_acceptance_ratio": null,
+        "prompt_tokens_per_second": 131.72056678441234,
+        "decode_tokens_per_second": 53.4117733431009,
+        "inter_token_latency_ms": 18.722463932742055,
+        "cache_bytes": 50331648,
+        "cache_backend": "dense",
+        "cache_logical_bytes": 8454144,
+        "cache_allocated_bytes": 50331648,
+        "cache_reserved_bytes": 0,
+        "cache_shared_blocks": 0,
+        "cache_lookup_time_ms": 0.0,
+        "cache_allocation_time_ms": 0.026792011340148747,
+        "avoided_prefill_tokens": 0,
+        "server_text_ttft_ms": 218.7556660064729,
+        "model_token_count": 16,
+        "model_token_gap_p50_ms": 18.674124992685392,
+        "model_token_gap_p95_ms": 19.297916995128617,
+        "timing_samples_truncated": false,
+        "actual_prefill_tokens": 28,
+        "eligible_prefix_tokens": 0,
+        "matched_prefix_tokens": 0,
+        "prefix_publications": 0,
+        "publication_rejections": 0,
+        "queue_ms": null,
+        "tokenization_ms": 0.11654199624899775,
+        "prefill_ms": 212.57120800146367,
+        "decode_ms": 272.0090010407148,
+        "model_token_times_ms": [
+          218.69541601336095,
+          237.7935830008937,
+          256.30083300347906,
+          274.8135830042884,
+          293.6042500077747,
+          312.5217910128413,
+          331.8197080079699,
+          350.4240410111379,
+          369.0981660038233,
+          387.78466600342654,
+          406.4059580123285,
+          424.84741601219866,
+          443.34995800454635,
+          461.9705000077374,
+          480.8464580128202,
+          499.53237500449177
+        ],
+        "model_generation_started_at": 97865.800937125,
+        "model_forward_batch_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "execution_observer": "synchronized-forward-v2",
+        "mlx_cached_bytes": 267328610,
+        "actual_logits_dtypes": [
+          "mlx.core.float16"
+        ],
+        "cache_layers": [
+          {
+            "layer_id": 0,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 1,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 2,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 3,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 4,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 5,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 6,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 7,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 8,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 9,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 10,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 11,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 12,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 13,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 14,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 15,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 16,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 17,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 18,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 19,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 20,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 21,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 22,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          },
+          {
+            "layer_id": 23,
+            "kind": "full_kv",
+            "actual_dtypes": [
+              "float16"
+            ],
+            "logical_bytes": 352256,
+            "allocated_bytes": 2097152,
+            "committed_tokens": 43
+          }
+        ]
+      },
+      "aggregate_metric_scope": "latest_completed_request",
+      "memory_pressure": null
+    },
+    "status": "PASS"
+  },
+  "sample_row_ids": [
+    3
+  ],
+  "text_quality": {
+    "sample_row_ids": [
+      3,
+      4,
+      11,
+      12,
+      16
+    ],
+    "target_tokens": 480,
+    "mean_negative_log_likelihood": 2.383203125,
+    "perplexity": 10.839567806851386,
+    "threshold_perplexity": 1000,
+    "scope": "five bounded WikiText excerpts; sanity check, not full test-set perplexity"
+  },
+  "quality_status": "PASS_FIVE_EXCERPT_WIKITEXT_SANITY_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"finish_reason\": \"length\",\n  \"generation_tokens\": 4,\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/qwen2_moe/checkpoint\",\n  \"prompt\": \"Robert Boulter is an English film , television and theatre actor . He had a guest @-@ starring role on the television series The\",\n  \"prompt_tokens\": 28,\n  \"revision\": null,\n  \"text\": \" Bill as Detective Sergeant\",\n  \"timings\": {\n    \"wall_seconds\": 0.2517767920071492\n  }\n}\n",
+      "status": "PASS"
+    },
+    "sse": "PASS_GREEDY_EQUALS_NONSTREAMING",
+    "http": {
+      "status_code": 200,
+      "body": {
+        "id": "cmpl-eee4cba8cb524b2fbf3d9284472ec34b",
+        "object": "text_completion",
+        "created": 1794141075,
+        "model": "qualification",
+        "choices": [
+          {
+            "index": 0,
+            "text": " destroyed by the earthquake",
+            "logprobs": null,
+            "finish_reason": "length"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3,
+          "completion_tokens": 4,
+          "total_tokens": 7
+        },
+        "mlx": {
+          "prompt_tokens": 3,
+          "generated_tokens": 4,
+          "tokens_per_second": 14.79294957492725,
+          "time_to_first_token_ms": 110.19825001130812,
+          "generation_latency_ms": 270.39908300503157,
+          "context_used": 7,
+          "memory_used_bytes": 8550730768,
+          "memory_peak_bytes": 8783514640,
+          "reasoning_tokens": 0,
+          "prompt_cache_hit": false,
+          "reused_prompt_tokens": 0,
+          "drafted_tokens": 0,
+          "accepted_draft_tokens": 0,
+          "rejected_draft_tokens": 0,
+          "draft_acceptance_ratio": null,
+          "prompt_tokens_per_second": 38.30559490972679,
+          "decode_tokens_per_second": 18.7521194595686,
+          "inter_token_latency_ms": 53.327305329730734,
+          "cache_bytes": 50331648,
+          "cache_backend": "dense",
+          "cache_logical_bytes": 1179648,
+          "cache_allocated_bytes": 50331648,
+          "cache_reserved_bytes": 0,
+          "cache_shared_blocks": 0,
+          "cache_lookup_time_ms": 0.0,
+          "cache_allocation_time_ms": 0.02983299782499671,
+          "avoided_prefill_tokens": 0,
+          "server_text_ttft_ms": 110.23708300490398,
+          "model_token_count": 4,
+          "model_token_gap_p50_ms": 53.04370800149627,
+          "model_token_gap_p95_ms": 53.960374993039295,
+          "timing_samples_truncated": false,
+          "actual_prefill_tokens": 3,
+          "eligible_prefix_tokens": 0,
+          "matched_prefix_tokens": 0,
+          "prefix_publications": 0,
+          "publication_rejections": 0,
+          "queue_ms": 0.08191699453163892,
+          "tokenization_ms": 0.020209001377224922,
+          "prefill_ms": 78.31754100334365,
+          "decode_ms": 61.48437398951501,
+          "model_token_times_ms": null,
+          "model_generation_started_at": null,
+          "model_forward_batch_sizes": null,
+          "execution_observer": "synchronized-forward-v2",
+          "mlx_cached_bytes": 267632528,
+          "actual_logits_dtypes": [
+            "mlx.core.float16"
+          ],
+          "cache_layers": [
+            {
+              "layer_id": 0,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 1,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 2,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 3,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 4,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 5,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 6,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 7,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 8,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 9,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 10,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 11,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 12,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 13,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 14,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 15,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 16,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 17,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 18,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 19,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 20,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 21,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 22,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            },
+            {
+              "layer_id": 23,
+              "kind": "full_kv",
+              "actual_dtypes": [
+                "float16"
+              ],
+              "logical_bytes": 49152,
+              "allocated_bytes": 2097152,
+              "committed_tokens": 6
+            }
+          ]
+        }
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 8783514640,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 17.664456367492676,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "9fae0f625378421eb144ace804fe23fdc6afe0b169c7409d8465afb0747c80da"
+}

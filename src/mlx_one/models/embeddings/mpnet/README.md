@@ -8,7 +8,8 @@ Registry type: `mpnet`. The encoder implements MPNet relative-position buckets,
 bidirectional attention, mean pooling, normalization, and single-vector retrieval.
 [sentence-transformers/all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
 is the primary checkpoint candidate. Native loading and synthetic execution are
-implemented; exact-checkpoint quality, parity, and hardware qualification remain pending.
+implemented. The selected checkpoint now passes real native embedding and
+applicable interface checks; see the [current support record](../../../../../status_models_testing.md).
 
 ## Model Architecture
 

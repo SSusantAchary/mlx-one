@@ -6,6 +6,20 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+### 0.1.1 approved for release — 2026-11-08
+
+- Complete real-checkpoint primary-workflow records for all 40 registered native
+  model types across seven modalities, with exact checkpoint/precision/operation
+  identities and applicable interface checks.
+- Repair prompt/BOS handling, MoE loading, retrieval, OCR decoding/rendering,
+  LFM speech state and SAM temporal tracking; retain original failed diagnostics.
+- Record 2,573 passing native regression tests and 9 passing subtests, with
+  95 optional tests skipped; pass wheel/sdist and isolated installed-wheel checks.
+- Update the support inventory, README and documentation site from the verified
+  support catalog. Archive the older 23/7/10 model audit separately.
+- Maintainer approved release on 8 November. Publication remains pending; the
+  published installation stays at 0.1.0a1. See [release notes](docs/releases/0.1.1.md).
+
 ### 0.1.1 integration candidate — 2026-11-04
 
 - Integrate existing native sentiment, NER, CLIP and Silero task APIs, tests and

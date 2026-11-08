@@ -1,0 +1,21 @@
+/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/lib/python3.14/site-packages/torch/jit/_script.py:1485: FutureWarning: `torch.jit.script` is not supported in Python 3.14+ and may break. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/845 [00:00<?, ?it/s]Loading weights: 100%|██████████| 845/845 [00:00<00:00, 11941.81it/s]
+{"stage": "reference_loaded", "seconds": 0.2293457500054501}
+Traceback (most recent call last):
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/benchmarks/sam3_qualification.py", line 446, in <module>
+    main()
+    ~~~~^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/benchmarks/sam3_qualification.py", line 275, in main
+    reference(args)
+    ~~~~~~~~~^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/benchmarks/sam3_qualification.py", line 131, in reference
+    for output in iterator:
+                  ^^^^^^^^
+  File "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/lib/python3.14/site-packages/torch/utils/_contextlib.py", line 71, in inference_mode
+    response = gen.send(None)
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/transformers-6133195dcb027feb7502379acd13750e167eb6c5/src/transformers/models/sam3_tracker_video/modeling_sam3_tracker_video.py", line 2798, in propagate_in_video_iterator
+    raise ValueError(
+        "Cannot determine the starting frame index; please specify it manually, or run inference on a frame with inputs first."
+    )
+ValueError: Cannot determine the starting frame index; please specify it manually, or run inference on a frame with inputs first.

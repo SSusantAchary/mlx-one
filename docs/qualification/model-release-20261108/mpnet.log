@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "mpnet", "status": "FAIL", "quality_status": null, "seconds": 0.241804838180542, "error": "cannot load native mpnet embedding: unexpected tensors: pooler.dense.bias, pooler.dense.weight"}

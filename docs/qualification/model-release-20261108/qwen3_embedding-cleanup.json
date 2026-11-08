@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "qwen3_embedding"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_embedding",
+  "bytes_removed": 2399076282,
+  "downloaded_bytes_verified": 1207487471,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139725.438654,
+  "recorded": 1794140060.4588668,
+  "cleanup_complete": true,
+  "finished": 1794140060.486049
+}

@@ -1,0 +1,27 @@
+START qwen3_asr mlx-community/Qwen3-ASR-0.6B-8bit
+FETCH qwen3_asr chat_template.json 1161
+FETCH qwen3_asr config.json 7187
+FETCH qwen3_asr generation_config.json 142
+FETCH qwen3_asr merges.txt 1671853
+FETCH qwen3_asr model.safetensors 1006229426
+FETCH qwen3_asr model.safetensors.index.json 71815
+FETCH qwen3_asr preprocessor_config.json 330
+FETCH qwen3_asr tokenizer_config.json 12487
+FETCH qwen3_asr vocab.json 2776833
+RANGE model.safetensors 2 / 15
+RANGE model.safetensors 1 / 15
+RANGE model.safetensors 3 / 15
+RANGE model.safetensors 4 / 15
+RANGE model.safetensors 5 / 15
+RANGE model.safetensors 7 / 15
+RANGE model.safetensors 6 / 15
+RANGE model.safetensors 9 / 15
+RANGE model.safetensors 10 / 15
+RANGE model.safetensors 8 / 15
+RANGE model.safetensors 11 / 15
+RANGE model.safetensors 12 / 15
+RANGE model.safetensors 13 / 15
+RANGE model.safetensors 14 / 15
+RANGE model.safetensors 15 / 15
+RESULT qwen3_asr FAIL independent Whisper speech transcription exceeds declared WER limit
+CLEANED qwen3_asr 2017002666

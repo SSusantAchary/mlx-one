@@ -1,0 +1,19 @@
+START gpt2 openai-community/gpt2
+FETCH FETCHgpt2  gpt2FETCHREADME.md   gpt2 generation_config.json 124
+config.json8092 
+665
+FETCH gpt2 merges.txt 456318
+FETCH gpt2 model.safetensors 548105171
+FETCH gpt2 tokenizer.json 1355256
+FETCH gpt2 tokenizer_config.json 26
+FETCH gpt2 vocab.json 1042301
+RESULT gpt2 PASS_FUNCTIONAL 
+CLEANED gpt2 550969846
+START distilbert distilbert/distilbert-base-uncased-finetuned-sst-2-english
+FETCH FETCHdistilbert  FETCHdistilbert README.mddistilbert  config.json  10512629model.safetensors
+ 
+267832558
+FETCH distilbert tokenizer_config.json 48
+FETCH distilbert vocab.txt 231508
+RESULT distilbert PASS_FUNCTIONAL 
+CLEANED distilbert 268076610

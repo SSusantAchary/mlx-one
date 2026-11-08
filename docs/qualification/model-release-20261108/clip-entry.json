@@ -1,0 +1,72 @@
+{
+  "model_type": "clip",
+  "kind": "classification",
+  "repo": "openai/clip-vit-base-patch32",
+  "revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+  "profile": "float32",
+  "gated": false,
+  "license": null,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 690,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 7942,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 4186,
+      "sha256": null
+    },
+    {
+      "path": "flax_model.msgpack",
+      "bytes": 605123003,
+      "sha256": "2a2994d89bebd77abba5a554789dd9152a7e25467b79d88f6bd237d2dec5051c"
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 524657,
+      "sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 316,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 605247071,
+      "sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 389,
+      "sha256": null
+    },
+    {
+      "path": "tf_model.h5",
+      "bytes": 605551040,
+      "sha256": "0d7e64ea2c496306a4bc0a6a7ab21e4755fd8c7beb01e6d9f5dc8d6662f1bfd2"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 2224041,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 592,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 862328,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

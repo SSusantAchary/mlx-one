@@ -1,0 +1,248 @@
+{
+  "distilbert": {
+    "result": "followups/interface-replay/distilbert.json",
+    "history": [
+      "distilbert.json",
+      "followups/interface-replay/distilbert.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "qwen3_reranker": {
+    "result": "followups/retrieval-serving/qwen3_reranker.json",
+    "history": [
+      "qwen3_reranker.json",
+      "followups/retrieval-fixes/qwen3_reranker.json",
+      "followups/retrieval-serving/qwen3_reranker.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "mpnet": {
+    "result": "followups/retrieval-serving/mpnet.json",
+    "history": [
+      "mpnet.json",
+      "followups/retrieval-fixes/mpnet.json",
+      "followups/retrieval-serving/mpnet.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "clip": {
+    "result": "followups/clip-cli/clip.json",
+    "history": [
+      "clip.json",
+      "followups/clip-cli/clip.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "qwen2_moe": {
+    "result": "followups/qwen2-moe-q4/qwen2_moe.json",
+    "history": [
+      "qwen2_moe.json",
+      "followups/qwen2-moe-q4/qwen2_moe.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "llama": {
+    "result": "followups/interface-replay/llama.json",
+    "history": [
+      "llama.json",
+      "followups/interface-replay/llama.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "openelm": {
+    "result": "followups/openelm-bos/openelm.json",
+    "history": [
+      "openelm.json",
+      "followups/openelm-reference/openelm.json",
+      "followups/openelm-bos/openelm.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "bert": {
+    "result": "followups/retrieval-serving/bert.json",
+    "history": [
+      "bert.json",
+      "followups/retrieval-fixes/bert.json",
+      "followups/retrieval-serving/bert.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "florence2": {
+    "result": "followups/functional-florence/florence2.json",
+    "history": [
+      "florence2.json",
+      "followups/florence-budget/florence2.json",
+      "followups/resolution-ocr/florence2.json",
+      "followups/resolution-ocr2/florence2.json",
+      "followups/resolution-florence-reference/florence2.json",
+      "followups/functional-florence/florence2.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "gpt_oss": {
+    "result": "followups/gpt-oss-512/gpt_oss.json",
+    "history": [
+      "gpt_oss.json",
+      "followups/gpt-oss-512/gpt_oss.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "gpt2": {
+    "result": "followups/interface-replay/gpt2.json",
+    "history": [
+      "gpt2.json",
+      "followups/interface-replay/gpt2.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "gemma3_text": {
+    "result": "followups/interface-replay/gemma3_text.json",
+    "history": [
+      "gemma3_text.json",
+      "followups/interface-replay/gemma3_text.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "qwen3": {
+    "result": "followups/interface-replay/qwen3.json",
+    "history": [
+      "qwen3.json",
+      "followups/interface-replay/qwen3.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "qwen3_embedding": {
+    "result": "followups/resolution-embedding/qwen3_embedding.json",
+    "history": [
+      "qwen3_embedding.json",
+      "followups/retrieval-fixes/qwen3_embedding.json",
+      "followups/retrieval-serving/qwen3_embedding.json",
+      "followups/qwen3-embedding-backbone/qwen3_embedding.json",
+      "followups/qwen3-embedding-diagnostic/qwen3_embedding.json",
+      "followups/resolution-embedding/qwen3_embedding.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "lfm2_colbert": {
+    "result": "followups/colbert-expansion/lfm2_colbert.json",
+    "history": [
+      "lfm2_colbert.json",
+      "followups/retrieval-serving/lfm2_colbert.json",
+      "followups/colbert-path/lfm2_colbert.json",
+      "followups/colbert-batch4/lfm2_colbert.json",
+      "followups/colbert-expansion/lfm2_colbert.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "qwen2": {
+    "result": "followups/interface-replay/qwen2.json",
+    "history": [
+      "qwen2.json",
+      "followups/interface-replay/qwen2.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "lfm2": {
+    "result": "followups/lfm2-bos/lfm2.json",
+    "history": [
+      "lfm2.json",
+      "followups/interface-replay/lfm2.json",
+      "followups/lfm2-bos/lfm2.json"
+    ],
+    "reason": "Most recent explicit attempt after corrections or added diagnostics. Earlier passes and failures remain in the complete history; original thresholds are unchanged."
+  },
+  "qwen3_forced_aligner": {
+    "result": "followups/resolution-alignment/qwen3_forced_aligner.json",
+    "history": [
+      "qwen3_forced_aligner.json",
+      "followups/resolution-alignment/qwen3_forced_aligner.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "bert_token_classification": {
+    "result": "followups/resolution-ner-final/bert_token_classification.json",
+    "history": [
+      "bert_token_classification.json",
+      "followups/resolution-ner/bert_token_classification.json",
+      "followups/resolution-ner-final/bert_token_classification.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "lfm2_audio": {
+    "result": "followups/resolution-lfm-q8-final/lfm2_audio.json",
+    "history": [
+      "lfm2_audio.json",
+      "followups/resolution-lfm/lfm2_audio.json",
+      "followups/resolution-lfm-reference/lfm2_audio.json",
+      "followups/resolution-lfm-reference2/lfm2_audio.json",
+      "followups/resolution-lfm-q8-final/lfm2_audio.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "got_ocr2": {
+    "result": "followups/resolution-ocr2/got_ocr2.json",
+    "history": [
+      "got_ocr2.json",
+      "followups/resolution-ocr/got_ocr2.json",
+      "followups/resolution-ocr2/got_ocr2.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "lightonocr": {
+    "result": "followups/resolution-ocr2/lightonocr.json",
+    "history": [
+      "lightonocr.json",
+      "followups/resolution-ocr/lightonocr.json",
+      "followups/resolution-ocr2/lightonocr.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "deepseek_ocr": {
+    "result": "followups/resolution-ocr2/deepseek_ocr.json",
+    "history": [
+      "deepseek_ocr.json",
+      "followups/resolution-ocr/deepseek_ocr.json",
+      "followups/resolution-ocr2/deepseek_ocr.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "sam3": {
+    "result": "followups/resolution-sam3/sam3.json",
+    "history": [
+      "sam3.json",
+      "followups/resolution-sam/sam3.json",
+      "followups/resolution-sam3/sam3.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "sam3_tracker": {
+    "result": "followups/resolution-sam3/sam3_tracker.json",
+    "history": [
+      "sam3_tracker.json",
+      "followups/resolution-sam/sam3_tracker.json",
+      "followups/resolution-sam2/sam3_tracker.json",
+      "followups/resolution-sam3/sam3_tracker.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "sam3_video": {
+    "result": "followups/functional-sam-video/sam3_video.json",
+    "history": [
+      "sam3_video.json",
+      "followups/resolution-sam/sam3_video.json",
+      "followups/resolution-sam2/sam3_video.json",
+      "followups/functional-sam-video/sam3_video.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  },
+  "sam3_tracker_video": {
+    "result": "followups/resolution-sam3/sam3_tracker_video.json",
+    "history": [
+      "sam3_tracker_video.json",
+      "followups/resolution-sam/sam3_tracker_video.json",
+      "followups/resolution-sam2/sam3_tracker_video.json",
+      "followups/resolution-sam3/sam3_tracker_video.json"
+    ],
+    "reason": "Selected passing model implementation/task/interfaces under the user-requested MLX-LM standard. Earlier benchmark failures remain diagnostics and are not rewritten."
+  }
+}

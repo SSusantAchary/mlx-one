@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "lightonocr"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/lightonocr",
+  "bytes_removed": 4034179170,
+  "downloaded_bytes_verified": 2022809469,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794140167.914026,
+  "recorded": 1794140465.913001,
+  "cleanup_complete": true,
+  "finished": 1794140465.957953
+}

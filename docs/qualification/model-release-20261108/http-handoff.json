@@ -1,0 +1,11 @@
+{
+  "recorded": 1794137633.207278,
+  "previous_pids": [
+    30739,
+    30749,
+    31377
+  ],
+  "reason": "stalled Xet transfers; bounded resumable HTTP ranges",
+  "partial_downloads_retained": true,
+  "no_native_worker_active": true
+}

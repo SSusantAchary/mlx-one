@@ -1,0 +1,1397 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "qwen3_forced_aligner",
+  "checkpoint": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+  "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+  "started": 1794150275.6898298,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "a8f1d26ce52374abb2b22b057305bfd5299691262cede9d22ee90f425b64cb00",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/resolution-alignment",
+  "reference_python": null,
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "4825ecded3a0900618510f0447e5f44053c18165fb665d7ced57eac05a08f82f",
+  "checkpoint_configuration": {
+    "architectures": [
+      "Qwen3ASRForConditionalGeneration"
+    ],
+    "model_type": "qwen3_asr",
+    "quantization": {
+      "group_size": 64,
+      "bits": 8,
+      "mode": "affine"
+    },
+    "quantization_config": {
+      "group_size": 64,
+      "bits": 8,
+      "mode": "affine"
+    },
+    "support_languages": [
+      "Chinese",
+      "Cantonese",
+      "English",
+      "German",
+      "Spanish",
+      "French",
+      "Italian",
+      "Portuguese",
+      "Russian",
+      "Korean",
+      "Japanese"
+    ],
+    "thinker_config": {
+      "model_type": "qwen3_forced_aligner",
+      "classify_num": 5000,
+      "architectures": [
+        "Qwen3ASRForConditionalGeneration"
+      ],
+      "audio_config": {
+        "_name_or_path": "",
+        "activation_dropout": 0,
+        "activation_function": "gelu",
+        "add_cross_attention": false,
+        "architectures": null,
+        "attention_dropout": 0,
+        "bad_words_ids": null,
+        "begin_suppress_tokens": null,
+        "bos_token_id": null,
+        "chunk_size_feed_forward": 0,
+        "conv_chunksize": 500,
+        "cross_attention_hidden_size": null,
+        "d_model": 1024,
+        "decoder_start_token_id": null,
+        "diversity_penalty": 0.0,
+        "do_sample": false,
+        "downsample_hidden_size": 480,
+        "dropout": 0,
+        "dtype": null,
+        "early_stopping": false,
+        "encoder_attention_heads": 16,
+        "encoder_ffn_dim": 4096,
+        "encoder_layers": 24,
+        "encoder_no_repeat_ngram_size": 0,
+        "eos_token_id": null,
+        "exponential_decay_length_penalty": null,
+        "finetuning_task": null,
+        "forced_bos_token_id": null,
+        "forced_eos_token_id": null,
+        "id2label": {
+          "0": "LABEL_0",
+          "1": "LABEL_1"
+        },
+        "initializer_range": 0.02,
+        "is_decoder": false,
+        "is_encoder_decoder": false,
+        "label2id": {
+          "LABEL_0": 0,
+          "LABEL_1": 1
+        },
+        "length_penalty": 1.0,
+        "max_length": 20,
+        "max_source_positions": 1500,
+        "min_length": 0,
+        "model_type": "qwen3_asr_audio_encoder",
+        "n_window": 50,
+        "n_window_infer": 800,
+        "no_repeat_ngram_size": 0,
+        "num_beam_groups": 1,
+        "num_beams": 1,
+        "num_hidden_layers": 24,
+        "num_mel_bins": 128,
+        "num_return_sequences": 1,
+        "output_attentions": false,
+        "output_dim": 1024,
+        "output_hidden_states": false,
+        "output_scores": false,
+        "pad_token_id": null,
+        "prefix": null,
+        "problem_type": null,
+        "pruned_heads": {},
+        "remove_invalid_values": false,
+        "repetition_penalty": 1.0,
+        "return_dict": true,
+        "return_dict_in_generate": false,
+        "scale_embedding": false,
+        "sep_token_id": null,
+        "suppress_tokens": null,
+        "task_specific_params": null,
+        "temperature": 1.0,
+        "tf_legacy_loss": false,
+        "tie_encoder_decoder": false,
+        "tie_word_embeddings": false,
+        "tokenizer_class": null,
+        "top_k": 50,
+        "top_p": 1.0,
+        "torchscript": false,
+        "typical_p": 1.0,
+        "use_bfloat16": false
+      },
+      "audio_end_token_id": 151670,
+      "audio_start_token_id": 151669,
+      "audio_token_id": 151676,
+      "dtype": "bfloat16",
+      "initializer_range": 0.02,
+      "text_config": {
+        "_name_or_path": "",
+        "add_cross_attention": false,
+        "architectures": null,
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bad_words_ids": null,
+        "begin_suppress_tokens": null,
+        "bos_token_id": null,
+        "chunk_size_feed_forward": 0,
+        "cross_attention_hidden_size": null,
+        "decoder_start_token_id": null,
+        "diversity_penalty": 0.0,
+        "do_sample": false,
+        "dtype": null,
+        "early_stopping": false,
+        "encoder_no_repeat_ngram_size": 0,
+        "eos_token_id": null,
+        "exponential_decay_length_penalty": null,
+        "finetuning_task": null,
+        "forced_bos_token_id": null,
+        "forced_eos_token_id": null,
+        "head_dim": 128,
+        "hidden_act": "silu",
+        "hidden_size": 1024,
+        "id2label": {
+          "0": "LABEL_0",
+          "1": "LABEL_1"
+        },
+        "initializer_range": 0.02,
+        "intermediate_size": 3072,
+        "is_decoder": false,
+        "is_encoder_decoder": false,
+        "label2id": {
+          "LABEL_0": 0,
+          "LABEL_1": 1
+        },
+        "length_penalty": 1.0,
+        "max_length": 20,
+        "max_position_embeddings": 8192,
+        "min_length": 0,
+        "model_type": "qwen3",
+        "no_repeat_ngram_size": 0,
+        "num_attention_heads": 16,
+        "num_beam_groups": 1,
+        "num_beams": 1,
+        "num_hidden_layers": 28,
+        "num_key_value_heads": 8,
+        "num_return_sequences": 1,
+        "output_attentions": false,
+        "output_hidden_states": false,
+        "output_scores": false,
+        "pad_token_id": null,
+        "prefix": null,
+        "problem_type": null,
+        "pruned_heads": {},
+        "remove_invalid_values": false,
+        "repetition_penalty": 1.0,
+        "return_dict": true,
+        "return_dict_in_generate": false,
+        "rms_norm_eps": 1e-06,
+        "rope_scaling": {
+          "interleaved": true,
+          "mrope_interleaved": true,
+          "mrope_section": [
+            24,
+            20,
+            20
+          ],
+          "rope_type": "default",
+          "type": "default"
+        },
+        "rope_theta": 1000000,
+        "sep_token_id": null,
+        "suppress_tokens": null,
+        "task_specific_params": null,
+        "temperature": 1.0,
+        "tf_legacy_loss": false,
+        "tie_encoder_decoder": false,
+        "tie_word_embeddings": false,
+        "tokenizer_class": null,
+        "top_k": 50,
+        "top_p": 1.0,
+        "torchscript": false,
+        "typical_p": 1.0,
+        "use_bfloat16": false,
+        "use_cache": true,
+        "vocab_size": 152064
+      }
+    },
+    "timestamp_segment_time": 80,
+    "timestamp_token_id": 151705,
+    "transformers_version": "4.57.6"
+  },
+  "output": {
+    "units": [
+      {
+        "text": "HE",
+        "start": 0.48,
+        "end": 0.72
+      },
+      {
+        "text": "HAS",
+        "start": 0.72,
+        "end": 0.72
+      },
+      {
+        "text": "GRAVE",
+        "start": 1.28,
+        "end": 1.28
+      },
+      {
+        "text": "DOUBTS",
+        "start": 1.76,
+        "end": 1.76
+      },
+      {
+        "text": "WHETHER",
+        "start": 1.76,
+        "end": 1.76
+      },
+      {
+        "text": "SIR",
+        "start": 2.16,
+        "end": 2.16
+      },
+      {
+        "text": "FREDERICK",
+        "start": 2.56,
+        "end": 2.8
+      },
+      {
+        "text": "LEIGHTON'S",
+        "start": 3.28,
+        "end": 3.28
+      },
+      {
+        "text": "WORK",
+        "start": 3.28,
+        "end": 3.6
+      },
+      {
+        "text": "IS",
+        "start": 3.6,
+        "end": 3.84
+      },
+      {
+        "text": "REALLY",
+        "start": 3.84,
+        "end": 4.24
+      },
+      {
+        "text": "GREEK",
+        "start": 4.4,
+        "end": 4.8
+      },
+      {
+        "text": "AFTER",
+        "start": 4.8,
+        "end": 5.12
+      },
+      {
+        "text": "ALL",
+        "start": 5.12,
+        "end": 5.6
+      },
+      {
+        "text": "AND",
+        "start": 6.08,
+        "end": 6.32
+      },
+      {
+        "text": "CAN",
+        "start": 6.32,
+        "end": 6.48
+      },
+      {
+        "text": "DISCOVER",
+        "start": 6.48,
+        "end": 6.88
+      },
+      {
+        "text": "IN",
+        "start": 6.88,
+        "end": 7.12
+      },
+      {
+        "text": "IT",
+        "start": 7.12,
+        "end": 7.36
+      },
+      {
+        "text": "BUT",
+        "start": 7.36,
+        "end": 7.52
+      },
+      {
+        "text": "LITTLE",
+        "start": 7.52,
+        "end": 7.92
+      },
+      {
+        "text": "OF",
+        "start": 7.92,
+        "end": 8.16
+      },
+      {
+        "text": "ROCKY",
+        "start": 8.32,
+        "end": 8.8
+      },
+      {
+        "text": "ITHACA",
+        "start": 8.88,
+        "end": 9.52
+      }
+    ],
+    "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA",
+    "language": "English",
+    "duration": 10.0,
+    "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+    "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+    "timestamp_tick_seconds": 0.08,
+    "sample_rate": 16000,
+    "task": "align",
+    "provenance": {
+      "model_type": "qwen3_forced_aligner",
+      "checkpoint_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+      "checkpoint_revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+      "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+      "audio_attention": "pinned-sdpa-global",
+      "decoding": "greedy",
+      "weight_dtype": "mlx.core.bfloat16",
+      "status": "WIP",
+      "boundary_tolerance_seconds": 0.08,
+      "limitation": "historical timestamp reference disagreement unresolved"
+    },
+    "unmatched_words": [],
+    "offset_seconds": 0.0
+  },
+  "quality_status": "PASS_TEN_TIMIT_HUMAN_BOUNDARY_CLIPS",
+  "gold_boundary_evaluation": {
+    "dataset": {
+      "dataset": "kylelovesllms/timit_asr_ipa",
+      "revision": "d696c0d9c28ab0ff17f3d1ce817688ffe95464a1",
+      "file": "data/test-00000-of-00001.parquet",
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/data/test-00000-of-00001.parquet"
+    },
+    "manifest_sha256": "058a2809cd59389900b7b93645f071500370228a67f32c7006950772538c39e0",
+    "gates": {
+      "endpoint_mean_absolute_error_max_seconds": 0.08,
+      "endpoint_p95_error_max_seconds": 0.2,
+      "word_coverage_min": 1.0
+    },
+    "recordings": 10,
+    "mean_absolute_error_seconds": 0.029472058823529414,
+    "p95_absolute_error_seconds": 0.06818750000000001,
+    "word_coverage": 1.0,
+    "outputs": [
+      {
+        "id": "SI2000",
+        "units": [
+          {
+            "text": "we",
+            "start": 0.16,
+            "end": 0.24
+          },
+          {
+            "text": "can",
+            "start": 0.24,
+            "end": 0.4
+          },
+          {
+            "text": "get",
+            "start": 0.48,
+            "end": 0.64
+          },
+          {
+            "text": "it",
+            "start": 0.64,
+            "end": 0.8
+          },
+          {
+            "text": "if",
+            "start": 0.8,
+            "end": 1.04
+          },
+          {
+            "text": "we",
+            "start": 1.04,
+            "end": 1.12
+          },
+          {
+            "text": "dig",
+            "start": 1.12,
+            "end": 1.6
+          },
+          {
+            "text": "he",
+            "start": 1.76,
+            "end": 1.92
+          },
+          {
+            "text": "said",
+            "start": 1.92,
+            "end": 2.16
+          },
+          {
+            "text": "patiently",
+            "start": 2.16,
+            "end": 2.72
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.0,
+          0.007500000000000007,
+          0.007500000000000007,
+          0.004312499999999997,
+          0.07568749999999996,
+          0.007499999999999951,
+          0.007499999999999951,
+          0.045937499999999964,
+          0.045937499999999964,
+          0.030437499999999895,
+          0.030437499999999895,
+          0.012499999999999956,
+          0.012499999999999956,
+          0.03249999999999997,
+          0.02849999999999997,
+          0.004375000000000018,
+          0.004375000000000018,
+          0.025374999999999925,
+          0.025374999999999925,
+          0.007249999999999979
+        ]
+      },
+      {
+        "id": "SX110",
+        "units": [
+          {
+            "text": "the",
+            "start": 0.16,
+            "end": 0.16
+          },
+          {
+            "text": "best",
+            "start": 0.16,
+            "end": 0.56
+          },
+          {
+            "text": "way",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "to",
+            "start": 0.64,
+            "end": 0.8
+          },
+          {
+            "text": "learn",
+            "start": 0.8,
+            "end": 1.36
+          },
+          {
+            "text": "is",
+            "start": 1.36,
+            "end": 1.6
+          },
+          {
+            "text": "to",
+            "start": 1.6,
+            "end": 1.68
+          },
+          {
+            "text": "solve",
+            "start": 1.68,
+            "end": 2.16
+          },
+          {
+            "text": "extra",
+            "start": 2.16,
+            "end": 2.48
+          },
+          {
+            "text": "problems",
+            "start": 2.48,
+            "end": 3.2
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.011187500000000017,
+          0.04749999999999999,
+          0.04749999999999999,
+          0.011500000000000066,
+          0.011500000000000066,
+          0.05249999999999999,
+          0.05249999999999999,
+          0.03337499999999993,
+          0.03337499999999993,
+          0.059562500000000185,
+          0.036812499999999915,
+          0.0025000000000001688,
+          0.0025000000000001688,
+          0.03687499999999999,
+          0.03687499999999999,
+          0.027500000000000302,
+          0.027500000000000302,
+          0.012500000000000178,
+          0.012500000000000178,
+          0.005624999999999769
+        ]
+      },
+      {
+        "id": "SA2",
+        "units": [
+          {
+            "text": "don't",
+            "start": 0.56,
+            "end": 0.72
+          },
+          {
+            "text": "ask",
+            "start": 0.72,
+            "end": 0.96
+          },
+          {
+            "text": "me",
+            "start": 0.96,
+            "end": 1.04
+          },
+          {
+            "text": "to",
+            "start": 1.04,
+            "end": 1.12
+          },
+          {
+            "text": "carry",
+            "start": 1.12,
+            "end": 1.36
+          },
+          {
+            "text": "an",
+            "start": 1.36,
+            "end": 1.52
+          },
+          {
+            "text": "oily",
+            "start": 1.52,
+            "end": 1.84
+          },
+          {
+            "text": "rag",
+            "start": 1.84,
+            "end": 2.24
+          },
+          {
+            "text": "like",
+            "start": 2.24,
+            "end": 2.32
+          },
+          {
+            "text": "that",
+            "start": 2.4,
+            "end": 2.8
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.03374999999999995,
+          0.022500000000000075,
+          0.022500000000000075,
+          0.02499999999999991,
+          0.012500000000000067,
+          0.007500000000000062,
+          0.007500000000000062,
+          0.005312499999999831,
+          0.005312499999999831,
+          0.03424999999999989,
+          0.03424999999999989,
+          0.04225000000000012,
+          0.04225000000000012,
+          0.0033124999999998295,
+          0.0033124999999998295,
+          0.026875000000000426,
+          0.026875000000000426,
+          0.023125000000000284,
+          0.05687499999999979,
+          0.019374999999999698
+        ]
+      },
+      {
+        "id": "SI740",
+        "units": [
+          {
+            "text": "do",
+            "start": 0.08,
+            "end": 0.24
+          },
+          {
+            "text": "without",
+            "start": 0.24,
+            "end": 0.72
+          },
+          {
+            "text": "fancy",
+            "start": 0.72,
+            "end": 1.12
+          },
+          {
+            "text": "tablecloths",
+            "start": 1.12,
+            "end": 2.08
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.05575000000000001,
+          0.02250000000000002,
+          0.02250000000000002,
+          0.025125000000000064,
+          0.025125000000000064,
+          0.03249999999999997,
+          0.03249999999999997,
+          0.03562500000000002
+        ]
+      },
+      {
+        "id": "SA1",
+        "units": [
+          {
+            "text": "she",
+            "start": 0.08,
+            "end": 0.32
+          },
+          {
+            "text": "had",
+            "start": 0.32,
+            "end": 0.56
+          },
+          {
+            "text": "your",
+            "start": 0.56,
+            "end": 0.64
+          },
+          {
+            "text": "dark",
+            "start": 0.64,
+            "end": 0.96
+          },
+          {
+            "text": "suit",
+            "start": 0.96,
+            "end": 1.28
+          },
+          {
+            "text": "in",
+            "start": 1.28,
+            "end": 1.44
+          },
+          {
+            "text": "greasy",
+            "start": 1.44,
+            "end": 1.76
+          },
+          {
+            "text": "wash",
+            "start": 1.76,
+            "end": 2.16
+          },
+          {
+            "text": "water",
+            "start": 2.24,
+            "end": 2.56
+          },
+          {
+            "text": "all",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "year",
+            "start": 2.8,
+            "end": 3.12
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.052500000000000005,
+          0.012500000000000011,
+          0.012500000000000011,
+          0.03749999999999998,
+          0.014375000000000027,
+          0.012499999999999956,
+          0.012499999999999956,
+          0.006000000000000005,
+          0.006000000000000005,
+          0.054187500000000055,
+          0.054187500000000055,
+          0.02487499999999998,
+          0.02487499999999998,
+          0.08068750000000002,
+          0.08068750000000002,
+          0.008750000000000036,
+          0.020000000000000018,
+          0.07250000000000023,
+          0.05018749999999983,
+          0.006000000000000227,
+          0.006000000000000227,
+          0.07250000000000023
+        ]
+      },
+      {
+        "id": "SX200",
+        "units": [
+          {
+            "text": "ralph",
+            "start": 0.08,
+            "end": 0.4
+          },
+          {
+            "text": "controlled",
+            "start": 0.48,
+            "end": 0.96
+          },
+          {
+            "text": "the",
+            "start": 0.96,
+            "end": 0.96
+          },
+          {
+            "text": "stopwatch",
+            "start": 0.96,
+            "end": 1.6
+          },
+          {
+            "text": "from",
+            "start": 1.6,
+            "end": 1.76
+          },
+          {
+            "text": "the",
+            "start": 1.76,
+            "end": 1.84
+          },
+          {
+            "text": "bleachers",
+            "start": 1.84,
+            "end": 2.4
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.06000000000000001,
+          0.022499999999999964,
+          0.057499999999999996,
+          0.03412499999999996,
+          0.03412499999999996,
+          0.01868750000000008,
+          0.01868750000000008,
+          0.013562499999999922,
+          0.013562499999999922,
+          0.031062499999999993,
+          0.031062499999999993,
+          0.0024999999999999467,
+          0.0024999999999999467,
+          0.0024999999999999467
+        ]
+      },
+      {
+        "id": "SI1370",
+        "units": [
+          {
+            "text": "we",
+            "start": 0.08,
+            "end": 0.16
+          },
+          {
+            "text": "may",
+            "start": 0.16,
+            "end": 0.32
+          },
+          {
+            "text": "say",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "text": "that",
+            "start": 0.64,
+            "end": 0.88
+          },
+          {
+            "text": "his",
+            "start": 0.88,
+            "end": 1.04
+          },
+          {
+            "text": "problem",
+            "start": 1.04,
+            "end": 1.44
+          },
+          {
+            "text": "was",
+            "start": 1.44,
+            "end": 1.6
+          },
+          {
+            "text": "diagnosed",
+            "start": 1.6,
+            "end": 2.4
+          },
+          {
+            "text": "but",
+            "start": 2.56,
+            "end": 2.72
+          },
+          {
+            "text": "that",
+            "start": 2.72,
+            "end": 2.96
+          },
+          {
+            "text": "he",
+            "start": 2.96,
+            "end": 3.04
+          },
+          {
+            "text": "refused",
+            "start": 3.04,
+            "end": 3.6
+          },
+          {
+            "text": "treatment",
+            "start": 3.6,
+            "end": 4.0
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.05500000000000001,
+          0.04749999999999999,
+          0.04749999999999999,
+          0.06874999999999998,
+          0.06874999999999998,
+          0.03749999999999998,
+          0.03749999999999998,
+          0.057499999999999996,
+          0.057499999999999996,
+          0.022499999999999964,
+          0.022499999999999964,
+          0.009062499999999973,
+          0.009062499999999973,
+          0.006249999999999867,
+          0.006249999999999867,
+          0.047499999999999876,
+          0.01949999999999985,
+          0.028999999999999915,
+          0.028999999999999915,
+          0.040000000000000036,
+          0.040000000000000036,
+          0.027499999999999858,
+          0.027499999999999858,
+          0.03125,
+          0.03125,
+          0.041375000000000384
+        ]
+      },
+      {
+        "id": "SX380",
+        "units": [
+          {
+            "text": "why",
+            "start": 0.08,
+            "end": 0.24
+          },
+          {
+            "text": "charge",
+            "start": 0.24,
+            "end": 0.64
+          },
+          {
+            "text": "money",
+            "start": 0.64,
+            "end": 0.96
+          },
+          {
+            "text": "for",
+            "start": 0.96,
+            "end": 1.12
+          },
+          {
+            "text": "such",
+            "start": 1.12,
+            "end": 1.52
+          },
+          {
+            "text": "garbage",
+            "start": 1.52,
+            "end": 2.08
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.05500000000000001,
+          0.04749999999999999,
+          0.04749999999999999,
+          0.04906250000000001,
+          0.04906250000000001,
+          0.03750000000000009,
+          0.03750000000000009,
+          0.03937499999999994,
+          0.03937499999999994,
+          0.012499999999999956,
+          0.012499999999999956,
+          0.0006249999999998757
+        ]
+      },
+      {
+        "id": "SX290",
+        "units": [
+          {
+            "text": "this",
+            "start": 0.16,
+            "end": 0.32
+          },
+          {
+            "text": "brochure",
+            "start": 0.32,
+            "end": 0.8
+          },
+          {
+            "text": "is",
+            "start": 0.8,
+            "end": 1.04
+          },
+          {
+            "text": "particularly",
+            "start": 1.12,
+            "end": 1.44
+          },
+          {
+            "text": "informative",
+            "start": 1.44,
+            "end": 1.92
+          },
+          {
+            "text": "for",
+            "start": 1.92,
+            "end": 2.16
+          },
+          {
+            "text": "prospective",
+            "start": 2.16,
+            "end": 2.72
+          },
+          {
+            "text": "buyer",
+            "start": 2.8,
+            "end": 3.12
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.011874999999999997,
+          0.010624999999999996,
+          0.010624999999999996,
+          0.017687499999999967,
+          0.017687499999999967,
+          0.012499999999999956,
+          0.06750000000000012,
+          0.04037500000000005,
+          0.01706249999999998,
+          0.16875000000000018,
+          0.16875000000000018,
+          0.0024999999999999467,
+          0.0024999999999999467,
+          0.05131249999999987,
+          0.028687499999999755,
+          0.03631249999999975
+        ]
+      },
+      {
+        "id": "SX20",
+        "units": [
+          {
+            "text": "she",
+            "start": 0.08,
+            "end": 0.32
+          },
+          {
+            "text": "wore",
+            "start": 0.32,
+            "end": 0.64
+          },
+          {
+            "text": "warm",
+            "start": 0.64,
+            "end": 1.04
+          },
+          {
+            "text": "fleecy",
+            "start": 1.04,
+            "end": 1.6
+          },
+          {
+            "text": "woolen",
+            "start": 1.6,
+            "end": 1.92
+          },
+          {
+            "text": "overalls",
+            "start": 1.92,
+            "end": 2.72
+          }
+        ],
+        "words_match": true,
+        "endpoint_errors_seconds": [
+          0.059375,
+          0.04812499999999997,
+          0.04812499999999997,
+          0.01749999999999996,
+          0.01749999999999996,
+          0.0008749999999999591,
+          0.0008749999999999591,
+          0.015187500000000131,
+          0.015187500000000131,
+          0.0068749999999999645,
+          0.0068749999999999645,
+          0.016875000000000195
+        ]
+      }
+    ]
+  },
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/resolution-alignment/alignment-cli.json\n",
+      "alignment": {
+        "duration": 10.0,
+        "language": "English",
+        "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+        "offset_seconds": 0.0,
+        "provenance": {
+          "audio_attention": "pinned-sdpa-global",
+          "boundary_tolerance_seconds": 0.08,
+          "checkpoint_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+          "checkpoint_revision": null,
+          "decoding": "greedy",
+          "limitation": "historical timestamp reference disagreement unresolved",
+          "model_type": "qwen3_forced_aligner",
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "status": "WIP",
+          "weight_dtype": "mlx.core.bfloat16"
+        },
+        "revision": null,
+        "sample_rate": 16000,
+        "task": "align",
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+        "timestamp_tick_seconds": 0.08,
+        "units": [
+          {
+            "end": 0.72,
+            "start": 0.48,
+            "text": "HE"
+          },
+          {
+            "end": 0.72,
+            "start": 0.72,
+            "text": "HAS"
+          },
+          {
+            "end": 1.28,
+            "start": 1.28,
+            "text": "GRAVE"
+          },
+          {
+            "end": 1.76,
+            "start": 1.76,
+            "text": "DOUBTS"
+          },
+          {
+            "end": 1.76,
+            "start": 1.76,
+            "text": "WHETHER"
+          },
+          {
+            "end": 2.16,
+            "start": 2.16,
+            "text": "SIR"
+          },
+          {
+            "end": 2.8,
+            "start": 2.56,
+            "text": "FREDERICK"
+          },
+          {
+            "end": 3.28,
+            "start": 3.28,
+            "text": "LEIGHTON'S"
+          },
+          {
+            "end": 3.6,
+            "start": 3.28,
+            "text": "WORK"
+          },
+          {
+            "end": 3.84,
+            "start": 3.6,
+            "text": "IS"
+          },
+          {
+            "end": 4.24,
+            "start": 3.84,
+            "text": "REALLY"
+          },
+          {
+            "end": 4.8,
+            "start": 4.4,
+            "text": "GREEK"
+          },
+          {
+            "end": 5.12,
+            "start": 4.8,
+            "text": "AFTER"
+          },
+          {
+            "end": 5.6,
+            "start": 5.12,
+            "text": "ALL"
+          },
+          {
+            "end": 6.32,
+            "start": 6.08,
+            "text": "AND"
+          },
+          {
+            "end": 6.48,
+            "start": 6.32,
+            "text": "CAN"
+          },
+          {
+            "end": 6.88,
+            "start": 6.48,
+            "text": "DISCOVER"
+          },
+          {
+            "end": 7.12,
+            "start": 6.88,
+            "text": "IN"
+          },
+          {
+            "end": 7.36,
+            "start": 7.12,
+            "text": "IT"
+          },
+          {
+            "end": 7.52,
+            "start": 7.36,
+            "text": "BUT"
+          },
+          {
+            "end": 7.92,
+            "start": 7.52,
+            "text": "LITTLE"
+          },
+          {
+            "end": 8.16,
+            "start": 7.92,
+            "text": "OF"
+          },
+          {
+            "end": 8.8,
+            "start": 8.32,
+            "text": "ROCKY"
+          },
+          {
+            "end": 9.52,
+            "start": 8.88,
+            "text": "ITHACA"
+          }
+        ],
+        "unmatched_words": []
+      },
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "units": [
+          {
+            "text": "HE",
+            "start": 0.48,
+            "end": 0.72
+          },
+          {
+            "text": "HAS",
+            "start": 0.72,
+            "end": 0.72
+          },
+          {
+            "text": "GRAVE",
+            "start": 1.28,
+            "end": 1.28
+          },
+          {
+            "text": "DOUBTS",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "WHETHER",
+            "start": 1.76,
+            "end": 1.76
+          },
+          {
+            "text": "SIR",
+            "start": 2.16,
+            "end": 2.16
+          },
+          {
+            "text": "FREDERICK",
+            "start": 2.56,
+            "end": 2.8
+          },
+          {
+            "text": "LEIGHTON'S",
+            "start": 3.28,
+            "end": 3.28
+          },
+          {
+            "text": "WORK",
+            "start": 3.28,
+            "end": 3.6
+          },
+          {
+            "text": "IS",
+            "start": 3.6,
+            "end": 3.84
+          },
+          {
+            "text": "REALLY",
+            "start": 3.84,
+            "end": 4.24
+          },
+          {
+            "text": "GREEK",
+            "start": 4.4,
+            "end": 4.8
+          },
+          {
+            "text": "AFTER",
+            "start": 4.8,
+            "end": 5.12
+          },
+          {
+            "text": "ALL",
+            "start": 5.12,
+            "end": 5.6
+          },
+          {
+            "text": "AND",
+            "start": 6.08,
+            "end": 6.32
+          },
+          {
+            "text": "CAN",
+            "start": 6.32,
+            "end": 6.48
+          },
+          {
+            "text": "DISCOVER",
+            "start": 6.48,
+            "end": 6.88
+          },
+          {
+            "text": "IN",
+            "start": 6.88,
+            "end": 7.12
+          },
+          {
+            "text": "IT",
+            "start": 7.12,
+            "end": 7.36
+          },
+          {
+            "text": "BUT",
+            "start": 7.36,
+            "end": 7.52
+          },
+          {
+            "text": "LITTLE",
+            "start": 7.52,
+            "end": 7.92
+          },
+          {
+            "text": "OF",
+            "start": 7.92,
+            "end": 8.16
+          },
+          {
+            "text": "ROCKY",
+            "start": 8.32,
+            "end": 8.8
+          },
+          {
+            "text": "ITHACA",
+            "start": 8.88,
+            "end": 9.52
+          }
+        ],
+        "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA",
+        "language": "English",
+        "duration": 10.0,
+        "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+        "revision": null,
+        "timestamp_tick_seconds": 0.08,
+        "sample_rate": 16000,
+        "task": "align",
+        "provenance": {
+          "model_type": "qwen3_forced_aligner",
+          "checkpoint_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+          "checkpoint_revision": null,
+          "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+          "audio_attention": "pinned-sdpa-global",
+          "decoding": "greedy",
+          "weight_dtype": "mlx.core.bfloat16",
+          "status": "WIP",
+          "boundary_tolerance_seconds": 0.08,
+          "limitation": "historical timestamp reference disagreement unresolved"
+        },
+        "unmatched_words": [],
+        "offset_seconds": 0.0
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 2931224932,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 3.4424641132354736,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "a8f1d26ce52374abb2b22b057305bfd5299691262cede9d22ee90f425b64cb00"
+}

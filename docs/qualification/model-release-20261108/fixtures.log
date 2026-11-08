@@ -1,0 +1,6 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/private/tmp/mlx-one-all40-20261108/fixtures/audio/manifest.json
+OCR_FILES ['.gitattributes', 'README.md', 'SROIE-receipt.jpeg', 'iam_picture.jpeg']
+SIMILARITY_SAMPLE [{'row_id': 0, 'sentence1': 'A girl is styling her hair.', 'sentence2': 'A girl is brushing her hair.', 'score': 0.5}, {'row_id': 1, 'sentence1': 'A group of men play soccer on the beach.', 'sentence2': 'A group of boys are playing soccer on the beach.', 'score': 0.72}]
+NER_SAMPLE [{'row_id': 0, 'tags': [0, 0, 5, 0, 0, 0, 0, 3, 0, 0, 0, 0], 'tokens': ['SOCCER', '-', 'JAPAN', 'GET', 'LUCKY', 'WIN', ',', 'CHINA', 'IN', 'SURPRISE', 'DEFEAT', '.']}]
+PREPARED /private/tmp/mlx-one-all40-20261108/fixtures

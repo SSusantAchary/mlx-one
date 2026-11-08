@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "gemma3_text"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/gemma3_text",
+  "bytes_removed": 4038881162,
+  "downloaded_bytes_verified": 2039067925,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139303.842062,
+  "recorded": 1794139536.045465,
+  "cleanup_complete": true,
+  "finished": 1794139536.0837498
+}

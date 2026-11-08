@@ -1,0 +1,12 @@
+{
+  "status": "OPTIONAL_REPEAT_STOPPED",
+  "recorded": 1794158375.691854,
+  "reason": "User requested MLX-LM-aligned model admission; repeated video reference/corpus checks are not universal release requirements. Preserve prior native evidence and use this owned checkpoint for the remaining real CLI smoke.",
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/sam3_video",
+  "stopped_pids": [
+    56261,
+    56424,
+    57063
+  ],
+  "weights_retained_for_essential_smoke": true
+}

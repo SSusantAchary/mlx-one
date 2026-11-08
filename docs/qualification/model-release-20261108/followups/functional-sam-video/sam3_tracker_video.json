@@ -1,0 +1,157 @@
+{
+  "model_type": "sam3_tracker_video",
+  "checkpoint": "facebook/sam3",
+  "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+  "release_standard": "mlx-lm-aligned-functional-v1",
+  "release_qualified": false,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "reference_packages_absent": true,
+  "installed_record_sha256": "54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c",
+  "worker_sha256": "8310cc514f1d820f7a8eb303e95d6ced767e2dfc56807d7f3f698b9eee5beb5a",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "started": 1794159040.567261,
+  "quality_status": "REFERENCE_AND_ACCURACY_DIAGNOSTICS_RETAINED_SEPARATELY",
+  "fixtures": [
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-functional-cli/001.png",
+      "sha256": "d83a6cbc5a53a185e5904d2acc324f1030cb7d7aa1cfb017a75f0243ce1efc84"
+    },
+    {
+      "path": "/private/tmp/mlx-one-all40-20261108/fixtures/sam-functional-cli/002.png",
+      "sha256": "558108347598e7d7ae9487e593cfd6885ced303e11a8c60d9b17611bf57c4cff"
+    }
+  ],
+  "interfaces": {
+    "python": "PASS",
+    "streaming": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "/private/tmp/mlx-one-all40-20261108/models/sam3_video/functional-cli-sam3_tracker_video/manifest.json\n",
+      "status": "PASS",
+      "frames": 2,
+      "manifest": {
+        "status": "complete",
+        "results": [
+          {
+            "masks": [
+              "frame-000000000-mask-00000.png",
+              "frame-000000000-mask-00001.png"
+            ],
+            "boxes": [
+              [
+                312.0,
+                0.0,
+                515.0,
+                394.0
+              ],
+              [
+                144.0,
+                135.0,
+                292.0,
+                404.0
+              ]
+            ],
+            "original_size": [
+              540,
+              960
+            ],
+            "provenance": {
+              "model_id": "/private/tmp/mlx-one-all40-20261108/models/sam3_video/checkpoint",
+              "revision": null,
+              "architecture": "sam3_tracker_video",
+              "dtype": "float32",
+              "reference": "transformers@6133195dcb",
+              "qualified": false
+            },
+            "scores": [
+              1.0,
+              1.0
+            ],
+            "frame_index": 0,
+            "object_ids": [
+              1,
+              2
+            ],
+            "prompt_ids": []
+          },
+          {
+            "masks": [
+              "frame-000000001-mask-00000.png",
+              "frame-000000001-mask-00001.png"
+            ],
+            "boxes": [
+              [
+                311.0,
+                12.0,
+                507.0,
+                424.0
+              ],
+              [
+                151.0,
+                123.0,
+                293.0,
+                401.0
+              ]
+            ],
+            "original_size": [
+              540,
+              960
+            ],
+            "provenance": {
+              "model_id": "/private/tmp/mlx-one-all40-20261108/models/sam3_video/checkpoint",
+              "revision": null,
+              "architecture": "sam3_tracker_video",
+              "dtype": "float32",
+              "reference": "transformers@6133195dcb",
+              "qualified": false
+            },
+            "scores": [
+              0.9999963045120239,
+              0.9999926090240479
+            ],
+            "frame_index": 1,
+            "object_ids": [
+              1,
+              2
+            ],
+            "prompt_ids": []
+          }
+        ]
+      }
+    },
+    "http": "NOT_ADVERTISED_FOR_SEGMENTATION"
+  },
+  "status": "PASS_FUNCTIONAL",
+  "functional_status": "PASS",
+  "modes": [
+    {
+      "streaming": false,
+      "frames": 2,
+      "output": "sam3_tracker_video-offline-outputs.npz",
+      "output_sha256": "cd649c6bf9f2c78caae1e8c3c39bf6e0f525e9f1913ab94e5f511931a0d1edb5",
+      "object_ids": [
+        1,
+        2
+      ]
+    },
+    {
+      "streaming": true,
+      "frames": 2,
+      "output": "sam3_tracker_video-stream-outputs.npz",
+      "output_sha256": "7c49dcd89bb1cd82a42d2df42fb2afcce975d9f050e3dd361308009a481e225c",
+      "object_ids": [
+        1,
+        2
+      ]
+    }
+  ],
+  "peak_mlx_bytes": 8331193448,
+  "seconds": 20.457808017730713
+}

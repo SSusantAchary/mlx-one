@@ -1,0 +1,79 @@
+{
+  "checkpoint": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+  "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 762,
+      "sha256": "20e3212074894a87f2e7ba17fd0190d1fffc9869971b901ec33253ee827a59e6",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 605,
+      "sha256": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "chat_template.json",
+      "bytes": 1050,
+      "sha256": "ad60d90252ed0b0705ba14e2d0ad0fec0beac1ea955642b54059b36052d8bc96",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 1659,
+      "sha256": "7ed631bd2786d251cb38bd2a6a8a78c31bc1316f728bffa84b2d8954d3cfcd63",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 1671853,
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 3073720461,
+      "sha256": "636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4",
+      "hub_lfs_sha256": "636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 108307,
+      "sha256": "3dacd0399838beaa368c4a4278477096c861defca3cfdcdd6f947b62d349af32",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 350,
+      "sha256": "f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 613,
+      "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11421896,
+      "sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "hub_lfs_sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 7256,
+      "sha256": "2f58f4bbd7bbce15d683f525954ef3a92cd82f5e06415a9c513859bf8ab72436",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "hub_lfs_sha256": null
+    }
+  ]
+}

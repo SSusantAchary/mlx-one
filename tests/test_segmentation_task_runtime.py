@@ -8,7 +8,11 @@ from test_dense_batching import native as native
 
 from mlx_one.engine.adapter_registry import get_runtime_registration
 from mlx_one.engine.service import InferenceService
-from mlx_one.engine.task_runners.segmentation import SAM3ConceptAdapter, SAM3VideoAdapter
+from mlx_one.engine.task_runners.segmentation import (
+    SAM3ConceptAdapter,
+    SAM3TemporalAdapter,
+    SAM3VideoAdapter,
+)
 
 
 def bundle(dtype=np.float32):
@@ -49,7 +53,8 @@ def test_native_task_service_routes_without_generation_or_kv(native,monkeypatch)
         service.close()
 
 
-def test_nested_video_tracker_has_no_independent_task_authority():
+def test_standalone_video_tracker_has_its_own_task_adapter():
     binding=get_runtime_registration('sam3_tracker_video')
-    assert binding.component_only and not binding.adapter_path
+    assert not binding.component_only and binding.adapter_path
+    assert binding.adapter() is SAM3TemporalAdapter
     assert get_runtime_registration('sam3_video').adapter() is SAM3VideoAdapter

@@ -22,7 +22,7 @@ def test_sam3_registry_is_lazy():
     for name in ("sam3", "sam3_tracker", "sam3_tracker_video", "sam3_video"):
         entry = get_registration(name)
         assert entry.modality == "segmentation"
-        assert bool(entry.loader_path) == (name != "sam3_tracker_video")
+        assert entry.loader_path
         assert not entry.supports("text-generation")
 
 
@@ -89,6 +89,8 @@ def test_native_tensor_dialect():
     )
     assert np.asarray(value.flatten(2)).tolist() == [[[0, 1, 2, 3, 4, 5]]]
     assert ops.ones(2, 3).sum(1).tolist() == [3, 3]
+    assert ops.argmax(value, dim=2, keepdim=True).shape == (1, 1, 1, 3)
+    assert value.argmin(3, keepdim=True).tolist() == [[[[0], [0]]]]
     assert value[value > 2].tolist() == [3, 4, 5]
     assert Conv2d(1, 2, 1)(value).shape == (1, 2, 2, 3)
     assert ConvTranspose2d(1, 2, 2, stride=2)(value).shape == (1, 2, 4, 6)

@@ -1,0 +1,21 @@
+{
+  "timestamp": 1794143398.613256,
+  "status": "PASS",
+  "selected_results": 40,
+  "all_selected_worker_snapshots_archived": true,
+  "all_selected_cleanup_complete": true,
+  "installed_identities_matched": 9,
+  "final_packaged_source_files_verified": 499,
+  "historical_worker_snapshot_gaps": [
+    "distilbert.json",
+    "gpt2.json",
+    "qwen3.json",
+    "qwen2.json",
+    "lfm2.json"
+  ],
+  "historical_gap_scope": "Five early pilot reports retain worker digests and wheel identities, but their worker source bytes were not archived. All five were explicitly replayed; every selected final result has a saved worker snapshot.",
+  "workspace": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification",
+  "branch": "release/model-qualification-40-20261108",
+  "changes_committed": false,
+  "changes_pushed": false
+}

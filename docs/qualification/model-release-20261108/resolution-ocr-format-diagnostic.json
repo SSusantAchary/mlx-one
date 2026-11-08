@@ -1,0 +1,29 @@
+{
+  "scope": "Offline diagnostic of saved outputs; generic visible-text rendering applied identically to reference and hypothesis; original scores retained; not a new model run",
+  "rows": [
+    {
+      "model_type": "got_ocr2",
+      "source_result": "got_ocr2.json",
+      "original_cer": 0.9153543307086615,
+      "rendered_content_cer": 0.9134020618556701
+    },
+    {
+      "model_type": "florence2",
+      "source_result": "followups/florence-budget/florence2.json",
+      "original_cer": 0.3779527559055118,
+      "rendered_content_cer": 0.34845360824742266
+    },
+    {
+      "model_type": "lightonocr",
+      "source_result": "lightonocr.json",
+      "original_cer": 0.7372047244094488,
+      "rendered_content_cer": 0.1618556701030928
+    },
+    {
+      "model_type": "deepseek_ocr",
+      "source_result": "deepseek_ocr.json",
+      "original_cer": 0.33858267716535434,
+      "rendered_content_cer": 0.22371134020618558
+    }
+  ]
+}

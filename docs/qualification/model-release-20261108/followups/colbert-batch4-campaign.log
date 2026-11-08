@@ -1,0 +1,38 @@
+START lfm2_colbert LiquidAI/LFM2-ColBERT-350M
+FETCH lfm2_colbertFETCH  1_Dense/config.jsonFETCH  lfm2_colbertlfm2_colbert116  
+1_Dense/model.safetensorsLICENSE 10574 524376
+
+FETCH lfm2_colbert README.md 63051
+FETCH lfm2_colbert chat_template.jinja 1296
+FETCH lfm2_colbert config.json 1215
+FETCH lfm2_colbert config_sentence_transformers.json 693
+FETCH lfm2_colbert model.safetensors 1413306600
+FETCH lfm2_colbert modules.json 216
+FETCH lfm2_colbert sentence_bert_config.json 53
+FETCH lfm2_colbert special_tokens_map.json 323
+FETCH lfm2_colbert tokenizer.json 4733022
+FETCH lfm2_colbert tokenizer_config.json 91910
+RANGE model.safetensors 4 / 22
+RANGE model.safetensors 3 / 22
+RANGE model.safetensors 1 / 22
+RANGE model.safetensors 2 / 22
+RANGE model.safetensors 5 / 22
+RANGE model.safetensors 6 / 22
+RANGE model.safetensors 8 / 22
+RANGE model.safetensors 7 / 22
+RANGE model.safetensors 9 / 22
+RANGE model.safetensors 10 / 22
+RANGE model.safetensors 11 / 22
+RANGE model.safetensors 12 / 22
+RANGE model.safetensors 13 / 22
+RANGE model.safetensors 15 / 22
+RANGE model.safetensors 14 / 22
+RANGE model.safetensors 16 / 22
+RANGE model.safetensors 17 / 22
+RANGE model.safetensors 18 / 22
+RANGE model.safetensors 22 / 22
+RANGE model.safetensors 19 / 22
+RANGE model.safetensors 21 / 22
+RANGE model.safetensors 20 / 22
+RESULT lfm2_colbert FAIL 
+CLEANED lfm2_colbert 2832100843

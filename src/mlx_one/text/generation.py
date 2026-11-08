@@ -9,6 +9,7 @@ from collections.abc import Callable, Iterator, Mapping, Sequence
 from pathlib import Path
 
 from mlx_one.text.loading import LoadedTextModel, load_text_model
+from mlx_one.text.prompts import completion_token_ids
 from mlx_one.text.sampling import select_token
 from mlx_one.text.schemas import GenerationChunk, GenerationResult, TextGenerationOptions
 
@@ -86,7 +87,7 @@ def stream_generate(
 
     if not isinstance(_cache_manager, CacheManager):
         raise TypeError("_cache_manager must be a CacheManager")
-    token_ids = tuple(int(value) for value in bundle.tokenizer.encode(prompt))
+    token_ids = tuple(int(value) for value in completion_token_ids(bundle, prompt))
     context_limit = bundle.context_length or _legacy_context_length(bundle)
     effective_prompt_tokens = len(token_ids) or 1
     if effective_prompt_tokens >= context_limit:
@@ -246,7 +247,7 @@ def _generate_one(
     if not isinstance(prompt, str) or not prompt:
         raise ValueError("prompt must be non-empty text")
     started = time.perf_counter()
-    prompt_ids = bundle.tokenizer.encode(prompt)
+    prompt_ids = completion_token_ids(bundle, prompt)
     chunks = tuple(_stream_bundle(bundle, prompt, options, None))
     terminal = chunks[-1]
     content = tuple(chunk for chunk in chunks if chunk.token_id is not None)
@@ -314,6 +315,7 @@ def _stream_bundle_impl(
     _cache_handle: object | None = None,
     _forced_token_ids: tuple[int, ...] = (),
     _prepared_input_ids: tuple[int, ...] | None = None,
+    _logits_processor: Callable | None = None,
     _draft_bundle: object | None = None,
     _math_policy: object | None = None,
     _math_observer: object | None = None,
@@ -334,6 +336,8 @@ def _stream_bundle_impl(
         on_execution = request_observer
 
     cancelled = is_cancelled or (lambda: False)
+    if _logits_processor is not None and spec_type != "none":
+        raise ValueError("request-local logits processing requires nonspeculative generation")
     if spec_type not in {"none","draft-mtp","draft-model"} or spec_draft_n_max<1:
         raise ValueError("unsupported speculation policy or draft budget")
     if spec_type=="draft-mtp":
@@ -349,7 +353,7 @@ def _stream_bundle_impl(
                 if _cache_handle is not None else None)
     prompt_ids = (list(_prepared_input_ids) if _prepared_input_ids is not None else
                   list(prepared.token_ids) if prepared is not None else
-                  bundle.tokenizer.encode(prompt))
+                  completion_token_ids(bundle, prompt))
     if on_execution is not None:
         on_execution({"kind": "tokenization", "duration_ms":
                       (time.perf_counter() - tokenization_started) * 1000})
@@ -550,6 +554,8 @@ def _stream_bundle_impl(
                 on_cache_update(tuple(prompt_ids), cache)
             prompt_cache_published = True
         logits = output.logits[0, -1]
+        if _logits_processor is not None:
+            logits = _logits_processor(tuple(tokens), logits)
         using_forced = bool(forced_tokens)
         if request_observer is not None and getattr(request_observer, "profile_math", False):
             from mlx_one.ops.profiling import phase as math_phase

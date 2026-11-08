@@ -34,13 +34,29 @@ from mlx_one.retrieval.service import (
     RERANK_PREFIX,
     RERANK_SUFFIX,
 )
-from mlx_one.retrieval.tokenizer import Qwen3Tokenizer
+from mlx_one.retrieval.tokenizer import Qwen3Tokenizer, _post_processor_tokens
 from mlx_one.text.tokenizer import bytes_to_unicode
 
 
 @dataclass(frozen=True)
 class Shaped:
     shape: tuple[int, ...]
+
+
+def test_embedding_sequence_postprocessor_preserves_eos_and_composition():
+    byte = dict(type="ByteLevel", add_prefix_space=False, trim_offsets=False, use_regex=False)
+    template = dict(
+        type="TemplateProcessing",
+        single=[
+            {"Sequence": {"id": "A", "type_id": 0}},
+            {"SpecialToken": {"id": "eos", "type_id": 0}},
+        ],
+    )
+    assert _post_processor_tokens(
+        dict(type="Sequence", processors=[byte, template]), {"eos": 3}
+    ) == ((), (3,))
+    with pytest.raises(ValueError, match="member"):
+        _post_processor_tokens(dict(type="Sequence", processors=[dict(type="BertProcessing")]), {})
 
 
 def _tiny_text_config(**updates: object) -> dict[str, object]:
@@ -119,9 +135,7 @@ def test_official_profiles_and_dimension_validation() -> None:
 
 def test_configs_reject_invalid_task_specific_settings() -> None:
     with pytest.raises(ConfigError, match="model_type"):
-        Qwen3EmbeddingConfig.from_dict(
-            {"model_type": "wrong", "text_config": _tiny_text_config()}
-        )
+        Qwen3EmbeddingConfig.from_dict({"model_type": "wrong", "text_config": _tiny_text_config()})
     with pytest.raises(ConfigError, match="tied"):
         Qwen3RerankerConfig.from_dict(
             {
@@ -130,12 +144,8 @@ def test_configs_reject_invalid_task_specific_settings() -> None:
             }
         )
     with pytest.raises(ConfigError, match="word_embedding_dimension"):
-        Qwen3EmbeddingConfig.from_dict(
-            {**_tiny_text_config(), "word_embedding_dimension": None}
-        )
-    tiny = Qwen3EmbeddingConfig.from_dict(
-        {**_tiny_text_config(), "word_embedding_dimension": 8}
-    )
+        Qwen3EmbeddingConfig.from_dict({**_tiny_text_config(), "word_embedding_dimension": None})
+    tiny = Qwen3EmbeddingConfig.from_dict({**_tiny_text_config(), "word_embedding_dimension": 8})
     assert (tiny.min_dimension, tiny.max_dimension) == (8, 8)
 
 
@@ -163,15 +173,17 @@ def test_registry_is_lazy_and_declares_retrieval_capabilities() -> None:
 
 
 def test_embedding_weight_contract_is_exact_and_cleans_tied_buffers() -> None:
-    config = Qwen3EmbeddingConfig.from_dict(
-        {**_tiny_text_config(), "word_embedding_dimension": 8}
-    )
+    config = Qwen3EmbeddingConfig.from_dict({**_tiny_text_config(), "word_embedding_dimension": 8})
     contract = embedding_weight_contract(config)
     tensors = {name: Shaped(shape) for name, shape in contract.expected.items()}
     tensors["lm_head.weight"] = Shaped((300, 8))
     tensors["model.rotary_emb.inv_freq"] = Shaped((2,))
     clean = sanitize_embedding_weights(tensors, config)
     contract.validate(clean)
+    bare = {name.removeprefix("model."): value for name, value in clean.items()}
+    contract.validate(sanitize_embedding_weights(bare, config))
+    with pytest.raises(ValueError, match="duplicate"):
+        sanitize_embedding_weights({**bare, "model.embed_tokens.weight": Shaped((300, 8))}, config)
     assert "lm_head.weight" not in clean
     assert "model.rotary_emb.inv_freq" not in clean
     with pytest.raises(WeightContractError, match="unexpected"):
@@ -222,14 +234,7 @@ def test_metadata_task_detection_and_checkpoint_security(tmp_path: Path) -> None
     module_reranker.mkdir()
     (module_reranker / "modules.json").write_text(
         json.dumps(
-            [
-                {
-                    "type": (
-                        "sentence_transformers.cross_encoder.modules."
-                        "logit_score.LogitScore"
-                    )
-                }
-            ]
+            [{"type": ("sentence_transformers.cross_encoder.modules.logit_score.LogitScore")}]
         ),
         encoding="utf-8",
     )
@@ -248,9 +253,7 @@ def test_metadata_task_detection_and_checkpoint_security(tmp_path: Path) -> None
     with pytest.raises(RetrievalModelLoadError, match="require an index"):
         _checkpoint_files(shards)
     (shards / "model.safetensors.index.json").write_text(
-        json.dumps(
-            {"weight_map": {"a": "one.safetensors", "b": "two.safetensors"}}
-        ),
+        json.dumps({"weight_map": {"a": "one.safetensors", "b": "two.safetensors"}}),
         encoding="utf-8",
     )
     files, weight_map = _checkpoint_files(shards)
@@ -293,22 +296,35 @@ def test_prompts_and_result_serialization_are_stable() -> None:
 def test_retrieval_cli_commands(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mlx_one.cli.embed_texts",
-        lambda *args, **kwargs: EmbeddingResult(
-            ("hello",), ((1.0, 0.0),), 2, "document", "fake"
-        ),
+        lambda *args, **kwargs: EmbeddingResult(("hello",), ((1.0, 0.0),), 2, "document", "fake"),
     )
     monkeypatch.setattr(
         "mlx_one.cli.rerank_documents",
-        lambda *args, **kwargs: RerankResult(
-            "query", (RerankItem(1, "second", 1.5, 0.8),), "fake"
-        ),
+        lambda *args, **kwargs: RerankResult("query", (RerankItem(1, "second", 1.5, 0.8),), "fake"),
     )
     runner = CliRunner()
     embedded = runner.invoke(main, ["embed", "fake", "hello", "--json-output"])
-    ranked = runner.invoke(
-        main, ["rerank", "fake", "query", "first", "second", "--json-output"]
-    )
+    ranked = runner.invoke(main, ["rerank", "fake", "query", "first", "second", "--json-output"])
     assert embedded.exit_code == 0
     assert json.loads(embedded.output)["dimensions"] == 2
     assert ranked.exit_code == 0
     assert json.loads(ranked.output)["items"][0]["index"] == 1
+
+
+def test_real_checkpoint_bytelevel_postprocessor_preserves_ids(tmp_path):
+    _write_tokenizer(tmp_path)
+    path = tmp_path / "tokenizer.json"
+    payload = json.loads(path.read_text())
+    payload["post_processor"] = {
+        "type": "ByteLevel",
+        "add_prefix_space": False,
+        "trim_offsets": False,
+        "use_regex": False,
+    }
+    path.write_text(json.dumps(payload))
+    tokenizer = Qwen3Tokenizer.from_directory(tmp_path)
+    assert tokenizer.encode("yes no", add_special_tokens=True) == tokenizer.encode("yes no")
+    payload["post_processor"]["trim_offsets"] = "false"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="ByteLevel"):
+        Qwen3Tokenizer.from_directory(tmp_path)

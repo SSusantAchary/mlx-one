@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "paddleocr_vl"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/paddleocr_vl",
+  "bytes_removed": 1418420770,
+  "downloaded_bytes_verified": 714855434,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139787.824824,
+  "recorded": 1794140167.890961,
+  "cleanup_complete": true,
+  "finished": 1794140167.913516
+}

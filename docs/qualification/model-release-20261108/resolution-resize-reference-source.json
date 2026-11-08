@@ -1,0 +1,18 @@
+{
+  "repo": "pytorch/pytorch",
+  "revision": "d0f2af8b66b20da4baa50644c0cd3f887a2eae2e",
+  "files": [
+    {
+      "file": "UpSampleKernel.cpp",
+      "sha256": "3130e86b56234a8da4c6347d973721d49845d1c7cdbdad2e27dd11f4f869d708"
+    },
+    {
+      "file": "UpSampleKernelAVXAntialias.h",
+      "sha256": "d33f728c3a538d6f000332e65ede23a25cf889c0fc63edc7a59ca049fa8856d1"
+    },
+    {
+      "file": "UpSampleKernelNEONAntialias.h",
+      "sha256": "4e73faea165ad67a51cab9e0ce0fe6bb257697c09ca1635f45e006ed117a1ac3"
+    }
+  ]
+}

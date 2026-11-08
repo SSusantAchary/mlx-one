@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "clip", "status": "FAIL", "quality_status": "PASS_THREE_CANDIDATE_SANITY_ONLY", "seconds": 0.6675961017608643, "error": "installed CLI failed: Usage: main zero-shot-image [OPTIONS] MODEL IMAGE\nTry 'main zero-shot-image --help' for help.\n\nError: No such option '--labels'. Did you mean '--label'?\n"}

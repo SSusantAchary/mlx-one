@@ -1,0 +1,55 @@
+{
+  "model_type": "moonshine",
+  "kind": "audio",
+  "repo": "UsefulSensors/moonshine-tiny",
+  "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+  "assets": [
+    "config.json",
+    "generation_config.json",
+    "model.safetensors",
+    "preprocessor_config.json",
+    "tokenizer.json"
+  ],
+  "manifest_id": "A04",
+  "profile": "FP32",
+  "gated": false,
+  "license": "mit",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 7959,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 897,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 189,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 108389192,
+      "sha256": "867cd2215804859c55aa972d740bd5002be149b4e7526328c895d2408848c736"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 215,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1985530,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

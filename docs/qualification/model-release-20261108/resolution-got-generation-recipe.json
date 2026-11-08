@@ -1,0 +1,12 @@
+{
+  "repo": "mlx-community/GOT-OCR2_0-4bit",
+  "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+  "file": "modeling_GOT.py",
+  "sha256": "68375b6bf7683cca41bb987953f0e31fde802652ad01e1accc4b53127b841609",
+  "recipe": {
+    "do_sample": false,
+    "num_beams": 1,
+    "no_repeat_ngram_size": 20
+  },
+  "scope": "Pinned publisher chat recipe, inspected as data; never executed by native production"
+}

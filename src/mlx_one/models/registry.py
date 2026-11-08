@@ -91,8 +91,7 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
                 capabilities,
                 "mlx_one.models.segmentation.sam3.weights:sanitize_weights",
                 "mlx_one.models.segmentation.sam3.weights:weight_contract",
-                loader_path=(None if model_type == "sam3_tracker_video"
-                             else "mlx_one.segmentation.loading:load_segmentation_model"),
+                loader_path="mlx_one.segmentation.loading:load_segmentation_model",
                 tasks=tasks,
             )
             for model_type, config, module, model, capabilities, tasks in (

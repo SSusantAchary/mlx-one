@@ -1,0 +1,6 @@
+{
+  "checkpoint_tokenizer": "Qwen/Qwen3-Reranker-0.6B",
+  "tokenizer_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+  "cases": 68,
+  "all_token_ids_match_huggingface_tokenizers": true
+}

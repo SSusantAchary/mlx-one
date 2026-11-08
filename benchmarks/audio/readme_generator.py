@@ -196,7 +196,7 @@ def render(catalog, records):
         lines += ["", *dict.fromkeys(notes), ""]
     if any(record["status"] == "MEASURED" for record in records):
         lines[3] = (
-            "Native audio support is experimental. Values below are validated "
+            "Historical native audio performance. Values below are validated "
             "measurements; “—” means unavailable. Recognition uses one pinned English "
             "LibriSpeech utterance (9.9 seconds, padded to 10); its WER is a single-clip "
             "check, not corpus accuracy. See the linked raw evidence."
@@ -226,13 +226,15 @@ def render(catalog, records):
             "",
         ]
     lines += [
-        "Qwen alignment remains WIP because historical timestamp discrepancies are "
-        "unresolved; boundary errors need independently annotated reference timings. "
-        "LFM speech-to-speech exceeded its output bound on this fixture; its sampled "
+        "Independent alignment boundary accuracy was not measured in this "
+        "historical cohort; the newer TIMIT timing checks "
+        "are recorded in the current support inventory. "
+        "Q4 LFM speech-to-speech exceeded its output bound on this fixture; its sampled "
         "diagnostic also had unstable waveform amplitude. No speed is published for "
         "that failed task. TTS timings do not establish perceptual quality. "
         "Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a "
-        "causal streaming encoder.",
+        "causal streaming encoder. Current Q8 speech support and newer alignment "
+        "results are in the [support inventory](status_models_testing.md).",
         "",
         "[Methodology and coverage](docs/benchmarks/audio/README.md) · "
         "[Manual download, Python/CLI/HTTP and benchmark commands](docs/AUDIO_TESTING.md)",

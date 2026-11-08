@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "bert", "status": "FAIL", "quality_status": null, "seconds": 0.20517492294311523, "error": "cannot load native bert embedding: unexpected tensors: pooler.dense.bias, pooler.dense.weight"}

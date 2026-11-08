@@ -1,0 +1,67 @@
+{
+  "checkpoint": "facebook/sam3",
+  "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 7352,
+      "sha256": "bec48f70bd37bf8280a9d1ebf01642d26086f6122ba735baa08fe03c5a6e7448",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 26038,
+      "sha256": "1ac8a322aa4a797db79cbc334acee7c0cae8635032b71c7d5b23ae63a05f4bd5",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 25843,
+      "sha256": "4616385e4b21f2e5e22c875b65679185cbccfa95de42542b9166f7dc3d57160f",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 524619,
+      "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 3439938512,
+      "sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a",
+      "hub_lfs_sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a"
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 1712,
+      "sha256": "6420cf2671fa9309ea95bc0144a8b9861666d1c5f43c8db09e410dacda974fce",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 588,
+      "sha256": "2cdb3b8331a60c92fc1e55a13e9fd61fd2293c5a51275fdcccd62b780052530e",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 3642073,
+      "sha256": "6d9109cc838977f3ca94a379eec36aecc7c807e1785cd729660ca2fc0171fb35",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 799,
+      "sha256": "39670ad98457fe8f14ca59f6bb74591e9fc850974380a63993e5b8ffc865baa2",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 862328,
+      "sha256": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363",
+      "hub_lfs_sha256": null
+    }
+  ]
+}

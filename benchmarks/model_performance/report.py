@@ -387,7 +387,15 @@ def render_summary(records):
 
 
 def derived(inventory, records):
-    intro = "# Text inference checkpoint inventory\n\nPrimary means the support manifest’s "
+    intro = (
+        "# Text inference checkpoint inventory\n\n"
+        "This is the **historical text-cohort inventory**, preserving its original\n"
+        "checkpoint/profile statuses and benchmark gaps. Current supported model types,\n"
+        "including GPT-OSS MXFP4 and LFM2 MoE, are recorded in the\n"
+        "[40-model inventory](../../status_models_testing.md) and\n"
+        "[0.1.1 release notes](../releases/0.1.1.md).\n\n"
+        "Primary means the support manifest’s "
+    )
     intro += "selected configuration, not certification. Q4/Q8 conversions use group size 64. "
     intro += "Source BF16/FP32 runs are distinct. Parameter sizes are nominal labels; "
     intro += "quantized bytes are not parameter counts. Configured context is taken from "

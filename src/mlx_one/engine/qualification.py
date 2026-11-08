@@ -10,6 +10,7 @@ from mlx_one.engine.cache import CacheBundle
 from mlx_one.engine.cache_manager import CacheManager
 from mlx_one.engine.cache_specs import CacheConfig
 from mlx_one.engine.parity import compare_logits
+from mlx_one.text.prompts import completion_token_ids
 from mlx_one.text.sampling import select_token
 from mlx_one.text.schemas import TextGenerationOptions
 
@@ -53,7 +54,10 @@ def execution_parity(bundle, *, mode, prompt="The quick brown fox", count=32, ba
         mode, BatchedDenseRunner))()
     if target.hybrid_state:
         runner = HybridRunner()
-    prompts = [tuple(bundle.tokenizer.encode(prompt + ("\nMore." * i))) for i in range(batch_size)]
+    prompts = [
+        tuple(completion_token_ids(bundle, prompt + ("\nMore." * i)))
+        for i in range(batch_size)
+    ]
     fixture = bundle.tokenizer.encode(" A deterministic continuation.")
     forced = tuple(fixture[i % len(fixture)] for i in range(count))
     fp = target.fingerprint(namespace="qualification", key_type=cache_type, value_type=cache_type)

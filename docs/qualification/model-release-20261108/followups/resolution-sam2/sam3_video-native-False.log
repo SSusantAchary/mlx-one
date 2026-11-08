@@ -1,0 +1,34 @@
+{"stage": "loaded", "task": "video", "seconds": 0.51578270799655, "tensor_count": 1797, "peak_mlx_bytes": 3440198532}
+{"stage": "video_frame", "index": 0, "objects": 2}
+{"stage": "video_frame", "index": 1, "objects": 2}
+{"stage": "video_frame", "index": 2, "objects": 2}
+{"stage": "video_frame", "index": 3, "objects": 2}
+{"stage": "video_frame", "index": 4, "objects": 2}
+{"stage": "video_frame", "index": 5, "objects": 2}
+{"stage": "video_frame", "index": 6, "objects": 2}
+{"stage": "video_frame", "index": 7, "objects": 2}
+{"stage": "video_frame", "index": 8, "objects": 2}
+{"stage": "video_frame", "index": 9, "objects": 2}
+{"stage": "video_frame", "index": 10, "objects": 2}
+{"stage": "video_frame", "index": 11, "objects": 2}
+{"stage": "video_frame", "index": 12, "objects": 2}
+{"stage": "video_frame", "index": 13, "objects": 2}
+{"stage": "video_frame", "index": 14, "objects": 2}
+{"stage": "video_frame", "index": 15, "objects": 2}
+{"stage": "video_frame", "index": 16, "objects": 2}
+{"stage": "video_frame", "index": 17, "objects": 2}
+{"stage": "video_frame", "index": 18, "objects": 2}
+{"stage": "video_frame", "index": 19, "objects": 2}
+{"stage": "video_frame", "index": 20, "objects": 2}
+{"stage": "video_frame", "index": 21, "objects": 2}
+{"stage": "video_frame", "index": 22, "objects": 2}
+{"stage": "video_frame", "index": 23, "objects": 2}
+{"stage": "video_frame", "index": 24, "objects": 2}
+{"stage": "video_frame", "index": 25, "objects": 2}
+{"stage": "video_frame", "index": 26, "objects": 2}
+{"stage": "video_frame", "index": 27, "objects": 2}
+{"stage": "video_frame", "index": 28, "objects": 2}
+{"stage": "video_frame", "index": 29, "objects": 2}
+{"stage": "video_frame", "index": 30, "objects": 2}
+{"stage": "video_frame", "index": 31, "objects": 2}
+{"stage": "video_inferred", "frames": 32, "seconds": 159.1454096249945, "peak_mlx_bytes": 8464302234, "peak_process_bytes": 6473039872, "qualified": false}

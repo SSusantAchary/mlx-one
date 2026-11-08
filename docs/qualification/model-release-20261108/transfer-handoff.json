@@ -1,0 +1,7 @@
+{
+  "previous_pid": 29153,
+  "reason": "resume owned downloads with Xet acceleration and chunk caching disabled",
+  "recorded": 1794130960.354996,
+  "completed_results_preserved": true,
+  "partial_downloads_retained_for_resume": true
+}

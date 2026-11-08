@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "lfm2_colbert"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/lfm2_colbert",
+  "bytes_removed": 2832042842,
+  "downloaded_bytes_verified": 1418733445,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794142122.7885811,
+  "recorded": 1794142277.589647,
+  "cleanup_complete": true,
+  "finished": 1794142277.6435819
+}

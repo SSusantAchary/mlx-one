@@ -1,5 +1,11 @@
 # Text inference checkpoint inventory
 
+This is the **historical text-cohort inventory**, preserving its original
+checkpoint/profile statuses and benchmark gaps. Current supported model types,
+including GPT-OSS MXFP4 and LFM2 MoE, are recorded in the
+[40-model inventory](../../status_models_testing.md) and
+[0.1.1 release notes](../releases/0.1.1.md).
+
 Primary means the support manifest’s selected configuration, not certification. Q4/Q8 conversions use group size 64. Source BF16/FP32 runs are distinct. Parameter sizes are nominal labels; quantized bytes are not parameter counts. Configured context is taken from each pinned config's `max_position_embeddings` (inside `text_config` where applicable), or GPT-2's `n_positions`. Context values link to those configs; they do not establish full-window validation.
 
 

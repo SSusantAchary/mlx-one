@@ -1,0 +1,68 @@
+{
+  "model_type": "gpt_oss",
+  "kind": "text",
+  "repo": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+  "revision": "f356f2747216d7e98fee755df25987459fc19089",
+  "profile": "mixed_mxfp4_affine_q4_q8",
+  "manifest_id": "M12",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1570,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 838,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 33998,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 177,
+      "sha256": null
+    },
+    {
+      "path": "model-00001-of-00003.safetensors",
+      "bytes": 5306798277,
+      "sha256": "ec8571f6f8adba2d7d92a1f6029a69aecd18ab4e82404a306ceb063d9ae1362d"
+    },
+    {
+      "path": "model-00002-of-00003.safetensors",
+      "bytes": 5263518916,
+      "sha256": "9a32623d891d6f64694fdaaaeecf145d8796d17c238b9b99af953077d0f63837"
+    },
+    {
+      "path": "model-00003-of-00003.safetensors",
+      "bytes": 608251966,
+      "sha256": "3fb80743340b3dbeb649e50b5fd1b5f063e98c143759025284344988d8fa0a95"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 67046,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 440,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 27868174,
+      "sha256": "0614fe83cadab421296e664e1f48f4261fa8fef6e03e63bb75c20f38e37d07d3"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 21694,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

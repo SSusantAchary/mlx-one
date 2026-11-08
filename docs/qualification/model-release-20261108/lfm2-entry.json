@@ -1,0 +1,63 @@
+{
+  "model_type": "lfm2",
+  "kind": "text",
+  "repo": "LiquidAI/LFM2-350M",
+  "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+  "profile": "affine_q4",
+  "manifest_id": "M04",
+  "gated": false,
+  "license": "other",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 10596,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 18107,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 1379,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 999,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 137,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 708984464,
+      "sha256": "387638dc889ff1a1395c3c2ab9605211e4c7e16f2d375361dd4e423b909a254e"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 434,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4732426,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 91565,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

@@ -7,8 +7,9 @@
 Registry type: `openelm`. The native decoder uses layer-specific attention-head
 counts and feed-forward widths, fused QKV, GQA, RoPE, and RMSNorm.
 [apple/OpenELM-270M](https://huggingface.co/apple/OpenELM-270M) is an upstream
-reference; 270M–3B variants are catalog candidates. Native loading/generation and
-synthetic tests exist, but each exact checkpoint release needs integration qualification.
+reference and the supported primary checkpoint, with passing native generation
+and applicable interface records. Other sizes remain separate profiles. See the
+[current support record](../../../../../status_models_testing.md).
 
 ## Model Architecture
 

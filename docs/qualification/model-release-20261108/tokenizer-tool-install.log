@@ -1,0 +1,9 @@
+Collecting sentencepiece
+  Downloading sentencepiece-0.2.3-cp312-cp312-macosx_11_0_arm64.whl.metadata (34 kB)
+Downloading sentencepiece-0.2.3-cp312-cp312-macosx_11_0_arm64.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 175.8 kB/s  0:00:08
+Installing collected packages: sentencepiece
+Successfully installed sentencepiece-0.2.3
+
+[notice] A new release of pip is available: 25.2 -> 26.3
+[notice] To update, run: /private/tmp/mlx-one-all40-20261108/reference-env/bin/python -m pip install --upgrade pip

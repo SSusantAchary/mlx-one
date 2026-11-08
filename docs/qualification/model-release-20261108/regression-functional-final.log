@@ -1,0 +1,62 @@
+........................................................................ [  2%]
+...................................................................sssss [  5%]
+s.s...s...........................................................ssssss [  8%]
+.....................ss...ssssssss..ss.........sssssssssssssss.......... [ 10%]
+........................................................................ [ 13%]
+.......sssssssssssssssssssss.sssss.....ss.sssss..s.ss................... [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 21%]
+........................................................................ [ 24%]
+............................................sssssss..................... [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 32%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+........................................................................ [ 43%]
+........................................................................ [ 45%]
+...........................................s............................ [ 48%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 78%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+......................................................sss.............F. [ 89%]
+........................................................................ [ 91%]
+........................................................................ [ 94%]
+........................................................................ [ 97%]
+............................................................... [ 99%]
+......                                                                   [100%]
+=================================== FAILURES ===================================
+________________ test_cli_help_is_backend_free_and_output_guard ________________
+
+tmp_path = PosixPath('/private/var/folders/8b/269n41v14fdcwd5wlf7sr3q00000gn/T/pytest-of-susant-achary/pytest-38/test_cli_help_is_backend_free_0')
+
+>   ???
+E   AssertionError: assert 'unqualified' in 'Usage: main segment [OPTIONS] MODEL IMAGE\n\n  Segment an image with native SAM3.\n\nOptions:\n  --mode [concept|inte...RECTORY\n  --output PATH                   [required]\n  -h, --help                      Show this message and exit.\n'
+E    +  where 'Usage: main segment [OPTIONS] MODEL IMAGE\n\n  Segment an image with native SAM3.\n\nOptions:\n  --mode [concept|inte...RECTORY\n  --output PATH                   [required]\n  -h, --help                      Show this message and exit.\n' = <Result okay>.output
+
+/private/tmp/mlx-one-docs-site/tests/test_sam3_workflows.py:55: AssertionError
+=============================== warnings summary ===============================
+../mlx-one/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/susant-achary/dev_work/git_codes/c_base/mlx-one/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+../mlx-one/.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /Users/susant-achary/dev_work/git_codes/c_base/mlx-one/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_sam3_workflows.py::test_cli_help_is_backend_free_and_output_guard
+1 failed, 2572 passed, 95 skipped, 2 warnings, 9 subtests passed in 54.42s
+{"status": "FAIL", "exit_code": 1, "mlx_tests_enabled": true, "device": {"device_name": "Apple M4", "max_recommended_working_set_size": 22906503168, "memory_size": 34359738368, "architecture": "applegpu_g16g", "max_buffer_length": 17179869184, "resource_limit": 499000}, "counts": {"tests": 2677, "failures": 1, "errors": 0, "skipped": 95}, "xml": "regression-functional-final.xml", "xml_sha256": "0c172edf1683db4050e045b7bd44aec95e33a9b08e3369c76f6f06ba6360551d", "skip_scope": "Optional external checkpoint/hardware opt-ins remain skipped and are not counted as passes. Each of the 40 supported types has a separate real checkpoint task record."}

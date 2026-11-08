@@ -363,11 +363,11 @@ class Tensor:
             return values
         return Reduction(values, Tensor(mx.argmin(self.array, axis=dim, keepdims=keepdim)))
 
-    def argmax(self, dim=None):
-        return Tensor(mx.argmax(self.array, axis=dim))
+    def argmax(self, dim=None, keepdim=False):
+        return Tensor(mx.argmax(self.array, axis=dim, keepdims=keepdim))
 
-    def argmin(self, dim=None):
-        return Tensor(mx.argmin(self.array, axis=dim))
+    def argmin(self, dim=None, keepdim=False):
+        return Tensor(mx.argmin(self.array, axis=dim, keepdims=keepdim))
 
     def gather(self, dim, index):
         return ops.gather(self, dim, index)
@@ -948,8 +948,8 @@ class Ops:
     def any(self, x, dim=None):
         return x.any(dim)
 
-    def argmax(self, x, dim=None):
-        return x.argmax(dim)
+    def argmax(self, x, dim=None, keepdim=False):
+        return x.argmax(dim, keepdim=keepdim)
 
     def topk(self, x, k, **kwargs):
         return x.topk(k, **kwargs)

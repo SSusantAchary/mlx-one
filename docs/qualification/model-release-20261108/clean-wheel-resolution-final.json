@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "model_types": 40,
+  "support_standard": "mlx-lm-aligned-functional-v1",
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "reference_packages_absent": {
+    "mlx_lm": true,
+    "mlx_embeddings": true,
+    "transformers": true,
+    "torch": true,
+    "mlx_vlm": true,
+    "mlx_audio": true
+  },
+  "cli_help": {
+    "root": "PASS",
+    "segment": "PASS",
+    "track": "PASS"
+  },
+  "all_support_claims_bound_to_passing_results": true,
+  "installed_record_sha256": "80350231d12f01c4a453cafde94dbef5aaa27d89ae224f0cbd29f807f9e966b6",
+  "scope": "Final installed wheel registry/catalog/import/help smoke; real-checkpoint results retain their recorded historical wheel identities."
+}

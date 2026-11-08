@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "bert_token_classification"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/bert_token_classification",
+  "bytes_removed": 913714718,
+  "downloaded_bytes_verified": 433513304,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794149288.470721,
+  "recorded": 1794149325.458791,
+  "cleanup_complete": true,
+  "finished": 1794149325.465256
+}

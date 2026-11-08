@@ -2,7 +2,12 @@
 
 Native MLX inference for the original publisher checkpoints. ASR and alignment
 are distinct tasks; the aligner cannot transcribe unknown speech. The implementation
-has Python/CLI integration, but **checkpoint qualification is incomplete**.
+has Python/CLI/HTTP integration. The selected ASR and forced-alignment checkpoints
+are **supported** for their recorded primary workflows. The current independently
+annotated TIMIT alignment run passes with **29.472 ms mean** and **68.1875 ms p95**
+boundary error. See the [current inventory](../../../../../status_models_testing.md).
+Older qualification tables and investigations below retain their original
+checkpoint revisions, wider task scopes and failed diagnostics.
 
 ## Model Architecture
 

@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "lfm2_audio"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/lfm2_audio",
+  "bytes_removed": 2848735026,
+  "downloaded_bytes_verified": 1407665153,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794154177.0127091,
+  "recorded": 1794154590.664741,
+  "cleanup_complete": true,
+  "finished": 1794154590.7076612
+}

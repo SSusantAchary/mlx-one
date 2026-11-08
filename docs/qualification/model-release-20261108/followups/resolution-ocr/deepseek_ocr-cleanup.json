@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "deepseek_ocr"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/deepseek_ocr",
+  "bytes_removed": 4912490469,
+  "downloaded_bytes_verified": 2461273340,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794152035.534847,
+  "recorded": 1794152248.2969248,
+  "cleanup_complete": true,
+  "finished": 1794152248.3708951
+}

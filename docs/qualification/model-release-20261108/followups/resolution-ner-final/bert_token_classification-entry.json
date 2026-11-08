@@ -1,0 +1,102 @@
+{
+  "model_type": "bert_token_classification",
+  "kind": "classification",
+  "repo": "dslim/bert-base-NER",
+  "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+  "profile": "float32",
+  "gated": false,
+  "license": "mit",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 445,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 6558,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 2,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 829,
+      "sha256": null
+    },
+    {
+      "path": "flax_model.msgpack",
+      "bytes": 430913546,
+      "sha256": "a124466eab9adb43377d35d32afe77313fceeb16b74b106f3742884c666a2c1e"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 433292294,
+      "sha256": "b04492186cfb45a64908487a17a9f8d6ddec3a403ef39db5bca688f0fa702a34"
+    },
+    {
+      "path": "onnx/added_tokens.json",
+      "bytes": 82,
+      "sha256": null
+    },
+    {
+      "path": "onnx/config.json",
+      "bytes": 999,
+      "sha256": null
+    },
+    {
+      "path": "onnx/model.onnx",
+      "bytes": 431172619,
+      "sha256": "963039b81eec5b33e23d84826ccdf1e8f8ada776f320e692113034cfae384617"
+    },
+    {
+      "path": "onnx/special_tokens_map.json",
+      "bytes": 125,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tokenizer.json",
+      "bytes": 668923,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tokenizer_config.json",
+      "bytes": 1296,
+      "sha256": null
+    },
+    {
+      "path": "onnx/vocab.txt",
+      "bytes": 213450,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 433316646,
+      "sha256": "4c0b01790e435da1337ea519d76e747427f2d3ee9c0e49b4952caa06298021f6"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 112,
+      "sha256": null
+    },
+    {
+      "path": "tf_model.h5",
+      "bytes": 433538860,
+      "sha256": "ba8245e6eefa4057300e93caef9d8360192914c271f15c8bd112283d357a954b"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 59,
+      "sha256": null
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 213450,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

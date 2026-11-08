@@ -1,0 +1,35 @@
+/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/lib/python3.14/site-packages/torch/jit/_script.py:1485: FutureWarning: `torch.jit.script` is not supported in Python 3.14+ and may break. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Loading weights:   0%|          | 0/845 [00:00<?, ?it/s]Loading weights: 100%|██████████| 845/845 [00:00<00:00, 11245.96it/s]
+{"stage": "reference_loaded", "seconds": 2.004530166988843}
+{"stage": "reference_tracking_frame", "index": 0}
+{"stage": "reference_tracking_frame", "index": 1}
+{"stage": "reference_tracking_frame", "index": 2}
+{"stage": "reference_tracking_frame", "index": 3}
+{"stage": "reference_tracking_frame", "index": 4}
+{"stage": "reference_tracking_frame", "index": 5}
+{"stage": "reference_tracking_frame", "index": 6}
+{"stage": "reference_tracking_frame", "index": 7}
+{"stage": "reference_tracking_frame", "index": 8}
+{"stage": "reference_tracking_frame", "index": 9}
+{"stage": "reference_tracking_frame", "index": 10}
+{"stage": "reference_tracking_frame", "index": 11}
+{"stage": "reference_tracking_frame", "index": 12}
+{"stage": "reference_tracking_frame", "index": 13}
+{"stage": "reference_tracking_frame", "index": 14}
+{"stage": "reference_tracking_frame", "index": 15}
+{"stage": "reference_tracking_frame", "index": 16}
+{"stage": "reference_tracking_frame", "index": 17}
+{"stage": "reference_tracking_frame", "index": 18}
+{"stage": "reference_tracking_frame", "index": 19}
+{"stage": "reference_tracking_frame", "index": 20}
+{"stage": "reference_tracking_frame", "index": 21}
+{"stage": "reference_tracking_frame", "index": 22}
+{"stage": "reference_tracking_frame", "index": 23}
+{"stage": "reference_tracking_frame", "index": 24}
+{"stage": "reference_tracking_frame", "index": 25}
+{"stage": "reference_tracking_frame", "index": 26}
+{"stage": "reference_tracking_frame", "index": 27}
+{"stage": "reference_tracking_frame", "index": 28}
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:475: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-_arguy93'}
+  warnings.warn(

@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "trocr"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/trocr",
+  "bytes_removed": 2668135460,
+  "downloaded_bytes_verified": 1334749010,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139442.8616588,
+  "recorded": 1794139609.514667,
+  "cleanup_complete": true,
+  "finished": 1794139609.551183
+}

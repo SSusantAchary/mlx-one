@@ -1,0 +1,98 @@
+{
+  "model_type": "paddleocr_vl",
+  "kind": "ocr",
+  "repo": "mlx-community/PaddleOCR-VL-1.5-4bit",
+  "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+  "manifest_id": "O05",
+  "profile": "Affine Q4",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1570,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 802,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 25381,
+      "sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 1474,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 2483,
+      "sha256": null
+    },
+    {
+      "path": "configuration_paddleocr_vl.py",
+      "bytes": 8104,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 133,
+      "sha256": null
+    },
+    {
+      "path": "image_processing_paddleocr_vl.py",
+      "bytes": 24966,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 703562711,
+      "sha256": "f9a45393e2ffe6cbb412c25c82704fbb081e952c4c4517fa01e8a750010d1267"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 69879,
+      "sha256": null
+    },
+    {
+      "path": "modeling_paddleocr_vl.py",
+      "bytes": 111490,
+      "sha256": null
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 641,
+      "sha256": null
+    },
+    {
+      "path": "processing_paddleocr_vl.py",
+      "bytes": 12253,
+      "sha256": null
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 843,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 1151,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11189060,
+      "sha256": "c8a215a59183d0d0781adc33bacd3ce6162716f7fd568fb30234a74d69803a7d"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 876,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

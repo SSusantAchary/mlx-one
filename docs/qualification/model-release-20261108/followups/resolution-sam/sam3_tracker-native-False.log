@@ -1,0 +1,2 @@
+{"stage": "loaded", "task": "interactive", "seconds": 0.5063141669961624, "tensor_count": 685, "peak_mlx_bytes": 1833487052}
+{"stage": "inferred", "task": "interactive", "seconds": 2.9535403750051046, "mask_count": 3, "peak_mlx_bytes": 3353610818, "peak_process_bytes": 2273738752, "qualified": false}

@@ -14,14 +14,19 @@ encoded media, and NumPy handles ordinary PCM mixing/resampling. The optional
 
 ## Status and checkpoint selection
 
-Native implementations and real-checkpoint results are tracked separately. The
-primary catalog has now been exercised using pinned Hugging Face data on Apple M4;
-see the [hardware test report](validation/audio-hf-2026-10-24/report.md) and
-[audio performance coverage](benchmarks/audio/coverage.md). These short checks
-establish scoped execution and measured speed, not corpus accuracy, alignment
-accuracy or human-rated speech quality. The earlier source-only implementation
-report remains historical. LFM speech-to-speech has input-dependent failures;
-Qwen alignment retains its known timestamp discrepancy.
+All **seven audio/speech model types** have passing selected primary workflows in
+the [current support inventory](../status_models_testing.md). LFM2 Audio selects
+the tested **8-bit** checkpoint for ASR/TTS/STS. Known-text alignment now passes
+independently annotated TIMIT checks: mean boundary error **29.472 ms**, p95
+**68.1875 ms**. [0.1.1 is approved for release](releases/0.1.1.md); publication is pending.
+
+### Historical benchmark profiles
+
+The October catalog and [hardware test report](validation/audio-hf-2026-10-24/report.md)
+below retain their original checkpoints, measured speed and failed diagnostics.
+They are separate from the current support selection. Older Q4 speech failures
+and alignment discrepancies remain in those reports; they do not replace the
+newer Q8 speech and TIMIT records. See [resolutions](qualification/model-release-20261108/RESOLUTIONS.md).
 
 | Key | Checkpoint | Primary precision | Tasks / limits |
 | --- | --- | --- | --- |

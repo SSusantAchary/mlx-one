@@ -1,0 +1,67 @@
+START sam3_tracker,sam3_video,sam3_tracker_video facebook/sam3
+FETCH sam3_tracker LICENSE 7352
+FETCH sam3_tracker README.md 26038
+FETCH sam3_tracker config.json 25843
+FETCH sam3_tracker merges.txt 524619
+FETCH sam3_tracker model.safetensors 3439938512
+FETCH sam3_tracker processor_config.json 1712
+FETCH sam3_tracker special_tokens_map.json 588
+FETCH sam3_tracker tokenizer.json 3642073
+FETCH sam3_tracker tokenizer_config.json 799
+FETCH sam3_tracker vocab.json 862328
+RANGE model.safetensors 3 / 52
+RANGE model.safetensors 2 / 52
+RANGE model.safetensors 4 / 52
+RANGE model.safetensors 1 / 52
+RANGE model.safetensors 5 / 52
+RANGE model.safetensors 8 / 52
+RANGE model.safetensors 6 / 52
+RANGE model.safetensors 7 / 52
+RANGE model.safetensors 9 / 52
+RANGE model.safetensors 10 / 52
+RANGE model.safetensors 12 / 52
+RANGE model.safetensors 11 / 52
+RANGE model.safetensors 13 / 52
+RANGE model.safetensors 14 / 52
+RANGE model.safetensors 15 / 52
+RANGE model.safetensors 16 / 52
+RANGE model.safetensors 17 / 52
+RANGE model.safetensors 18 / 52
+RANGE model.safetensors 21 / 52
+RANGE model.safetensors 20 / 52
+RANGE model.safetensors 22 / 52
+RANGE model.safetensors 19 / 52
+RANGE model.safetensors 23 / 52
+RANGE model.safetensors 24 / 52
+RANGE model.safetensors 25 / 52
+RANGE model.safetensors 26 / 52
+RANGE model.safetensors 28 / 52
+RANGE model.safetensors 27 / 52
+RANGE model.safetensors 30 / 52
+RANGE model.safetensors 29 / 52
+RANGE model.safetensors 31 / 52
+RANGE model.safetensors 33 / 52
+RANGE model.safetensors 34 / 52
+RANGE model.safetensors 32 / 52
+RANGE model.safetensors 35 / 52
+RANGE model.safetensors 36 / 52
+RANGE model.safetensors 37 / 52
+RANGE model.safetensors 39 / 52
+RANGE model.safetensors 40 / 52
+RANGE model.safetensors 38 / 52
+RANGE model.safetensors 41 / 52
+RANGE model.safetensors 43 / 52
+RANGE model.safetensors 42 / 52
+RANGE model.safetensors 44 / 52
+RANGE model.safetensors 46 / 52
+RANGE model.safetensors 47 / 52
+RANGE model.safetensors 45 / 52
+RANGE model.safetensors 48 / 52
+RANGE model.safetensors 52 / 52
+RANGE model.safetensors 50 / 52
+RANGE model.safetensors 51 / 52
+RANGE model.safetensors 49 / 52
+RESULT sam3_tracker FAIL SAM mask/score/box/identity reference gate failed
+RESULT sam3_video PASS_FUNCTIONAL 
+RESULT sam3_tracker_video FAIL SAM tracking reference failed; see sam3_tracker_video-reference-False.log
+CLEANED sam3_tracker 6931419809

@@ -5,7 +5,7 @@
 <!-- MLX-ONE-AUDIO-BENCHMARK-START -->
 ## Audio Model Performance
 
-Native audio support is experimental. Values below are validated measurements; “—” means unavailable. Recognition uses one pinned English LibriSpeech utterance (9.9 seconds, padded to 10); its WER is a single-clip check, not corpus accuracy. See the linked raw evidence.
+Historical native audio performance. Values below are validated measurements; “—” means unavailable. Recognition uses one pinned English LibriSpeech utterance (9.9 seconds, padded to 10); its WER is a single-clip check, not corpus accuracy. See the linked raw evidence.
 
 Protocol: batch 1, one warmup, five repetitions, median; actual audio durations. ASR uses a fixed 10-second clip (ASR-S1); TTS uses fixed 30-word text (TTS-S1). RTF is processing seconds divided by input audio seconds for ASR, or generated audio seconds for synthesis. Lower RTF is faster. Hardware and MLX version are listed for each measured cohort. Direct-model, Python Engine and full file-pipeline runs remain separate.
 
@@ -61,7 +61,7 @@ Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepare
 
 Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm. Experimental; speech quality requires listening review.
 
-Qwen alignment remains WIP because historical timestamp discrepancies are unresolved; boundary errors need independently annotated reference timings. LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder.
+Independent alignment boundary accuracy was not measured in this historical cohort; the newer TIMIT timing checks are recorded in the current support inventory. Q4 LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder. Current Q8 speech support and newer alignment results are in the [support inventory](../../../status_models_testing.md).
 
 [Methodology and coverage](README.md) · [Manual download, Python/CLI/HTTP and benchmark commands](../../AUDIO_TESTING.md)
 <!-- MLX-ONE-AUDIO-BENCHMARK-END -->

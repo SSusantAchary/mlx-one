@@ -1,0 +1,6 @@
+{
+  "candidate_wheel_sha256": "1da420c69cfb4a24f620f06df2a876d6293703c5bd9a83abe490efc2f22b4098",
+  "updated": 1794140779.3318,
+  "exclusive_metal_lock": true,
+  "change": "validated unused sentence-encoder poolers and Qwen ByteLevel tokenizer support"
+}

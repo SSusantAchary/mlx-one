@@ -1,0 +1,52 @@
+{
+  "model_type": "parakeet_tdt",
+  "kind": "audio",
+  "repo": "mlx-community/parakeet-tdt-0.6b-v3",
+  "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+  "assets": [
+    "config.json",
+    "model.safetensors"
+  ],
+  "manifest_id": "A09",
+  "profile": "FP32",
+  "gated": false,
+  "license": "cc-by-4.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 1081,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 244093,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 2508288736,
+      "sha256": "05e01c7f396c298cf7d23f61da7b504adeab698f0aaeafd9c82d198625464592"
+    },
+    {
+      "path": "tokenizer.model",
+      "bytes": 360916,
+      "sha256": "eacec2b0a77f336d4a2ca4a25a7047575d3c2b74de47e997f4c205126ed3135e"
+    },
+    {
+      "path": "tokenizer.vocab",
+      "bytes": 101024,
+      "sha256": null
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 46772,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

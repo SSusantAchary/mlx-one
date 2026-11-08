@@ -99,6 +99,18 @@ def test_embedding_mask_dimensions_normalization_and_parameter_contract() -> Non
     assert set(dict(tree_flatten(model.parameters()))) == set(weight_contract(config).expected)
 
 
+def test_bfloat16_stored_embedding_uses_stable_float32_execution():
+    model = Qwen3ForEmbedding(_embedding_config())
+    model.set_dtype(mx.bfloat16)
+    batch = model(mx.array([[0, 0, 3, 4], [5, 6, 7, 8]]),
+                  attention_mask=mx.array([[0, 0, 1, 1], [1, 1, 1, 1]]))
+    single = model(mx.array([[3, 4]]), attention_mask=mx.array([[1, 1]]))
+    mx.eval(batch.embeddings, single.embeddings)
+    assert batch.embeddings.dtype == mx.float32
+    assert model.model.embed_tokens.weight.dtype == mx.bfloat16
+    assert mx.allclose(batch.embeddings[0], single.embeddings[0], atol=2e-4, rtol=2e-4).item()
+
+
 def test_cosine_matrix_and_reranker_selected_logits() -> None:
     embedding = Qwen3ForEmbedding(_embedding_config())
     cosine = embedding.similarity(mx.array([[1.0, 0.0]]), mx.array([[1.0, 0.0], [0.0, 1.0]]))

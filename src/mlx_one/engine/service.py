@@ -154,7 +154,7 @@ class InferenceService:
             session.on_close=lambda:self._sessions.discard(session)
         return session
 
-    def open_video_session(self,name,*,memory_budget_bytes=24*1024**3,
+    def open_video_session(self,name,*,memory_budget_bytes=24*1024**3,original_size=None,
                            cancel=None,deadline=None):
         from mlx_one.engine.contracts import TaskKind
         from mlx_one.engine.sessions import DeviceSession
@@ -162,9 +162,10 @@ class InferenceService:
         if memory_budget_bytes<1:
             raise ValueError("video state requires a positive byte budget")
         actor,lease=self._task_lease(name,TaskKind.VIDEO_SEGMENTATION)
+        session_options = {} if original_size is None else {"original_size": original_size}
         session=DeviceSession(lease,actor.device_executor,lambda:lease.runtime.value.video_session(
-            streaming=True,memory_budget_bytes=memory_budget_bytes),
-            methods=("add_prompt","remove_prompt","remove_object","correct_object",
+            streaming=True,memory_budget_bytes=memory_budget_bytes,**session_options),
+            methods=("add_prompt","remove_prompt","remove_object","correct_object","add_object",
                      "process_frame","reset"),cancel=cancel,deadline=deadline)
         with self._lock:
             if self._closed:

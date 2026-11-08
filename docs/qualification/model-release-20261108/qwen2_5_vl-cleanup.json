@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "qwen2_5_vl"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/qwen2_5_vl",
+  "bytes_removed": 3089714373,
+  "downloaded_bytes_verified": 3089711645,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794133010.278656,
+  "recorded": 1794133359.219442,
+  "cleanup_complete": true,
+  "finished": 1794133359.245537
+}

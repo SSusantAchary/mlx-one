@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 
 
-def run(path, *, prompt, chat=False, max_tokens=16, context=512):
+def run(path, *, prompt, chat=False, max_tokens=16, context=512, reasoning_effort=None):
     import mlx.core as mx
 
     from mlx_one.engine.device_executor import DeviceExecutor
@@ -82,6 +82,9 @@ def run(path, *, prompt, chat=False, max_tokens=16, context=512):
             context_length=min(context, bundle.context_length),
             cache_prompt=False,
         )
+        if reasoning_effort is not None:
+            settings["reasoning_effort"] = reasoning_effort
+            report["reasoning_effort"] = reasoning_effort
         executor.call(id(bundle), mx.reset_peak_memory)
         events = list(
             engine.stream(messages=[{"role": "user", "content": prompt}], **settings)
@@ -89,6 +92,7 @@ def run(path, *, prompt, chat=False, max_tokens=16, context=512):
             else engine.stream_completion(prompt=prompt, **settings)
         )
         report["text"] = "".join(event.text for event in events)
+        report["reasoning_content"] = "".join(event.reasoning_content for event in events)
         report["metrics"] = engine.stats.to_dict()
         report["runtime"] = engine.runtime_stats()
         if not events or events[-1].finish_reason not in {"stop", "length"}:

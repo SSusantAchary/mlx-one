@@ -50,7 +50,8 @@ def test_paddle_byte_fallback_preserves_newline_before_split_unicode(tmp_path, m
     monkeypatch.setattr(generation, "select_token", lambda *a, **kw: next(choices))
     with OCREngine(bundle) as engine, Image.new("RGB", (16, 12), "white") as image:
         result = engine.recognize(image, max_tokens=8)
-    assert result.text == "A\n☐"
+    # Plain-text rendering canonicalizes the checkbox after complete-token decode.
+    assert result.text == "A\n□"
     assert result.pages[0].metadata["output_tokens"] == 5
 
 

@@ -1,0 +1,31 @@
+START qwen3_forced_aligner mlx-community/Qwen3-ForcedAligner-0.6B-8bit
+FETCH FETCH qwen3_forced_alignerqwen3_forced_alignerFETCH  config.json 6940qwen3_forced_aligner generation_config.json 115
+
+ chat_template.json 1161
+FETCH qwen3_forced_aligner merges.txt 1671853
+FETCH qwen3_forced_aligner model.safetensors 1271924386
+FETCH qwen3_forced_aligner model.safetensors.index.json 79108
+FETCH qwen3_forced_aligner preprocessor_config.json 330
+FETCH qwen3_forced_aligner tokenizer_config.json 12666
+FETCH qwen3_forced_aligner vocab.json 2776833
+RANGE model.safetensors 2 / 19
+RANGE model.safetensors 3 / 19
+RANGE model.safetensors 1 / 19
+RANGE model.safetensors 4 / 19
+RANGE model.safetensors 5 / 19
+RANGE model.safetensors 6 / 19
+RANGE model.safetensors 7 / 19
+RANGE model.safetensors 8 / 19
+RANGE model.safetensors 10 / 19
+RANGE model.safetensors 9 / 19
+RANGE model.safetensors 11 / 19
+RANGE model.safetensors 12 / 19
+RANGE model.safetensors 13 / 19
+RANGE model.safetensors 14 / 19
+RANGE model.safetensors 15 / 19
+RANGE model.safetensors 16 / 19
+RANGE model.safetensors 17 / 19
+RANGE model.safetensors 18 / 19
+RANGE model.safetensors 19 / 19
+RESULT qwen3_forced_aligner PASS_FUNCTIONAL 
+CLEANED qwen3_forced_aligner 2548399794

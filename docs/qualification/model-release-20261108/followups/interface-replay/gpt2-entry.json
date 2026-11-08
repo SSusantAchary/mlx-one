@@ -1,0 +1,143 @@
+{
+  "model_type": "gpt2",
+  "kind": "text",
+  "repo": "openai-community/gpt2",
+  "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+  "profile": "float32",
+  "manifest_id": "M01",
+  "gated": false,
+  "license": "mit",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 445,
+      "sha256": null
+    },
+    {
+      "path": "64-8bits.tflite",
+      "bytes": 125162496,
+      "sha256": "c966da3b74697803352ca7c6f2f220e7090a557b619de9da0c6b34d89f7825c1"
+    },
+    {
+      "path": "64-fp16.tflite",
+      "bytes": 248269688,
+      "sha256": "1ceafd82e733dd4b21570b2a86cf27556a983041806c033a55d086e0ed782cd3"
+    },
+    {
+      "path": "64.tflite",
+      "bytes": 495791932,
+      "sha256": "cfcd510b239d90b71ee87d4e57a5a8c2d55b2a941e5d9fe5852298268ddbe61b"
+    },
+    {
+      "path": "README.md",
+      "bytes": 8092,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 665,
+      "sha256": null
+    },
+    {
+      "path": "flax_model.msgpack",
+      "bytes": 497764120,
+      "sha256": "192e8257ae9e8f796f764630f4a488a6a16d1461762d62b49ef7405df951a283"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 124,
+      "sha256": null
+    },
+    {
+      "path": "merges.txt",
+      "bytes": 456318,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 548105171,
+      "sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707"
+    },
+    {
+      "path": "onnx/config.json",
+      "bytes": 879,
+      "sha256": null
+    },
+    {
+      "path": "onnx/decoder_model.onnx",
+      "bytes": 653665842,
+      "sha256": "e3fc9615868ff8f5e0429b892a0f6ca692784ba6c4ca31c4e9ee8218e7cce34f"
+    },
+    {
+      "path": "onnx/decoder_model_merged.onnx",
+      "bytes": 655189339,
+      "sha256": "e6fc046fe5a7cfeeb8bb3c7d4c1b6a8bd90ced7339a75d5567957e3bc9d48abe"
+    },
+    {
+      "path": "onnx/decoder_with_past_model.onnx",
+      "bytes": 653672649,
+      "sha256": "570d958241de81f12d82a8358dfc0b408a7bf44ff2bd10ac4a97dab24a8118db"
+    },
+    {
+      "path": "onnx/generation_config.json",
+      "bytes": 119,
+      "sha256": null
+    },
+    {
+      "path": "onnx/merges.txt",
+      "bytes": 456318,
+      "sha256": null
+    },
+    {
+      "path": "onnx/special_tokens_map.json",
+      "bytes": 99,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tokenizer.json",
+      "bytes": 2107653,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tokenizer_config.json",
+      "bytes": 234,
+      "sha256": null
+    },
+    {
+      "path": "onnx/vocab.json",
+      "bytes": 798156,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 548118077,
+      "sha256": "7c5d3f4b8b76583b422fcb9189ad6c89d5d97a094541ce8932dce3ecabde1421"
+    },
+    {
+      "path": "rust_model.ot",
+      "bytes": 702517648,
+      "sha256": "adf0adedbf4016b249550f866c66a3b3a3d09c8b3b3a1f6e5e9a265d94e0270e"
+    },
+    {
+      "path": "tf_model.h5",
+      "bytes": 497933648,
+      "sha256": "d08c1307f7dfae6f878e0a2ca5715d587d2640530db8ef96fc0c1fc474dd9fee"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1355256,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 26,
+      "sha256": null
+    },
+    {
+      "path": "vocab.json",
+      "bytes": 1042301,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

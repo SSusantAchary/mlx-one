@@ -1,0 +1,15 @@
+{
+  "schema_version": "mlx-one-release-decision-v1",
+  "version": "0.1.1",
+  "release_approval": "APPROVED",
+  "approval_date": "2026-11-08",
+  "approval_source": "Maintainer instruction approving release after the model support review.",
+  "publication_status": "PENDING",
+  "published": false,
+  "published_install_version": "0.1.0a1",
+  "support_recorded_date": "2026-11-08",
+  "support_catalog": "src/mlx_one/data/model_support_release_20261108.json",
+  "support_catalog_sha256": "4ffe7cb6a4865f2904504ae6df1517b8a11d7a24864271880e6fd3fdea33cdcf",
+  "scope": "40 registered native model types with passing selected primary workflows; exact checkpoints, precisions and operations are recorded in the support catalog.",
+  "target_install_version": "0.1.1"
+}

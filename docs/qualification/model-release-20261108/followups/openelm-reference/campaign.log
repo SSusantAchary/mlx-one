@@ -1,0 +1,8 @@
+START openelm apple/OpenELM-270M
+FETCHFETCHFETCH  openelm openelm LICENSE  config.json5820
+ openelm1301
+ README.md 12744
+FETCHFETCH openelm model.safetensors 1086123184
+ openelm generation_config.json 111
+RESULT openelm FAIL bounded WikiText perplexity exceeds 1000
+CLEANED openelm 1108695597

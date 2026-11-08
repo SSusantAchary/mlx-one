@@ -1,0 +1,9 @@
+Collecting scipy
+  Using cached scipy-1.18.1-cp312-cp312-macosx_14_0_arm64.whl.metadata (62 kB)
+Requirement already satisfied: numpy<2.8,>=2.0.0 in /private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages (from scipy) (2.5.4)
+Using cached scipy-1.18.1-cp312-cp312-macosx_14_0_arm64.whl (20.5 MB)
+Installing collected packages: scipy
+Successfully installed scipy-1.18.1
+
+[notice] A new release of pip is available: 25.2 -> 26.3
+[notice] To update, run: /private/tmp/mlx-one-all40-20261108/wheel-env/bin/python -m pip install --upgrade pip

@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "qwen3_asr", "status": "FAIL", "quality_status": "PASS_ONE_ENGLISH_CLIP_ONLY", "seconds": 339.19290494918823, "error": "independent Whisper speech transcription exceeds declared WER limit"}

@@ -1,67 +1,68 @@
-# Functional architecture and checkpoint admission
+# Model support and functional admission
 
-Effective 2026-10-21. This supersedes prior numerical admission proposals as
-the default model support policy. Frozen reports, logs and their original
-PASS/FAIL decisions remain historical evidence and must not be rewritten.
+MLX-One follows the practical MLX-LM admission approach: native model correctness,
+real checkpoint task execution and working relevant interfaces. All **40 registered
+model types** have passing selected primary workflows in the
+[current support inventory](../status_models_testing.md). **0.1.1 is approved for
+release on 8 November 2026; publication is pending.**
+[Release notes](releases/0.1.1.md).
 
-The default gate follows the published MLX-LM functional approach: correctly
-parse the architecture, load the checkpoint and execute useful native model
-operations through the supported interfaces. No production `mlx_lm` or
-`transformers` dependency is allowed.
+## What supported means
 
-Admission requires:
+A support entry identifies a model type, exact checkpoint revision, storage and
+execution precision, primary operations and saved real-checkpoint result. Model
+architecture/state tests, relevant interfaces, native regressions and clean
+package checks back the entry. Other sizes, quantizations, tasks and hardware
+require evidence for any additional advertised claim.
 
-- Exact config, layer schedule, weight names/shapes, quantization modes and
-  per-module exceptions; reject unsupported or malformed inputs explicitly.
-- Forward shape, supported dtype and finite logits; correct routing and masks.
-- Genuine cache prefill, continuation, advancing positions, reset and request
-  isolation, with family-specific convolution/sliding/recurrent state.
-- Basic generation, tokenizer/chat formatting and every configured EOS ID.
-- Native Python, CLI, HTTP completion/chat and SSE smoke for advertised paths,
-  including bounded queuing, cancellation, cleanup and reset/reload behavior.
-- Clean wheel installation, dependency/import isolation, retained licenses and
-  the ordinary existing regression suite, with native Metal checks where available.
+The machine-readable source is
+[`model_support_release_20261108.json`](../src/mlx_one/data/model_support_release_20261108.json).
+It is checked against the native registry and saved result hashes during the
+website build. Historical manifests retain their original statuses and do not
+override this current inventory.
 
-Tiny synthetic configurations and fabricated safetensors test architecture
-support without full model downloads. New architecture tests run by default
-on a Metal host. Lack of full weights is never a reason to skip them. Other
-hosts still run metadata, configuration and protocol tests.
+## Required engineering checks
 
-| Status | Required evidence |
-|---|---|
-| `ARCHITECTURE_IMPLEMENTED` | Native config/model/cache/registry and passing tiny synthetic forward and cache tests |
-| `MODEL_SMOKE_TESTED` | The exact downloaded checkpoint actually loads and generates through native code |
-| `EXPERIMENTAL_SUPPORTED` | Required real-checkpoint serving/runtime smoke passes within disclosed bounds |
-| `USER_VALIDATED` | The owner completes independent manual evaluation |
+- Correct config, weight names/shapes and quantization mapping; reject unsupported
+  or malformed inputs.
+- Forward shape/dtype and finite outputs; correct masks, routing and task state.
+- Applicable cache prefill/continuation/reset and independent request state.
+- Real pinned-checkpoint output for the named task: text, images, transcripts,
+  waveform generation, embeddings, scores, masks or classifications.
+- Working advertised Python/CLI/HTTP/streaming interfaces and relevant lifecycle
+  checks. A task does not need an interface that is not advertised.
+- Regression and clean distribution checks, native Metal execution where claimed,
+  isolated imports, and retained licenses/notices.
 
-`CODE_IMPLEMENTED` and `SYNTHETIC_TESTED` are implementation milestones.
-`NOT_DOWNLOADED_NOT_SMOKE_TESTED`, `NOT_DOWNLOADED` and `MANUAL_TEST_PENDING`
-describe remaining checkpoint work. `INCOMPATIBLE_MLX_CORE` is a runtime
-compatibility failure; MXFP4 must never be reinterpreted as affine Q4.
+Upstream MLX-LM asks for new model tests and actual generation output. Its template
+requests reference output if CUDA is available; it does not prescribe a universal
+corpus accuracy floor or blanket broad-reliability certification.
+[Contribution guide](https://github.com/ml-explore/mlx-lm/blob/main/CONTRIBUTING.md) ·
+[new-model template](https://github.com/ml-explore/mlx-lm/blob/main/.github/PULL_REQUEST_TEMPLATE/new_model.md).
 
-Full-vs-cached differential logit E, KL, NLL, extensive FP64 experiments and
-exhaustive sequence-partition matrices remain **optional research diagnostics**.
-They do not determine admission. Focused tolerance-based operation checks
-remain useful when they test actual routing, masking, RoPE or quantization.
-Known severe functional failures still block their affected advertised paths.
+## Quality, performance and optional scopes
 
-Gemma3 follows these ordinary functional rules. Its historical cached numerical
-differences after sliding boundaries remain a known limitation, without a
-numerical admission veto. Qwen3.5's current stored-source short generation and
-continuation/reset recheck passed, but converted and previously broken paths
-remain experimental and unqualified. A short source smoke does not promote them.
+CER/WER/F1/PPL measurements, reference comparisons, long-context work and optional
+task variants remain valuable diagnostics or evidence for specific claims. They
+are not universal support gates. Actual loading, invalid output, broken state or
+interface defects still block the affected advertised workflow.
 
-The packaged support manifest retains the previous ten exact checkpoint rows
-and adds the two new large targets as architecture-only. Historical bounded
-Python/CLI/HTTP/SSE evidence supports the nine existing experimental entries;
-neither new target has real-checkpoint smoke evidence. Administrative publication
-approval is separate from functional model admission and remains pending.
+Changing the support policy never turns a failed benchmark into a passed
+benchmark. See [repairs and preserved diagnostic limits](qualification/model-release-20261108/RESOLUTIONS.md).
+MLXBoost, training, TQ3 variants and other optional experiments retain their own
+status; model support does not admit every extension.
 
-Configured position limits do not establish feasible context or hardware
-performance. Start large-model manual smoke at 128–1024 total tokens and record
-actual prompt/output counts, TTFT, throughput, MLX memory and state memory.
+## Release and publication
 
-References: [MLX-LM](https://github.com/ml-explore/mlx-lm),
-[current manifest](../src/mlx_one/data/compatibility/alpha_release.json),
-[manual inference](native-moe/manual-inference.md),
-[historical proof](qualification/alpha_release/model-support-matrix.md).
+Functional support, measured quality/performance and publication are separate
+records. The [maintainer release decision](releases/0.1.1.json) approves 0.1.1;
+publishing the package and deploying the site happen separately. Published
+installation examples target 0.1.1 and identify publication as pending until upload.
+
+## Historical status vocabulary
+
+Older manifests use `ARCHITECTURE_IMPLEMENTED`, `MODEL_SMOKE_TESTED`,
+`EXPERIMENTAL_SUPPORTED`, `USER_VALIDATED`, `WIP` and blocked/unknown labels. These
+continue to describe their original exact profiles. They do not impose a blanket
+experimental label on the current supported models. The older 23/7/10 model audit
+is preserved in the [historical report](qualification/history/model-status-before-20261108.md).

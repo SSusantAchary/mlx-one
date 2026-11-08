@@ -1,0 +1,8 @@
+{'dimensions': (7, 11, 3, 5), 'max_error': 1, 'different': 6, 'reference_sha256': 'ba32630fe9c5cec7272b398d2f5785cad1b0e892fcaf475b4c81effbc692da5f'}
+{'dimensions': (7, 11, 15, 19), 'max_error': 1, 'different': 147, 'reference_sha256': '8c1d9b3d6191aa93bf6f09b9600b8b47df5c3e9c12efcfa0d70a48f1ebec2527'}
+{'dimensions': (7, 11, 3, 19), 'max_error': 1, 'different': 30, 'reference_sha256': '2aba12c3c815e38b4b92610eff1437e05d4b4a82655c63716296a000860ee012'}
+{'dimensions': (1, 11, 1, 19), 'max_error': 0, 'different': 0, 'reference_sha256': '02a416b14f36219e519e7102f22776a9426fe9e1cbcb74036c3e4e4a490ac847'}
+{'dimensions': (7, 1, 15, 1), 'max_error': 212, 'different': 42, 'reference_sha256': '6128b743ca11bc4f1a778638555df89e7b0b35d6036c6569c518239f5ad468a9'}
+{'dimensions': (7, 11, 7, 11), 'max_error': 0, 'different': 0, 'reference_sha256': '2d9871ee7da2590abbc8c4a5076bd04c63a5ea17cea9349213cf130d5558c2d3'}
+{'dimensions': (13, 17, 1008, 1008), 'max_error': 1, 'different': 563332, 'reference_sha256': 'e6e7ea2010d47c79bfecf4d1a5b366b945394db7493deb075ebed591dc030bcf'}
+{'dimensions': (121, 169, 31, 29), 'max_error': 1, 'different': 257, 'reference_sha256': 'b09898b19e25e0f1a6e44c57295f674405d932728df385b3c349445c7554a864'}

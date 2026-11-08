@@ -29,16 +29,42 @@ class Lfm2ColBERTModel(nn.Module):
         )
 
     def __call__(
-        self, input_ids: Any, *, attention_mask: Any | None = None
+        self,
+        input_ids: Any,
+        *,
+        attention_mask: Any | None = None,
+        embedding_mask: Any | None = None,
     ) -> EmbeddingModelOutput:
-        hidden, _, _ = self.model(input_ids, attention_mask=attention_mask)
+        if self.config.query_prefix is None:
+            hidden, _, _ = self.model(input_ids, attention_mask=attention_mask)
+        else:
+            # Expansion positions retain their EOS-token convolution states.
+            # The publisher recipe masks only attention keys here. Exact-length
+            # task groups avoid introducing unrelated document batch padding.
+            hidden = self.model.embed_tokens(input_ids)
+            length = input_ids.shape[1]
+            causal = mx.triu(mx.full((length, length), -float("inf")), k=1)
+            padding = (
+                0
+                if attention_mask is None
+                else mx.where(attention_mask[:, None, None, :], 0.0, -float("inf"))
+            )
+            for layer in self.model.layers:
+                hidden = layer(
+                    hidden,
+                    mask=causal + padding if layer.is_attention_layer else None,
+                    cache=None,
+                    position_ids=None,
+                )
+            hidden = self.model.embedding_norm(hidden)
         embeddings = self.projection(hidden)
         if self.config.normalize:
             norm = mx.sqrt(mx.sum(embeddings * embeddings, axis=-1, keepdims=True))
             embeddings = embeddings / mx.maximum(norm, 1e-12)
-        if attention_mask is not None:
-            embeddings = mx.where(attention_mask[..., None], embeddings, 0)
-        return EmbeddingModelOutput(embeddings, hidden, attention_mask)
+        keep = attention_mask if embedding_mask is None else embedding_mask
+        if keep is not None:
+            embeddings = mx.where(keep[..., None], embeddings, 0)
+        return EmbeddingModelOutput(embeddings, hidden, keep)
 
     @staticmethod
     def maxsim(

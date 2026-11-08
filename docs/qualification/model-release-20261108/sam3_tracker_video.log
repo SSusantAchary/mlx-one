@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "sam3_tracker_video", "status": "FAIL", "quality_status": null, "seconds": 0.19122815132141113, "error": "registered standalone temporal tracker has no admitted public checkpoint loader"}

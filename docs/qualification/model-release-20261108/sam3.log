@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "sam3", "status": "PASS_FUNCTIONAL", "quality_status": "PENDING_SAME_CHECKPOINT_REFERENCE_MASK_COMPARISON", "seconds": 4.091799020767212, "error": null}

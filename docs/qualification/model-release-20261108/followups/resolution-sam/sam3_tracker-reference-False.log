@@ -1,0 +1,6 @@
+/Users/susant-achary/dev_work/git_codes/c_base/mlx-one/local/native_tasks/reference_venv/lib/python3.14/site-packages/torch/jit/_script.py:1485: FutureWarning: `torch.jit.script` is not supported in Python 3.14+ and may break. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+You are using a model of type `sam3_video` to instantiate a model of type `sam3_tracker`. This may be expected if you are loading a checkpoint that shares a subset of the architecture (e.g., loading a `sam2_video` checkpoint into `Sam2Model`), but is otherwise not supported and can yield errors. Please verify that the checkpoint is compatible with the model you are instantiating.
+Loading weights:   0%|          | 0/685 [00:00<?, ?it/s]Loading weights: 100%|██████████| 685/685 [00:00<00:00, 24375.35it/s]
+{"stage": "reference_loaded", "seconds": 0.15928337500372436}
+{"stage": "reference_inferred", "seconds": 6.274863375001587, "mask_count": 3, "peak_process_bytes": 3562881024}

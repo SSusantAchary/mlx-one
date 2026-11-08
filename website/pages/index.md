@@ -10,8 +10,17 @@ MLX library. Load a model, run it from Python or the CLI, and serve a local chat
 and HTTP API. Native model implementations share checkpoint loading, execution and
 developer tooling on Apple Silicon.
 
+**0.1.1 approved for release · 8 November 2026.** All registered model types have
+passing primary-workflow records. [Release notes](releases/0.1.1.md) ·
+[Supported models and known limits](models/support.md).
+
+<!-- insights:summary -->
+
+The installation examples target **0.1.1**. Publication is pending; until it is
+available on PyPI, use the [source installation](getting-started.md#source-installation-for-development).
+
 ```bash
-python -m pip install "mlx-one==0.1.0a1"
+python -m pip install "mlx-one==0.1.1"
 ```
 
 ```bash
@@ -23,13 +32,13 @@ mlx-one generate openai-community/gpt2 "The future of local AI is" \
   --max-tokens 64 --temperature 0.8 --seed 0
 
 # Start the local chat UI and an OpenAI-compatible HTTP API.
-python -m pip install "mlx-one[server]==0.1.0a1"
+python -m pip install "mlx-one[server]==0.1.1"
 mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
   --host 127.0.0.1 --port 8888 --inference-mode reference_dense
 ```
 
 [Get started](getting-started.md){ .md-button .md-button--primary }
-[Choose a model](models/index.md){ .md-button }
+[Supported models](models/support.md){ .md-button }
 [How it works](reference/architecture.md){ .md-button }
 
 ## What it makes possible
@@ -38,24 +47,25 @@ mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
 
 [Explore model coverage, benchmarks and development progress](insights/index.md){ .md-button }
 
-Counts show distinct native model types and refresh from the registry on each
-build. Checkpoint sizes and quantizations share a model type. The coverage
-dashboard records validation status and limitations for individual checkpoints.
+Counts come from the verified support catalog and native registry on each build.
+Each type has a pinned checkpoint, precision, passing task record and applicable
+interface checks. Checkpoint sizes and quantizations share a model type.
 
 | Workflow | Native capabilities | Start here |
 | --- | --- | --- |
 | Text generation | Cached decoding, sampling, chat templates and token streaming | [Generate text](guides/generate.md) |
 | Local applications | Python APIs, CLI workflows and HTTP/SSE serving | [Serve an API and chat UI](guides/serve.md) |
 | Vision-language | Supported static-image and text workflows | [Vision-language guide](guides/vision.md) |
-| Audio and speech | ASR, separate known-text alignment and experimental speech generation | [Audio guide](guides/audio.md) |
+| Audio and speech | ASR, known-text alignment, voice activity detection and Q8 speech generation | [Audio guide](guides/audio.md) |
 | Documents | Line recognition and implemented page-model OCR workflows | [OCR guide](guides/ocr.md) |
 | Retrieval | Embeddings, similarity and Qwen3 reranking | [Embeddings and reranking](guides/retrieval.md) |
-| Segmentation and tracking | SAM3 image prompts and experimental video tracking | [SAM3 guide](models/segmentation/sam3.md) |
+| Segmentation and tracking | SAM3 image prompts and native offline/streaming video tracking | [SAM3 guide](models/segmentation/sam3.md) |
+| Classification | Sentiment, named entities and zero-shot image classification | [Classification guides](models/index.md#classification-guides) |
 
-Exact checkpoint and interface coverage varies. The [model index](models/index.md)
-and [checkpoint inventory](reference/checkpoints.md) record those boundaries;
-[performance reports](performance/index.md) keep measured workloads separate from
-broader qualification claims.
+The [support inventory](models/support.md) records exact checkpoints and operations.
+[Performance reports](performance/index.md) retain measured workloads, and
+[known quality and scope limits](models/support.md#known-quality-and-scope-limitations)
+remain visible alongside support.
 
 ## Find a guide
 
@@ -87,5 +97,5 @@ implemented components and [experimental documentation](experimental/index.md)
 for investigations, known failures and remaining gates.
 
 Apache-2.0 · [GitHub](https://github.com/SSusantAchary/mlx-one) ·
-[PyPI](https://pypi.org/project/mlx-one/0.1.0a1/) ·
+[PyPI](https://pypi.org/project/mlx-one/0.1.1/) ·
 [Citation and license](reference/citation.md)

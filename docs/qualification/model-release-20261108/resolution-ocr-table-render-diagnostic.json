@@ -1,0 +1,29 @@
+{
+  "scope": "Offline remeasurement of retained outputs; no new inference claimed",
+  "results": {
+    "got_ocr2": {
+      "previous_cer": 0.2536082474226804,
+      "corrected_markdown_table_rendered_cer": 0.18055555555555555,
+      "reference_characters": 864,
+      "source_result": "followups/resolution-ocr/got_ocr2.json"
+    },
+    "florence2": {
+      "previous_cer": 0.34845360824742266,
+      "corrected_markdown_table_rendered_cer": 0.2789351851851852,
+      "reference_characters": 864,
+      "source_result": "followups/resolution-ocr/florence2.json"
+    },
+    "lightonocr": {
+      "previous_cer": 0.1618556701030928,
+      "corrected_markdown_table_rendered_cer": 0.059027777777777776,
+      "reference_characters": 864,
+      "source_result": "followups/resolution-ocr/lightonocr.json"
+    },
+    "deepseek_ocr": {
+      "previous_cer": 0.22371134020618558,
+      "corrected_markdown_table_rendered_cer": 0.3414351851851852,
+      "reference_characters": 864,
+      "source_result": "followups/resolution-ocr/deepseek_ocr.json"
+    }
+  }
+}

@@ -1,0 +1,3 @@
+/private/tmp/mlx-one-all40-20261108/reference-sources/florence-publisher-f6c1a25888ffc1d945ee8a1a77ac833c7303d46e/florence_publisher/processing_florence2.py:515: SyntaxWarning: invalid escape sequence '\d'
+  PATTERN: 'r<time_(\d+)><time_(\d+)>([a-zA-Z0-9 ]+)'
+{"backend": "reference", "shapes": {"pixel_values": [1, 3, 768, 768], "input_ids": [1, 10], "visual_features": [1, 577, 768], "inputs_embeds": [1, 587, 768], "encoder_states": [1, 587, 768]}}

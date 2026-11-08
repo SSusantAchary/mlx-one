@@ -1,0 +1,6 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+SPEECH_TASK tts PASS_FUNCTIONAL
+SPEECH_TASK sts_short PASS_FUNCTIONAL
+SPEECH_TASK sts_10s PASS_FUNCTIONAL
+{"model_type": "lfm2_audio", "status": "FAIL", "quality_status": "ASR_MEASURED_SPEECH_REVIEW_REQUIRED", "seconds": 433.3350327014923, "error": "No module named 'soundfile'"}

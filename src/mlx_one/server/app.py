@@ -220,6 +220,18 @@ def create_app(
     bearer = HTTPBearer(auto_error=False)
     services = dict(task_services or {})
     try:
+        primary_retrieval = getattr(manager.current_model(), "retrieval", None)
+        if primary_retrieval is not None:
+            from mlx_one.server.retrieval import serving_operation
+
+            task = primary_retrieval.task
+            services.setdefault(
+                "embedding" if task == "embedding" else "rerank",
+                serving_operation(manager, task),
+            )
+    except RuntimeError:
+        pass
+    try:
         info = manager.model_info()
         if ("image" in getattr(info, "modalities", ()) and "ocr.recognize" not in info.tasks
                 and "zero-shot-image-classification" not in info.tasks):

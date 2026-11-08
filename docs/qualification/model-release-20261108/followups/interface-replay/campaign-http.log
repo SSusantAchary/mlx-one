@@ -1,0 +1,227 @@
+START gpt2 openai-community/gpt2
+FETCH FETCHgpt2 FETCH gpt2README.md gpt2 generation_config.json   8092
+124config.json
+ 665
+FETCH gpt2 merges.txt FETCH456318 gpt2
+FETCH gpt2  model.safetensorstokenizer.json  1355256548105171
+
+FETCH gpt2 tokenizer_config.json 26
+FETCH gpt2 vocab.json 1042301
+RANGE model.safetensors 4 / 9
+RANGE model.safetensors 2 / 9
+RANGE model.safetensors 5 / 9
+RANGE model.safetensors 1 / 9
+RANGE model.safetensors 6 / 9
+RANGE model.safetensors 9 / 9
+RANGE model.safetensors 8 / 9
+RANGE model.safetensors 7 / 9
+RANGE model.safetensors 3 / 9
+RESULT gpt2 PASS_FUNCTIONAL 
+CLEANED gpt2 1099074892
+START qwen2 Qwen/Qwen2.5-0.5B-Instruct
+FETCH qwen2 FETCHFETCHLICENSE  qwen2 README.md 4917
+ qwen2 config.json11343 
+659
+FETCH qwen2 generation_config.json 242
+FETCH qwen2 merges.txt 1671839
+FETCH qwen2 model.safetensors 988097824
+FETCH qwen2 tokenizer.json 7031645
+FETCH qwen2 tokenizer_config.json 7305
+FETCH qwen2 vocab.json 2776833
+RANGE model.safetensors 1 / 15
+RANGE model.safetensors 5 / 15
+RANGE model.safetensors 2 / 15
+RANGE model.safetensors 7 / 15
+RANGE model.safetensors 6 / 15
+RANGE model.safetensors 4 / 15
+RANGE model.safetensors 8 / 15
+RANGE model.safetensors 10 / 15
+RANGE model.safetensors 3 / 15
+RANGE model.safetensors 12 / 15
+RANGE model.safetensors 9 / 15
+RANGE model.safetensors 11 / 15
+RANGE model.safetensors 13 / 15
+RANGE model.safetensors 15 / 15
+RANGE model.safetensors 14 / 15
+RESULT qwen2 PASS_FUNCTIONAL 
+CLEANED qwen2 2524290017
+START qwen3 Qwen/Qwen3-0.6B
+FETCHFETCH FETCH  qwen3 LICENSE 11343
+qwen3qwen3  README.mdconfig.json 726
+ 13965
+FETCH qwen3 generation_config.json 239
+FETCH qwen3 merges.txt 1671853
+FETCH qwen3 model.safetensors 1503300328
+FETCH qwen3 tokenizer.json 11422654
+FETCH qwen3 tokenizer_config.json 9732
+FETCH qwen3 vocab.json 2776833
+RANGE model.safetensors 3 / 23
+RANGE model.safetensors 2 / 23
+RANGE model.safetensors 1 / 23
+RANGE model.safetensors 6 / 23
+RANGE model.safetensors 7 / 23
+RANGE model.safetensors 5 / 23
+RANGE model.safetensors 9 / 23
+RANGE model.safetensors 8 / 23
+RANGE model.safetensors 10 / 23
+RANGE model.safetensors 12 / 23
+RANGE model.safetensors 11 / 23
+RANGE model.safetensors 13 / 23
+RANGE model.safetensors 4 / 23
+RANGE model.safetensors 14 / 23
+RANGE model.safetensors 15 / 23
+RANGE model.safetensors 18 / 23
+RANGE model.safetensors 17 / 23
+RANGE model.safetensors 16 / 23
+RANGE model.safetensors 19 / 23
+RANGE model.safetensors 20 / 23
+RANGE model.safetensors 23 / 23
+RANGE model.safetensors 21 / 23
+RANGE model.safetensors 22 / 23
+RESULT qwen3 PASS_FUNCTIONAL 
+CLEANED qwen3 3671894242
+START lfm2 LiquidAI/LFM2-350M
+FETCH FETCHlfm2 FETCH  LICENSElfm2 lfm2 README.md 18107
+10596 
+chat_template.jinja 1379
+FETCH lfm2 config.json 999
+FETCH lfm2 generation_config.json 137
+FETCH lfm2 model.safetensors 708984464
+FETCH lfm2 special_tokens_map.json 434
+FETCH lfm2 tokenizer.json 4732426
+FETCH lfm2 tokenizer_config.json 91565
+RANGE model.safetensors 4 / 11
+RANGE model.safetensors 5 / 11
+RANGE model.safetensors 2 / 11
+RANGE model.safetensors 6 / 11
+RANGE model.safetensors 7 / 11
+RANGE model.safetensors 8 / 11
+RANGE model.safetensors 9 / 11
+RANGE model.safetensors 1 / 11
+RANGE model.safetensors 11 / 11
+RANGE model.safetensors 3 / 11
+RANGE model.safetensors 10 / 11
+RESULT lfm2 FAIL bounded WikiText perplexity exceeds 1000
+CLEANED lfm2 1627210529
+START llama HuggingFaceTB/SmolLM2-1.7B-Instruct
+FETCHFETCHFETCH  llama llama all_results.json 785
+config.json llama 908 
+README.md 14928
+FETCH llama eval_results.json 587
+FETCH llama generation_config.json 132
+FETCH llama merges.txt 466391
+FETCH llama model.safetensors 3422777952
+FETCH llama special_tokens_map.json 655
+FETCH llama tokenizer.json 2104556
+FETCH llama tokenizer_config.json 3764
+FETCH llama train_results.json 232
+FETCH llama trainer_state.json 86369
+FETCH llama vocab.json 800662
+RANGE model.safetensors 4 / 52
+RANGE model.safetensors 5 / 52
+RANGE model.safetensors 1 / 52
+RANGE model.safetensors 6 / 52
+RANGE model.safetensors 7 / 52
+RANGE model.safetensors 2 / 52
+RANGE model.safetensors 9 / 52
+RANGE model.safetensors 3 / 52
+RANGE model.safetensors 10 / 52
+RANGE model.safetensors 12 / 52
+RANGE model.safetensors 13 / 52
+RANGE model.safetensors 8 / 52
+RANGE model.safetensors 14 / 52
+RANGE model.safetensors 11 / 52
+RANGE model.safetensors 15 / 52
+RANGE model.safetensors 16 / 52
+RANGE model.safetensors 17 / 52
+RANGE model.safetensors 18 / 52
+RANGE model.safetensors 19 / 52
+RANGE model.safetensors 21 / 52
+RANGE model.safetensors 23 / 52
+RANGE model.safetensors 22 / 52
+RANGE model.safetensors 24 / 52
+RANGE model.safetensors 26 / 52
+RANGE model.safetensors 25 / 52
+RANGE model.safetensors 27 / 52
+RANGE model.safetensors 29 / 52
+RANGE model.safetensors 28 / 52
+RANGE model.safetensors 20 / 52
+RANGE model.safetensors 30 / 52
+RANGE model.safetensors 31 / 52
+RANGE model.safetensors 32 / 52
+RANGE model.safetensors 33 / 52
+RANGE model.safetensors 34 / 52
+RANGE model.safetensors 36 / 52
+RANGE model.safetensors 35 / 52
+RANGE model.safetensors 37 / 52
+RANGE model.safetensors 41 / 52
+RANGE model.safetensors 39 / 52
+RANGE model.safetensors 38 / 52
+RANGE model.safetensors 40 / 52
+RANGE model.safetensors 42 / 52
+RANGE model.safetensors 44 / 52
+RANGE model.safetensors 45 / 52
+RANGE model.safetensors 43 / 52
+RANGE model.safetensors 46 / 52
+RANGE model.safetensors 47 / 52
+RANGE model.safetensors 48 / 52
+RANGE model.safetensors 52 / 52
+RANGE model.safetensors 49 / 52
+RANGE model.safetensors 50 / 52
+RANGE model.safetensors 51 / 52
+RESULT llama PASS_FUNCTIONAL 
+CLEANED llama 7815407848
+START gemma3_text google/gemma-3-1b-it
+FETCHFETCHFETCH gemma3_text gemma3_text added_tokens.json  README.md35
+  24265gemma3_text
+ config.json 899
+FETCH gemma3_text generation_config.json 215
+FETCH gemma3_text model.safetensors 1999811208
+FETCH gemma3_text special_tokens_map.json 662
+FETCH gemma3_text tokenizer.json 33384568
+FETCH gemma3_text tokenizer.model 4689074
+FETCH gemma3_text tokenizer_config.json 1156999
+RANGE model.safetensors 2 / 30
+RANGE model.safetensors 3 / 30
+RANGE model.safetensors 1 / 30
+RANGE model.safetensors 5 / 30
+RANGE model.safetensors 6 / 30
+RANGE model.safetensors 4 / 30
+RANGE model.safetensors 9 / 30
+RANGE model.safetensors 7 / 30
+RANGE model.safetensors 10 / 30
+RANGE model.safetensors 11 / 30
+RANGE model.safetensors 12 / 30
+RANGE model.safetensors 13 / 30
+RANGE model.safetensors 16 / 30
+RANGE model.safetensors 15 / 30
+RANGE model.safetensors 14 / 30
+RANGE model.safetensors 17 / 30
+RANGE model.safetensors 8 / 30
+RANGE model.safetensors 18 / 30
+RANGE model.safetensors 20 / 30
+RANGE model.safetensors 21 / 30
+RANGE model.safetensors 19 / 30
+RANGE model.safetensors 22 / 30
+RANGE model.safetensors 24 / 30
+RANGE model.safetensors 23 / 30
+RANGE model.safetensors 27 / 30
+RANGE model.safetensors 25 / 30
+RANGE model.safetensors 26 / 30
+RANGE model.safetensors 28 / 30
+RANGE model.safetensors 30 / 30
+RANGE model.safetensors 29 / 30
+RESULT gemma3_text PASS_FUNCTIONAL 
+CLEANED gemma3_text 4038881162
+START distilbert distilbert/distilbert-base-uncased-finetuned-sst-2-english
+FETCH FETCHFETCH  distilbert distilbert README.md 10512
+distilbertconfig.json 629
+ model.safetensors 267832558
+FETCH distilbert tokenizer_config.json 48
+FETCH distilbert vocab.txt 231508
+RANGE model.safetensors 2 / 4
+RANGE model.safetensors 4 / 4
+RANGE model.safetensors 1 / 4
+RANGE model.safetensors 3 / 4
+RESULT distilbert PASS_FUNCTIONAL 
+CLEANED distilbert 535909045

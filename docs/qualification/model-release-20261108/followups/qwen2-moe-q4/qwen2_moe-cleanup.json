@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "qwen2_moe"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/qwen2_moe",
+  "bytes_removed": 17016665680,
+  "downloaded_bytes_verified": 8514714590,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794139761.5563898,
+  "recorded": 1794141078.927304,
+  "cleanup_complete": true,
+  "finished": 1794141079.132353
+}

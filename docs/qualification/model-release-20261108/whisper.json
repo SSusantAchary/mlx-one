@@ -1,0 +1,199 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "whisper",
+  "checkpoint": "openai/whisper-tiny",
+  "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+  "started": 1794138117.359172,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "f070a39bccddf63c296ceca6cb86be36f9be2a7f497739b4088575af4c93c12c",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "reference_python": "/private/tmp/mlx-one-all40-20261108/reference-env/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279",
+  "output": {
+    "text": "He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+    "language": "en",
+    "segments": [
+      {
+        "id": 0,
+        "seek": 0,
+        "start": 0.0,
+        "end": 6.4,
+        "text": "He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can",
+        "tokens": [
+          634,
+          575,
+          12525,
+          22618,
+          1968,
+          6144,
+          35617,
+          20084,
+          1756,
+          311,
+          589,
+          307,
+          534,
+          10281,
+          934,
+          439,
+          11,
+          293,
+          393
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.6710914572816926,
+        "compression_ratio": 1.0465116279069768,
+        "no_speech_prob": 0.0,
+        "words": []
+      },
+      {
+        "id": 1,
+        "seek": 640,
+        "start": 6.4,
+        "end": 9.4,
+        "text": "discover in it but little of Rocky Ithaca.",
+        "tokens": [
+          4411,
+          294,
+          309,
+          457,
+          707,
+          295,
+          26916,
+          286,
+          392,
+          6628,
+          13
+        ],
+        "temperature": 0.0,
+        "avg_logprob": -0.42319819538913983,
+        "compression_ratio": 0.84,
+        "no_speech_prob": 0.0,
+        "words": []
+      }
+    ],
+    "duration": 10.0,
+    "model": "/private/tmp/mlx-one-all40-20261108/models/whisper/checkpoint",
+    "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+    "task": "transcribe",
+    "timings": {
+      "load_seconds": 3.3299147617071867e-07,
+      "preprocess_seconds": 0.017015750010614283,
+      "decode_seconds": 1.8494590829941444,
+      "wall_seconds": 1.8664751659962349
+    },
+    "offset_seconds": 0.0
+  },
+  "wer": 0.041666666666666664,
+  "cer": 0.03636363636363636,
+  "quality_status": "PASS_ONE_ENGLISH_CLIP_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"duration\": 10.0,\n  \"language\": \"en\",\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/whisper/checkpoint\",\n  \"offset_seconds\": 0.0,\n  \"revision\": null,\n  \"segments\": [\n    {\n      \"avg_logprob\": -0.6710914572816926,\n      \"compression_ratio\": 1.0465116279069768,\n      \"end\": 6.4,\n      \"id\": 0,\n      \"no_speech_prob\": 0.0,\n      \"seek\": 0,\n      \"start\": 0.0,\n      \"temperature\": 0.0,\n      \"text\": \"He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can\",\n      \"tokens\": [\n        634,\n        575,\n        12525,\n        22618,\n        1968,\n        6144,\n        35617,\n        20084,\n        1756,\n        311,\n        589,\n        307,\n        534,\n        10281,\n        934,\n        439,\n        11,\n        293,\n        393\n      ],\n      \"words\": []\n    },\n    {\n      \"avg_logprob\": -0.42319819538913983,\n      \"compression_ratio\": 0.84,\n      \"end\": 9.4,\n      \"id\": 1,\n      \"no_speech_prob\": 0.0,\n      \"seek\": 640,\n      \"start\": 6.4,\n      \"temperature\": 0.0,\n      \"text\": \"discover in it but little of Rocky Ithaca.\",\n      \"tokens\": [\n        4411,\n        294,\n        309,\n        457,\n        707,\n        295,\n        26916,\n        286,\n        392,\n        6628,\n        13\n      ],\n      \"words\": []\n    }\n  ],\n  \"task\": \"transcribe\",\n  \"text\": \"He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.\",\n  \"timings\": {\n    \"decode_seconds\": 2.105791624999256,\n    \"load_seconds\": 0.06096358298964333,\n    \"preprocess_seconds\": 0.03470758300682064,\n    \"wall_seconds\": 2.20146279099572\n  }\n}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "text": "He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+        "language": "en",
+        "mlx": {
+          "segments": [
+            {
+              "id": 0,
+              "seek": 0,
+              "start": 0.0,
+              "end": 6.4,
+              "text": "He has grave doubts whether Sir Frederick Layton's work is really Greek after all, and can",
+              "tokens": [
+                634,
+                575,
+                12525,
+                22618,
+                1968,
+                6144,
+                35617,
+                20084,
+                1756,
+                311,
+                589,
+                307,
+                534,
+                10281,
+                934,
+                439,
+                11,
+                293,
+                393
+              ],
+              "temperature": 0.0,
+              "avg_logprob": -0.6710914572816926,
+              "compression_ratio": 1.0465116279069768,
+              "no_speech_prob": 0.0,
+              "words": []
+            },
+            {
+              "id": 1,
+              "seek": 640,
+              "start": 6.4,
+              "end": 9.4,
+              "text": "discover in it but little of Rocky Ithaca.",
+              "tokens": [
+                4411,
+                294,
+                309,
+                457,
+                707,
+                295,
+                26916,
+                286,
+                392,
+                6628,
+                13
+              ],
+              "temperature": 0.0,
+              "avg_logprob": -0.42319819538913983,
+              "compression_ratio": 0.84,
+              "no_speech_prob": 0.0,
+              "words": []
+            }
+          ],
+          "duration": 10.0,
+          "timings": {
+            "load_seconds": 2.4170003598555923e-06,
+            "preprocess_seconds": 0.013435083004878834,
+            "decode_seconds": 2.4362166249920847,
+            "wall_seconds": 2.4496541249973234
+          }
+        }
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 651546664,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 7.3064048290252686,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "f070a39bccddf63c296ceca6cb86be36f9be2a7f497739b4088575af4c93c12c"
+}

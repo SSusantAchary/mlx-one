@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/private/tmp/mlx-one-all40-20261108/reference-sources/florence-publisher-f6c1a25888ffc1d945ee8a1a77ac833c7303d46e/florence_publisher/modeling_florence2.py", line 29, in <module>
+    from timm.layers import DropPath, trunc_normal_
+  File "/private/tmp/mlx-one-all40-20261108/reference-env/lib/python3.12/site-packages/timm/__init__.py", line 2, in <module>
+    from .layers import (
+  File "/private/tmp/mlx-one-all40-20261108/reference-env/lib/python3.12/site-packages/timm/layers/__init__.py", line 23, in <module>
+    from .classifier import create_classifier, ClassifierHead, NormMlpClassifierHead, ClNormMlpClassifierHead
+  File "/private/tmp/mlx-one-all40-20261108/reference-env/lib/python3.12/site-packages/timm/layers/classifier.py", line 15, in <module>
+    from .create_norm import get_norm_layer
+  File "/private/tmp/mlx-one-all40-20261108/reference-env/lib/python3.12/site-packages/timm/layers/create_norm.py", line 29, in <module>
+    from torchvision.ops.misc import FrozenBatchNorm2d
+ModuleNotFoundError: No module named 'torchvision'

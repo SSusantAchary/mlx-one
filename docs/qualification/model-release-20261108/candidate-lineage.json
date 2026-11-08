@@ -1,0 +1,292 @@
+{
+  "builds": [
+    {
+      "build": "dist",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "5984129a2e86099be337cb819b181df9ba8f0956f5a9588f551e6767e77532a5",
+          "bytes": 2312482
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "bd000575497ce89b79bd0f96d2e63f3513bfa4c88df6abce8e3ef36aec3497db",
+          "bytes": 2106360
+        }
+      },
+      "installed_record_sha256": "8107cad617b73bf81760d6154ac4fcd8acc974e55924aa360708b83c9cca55d7",
+      "installed_record_file": "installed-records/56e44a0d9f80242d3d5db565a646c5d24aaffd48114b5f13137323ffda55b3fb.csv",
+      "record_file_sha256": "56e44a0d9f80242d3d5db565a646c5d24aaffd48114b5f13137323ffda55b3fb"
+    },
+    {
+      "build": "dist-v2",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "72f87455877f4be8137f30475c1e906a4b3281171f08ec314364ba9a30e87570",
+          "bytes": 2312481
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "dc3aaa2872ad5397ce9790228867f3277b1fb7d83caa0abdc2b282ef1b381820",
+          "bytes": 2106286
+        }
+      },
+      "installed_record_sha256": "c3f83ba89685bb8aff1f9ae154ccf19ce59b4f1da06a2c7a129c969a57405fbc",
+      "installed_record_file": "installed-records/52e58aa30b3a97eaa014f0a8394a21ae467d1806e29122802ef14652df35d584.csv",
+      "record_file_sha256": "52e58aa30b3a97eaa014f0a8394a21ae467d1806e29122802ef14652df35d584"
+    },
+    {
+      "build": "dist-v3",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "d4c0a20c937c3b9c78bd7efca181d2b5a0ee6a6629c83f02c4a209f3edefa831",
+          "bytes": 2313088
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "daf4e5cc03afe8c349a95dbc9082b6ceb9fdbc5841fa9302104f2d663ed4edc0",
+          "bytes": 2106821
+        }
+      },
+      "installed_record_sha256": "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279",
+      "installed_record_file": "installed-records/080b231b55594bb9e1245ab765d14c4f47ac5fb2033c96eed5e9e9bc610fe553.csv",
+      "record_file_sha256": "080b231b55594bb9e1245ab765d14c4f47ac5fb2033c96eed5e9e9bc610fe553"
+    },
+    {
+      "build": "dist-v4",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "af73d98b0602d3060b4b50294853903f0d1e1d81667945065dd7af9574b8fc28",
+          "bytes": 2313490
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "ec17d2c93550299cc6d32dd1d0ccee98f7c0cbda7c5f63a5ba4d2908a32aa66c",
+          "bytes": 2107118
+        }
+      },
+      "installed_record_sha256": "843e363381dce9153f4ed95fe1647c4cae61d1968079ec9b2f00327fa528a642",
+      "installed_record_file": "installed-records/3e797b99c46d75875fb49b7ef2c55e1627de2219c3f24ed80d3705c53887eace.csv",
+      "record_file_sha256": "3e797b99c46d75875fb49b7ef2c55e1627de2219c3f24ed80d3705c53887eace"
+    },
+    {
+      "build": "dist-v5",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "1da420c69cfb4a24f620f06df2a876d6293703c5bd9a83abe490efc2f22b4098",
+          "bytes": 2313722
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "10afb7c98760ddb72de75a39654131c59c0bfb6d93755fd7a9e48825ae9da308",
+          "bytes": 2107357
+        }
+      },
+      "installed_record_sha256": "22eab5e71be08e19bc54dc6894320aa0456bff674efcc93be2dba614542010b9",
+      "installed_record_file": "installed-records/61d510ead690a3018278f7a292bc7b9986200839afdfcf3d1c65aeee8b83bb7f.csv",
+      "record_file_sha256": "61d510ead690a3018278f7a292bc7b9986200839afdfcf3d1c65aeee8b83bb7f"
+    },
+    {
+      "build": "dist-v6",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "16fe65318c2120623dd730e257ddb61cce2c8ba4df5d0a840c84d3250851593f",
+          "bytes": 2317750
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "53b89de0592be360637277a09ac3abea902a2dd225901958d6e56e3d06f172ba",
+          "bytes": 2110176
+        }
+      },
+      "installed_record_sha256": "b217e481c4c2c27a0f565346de4a951cbc9c880fd1cc74e4715eda424d1393af",
+      "installed_record_file": "installed-records/bcb058cb7ebcae3335adefd8c91f8880388f61c7cbe609afae4792769d45be22.csv",
+      "record_file_sha256": "bcb058cb7ebcae3335adefd8c91f8880388f61c7cbe609afae4792769d45be22"
+    },
+    {
+      "build": "dist-v7",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "0a3e235b3aeb589d6b44bed9a12c3f6ba06ffdd9354b63639a8066ce40a0c194",
+          "bytes": 2317761
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "9c1beb23a652da5fc935cb4834a0c2cf58453cd3e69389c0ce04935916d48edf",
+          "bytes": 2110206
+        }
+      },
+      "installed_record_sha256": "ee55ddda19166e3458a18872704a5971dfb2160640d2624c9bfaa18676cf1eee",
+      "installed_record_file": "installed-records/74a7b1d6033a71f81ab2234c6325cb4992e63d5b7853e22c3267badc87e4ef51.csv",
+      "record_file_sha256": "74a7b1d6033a71f81ab2234c6325cb4992e63d5b7853e22c3267badc87e4ef51"
+    },
+    {
+      "build": "dist-v8",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "39b2f114f52af13f52623b6361a615cf1b219d945e3c1c45da39d889ab263e46",
+          "bytes": 2318013
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "9696b6c2f004a7a1a99ebf5eac9bd440702e0afd2689fe83402c674b7e824887",
+          "bytes": 2110336
+        }
+      },
+      "installed_record_sha256": "0b066d87eb16897d5dc6e7161b7612dbeb91cdd68a4a0b365845d44d217d72b0",
+      "installed_record_file": "installed-records/cf0c92014a50bc6040509de46d15e1f7ff2e71f76519141ae8cbd9fc59e48f35.csv",
+      "record_file_sha256": "cf0c92014a50bc6040509de46d15e1f7ff2e71f76519141ae8cbd9fc59e48f35"
+    },
+    {
+      "build": "dist-v9",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "0791926d39b4ebf92ed9139ed912541e1c7e9eae7ef50ec4cb8daf2fbb580d08",
+          "bytes": 2318059
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "2f4c3e644768e9bc8630af0d94eea29d06b78c70bd56bd39ec8373f59e0241b1",
+          "bytes": 2110612
+        }
+      },
+      "installed_record_sha256": "2b8dac9eb81757e7925fcb422e27e2ab4a46b6fe2cca19645fddf299f8f4b432",
+      "installed_record_file": "installed-records/c53797253a44a9a7a3da4da2ec69e72a7d67519beeb1db74cfd40ae2a6ff71f4.csv",
+      "record_file_sha256": "c53797253a44a9a7a3da4da2ec69e72a7d67519beeb1db74cfd40ae2a6ff71f4"
+    },
+    {
+      "build": "dist-final",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "7ebc12a4a2456015114bd7b1c973290671bc6b7db7c30b9e813f910e4cc400da",
+          "bytes": 2318063
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "31280ae91209005c24799b500be81cdee8fba1a377b955d32eaee091987174c2",
+          "bytes": 2110546
+        }
+      },
+      "installed_record_sha256": "151dfc34eea92cda14f714c37ef1da757a4c3237d4758a214a2d10f136e10b56",
+      "installed_record_file": "installed-records/a9d113ff45cdaca4da973e634aa82c64e0de68d9bfefeb66811f6b482f111556.csv",
+      "record_file_sha256": "a9d113ff45cdaca4da973e634aa82c64e0de68d9bfefeb66811f6b482f111556"
+    },
+    {
+      "build": "dist-final2",
+      "artifacts": {
+        "mlx_one-0.1.1-py3-none-any.whl": {
+          "sha256": "6aadc08d28e36bf075227e33222d880ad7204a39dec463fa64882d09b603d2ef",
+          "bytes": 2318102
+        },
+        "mlx_one-0.1.1.tar.gz": {
+          "sha256": "9f3c6d8294e73909a34aa835cb53fa5b284636a7ff97dcebde95b3bbf47c932f",
+          "bytes": 2110616
+        }
+      },
+      "installed_record_sha256": "3a0a128b69d59994064404f4c44e6f33419c63cba27389bd714dea5b03e6074c",
+      "installed_record_file": "installed-records/f79b94cfce4f7cde46b1774fed24416cf4b079a8891a99f0cc56e173d9ebb627.csv",
+      "record_file_sha256": "f79b94cfce4f7cde46b1774fed24416cf4b079a8891a99f0cc56e173d9ebb627"
+    }
+  ],
+  "probe_identity_matches": {
+    "c3f83ba89685bb8aff1f9ae154ccf19ce59b4f1da06a2c7a129c969a57405fbc": {
+      "build": "dist-v2",
+      "results": [
+        "qwen2_5_vl.json",
+        "openelm.json",
+        "qwen2_vl.json",
+        "gpt_oss.json",
+        "lfm2_moe.json",
+        "followups/gpt-oss-512/gpt_oss.json",
+        "followups/openelm-reference/openelm.json"
+      ]
+    },
+    "22eab5e71be08e19bc54dc6894320aa0456bff674efcc93be2dba614542010b9": {
+      "build": "dist-v5",
+      "results": [
+        "sam3_tracker_video.json",
+        "sam3.json",
+        "bert_token_classification.json",
+        "deepseek_ocr.json",
+        "sam3_tracker.json",
+        "sam3_video.json",
+        "lfm2_colbert.json",
+        "followups/florence-budget/florence2.json",
+        "followups/qwen2-moe-q4/qwen2_moe.json",
+        "followups/retrieval-fixes/qwen3_reranker.json",
+        "followups/retrieval-fixes/mpnet.json",
+        "followups/retrieval-fixes/bert.json",
+        "followups/retrieval-fixes/qwen3_embedding.json"
+      ]
+    },
+    "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279": {
+      "build": "dist-v3",
+      "results": [
+        "lfm2_audio.json",
+        "lfm2_vl.json",
+        "mpnet.json",
+        "qwen2_moe.json",
+        "qwen3_forced_aligner.json",
+        "qwen3_5.json",
+        "parakeet_tdt.json",
+        "bert.json",
+        "silero_vad.json",
+        "qwen3_asr.json",
+        "whisper.json",
+        "trocr.json",
+        "moonshine.json",
+        "got_ocr2.json",
+        "followups/interface-replay/distilbert.json",
+        "followups/interface-replay/llama.json",
+        "followups/interface-replay/gpt2.json",
+        "followups/interface-replay/gemma3_text.json",
+        "followups/interface-replay/qwen3.json",
+        "followups/interface-replay/qwen2.json",
+        "followups/interface-replay/lfm2.json",
+        "followups/openelm-bos/openelm.json"
+      ]
+    },
+    "843e363381dce9153f4ed95fe1647c4cae61d1968079ec9b2f00327fa528a642": {
+      "build": "dist-v4",
+      "results": [
+        "qwen3_reranker.json",
+        "lightonocr.json",
+        "paddleocr_vl.json",
+        "florence2.json",
+        "qwen3_embedding.json"
+      ]
+    },
+    "b217e481c4c2c27a0f565346de4a951cbc9c880fd1cc74e4715eda424d1393af": {
+      "build": "dist-v6",
+      "results": [
+        "clip.json",
+        "followups/clip-cli/clip.json",
+        "followups/retrieval-serving/mpnet.json",
+        "followups/retrieval-serving/bert.json",
+        "followups/retrieval-serving/qwen3_embedding.json"
+      ]
+    },
+    "8107cad617b73bf81760d6154ac4fcd8acc974e55924aa360708b83c9cca55d7": {
+      "build": "dist",
+      "results": [
+        "llama.json",
+        "gemma3_text.json",
+        "phi3.json"
+      ]
+    },
+    "2b8dac9eb81757e7925fcb422e27e2ab4a46b6fe2cca19645fddf299f8f4b432": {
+      "build": "dist-v9",
+      "results": [
+        "followups/qwen3-embedding-backbone/qwen3_embedding.json",
+        "followups/colbert-path/lfm2_colbert.json",
+        "followups/colbert-batch4/lfm2_colbert.json",
+        "followups/qwen3-embedding-diagnostic/qwen3_embedding.json",
+        "followups/retrieval-serving/lfm2_colbert.json"
+      ]
+    },
+    "3a0a128b69d59994064404f4c44e6f33419c63cba27389bd714dea5b03e6074c": {
+      "build": "dist-final2",
+      "results": [
+        "followups/colbert-expansion/lfm2_colbert.json"
+      ]
+    },
+    "ee55ddda19166e3458a18872704a5971dfb2160640d2624c9bfaa18676cf1eee": {
+      "build": "dist-v7",
+      "results": [
+        "followups/lfm2-bos/lfm2.json",
+        "followups/retrieval-serving/qwen3_reranker.json"
+      ]
+    }
+  },
+  "unmatched_installed_records": [],
+  "method": "Reinstalled each immutable local wheel with the same candidate interpreter and pip; archived resulting RECORD before restoring final candidate. Probe digests use importlib.metadata.read_text(), so RECORD text is hashed with normalized newlines; the archived raw file SHA is recorded separately."
+}

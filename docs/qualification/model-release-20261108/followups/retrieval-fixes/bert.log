@@ -1,0 +1,5 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+{"model_type": "bert", "status": "FAIL", "quality_status": "PASS_32_PAIR_SANITY_ONLY", "seconds": 10.093168020248413, "error": "cannot load native VLM: model type 'bert' has no native VLM task loader"}

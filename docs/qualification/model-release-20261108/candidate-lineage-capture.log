@@ -1,0 +1,2 @@
+BUILDS 11 MATCHED 0 UNMATCHED 9 EXACT_SOURCE_FILES 499
+RECHECK: normalized importlib.metadata.read_text RECORD digests match all 9 historical installed identities; zero unmatched. Raw CSV checksums retained separately.

@@ -1,0 +1,93 @@
+{
+  "model_type": "lightonocr",
+  "kind": "ocr",
+  "repo": "lightonai/LightOnOCR-2-1B",
+  "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+  "manifest_id": "O06",
+  "profile": "BF16",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".eval_results/mdpbench.yaml",
+      "bytes": 5005,
+      "sha256": null
+    },
+    {
+      "path": ".eval_results/olmocrbench.yaml",
+      "bytes": 2135,
+      "sha256": null
+    },
+    {
+      "path": ".eval_results/parsebench.yaml",
+      "bytes": 1558,
+      "sha256": null
+    },
+    {
+      "path": ".gitattributes",
+      "bytes": 1678,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 7951,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 707,
+      "sha256": null
+    },
+    {
+      "path": "benchmark.png",
+      "bytes": 326664,
+      "sha256": "588f08c83690be0564e0275a369911b17fae02c4bfaac46a243323bd4efe23b8"
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 720,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 2363,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 219,
+      "sha256": null
+    },
+    {
+      "path": "lightonocr-banner.png",
+      "bytes": 350989,
+      "sha256": "e32c44dc131d4e07b344a41bb9651eb97ce4ce73d4e78463821267467810462c"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 2011367489,
+      "sha256": "cbe12d0831cca119facce91268fc7c5fb72babdf919a6e352e3131bda85c8fbb"
+    },
+    {
+      "path": "processor_config.json",
+      "bytes": 1023,
+      "sha256": null
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 613,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 11422822,
+      "sha256": "f54b55fa0c3aba0c91ce09ea79ae4e62da24e2a1a630f96c4bae34aba25e234a"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 5562,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

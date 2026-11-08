@@ -1,0 +1,328 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "lfm2_audio",
+  "checkpoint": "mlx-community/LFM2.5-Audio-1.5B-8bit",
+  "revision": "a569a7805a8e3eae954c244e54ba811d479a12c2",
+  "started": 1794157263.330676,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "0a2ffc148ed7f99812c897d5d0446e3f95ae6152e11f18a2043ec491bb869b12",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/resolution-lfm-q8-final",
+  "reference_python": null,
+  "gpu_execution_serialized": true,
+  "harness_sources": {
+    "scripts/qualification/embedding_reference_probe.py": "7bda87d3dc4d6270c98815122f7374805e760bba96345bd8025aacaf36aa0a41",
+    "scripts/qualification/run_tiled_feasibility.py": "4523da32cb42ac3efd8c64f97451935ede924f25ec0b8f59766fd3304f280504",
+    "scripts/qualification/revamp_inventory.py": "374b0df68dfcc3f4b9f848bbbe7cb737d5106167f2c0b56251d14d634c83b294",
+    "scripts/qualification/qualify_ten_models.py": "a2fb6cb00f70a4b2f79e758b74ea61c697c64c2e5e84201e040b239fe4550321",
+    "scripts/qualification/numerical_contract_v2.py": "52c9f6c0cd0962df72b305b498e9146edbe7683a7a36373275a270b1a4665aee",
+    "scripts/qualification/lfm_speech_interfaces.py": "6dbafb7c58cf66e630de118900a8b8bfb860ce3d43a5d3d625ad3fff04eb0316",
+    "scripts/qualification/alpha_package.py": "cceb3705a86d9d3da2376f0707b8dbb9318e6b15e59c2e224b5059a521ee49cb",
+    "scripts/qualification/colbert_reference_probe.py": "4eaa9de82d01c567b84b735b114d24757e6a9b39057cd122114b10b05eaa69d2",
+    "scripts/qualification/run_inference_optimization.py": "6e44ed8b72ad316c275def0bd629de2b57eedd46a35627dd4a259b30a0d7947a",
+    "scripts/qualification/operation_selection.py": "1c6071aa96d2930692763dcd48fc10591c45111287acf9ddb6c83cb395b24554",
+    "scripts/qualification/report_ten_models.py": "12d6d721bc9534e505aa303ef1ac52a200377a8586cf668f0ae882177ea2589a",
+    "scripts/qualification/model_release_report.py": "00341a57c026a05ec093ab3370d9e7b1d66fafe0067d5456f7ce0a09b6859198",
+    "scripts/qualification/qwen_fused_causal.py": "59a513c3d9af991531457ec2b1dcf3ff0e8daa348c5837f536ed303bb04994ea",
+    "scripts/qualification/ten_model_worker.py": "ec27e5d04adbd058f9cfa5ab6c6c9ac35a9c5cc968b18ce0c50fc40c1b563aee",
+    "scripts/qualification/model_release_download.py": "38cbd72b4f19e356877826c9bdfd84934625bcc787589741067ff62f49f6d373",
+    "scripts/qualification/florence_reference_probe.py": "883712645cf4ced7741e882898fbceaac7e3fb652812cce389216399b7b104ee",
+    "scripts/qualification/alpha_ui_security.py": "45980e6492447c4f4b223735a77cedfacda311d8e079b72134763cabb19ab39d",
+    "scripts/qualification/lfm2_reference_probe.py": "b1ecd58d2ad86c35882e2a4f2346dcc48cb74b5f86664e3900bdfef51a6fb7cf",
+    "scripts/qualification/lfm_audio_reference_probe.py": "a7865c518e7920b887810a97209202dfe16b1d651b207bb6681b5037198a0ff9",
+    "scripts/qualification/model_release_campaign.py": "0cab112f949165492cc09e70bc8da16572f9353b8146d06ccd22260956881c64",
+    "scripts/qualification/tiled_model_qualification.py": "cf2372ad882241a98c29f13df1448becf75f6c9ec1f44092e43157c4478b5aaf",
+    "scripts/qualification/florence_reference_qualification.py": "ad45e1b2f32e936a7dc99d3b2d6f320071a3cf733a8f1a637ef67d2211364c13",
+    "scripts/qualification/model_release_worker.py": "0a2ffc148ed7f99812c897d5d0446e3f95ae6152e11f18a2043ec491bb869b12",
+    "scripts/qualification/model_release_candidate.py": "9c4a058ceb9dbd9b3d6531febd22be4a006cae4c9407322918532fd1484621df",
+    "scripts/qualification/model_release_resolution_fixtures.py": "eac84131a0bd069ea7694422ccd80ae8dfd593567837d7fecf2af3a0efc94024",
+    "scripts/qualification/openelm_reference_probe.py": "1b37ac6c531513168a25f81db748422a8f5eee883bb0f0784d6ae0c63c5dc53b",
+    "scripts/qualification/model_release_fixtures.py": "465a0f1f2603ca38d324f81c6e79512f57b09f90e67152b3f48326f189a489a7",
+    "scripts/qualification/ner_reference_qualification.py": "8dc1a96f41cedb2631161b84ed15239591ee3656045783eeb2419678f6d05c41",
+    "scripts/qualification/reference_tiled_attention.py": "6e9ca57978764e4fef420360402734ca2a7989266cb687b37801e118583e690b",
+    "scripts/qualification/lfm_audio_reference_qualification.py": "908bb19fe35f408a5a49af6c7cd4ea72c6686dff5e3275866ab309a3092814bc",
+    "scripts/qualification/functional_checkpoint_smoke.py": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+    "scripts/qualification/verify_http_identity.py": "4b9a83e7779f9f31d4665113e925edd0d85410d10f0d1ff7a2206f7409bbb65d",
+    "scripts/qualification/model_release_inventory.py": "546ba29a967cf110df723a96f82d5ed12ea554e20f8d666f8d0686a07f7bbaf6",
+    "scripts/qualification/turboquant_wheel_smoke.py": "050db4ee799f1a9930fac74e0f948c21b3e05126bea0654f8b384a6795025cda",
+    "scripts/qualification/sam_reference_qualification.py": "da88b133b66fd0912a61dffccd78b81444957f13337be9d5d2933de477887082",
+    "benchmarks/sam3_qualification.py": "6e8a238c5dceb08d51a885abe768716645f65d6fb45e752b66178aa57eb1d04b",
+    "benchmarks/sam3_compare.py": "ddaa3ee2a8fab14fe1d3c7a9ae7ddb61a0bb0ceacc19e43ce281150074c1fe66",
+    "benchmarks/native_tasks/export_ner.py": "86e0d0f7438bb12b4225c11d2e28c3fc4b3483ba8b209e3da77fc1edaa33f3b9"
+  },
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c",
+  "checkpoint_configuration": {
+    "architectures": [
+      "Lfm2AudioForConditionalGeneration"
+    ],
+    "codebook_weight": "log",
+    "codebooks": 8,
+    "depthformer": {
+      "layers": 6,
+      "dim": 1024,
+      "tie": true
+    },
+    "encoder": {
+      "feat_in": 128,
+      "feat_out": -1,
+      "n_layers": 17,
+      "d_model": 512,
+      "subsampling": "dw_striding",
+      "subsampling_factor": 8,
+      "subsampling_conv_channels": 256,
+      "causal_downsampling": false,
+      "reduction": null,
+      "reduction_position": null,
+      "reduction_factor": 1,
+      "ff_expansion_factor": 4,
+      "self_attention_model": "rel_pos",
+      "n_heads": 8,
+      "att_context_size": [
+        -1,
+        -1
+      ],
+      "xscaling": false,
+      "untie_biases": true,
+      "pos_emb_max_len": 5000,
+      "conv_kernel_size": 9,
+      "conv_norm_type": "batch_norm",
+      "conv_context_size": null,
+      "dropout": 0.1,
+      "dropout_pre_encoder": 0.1,
+      "dropout_emb": 0,
+      "dropout_att": 0.1
+    },
+    "interleaved_n_audio": 12,
+    "interleaved_n_text": 6,
+    "lfm": {
+      "_name_or_path": "LiquidAI/LFM2-1.2B",
+      "architectures": [
+        "Lfm2ForCausalLM"
+      ],
+      "block_auto_adjust_ff_dim": true,
+      "block_dim": 2048,
+      "block_ff_dim": 12288,
+      "block_ffn_dim_multiplier": 1,
+      "block_mlp_init_scale": 1,
+      "block_multiple_of": 256,
+      "block_norm_eps": 1e-05,
+      "block_out_init_scale": 1,
+      "block_use_swiglu": true,
+      "block_use_xavier_init": true,
+      "conv_L_cache": 3,
+      "conv_bias": false,
+      "conv_dim": 2048,
+      "conv_dim_out": 2048,
+      "conv_use_xavier_init": true,
+      "eos_token_id": 7,
+      "hidden_size": 2048,
+      "initializer_range": 0.02,
+      "intermediate_size": 12288,
+      "layer_types": [
+        "conv",
+        "conv",
+        "full_attention",
+        "conv",
+        "conv",
+        "full_attention",
+        "conv",
+        "conv",
+        "full_attention",
+        "conv",
+        "full_attention",
+        "conv",
+        "full_attention",
+        "conv",
+        "full_attention",
+        "conv"
+      ],
+      "max_position_embeddings": 128000,
+      "model_type": "lfm2",
+      "norm_eps": 1e-05,
+      "num_attention_heads": 32,
+      "num_heads": 32,
+      "num_hidden_layers": 16,
+      "num_key_value_heads": 8,
+      "rope_theta": 1000000,
+      "torch_dtype": "bfloat16",
+      "use_cache": true,
+      "use_pos_enc": true,
+      "vocab_size": 65536
+    },
+    "model_type": "lfm_audio",
+    "preprocessor": {
+      "sample_rate": 16000,
+      "normalize": "per_feature",
+      "window_size": 0.025,
+      "window_stride": 0.01,
+      "window": "hann",
+      "features": 128,
+      "n_fft": 512,
+      "log": true,
+      "frame_splicing": 1,
+      "dither": 1e-05,
+      "pad_to": 0,
+      "pad_value": 0.0
+    },
+    "quantization": {
+      "group_size": 64,
+      "bits": 8,
+      "mode": "affine"
+    },
+    "quantization_config": {
+      "group_size": 64,
+      "bits": 8,
+      "mode": "affine"
+    },
+    "semantic_codebook_factor": 100,
+    "tie_audio_embeddings": false
+  },
+  "output": {
+    "text": "He has grave doubts whether sir frederick leighton's work is really greek after all, and can discover in it but little of rocky ithaca.",
+    "duration": 10.0,
+    "model": "/private/tmp/mlx-one-all40-20261108/models/lfm2_audio/checkpoint",
+    "revision": "a569a7805a8e3eae954c244e54ba811d479a12c2",
+    "sample_rate": 16000,
+    "tokens": [],
+    "language": null,
+    "confidence": null,
+    "timestamps": null,
+    "task": "transcribe",
+    "timings": {
+      "input_decode_seconds": 9.695799963083118e-05,
+      "frontend_seconds": 0.01901629198982846,
+      "encoder_seconds": 0.05855237500509247,
+      "preprocess_seconds": 0.08106324999243952,
+      "time_to_first_text_seconds": 0.2220651249954244,
+      "wall_seconds": 0.7649758750048932
+    },
+    "provenance": {
+      "backend": "native-mlx",
+      "model_type": "lfm2_audio",
+      "status": "NATIVE_IMPLEMENTED"
+    },
+    "offset_seconds": 0.0
+  },
+  "wer": 0.0,
+  "cer": 0.0,
+  "speech_tasks": {
+    "tts": {
+      "status": "PASS_FUNCTIONAL",
+      "seconds": 11.52,
+      "sample_rate": 24000,
+      "text": "",
+      "wav_sha256": "44debe941f43f439e542f27c60e8e99f2e6174277b4ca057b2103e6512f86661",
+      "artifact": "lfm2_audio-tts.wav",
+      "quality_review": "PENDING_INTELLIGIBILITY_OR_ANSWER_REVIEW"
+    },
+    "sts_short": {
+      "status": "PASS_FUNCTIONAL",
+      "seconds": 4.8,
+      "sample_rate": 24000,
+      "text": "I'm sorry, I couldn't hear your voice. Could you say it once more?",
+      "wav_sha256": "b01cb547f93d39b9b1df16871de122058f86f3c13126655743665949d6477cfd",
+      "artifact": "lfm2_audio-sts_short.wav",
+      "quality_review": "PENDING_INTELLIGIBILITY_OR_ANSWER_REVIEW"
+    },
+    "sts_10s": {
+      "status": "PASS_FUNCTIONAL",
+      "seconds": 3.76,
+      "sample_rate": 24000,
+      "text": "I'm sorry, but I can't help with that.",
+      "wav_sha256": "b736a5e4d16277ae0fad3b7e2af4b7e116a2a0f7ab18e1950aecc0aa908455d7",
+      "artifact": "lfm2_audio-sts_10s.wav",
+      "quality_review": "PENDING_INTELLIGIBILITY_OR_ANSWER_REVIEW"
+    }
+  },
+  "quality_status": "ASR_MEASURED_SPEECH_REVIEW_REQUIRED",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"confidence\": null,\n  \"duration\": 10.0,\n  \"language\": null,\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/lfm2_audio/checkpoint\",\n  \"offset_seconds\": 0.0,\n  \"provenance\": {\n    \"backend\": \"native-mlx\",\n    \"model_type\": \"lfm2_audio\",\n    \"status\": \"NATIVE_IMPLEMENTED\"\n  },\n  \"revision\": null,\n  \"sample_rate\": 16000,\n  \"task\": \"transcribe\",\n  \"text\": \"He has grave doubts whether sir frederick leighton's work is really greek after all, and can discover in it but little of rocky ithaca.\",\n  \"timestamps\": null,\n  \"timings\": {\n    \"encoder_seconds\": 0.04998662500292994,\n    \"frontend_seconds\": 0.022282417005044408,\n    \"input_decode_seconds\": 8.158299897331744e-05,\n    \"preprocess_seconds\": 0.0744130410021171,\n    \"time_to_first_text_seconds\": 0.20875916600925848,\n    \"wall_seconds\": 0.7487622080079746\n  },\n  \"tokens\": []\n}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "text": "He has grave doubts whether sir frederick leighton's work is really greek after all, and can discover in it but little of rocky ithaca.",
+        "mlx": {
+          "duration": 10.0,
+          "timestamps": null,
+          "timings": {
+            "input_decode_seconds": 0.00013116699119564146,
+            "frontend_seconds": 0.0205101659958018,
+            "encoder_seconds": 0.07069683400914073,
+            "preprocess_seconds": 0.09330845899239648,
+            "time_to_first_text_seconds": 0.23196641699178144,
+            "wall_seconds": 0.7710546249873005
+          },
+          "provenance": {
+            "backend": "native-mlx",
+            "model_type": "lfm2_audio",
+            "status": "NATIVE_IMPLEMENTED"
+          }
+        }
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS",
+    "speech_cli_tts": {
+      "exit_code": 0,
+      "output": "{\"text\": \"\", \"sample_rate\": 24000, \"duration\": 2.0, \"samples\": 48000, \"model\": \"/private/tmp/mlx-one-all40-20261108/models/lfm2_audio/checkpoint\", \"revision\": null, \"timings\": {\"input_decode_seconds\": 1.0249990737065673e-05, \"preprocess_seconds\": 0.003924417003872804, \"codec_decode_seconds\": 0.030334501003380865, \"time_to_first_audio_seconds\": 0.5702822089951951, \"audio_chunk_count\": 3, \"wall_seconds\": 1.1612569589924533}, \"provenance\": {\"backend\": \"native-mlx\", \"task\": \"synthesize\", \"codec\": \"lfm-audio-detokenizer\", \"status\": \"NATIVE_IMPLEMENTED\", \"codec_streaming\": \"bounded-prefix-recomputation\"}}\n",
+      "status": "PASS",
+      "samples": 48000,
+      "sample_rate": 24000,
+      "sha256": "4a4b34c0df51b4f5714c413e13984782aeaea2687f4232691de683b6fc0c6d60"
+    },
+    "speech_cli_sts": {
+      "exit_code": 0,
+      "output": "{\"text\": \"I'm sorry, I couldn't hear your voice. Could you say it once more?\", \"sample_rate\": 24000, \"duration\": 4.8, \"samples\": 115200, \"model\": \"/private/tmp/mlx-one-all40-20261108/models/lfm2_audio/checkpoint\", \"revision\": null, \"timings\": {\"input_decode_seconds\": 5.7958008255809546e-05, \"frontend_seconds\": 0.022829541005194187, \"encoder_seconds\": 0.054840583994518965, \"preprocess_seconds\": 0.08140804200957064, \"time_to_first_text_seconds\": 0.15973820800718386, \"codec_decode_seconds\": 0.14322920799895655, \"time_to_first_audio_seconds\": 0.7879165830090642, \"audio_chunk_count\": 6, \"wall_seconds\": 3.7089356670039706}, \"provenance\": {\"backend\": \"native-mlx\", \"task\": \"speech-to-speech\", \"codec\": \"lfm-audio-detokenizer\", \"status\": \"NATIVE_IMPLEMENTED\", \"codec_streaming\": \"bounded-prefix-recomputation\"}}\n",
+      "status": "PASS",
+      "samples": 115200,
+      "sample_rate": 24000,
+      "sha256": "707c8d1fd19e5c2a306feaac96b5b76b51400d02508a74b768b554165b60dd27"
+    },
+    "speech_http_tts": {
+      "status": "PASS",
+      "samples": 48000,
+      "sample_rate": 24000,
+      "sha256": "259baf6485cd7379f72beb1675883735864c4f6f123497c89c31ed875748c5e2"
+    },
+    "speech_http_sts": {
+      "status": "PASS",
+      "samples": 115200,
+      "sample_rate": 24000,
+      "sha256": "12eb715e62d54cd3dc99c2e4d8de6ca2f9696b5da181ea175a9d25baaedf1c99"
+    },
+    "speech_http_stream": {
+      "status": "PASS",
+      "events": 4,
+      "samples": 48000
+    },
+    "speech_python_early_close_and_recovery": "PASS",
+    "speech_invalid_speed": "PASS_400"
+  },
+  "peak_mlx_bytes": 4301957500,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 949.8653039932251,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "0a2ffc148ed7f99812c897d5d0446e3f95ae6152e11f18a2043ec491bb869b12"
+}

@@ -1,0 +1,61 @@
+{
+  "checkpoint": "LiquidAI/LFM2-350M",
+  "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 10596,
+      "sha256": "5188f2b355da20647257a3156db5834c794e5fb5e6d8dc4d4cdbb3180e75b85b",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 18107,
+      "sha256": "17b36cc5b9529cf3c36cbee8c0ced25f798fb86bb3137e4266a9c6adb96a9e4f",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 1379,
+      "sha256": "cef187400d62a59507aab3a642ea9a8d2a2ef263562bc3430560e116945273cf",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 999,
+      "sha256": "fd3b3fba4e50e7b9a22bd41cbab59e9b28e319b2de19668d7fd9777c8d1a9ba1",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 137,
+      "sha256": "0f678f07a00ae4bdeb2b2bd5f37988a4b33a87686d9103fefe08de7a46522373",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 708984464,
+      "sha256": "387638dc889ff1a1395c3c2ab9605211e4c7e16f2d375361dd4e423b909a254e",
+      "hub_lfs_sha256": "387638dc889ff1a1395c3c2ab9605211e4c7e16f2d375361dd4e423b909a254e"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 434,
+      "sha256": "742aefe2b7dec496e8caffdba03a75d0c1a9925d53bd3f3e0d388c96b591b6f4",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4732426,
+      "sha256": "98cff83b4f6d7e9d8929bebc62b07e92cf1b3f99c80d16bafe8b84a75448f40b",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 91565,
+      "sha256": "63ced8ee8627fa4b0638c4c057351f00fb4e332ca2327a9a00eecc5978e84835",
+      "hub_lfs_sha256": null
+    }
+  ]
+}

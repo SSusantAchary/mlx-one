@@ -1,0 +1,63 @@
+{
+  "model_type": "gemma3_text",
+  "kind": "text",
+  "repo": "google/gemma-3-1b-it",
+  "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+  "profile": "bfloat16",
+  "manifest_id": "M09",
+  "gated": "manual",
+  "license": "gemma",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1676,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 24265,
+      "sha256": null
+    },
+    {
+      "path": "added_tokens.json",
+      "bytes": 35,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 899,
+      "sha256": null
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 215,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 1999811208,
+      "sha256": "3d4ef8d71c14db7e448a09ebe891cfb6bf32c57a9b44499ae0d1c098e48516b6"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 662,
+      "sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 33384568,
+      "sha256": "4667f2089529e8e7657cfb6d1c19910ae71ff5f28aa7ab2ff2763330affad795"
+    },
+    {
+      "path": "tokenizer.model",
+      "bytes": 4689074,
+      "sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 1156999,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

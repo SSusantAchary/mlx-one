@@ -1,0 +1,3338 @@
+[
+  {
+    "model_type": "gpt2",
+    "kind": "text",
+    "repo": "openai-community/gpt2",
+    "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "profile": "float32",
+    "manifest_id": "M01",
+    "gated": false,
+    "license": "mit",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 445,
+        "sha256": null
+      },
+      {
+        "path": "64-8bits.tflite",
+        "bytes": 125162496,
+        "sha256": "c966da3b74697803352ca7c6f2f220e7090a557b619de9da0c6b34d89f7825c1"
+      },
+      {
+        "path": "64-fp16.tflite",
+        "bytes": 248269688,
+        "sha256": "1ceafd82e733dd4b21570b2a86cf27556a983041806c033a55d086e0ed782cd3"
+      },
+      {
+        "path": "64.tflite",
+        "bytes": 495791932,
+        "sha256": "cfcd510b239d90b71ee87d4e57a5a8c2d55b2a941e5d9fe5852298268ddbe61b"
+      },
+      {
+        "path": "README.md",
+        "bytes": 8092,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 665,
+        "sha256": null
+      },
+      {
+        "path": "flax_model.msgpack",
+        "bytes": 497764120,
+        "sha256": "192e8257ae9e8f796f764630f4a488a6a16d1461762d62b49ef7405df951a283"
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 124,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 456318,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 548105171,
+        "sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707"
+      },
+      {
+        "path": "onnx/config.json",
+        "bytes": 879,
+        "sha256": null
+      },
+      {
+        "path": "onnx/decoder_model.onnx",
+        "bytes": 653665842,
+        "sha256": "e3fc9615868ff8f5e0429b892a0f6ca692784ba6c4ca31c4e9ee8218e7cce34f"
+      },
+      {
+        "path": "onnx/decoder_model_merged.onnx",
+        "bytes": 655189339,
+        "sha256": "e6fc046fe5a7cfeeb8bb3c7d4c1b6a8bd90ced7339a75d5567957e3bc9d48abe"
+      },
+      {
+        "path": "onnx/decoder_with_past_model.onnx",
+        "bytes": 653672649,
+        "sha256": "570d958241de81f12d82a8358dfc0b408a7bf44ff2bd10ac4a97dab24a8118db"
+      },
+      {
+        "path": "onnx/generation_config.json",
+        "bytes": 119,
+        "sha256": null
+      },
+      {
+        "path": "onnx/merges.txt",
+        "bytes": 456318,
+        "sha256": null
+      },
+      {
+        "path": "onnx/special_tokens_map.json",
+        "bytes": 99,
+        "sha256": null
+      },
+      {
+        "path": "onnx/tokenizer.json",
+        "bytes": 2107653,
+        "sha256": null
+      },
+      {
+        "path": "onnx/tokenizer_config.json",
+        "bytes": 234,
+        "sha256": null
+      },
+      {
+        "path": "onnx/vocab.json",
+        "bytes": 798156,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 548118077,
+        "sha256": "7c5d3f4b8b76583b422fcb9189ad6c89d5d97a094541ce8932dce3ecabde1421"
+      },
+      {
+        "path": "rust_model.ot",
+        "bytes": 702517648,
+        "sha256": "adf0adedbf4016b249550f866c66a3b3a3d09c8b3b3a1f6e5e9a265d94e0270e"
+      },
+      {
+        "path": "tf_model.h5",
+        "bytes": 497933648,
+        "sha256": "d08c1307f7dfae6f878e0a2ca5715d587d2640530db8ef96fc0c1fc474dd9fee"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 1355256,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 26,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 1042301,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen2",
+    "kind": "text",
+    "repo": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "profile": "affine_q8",
+    "manifest_id": "M02",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 11343,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 4917,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 659,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 242,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671839,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 988097824,
+        "sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 7031645,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 7305,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen3",
+    "kind": "text",
+    "repo": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "profile": "affine_q8",
+    "manifest_id": "M03",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 11343,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 13965,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 726,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 239,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1503300328,
+        "sha256": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 9732,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "lfm2",
+    "kind": "text",
+    "repo": "LiquidAI/LFM2-350M",
+    "revision": "0b6ea934a94b880d1048cbcba45a0d81ca721eb0",
+    "profile": "affine_q4",
+    "manifest_id": "M04",
+    "gated": false,
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 10596,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 18107,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 1379,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 999,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 137,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 708984464,
+        "sha256": "387638dc889ff1a1395c3c2ab9605211e4c7e16f2d375361dd4e423b909a254e"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 434,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 4732426,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 91565,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "llama",
+    "kind": "text",
+    "repo": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    "revision": "31b70e2e869a7173562077fd711b654946d38674",
+    "profile": "affine_q4",
+    "manifest_id": "M06",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1638,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 14928,
+        "sha256": null
+      },
+      {
+        "path": "all_results.json",
+        "bytes": 785,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 908,
+        "sha256": null
+      },
+      {
+        "path": "eval_results.json",
+        "bytes": 587,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 132,
+        "sha256": null
+      },
+      {
+        "path": "instructions_function_calling.md",
+        "bytes": 7279,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 466391,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 3422777952,
+        "sha256": "f55217be716b6a997b97b9d8d7eb6fad02e00858f5010ec24f64603c3a98a0e8"
+      },
+      {
+        "path": "onnx/model.onnx",
+        "bytes": 165580,
+        "sha256": "c538daa78f811830dc9028aa228a63a218147ab478c0c65ef6e2d8cab532380a"
+      },
+      {
+        "path": "onnx/model.onnx_data",
+        "bytes": 6847602688,
+        "sha256": "023686a59a534e45af70bc5f99ae70e592481701680591f9844fc140a3db220a"
+      },
+      {
+        "path": "onnx/model_bnb4.onnx",
+        "bytes": 1311307655,
+        "sha256": "ac7400ca170e6644d95d26394846d2cce8083298e8519b1df7ac1eaa0ab2b5b6"
+      },
+      {
+        "path": "onnx/model_fp16.onnx",
+        "bytes": 1326807956,
+        "sha256": "3d891d77661f6339f727b3188f1c21b1429a1e4e55c40d1f60f85048b00a4348"
+      },
+      {
+        "path": "onnx/model_fp16.onnx_data",
+        "bytes": 2097152000,
+        "sha256": "5f48c05c14ed97738f8dc5854c20c229ddc8661f43fa914085843901a4ba8740"
+      },
+      {
+        "path": "onnx/model_int8.onnx",
+        "bytes": 1714119778,
+        "sha256": "db5cb9057f4e7014f00c38fd9764f0103e60bb4d145ad600b7144625f0d56930"
+      },
+      {
+        "path": "onnx/model_q4.onnx",
+        "bytes": 1411969607,
+        "sha256": "467b7b8f62d99f184d3628d24b8d65c151e331695f6e9ea997616c4e279e9a51"
+      },
+      {
+        "path": "onnx/model_q4f16.onnx",
+        "bytes": 1108730338,
+        "sha256": "d94946187fb5f27579f3db4ba21fb7f7466c7cbd18956bd420d3981f75282f9c"
+      },
+      {
+        "path": "onnx/model_quantized.onnx",
+        "bytes": 1714119846,
+        "sha256": "b1110061268f161512c234c4d43cd9dbe61eeb1454e9b94b652edf4de55ae51c"
+      },
+      {
+        "path": "onnx/model_uint8.onnx",
+        "bytes": 1714119846,
+        "sha256": "b1110061268f161512c234c4d43cd9dbe61eeb1454e9b94b652edf4de55ae51c"
+      },
+      {
+        "path": "runs/Oct31_06-24-59_ip-26-0-174-36/events.out.tfevents.1730356365.ip-26-0-174-36.3169719.0",
+        "bytes": 114828,
+        "sha256": "e6bfce1916438dd2e6553aa0a62d418087b3ae04f8af75e714ad1f01b7663db6"
+      },
+      {
+        "path": "runs/Oct31_06-24-59_ip-26-0-174-36/events.out.tfevents.1730363825.ip-26-0-174-36.3169719.1",
+        "bytes": 828,
+        "sha256": "b3d7723fd0715ce6dcbccf7bb2097f59490b0ac670f798f5378ef5abb7d1301d"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 655,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 2104556,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 3764,
+        "sha256": null
+      },
+      {
+        "path": "train_results.json",
+        "bytes": 232,
+        "sha256": null
+      },
+      {
+        "path": "trainer_state.json",
+        "bytes": 86369,
+        "sha256": null
+      },
+      {
+        "path": "training_args.bin",
+        "bytes": 6520,
+        "sha256": "7649586c424c337f6c403fdb617ac9d954daf9a7192f3afe5b6318f37e9bb19e"
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 800662,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "gemma3_text",
+    "kind": "text",
+    "repo": "google/gemma-3-1b-it",
+    "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+    "profile": "bfloat16",
+    "manifest_id": "M09",
+    "gated": "manual",
+    "license": "gemma",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1676,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 24265,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 35,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 899,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 215,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1999811208,
+        "sha256": "3d4ef8d71c14db7e448a09ebe891cfb6bf32c57a9b44499ae0d1c098e48516b6"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 662,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 33384568,
+        "sha256": "4667f2089529e8e7657cfb6d1c19910ae71ff5f28aa7ab2ff2763330affad795"
+      },
+      {
+        "path": "tokenizer.model",
+        "bytes": 4689074,
+        "sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 1156999,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "phi3",
+    "kind": "text",
+    "repo": "microsoft/Phi-3-mini-4k-instruct",
+    "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+    "profile": "affine_q4",
+    "manifest_id": "M10",
+    "gated": false,
+    "license": "mit",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1554,
+        "sha256": null
+      },
+      {
+        "path": "CODE_OF_CONDUCT.md",
+        "bytes": 453,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 1105,
+        "sha256": null
+      },
+      {
+        "path": "NOTICE.md",
+        "bytes": 1809,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 21733,
+        "sha256": null
+      },
+      {
+        "path": "SECURITY.md",
+        "bytes": 2697,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 306,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 967,
+        "sha256": null
+      },
+      {
+        "path": "configuration_phi3.py",
+        "bytes": 11153,
+        "sha256": null
+      },
+      {
+        "path": "data_summary_card.md",
+        "bytes": 4619,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 181,
+        "sha256": null
+      },
+      {
+        "path": "model-00001-of-00002.safetensors",
+        "bytes": 4972489328,
+        "sha256": "b7492726c01287bf6e13c3d74c65ade3d436d50da1cf5bb6925bc962419d6610"
+      },
+      {
+        "path": "model-00002-of-00002.safetensors",
+        "bytes": 2669692552,
+        "sha256": "3f311787aa136e858556caa8543015161edcad85ba81b6a36072443d7fa73c87"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 16533,
+        "sha256": null
+      },
+      {
+        "path": "modeling_phi3.py",
+        "bytes": 73193,
+        "sha256": null
+      },
+      {
+        "path": "sample_finetune.py",
+        "bytes": 6401,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 599,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 1937869,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.model",
+        "bytes": 499723,
+        "sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 3441,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "lfm2_moe",
+    "kind": "text",
+    "repo": "LiquidAI/LFM2.5-24B-A2B-MLX-4bit",
+    "revision": "667408d494bde191c2cb9dd4f4549827816b9275",
+    "profile": "mixed_affine_q4_embedding_q6_router_fp32",
+    "manifest_id": "M11",
+    "gated": false,
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 10574,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 3688,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 5496,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 2148,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 329,
+        "sha256": null
+      },
+      {
+        "path": "model-00001-of-00003.safetensors",
+        "bytes": 5318453801,
+        "sha256": "17e953456c62314a498f1ef5ee8a5f1b51ac83f6b6bb684f160dde4f92cd11c0"
+      },
+      {
+        "path": "model-00002-of-00003.safetensors",
+        "bytes": 5344895125,
+        "sha256": "c3ae09dba31b3786c325425435021cf5d5bf06c1a79acb31a741e15a47e5bb14"
+      },
+      {
+        "path": "model-00003-of-00003.safetensors",
+        "bytes": 2903945409,
+        "sha256": "9814144af5045ea8c96e2f1352148fdbe9f8a0085b76df6d6760efbe916e9840"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 80192,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 17905598,
+        "sha256": "695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 363,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "gpt_oss",
+    "kind": "text",
+    "repo": "mlx-community/gpt-oss-20b-MXFP4-Q4",
+    "revision": "f356f2747216d7e98fee755df25987459fc19089",
+    "profile": "mixed_mxfp4_affine_q4_q8",
+    "manifest_id": "M12",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 838,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 33998,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 177,
+        "sha256": null
+      },
+      {
+        "path": "model-00001-of-00003.safetensors",
+        "bytes": 5306798277,
+        "sha256": "ec8571f6f8adba2d7d92a1f6029a69aecd18ab4e82404a306ceb063d9ae1362d"
+      },
+      {
+        "path": "model-00002-of-00003.safetensors",
+        "bytes": 5263518916,
+        "sha256": "9a32623d891d6f64694fdaaaeecf145d8796d17c238b9b99af953077d0f63837"
+      },
+      {
+        "path": "model-00003-of-00003.safetensors",
+        "bytes": 608251966,
+        "sha256": "3fb80743340b3dbeb649e50b5fd1b5f063e98c143759025284344988d8fa0a95"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 67046,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 440,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 27868174,
+        "sha256": "0614fe83cadab421296e664e1f48f4261fa8fef6e03e63bb75c20f38e37d07d3"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 21694,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "openelm",
+    "kind": "text",
+    "repo": "apple/OpenELM-270M",
+    "revision": "e2b9003235d55a404567faf06e74883081c65e65",
+    "gated": false,
+    "license": "apple-amlr",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 5820,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 12744,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 1301,
+        "sha256": null
+      },
+      {
+        "path": "configuration_openelm.py",
+        "bytes": 14264,
+        "sha256": null
+      },
+      {
+        "path": "generate_openelm.py",
+        "bytes": 7453,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 111,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1086123184,
+        "sha256": "afbeade8abad5a1ed4df7dabdf1773aa0215c5bb7563537ac62d33fff9a2ecfa"
+      },
+      {
+        "path": "modeling_openelm.py",
+        "bytes": 39348,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen2_moe",
+    "kind": "text",
+    "repo": "mlx-community/Qwen1.5-MoE-A2.7B-4bit",
+    "revision": "11aaad5b454a361ae33f19fb47b72bc74b3c3b55",
+    "gated": false,
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 932,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 80,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 2541,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model-00001-of-00002.safetensors",
+        "bytes": 5369546977,
+        "sha256": "6c761190d7da1d1bc3528d4a4a69d1cdca18d07a3e023ae54a622fa4530daeac"
+      },
+      {
+        "path": "model-00002-of-00002.safetensors",
+        "bytes": 3132401803,
+        "sha256": "5c524b4b732840f2f406e137f5ee37b621f901bfcbd27b8acc8fc4c7ed30d7ef"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 1284018,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 370,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 7028015,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 1168,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS",
+    "publisher_reference": {
+      "repo": "Qwen/Qwen1.5-MoE-A2.7B",
+      "revision": "1a758c50ecb6350748b9ce0a99d2352fd9fc11c9",
+      "scope": "original dense-storage checkpoint; 28.63GB weights exceed recommended 22.91GB working set before cache"
+    },
+    "profile": "stored_affine_q4",
+    "selection_reason": "native MLX Q4 family representative selected before execution to fit M4 32GB; distinct from untested publisher BF16"
+  },
+  {
+    "model_type": "qwen2_vl",
+    "kind": "vlm",
+    "repo": "mlx-community/Qwen2-VL-2B-Instruct-4bit",
+    "revision": "01af461cdb9574acc09084a0ef94e216e142b085",
+    "manifest_id": "V01",
+    "profile": "Q4",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 565,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 392,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.json",
+        "bytes": 1049,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 1408,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1245868907,
+        "sha256": "3534d3dcfaacd0cd00e935469bc34b6d692b2ba0749c5d9ee422f3f2175cf992"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 107605,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 499,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 613,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11420371,
+        "sha256": "091aa7594dc2fcfbfa06b9e3c22a5f0562ac14f30375c13af7309407a0e67b8a"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 4297,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen2_5_vl",
+    "kind": "vlm",
+    "repo": "mlx-community/Qwen2.5-VL-3B-Instruct-4bit",
+    "revision": "46d4cf06a06ffc1a766c214174f9cbed2f45bcab",
+    "manifest_id": "V02",
+    "profile": "Q4",
+    "gated": false,
+    "license": null,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 762,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 605,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.json",
+        "bytes": 1050,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 1659,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 3073720461,
+        "sha256": "636982419c940321ac0f7793dc9dc3575a4ee4843a6b167b2e8c3d3cd25dacf4"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 108307,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 350,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 613,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11421896,
+        "sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 7256,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen3_5",
+    "kind": "vlm",
+    "repo": "mlx-community/Qwen3.5-0.8B-4bit",
+    "revision": "da28692b5f139cb0ec58a356b437486b7dac7462",
+    "manifest_id": "V03",
+    "profile": "Q4",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 678,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 7755,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 3112,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 625229487,
+        "sha256": "f5a0d9dd3efa73510542a8023d610ff26be2b4b020d181cfc4bedaa1fcc5dd9e"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 71473,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 390,
+        "sha256": null
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 1300,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 19989343,
+        "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 1139,
+        "sha256": null
+      },
+      {
+        "path": "video_preprocessor_config.json",
+        "bytes": 385,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 6722759,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "lfm2_vl",
+    "kind": "vlm",
+    "repo": "mlx-community/LFM2-VL-450M-8bit",
+    "revision": "2422c0686f1f1c6267640bc1f069ff4e8b06b8d0",
+    "manifest_id": "V04",
+    "profile": "Q8",
+    "gated": false,
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 661,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 434,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 8174,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 132,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 559614320,
+        "sha256": "b67daf504eae7f4815f1b51152d0d363547bacc25f4748f0b24df9440f3f9624"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 45180,
+        "sha256": null
+      },
+      {
+        "path": "modeling_lfm2_vl.py",
+        "bytes": 27396,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 535,
+        "sha256": null
+      },
+      {
+        "path": "processing_lfm2_vl.py",
+        "bytes": 24466,
+        "sha256": null
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 436,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 584,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 4733040,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 92279,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "whisper",
+    "kind": "audio",
+    "repo": "openai/whisper-tiny",
+    "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+    "assets": [
+      "added_tokens.json",
+      "config.json",
+      "generation_config.json",
+      "merges.txt",
+      "model.safetensors",
+      "preprocessor_config.json",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json",
+      "vocab.json"
+    ],
+    "manifest_id": "A01",
+    "profile": "FP32",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1438,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 19787,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 34604,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 1983,
+        "sha256": null
+      },
+      {
+        "path": "flax_model.msgpack",
+        "bytes": 151048591,
+        "sha256": "a695f537d9f018eb43a9eb05bc22f4524351061bbf2890b2c01ac9b51b43ff4e"
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 3747,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 493869,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 151061672,
+        "sha256": "7ebd0e69e78190ffe1438491fa05cc1f5c1aa3a4c4db3bc1723adbb551ea2395"
+      },
+      {
+        "path": "normalizer.json",
+        "bytes": 52666,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 184990,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 151095027,
+        "sha256": "9607f98a2b22d9e229ae43c52ecea79dcede9e0c5cfae67e8da6eda86d8aac1d"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 2194,
+        "sha256": null
+      },
+      {
+        "path": "tf_model.h5",
+        "bytes": 151253960,
+        "sha256": "4144af98f9f31730fd565591248e046f56a6adbe1461d7306339769e09ec8ed0"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 2480466,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 282683,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 835550,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "moonshine",
+    "kind": "audio",
+    "repo": "UsefulSensors/moonshine-tiny",
+    "revision": "390624ed33d594443aa4aa221f5b9f283b545b5a",
+    "assets": [
+      "config.json",
+      "generation_config.json",
+      "model.safetensors",
+      "preprocessor_config.json",
+      "tokenizer.json"
+    ],
+    "manifest_id": "A04",
+    "profile": "FP32",
+    "gated": false,
+    "license": "mit",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 7959,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 897,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 189,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 108389192,
+        "sha256": "867cd2215804859c55aa972d740bd5002be149b4e7526328c895d2408848c736"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 215,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 1985530,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen3_asr",
+    "kind": "audio",
+    "repo": "mlx-community/Qwen3-ASR-0.6B-8bit",
+    "revision": "89e96d92ba34aca20b3e29fb10cc284097d1219f",
+    "assets": [
+      "chat_template.json",
+      "config.json",
+      "generation_config.json",
+      "merges.txt",
+      "model.safetensors",
+      "model.safetensors.index.json",
+      "preprocessor_config.json",
+      "tokenizer_config.json",
+      "vocab.json"
+    ],
+    "manifest_id": "A06",
+    "profile": "Q8 / BF16",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 1008,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.json",
+        "bytes": 1161,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 7187,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 142,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1006229426,
+        "sha256": "b5bfe4abc1b4c6e58b633096682ec2b6297298add1527119936107d211adf0e8"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 71815,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 330,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 12487,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "parakeet_tdt",
+    "kind": "audio",
+    "repo": "mlx-community/parakeet-tdt-0.6b-v3",
+    "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+    "assets": [
+      "config.json",
+      "model.safetensors"
+    ],
+    "manifest_id": "A09",
+    "profile": "FP32",
+    "gated": false,
+    "license": "cc-by-4.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 1081,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 244093,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 2508288736,
+        "sha256": "05e01c7f396c298cf7d23f61da7b504adeab698f0aaeafd9c82d198625464592"
+      },
+      {
+        "path": "tokenizer.model",
+        "bytes": 360916,
+        "sha256": "eacec2b0a77f336d4a2ca4a25a7047575d3c2b74de47e997f4c205126ed3135e"
+      },
+      {
+        "path": "tokenizer.vocab",
+        "bytes": 101024,
+        "sha256": null
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 46772,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen3_forced_aligner",
+    "kind": "audio",
+    "repo": "mlx-community/Qwen3-ForcedAligner-0.6B-8bit",
+    "revision": "0e1a68e91d815300c7c9754b2a7639378b23db15",
+    "assets": [
+      "chat_template.json",
+      "config.json",
+      "generation_config.json",
+      "merges.txt",
+      "model.safetensors",
+      "model.safetensors.index.json",
+      "preprocessor_config.json",
+      "tokenizer_config.json",
+      "vocab.json"
+    ],
+    "manifest_id": "A11",
+    "profile": "Q8 / BF16",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 1068,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.json",
+        "bytes": 1161,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 6940,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 115,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1271924386,
+        "sha256": "be19ef8ac4326d032e7673342930b14c2df30bd68c1632493b0f563e30829f91"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 79108,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 330,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 12666,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "lfm2_audio",
+    "kind": "audio",
+    "repo": "mlx-community/LFM2.5-Audio-1.5B-4bit",
+    "revision": "55d4de65fa10fa935561aaaa995271d8b8ff2ee0",
+    "assets": [
+      "audio_detokenizer/config.json",
+      "audio_detokenizer/model.safetensors",
+      "config.json",
+      "model.safetensors",
+      "model.safetensors.index.json",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ],
+    "manifest_id": "A10",
+    "profile": "Q4 / BF16",
+    "gated": false,
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 10390,
+        "sha256": null
+      },
+      {
+        "path": "audio_detokenizer/config.json",
+        "bytes": 1150,
+        "sha256": null
+      },
+      {
+        "path": "audio_detokenizer/model.safetensors",
+        "bytes": 314137512,
+        "sha256": "d294aef1eacaab6dc7a5dab53fc88ac3fdd45c0a1994888489caaacf87d1ac70"
+      },
+      {
+        "path": "audio_detokenizer/tokenizer.json",
+        "bytes": 4732426,
+        "sha256": null
+      },
+      {
+        "path": "audio_detokenizer/tokenizer_config.json",
+        "bytes": 91509,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 3331,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1088588169,
+        "sha256": "73616f26c107680056df4ff0ce3c1f081fe7db792e76da026014f2dc5790afbc"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 110587,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 434,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer-e351c8d8-checkpoint125.safetensors",
+        "bytes": 384644900,
+        "sha256": "09b782f0629851a271227fb9d36db65c041790365f11bbe5d3d59369cf863f50"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 4732404,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 91566,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "silero_vad",
+    "kind": "vad",
+    "repo": "snakers4/silero-vad",
+    "revision": "60b7ffa243625ebdc1070275a29f18c87843786a",
+    "source": "github"
+  },
+  {
+    "model_type": "trocr",
+    "kind": "ocr",
+    "repo": "microsoft/trocr-base-printed",
+    "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+    "manifest_id": "O01",
+    "profile": "FP32",
+    "gated": false,
+    "license": null,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1229,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 2976,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 4126,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 190,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 456318,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1333384464,
+        "sha256": "1cf4a6eedab26afaaf505f1c7f73d9634944924dbd1ed049d569db98039cd596"
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 224,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 1333508485,
+        "sha256": "a67665277b31df7da142e76e5247d2f464d9914cd5ccf7edaf83c1e79547a130"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 772,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 1118,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 898822,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "got_ocr2",
+    "kind": "ocr",
+    "repo": "mlx-community/GOT-OCR2_0-4bit",
+    "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+    "manifest_id": "O03",
+    "profile": "Affine Q4",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 5888,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 1390,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 117,
+        "sha256": null
+      },
+      {
+        "path": "got_vision_b.py",
+        "bytes": 16106,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 454463407,
+        "sha256": "ba4d1151e3b4ba4bd1c6cf1c1d26b6b6d015ef005e362ed5526d813a47e9a5cf"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 65900,
+        "sha256": null
+      },
+      {
+        "path": "modeling_GOT.py",
+        "bytes": 33771,
+        "sha256": null
+      },
+      {
+        "path": "qwen.tiktoken",
+        "bytes": 2561218,
+        "sha256": null
+      },
+      {
+        "path": "render_tools.py",
+        "bytes": 1992,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 149,
+        "sha256": null
+      },
+      {
+        "path": "tokenization_qwen.py",
+        "bytes": 9470,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 372,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "florence2",
+    "kind": "ocr",
+    "repo": "microsoft/Florence-2-base-ft",
+    "revision": "f6c1a25888ffc1d945ee8a1a77ac833c7303d46e",
+    "manifest_id": "O04",
+    "profile": "FP16",
+    "gated": false,
+    "license": "mit",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1560,
+        "sha256": null
+      },
+      {
+        "path": "CODE_OF_CONDUCT.md",
+        "bytes": 444,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 1141,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 14820,
+        "sha256": null
+      },
+      {
+        "path": "SECURITY.md",
+        "bytes": 2656,
+        "sha256": null
+      },
+      {
+        "path": "SUPPORT.md",
+        "bytes": 1244,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 2430,
+        "sha256": null
+      },
+      {
+        "path": "configuration_florence2.py",
+        "bytes": 15125,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 463221266,
+        "sha256": "58757d657ff44051314c8030b68e04cb1bb618ca9a4885418f111f6fb708185a"
+      },
+      {
+        "path": "modeling_florence2.py",
+        "bytes": 127415,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 806,
+        "sha256": null
+      },
+      {
+        "path": "processing_florence2.py",
+        "bytes": 46372,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 464421315,
+        "sha256": "664e363a908207ce37b8128ec3087fae0e17252b5e036882e954f69369f08002"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 1355863,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 34,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 1099884,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "paddleocr_vl",
+    "kind": "ocr",
+    "repo": "mlx-community/PaddleOCR-VL-1.5-4bit",
+    "revision": "3404726b40ac30b6e4e3d37c504e3f96c9c6c984",
+    "manifest_id": "O05",
+    "profile": "Affine Q4",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 802,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 25381,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 1474,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 2483,
+        "sha256": null
+      },
+      {
+        "path": "configuration_paddleocr_vl.py",
+        "bytes": 8104,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 133,
+        "sha256": null
+      },
+      {
+        "path": "image_processing_paddleocr_vl.py",
+        "bytes": 24966,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 703562711,
+        "sha256": "f9a45393e2ffe6cbb412c25c82704fbb081e952c4c4517fa01e8a750010d1267"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 69879,
+        "sha256": null
+      },
+      {
+        "path": "modeling_paddleocr_vl.py",
+        "bytes": 111490,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 641,
+        "sha256": null
+      },
+      {
+        "path": "processing_paddleocr_vl.py",
+        "bytes": 12253,
+        "sha256": null
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 843,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 1151,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11189060,
+        "sha256": "c8a215a59183d0d0781adc33bacd3ce6162716f7fd568fb30234a74d69803a7d"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 876,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "lightonocr",
+    "kind": "ocr",
+    "repo": "lightonai/LightOnOCR-2-1B",
+    "revision": "be7c41313c30e940fe5571de59e5fabc779e00c8",
+    "manifest_id": "O06",
+    "profile": "BF16",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".eval_results/mdpbench.yaml",
+        "bytes": 5005,
+        "sha256": null
+      },
+      {
+        "path": ".eval_results/olmocrbench.yaml",
+        "bytes": 2135,
+        "sha256": null
+      },
+      {
+        "path": ".eval_results/parsebench.yaml",
+        "bytes": 1558,
+        "sha256": null
+      },
+      {
+        "path": ".gitattributes",
+        "bytes": 1678,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 7951,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 707,
+        "sha256": null
+      },
+      {
+        "path": "benchmark.png",
+        "bytes": 326664,
+        "sha256": "588f08c83690be0564e0275a369911b17fae02c4bfaac46a243323bd4efe23b8"
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 720,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 2363,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 219,
+        "sha256": null
+      },
+      {
+        "path": "lightonocr-banner.png",
+        "bytes": 350989,
+        "sha256": "e32c44dc131d4e07b344a41bb9651eb97ce4ce73d4e78463821267467810462c"
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 2011367489,
+        "sha256": "cbe12d0831cca119facce91268fc7c5fb72babdf919a6e352e3131bda85c8fbb"
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 1023,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 613,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11422822,
+        "sha256": "f54b55fa0c3aba0c91ce09ea79ae4e62da24e2a1a630f96c4bae34aba25e234a"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 5562,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "deepseek_ocr",
+    "kind": "ocr",
+    "repo": "mlx-community/DeepSeek-OCR-4bit",
+    "revision": "4958b6b0d46d7dc3cf27556989dab659996ea426",
+    "manifest_id": "O07",
+    "profile": "Affine Q4",
+    "gated": false,
+    "license": "mit",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 653,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 191,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.json",
+        "bytes": 217,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 3398,
+        "sha256": null
+      },
+      {
+        "path": "configuration_deepseek_v2.py",
+        "bytes": 10646,
+        "sha256": null
+      },
+      {
+        "path": "conversation.py",
+        "bytes": 9253,
+        "sha256": null
+      },
+      {
+        "path": "deepencoder.py",
+        "bytes": 38008,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 2451214926,
+        "sha256": "cf97cb093ef54cd6847bf088d31fb5b507d5fd6e23f6f14ec486f2ec1e03c2eb"
+      },
+      {
+        "path": "model.safetensors.index.json",
+        "bytes": 72573,
+        "sha256": null
+      },
+      {
+        "path": "modeling_deepseekocr.py",
+        "bytes": 40133,
+        "sha256": null
+      },
+      {
+        "path": "modeling_deepseekv2.py",
+        "bytes": 82224,
+        "sha256": null
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 460,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 801,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 9979544,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 577,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "bert",
+    "kind": "retrieval",
+    "repo": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1229,
+        "sha256": null
+      },
+      {
+        "path": "1_Pooling/config.json",
+        "bytes": 190,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 10502,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 612,
+        "sha256": null
+      },
+      {
+        "path": "config_sentence_transformers.json",
+        "bytes": 116,
+        "sha256": null
+      },
+      {
+        "path": "data_config.json",
+        "bytes": 39265,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 90868376,
+        "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db"
+      },
+      {
+        "path": "modules.json",
+        "bytes": 349,
+        "sha256": null
+      },
+      {
+        "path": "onnx/model.onnx",
+        "bytes": 90405214,
+        "sha256": "6fd5d72fe4589f189f8ebc006442dbb529bb7ce38f8082112682524616046452"
+      },
+      {
+        "path": "onnx/model_O1.onnx",
+        "bytes": 90360328,
+        "sha256": "1391c6fc20b5530250bc15cbe1f47578ffeca55ab0551d335cc668b6299a88ec"
+      },
+      {
+        "path": "onnx/model_O2.onnx",
+        "bytes": 90326566,
+        "sha256": "1de3905029190b398c7d300b530e320cf4b5e7d3dfb9af1429ebd73fd9a16faf"
+      },
+      {
+        "path": "onnx/model_O3.onnx",
+        "bytes": 90326497,
+        "sha256": "a44f671e364dddbac31f203f07b91be6b0a35e51936e5ebfab65b6d9538b83ff"
+      },
+      {
+        "path": "onnx/model_O4.onnx",
+        "bytes": 45212349,
+        "sha256": "1667d7f3ba669048b13a96ee3a44456d5e42c8f44588ae8b603430e16160c485"
+      },
+      {
+        "path": "onnx/model_qint8_arm64.onnx",
+        "bytes": 23026053,
+        "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474"
+      },
+      {
+        "path": "onnx/model_qint8_avx512.onnx",
+        "bytes": 23026053,
+        "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474"
+      },
+      {
+        "path": "onnx/model_qint8_avx512_vnni.onnx",
+        "bytes": 23026053,
+        "sha256": "4278337fd0ff3c68bfb6291042cad8ab363e1d9fbc43dcb499fe91c871902474"
+      },
+      {
+        "path": "onnx/model_quint8_avx2.onnx",
+        "bytes": 23046789,
+        "sha256": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21"
+      },
+      {
+        "path": "openvino/openvino_model.bin",
+        "bytes": 90265744,
+        "sha256": "8b86cab4722e2aefab310cf96d4d5a9eb3b187f7d9670a082afc55c7fa0d392a"
+      },
+      {
+        "path": "openvino/openvino_model.xml",
+        "bytes": 211315,
+        "sha256": null
+      },
+      {
+        "path": "openvino/openvino_model_qint8_quantized.bin",
+        "bytes": 22933664,
+        "sha256": "c92ea4af3c6bc7b4a0f3b3d61b147c850f4dbdd7c9e7beee0c0c70dc12da289b"
+      },
+      {
+        "path": "openvino/openvino_model_qint8_quantized.xml",
+        "bytes": 368006,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 90888945,
+        "sha256": "c3a85f238711653950f6a79ece63eb0ea93d76f6a6284be04019c53733baf256"
+      },
+      {
+        "path": "rust_model.ot",
+        "bytes": 90887379,
+        "sha256": "2d98d96d278348988f2744e6445b8bc16d921c3f6e17c667362f3cb353007aea"
+      },
+      {
+        "path": "sentence_bert_config.json",
+        "bytes": 53,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 112,
+        "sha256": null
+      },
+      {
+        "path": "tf_model.h5",
+        "bytes": 91005696,
+        "sha256": "24c06a7429b843d46e40c6b167122053921bf94dce2e5550ea5c07fabc597646"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 466247,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 350,
+        "sha256": null
+      },
+      {
+        "path": "train_script.py",
+        "bytes": 13156,
+        "sha256": null
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 231508,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "mpnet",
+    "kind": "retrieval",
+    "repo": "sentence-transformers/all-mpnet-base-v2",
+    "revision": "e8c3b32edf5434bc2275fc9bab85f82640a19130",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1229,
+        "sha256": null
+      },
+      {
+        "path": "1_Pooling/config.json",
+        "bytes": 190,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 11612,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 571,
+        "sha256": null
+      },
+      {
+        "path": "config_sentence_transformers.json",
+        "bytes": 116,
+        "sha256": null
+      },
+      {
+        "path": "data_config.json",
+        "bytes": 39265,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 437971872,
+        "sha256": "78c0197b6159d92658e319bc1d72e4c73a9a03dd03815e70e555c5ef05615658"
+      },
+      {
+        "path": "modules.json",
+        "bytes": 349,
+        "sha256": null
+      },
+      {
+        "path": "onnx/model.onnx",
+        "bytes": 435826548,
+        "sha256": "74187b16d9c946fea252e120cfd7a12c5779d8b8b86838a2e4c56573c47941bd"
+      },
+      {
+        "path": "onnx/model_O1.onnx",
+        "bytes": 435730180,
+        "sha256": "5c0b47004076ab40bf15a2c52b98a53e985ebb84faaeeb6d2551768f96e384b0"
+      },
+      {
+        "path": "onnx/model_O2.onnx",
+        "bytes": 435666661,
+        "sha256": "14d01256f5f3d2245b15b596173bca4367c9405fde5700dd7fb4e110708c1793"
+      },
+      {
+        "path": "onnx/model_O3.onnx",
+        "bytes": 435666516,
+        "sha256": "dd55510706038d0817b7d41bf2078f01472e4865190584ad624e8ab79bbcb310"
+      },
+      {
+        "path": "onnx/model_O4.onnx",
+        "bytes": 217894954,
+        "sha256": "cab2a54139fc4fd5b8e2a23cb5729ee28dc44cfde685ad3356d533653e635310"
+      },
+      {
+        "path": "onnx/model_qint8_arm64.onnx",
+        "bytes": 110124379,
+        "sha256": "c392a9c545c7d4438a16fed8287a76a576b27eaf029c1c23bbf78a7a666d197f"
+      },
+      {
+        "path": "onnx/model_qint8_avx512.onnx",
+        "bytes": 110124379,
+        "sha256": "c392a9c545c7d4438a16fed8287a76a576b27eaf029c1c23bbf78a7a666d197f"
+      },
+      {
+        "path": "onnx/model_qint8_avx512_vnni.onnx",
+        "bytes": 110124379,
+        "sha256": "c392a9c545c7d4438a16fed8287a76a576b27eaf029c1c23bbf78a7a666d197f"
+      },
+      {
+        "path": "onnx/model_quint8_avx2.onnx",
+        "bytes": 110207323,
+        "sha256": "aa5c27172d77bbd1cbae3628cbac4b26d7c12adabff25d2d4285d0f29159b237"
+      },
+      {
+        "path": "openvino/openvino_model.bin",
+        "bytes": 435583684,
+        "sha256": "5c3279d833888eaab745e24b652126c5a71375af185ac21aa47e112e2468dec0"
+      },
+      {
+        "path": "openvino/openvino_model.xml",
+        "bytes": 432773,
+        "sha256": null
+      },
+      {
+        "path": "openvino/openvino_model_qint8_quantized.bin",
+        "bytes": 109974792,
+        "sha256": "fde0c650018f5e244f793316b666aaf4758d4e19072f430e59eb2bcc414895ce"
+      },
+      {
+        "path": "openvino/openvino_model_qint8_quantized.xml",
+        "bytes": 741875,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 438011953,
+        "sha256": "a8fd120b1a0032e70ff3d4b8ab8e46a6d01c2cb08ffe7c007a021c1788928146"
+      },
+      {
+        "path": "sentence_bert_config.json",
+        "bytes": 53,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 239,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 466021,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 363,
+        "sha256": null
+      },
+      {
+        "path": "train_script.py",
+        "bytes": 13123,
+        "sha256": null
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 231536,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen3_embedding",
+    "kind": "retrieval",
+    "repo": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "1_Pooling/config.json",
+        "bytes": 313,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 17237,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 727,
+        "sha256": null
+      },
+      {
+        "path": "config_sentence_transformers.json",
+        "bytes": 215,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 117,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1191586416,
+        "sha256": "0437e45c94563b09e13cb7a64478fc406947a93cb34a7e05870fc8dcd48e23fd"
+      },
+      {
+        "path": "modules.json",
+        "bytes": 349,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11423705,
+        "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 9706,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "qwen3_reranker",
+    "kind": "retrieval",
+    "repo": "Qwen/Qwen3-Reranker-0.6B",
+    "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1570,
+        "sha256": null
+      },
+      {
+        "path": "1_LogitScore/config.json",
+        "bytes": 57,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 14742,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 741,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 727,
+        "sha256": null
+      },
+      {
+        "path": "config_sentence_transformers.json",
+        "bytes": 325,
+        "sha256": null
+      },
+      {
+        "path": "generation_config.json",
+        "bytes": 214,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 1671853,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1191588280,
+        "sha256": "27cd75a405b9c1b46b59abfd88aaa209e6fed2a1972cde9b70e7659537c5e65b"
+      },
+      {
+        "path": "modules.json",
+        "bytes": 280,
+        "sha256": null
+      },
+      {
+        "path": "sentence_bert_config.json",
+        "bytes": 362,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 9706,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 2776833,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "lfm2_colbert",
+    "kind": "retrieval",
+    "repo": "LiquidAI/LFM2-ColBERT-350M",
+    "revision": "9d727d7964d3e4fd093a0f01c7287ae814264e31",
+    "gated": false,
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "1_Dense/config.json",
+        "bytes": 116,
+        "sha256": null
+      },
+      {
+        "path": "1_Dense/model.safetensors",
+        "bytes": 524376,
+        "sha256": "5e3b6e404581efd18c1d1931b96d2735d0fc7cd94b7c4156fbf9ff070b9296f8"
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 10574,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 63051,
+        "sha256": null
+      },
+      {
+        "path": "chat_template.jinja",
+        "bytes": 1296,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 1215,
+        "sha256": null
+      },
+      {
+        "path": "config_sentence_transformers.json",
+        "bytes": 693,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 1413306600,
+        "sha256": "6a00ba7c169605c03eb50ab1d0805acb44c2c11310ce35cbccfd36b97cfcb5eb"
+      },
+      {
+        "path": "modules.json",
+        "bytes": 216,
+        "sha256": null
+      },
+      {
+        "path": "sentence_bert_config.json",
+        "bytes": 53,
+        "sha256": null
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 323,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 4733022,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 91910,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "sam3",
+    "kind": "segmentation",
+    "repo": "facebook/sam3",
+    "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+    "gated": "manual",
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 7352,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 26038,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 25843,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 524619,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 3439938512,
+        "sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a"
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 1712,
+        "sha256": null
+      },
+      {
+        "path": "sam3.pt",
+        "bytes": 3450062241,
+        "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 588,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 3642073,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 799,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 862328,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "sam3_tracker",
+    "kind": "segmentation",
+    "repo": "facebook/sam3",
+    "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+    "gated": "manual",
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 7352,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 26038,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 25843,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 524619,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 3439938512,
+        "sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a"
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 1712,
+        "sha256": null
+      },
+      {
+        "path": "sam3.pt",
+        "bytes": 3450062241,
+        "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 588,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 3642073,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 799,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 862328,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "sam3_video",
+    "kind": "segmentation",
+    "repo": "facebook/sam3",
+    "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+    "gated": "manual",
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 7352,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 26038,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 25843,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 524619,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 3439938512,
+        "sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a"
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 1712,
+        "sha256": null
+      },
+      {
+        "path": "sam3.pt",
+        "bytes": 3450062241,
+        "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 588,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 3642073,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 799,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 862328,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "sam3_tracker_video",
+    "kind": "segmentation",
+    "repo": "facebook/sam3",
+    "revision": "3c879f39826c281e95690f02c7821c4de09afae7",
+    "gated": "manual",
+    "license": "other",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1519,
+        "sha256": null
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 7352,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 26038,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 25843,
+        "sha256": null
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 524619,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 3439938512,
+        "sha256": "6d06f0a5f84e435071fe6603e61d0b4cc7b40e0d39d487cfd4d67d8cc11cc14a"
+      },
+      {
+        "path": "processor_config.json",
+        "bytes": 1712,
+        "sha256": null
+      },
+      {
+        "path": "sam3.pt",
+        "bytes": 3450062241,
+        "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 588,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 3642073,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 799,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 862328,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "distilbert",
+    "kind": "classification",
+    "repo": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+    "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+    "profile": "float32",
+    "gated": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 399,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 10512,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 629,
+        "sha256": null
+      },
+      {
+        "path": "map.jpeg",
+        "bytes": 81645,
+        "sha256": null
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 267832558,
+        "sha256": "7c3919835e442510166d267fe7cbe847e0c51cd26d9ba07b89a57b952b49b8aa"
+      },
+      {
+        "path": "onnx/added_tokens.json",
+        "bytes": 82,
+        "sha256": null
+      },
+      {
+        "path": "onnx/config.json",
+        "bytes": 735,
+        "sha256": null
+      },
+      {
+        "path": "onnx/model.onnx",
+        "bytes": 267955711,
+        "sha256": "252cf7048af94a1599019fef35961b2bd3d6db13df0b0a4b032b92baeae31939"
+      },
+      {
+        "path": "onnx/special_tokens_map.json",
+        "bytes": 125,
+        "sha256": null
+      },
+      {
+        "path": "onnx/tokenizer.json",
+        "bytes": 711396,
+        "sha256": null
+      },
+      {
+        "path": "onnx/tokenizer_config.json",
+        "bytes": 1283,
+        "sha256": null
+      },
+      {
+        "path": "onnx/vocab.txt",
+        "bytes": 231508,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 267844284,
+        "sha256": "60554cbd7781b09d87f1ececbea8c064b94e49a7f03fd88e8775bfe6cc3d9f88"
+      },
+      {
+        "path": "rust_model.ot",
+        "bytes": 267846324,
+        "sha256": "9db97da21b97a5e6db1212ce6a810a0c5e22c99daefe3355bae2117f78a0abb9"
+      },
+      {
+        "path": "tf_model.h5",
+        "bytes": 267949840,
+        "sha256": "b44df675bb34ccd8e57c14292c811ac7358b7c8e37c7f212745f640cd6019ac8"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 48,
+        "sha256": null
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 231508,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "bert_token_classification",
+    "kind": "classification",
+    "repo": "dslim/bert-base-NER",
+    "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+    "profile": "float32",
+    "gated": false,
+    "license": "mit",
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 445,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 6558,
+        "sha256": null
+      },
+      {
+        "path": "added_tokens.json",
+        "bytes": 2,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 829,
+        "sha256": null
+      },
+      {
+        "path": "flax_model.msgpack",
+        "bytes": 430913546,
+        "sha256": "a124466eab9adb43377d35d32afe77313fceeb16b74b106f3742884c666a2c1e"
+      },
+      {
+        "path": "model.safetensors",
+        "bytes": 433292294,
+        "sha256": "b04492186cfb45a64908487a17a9f8d6ddec3a403ef39db5bca688f0fa702a34"
+      },
+      {
+        "path": "onnx/added_tokens.json",
+        "bytes": 82,
+        "sha256": null
+      },
+      {
+        "path": "onnx/config.json",
+        "bytes": 999,
+        "sha256": null
+      },
+      {
+        "path": "onnx/model.onnx",
+        "bytes": 431172619,
+        "sha256": "963039b81eec5b33e23d84826ccdf1e8f8ada776f320e692113034cfae384617"
+      },
+      {
+        "path": "onnx/special_tokens_map.json",
+        "bytes": 125,
+        "sha256": null
+      },
+      {
+        "path": "onnx/tokenizer.json",
+        "bytes": 668923,
+        "sha256": null
+      },
+      {
+        "path": "onnx/tokenizer_config.json",
+        "bytes": 1296,
+        "sha256": null
+      },
+      {
+        "path": "onnx/vocab.txt",
+        "bytes": 213450,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 433316646,
+        "sha256": "4c0b01790e435da1337ea519d76e747427f2d3ee9c0e49b4952caa06298021f6"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 112,
+        "sha256": null
+      },
+      {
+        "path": "tf_model.h5",
+        "bytes": 433538860,
+        "sha256": "ba8245e6eefa4057300e93caef9d8360192914c271f15c8bd112283d357a954b"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 59,
+        "sha256": null
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 213450,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  },
+  {
+    "model_type": "clip",
+    "kind": "classification",
+    "repo": "openai/clip-vit-base-patch32",
+    "revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+    "profile": "float32",
+    "gated": false,
+    "license": null,
+    "files": [
+      {
+        "path": ".gitattributes",
+        "bytes": 690,
+        "sha256": null
+      },
+      {
+        "path": "README.md",
+        "bytes": 7942,
+        "sha256": null
+      },
+      {
+        "path": "config.json",
+        "bytes": 4186,
+        "sha256": null
+      },
+      {
+        "path": "flax_model.msgpack",
+        "bytes": 605123003,
+        "sha256": "2a2994d89bebd77abba5a554789dd9152a7e25467b79d88f6bd237d2dec5051c"
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 524657,
+        "sha256": null
+      },
+      {
+        "path": "preprocessor_config.json",
+        "bytes": 316,
+        "sha256": null
+      },
+      {
+        "path": "pytorch_model.bin",
+        "bytes": 605247071,
+        "sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 389,
+        "sha256": null
+      },
+      {
+        "path": "tf_model.h5",
+        "bytes": 605551040,
+        "sha256": "0d7e64ea2c496306a4bc0a6a7ab21e4755fd8c7beb01e6d9f5dc8d6662f1bfd2"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 2224041,
+        "sha256": null
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 592,
+        "sha256": null
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 862328,
+        "sha256": null
+      }
+    ],
+    "metadata_status": "PASS"
+  }
+]

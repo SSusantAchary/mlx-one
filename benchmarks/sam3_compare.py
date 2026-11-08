@@ -50,8 +50,8 @@ def compare_video(native, reference, *, frames=32, id_mapping=None):
                 iou = float(np.logical_and(a, b).sum() / union) if union else 1.0
                 score_delta = float(
                     abs(
-                        native[prefix + "scores"][native_index]
-                        - reference[prefix + "scores"][reference_index]
+                        np.asarray(native[prefix + "scores"][native_index]).item()
+                        - np.asarray(reference[prefix + "scores"][reference_index]).item()
                     )
                 )
                 box_delta = float(

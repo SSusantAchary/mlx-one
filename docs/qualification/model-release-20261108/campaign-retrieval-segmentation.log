@@ -1,0 +1,251 @@
+START bert sentence-transformers/all-MiniLM-L6-v2
+FETCHFETCH  bertFETCHbert  1_Pooling/config.json 190
+ README.md 10502bert 
+config.json 612
+FETCH bert config_sentence_transformers.json 116
+FETCH bert data_config.json 39265
+FETCH bert model.safetensors 90868376
+FETCH bert modules.json 349
+FETCH bert sentence_bert_config.json 53
+FETCH bert special_tokens_map.json 112
+FETCH bert tokenizer.json 466247
+FETCH bert tokenizer_config.json 350
+FETCH bert vocab.txt 231508
+RESULT bert FAIL cannot load native bert embedding: unexpected tensors: pooler.dense.bias, pooler.dense.weight
+CLEANED bert 91620389
+START mpnet sentence-transformers/all-mpnet-base-v2
+FETCH FETCHmpnet  FETCHmpnet1_Pooling/config.json   mpnetREADME.md 11612
+ 190config.json
+ 571
+FETCH mpnet config_sentence_transformers.json 116
+FETCH mpnet data_config.json 39265
+FETCH mpnet model.safetensors 437971872
+FETCH mpnet modules.json 349
+FETCH mpnet sentence_bert_config.json 53
+FETCH mpnet special_tokens_map.json 239
+FETCH mpnet tokenizer.json 466021
+FETCH mpnet tokenizer_config.json 363
+FETCH mpnet vocab.txt 231536
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 5 / 7
+RANGE model.safetensors 6 / 7
+RESULT mpnet FAIL cannot load native mpnet embedding: unexpected tensors: pooler.dense.bias, pooler.dense.weight
+CLEANED mpnet 876696650
+START qwen3_embedding Qwen/Qwen3-Embedding-0.6B
+FETCH FETCHqwen3_embedding  FETCHqwen3_embedding1_Pooling/config.json  qwen3_embedding config.json  727
+313README.md
+ 17237
+FETCH qwen3_embedding config_sentence_transformers.json 215
+FETCH qwen3_embedding generation_config.json 117
+FETCH qwen3_embedding merges.txt 1671853
+FETCH qwen3_embedding model.safetensors 1191586416
+FETCH qwen3_embedding modules.json 349
+FETCH qwen3_embedding tokenizer.json 11423705
+FETCH qwen3_embedding tokenizer_config.json 9706
+FETCH qwen3_embedding vocab.json 2776833
+RANGE model.safetensors 3 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 1 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 2 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 15 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 16 / 18
+RANGE model.safetensors 17 / 18
+RANGE model.safetensors 18 / 18
+RANGE model.safetensors 14 / 18
+RESULT qwen3_embedding FAIL invalid Qwen3 tokenizer assets: Qwen3 tokenizer supports only TemplateProcessing post-processors
+CLEANED qwen3_embedding 2399076282
+START qwen3_reranker Qwen/Qwen3-Reranker-0.6B
+FETCH FETCHqwen3_reranker FETCHqwen3_reranker  1_LogitScore/config.json  README.md 14742
+57qwen3_reranker
+ chat_template.jinja 741
+FETCH qwen3_reranker config.json 727
+FETCH qwen3_reranker config_sentence_transformers.json 325
+FETCH qwen3_reranker generation_config.json 214
+FETCH qwen3_reranker merges.txt 1671853
+FETCH qwen3_reranker model.safetensors 1191588280
+FETCH qwen3_reranker modules.json 280
+FETCH qwen3_reranker sentence_bert_config.json 362
+FETCH qwen3_reranker tokenizer.json 11422654
+FETCH qwen3_reranker tokenizer_config.json 9706
+FETCH qwen3_reranker vocab.json 2776833
+RANGE model.safetensors 4 / 18
+RANGE model.safetensors 1 / 18
+RANGE model.safetensors 5 / 18
+RANGE model.safetensors 6 / 18
+RANGE model.safetensors 2 / 18
+RANGE model.safetensors 3 / 18
+RANGE model.safetensors 10 / 18
+RANGE model.safetensors 8 / 18
+RANGE model.safetensors 11 / 18
+RANGE model.safetensors 7 / 18
+RANGE model.safetensors 14 / 18
+RANGE model.safetensors 9 / 18
+RANGE model.safetensors 15 / 18
+RANGE model.safetensors 13 / 18
+RANGE model.safetensors 12 / 18
+RANGE model.safetensors 16 / 18
+RANGE model.safetensors 17 / 18
+RANGE model.safetensors 18 / 18
+RESULT qwen3_reranker FAIL invalid Qwen3 tokenizer assets: Qwen3 tokenizer supports only TemplateProcessing post-processors
+CLEANED qwen3_reranker 2399077847
+START lfm2_colbert LiquidAI/LFM2-ColBERT-350M
+FETCHFETCH  lfm2_colbertFETCHlfm2_colbert  LICENSE  1_Dense/config.json10574lfm2_colbert 
+ 116README.md
+ 63051
+FETCH lfm2_colbert chat_template.jinja 1296
+FETCH lfm2_colbert config.json 1215
+FETCH lfm2_colbert config_sentence_transformers.json 693
+FETCH lfm2_colbert model.safetensors 1413306600
+FETCH lfm2_colbert modules.json 216
+FETCH lfm2_colbert sentence_bert_config.json 53
+FETCH lfm2_colbert special_tokens_map.json 323
+FETCH lfm2_colbert tokenizer.json 4733022
+FETCH lfm2_colbert tokenizer_config.json 91910
+RANGE model.safetensors 2 / 22
+RANGE model.safetensors 1 / 22
+RANGE model.safetensors 5 / 22
+RANGE model.safetensors 3 / 22
+RANGE model.safetensors 6 / 22
+RANGE model.safetensors 4 / 22
+RANGE model.safetensors 9 / 22
+RANGE model.safetensors 7 / 22
+RANGE model.safetensors 10 / 22
+RANGE model.safetensors 11 / 22
+RANGE model.safetensors 13 / 22
+RANGE model.safetensors 12 / 22
+RANGE model.safetensors 14 / 22
+RANGE model.safetensors 15 / 22
+RANGE model.safetensors 16 / 22
+RANGE model.safetensors 17 / 22
+RANGE model.safetensors 8 / 22
+RANGE model.safetensors 20 / 22
+RANGE model.safetensors 22 / 22
+RANGE model.safetensors 21 / 22
+RANGE model.safetensors 19 / 22
+RANGE model.safetensors 18 / 22
+RESULT lfm2_colbert FAIL unsupported native retrieval model type: 'lfm2'
+CLEANED lfm2_colbert 2831518242
+START sam3,sam3_tracker,sam3_video,sam3_tracker_video facebook/sam3
+FETCHFETCHFETCH  sam3 LICENSEsam3 README.md   7352
+26038sam3 config.json 25843
+
+FETCH sam3 merges.txt 524619
+FETCH sam3 model.safetensors 3439938512
+FETCH sam3 processor_config.json 1712
+FETCH sam3 special_tokens_map.json 588
+FETCH sam3 tokenizer.json 3642073
+FETCH sam3 tokenizer_config.json 799
+FETCH sam3 vocab.json 862328
+RANGE model.safetensors 4 / 52
+RANGE model.safetensors 3 / 52
+RANGE model.safetensors 1 / 52
+RANGE model.safetensors 5 / 52
+RANGE model.safetensors 7 / 52
+RANGE model.safetensors 8 / 52
+RANGE model.safetensors 2 / 52
+RANGE model.safetensors 6 / 52
+RANGE model.safetensors 11 / 52
+RANGE model.safetensors 10 / 52
+RANGE model.safetensors 12 / 52
+RANGE model.safetensors 9 / 52
+RANGE model.safetensors 13 / 52
+RANGE model.safetensors 14 / 52
+RANGE model.safetensors 17 / 52
+RANGE model.safetensors 15 / 52
+RANGE model.safetensors 19 / 52
+RANGE model.safetensors 20 / 52
+RANGE model.safetensors 18 / 52
+RANGE model.safetensors 16 / 52
+RANGE model.safetensors 21 / 52
+RANGE model.safetensors 22 / 52
+RANGE model.safetensors 23 / 52
+RANGE model.safetensors 25 / 52
+RANGE model.safetensors 24 / 52
+RANGE model.safetensors 26 / 52
+RANGE model.safetensors 29 / 52
+RANGE model.safetensors 28 / 52
+RANGE model.safetensors 30 / 52
+RANGE model.safetensors 27 / 52
+RANGE model.safetensors 33 / 52
+RANGE model.safetensors 31 / 52
+RANGE model.safetensors 34 / 52
+RANGE model.safetensors 32 / 52
+RANGE model.safetensors 35 / 52
+RANGE model.safetensors 36 / 52
+RANGE model.safetensors 37 / 52
+RANGE model.safetensors 39 / 52
+RANGE model.safetensors 38 / 52
+RANGE model.safetensors 40 / 52
+RANGE model.safetensors 41 / 52
+RANGE model.safetensors 43 / 52
+RANGE model.safetensors 45 / 52
+RANGE model.safetensors 44 / 52
+RANGE model.safetensors 46 / 52
+RANGE model.safetensors 42 / 52
+RANGE model.safetensors 47 / 52
+RANGE model.safetensors 50 / 52
+RANGE model.safetensors 49 / 52
+RANGE model.safetensors 52 / 52
+RANGE model.safetensors 48 / 52
+RANGE model.safetensors 51 / 52
+RESULT sam3 PASS_FUNCTIONAL 
+RESULT sam3_tracker PASS_FUNCTIONAL 
+RESULT sam3_video PASS_FUNCTIONAL 
+RESULT sam3_tracker_video FAIL registered standalone temporal tracker has no admitted public checkpoint loader
+CLEANED sam3 6884970519
+START bert_token_classification dslim/bert-base-NER
+FETCH FETCHbert_token_classification  FETCHREADME.mdbert_token_classification bert_token_classification config.json 829
+  added_tokens.json 6558
+2
+FETCH bert_token_classification model.safetensors 433292294
+FETCH bert_token_classification special_tokens_map.json 112
+FETCH bert_token_classification tokenizer_config.json 59
+FETCH bert_token_classification vocab.txt 213450
+RANGE model.safetensors 1 / 7
+RANGE model.safetensors 4 / 7
+RANGE model.safetensors 2 / 7
+RANGE model.safetensors 3 / 7
+RANGE model.safetensors 7 / 7
+RANGE model.safetensors 6 / 7
+RANGE model.safetensors 5 / 7
+RESULT bert_token_classification PASS_FUNCTIONAL 
+CLEANED bert_token_classification 866807184
+START clip openai/clip-vit-base-patch32
+FETCH FETCHclip FETCH clip README.mdclip  7942
+merges.txt  config.json524657 
+4186
+FETCH clip preprocessor_config.json 316
+FETCH clip pytorch_model.bin 605247071
+FETCH clip special_tokens_map.json 389
+FETCH clip tokenizer.json 2224041
+FETCH clip tokenizer_config.json 592
+FETCH clip vocab.json 862328
+RANGE pytorch_model.bin 1 / 10
+RANGE pytorch_model.bin 3 / 10
+RANGE pytorch_model.bin 4 / 10
+RANGE pytorch_model.bin 2 / 10
+RANGE pytorch_model.bin 6 / 10
+RANGE pytorch_model.bin 5 / 10
+RANGE pytorch_model.bin 7 / 10
+RANGE pytorch_model.bin 10 / 10
+RANGE pytorch_model.bin 8 / 10
+RANGE pytorch_model.bin 9 / 10
+RESULT clip FAIL installed CLI failed: Usage: main zero-shot-image [OPTIONS] MODEL IMAGE
+Try 'main zero-shot-image --help' for help.
+
+Error: No such option '--labels'. Did you mean '--label'?
+
+CLEANED clip 1822959504

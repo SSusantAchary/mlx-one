@@ -1,0 +1,380 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "trocr",
+  "checkpoint": "microsoft/trocr-base-printed",
+  "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+  "started": 1794139607.153034,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "10d9aad75b76455ca4b67324f10891c75185adce403865d5d9d7e45100d3a30a",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108",
+  "reference_python": "/private/tmp/mlx-one-all40-20261108/reference-env/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279",
+  "checkpoint_configuration": {
+    "architectures": [
+      "VisionEncoderDecoderModel"
+    ],
+    "decoder": {
+      "_name_or_path": "",
+      "activation_dropout": 0.0,
+      "activation_function": "gelu",
+      "add_cross_attention": true,
+      "architectures": null,
+      "attention_dropout": 0.0,
+      "bad_words_ids": null,
+      "bos_token_id": 0,
+      "chunk_size_feed_forward": 0,
+      "classifier_dropout": 0.0,
+      "d_model": 1024,
+      "decoder_attention_heads": 16,
+      "decoder_ffn_dim": 4096,
+      "decoder_layerdrop": 0.0,
+      "decoder_layers": 12,
+      "decoder_start_token_id": 2,
+      "diversity_penalty": 0.0,
+      "do_sample": false,
+      "dropout": 0.1,
+      "early_stopping": false,
+      "cross_attention_hidden_size": 768,
+      "encoder_no_repeat_ngram_size": 0,
+      "eos_token_id": 2,
+      "finetuning_task": null,
+      "forced_bos_token_id": null,
+      "forced_eos_token_id": null,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "init_std": 0.02,
+      "is_decoder": true,
+      "is_encoder_decoder": false,
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "length_penalty": 1.0,
+      "max_length": 20,
+      "max_position_embeddings": 512,
+      "min_length": 0,
+      "model_type": "trocr",
+      "no_repeat_ngram_size": 0,
+      "num_beam_groups": 1,
+      "num_beams": 1,
+      "num_return_sequences": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "output_scores": false,
+      "pad_token_id": 1,
+      "prefix": null,
+      "problem_type": null,
+      "pruned_heads": {},
+      "remove_invalid_values": false,
+      "repetition_penalty": 1.0,
+      "return_dict": true,
+      "return_dict_in_generate": false,
+      "scale_embedding": false,
+      "sep_token_id": null,
+      "task_specific_params": null,
+      "temperature": 1.0,
+      "tie_encoder_decoder": false,
+      "tie_word_embeddings": true,
+      "tokenizer_class": null,
+      "top_k": 50,
+      "top_p": 1.0,
+      "torch_dtype": null,
+      "torchscript": false,
+      "transformers_version": "4.12.0.dev0",
+      "use_bfloat16": false,
+      "use_cache": false,
+      "vocab_size": 50265
+    },
+    "encoder": {
+      "_name_or_path": "",
+      "add_cross_attention": false,
+      "architectures": null,
+      "attention_probs_dropout_prob": 0.0,
+      "bad_words_ids": null,
+      "bos_token_id": null,
+      "chunk_size_feed_forward": 0,
+      "decoder_start_token_id": null,
+      "diversity_penalty": 0.0,
+      "do_sample": false,
+      "early_stopping": false,
+      "cross_attention_hidden_size": null,
+      "encoder_no_repeat_ngram_size": 0,
+      "eos_token_id": null,
+      "finetuning_task": null,
+      "forced_bos_token_id": null,
+      "forced_eos_token_id": null,
+      "hidden_act": "gelu",
+      "hidden_dropout_prob": 0.0,
+      "hidden_size": 768,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "image_size": 384,
+      "initializer_range": 0.02,
+      "intermediate_size": 3072,
+      "is_decoder": false,
+      "is_encoder_decoder": false,
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "layer_norm_eps": 1e-12,
+      "length_penalty": 1.0,
+      "max_length": 20,
+      "min_length": 0,
+      "model_type": "vit",
+      "no_repeat_ngram_size": 0,
+      "num_attention_heads": 12,
+      "num_beam_groups": 1,
+      "num_beams": 1,
+      "num_channels": 3,
+      "num_hidden_layers": 12,
+      "num_return_sequences": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "output_scores": false,
+      "pad_token_id": null,
+      "patch_size": 16,
+      "prefix": null,
+      "problem_type": null,
+      "pruned_heads": {},
+      "qkv_bias": false,
+      "remove_invalid_values": false,
+      "repetition_penalty": 1.0,
+      "return_dict": true,
+      "return_dict_in_generate": false,
+      "sep_token_id": null,
+      "task_specific_params": null,
+      "temperature": 1.0,
+      "tie_encoder_decoder": false,
+      "tie_word_embeddings": true,
+      "tokenizer_class": null,
+      "top_k": 50,
+      "top_p": 1.0,
+      "torch_dtype": null,
+      "torchscript": false,
+      "transformers_version": "4.12.0.dev0",
+      "use_bfloat16": false
+    },
+    "is_encoder_decoder": true,
+    "model_type": "vision-encoder-decoder",
+    "tie_word_embeddings": false,
+    "torch_dtype": "float32",
+    "transformers_version": null
+  },
+  "ocr_image_path": "/private/tmp/mlx-one-all40-20261108/fixtures/ocr-line.png",
+  "output": {
+    "text": "CASH BILL",
+    "markdown": null,
+    "pages": [
+      {
+        "page": 0,
+        "original_size": [
+          810,
+          186
+        ],
+        "rendered_size": [
+          810,
+          186
+        ],
+        "text": "CASH BILL",
+        "markdown": null,
+        "elements": [],
+        "tables": [],
+        "formulas": [],
+        "timings": {
+          "preprocessing_seconds": 0.002670917005161755,
+          "encoder_seconds": 0.10019366700726096,
+          "generation_seconds": 0.08370058400032576,
+          "text_prefill_seconds": 0.03481712499342393,
+          "decode_forward_seconds": 0.04625554199446924,
+          "total_seconds": 0.1866281669936143,
+          "first_token_seconds": 0.13894570800766815
+        },
+        "metadata": {
+          "path": "visual",
+          "exif_oriented": true,
+          "source_page_count": 1,
+          "decode_seconds": 0.001503040999523364,
+          "processed_size": [
+            384,
+            384
+          ],
+          "visual_tokens": 577,
+          "prompt_tokens": 1,
+          "crop_first": false,
+          "source_crop": [
+            0,
+            0,
+            810,
+            186
+          ],
+          "model": "/private/tmp/mlx-one-all40-20261108/models/trocr/checkpoint",
+          "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+          "architecture": "trocr",
+          "output_tokens": 4,
+          "finish_reason": "stop",
+          "truncated": false,
+          "geometry_predicted": false,
+          "confidence_available": false
+        }
+      }
+    ],
+    "model": "/private/tmp/mlx-one-all40-20261108/models/trocr/checkpoint",
+    "task": "ocr.recognize",
+    "language": null,
+    "timings": {
+      "total_seconds": 0.21442729100817814
+    },
+    "metadata": {
+      "processed_pages": 1,
+      "page_count": 1,
+      "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+      "capabilities": {
+        "family": "trocr",
+        "tasks": [
+          "ocr.batch",
+          "ocr.recognize",
+          "ocr.region"
+        ],
+        "markdown": false,
+        "geometry": false,
+        "line_only": true,
+        "language_hint": false,
+        "crop_first": true
+      },
+      "measurement_type": "python-engine",
+      "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+      "checkpoint_status": "PENDING_HARDWARE_TEST"
+    },
+    "schema_version": "mlx-one-ocr-v1"
+  },
+  "line_cer": 0.0,
+  "quality_status": "PASS_ONE_PRINTED_LINE_ONLY",
+  "functional_status": "PASS",
+  "stage": "interfaces",
+  "interfaces": {
+    "python": "PASS",
+    "cli": {
+      "exit_code": 0,
+      "output": "{\n  \"text\": \"CASH BILL\",\n  \"markdown\": null,\n  \"pages\": [\n    {\n      \"page\": 0,\n      \"original_size\": [\n        810,\n        186\n      ],\n      \"rendered_size\": [\n        810,\n        186\n      ],\n      \"text\": \"CASH BILL\",\n      \"markdown\": null,\n      \"elements\": [],\n      \"tables\": [],\n      \"formulas\": [],\n      \"timings\": {\n        \"preprocessing_seconds\": 0.002049499991699122,\n        \"encoder_seconds\": 0.06051100000331644,\n        \"generation_seconds\": 0.0720203329983633,\n        \"text_prefill_seconds\": 0.023969415997271426,\n        \"decode_forward_seconds\": 0.04632691800361499,\n        \"total_seconds\": 0.13463024998782203,\n        \"first_token_seconds\": 0.08696820899785962\n      },\n      \"metadata\": {\n        \"path\": \"visual\",\n        \"exif_oriented\": true,\n        \"source_page_count\": 1,\n        \"decode_seconds\": 0.0012774579954566434,\n        \"processed_size\": [\n          384,\n          384\n        ],\n        \"visual_tokens\": 577,\n        \"prompt_tokens\": 1,\n        \"crop_first\": false,\n        \"source_crop\": [\n          0,\n          0,\n          810,\n          186\n        ],\n        \"model\": \"/private/tmp/mlx-one-all40-20261108/models/trocr/checkpoint\",\n        \"revision\": \"93450be3f1ed40a930690d951ef3932687cc1892\",\n        \"architecture\": \"trocr\",\n        \"output_tokens\": 4,\n        \"finish_reason\": \"stop\",\n        \"truncated\": false,\n        \"geometry_predicted\": false,\n        \"confidence_available\": false\n      }\n    }\n  ],\n  \"model\": \"/private/tmp/mlx-one-all40-20261108/models/trocr/checkpoint\",\n  \"task\": \"ocr.recognize\",\n  \"language\": null,\n  \"timings\": {\n    \"total_seconds\": 0.13687887499690987\n  },\n  \"metadata\": {\n    \"processed_pages\": 1,\n    \"page_count\": 1,\n    \"revision\": \"93450be3f1ed40a930690d951ef3932687cc1892\",\n    \"capabilities\": {\n      \"family\": \"trocr\",\n      \"tasks\": [\n        \"ocr.batch\",\n        \"ocr.recognize\",\n        \"ocr.region\"\n      ],\n      \"markdown\": false,\n      \"geometry\": false,\n      \"line_only\": true,\n      \"language_hint\": false,\n      \"crop_first\": true\n    },\n    \"measurement_type\": \"python-engine\",\n    \"coordinate_convention\": \"top-left pixel xyxy, zero-based pages\",\n    \"checkpoint_status\": \"PENDING_HARDWARE_TEST\"\n  },\n  \"schema_version\": \"mlx-one-ocr-v1\"\n}\n",
+      "status": "PASS"
+    },
+    "http": {
+      "status_code": 200,
+      "body": {
+        "text": "CASH BILL",
+        "markdown": null,
+        "pages": [
+          {
+            "page": 0,
+            "original_size": [
+              810,
+              186
+            ],
+            "rendered_size": [
+              810,
+              186
+            ],
+            "text": "CASH BILL",
+            "markdown": null,
+            "elements": [],
+            "tables": [],
+            "formulas": [],
+            "timings": {
+              "preprocessing_seconds": 0.002253041006042622,
+              "encoder_seconds": 0.07319116700091399,
+              "generation_seconds": 0.07221079099690542,
+              "text_prefill_seconds": 0.02376266600913368,
+              "decode_forward_seconds": 0.04670708300545812,
+              "total_seconds": 0.14772249999805354,
+              "first_token_seconds": 0.09965604099852499
+            },
+            "metadata": {
+              "path": "visual",
+              "exif_oriented": true,
+              "source_page_count": 1,
+              "decode_seconds": 0.0012652919976972044,
+              "processed_size": [
+                384,
+                384
+              ],
+              "visual_tokens": 577,
+              "prompt_tokens": 1,
+              "crop_first": false,
+              "source_crop": [
+                0,
+                0,
+                810,
+                186
+              ],
+              "model": "/private/tmp/mlx-one-all40-20261108/models/trocr/checkpoint",
+              "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+              "architecture": "trocr",
+              "output_tokens": 4,
+              "finish_reason": "stop",
+              "truncated": false,
+              "geometry_predicted": false,
+              "confidence_available": false
+            }
+          }
+        ],
+        "model": "/private/tmp/mlx-one-all40-20261108/models/trocr/checkpoint",
+        "task": "ocr.recognize",
+        "language": null,
+        "timings": {
+          "total_seconds": 0.14988033400732093
+        },
+        "metadata": {
+          "processed_pages": 1,
+          "page_count": 1,
+          "revision": "93450be3f1ed40a930690d951ef3932687cc1892",
+          "capabilities": {
+            "family": "trocr",
+            "tasks": [
+              "ocr.batch",
+              "ocr.recognize",
+              "ocr.region"
+            ],
+            "markdown": false,
+            "geometry": false,
+            "line_only": true,
+            "language_hint": false,
+            "crop_first": true
+          },
+          "measurement_type": "python-engine",
+          "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+          "checkpoint_status": "PENDING_HARDWARE_TEST"
+        },
+        "schema_version": "mlx-one-ocr-v1"
+      },
+      "status": "PASS"
+    },
+    "http_authentication": "PASS"
+  },
+  "peak_mlx_bytes": 1597616152,
+  "status": "PASS_FUNCTIONAL",
+  "seconds": 2.2411930561065674,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "10d9aad75b76455ca4b67324f10891c75185adce403865d5d9d7e45100d3a30a"
+}

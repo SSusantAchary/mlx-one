@@ -187,7 +187,7 @@ class NativeLFMAudio(nn.Module):
         encoded, lengths = self.audio_encoder(features, check=check)
         return self.audio_adapter(encoded), lengths
 
-    def audio_frame(self, hidden, *, temperature=0.0, top_k=0):
+    def audio_frame(self, hidden, *, temperature=0.0, top_k=0, key=None):
         """Autoregressive codebook axis; a fresh depth cache for each time frame."""
         projected = self.depth_linear(hidden).reshape(
             1, 1, self.config.codebooks, self.config.depthformer.dim
@@ -201,11 +201,14 @@ class NativeLFMAudio(nn.Module):
             )
             logits = embedding.get_logits(value[:, -1]).astype(mx.float32)
             if temperature > 0:
+                sample_key = None
+                if key is not None:
+                    key, sample_key = mx.random.split(key)
                 logits = logits / temperature
                 if 0 < top_k < logits.shape[-1]:
                     threshold = mx.sort(logits, axis=-1)[..., -top_k : -top_k + 1 or None]
                     logits = mx.where(logits >= threshold, logits, -float("inf"))
-                code = mx.random.categorical(logits)
+                code = mx.random.categorical(logits, key=sample_key)
             else:
                 code = mx.argmax(logits, axis=-1)
             codes.append(code)
@@ -220,12 +223,14 @@ class NativeLFMAudio(nn.Module):
         max_tokens=512,
         audio_temperature=0.0,
         audio_top_k=0,
+        seed=0,
         cancelled=None,
     ):
         """Ordered text tokens/audio frames; caches belong to this generator."""
         if mode not in {"sequential", "interleaved"} or max_tokens < 1:
             raise ValueError("invalid LFM generation mode/token budget")
         cache = self.make_cache()
+        key = mx.random.key(seed)
         current = "text"
         text_done = False
         remaining = self.config.interleaved_n_text
@@ -251,17 +256,20 @@ class NativeLFMAudio(nn.Module):
                     ):
                         current, remaining = "audio", self.config.interleaved_n_audio
                 else:
+                    key, frame_key = mx.random.split(key)
                     frame = self.audio_frame(
-                        hidden, temperature=audio_temperature, top_k=audio_top_k
+                        hidden, temperature=audio_temperature, top_k=audio_top_k, key=frame_key
                     )
                     first = int(frame[0, 0].item())
+                    # Match the publisher: reset the text-group counter before
+                    # applying EOS, including EOS on the final audio-group frame.
+                    if mode == "interleaved" and remaining <= 0 and not text_done:
+                        current, remaining = "text", self.config.interleaved_n_text
                     if first == 2048:
                         frame = mx.full(frame.shape, 2048, dtype=mx.int32)
                         current = "text"
                     elif bool(mx.any(frame >= 2048).item()):
                         raise ValueError("nonterminal LFM frame contains invalid codec code")
-                    elif mode == "interleaved" and remaining <= 0 and not text_done:
-                        current, remaining = "text", self.config.interleaved_n_text
                     yield "audio_end" if first == 2048 else "audio", frame
                     next_embedding = self.audio_embedding(frame)[:, None]
                 hidden, _, _ = self.lfm(None, cache=cache, input_embeddings=next_embedding)

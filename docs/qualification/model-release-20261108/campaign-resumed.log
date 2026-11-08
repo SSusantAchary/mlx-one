@@ -1,0 +1,52 @@
+START gemma3_text google/gemma-3-1b-it
+FETCH FETCH gemma3_textgemma3_textFETCH   README.mdgemma3_text  config.json 24265899
+
+added_tokens.json 35
+FETCH gemma3_textFETCH  FETCHgeneration_config.jsongemma3_text  gemma3_text special_tokens_map.json 662
+215 model.safetensors
+ 1999811208
+FETCH gemma3_text tokenizer.json FETCH gemma3_text tokenizer.model 4689074
+33384568
+FETCH gemma3_text tokenizer_config.json 1156999
+RESULT gemma3_text PASS_FUNCTIONAL 
+CLEANED gemma3_text 2919873917
+START phi3 microsoft/Phi-3-mini-4k-instruct
+FETCH FETCHFETCH  phi3 phi3 LICENSE 1105
+phi3README.md NOTICE.md  1809
+21733
+FETCHFETCH FETCHphi3   config.json 967phi3 added_tokens.json 306
+
+phi3 generation_config.json 181
+FETCH phi3 model-00001-of-00002.safetensors 4972489328
+FETCH phi3 model-00002-of-00002.safetensors 2669692552
+FETCH phi3 model.safetensors.index.json 16533
+FETCH phi3 special_tokens_map.json 599
+FETCH phi3 tokenizer.json 1937869
+FETCH phi3 tokenizer.model 499723
+FETCH phi3 tokenizer_config.json 3441
+RESULT phi3 PASS_FUNCTIONAL 
+CLEANED phi3 9796849101
+START lfm2_moe LiquidAI/LFM2.5-24B-A2B-MLX-4bit
+FETCH lfm2_moeFETCHFETCH  lfm2_moe README.md 3688
+ LICENSE lfm2_moe chat_template.jinja 10574
+5496
+FETCH lfm2_moe config.json 2148
+FETCH lfm2_moe generation_config.json 329
+FETCH lfm2_moe model-00001-of-00003.safetensors 5318453801
+FETCH lfm2_moe model-00002-of-00003.safetensors 5344895125
+FETCH lfm2_moe model-00003-of-00003.safetensors 2903945409
+FETCH lfm2_moe model.safetensors.index.json 80192
+FETCH lfm2_moe tokenizer.json 17905598
+FETCH lfm2_moe tokenizer_config.json 363
+RESULT lfm2_moe PASS_FUNCTIONAL 
+CLEANED lfm2_moe 13585305341
+START gpt_oss mlx-community/gpt-oss-20b-MXFP4-Q4
+REUSE_PROTECTED /Users/susant-achary/mlx-one-models/gpt-oss-20b-MXFP4-Q4
+RESULT gpt_oss FAIL ValueError: no visible final chat text within this output budget
+CLEANED gpt_oss 35
+START openelm apple/OpenELM-270M
+FETCH FETCHopenelm  FETCHLICENSEopenelm   README.md 12744
+5820openelm
+ config.json 1301
+FETCH openelm generation_config.json 111
+FETCH openelm model.safetensors 1086123184

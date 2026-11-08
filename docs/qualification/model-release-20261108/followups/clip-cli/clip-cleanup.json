@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "clip"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/clip",
+  "bytes_removed": 1822959505,
+  "downloaded_bytes_verified": 608871522,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794141884.4195242,
+  "recorded": 1794141998.643441,
+  "cleanup_complete": true,
+  "finished": 1794141998.6598551
+}

@@ -1,0 +1,3 @@
+sam3_video PASS_FUNCTIONAL 
+sam3_tracker_video PASS_FUNCTIONAL 
+CLEANED /private/tmp/mlx-one-all40-20261108/models/sam3_video 6884992932

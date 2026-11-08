@@ -1,0 +1,554 @@
+{
+  "schema_version": "alignment-gold-v1",
+  "source": {
+    "dataset": "kylelovesllms/timit_asr_ipa",
+    "revision": "d696c0d9c28ab0ff17f3d1ce817688ffe95464a1",
+    "file": "data/test-00000-of-00001.parquet",
+    "path": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/data/test-00000-of-00001.parquet",
+    "file_sha256": "bef3c31fc7ea3205d4d88ea91e6930910314ff7c77c6a0c493d77aca23b22a28"
+  },
+  "selection": "first 10 test rows, selected before aligner inference",
+  "annotation": "TIMIT word_detail start/stop sample indices; independent corpus annotations",
+  "gates": {
+    "endpoint_mean_absolute_error_max_seconds": 0.08,
+    "endpoint_p95_error_max_seconds": 0.2,
+    "word_coverage_min": 1.0
+  },
+  "records": [
+    {
+      "index": 0,
+      "id": "SI2000",
+      "timit_path": "TEST/DR4/MTLS0/SI2000.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/00.wav",
+      "audio_sha256": "c8a8c545b46901c283438e89e66fd7085a0cfa13273ba54b1e8831e664c64936",
+      "duration": 2.86725,
+      "text": "we can get it if we dig he said patiently",
+      "words": [
+        {
+          "text": "we",
+          "start": 0.16,
+          "end": 0.2475
+        },
+        {
+          "text": "can",
+          "start": 0.2475,
+          "end": 0.4043125
+        },
+        {
+          "text": "get",
+          "start": 0.4043125,
+          "end": 0.6475
+        },
+        {
+          "text": "it",
+          "start": 0.6475,
+          "end": 0.8459375
+        },
+        {
+          "text": "if",
+          "start": 0.8459375,
+          "end": 1.0704375
+        },
+        {
+          "text": "we",
+          "start": 1.0704375,
+          "end": 1.1325
+        },
+        {
+          "text": "dig",
+          "start": 1.1325,
+          "end": 1.6325
+        },
+        {
+          "text": "he",
+          "start": 1.7885,
+          "end": 1.924375
+        },
+        {
+          "text": "said",
+          "start": 1.924375,
+          "end": 2.185375
+        },
+        {
+          "text": "patiently",
+          "start": 2.185375,
+          "end": 2.71275
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "id": "SX110",
+      "timit_path": "TEST/DR4/MTLS0/SX110.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/01.wav",
+      "audio_sha256": "df81a061df4851276d69500c08d4b5c1d41bab87af0f5875dabf58f7569f5c11",
+      "duration": 3.4048125,
+      "text": "the best way to learn is to solve extra problems",
+      "words": [
+        {
+          "text": "the",
+          "start": 0.1488125,
+          "end": 0.2075
+        },
+        {
+          "text": "best",
+          "start": 0.2075,
+          "end": 0.5485
+        },
+        {
+          "text": "way",
+          "start": 0.5485,
+          "end": 0.6925
+        },
+        {
+          "text": "to",
+          "start": 0.6925,
+          "end": 0.833375
+        },
+        {
+          "text": "learn",
+          "start": 0.833375,
+          "end": 1.3004375
+        },
+        {
+          "text": "is",
+          "start": 1.3968125,
+          "end": 1.5975
+        },
+        {
+          "text": "to",
+          "start": 1.5975,
+          "end": 1.716875
+        },
+        {
+          "text": "solve",
+          "start": 1.716875,
+          "end": 2.1325
+        },
+        {
+          "text": "extra",
+          "start": 2.1325,
+          "end": 2.4675
+        },
+        {
+          "text": "problems",
+          "start": 2.4675,
+          "end": 3.205625
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "id": "SA2",
+      "timit_path": "TEST/DR4/MTLS0/SA2.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/02.wav",
+      "audio_sha256": "a11cbab73536b50680c6791af06a5e2984a6e089173c8f4ab1caba674fb17ff5",
+      "duration": 2.89925,
+      "text": "don't ask me to carry an oily rag like that",
+      "words": [
+        {
+          "text": "don't",
+          "start": 0.59375,
+          "end": 0.7425
+        },
+        {
+          "text": "ask",
+          "start": 0.7425,
+          "end": 0.935
+        },
+        {
+          "text": "me",
+          "start": 0.9725,
+          "end": 1.0475
+        },
+        {
+          "text": "to",
+          "start": 1.0475,
+          "end": 1.1253125
+        },
+        {
+          "text": "carry",
+          "start": 1.1253125,
+          "end": 1.39425
+        },
+        {
+          "text": "an",
+          "start": 1.39425,
+          "end": 1.47775
+        },
+        {
+          "text": "oily",
+          "start": 1.47775,
+          "end": 1.8433125
+        },
+        {
+          "text": "rag",
+          "start": 1.8433125,
+          "end": 2.213125
+        },
+        {
+          "text": "like",
+          "start": 2.213125,
+          "end": 2.343125
+        },
+        {
+          "text": "that",
+          "start": 2.343125,
+          "end": 2.780625
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "id": "SI740",
+      "timit_path": "TEST/DR4/MTLS0/SI740.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/03.wav",
+      "audio_sha256": "3c99f3f8b05757612b9ad1c0f06475662381f3f2486c9a332c14990ce2a5b2ad",
+      "duration": 2.1824375,
+      "text": "do without fancy tablecloths",
+      "words": [
+        {
+          "text": "do",
+          "start": 0.13575,
+          "end": 0.2625
+        },
+        {
+          "text": "without",
+          "start": 0.2625,
+          "end": 0.745125
+        },
+        {
+          "text": "fancy",
+          "start": 0.745125,
+          "end": 1.1525
+        },
+        {
+          "text": "tablecloths",
+          "start": 1.1525,
+          "end": 2.044375
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "id": "SA1",
+      "timit_path": "TEST/DR4/MTLS0/SA1.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/04.wav",
+      "audio_sha256": "29aff665ee177ab03b5a2ab4e2db8f7d2d3d43794929d71906bacaea0ad67e8c",
+      "duration": 3.1808125,
+      "text": "she had your dark suit in greasy wash water all year",
+      "words": [
+        {
+          "text": "she",
+          "start": 0.1325,
+          "end": 0.3325
+        },
+        {
+          "text": "had",
+          "start": 0.3325,
+          "end": 0.5975
+        },
+        {
+          "text": "your",
+          "start": 0.545625,
+          "end": 0.6525
+        },
+        {
+          "text": "dark",
+          "start": 0.6525,
+          "end": 0.966
+        },
+        {
+          "text": "suit",
+          "start": 0.966,
+          "end": 1.3341875
+        },
+        {
+          "text": "in",
+          "start": 1.3341875,
+          "end": 1.415125
+        },
+        {
+          "text": "greasy",
+          "start": 1.415125,
+          "end": 1.8406875
+        },
+        {
+          "text": "wash",
+          "start": 1.8406875,
+          "end": 2.16875
+        },
+        {
+          "text": "water",
+          "start": 2.22,
+          "end": 2.4875
+        },
+        {
+          "text": "all",
+          "start": 2.6101875,
+          "end": 2.806
+        },
+        {
+          "text": "year",
+          "start": 2.806,
+          "end": 3.0475
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "id": "SX200",
+      "timit_path": "TEST/DR4/MTLS0/SX200.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/05.wav",
+      "audio_sha256": "cbcd82549ae07fe1357f143e837b965c92638b44a73acb4f5b2701b9f73b5f7d",
+      "duration": 2.5408125,
+      "text": "ralph controlled the stopwatch from the bleachers",
+      "words": [
+        {
+          "text": "ralph",
+          "start": 0.14,
+          "end": 0.4225
+        },
+        {
+          "text": "controlled",
+          "start": 0.4225,
+          "end": 0.925875
+        },
+        {
+          "text": "the",
+          "start": 0.925875,
+          "end": 0.9786875
+        },
+        {
+          "text": "stopwatch",
+          "start": 0.9786875,
+          "end": 1.6135625
+        },
+        {
+          "text": "from",
+          "start": 1.6135625,
+          "end": 1.7910625
+        },
+        {
+          "text": "the",
+          "start": 1.7910625,
+          "end": 1.8425
+        },
+        {
+          "text": "bleachers",
+          "start": 1.8425,
+          "end": 2.3975
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "id": "SI1370",
+      "timit_path": "TEST/DR4/MTLS0/SI1370.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/06.wav",
+      "audio_sha256": "34e7a6777cc1496badae85032e21e06db9efb937c30262dd91670d8d4b9da7c3",
+      "duration": 4.096,
+      "text": "we may say that his problem was diagnosed but that he refused treatment",
+      "words": [
+        {
+          "text": "we",
+          "start": 0.135,
+          "end": 0.2075
+        },
+        {
+          "text": "may",
+          "start": 0.2075,
+          "end": 0.38875
+        },
+        {
+          "text": "say",
+          "start": 0.38875,
+          "end": 0.6775
+        },
+        {
+          "text": "that",
+          "start": 0.6775,
+          "end": 0.8225
+        },
+        {
+          "text": "his",
+          "start": 0.8225,
+          "end": 1.0625
+        },
+        {
+          "text": "problem",
+          "start": 1.0625,
+          "end": 1.4490625
+        },
+        {
+          "text": "was",
+          "start": 1.4490625,
+          "end": 1.60625
+        },
+        {
+          "text": "diagnosed",
+          "start": 1.60625,
+          "end": 2.4475
+        },
+        {
+          "text": "but",
+          "start": 2.5795,
+          "end": 2.749
+        },
+        {
+          "text": "that",
+          "start": 2.749,
+          "end": 2.92
+        },
+        {
+          "text": "he",
+          "start": 2.92,
+          "end": 3.0675
+        },
+        {
+          "text": "refused",
+          "start": 3.0675,
+          "end": 3.63125
+        },
+        {
+          "text": "treatment",
+          "start": 3.63125,
+          "end": 4.041375
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "id": "SX380",
+      "timit_path": "TEST/DR4/MTLS0/SX380.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/07.wav",
+      "audio_sha256": "d07389dfa53fb5ee4b6e8a3ede953e8c2d1cd42e5f4ef40a3bc17ac0b149f44f",
+      "duration": 2.2144375,
+      "text": "why charge money for such garbage",
+      "words": [
+        {
+          "text": "why",
+          "start": 0.135,
+          "end": 0.2875
+        },
+        {
+          "text": "charge",
+          "start": 0.2875,
+          "end": 0.6890625
+        },
+        {
+          "text": "money",
+          "start": 0.6890625,
+          "end": 0.9975
+        },
+        {
+          "text": "for",
+          "start": 0.9975,
+          "end": 1.159375
+        },
+        {
+          "text": "such",
+          "start": 1.159375,
+          "end": 1.5075
+        },
+        {
+          "text": "garbage",
+          "start": 1.5075,
+          "end": 2.080625
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "id": "SX290",
+      "timit_path": "TEST/DR4/MTLS0/SX290.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/08.wav",
+      "audio_sha256": "31ed2d2de7fb467bb75def3db67eb431afbc01e25499e6299136db91c3445655",
+      "duration": 3.18725,
+      "text": "this brochure is particularly informative for prospective buyer",
+      "words": [
+        {
+          "text": "this",
+          "start": 0.148125,
+          "end": 0.309375
+        },
+        {
+          "text": "brochure",
+          "start": 0.309375,
+          "end": 0.8176875
+        },
+        {
+          "text": "is",
+          "start": 0.8176875,
+          "end": 1.0525
+        },
+        {
+          "text": "particularly",
+          "start": 1.0525,
+          "end": 1.480375
+        },
+        {
+          "text": "informative",
+          "start": 1.4229375,
+          "end": 2.08875
+        },
+        {
+          "text": "for",
+          "start": 2.08875,
+          "end": 2.1625
+        },
+        {
+          "text": "prospective",
+          "start": 2.1625,
+          "end": 2.7713125
+        },
+        {
+          "text": "buyer",
+          "start": 2.7713125,
+          "end": 3.1563125
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "id": "SX20",
+      "timit_path": "TEST/DR4/MTLS0/SX20.wav",
+      "audio": "/private/tmp/mlx-one-all40-20261108/fixtures/alignment-gold/09.wav",
+      "audio_sha256": "30e7e321c213ec5782b941ebf7178d5366dbcf9bf826b4dd248c19e5a3945974",
+      "duration": 3.008,
+      "text": "she wore warm fleecy woolen overalls",
+      "words": [
+        {
+          "text": "she",
+          "start": 0.139375,
+          "end": 0.368125
+        },
+        {
+          "text": "wore",
+          "start": 0.368125,
+          "end": 0.6575
+        },
+        {
+          "text": "warm",
+          "start": 0.6575,
+          "end": 1.039125
+        },
+        {
+          "text": "fleecy",
+          "start": 1.039125,
+          "end": 1.5848125
+        },
+        {
+          "text": "woolen",
+          "start": 1.5848125,
+          "end": 1.926875
+        },
+        {
+          "text": "overalls",
+          "start": 1.926875,
+          "end": 2.703125
+        }
+      ]
+    }
+  ]
+}

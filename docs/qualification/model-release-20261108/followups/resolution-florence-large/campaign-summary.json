@@ -1,0 +1,6283 @@
+{
+  "schema_version": "model-release-campaign-v1",
+  "expected_models": 40,
+  "executed_models": 1,
+  "functional_passed": 0,
+  "release_qualified": 0,
+  "results": [
+    {
+      "schema_version": "model-release-probe-v1",
+      "model_type": "florence2",
+      "checkpoint": "microsoft/Florence-2-large-ft",
+      "revision": "4a12a2b54b7016a48a22037fbd62da90cd566f2a",
+      "started": 1794155428.658495,
+      "release_qualified": false,
+      "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+      "platform": "macOS-15.8.2-arm64-arm-64bit",
+      "worker_sha256": "3ad79d6ea94a052ff2410c6a74763931c9092948c5dea15603c9169624fa891d",
+      "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+      "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+      "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+      "evidence_directory": "/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/docs/qualification/model-release-20261108/followups/resolution-florence-large",
+      "reference_python": null,
+      "gpu_execution_serialized": true,
+      "harness_sources": {
+        "scripts/qualification/embedding_reference_probe.py": "7bda87d3dc4d6270c98815122f7374805e760bba96345bd8025aacaf36aa0a41",
+        "scripts/qualification/run_tiled_feasibility.py": "4523da32cb42ac3efd8c64f97451935ede924f25ec0b8f59766fd3304f280504",
+        "scripts/qualification/revamp_inventory.py": "374b0df68dfcc3f4b9f848bbbe7cb737d5106167f2c0b56251d14d634c83b294",
+        "scripts/qualification/qualify_ten_models.py": "a2fb6cb00f70a4b2f79e758b74ea61c697c64c2e5e84201e040b239fe4550321",
+        "scripts/qualification/numerical_contract_v2.py": "52c9f6c0cd0962df72b305b498e9146edbe7683a7a36373275a270b1a4665aee",
+        "scripts/qualification/lfm_speech_interfaces.py": "6dbafb7c58cf66e630de118900a8b8bfb860ce3d43a5d3d625ad3fff04eb0316",
+        "scripts/qualification/alpha_package.py": "cceb3705a86d9d3da2376f0707b8dbb9318e6b15e59c2e224b5059a521ee49cb",
+        "scripts/qualification/colbert_reference_probe.py": "4eaa9de82d01c567b84b735b114d24757e6a9b39057cd122114b10b05eaa69d2",
+        "scripts/qualification/run_inference_optimization.py": "6e44ed8b72ad316c275def0bd629de2b57eedd46a35627dd4a259b30a0d7947a",
+        "scripts/qualification/operation_selection.py": "1c6071aa96d2930692763dcd48fc10591c45111287acf9ddb6c83cb395b24554",
+        "scripts/qualification/report_ten_models.py": "12d6d721bc9534e505aa303ef1ac52a200377a8586cf668f0ae882177ea2589a",
+        "scripts/qualification/model_release_report.py": "00341a57c026a05ec093ab3370d9e7b1d66fafe0067d5456f7ce0a09b6859198",
+        "scripts/qualification/qwen_fused_causal.py": "59a513c3d9af991531457ec2b1dcf3ff0e8daa348c5837f536ed303bb04994ea",
+        "scripts/qualification/ten_model_worker.py": "ec27e5d04adbd058f9cfa5ab6c6c9ac35a9c5cc968b18ce0c50fc40c1b563aee",
+        "scripts/qualification/model_release_download.py": "38cbd72b4f19e356877826c9bdfd84934625bcc787589741067ff62f49f6d373",
+        "scripts/qualification/florence_reference_probe.py": "883712645cf4ced7741e882898fbceaac7e3fb652812cce389216399b7b104ee",
+        "scripts/qualification/alpha_ui_security.py": "45980e6492447c4f4b223735a77cedfacda311d8e079b72134763cabb19ab39d",
+        "scripts/qualification/lfm2_reference_probe.py": "b1ecd58d2ad86c35882e2a4f2346dcc48cb74b5f86664e3900bdfef51a6fb7cf",
+        "scripts/qualification/lfm_audio_reference_probe.py": "a7865c518e7920b887810a97209202dfe16b1d651b207bb6681b5037198a0ff9",
+        "scripts/qualification/model_release_campaign.py": "0cab112f949165492cc09e70bc8da16572f9353b8146d06ccd22260956881c64",
+        "scripts/qualification/tiled_model_qualification.py": "cf2372ad882241a98c29f13df1448becf75f6c9ec1f44092e43157c4478b5aaf",
+        "scripts/qualification/florence_reference_qualification.py": "ad45e1b2f32e936a7dc99d3b2d6f320071a3cf733a8f1a637ef67d2211364c13",
+        "scripts/qualification/model_release_worker.py": "8b0e51a52697e33d34d60184461c8f99b4db7248ebedc956ea540aacf15300af",
+        "scripts/qualification/model_release_candidate.py": "9c4a058ceb9dbd9b3d6531febd22be4a006cae4c9407322918532fd1484621df",
+        "scripts/qualification/model_release_resolution_fixtures.py": "eac84131a0bd069ea7694422ccd80ae8dfd593567837d7fecf2af3a0efc94024",
+        "scripts/qualification/openelm_reference_probe.py": "1b37ac6c531513168a25f81db748422a8f5eee883bb0f0784d6ae0c63c5dc53b",
+        "scripts/qualification/model_release_fixtures.py": "465a0f1f2603ca38d324f81c6e79512f57b09f90e67152b3f48326f189a489a7",
+        "scripts/qualification/ner_reference_qualification.py": "8dc1a96f41cedb2631161b84ed15239591ee3656045783eeb2419678f6d05c41",
+        "scripts/qualification/reference_tiled_attention.py": "6e9ca57978764e4fef420360402734ca2a7989266cb687b37801e118583e690b",
+        "scripts/qualification/lfm_audio_reference_qualification.py": "908bb19fe35f408a5a49af6c7cd4ea72c6686dff5e3275866ab309a3092814bc",
+        "scripts/qualification/functional_checkpoint_smoke.py": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+        "scripts/qualification/verify_http_identity.py": "4b9a83e7779f9f31d4665113e925edd0d85410d10f0d1ff7a2206f7409bbb65d",
+        "scripts/qualification/model_release_inventory.py": "546ba29a967cf110df723a96f82d5ed12ea554e20f8d666f8d0686a07f7bbaf6",
+        "scripts/qualification/turboquant_wheel_smoke.py": "050db4ee799f1a9930fac74e0f948c21b3e05126bea0654f8b384a6795025cda",
+        "scripts/qualification/sam_reference_qualification.py": "7d3a9c13bba584bb6b0f827a6bc98a082c8f194e07879fbca7cf87d78f989c50",
+        "benchmarks/sam3_qualification.py": "6e8a238c5dceb08d51a885abe768716645f65d6fb45e752b66178aa57eb1d04b",
+        "benchmarks/sam3_compare.py": "ddaa3ee2a8fab14fe1d3c7a9ae7ddb61a0bb0ceacc19e43ce281150074c1fe66",
+        "benchmarks/native_tasks/export_ner.py": "86e0d0f7438bb12b4225c11d2e28c3fc4b3483ba8b209e3da77fc1edaa33f3b9"
+      },
+      "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+      "mlx": "0.32.2",
+      "device": {
+        "device_name": "Apple M4",
+        "max_recommended_working_set_size": 22906503168,
+        "memory_size": 34359738368,
+        "architecture": "applegpu_g16g",
+        "max_buffer_length": 17179869184,
+        "resource_limit": 499000
+      },
+      "reference_packages_absent": true,
+      "installed_record_sha256": "54477f4f0121ea2d92ca2a8fd1672d30dcf95fd6a5069c109abc26092dfc825c",
+      "checkpoint_configuration": {
+        "_name_or_path": "florence2",
+        "architectures": [
+          "Florence2ForConditionalGeneration"
+        ],
+        "auto_map": {
+          "AutoConfig": "configuration_florence2.Florence2Config",
+          "AutoModelForCausalLM": "modeling_florence2.Florence2ForConditionalGeneration"
+        },
+        "bos_token_id": 0,
+        "eos_token_id": 2,
+        "ignore_index": -100,
+        "model_type": "florence2",
+        "pad_token_id": 1,
+        "projection_dim": 1024,
+        "text_config": {
+          "vocab_size": 51289,
+          "activation_dropout": 0.1,
+          "activation_function": "gelu",
+          "add_bias_logits": false,
+          "add_final_layer_norm": false,
+          "attention_dropout": 0.1,
+          "bos_token_id": 0,
+          "classif_dropout": 0.1,
+          "classifier_dropout": 0.0,
+          "d_model": 1024,
+          "decoder_attention_heads": 16,
+          "decoder_ffn_dim": 4096,
+          "decoder_layerdrop": 0.0,
+          "decoder_layers": 12,
+          "decoder_start_token_id": 2,
+          "dropout": 0.1,
+          "early_stopping": true,
+          "encoder_attention_heads": 16,
+          "encoder_ffn_dim": 4096,
+          "encoder_layerdrop": 0.0,
+          "encoder_layers": 12,
+          "eos_token_id": 2,
+          "forced_eos_token_id": 2,
+          "forced_bos_token_id": 0,
+          "gradient_checkpointing": false,
+          "init_std": 0.02,
+          "is_encoder_decoder": true,
+          "label2id": {
+            "LABEL_0": 0,
+            "LABEL_1": 1,
+            "LABEL_2": 2
+          },
+          "max_position_embeddings": 1024,
+          "no_repeat_ngram_size": 3,
+          "normalize_before": false,
+          "num_hidden_layers": 12,
+          "pad_token_id": 1,
+          "scale_embedding": false,
+          "num_beams": 3
+        },
+        "vision_config": {
+          "model_type": "davit",
+          "drop_path_rate": 0.1,
+          "patch_size": [
+            7,
+            3,
+            3,
+            3
+          ],
+          "patch_stride": [
+            4,
+            2,
+            2,
+            2
+          ],
+          "patch_padding": [
+            3,
+            1,
+            1,
+            1
+          ],
+          "patch_prenorm": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "enable_checkpoint": false,
+          "dim_embed": [
+            256,
+            512,
+            1024,
+            2048
+          ],
+          "num_heads": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "num_groups": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "depths": [
+            1,
+            1,
+            9,
+            1
+          ],
+          "window_size": 12,
+          "projection_dim": 1024,
+          "visual_temporal_embedding": {
+            "type": "COSINE",
+            "max_temporal_embeddings": 100
+          },
+          "image_pos_embed": {
+            "type": "learned_abs_2d",
+            "max_pos_embeddings": 50
+          },
+          "image_feature_source": [
+            "spatial_avg_pool",
+            "temporal_avg_pool"
+          ]
+        },
+        "vocab_size": 51289,
+        "torch_dtype": "float16",
+        "transformers_version": "4.41.0.dev0",
+        "is_encoder_decoder": true
+      },
+      "ocr_fixture_sha256": "1fed9cd48d58bb332f220e929220639978f989b41c4d7083e7d1177e00c1c50d",
+      "ocr_fixture": {
+        "dataset": "getomni-ai/ocr-benchmark",
+        "revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+        "id": "434",
+        "image_sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+        "reference_sha256": "50c2358e325c5e81f5c9653d4426b1bd73bbcf83b9c90e5aaf21de08b8d7b939"
+      },
+      "ocr_image_path": "/private/tmp/mlx-one-all40-20261108/fixtures/ocr-corpus/test/images/434.png",
+      "ocr_generation_budget": 512,
+      "output": {
+        "text": "Health History QuestionnaireFirst Name:First Name:Last Name:EmilyDavisMarital Status:Single Married Divor Divorced Separated WowedAddress:38A Sycamore LnCity:State:Zip:WaimanaloHIP6795Phone:DOB:4922-1939October 21, 1952Spouse Name:Spouse Phone:Is the requested medication ONEW or a C CONTINUATION of THERAPY? If so, start date:Have you been hospitalized in the past year? Yes NoFinancial Responsible Party:Responsible Party:Type Of Insurance:Insurance Company:AutomobileOscar Health InsuranceInsurance Address:Insurance Maple Way472A Maple WayInsurance Phone: Insurance Phone:Group #:Member ID:(658) 760-78UNOXZGV6SIKX4VRPatient Signature:Social Security #:Date:Guardian Signature:Guardian Social Security #:Date:Family Health HistoryRelationAge If LivingAge At DeathChronic Health ProblemsSister66",
+        "markdown": null,
+        "pages": [
+          {
+            "page": 0,
+            "original_size": [
+              1920,
+              2075
+            ],
+            "rendered_size": [
+              1920,
+              2075
+            ],
+            "text": "Health History QuestionnaireFirst Name:First Name:Last Name:EmilyDavisMarital Status:Single Married Divor Divorced Separated WowedAddress:38A Sycamore LnCity:State:Zip:WaimanaloHIP6795Phone:DOB:4922-1939October 21, 1952Spouse Name:Spouse Phone:Is the requested medication ONEW or a C CONTINUATION of THERAPY? If so, start date:Have you been hospitalized in the past year? Yes NoFinancial Responsible Party:Responsible Party:Type Of Insurance:Insurance Company:AutomobileOscar Health InsuranceInsurance Address:Insurance Maple Way472A Maple WayInsurance Phone: Insurance Phone:Group #:Member ID:(658) 760-78UNOXZGV6SIKX4VRPatient Signature:Social Security #:Date:Guardian Signature:Guardian Social Security #:Date:Family Health HistoryRelationAge If LivingAge At DeathChronic Health ProblemsSister66",
+            "markdown": null,
+            "elements": [],
+            "tables": [],
+            "formulas": [],
+            "timings": {
+              "preprocessing_seconds": 0.045540958002675325,
+              "encoder_seconds": 1.2545250000111992,
+              "generation_seconds": 9.087728124999558,
+              "text_prefill_seconds": 0.12228370799857657,
+              "decode_forward_seconds": 8.189642226061551,
+              "total_seconds": 10.387913832993945,
+              "first_token_seconds": 10.383775124995736
+            },
+            "metadata": {
+              "path": "visual",
+              "exif_oriented": true,
+              "source_page_count": 1,
+              "decode_seconds": 0.012165249994723126,
+              "processed_size": [
+                768,
+                768
+              ],
+              "visual_tokens": 577,
+              "prompt_tokens": 1,
+              "crop_first": false,
+              "source_crop": [
+                0,
+                0,
+                1920,
+                2075
+              ],
+              "num_beams": 3,
+              "model": "/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint",
+              "revision": "4a12a2b54b7016a48a22037fbd62da90cd566f2a",
+              "architecture": "florence2",
+              "output_tokens": 221,
+              "finish_reason": "stop",
+              "truncated": false,
+              "geometry_predicted": false,
+              "confidence_available": false
+            }
+          }
+        ],
+        "model": "/private/tmp/mlx-one-all40-20261108/models/florence2/checkpoint",
+        "task": "ocr.recognize",
+        "language": null,
+        "timings": {
+          "total_seconds": 10.449222791008651
+        },
+        "metadata": {
+          "processed_pages": 1,
+          "page_count": 1,
+          "revision": "4a12a2b54b7016a48a22037fbd62da90cd566f2a",
+          "capabilities": {
+            "family": "florence2",
+            "tasks": [
+              "ocr.batch",
+              "ocr.detect",
+              "ocr.document",
+              "ocr.recognize",
+              "ocr.region"
+            ],
+            "markdown": false,
+            "geometry": true,
+            "line_only": false,
+            "language_hint": false,
+            "crop_first": true
+          },
+          "measurement_type": "python-engine",
+          "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+          "checkpoint_status": "PENDING_HARDWARE_TEST"
+        },
+        "schema_version": "mlx-one-ocr-v1"
+      },
+      "metric_schema": "ocr-visible-text-v3",
+      "metric_scope": "returned plain text versus rendered HF Markdown reference; content accuracy only",
+      "raw_reference_cer": 0.390748031496063,
+      "rendered_reference_sha256": "64da2f2754fd1a98850e4443762c0e9470b4f3733f381e84678407bdaaa15615",
+      "page_cer": 0.2835648148148148,
+      "page_wer": 0.7196969696969697,
+      "quality_status": "MEASURED_ONE_LABELED_PAGE",
+      "status": "FAIL",
+      "error": "labeled HF page normalized CER exceeds declared 25% floor",
+      "exception": "AssertionError",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/scripts/qualification/model_release_worker.py\", line 1301, in main\n    }[entry[\"kind\"]]\n        ^^^^^^^^^^^^^\n  File \"/Users/susant-achary/dev_work/git_codes/c_base/mlx-one-release-qualification/scripts/qualification/model_release_worker.py\", line 797, in ocr_probe\n    assert report[\"page_cer\"] <= page_sample[\"normalized_cer_limit\"], (\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: labeled HF page normalized CER exceeds declared 25% floor\n",
+      "checkpoint_tensor_inventory": {
+        "model.safetensors": {
+          "image_pos_embed.column_embeddings.weight": {
+            "shape": [
+              50,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "image_pos_embed.row_embeddings.weight": {
+            "shape": [
+              50,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "image_proj_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "image_proj_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "image_projection": {
+            "shape": [
+              2048,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.final_logits_bias": {
+            "shape": [
+              1,
+              51289
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.embed_positions.weight": {
+            "shape": [
+              1026,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layernorm_embedding.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layernorm_embedding.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.0.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.1.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.10.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.11.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.2.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.3.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.4.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.5.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.6.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.7.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.8.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.encoder_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.decoder.layers.9.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.embed_positions.weight": {
+            "shape": [
+              1026,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layernorm_embedding.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layernorm_embedding.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.0.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.1.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.10.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.11.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.2.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.3.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.4.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.5.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.6.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.7.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.8.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.final_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.final_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.k_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.k_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.out_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.out_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.q_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.q_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.v_proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn.v_proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn_layer_norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.encoder.layers.9.self_attn_layer_norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "language_model.model.shared.weight": {
+            "shape": [
+              51289,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              256,
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              768
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              768,
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              256,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              256,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              1024,
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              256,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.ffn.norm.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.channel_block.ffn.norm.weight": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              256,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              256,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              1024,
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              256,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.ffn.norm.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.ffn.norm.weight": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              256,
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              768
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              768,
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.0.0.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              512,
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              1536
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              1536,
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              512,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              512,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              2048,
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              512,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.ffn.norm.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.channel_block.ffn.norm.weight": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              512,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              512,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              2048,
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              512,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.ffn.norm.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.ffn.norm.weight": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              512,
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              1536
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              1536,
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.1.0.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.0.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.1.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.2.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.3.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.4.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.5.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.6.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.7.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.channel_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              1024,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              4096,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              1024,
+              4096
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.ffn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.ffn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              1024,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              3072
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              3072,
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.2.8.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.channel_attn.fn.proj.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.channel_attn.fn.proj.weight": {
+            "shape": [
+              2048,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.channel_attn.fn.qkv.bias": {
+            "shape": [
+              6144
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.channel_attn.fn.qkv.weight": {
+            "shape": [
+              6144,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.channel_attn.norm.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.channel_attn.norm.weight": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.conv1.fn.dw.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.conv1.fn.dw.weight": {
+            "shape": [
+              2048,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.conv2.fn.dw.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.conv2.fn.dw.weight": {
+            "shape": [
+              2048,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              8192
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              8192,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              2048,
+              8192
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.ffn.norm.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.channel_block.ffn.norm.weight": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.conv1.fn.dw.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.conv1.fn.dw.weight": {
+            "shape": [
+              2048,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.conv2.fn.dw.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.conv2.fn.dw.weight": {
+            "shape": [
+              2048,
+              1,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.ffn.fn.net.fc1.bias": {
+            "shape": [
+              8192
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.ffn.fn.net.fc1.weight": {
+            "shape": [
+              8192,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.ffn.fn.net.fc2.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.ffn.fn.net.fc2.weight": {
+            "shape": [
+              2048,
+              8192
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.ffn.norm.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.ffn.norm.weight": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.window_attn.fn.proj.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.window_attn.fn.proj.weight": {
+            "shape": [
+              2048,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.window_attn.fn.qkv.bias": {
+            "shape": [
+              6144
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.window_attn.fn.qkv.weight": {
+            "shape": [
+              6144,
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.window_attn.norm.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.blocks.3.0.spatial_block.window_attn.norm.weight": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.0.norm.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.0.norm.weight": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.0.proj.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.0.proj.weight": {
+            "shape": [
+              256,
+              3,
+              7,
+              7
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.1.norm.bias": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.1.norm.weight": {
+            "shape": [
+              256
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.1.proj.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.1.proj.weight": {
+            "shape": [
+              512,
+              256,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.2.norm.bias": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.2.norm.weight": {
+            "shape": [
+              512
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.2.proj.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.2.proj.weight": {
+            "shape": [
+              1024,
+              512,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.3.norm.bias": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.3.norm.weight": {
+            "shape": [
+              1024
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.3.proj.bias": {
+            "shape": [
+              2048
+            ],
+            "dtype": "F16"
+          },
+          "vision_tower.convs.3.proj.weight": {
+            "shape": [
+              2048,
+              1024,
+              3,
+              3
+            ],
+            "dtype": "F16"
+          },
+          "visual_temporal_embed.pos_idx_to_embed": {
+            "shape": [
+              100,
+              2048
+            ],
+            "dtype": "F16"
+          }
+        }
+      },
+      "seconds": 908.3909208774567,
+      "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+      "campaign_worker_sha256": "8b0e51a52697e33d34d60184461c8f99b4db7248ebedc956ea540aacf15300af"
+    }
+  ]
+}

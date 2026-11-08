@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "got_ocr2"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/got_ocr2",
+  "bytes_removed": 911563654,
+  "downloaded_bytes_verified": 457098441,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794151540.846097,
+  "recorded": 1794151670.3431969,
+  "cleanup_complete": true,
+  "finished": 1794151670.3487518
+}

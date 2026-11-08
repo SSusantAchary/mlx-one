@@ -1,0 +1,22 @@
+START clip openai/clip-vit-base-patch32
+FETCH FETCHFETCHclip   README.md 7942
+clipclip  config.jsonmerges.txt 4186 
+524657
+FETCH clip preprocessor_config.json 316
+FETCH clip pytorch_model.bin 605247071
+FETCH clip special_tokens_map.json 389
+FETCH clip tokenizer.json 2224041
+FETCH clip tokenizer_config.json 592
+FETCH clip vocab.json 862328
+RANGE pytorch_model.bin 4 / 10
+RANGE pytorch_model.bin 1 / 10
+RANGE pytorch_model.bin 3 / 10
+RANGE pytorch_model.bin 2 / 10
+RANGE pytorch_model.bin 6 / 10
+RANGE pytorch_model.bin 8 / 10
+RANGE pytorch_model.bin 10 / 10
+RANGE pytorch_model.bin 5 / 10
+RANGE pytorch_model.bin 9 / 10
+RANGE pytorch_model.bin 7 / 10
+RESULT clip PASS_FUNCTIONAL 
+CLEANED clip 1822959505

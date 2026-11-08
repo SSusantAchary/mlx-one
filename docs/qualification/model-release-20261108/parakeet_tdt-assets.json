@@ -1,0 +1,19 @@
+{
+  "checkpoint": "mlx-community/parakeet-tdt-0.6b-v3",
+  "revision": "ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15",
+  "preserved_existing": false,
+  "files": [
+    {
+      "path": "config.json",
+      "bytes": 244093,
+      "sha256": "f320f1292511f34ec47f513755fe20fd01dbfc09a925d42730e66059a6e1ef4c",
+      "hub_lfs_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 2508288736,
+      "sha256": "05e01c7f396c298cf7d23f61da7b504adeab698f0aaeafd9c82d198625464592",
+      "hub_lfs_sha256": "05e01c7f396c298cf7d23f61da7b504adeab698f0aaeafd9c82d198625464592"
+    }
+  ]
+}

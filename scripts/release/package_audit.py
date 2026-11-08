@@ -11,6 +11,8 @@ import time
 import zipfile
 from pathlib import Path, PurePosixPath
 
+import tomllib
+
 
 def sha(value):
     return hashlib.sha256(value).hexdigest()
@@ -25,6 +27,20 @@ def audit(root, dist):
     expected_upstream_licenses = {
         str(p.relative_to(root / "src")): sha(p.read_bytes())
         for p in (root / "src/mlx_one").rglob("UPSTREAM_LICENSE")
+    }
+    package_root = root / "src/mlx_one"
+    metadata = tomllib.loads((root / "pyproject.toml").read_text())
+    patterns = metadata["tool"]["setuptools"]["package-data"]["mlx_one"]
+    expected_data = {
+        str(p.relative_to(root / "src")): sha(p.read_bytes())
+        for pattern in patterns
+        for p in package_root.glob(pattern)
+        if p.is_file()
+    }
+    expected_derived_notices = {
+        str(p.relative_to(root / "src")): sha(p.read_bytes())
+        for p in package_root.rglob("*")
+        if p.is_file() and p.name in {"NOTICE", "NOTICE.md"}
     }
     for path in sorted(dist.iterdir()):
         if path.suffix == ".whl":
@@ -60,20 +76,31 @@ def audit(root, dist):
                 actual[name[position:]] = sha(data)
         notices = [n for n in payload if n.endswith("UPSTREAM_LICENSE")]
         actual_upstream_licenses = {
-            name[name.index("mlx_one/"):]: sha(payload[name])
-            for name in notices if "mlx_one/" in name
+            name[name.index("mlx_one/") :]: sha(payload[name])
+            for name in notices
+            if "mlx_one/" in name
         }
         tq3_notices = [n for n in payload if n.endswith("quantization/turboquant/NOTICE.txt")]
         ui_notices = [n for n in payload if n.endswith("ui/dist/THIRD_PARTY_NOTICES.txt")]
         derived_notices = [n for n in payload if PurePosixPath(n).name in {"NOTICE", "NOTICE.md"}]
+        actual_derived_notices = {
+            n[n.index("mlx_one/") :]: sha(payload[n]) for n in derived_notices if "mlx_one/" in n
+        }
+        actual_data = {
+            n[n.index("mlx_one/") :]: sha(data)
+            for n, data in payload.items()
+            if "mlx_one/" in n and not n.endswith(".py")
+        }
         ui_prefix = "src/mlx_one/ui/dist/"
         ui_sources = {
             str(p.relative_to(root / "src")): sha(p.read_bytes())
-            for p in (root / ui_prefix).rglob("*") if p.is_file()
+            for p in (root / ui_prefix).rglob("*")
+            if p.is_file()
         }
         actual_ui = {
-            n[n.index("mlx_one/ui/dist/"):]: sha(data)
-            for n, data in payload.items() if "mlx_one/ui/dist/" in n
+            n[n.index("mlx_one/ui/dist/") :]: sha(data)
+            for n, data in payload.items()
+            if "mlx_one/ui/dist/" in n
         }
         apache = [
             n
@@ -95,6 +122,13 @@ def audit(root, dist):
             "ui_notices": ui_notices,
             "tq3_notices": tq3_notices,
             "derived_source_notices": derived_notices,
+            "exact_derived_notice_match": actual_derived_notices == expected_derived_notices,
+            "exact_package_data_match": actual_data == expected_data,
+            "changed_package_data": sorted(
+                n
+                for n in actual_data.keys() | expected_data.keys()
+                if actual_data.get(n) != expected_data.get(n)
+            ),
             "exact_ui_match": actual_ui == ui_sources,
             "apache_notices": apache,
         }
@@ -106,7 +140,8 @@ def audit(root, dist):
             and any(n.endswith("models/vision_language/UPSTREAM_LICENSE") for n in notices)
             and len(ui_notices) == 1
             and len(tq3_notices) == 1
-            and len(derived_notices) == 4
+            and actual_derived_notices == expected_derived_notices
+            and actual_data == expected_data
             and actual_ui == ui_sources
             and apache
             and not (bad_paths or sensitive or forbidden)

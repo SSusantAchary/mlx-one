@@ -8,8 +8,10 @@ Registry type: `qwen3`. The dense decoder adds bias-free attention, Q/K
 normalization, and explicit head dimensions to the shared GQA/RoPE stack.
 Native text loading, cache, completion, chat, sampling, and streaming are
 implemented. [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) is a
-checkpoint candidate; synthetic validation does not qualify real-model quality
-or throughput. Qwen3 MoE checkpoints are outside this dense implementation.
+supported primary checkpoint with real generation and applicable interface
+records. See the [current support inventory](../../../../../status_models_testing.md).
+Measured quality and throughput retain their own workload scope. Qwen3 MoE
+checkpoints are outside this dense implementation.
 
 ## Model Architecture
 

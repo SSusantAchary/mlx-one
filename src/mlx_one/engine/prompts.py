@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from mlx_one.text.prompts import completion_token_ids
+
 
 @dataclass(frozen=True)
 class PreparedPrompt:
@@ -22,7 +24,7 @@ def prepare_completion(bundle, prompt, output_tokens, context_tokens):
     context_tokens = context_tokens or bundle.context_length
     if context_tokens > bundle.context_length:
         raise ValueError("configured context exceeds the model context window")
-    tokens = tuple(bundle.tokenizer.encode(prompt))
+    tokens = tuple(completion_token_ids(bundle, prompt))
     if not tokens:
         bos = bundle.tokenizer.bos_token_id
         if bos is None:

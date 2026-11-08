@@ -7,7 +7,9 @@
 Registry type: `lfm2_moe`. The implementation combines LFM2's convolution/attention
 decoder with top-k expert routing, optional expert bias, and router outputs.
 Configuration, expert stacking, hybrid caches, and synthetic execution have tests.
-A native text loader is registered, but exact-checkpoint integration is unqualified.
+A native text loader is registered. The pinned
+`LiquidAI/LFM2.5-24B-A2B-MLX-4bit` checkpoint passes real generation and applicable
+interface checks; see the [current support record](../../../../../status_models_testing.md).
 
 [LiquidAI/LFM2-8B-A1B](https://huggingface.co/LiquidAI/LFM2-8B-A1B) is the upstream
 family reference. Its total-parameter footprint places it outside the initial

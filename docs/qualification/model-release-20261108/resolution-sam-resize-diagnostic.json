@@ -1,0 +1,7 @@
+{
+  "max_pixel_error": 0,
+  "different_pixels": 0,
+  "native_pixel_sha256": "8ef73f550b7f2188a5461bbd1170af76225008c46175b3262288ab654e947cd9",
+  "reference_pixel_sha256": "8ef73f550b7f2188a5461bbd1170af76225008c46175b3262288ab654e947cd9",
+  "scope": "Frozen truck image versus pinned reference processor; uint8 pixels before normalization"
+}

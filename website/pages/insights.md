@@ -1,64 +1,66 @@
 ---
-title: Coverage and progress
+title: Models, coverage and progress
 ---
 
-# Coverage and progress
+# Models, coverage and progress
 
-Explore the checkpoints, evidence and development history already in MLX-One.
-This page refreshes from the repository manifests and benchmark JSON on each
-site build. It does not download models or run new benchmarks.
+**0.1.1 is approved for release.** Explore the 40 native model types with passing
+primary workflows across seven modalities. Current support comes from the
+verified model catalog; measured performance and package publication are shown
+separately. [Release notes](../releases/0.1.1.md).
 
 <div data-insights-root data-source="../assets/data/insights.json"></div>
 
 <!-- insights:summary -->
 
-<p class="insights-provenance" data-insights-provenance>Loading the source revision…</p>
+<p class="insights-provenance" data-insights-provenance>Loading source provenance…</p>
 
-## Model-support growth
+## Supported model explorer
 
-<div class="insights-panel" data-growth-chart aria-label="Model evidence history"></div>
-
-The curve counts **checkpoint/task/precision profiles in the five manifests**
-and profiles with **scoped smoke evidence**. Candidates are included in the
-catalog line. Dates mark when records reached the branch's first-parent history,
-not the original test date, a release date, or the first implementation of an
-architecture. Support that predates these manifests is not reconstructed.
-
-<details class="insights-history"><summary>View historical counts and source commits</summary><div data-history-table></div></details>
-
-## Model explorer
-
-The catalog covers text, vision-language, audio, OCR and additional native task
-profiles. It is not a count of every implemented architecture. Each row retains
-its pinned revision, task, precision, raw status and evidence boundary.
+Every row identifies a supported model type, its pinned checkpoint, precision,
+tested primary operations and saved result. Search by model, task or precision.
 
 <div class="insights-controls">
-<label>Find a checkpoint or task<input type="search" data-model-search placeholder="Try Qwen, ASR, Q4 or blocked" disabled></label>
-<label>Modality<select data-model-modality disabled><option value="">All modalities</option></select></label>
-<label>Evidence status<select data-model-status disabled><option value="">All statuses</option></select></label>
-<label>Precision<select data-model-precision disabled><option value="">All precisions</option></select></label>
-<button type="button" data-model-reset disabled>Reset filters</button>
+<label>Find a model or task<input type="search" data-support-search placeholder="Try GPT-OSS, speech, SAM3 or Q8" disabled></label>
+<label>Modality<select data-support-modality disabled><option value="">All modalities</option></select></label>
+<label>Precision<select data-support-precision disabled><option value="">All precisions</option></select></label>
+<button type="button" data-support-reset disabled>Reset filters</button>
 </div>
 
-<p data-model-count role="status" aria-live="polite"></p>
-<div class="insights-table" data-model-table></div>
+<p data-support-count role="status" aria-live="polite"></p>
+<div class="insights-table" data-support-table></div>
 
-<!-- insights:catalog -->
+<details markdown="1" class="insights-fallback">
+<summary>All 40 supported models (also available without JavaScript)</summary>
 
-### What the labels mean
+<!-- insights:supported -->
 
-<div data-status-definitions></div>
+</details>
 
-**Measured performance is not release qualification.** A blocked profile stays
-blocked even when a diagnostic run has numeric results. Architecture-only and
-quantization tests do not establish that a full checkpoint has passed a smoke
-test. A revision or interface with no recorded evidence stays unqualified.
+**Supported** means the selected checkpoint passes native task execution and
+relevant interface checks, backed by model tests, regressions and packaging
+checks. Accuracy and speed remain measurements of the recorded workload.
+Publication is pending; installation examples target the approved **0.1.1**
+release for use once its artifacts are uploaded.
+
+[Quality and scope limitations](../models/support.md#known-quality-and-scope-limitations)
+include Florence page OCR accuracy, NER sample accuracy, LFM speech precision and
+the optional SAM MPS reference discrepancy. Optional failed tasks are excluded.
+
+## Model coverage over time
+
+<div class="insights-panel" data-registration-chart aria-label="Registered model types and dated functional admission records"></div>
+<div class="insights-table" data-registration-table></div>
+
+Registered types follow dated Git snapshots. Functional admissions are a separate
+series: the 8 November campaign records 40 passing primary workflows. No
+comparable earlier campaign point is established, so the historical 23/7/10 audit
+is not connected to this series. Monthly rows retain the actual snapshot date.
 
 ## Performance dashboard
 
-Choose a measurement cohort. Rates use different units and timing scopes across
-text, vision, speech and OCR, so cohorts are never combined into one ranking.
-Missing or failed results stay visible without zero-valued speed bars.
+Choose a measurement cohort. Text, vision, speech and OCR use their original
+units, timing scopes and hardware. Missing or failed results remain visible.
 
 <div class="insights-controls"><label>Measurement cohort<select data-performance-cohort disabled></select></label></div>
 <p data-performance-note></p>
@@ -66,15 +68,14 @@ Missing or failed results stay visible without zero-valued speed bars.
 <div class="insights-table" data-performance-table></div>
 
 The [all-modality reports](../performance/index.md) retain detailed methods,
-limitations and the separate historical GPT-OSS HTTP context. Every measured row
-below links to its original JSON; expand its details for hardware, software,
-workload and quality metrics.
+limitations and historical GPT-OSS HTTP context. Each measured row links to its
+original JSON and includes hardware, software, workload and quality details.
 
 ## MLXBoost comparison
 
-MLXBoost is **experimental and opt-in**. These are historical **complete HTTP SSE
-request rates**, not direct-model decode rates or evidence of faster kernels.
-The default reference execution path is unchanged.
+MLXBoost is **experimental and opt-in**. These historical **complete HTTP SSE
+request rates** describe the recorded workloads; direct-model decode rates and
+kernel performance are separate measurements.
 
 <div class="insights-panel" data-boost-chart></div>
 <div class="insights-table" data-boost-table></div>
@@ -84,19 +85,53 @@ The default reference execution path is unchanged.
 
 ## Weekly development milestones
 
-Weeks run Monday–Sunday using Git's recorded commit dates. Commit activity and
-dated changelog milestones describe development, not model certification or
-package publication. Expand a week to inspect its commits.
+Weeks run Monday–Sunday using Git's recorded commit dates. Activity and changelog
+milestones describe development; model support and publication have their own
+dated records.
 
 <div data-weekly-milestones></div>
 
+## Historical checkpoint profiles
+
+The earlier five catalogs contain checkpoint/task/precision profiles, including
+optional tasks and alternative revisions. Their counting unit and historical
+labels differ from the 40 supported model types above. Original blockers remain
+visible for those exact profiles.
+
+<details markdown="1" class="insights-history">
+<summary>Explore the historical catalogs and profile history</summary>
+
+<div class="insights-controls">
+<label>Find a historical profile<input type="search" data-model-search placeholder="Try Qwen, ASR, Q4 or blocked" disabled></label>
+<label>Modality<select data-model-modality disabled><option value="">All modalities</option></select></label>
+<label>Historical evidence status<select data-model-status disabled><option value="">All statuses</option></select></label>
+<label>Precision<select data-model-precision disabled><option value="">All precisions</option></select></label>
+<button type="button" data-model-reset disabled>Reset filters</button>
+</div>
+
+<p data-model-count role="status" aria-live="polite"></p>
+<div class="insights-table" data-model-table></div>
+<div data-status-definitions></div>
+
+<!-- insights:catalog -->
+
+<div class="insights-panel" data-growth-chart aria-label="Historical checkpoint profile catalog"></div>
+<div data-history-table></div>
+
+Dates show when profiles reached first-parent Git history. These are separate
+from model implementation, campaign execution and release dates.
+
+</details>
+
+[Archived pre-campaign model audit](../history/model-support.md)
+
 ## Sources and refresh
 
-[Download the dashboard JSON](../assets/data/insights.json) or inspect the
-[source manifest](../source-manifest.json). These static files update on each
-GitHub Pages build; no account or running inference server is required.
+[Dashboard JSON](../assets/data/insights.json) ·
+[source manifest](../source-manifest.json) ·
+[current support inventory](../models/support.md) ·
+[changelog](../reference/changelog.md).
 
-If interactive data cannot load, the full model catalog above remains available.
-The [checkpoint inventory](../reference/checkpoints.md),
-[performance reports](../performance/index.md), and
-[changelog](../reference/changelog.md) provide the original documentation.
+The site refreshes on each GitHub Pages build. It reads saved results without
+downloading a model or running inference. Both current and historical inventories
+remain available without JavaScript.

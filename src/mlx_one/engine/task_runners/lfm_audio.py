@@ -17,7 +17,7 @@ class AudioLanguageAvailability:
     text_to_audio: bool = True
     speech_to_speech: bool = True
     codec_streaming: bool = True
-    reason: str = "Native implementation; exact checkpoint and speech quality validation pending"
+    reason: str = "Native transcription, text-to-speech and speech-to-speech implementation"
 
 
 class LFM2AudioAdapter(AudioTaskAdapter):

@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "whisper"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/whisper",
+  "bytes_removed": 306445606,
+  "downloaded_bytes_verified": 155381758,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794137962.9088662,
+  "recorded": 1794138124.773352,
+  "cleanup_complete": true,
+  "finished": 1794138124.7777112
+}

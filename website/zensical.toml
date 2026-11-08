@@ -13,6 +13,8 @@ extra_javascript = ["assets/javascripts/insights.js"]
 nav = [
   { "Home" = "index.md" },
   { "Coverage & progress" = "insights/index.md" },
+  { "Supported models" = "models/support.md" },
+  { "0.1.1 release" = "releases/0.1.1.md" },
   { "Get started" = "getting-started.md" },
   { "Choose a model" = "models/index.md" },
   { "Guides" = [
@@ -62,6 +64,7 @@ nav = [
     { "Development roadmap" = "reference/roadmap.md" },
     { "Citation and license" = "reference/citation.md" },
     { "Changelog" = "reference/changelog.md" },
+    { "Historical model audit" = "history/model-support.md" },
   ] },
   { "Experimental" = [
     { "Overview" = "experimental/index.md" },

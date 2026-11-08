@@ -1,0 +1,97 @@
+{
+  "model_type": "distilbert",
+  "kind": "classification",
+  "repo": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+  "revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+  "profile": "float32",
+  "gated": false,
+  "license": "apache-2.0",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 399,
+      "sha256": null
+    },
+    {
+      "path": "README.md",
+      "bytes": 10512,
+      "sha256": null
+    },
+    {
+      "path": "config.json",
+      "bytes": 629,
+      "sha256": null
+    },
+    {
+      "path": "map.jpeg",
+      "bytes": 81645,
+      "sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 267832558,
+      "sha256": "7c3919835e442510166d267fe7cbe847e0c51cd26d9ba07b89a57b952b49b8aa"
+    },
+    {
+      "path": "onnx/added_tokens.json",
+      "bytes": 82,
+      "sha256": null
+    },
+    {
+      "path": "onnx/config.json",
+      "bytes": 735,
+      "sha256": null
+    },
+    {
+      "path": "onnx/model.onnx",
+      "bytes": 267955711,
+      "sha256": "252cf7048af94a1599019fef35961b2bd3d6db13df0b0a4b032b92baeae31939"
+    },
+    {
+      "path": "onnx/special_tokens_map.json",
+      "bytes": 125,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tokenizer.json",
+      "bytes": 711396,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tokenizer_config.json",
+      "bytes": 1283,
+      "sha256": null
+    },
+    {
+      "path": "onnx/vocab.txt",
+      "bytes": 231508,
+      "sha256": null
+    },
+    {
+      "path": "pytorch_model.bin",
+      "bytes": 267844284,
+      "sha256": "60554cbd7781b09d87f1ececbea8c064b94e49a7f03fd88e8775bfe6cc3d9f88"
+    },
+    {
+      "path": "rust_model.ot",
+      "bytes": 267846324,
+      "sha256": "9db97da21b97a5e6db1212ce6a810a0c5e22c99daefe3355bae2117f78a0abb9"
+    },
+    {
+      "path": "tf_model.h5",
+      "bytes": 267949840,
+      "sha256": "b44df675bb34ccd8e57c14292c811ac7358b7c8e37c7f212745f640cd6019ac8"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 48,
+      "sha256": null
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 231508,
+      "sha256": null
+    }
+  ],
+  "metadata_status": "PASS"
+}

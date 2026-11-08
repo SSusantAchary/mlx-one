@@ -1,0 +1,146 @@
+{
+  "duration": 10.0,
+  "language": "English",
+  "model": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+  "offset_seconds": 0.0,
+  "provenance": {
+    "audio_attention": "pinned-sdpa-global",
+    "boundary_tolerance_seconds": 0.08,
+    "checkpoint_path": "/private/tmp/mlx-one-all40-20261108/models/qwen3_forced_aligner/checkpoint",
+    "checkpoint_revision": null,
+    "decoding": "greedy",
+    "limitation": "historical timestamp reference disagreement unresolved",
+    "model_type": "qwen3_forced_aligner",
+    "reference_source_commit": "7c6daf77a2421100f5fb066495372c00129d39ff",
+    "status": "WIP",
+    "weight_dtype": "mlx.core.bfloat16"
+  },
+  "revision": null,
+  "sample_rate": 16000,
+  "task": "align",
+  "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA\n",
+  "timestamp_tick_seconds": 0.08,
+  "units": [
+    {
+      "end": 0.72,
+      "start": 0.48,
+      "text": "HE"
+    },
+    {
+      "end": 0.72,
+      "start": 0.72,
+      "text": "HAS"
+    },
+    {
+      "end": 1.28,
+      "start": 1.28,
+      "text": "GRAVE"
+    },
+    {
+      "end": 1.76,
+      "start": 1.76,
+      "text": "DOUBTS"
+    },
+    {
+      "end": 1.76,
+      "start": 1.76,
+      "text": "WHETHER"
+    },
+    {
+      "end": 2.16,
+      "start": 2.16,
+      "text": "SIR"
+    },
+    {
+      "end": 2.8,
+      "start": 2.56,
+      "text": "FREDERICK"
+    },
+    {
+      "end": 3.28,
+      "start": 3.28,
+      "text": "LEIGHTON'S"
+    },
+    {
+      "end": 3.6,
+      "start": 3.28,
+      "text": "WORK"
+    },
+    {
+      "end": 3.84,
+      "start": 3.6,
+      "text": "IS"
+    },
+    {
+      "end": 4.24,
+      "start": 3.84,
+      "text": "REALLY"
+    },
+    {
+      "end": 4.8,
+      "start": 4.4,
+      "text": "GREEK"
+    },
+    {
+      "end": 5.12,
+      "start": 4.8,
+      "text": "AFTER"
+    },
+    {
+      "end": 5.6,
+      "start": 5.12,
+      "text": "ALL"
+    },
+    {
+      "end": 6.32,
+      "start": 6.08,
+      "text": "AND"
+    },
+    {
+      "end": 6.48,
+      "start": 6.32,
+      "text": "CAN"
+    },
+    {
+      "end": 6.88,
+      "start": 6.48,
+      "text": "DISCOVER"
+    },
+    {
+      "end": 7.12,
+      "start": 6.88,
+      "text": "IN"
+    },
+    {
+      "end": 7.36,
+      "start": 7.12,
+      "text": "IT"
+    },
+    {
+      "end": 7.52,
+      "start": 7.36,
+      "text": "BUT"
+    },
+    {
+      "end": 7.92,
+      "start": 7.52,
+      "text": "LITTLE"
+    },
+    {
+      "end": 8.16,
+      "start": 7.92,
+      "text": "OF"
+    },
+    {
+      "end": 8.8,
+      "start": 8.32,
+      "text": "ROCKY"
+    },
+    {
+      "end": 9.52,
+      "start": 8.88,
+      "text": "ITHACA"
+    }
+  ],
+  "unmatched_words": []
+}

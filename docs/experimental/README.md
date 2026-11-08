@@ -1,5 +1,10 @@
 # Experimental development
 
+The [40 supported primary workflows](../../status_models_testing.md) and
+[0.1.1 release approval](../releases/0.1.1.md) are documented separately.
+This section preserves optional experiments and historical measurements; it does
+not apply a blanket experimental label to the current supported models.
+
 This is the entry point for implemented but unqualified features, bounded task
 results, runtime investigations and remaining blockers. An experimental workflow
 may execute successfully without meeting every checkpoint, task, quality or

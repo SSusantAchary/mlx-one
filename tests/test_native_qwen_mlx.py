@@ -210,8 +210,13 @@ def test_qwen2_vl_shapes_positions_and_feature_insertion() -> None:
 
 def test_explicit_fp16_decode_is_invariant_to_neutral_padding_mask():
     mx.random.seed(37)
-    config = qwen3_config(hidden_size=128, intermediate_size=256, head_dim=128,
-                          num_attention_heads=2, num_key_value_heads=1)
+    config = qwen3_config(
+        hidden_size=128,
+        intermediate_size=256,
+        head_dim=128,
+        num_attention_heads=2,
+        num_key_value_heads=1,
+    )
     model = Qwen3ForCausalLM(config)
     model.set_dtype(mx.float16)
     for layer in model.model.layers:
@@ -236,9 +241,9 @@ def test_explicit_int8_projection_is_invariant_to_token_row_count():
     values = mx.random.normal((2, 33, 128)).astype(mx.float16)
     full = project(layer, values, execution_dtype="float16")
     for index in (0, 16, 32):
-        single = project(layer, values[:, index:index + 1], execution_dtype="float16")
+        single = project(layer, values[:, index : index + 1], execution_dtype="float16")
         mx.eval(full, single)
-        assert bool(mx.array_equal(full[:, index:index + 1], single).item())
+        assert bool(mx.array_equal(full[:, index : index + 1], single).item())
     assert layer.weight.dtype == mx.uint32 and full.dtype == mx.float16
 
 
@@ -246,8 +251,13 @@ def test_explicit_int8_qwen3_full_vs_split_state():
     from mlx_one.models.shared.execution import project
 
     mx.random.seed(23)
-    config = qwen3_config(hidden_size=128, intermediate_size=256, head_dim=64,
-                          num_attention_heads=2, num_key_value_heads=1)
+    config = qwen3_config(
+        hidden_size=128,
+        intermediate_size=256,
+        head_dim=64,
+        num_attention_heads=2,
+        num_key_value_heads=1,
+    )
     model = Qwen3ForCausalLM(config)
     nn.quantize(model, group_size=64, bits=8)
     model.set_dtype(mx.float16, predicate=lambda dtype: dtype != mx.uint32)
@@ -259,14 +269,88 @@ def test_explicit_int8_qwen3_full_vs_split_state():
     mx.eval(model(ids[:, :-1], cache=caches[1]).logits)
     split = model(ids[:, -1:], cache=caches[1]).logits
     mx.eval(full, split)
-    assert bool(mx.allclose(full, split, atol=.01, rtol=.01).item())
+    assert bool(mx.allclose(full, split, atol=0.01, rtol=0.01).item())
     for a, b in zip(*caches, strict=True):
         assert a.offset == b.offset == 33
         for x, y in zip(a.state(), b.state(), strict=True):
             assert x.dtype == y.dtype == mx.float16
-            assert bool(mx.allclose(x, y, atol=.01, rtol=.01).item())
+            assert bool(mx.allclose(x, y, atol=0.01, rtol=0.01).item())
     # Also exercise tied affine INT8 output projection through the shared primitive.
     hidden = model.model(ids)[0]
     tied = project(model.model.embed_tokens, hidden, execution_dtype="float16", as_linear=True)
     mx.eval(tied)
     assert tied.dtype == mx.float16
+
+
+def test_selected_qwen_moe_matches_all_expert_reference():
+    from mlx_one.models.shared.moe import RoutedExperts, StackedExperts
+
+    mx.random.seed(19)
+    reference = StackedExperts(16, 24, 4)
+    selected = RoutedExperts(16, 24, 4)
+    selected.load_weights(
+        [
+            (f"{name}.weight", getattr(reference, name))
+            for name in ("gate_proj", "up_proj", "down_proj")
+        ]
+    )
+    values = mx.random.normal((2, 3, 16))
+    indices = mx.array([[[0, 2], [1, 3], [2, 0]], [[3, 1], [0, 1], [2, 3]]])
+    expected = mx.take_along_axis(reference(values), indices[..., None], axis=-2)
+    actual = selected(values, indices)
+    mx.eval(expected, actual)
+    assert mx.max(mx.abs(actual - expected)).item() < 1e-5
+
+
+def test_qwen_moe_old_per_expert_q4_checkpoint_loads_without_dequantizing(tmp_path):
+    import json
+
+    import numpy as np
+    from mlx.utils import tree_flatten
+    from safetensors.numpy import save_file
+    from tokenizers import Tokenizer
+    from tokenizers.models import WordLevel
+
+    from mlx_one.text.loading import load_text_model
+
+    config_data = dict(
+        model_type="qwen2_moe",
+        hidden_size=64,
+        num_hidden_layers=1,
+        intermediate_size=128,
+        num_attention_heads=4,
+        num_key_value_heads=2,
+        vocab_size=300,
+        num_experts=4,
+        num_experts_per_tok=2,
+        moe_intermediate_size=64,
+        shared_expert_intermediate_size=128,
+        max_position_embeddings=128,
+    )
+    model = Qwen2MoeForCausalLM(Qwen2MoeConfig.from_dict(config_data))
+    nn.quantize(model, group_size=64, bits=4)
+    ids = mx.array([[5, 6, 7]])
+    expected = model(ids).logits
+    mx.eval(expected)
+    tensors = {}
+    for name, value in tree_flatten(model.parameters()):
+        if ".mlp.experts." in name:
+            prefix, tail = name.split(".mlp.experts.", 1)
+            for expert in range(4):
+                tensors[f"{prefix}.mlp.experts.{expert}.{tail}"] = np.asarray(value[expert])
+        else:
+            tensors[name] = np.asarray(value)
+    Tokenizer(WordLevel({"[UNK]": 0, "a": 1, "b": 2}, unk_token="[UNK]")).save(
+        str(tmp_path / "tokenizer.json")
+    )
+    (tmp_path / "config.json").write_text(
+        json.dumps({**config_data, "quantization": {"group_size": 64, "bits": 4}})
+    )
+    save_file(tensors, str(tmp_path / "model.safetensors"))
+    loaded = load_text_model(tmp_path, offline=True)
+    experts = loaded.model.model.layers[0].mlp.experts
+    assert experts.gate_proj.weight.dtype == mx.uint32
+    assert experts.gate_proj.weight.shape == (4, 64, 8)
+    actual = loaded.model(ids).logits
+    mx.eval(actual)
+    np.testing.assert_allclose(np.asarray(actual), np.asarray(expected), atol=1e-4, rtol=1e-4)

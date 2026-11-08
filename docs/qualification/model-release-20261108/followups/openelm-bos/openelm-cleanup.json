@@ -1,0 +1,14 @@
+{
+  "model_types": [
+    "openelm"
+  ],
+  "owned_path": "/private/tmp/mlx-one-all40-20261108/models/openelm",
+  "bytes_removed": 2194818545,
+  "downloaded_bytes_verified": 1086143160,
+  "results_recorded_before_cleanup": true,
+  "protected_existing_untouched": true,
+  "started": 1794137782.980417,
+  "recorded": 1794138090.937058,
+  "cleanup_complete": true,
+  "finished": 1794138090.9662988
+}

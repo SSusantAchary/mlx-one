@@ -1,13 +1,20 @@
 # Native OCR and document testing
 
-OCR is experimental source support. All six architecture families have native source paths,
+All **six OCR model types** have passing primary recognition workflows in the
+[current support inventory](../status_models_testing.md). **0.1.1 is approved for
+release; publication is pending.** Florence's latest page CER is 32.87%; plain
+recognition is supported and the failed optional region parser is excluded.
+[Release notes and limits](releases/0.1.1.md#quality-and-scope-limitations).
+
+All six architecture families have native source paths,
 strict safetensors loading, processors, Python/CLI/HTTP integration and tiny-model execution
 tests. The seven pinned primary checkpoints have matching native parameter names/shapes
 against their published safetensors headers. The [initial implementation report](validation/ocr-native-2026-10-25.md)
 used metadata and tiny models only. Full-checkpoint execution and measured limitations are
 now tracked separately in the [100-page corpus evidence](benchmarks/ocr/omni100-20261025/README.md)
 and [10-line handwriting evidence](benchmarks/ocr/hand10-20261025/README.md).
-These experimental corpus runs do not establish every advertised task's accuracy.
+Those historical corpus runs retain their original failures and truncations.
+They measure their named workloads separately from current functional support.
 
 ## Architecture inventory
 
@@ -30,6 +37,8 @@ No second generic VLM engine, generation scheduler or paged-KV implementation wa
 | LightOnOCR 2 | Pixtral frontend/projector plus exact Qwen3 decoder; page-to-text/Markdown | Base variant has no bbox task; reading order/LaTeX remain model output, not independently established quality |
 | DeepSeek-OCR | SAM + CLIP compression, native non-MLA MoE decoder, affine Q4, 1024 global / 640 local crops, page OCR/Markdown | Pinned original OCR variant only; at most nine local crops; no measured compression speedup or geometry parser |
 
+The current catalog uses **SUPPORTED** for the tested primary operations. Older
+inventory fields retain the following historical meanings:
 `ARCHITECTURE_ONLY` means no complete task; `NATIVE_IMPLEMENTED` means synthetic native task
 integration passes; `CHECKPOINT_SMOKE_PASSED` requires the exact real checkpoint; and
 `EXPERIMENTAL_SUPPORTED` additionally requires the advertised real-image functional cases.

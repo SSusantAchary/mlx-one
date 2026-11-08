@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/private/tmp/mlx-one-docs-site/scripts/release/validate.py", line 132, in <module>
+    main()
+  File "/private/tmp/mlx-one-docs-site/scripts/release/validate.py", line 123, in main
+    result = static(args.root)
+             ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/mlx-one-docs-site/scripts/release/validate.py", line 41, in static
+    raise ValueError("release validation failed")
+ValueError: release validation failed

@@ -1,0 +1,1 @@
+{"model_type": "distilbert", "status": "PASS_FUNCTIONAL", "quality_status": "PASS_32_EXAMPLE_SANITY_ONLY", "seconds": 0.8726897239685059, "error": null}

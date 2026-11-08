@@ -1,0 +1,7 @@
+{
+  "previous_pid": 29698,
+  "recorded": 1794132596.1383328,
+  "reason": "split disjoint transfer cohorts; Metal execution protected by shared flock",
+  "partial_downloads_retained": true,
+  "no_inference_active": true
+}

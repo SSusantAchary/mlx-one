@@ -1,0 +1,136 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts/qualification/lfm_audio_reference_probe.py:51:9
+   |
+49 |           codec = bundle.codec
+50 |       else:
+51 | /         from tokenizers import Tokenizer
+52 | |
+53 | |         from mlx_audio.sts.models.lfm_audio.model import LFM2AudioModel
+54 | |         from mlx_audio.sts.models.lfm_audio.processor import ChatState, LFM2AudioProcessor
+   | |__________________________________________________________________________________________^
+55 |
+56 |           model = LFM2AudioModel.from_pretrained(str(args.model))
+   |
+help: Organize imports
+   |
+50 |     else:
+   -         from tokenizers import Tokenizer
+   -
+51 |         from mlx_audio.sts.models.lfm_audio.model import LFM2AudioModel
+52 |         from mlx_audio.sts.models.lfm_audio.processor import ChatState, LFM2AudioProcessor
+53 +         from tokenizers import Tokenizer
+54 |
+   |
+
+E501 Line too long (102 > 100)
+   --> scripts/qualification/lfm_audio_reference_probe.py:110:101
+    |
+108 |                     projected[:, :, index] + previous, cache=depth_cache, use_cache=True
+109 |                 )
+110 |                 frame_logits.append(np.asarray(embedding.get_logits(depth[:, -1]).astype(mx.float32)))
+    |                                                                                                     ^^
+111 |                 previous = embedding.embed(frame[:, index])[:, None]
+112 |             audio_logits.append(np.stack(frame_logits))
+    |
+
+E501 Line too long (104 > 100)
+   --> scripts/qualification/lfm_audio_reference_probe.py:127:101
+    |
+125 |         if step % 32 == 0:
+126 |             mx.eval(hidden)
+127 |             print(json.dumps(dict(stage="forced_history", backend=args.backend, step=step)), flush=True)
+    |                                                                                                     ^^^^
+128 |     if current:
+129 |         spans.append(current)
+    |
+
+E501 Line too long (114 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:29:101
+   |
+27 |         env.pop("PYTHONPATH", None)
+28 |         if backend == "reference":
+29 |             env["PYTHONPATH"] = str(work / "reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d")
+   |                                                                                                     ^^^^^^^^^^^^^^
+30 |         with log.open("w") as stream:
+31 |             result = subprocess.run(command, env=env, stdout=stream, stderr=subprocess.STDOUT, timeout=1200)
+   |
+
+E501 Line too long (108 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:31:101
+   |
+29 |             env["PYTHONPATH"] = str(work / "reference-sources/mlx-audio-76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d")
+30 |         with log.open("w") as stream:
+31 |             result = subprocess.run(command, env=env, stdout=stream, stderr=subprocess.STDOUT, timeout=1200)
+   |                                                                                                     ^^^^^^^^
+32 |         report.setdefault("lfm_reference_runs", []).append(dict(backend=backend, exit_code=result.returncode, log=log.name))
+33 |         if result.returncode:
+   |
+
+E501 Line too long (124 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:32:101
+   |
+30 |         with log.open("w") as stream:
+31 |             result = subprocess.run(command, env=env, stdout=stream, stderr=subprocess.STDOUT, timeout=1200)
+32 |         report.setdefault("lfm_reference_runs", []).append(dict(backend=backend, exit_code=result.returncode, log=log.name))
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^
+33 |         if result.returncode:
+34 |             raise ValueError(f"LFM {backend} reference diagnostic failed; see {log.name}")
+   |
+
+E501 Line too long (111 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:45:101
+   |
+43 |                               mean_absolute_error=float(np.mean(np.abs(a-b))))
+44 |                 if key.endswith("logits"):
+45 |                     metric["argmax_agreement"] = float(np.mean(np.argmax(a, axis=-1) == np.argmax(b, axis=-1)))
+   |                                                                                                     ^^^^^^^^^^^
+46 |             metrics[key] = metric
+47 |         public_path = Path(report["evidence_directory"]) / "audio-outputs/lfm2_audio-sts_10s.wav"
+   |
+
+E501 Line too long (110 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:53:101
+   |
+51 |             metrics["public_stream_vs_full_codec"] = dict(
+52 |                 same_shape=public.shape == full.shape,
+53 |                 max_absolute_error=float(np.max(np.abs(public-full))) if public.shape == full.shape else None,
+   |                                                                                                     ^^^^^^^^^^
+54 |                 correlation=float(np.corrcoef(public,full)[0,1]) if public.shape == full.shape else None,
+55 |             )
+   |
+
+E501 Line too long (105 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:54:101
+   |
+52 |                 same_shape=public.shape == full.shape,
+53 |                 max_absolute_error=float(np.max(np.abs(public-full))) if public.shape == full.shape else None,
+54 |                 correlation=float(np.corrcoef(public,full)[0,1]) if public.shape == full.shape else None,
+   |                                                                                                     ^^^^^
+55 |             )
+56 |     report["lfm_reference_diagnostic"] = dict(
+   |
+
+E501 Line too long (110 > 100)
+  --> scripts/qualification/lfm_audio_reference_qualification.py:59:101
+   |
+57 |         source_revision="76f35931cfe7db8f1f6b604d7b205ffe9d74ff8d",
+58 |         helper_sha256=hashlib.sha256(helper.read_bytes()).hexdigest(),
+59 |         scope="Independent frontend and stock model modules, forced native history; numerical diagnosis only",
+   |                                                                                                     ^^^^^^^^^^
+60 |         metrics=metrics,
+61 |     )
+   |
+
+E501 Line too long (123 > 100)
+  --> scripts/qualification/sam_reference_qualification.py:77:101
+   |
+75 |                 dict(
+76 |                     backend=backend,
+77 |                     device="mps" if backend == "reference" and video else "cpu" if backend == "reference" else "mlx-metal",
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^
+78 |                     streaming=streaming,
+79 |                     exit_code=completed.returncode,
+   |
+
+Found 11 errors.
+[*] 1 fixable with the `--fix` option.

@@ -1,0 +1,3 @@
+Waiting for the campaign Metal execution lock
+Acquired Metal execution lock
+{"model_type": "sam3_tracker_video", "status": "FAIL", "quality_status": null, "seconds": 469.70422077178955, "error": "SAM tracking reference failed; see sam3_tracker_video-reference-False.log"}

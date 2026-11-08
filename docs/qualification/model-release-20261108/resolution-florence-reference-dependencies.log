@@ -1,0 +1,13 @@
+Collecting timm
+  Downloading timm-1.0.31-py3-none-any.whl.metadata (42 kB)
+Collecting einops
+  Using cached einops-0.8.2-py3-none-any.whl.metadata (13 kB)
+Downloading timm-1.0.31-py3-none-any.whl (2.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 192.6 kB/s  0:00:14
+Using cached einops-0.8.2-py3-none-any.whl (65 kB)
+Installing collected packages: timm, einops
+
+Successfully installed einops-0.8.2 timm-1.0.31
+
+[notice] A new release of pip is available: 25.2 -> 26.3
+[notice] To update, run: /private/tmp/mlx-one-all40-20261108/reference-env/bin/python -m pip install --upgrade pip

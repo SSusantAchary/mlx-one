@@ -39,7 +39,7 @@ def registry_inventory(registrations=None):
                        if get_registration(entry.model_type) == entry else None)
         except KeyError:
             binding = None
-        component = entry.model_type == "sam3_tracker_video"
+        component = entry.model_type == "sam3_tracker_video" and entry.loader_path is None
         kind = ("component_only" if component else "architecture_only" if not entry.loader_path
                 and not entry.tasks else "task_unavailable" if not entry.loader_path
                 else "reference_loader_declared")

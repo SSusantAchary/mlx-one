@@ -8,7 +8,7 @@
 
 <p align="center">
   A unified, native MLX stack for language, vision-language, embeddings,
-  audio-language, speech, and segmentation models on Apple Silicon.
+  audio-language, speech, segmentation and classification models on Apple Silicon.
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
-  <img src="https://img.shields.io/badge/status-alpha-orange" alt="Alpha status">
+  <img src="https://img.shields.io/badge/0.1.1-release%20approved-15845d" alt="0.1.1 approved for release">
 </p>
 
 [**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
@@ -42,6 +42,28 @@ loading, execution and developer tooling.
 Hugging Face supplies configuration, tokenizer/processor assets and safe
 `safetensors` checkpoints. Native inference runs through MLX-One and Apple MLX.
 
+## Model support and release
+
+**0.1.1 approved for release · 8 November 2026.** All **40 registered native
+model types** have passing primary-workflow records across **seven modalities**.
+Each supported entry identifies its checkpoint, immutable revision, precision,
+operations and saved result. Model tests, relevant public interfaces and package
+checks back the support decision.
+
+**Validation:** 2,573 tests passed, 9 subtests passed, 95 optional tests skipped
+on Apple M4 / 32 GiB with MLX/Metal 0.32.2. Downloaded qualification weights were
+removed after recording results. Accuracy diagnostics and known limits remain
+visible beside the supported workflows.
+
+[All 40 supported models](status_models_testing.md) ·
+[0.1.1 release notes](docs/releases/0.1.1.md) ·
+[Coverage and progress](https://ssusantachary.github.io/mlx-one/insights/).
+
+Installation examples target **0.1.1**. Check [PyPI availability](https://pypi.org/project/mlx-one/#history)
+before installing; if the release is not available yet, use the
+[source installation](docs/getting-started.md#source-installation-for-development)
+after these changes reach the repository.
+
 ## Key Capabilities
 
 | Capability | What is implemented |
@@ -62,16 +84,16 @@ Task availability varies by checkpoint and interface. See the
 
 Use Python 3.10+ on an Apple Silicon Mac running macOS 15+ for model execution.
 MLX and MLX Metal are pinned to 0.32.2; Python 3.12.11 is the tested development
-version. Install the published alpha from PyPI:
+version. Install the 0.1.1 release from PyPI once it is published:
 
 ```bash
-python -m pip install "mlx-one==0.1.0a1"
+python -m pip install "mlx-one==0.1.1"
 ```
 
 For the HTTP server, vision and OCR dependencies:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr]==0.1.0a1"
+python -m pip install "mlx-one[server,vision,ocr]==0.1.1"
 mlx-one --version
 ```
 
@@ -79,13 +101,13 @@ For optional dependencies, audio/video decoding requirements and tested
 constraints, see [getting started](docs/getting-started.md) and the
 [dependency policy](requirements/README.md). For editable development setup, use the
 [source installation](docs/getting-started.md#source-installation-for-development).
-See the [0.1.0a1 release notes](https://github.com/SSusantAchary/mlx-one/releases/tag/0.1.0a1)
-for published artifacts and validation.
+See the [0.1.1 release notes](docs/releases/0.1.1.md) for validation and
+[PyPI files](https://pypi.org/project/mlx-one/0.1.1/#files) for published artifacts.
 
 ### Load a text checkpoint and generate
 
-The native GPT-2 checkpoint has bounded functional smoke evidence in the
-[checkpoint inventory](docs/benchmarks/inventory.md). The engine loads the model
+The native GPT-2 checkpoint has a passing primary-workflow record in the
+[support inventory](status_models_testing.md). The engine loads the model
 on entry and releases its resources on exit:
 
 ```python
@@ -112,7 +134,7 @@ Add `--stream` for incremental text or `--offline` for cached/local assets.
 ### Start the HTTP server
 
 ```bash
-python -m pip install "mlx-one[server]==0.1.0a1"
+python -m pip install "mlx-one[server]==0.1.1"
 mlx-one serve LiquidAI/LFM2-350M --inference-mode reference_dense \
   --host 127.0.0.1 --port 8888 --alias lfm2-local
 ```
@@ -193,7 +215,7 @@ High-resolution (1024 × 1024), four-image and OCR workloads remain separate. Th
 <!-- MLX-ONE-AUDIO-BENCHMARK-START -->
 ## Audio Model Performance
 
-Native audio support is experimental. Values below are validated measurements; “—” means unavailable. Recognition uses one pinned English LibriSpeech utterance (9.9 seconds, padded to 10); its WER is a single-clip check, not corpus accuracy. See the linked raw evidence.
+Historical native audio performance. Values below are validated measurements; “—” means unavailable. Recognition uses one pinned English LibriSpeech utterance (9.9 seconds, padded to 10); its WER is a single-clip check, not corpus accuracy. See the linked raw evidence.
 
 Protocol: batch 1, one warmup, five repetitions, median; actual audio durations. ASR uses a fixed 10-second clip (ASR-S1); TTS uses fixed 30-word text (TTS-S1). RTF is processing seconds divided by input audio seconds for ASR, or generated audio seconds for synthesis. Lower RTF is faster. Hardware and MLX version are listed for each measured cohort. Direct-model, Python Engine and full file-pipeline runs remain separate.
 
@@ -249,7 +271,7 @@ Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepare
 
 Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm. Experimental; speech quality requires listening review.
 
-Qwen alignment remains WIP because historical timestamp discrepancies are unresolved; boundary errors need independently annotated reference timings. LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder.
+Independent alignment boundary accuracy was not measured in this historical cohort; the newer TIMIT timing checks are recorded in the current support inventory. Q4 LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder. Current Q8 speech support and newer alignment results are in the [support inventory](status_models_testing.md).
 
 [Methodology and coverage](docs/benchmarks/audio/README.md) · [Manual download, Python/CLI/HTTP and benchmark commands](docs/AUDIO_TESTING.md)
 <!-- MLX-ONE-AUDIO-BENCHMARK-END -->
@@ -319,9 +341,10 @@ concurrent-serving rates. p95 uses the nearest-rank method.
 | Silero VAD | One second of decoded mono 16 kHz audio | 16.35 | 22.97 |
 
 [Task measurement protocol and raw-run locators](docs/native_tasks/task-performance.md)
-retain exact workload and provenance details. These bounded profiles remain
-experimental; quality results, rejected profiles and qualification blockers are
-in [experimental task documentation](docs/experimental/native-tasks.md).
+retain exact workload and provenance details. Current model support is recorded
+in the [40-model inventory](status_models_testing.md); older quality measurements
+and rejected optional profiles remain in the
+[task evidence](docs/experimental/native-tasks.md).
 
 | Modality | Available performance evidence | Remaining measurement gap |
 | --- | --- | --- |
@@ -331,22 +354,22 @@ in [experimental task documentation](docs/experimental/native-tasks.md).
 
 ## Supported Modalities and Models
 
-| Modality | Implemented capabilities | Documentation |
-| --- | --- | --- |
-| Text | Native completion/chat and streaming for registered language architectures | [Text families](docs/models/index.md#text-generation-guides) |
-| Vision-language | Native static-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL | [VLM families](docs/models/index.md#vision-language-guides) |
-| Audio | ASR, separate known-text alignment, and experimental LFM2.5 speech generation | [Audio families](docs/models/index.md#audio-guides) |
-| OCR | TrOCR line recognition and implemented page-model transcription workflows | [OCR guide](docs/OCR_TESTING.md) |
-| Embeddings | Native embedding and reranking interfaces; ColBERT token-level retrieval | [Retrieval families](docs/models/index.md#retrieval-guides) |
-| Segmentation | SAM3 concept/interactive images and experimental offline/streaming video tracking | [SAM3 guide](src/mlx_one/models/segmentation/sam3/README.md) |
-| Additional tasks | Bounded sentiment, NER, zero-shot image classification and voice activity detection | [Task scope and evidence](docs/experimental/native-tasks.md) |
+| Modality | Supported / registered types | Primary capabilities | Documentation |
+| --- | ---: | --- | --- |
+| Text generation | 11 / 11 | Native completion/chat and applicable serving/streaming | [Text families](docs/models/index.md#text-generation-guides) |
+| Vision-language | 4 / 4 | Single-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL | [VLM families](docs/models/index.md#vision-language-guides) |
+| Audio & speech | 7 / 7 | ASR, known-text alignment, VAD and Q8 LFM2.5 speech generation | [Audio families](docs/models/index.md#audio-guides) |
+| OCR & documents | 6 / 6 | TrOCR line recognition and page text recognition | [OCR guide](docs/OCR_TESTING.md) |
+| Embeddings & reranking | 5 / 5 | Embeddings, pair reranking and ColBERT token-level MaxSim | [Retrieval families](docs/models/index.md#retrieval-guides) |
+| Segmentation | 4 / 4 | SAM3 image prompts and native offline/streaming video workflows | [SAM3 guide](src/mlx_one/models/segmentation/sam3/README.md) |
+| Classification | 3 / 3 | Sentiment, NER and zero-shot image classification | [Classification guides](docs/models/index.md#classification-guides) |
+| **Total** | **40 / 40** | Selected primary workflows | [Exact checkpoints and results](status_models_testing.md) |
 
-Detailed checkpoint coverage, execution evidence, and qualification status are
-maintained in the model inventory and experimental documentation.
-See the [checkpoint inventory](docs/benchmarks/inventory.md),
-[qualification policy](docs/model-admission.md) and
-[experimental index](docs/experimental/README.md). An implemented family does not
-qualify every checkpoint, task, precision or device.
+Support applies to the checkpoint, precision and operations in the
+[verified catalog](src/mlx_one/data/model_support_release_20261108.json).
+[Known quality and scope limits](status_models_testing.md#known-quality-and-scope-limitations)
+remain documented. [Admission policy](docs/model-admission.md) explains the
+functional standard; optional experiments retain their own evidence and status.
 
 ## Architecture
 
@@ -453,6 +476,7 @@ and [Web UI guide](docs/ui.md) document request formats, streaming and settings.
 | Searchable documentation website | [MLX-One docs](https://ssusantachary.github.io/mlx-one/), [site maintenance](website/README.md) |
 | Setup and examples | [Getting started](docs/getting-started.md) |
 | Model families and guides | [Model index](docs/models/index.md), [candidate catalog](docs/model-catalog.md) |
+| Current support and release | [All 40 supported models](status_models_testing.md), [0.1.1 release notes](docs/releases/0.1.1.md) |
 | Qualification and checkpoints | [Admission policy](docs/model-admission.md), [checkpoint inventory](docs/benchmarks/inventory.md) |
 | Design and package ownership | [Architecture](docs/architecture/index.md), [repository summary](docs/REPOSITORY_SUMMARY.md) |
 | Python, CLI and HTTP | [API guide](docs/api/index.md), [HTTP reference](docs/api/openai-compatibility.md), [Web UI](docs/ui.md) |

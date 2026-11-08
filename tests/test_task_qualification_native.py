@@ -52,6 +52,11 @@ def test_isolated_native_task_worker_and_pending_matrix(tmp_path):
     from mlx_one.runtime_baseline import registry_inventory
 
     expected = {row['model_type'] for row in registry_inventory()['registrations']}
-    assert len(expected) == 36
+    release_inventory = json.loads(
+        (Path(__file__).resolve().parents[1]
+         / 'scripts/release/expected_model_types.json').read_text()
+    )
+    assert expected == set(release_inventory)
+    assert len(release_inventory) == len(expected)
     assert {row['model_type'] for row in rows} == expected
     assert all(not row['qualification_promoted'] for row in rows)

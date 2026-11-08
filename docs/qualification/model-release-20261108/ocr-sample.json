@@ -1,0 +1,23 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+  "selection": "first fixture in the existing seed-20261025 sample; selected before this campaign OCR inference",
+  "fixture": {
+    "id": "434",
+    "path": "test/images/434.png",
+    "sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+    "size": [
+      1920,
+      2075
+    ],
+    "reference_sha256": "50c2358e325c5e81f5c9653d4426b1bd73bbcf83b9c90e5aaf21de08b8d7b939",
+    "metadata": {
+      "format": "PATIENT_INTAKE",
+      "fontFamily": "TIMES_NEW_ROMAN",
+      "documentQuality": "LOW_QUALITY"
+    }
+  },
+  "image_path": "/private/tmp/mlx-one-all40-20261108/fixtures/ocr-corpus/test/images/434.png",
+  "max_tokens": 1024,
+  "normalized_cer_limit": 0.25
+}

@@ -1,0 +1,5644 @@
+{
+  "schema_version": "model-release-probe-v1",
+  "model_type": "got_ocr2",
+  "checkpoint": "mlx-community/GOT-OCR2_0-4bit",
+  "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+  "started": 1794139693.384873,
+  "release_qualified": false,
+  "python": "3.12.11 (main, Jun  3 2025, 15:41:47) [Clang 17.0.0 (clang-1700.0.13.3)]",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "worker_sha256": "10d9aad75b76455ca4b67324f10891c75185adce403865d5d9d7e45100d3a30a",
+  "functional_helper_sha256": "64836a3f7193d5f806b410345c750f0a5c123b45d1033acd68b1eff39e90d083",
+  "inputs_sha256": "9bf0bffbd02b3be967af5258e43f7585444d79768c146eec4179cbf86a39d83c",
+  "fixtures_directory": "/private/tmp/mlx-one-all40-20261108/fixtures",
+  "evidence_directory": "/private/tmp/mlx-one-docs-site/docs/qualification/model-release-20261108",
+  "reference_python": "/private/tmp/mlx-one-all40-20261108/reference-env/bin/python",
+  "gpu_execution_serialized": true,
+  "installed_source": "/private/tmp/mlx-one-all40-20261108/wheel-env/lib/python3.12/site-packages/mlx_one/__init__.py",
+  "mlx": "0.32.2",
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "reference_packages_absent": true,
+  "installed_record_sha256": "5d6248f5eb41765a7acf4fac7eaa6ac1ad0b1bbf789b5723a99dfc4b749df279",
+  "checkpoint_configuration": {
+    "architectures": [
+      "GOTQwenForCausalLM"
+    ],
+    "attention_dropout": 0.0,
+    "auto_map": {
+      "AutoConfig": "modeling_GOT.GOTConfig",
+      "AutoModel": "modeling_GOT.GOTQwenForCausalLM"
+    },
+    "bos_token_id": 151643,
+    "eos_token_id": 151643,
+    "freeze_vision_tower": false,
+    "generation_config": {
+      "bos_token_id": 151643,
+      "eos_token_id": 151643,
+      "max_new_tokens": 2048,
+      "transformers_version": "4.37.2"
+    },
+    "hidden_act": "silu",
+    "hidden_size": 1024,
+    "im_end_token": 151858,
+    "im_patch_token": 151859,
+    "im_start_token": 151857,
+    "image_token_len": 256,
+    "initializer_range": 0.02,
+    "intermediate_size": 2816,
+    "max_position_embeddings": 32768,
+    "max_window_layers": 21,
+    "model_type": "GOT",
+    "num_attention_heads": 16,
+    "num_hidden_layers": 24,
+    "num_key_value_heads": 16,
+    "quantization": {
+      "group_size": 64,
+      "bits": 4,
+      "mode": "affine"
+    },
+    "quantization_config": {
+      "group_size": 64,
+      "bits": 4,
+      "mode": "affine"
+    },
+    "rms_norm_eps": 1e-06,
+    "rope_theta": 1000000.0,
+    "sliding_window": 32768,
+    "tie_word_embeddings": true,
+    "transformers_version": "4.37.2",
+    "use_cache": true,
+    "use_im_start_end": true,
+    "use_sliding_window": false,
+    "vision_config": {},
+    "vocab_size": 151860
+  },
+  "ocr_fixture_sha256": "1fed9cd48d58bb332f220e929220639978f989b41c4d7083e7d1177e00c1c50d",
+  "ocr_fixture": {
+    "dataset": "getomni-ai/ocr-benchmark",
+    "revision": "4ed0d95271ca00107726230f7a0944ed9e90d897",
+    "id": "434",
+    "image_sha256": "5046912baea67ae22aa1bdeca5cc3544eb68fad53376bd09158d1ab38d18429d",
+    "reference_sha256": "50c2358e325c5e81f5c9653d4426b1bd73bbcf83b9c90e5aaf21de08b8d7b939"
+  },
+  "ocr_image_path": "/private/tmp/mlx-one-all40-20261108/fixtures/ocr-corpus/test/images/434.png",
+  "output": {
+    "text": "Health History Questionnaire\nFirst Name:\nEmail\nLast Name:\nDavis\nMarital Status:\n\uf064 Single\n\uf052 Married\n\uf052 Divorced\n\uf052 Separated\n\uf052 Widowed\nAddress:\n3818A Sycamore Ln\nCity:\nWaimanalo\nState:\nHI\nZip:\n96795\nPhone:\n492 224-1939\nDOB:\nOctober 21, 1952\nSpouse Name:\nSpouse Phone:\nIs the requested medication\n\uf052 NEW\nor a\n\uf052 CONTINUATION\nof THERAPY? If so, start date:\nHave you been hospitalized in the past year?\n\uf052 Yes\n\uf052 No\nFinancial Responsibility\nResponsible Party:\nSelf\nInsurance Address:\n4672A Maple Way\nInsurance Phone:\n(658) 760-7828\nGroup #:\nUNOXZ\nMember ID:\nGV6SIKX4VR\nPatient Signature:\nSocial Security #:\nDate:\nGuardian Signature:\nGuardian Social Security #:\nDate:\nFamily Health History\nRelation\nAge If Living\nAge At Death\nChronic Health Problems\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n6",
+    "markdown": null,
+    "pages": [
+      {
+        "page": 0,
+        "original_size": [
+          1920,
+          2075
+        ],
+        "rendered_size": [
+          1920,
+          2075
+        ],
+        "text": "Health History Questionnaire\nFirst Name:\nEmail\nLast Name:\nDavis\nMarital Status:\n\uf064 Single\n\uf052 Married\n\uf052 Divorced\n\uf052 Separated\n\uf052 Widowed\nAddress:\n3818A Sycamore Ln\nCity:\nWaimanalo\nState:\nHI\nZip:\n96795\nPhone:\n492 224-1939\nDOB:\nOctober 21, 1952\nSpouse Name:\nSpouse Phone:\nIs the requested medication\n\uf052 NEW\nor a\n\uf052 CONTINUATION\nof THERAPY? If so, start date:\nHave you been hospitalized in the past year?\n\uf052 Yes\n\uf052 No\nFinancial Responsibility\nResponsible Party:\nSelf\nInsurance Address:\n4672A Maple Way\nInsurance Phone:\n(658) 760-7828\nGroup #:\nUNOXZ\nMember ID:\nGV6SIKX4VR\nPatient Signature:\nSocial Security #:\nDate:\nGuardian Signature:\nGuardian Social Security #:\nDate:\nFamily Health History\nRelation\nAge If Living\nAge At Death\nChronic Health Problems\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n66\n6",
+        "markdown": null,
+        "elements": [],
+        "tables": [],
+        "formulas": [],
+        "timings": {
+          "preprocessing_seconds": 0.02604470901133027,
+          "encoder_seconds": 0.53567679101252,
+          "generation_seconds": 11.693713249987923,
+          "text_prefill_seconds": 0.10116112499963492,
+          "decode_forward_seconds": 10.187223748813267,
+          "total_seconds": 12.25550966701121,
+          "first_token_seconds": 0.663674750001519
+        },
+        "metadata": {
+          "path": "visual",
+          "exif_oriented": true,
+          "source_page_count": 1,
+          "decode_seconds": 0.006509958999231458,
+          "processed_size": [
+            1024,
+            1024
+          ],
+          "visual_tokens": 256,
+          "prompt_tokens": 286,
+          "crop_first": false,
+          "source_crop": [
+            0,
+            0,
+            1920,
+            2075
+          ],
+          "model": "/private/tmp/mlx-one-all40-20261108/models/got_ocr2/checkpoint",
+          "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+          "architecture": "got_ocr2",
+          "output_tokens": 1024,
+          "finish_reason": "length",
+          "truncated": true,
+          "geometry_predicted": false,
+          "confidence_available": false
+        }
+      }
+    ],
+    "model": "/private/tmp/mlx-one-all40-20261108/models/got_ocr2/checkpoint",
+    "task": "ocr.recognize",
+    "language": null,
+    "timings": {
+      "total_seconds": 12.27827254201111
+    },
+    "metadata": {
+      "processed_pages": 1,
+      "page_count": 1,
+      "revision": "0e28c87720de5d8af67389a0444cf8397524cb61",
+      "capabilities": {
+        "family": "got_ocr2",
+        "tasks": [
+          "ocr.batch",
+          "ocr.document",
+          "ocr.recognize",
+          "ocr.region"
+        ],
+        "markdown": true,
+        "geometry": false,
+        "line_only": false,
+        "language_hint": false,
+        "crop_first": true
+      },
+      "measurement_type": "python-engine",
+      "coordinate_convention": "top-left pixel xyxy, zero-based pages",
+      "checkpoint_status": "PENDING_HARDWARE_TEST"
+    },
+    "schema_version": "mlx-one-ocr-v1"
+  },
+  "page_cer": 0.9153543307086615,
+  "page_wer": 1.9025974025974026,
+  "quality_status": "MEASURED_ONE_LABELED_PAGE",
+  "status": "FAIL",
+  "error": "labeled HF page normalized CER exceeds declared 25% floor",
+  "exception": "AssertionError",
+  "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/mlx-one-docs-site/scripts/qualification/model_release_worker.py\", line 916, in main\n    probe(entry, args.model, fixtures, report, data)\n  File \"/private/tmp/mlx-one-docs-site/scripts/qualification/model_release_worker.py\", line 488, in ocr_probe\n    assert report[\"page_cer\"] <= page_sample[\"normalized_cer_limit\"], (\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: labeled HF page normalized CER exceeds declared 25% floor\n",
+  "checkpoint_tensor_inventory": {
+    "model.safetensors": {
+      "language_model.model.embed_tokens.biases": {
+        "shape": [
+          151860,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.embed_tokens.scales": {
+        "shape": [
+          151860,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.embed_tokens.weight": {
+        "shape": [
+          151860,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.0.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.0.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.1.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.1.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.10.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.10.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.11.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.11.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.12.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.12.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.13.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.13.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.14.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.14.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.15.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.15.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.16.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.16.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.17.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.17.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.18.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.18.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.19.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.19.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.2.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.2.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.20.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.20.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.21.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.21.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.22.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.22.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.23.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.23.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.3.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.3.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.4.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.4.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.5.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.5.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.6.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.6.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.7.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.7.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.8.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.8.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.input_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.down_proj.biases": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.down_proj.scales": {
+        "shape": [
+          1024,
+          44
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.down_proj.weight": {
+        "shape": [
+          1024,
+          352
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.mlp.gate_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.gate_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.gate_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.mlp.up_proj.biases": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.up_proj.scales": {
+        "shape": [
+          2816,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.mlp.up_proj.weight": {
+        "shape": [
+          2816,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.post_attention_layernorm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.k_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.k_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.k_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.k_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.self_attn.o_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.o_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.o_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.self_attn.q_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.q_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.q_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.q_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.layers.9.self_attn.v_proj.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.v_proj.biases": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.v_proj.scales": {
+        "shape": [
+          1024,
+          16
+        ],
+        "dtype": "BF16"
+      },
+      "language_model.model.layers.9.self_attn.v_proj.weight": {
+        "shape": [
+          1024,
+          128
+        ],
+        "dtype": "U32"
+      },
+      "language_model.model.norm.weight": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "multi_modal_projector.bias": {
+        "shape": [
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "multi_modal_projector.weight": {
+        "shape": [
+          1024,
+          1024
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.0.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.1.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.10.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.attn.rel_pos_h": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.attn.rel_pos_w": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.11.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.attn.rel_pos_h": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.attn.rel_pos_w": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.2.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.3.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.4.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.attn.rel_pos_h": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.attn.rel_pos_w": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.5.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.6.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.7.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.attn.rel_pos_h": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.attn.rel_pos_w": {
+        "shape": [
+          127,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.8.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.attn.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.attn.proj.weight": {
+        "shape": [
+          768,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.attn.qkv.bias": {
+        "shape": [
+          2304
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.attn.qkv.weight": {
+        "shape": [
+          2304,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.attn.rel_pos_h": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.attn.rel_pos_w": {
+        "shape": [
+          27,
+          64
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.mlp.lin1.bias": {
+        "shape": [
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.mlp.lin1.weight": {
+        "shape": [
+          3072,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.mlp.lin2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.mlp.lin2.weight": {
+        "shape": [
+          768,
+          3072
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.norm1.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.norm1.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.norm2.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.blocks.9.norm2.weight": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.conv1.weight": {
+        "shape": [
+          256,
+          1,
+          1,
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.conv2.weight": {
+        "shape": [
+          256,
+          3,
+          3,
+          256
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.net_2.weight": {
+        "shape": [
+          512,
+          3,
+          3,
+          256
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.net_3.weight": {
+        "shape": [
+          1024,
+          3,
+          3,
+          512
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.norm1.bias": {
+        "shape": [
+          256
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.norm1.weight": {
+        "shape": [
+          256
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.norm2.bias": {
+        "shape": [
+          256
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.norm2.weight": {
+        "shape": [
+          256
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.patch_embed.proj.bias": {
+        "shape": [
+          768
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.patch_embed.proj.weight": {
+        "shape": [
+          768,
+          16,
+          16,
+          3
+        ],
+        "dtype": "BF16"
+      },
+      "vision_tower.pos_embed": {
+        "shape": [
+          1,
+          64,
+          64,
+          768
+        ],
+        "dtype": "BF16"
+      }
+    }
+  },
+  "seconds": 13.044698238372803,
+  "candidate_python": "/private/tmp/mlx-one-all40-20261108/wheel-env/bin/python",
+  "campaign_worker_sha256": "10d9aad75b76455ca4b67324f10891c75185adce403865d5d9d7e45100d3a30a"
+}
