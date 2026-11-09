@@ -44,6 +44,12 @@ Hugging Face supplies configuration, tokenizer/processor assets and safe
 
 ## Model support and release
 
+<p align="center">
+  <a href="status_models_testing.md">
+    <img src="docs/assets/mlx-one-supported-model-ecosystem.png" alt="MLX-One supported model ecosystem: 40 native model types across seven modalities" width="1200">
+  </a>
+</p>
+
 **0.1.1 approved for release · 8 November 2026.** All **40 registered native
 model types** have passing primary-workflow records across **seven modalities**.
 Each supported entry identifies its checkpoint, immutable revision, precision,

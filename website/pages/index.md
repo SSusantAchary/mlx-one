@@ -43,6 +43,12 @@ mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
 
 ## What it makes possible
 
+<p align="center">
+  <a href="../../status_models_testing.md">
+    <img src="../../docs/assets/mlx-one-supported-model-ecosystem.png" alt="MLX-One supported model ecosystem: 40 native model types across seven modalities" width="1200" loading="lazy">
+  </a>
+</p>
+
 <!-- insights:modalities -->
 
 [Explore model coverage, benchmarks and development progress](insights/index.md){ .md-button }
