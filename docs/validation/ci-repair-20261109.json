@@ -1,0 +1,139 @@
+{
+  "schema_version": "mlx-one-ci-repair-v1",
+  "date": "2026-11-09",
+  "base_commit": "84f0bb1a1ae820efe6febf25ddf4fe67724b17fe",
+  "branch": "fix/ci-release-checks",
+  "local_validation": "PASS",
+  "hosted_ci_verified": false,
+  "source_is_uncommitted": true,
+  "observed_run": "https://github.com/SSusantAchary/mlx-one/actions/runs/42551029446",
+  "hosted_observation": "Python 3.12 failed in Pytest with exit code 2. Other matrix jobs were cancelled by fail-fast; clean-wheel passed. Detailed exception log requires unavailable repository-admin authentication.",
+  "reproduced_issues": [
+    "Fresh development installation omitted setuptools required by two packaging tests.",
+    "datetime.UTC imports prevent core package/test collection on Python 3.10.",
+    "hashlib.file_digest is unavailable on Python 3.10; campaign and loader integrity checks now use streamed SHA-256.",
+    "Release audit scripts imported tomllib without a Python 3.10 backport."
+  ],
+  "matrix": [
+    {
+      "python": "Python 3.10.20",
+      "dependencies": 0,
+      "lint": 0,
+      "release_metadata": 0,
+      "pytest": 0,
+      "counts": {
+        "tests": 2373,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 121
+      },
+      "pytest_summary": "=============== 2243 passed, 121 skipped, 724 warnings in 54.26s ===============",
+      "seconds": 54.91
+    },
+    {
+      "python": "Python 3.11.15",
+      "dependencies": 0,
+      "lint": 0,
+      "release_metadata": 0,
+      "pytest": 0,
+      "counts": {
+        "tests": 2373,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 121
+      },
+      "pytest_summary": "================ 2243 passed, 121 skipped, 1 warning in 48.87s =================",
+      "seconds": 49.54
+    },
+    {
+      "python": "Python 3.12.11",
+      "dependencies": 0,
+      "lint": 0,
+      "release_metadata": 0,
+      "pytest": 0,
+      "counts": {
+        "tests": 2373,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 121
+      },
+      "pytest_summary": "================ 2243 passed, 121 skipped, 1 warning in 56.88s =================",
+      "seconds": 57.6
+    },
+    {
+      "python": "Python 3.13.4",
+      "dependencies": 0,
+      "lint": 0,
+      "release_metadata": 0,
+      "pytest": 0,
+      "counts": {
+        "tests": 2373,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 121
+      },
+      "pytest_summary": "================ 2243 passed, 121 skipped, 1 warning in 50.03s =================",
+      "seconds": 50.87
+    }
+  ],
+  "clean_wheels": [
+    {
+      "python": "310",
+      "status": "PASS",
+      "cli_version": "mlx-one, version 0.1.1",
+      "registry_json_valid": true,
+      "package": {
+        "version": "0.1.1",
+        "model_types": 40
+      },
+      "dependency_check": "No broken requirements found."
+    },
+    {
+      "python": "312",
+      "status": "PASS",
+      "cli_version": "mlx-one, version 0.1.1",
+      "registry_json_valid": true,
+      "package": {
+        "version": "0.1.1",
+        "model_types": 40
+      },
+      "dependency_check": "No broken requirements found."
+    }
+  ],
+  "package_payload_audit": "PASS",
+  "twine_strict": "PASS",
+  "new_lint_findings": 0,
+  "inherited_lint_findings": 65,
+  "actions": {
+    "checkout": "v7.0.1",
+    "setup-python": "v7.1.0",
+    "upload-artifact": "v7.0.2",
+    "verified_runtime": "node24"
+  },
+  "source_sha256": {
+    ".github/workflows/ci.yml": "f0aab883ff48ba6a3389341e089066ecf8b0a83e8afa160432c30e2638f74136",
+    "benchmarks/audio/run.py": "0f29379f1e5569e4e732e087594299d2e8b9565c307c744a3adf12d9674b5b17",
+    "benchmarks/cache_runtime_bench.py": "52bacc702ab15a4397a8d65df441328dff3eefc474450a51ab1ec941e600d782",
+    "pyproject.toml": "28a0a7e8b9fd78f9b928bc1954d923a028c6de2ad2ba684aa32bba603719d5c9",
+    "requirements/README.md": "d82547e36ecb6f385787c6c912c4a36b7beafdbe58b8939c3dc9a1e2ffdd7e5e",
+    "scripts/detect_mlx_release.py": "ee22b53e6aa50a676c02cba2a3ba2c74c6d9a991935cbcf9c21bd532e74f59f6",
+    "scripts/qualification/model_release_worker.py": "cf69dd4f92a9d7ecd945a8b7b40c37be9672ef3c7f234c8fb9327c045774d57c",
+    "scripts/qualify_native_target.py": "e0b55a36aec4551b31e90a4b6bba0f8870d2d19762882b670a0198f90af8b9fc",
+    "scripts/release/package_audit.py": "584a9246518664fbb4e23bd546da1daa18e8b74a05074ba794083d86fac9a829",
+    "scripts/release/validate.py": "9d7500b233ae316368fddf139dfaa6052700e77cbbabf3429b32a511475cc2ea",
+    "src/mlx_one/audio/evaluation.py": "18fb03ce271268715d156dd45872e71e1e81d6cf6b402eca4b42243fa43510fa",
+    "src/mlx_one/benchmark.py": "456755a89bab46cbcf74a64b51023d58d3b350b166dc940c3aeb46c29d57458d",
+    "src/mlx_one/calibration.py": "d51c1aece0ba7d1e3fbdee510108fd98cdab9bcf533e7ddc18f5ad3a0f2f3475",
+    "src/mlx_one/evaluation.py": "abd36ef4639588dece422b4ace66de83d3514dd9bea5e2bdc9bc0d89b4f6397c",
+    "src/mlx_one/models/audio/silero/model.py": "8a6cbb2e26c8f00ebc6e00744a6051fc2b82bffab7fe8a20cf75a4c967dab9cc",
+    "src/mlx_one/models/depth/depth_anything.py": "cbb8e897ba29a0a06c1b0547bc75a839c935eaf87c15410b6b3a9aa12822a6f1",
+    "src/mlx_one/models/detection/detr.py": "554963a672b4056c4ab339b5657807979845241f83a7ae7cf09a42969d8dbbcc",
+    "src/mlx_one/schemas.py": "b9d6a770b6581843e1c383b86a266de450ce5df13a2b8a89313fddbc430a75a4",
+    "src/mlx_one/training.py": "ef807209e7082bf290d738ae621b984fbc46c92ce76b82720359075d73603142",
+    "src/mlx_one/utils/checkpoint.py": "5837118aaaafaefa8fbfc43e7bcca5be92c979188abd861a1335c9f14098034f",
+    "src/mlx_one/vision/document_qa.py": "9135d6e4180f5e3cfb8b3976a4aa4db5196dc23669555b0557d9dadea96188ed",
+    "src/mlx_one/utils/hashing.py": "b9faff4df138efe7e391d8272924dadc2c2f13f29f06f1d773bb993b9702dd47",
+    "tests/test_hashing.py": "cc4b9552e3d07c6bff9397c3a05eec6dd500df5682c55c5f798efab83caad19d"
+  },
+  "scope": "Local reproduction and verification with isolated dev installations on macOS arm64. CI now uses its selected interpreter in a venv and uploads JUnit reports. The hosted run must be confirmed after the maintainer pushes the fix. No model checkpoint downloads or numerical threshold changes."
+}

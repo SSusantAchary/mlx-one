@@ -27,6 +27,14 @@ its v2 schema and validator APIs.
 
 ## Installing and reproducing environments
 
+The `dev` extra declares `setuptools>=77.0.3` because packaging-contract tests
+read the build configuration through its API. Build isolation does not install
+build-backend requirements into the test environment. Python 3.10 also installs
+`tomli` through `dev`; release audit scripts use it when stdlib `tomllib` is absent.
+Invoke tests with `python -m pytest` to use the same interpreter that installed
+these dependencies. CI creates a virtual environment for each matrix job so
+preinstalled runner packages and console scripts do not affect collection.
+
 For the recorded candidate, first create and activate a Python 3.12.11 virtual
 environment on Apple Silicon macOS, then run from the repository root:
 

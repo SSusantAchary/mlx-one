@@ -9,7 +9,7 @@ import sys
 import tempfile
 import uuid
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -183,4 +183,4 @@ def _measured(value: int | float, unit: str) -> dict[str, Any]:
 
 
 def _now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()

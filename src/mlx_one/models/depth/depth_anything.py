@@ -6,7 +6,6 @@ Apache-2.0. Reuses existing native vision attention and GELU MLP primitives.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 
@@ -17,6 +16,7 @@ from mlx.utils import tree_flatten
 from mlx_one.models.depth.interpolation import resize
 from mlx_one.models.shared.vision import VisionMlp
 from mlx_one.models.vision_language.lfm2_vl.model import VisionAttention
+from mlx_one.utils.hashing import sha256_file
 
 REVISION = "5426e4f0f36572d16453bbda7a8389317b1bef99"
 
@@ -226,7 +226,7 @@ def load_depth(path):
     root = Path(path)
     # Locks are generated before validation; constants below are the only accepted assets.
     for name, expected in HASHES.items():
-        if hashlib.file_digest((root / name).open("rb"), "sha256").hexdigest() != expected:
+        if sha256_file(root / name) != expected:
             raise ValueError(f"Depth Anything asset mismatch: {name}")
     cfg = json.loads((root / "config.json").read_text())
     if cfg["model_type"] != "depth_anything" or cfg["backbone_config"]["hidden_size"] != 384:

@@ -84,6 +84,8 @@ audio = []  # Native MLX/NumPy/tokenizers are core; encoded media additionally r
 qwen-align-ja = ["nagisa==0.2.11"]
 qwen-align-ko = ["soynlp==0.0.493"]  # Also requires the pinned checkpoint dictionary.
 dev = [
+    "setuptools>=77.0.3",
+    "tomli>=2.0.1; python_version < '3.11'",
     "fastapi>=0.115,<1",
     "httpx>=0.27,<1",
     "pydantic>=2.13.5,<3",

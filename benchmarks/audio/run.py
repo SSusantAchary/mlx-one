@@ -11,7 +11,7 @@ import resource
 import statistics
 import subprocess
 import time
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from benchmarks.audio.result_schema import METRICS, PROTOCOL, SCHEMA, digest_file, validate
@@ -305,7 +305,7 @@ def benchmark(args):
     record = {
         "schema": SCHEMA,
         "status": "MEASURED",
-        "measured_at": datetime.now(UTC).isoformat(),
+        "measured_at": datetime.now(timezone.utc).isoformat(),
         "checkpoint": args.checkpoint,
         "revision": args.revision,
         "name": args.name or args.checkpoint.split("/")[-1],

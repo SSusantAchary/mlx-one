@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 import unicodedata
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -151,7 +151,7 @@ def evaluate_asr(
         raise ASREvaluationError("provide ASR predictions or generated predictions")
     score = score_asr_records(records, supplied, spec.profile or "")
     metric_name = "wer" if spec.profile == WHISPER_WER_PROFILE else "cer"
-    started = datetime.now(UTC).isoformat()
+    started = datetime.now(timezone.utc).isoformat()
     metric = MetricValue(
         value=score["value"],
         provenance=MetricProvenance.MEASURED,
@@ -175,7 +175,7 @@ def evaluate_asr(
         metrics={f"quality.{metric_name}": metric},
         task_results=(task,),
         started_at=started,
-        ended_at=datetime.now(UTC).isoformat(),
+        ended_at=datetime.now(timezone.utc).isoformat(),
     )
     store.save_result(result)
     return result

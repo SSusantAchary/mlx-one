@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import urllib.request
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -27,7 +27,7 @@ def main() -> None:
         if files and any(not item.get("yanked", False) for item in files):
             stable.append(version)
     latest = max(stable, key=lambda item: tuple(int(part) for part in item.split(".")))
-    observed_at = datetime.now(UTC).isoformat()
+    observed_at = datetime.now(timezone.utc).isoformat()
     report = {
         "schema_version": 1,
         "observed_at": observed_at,

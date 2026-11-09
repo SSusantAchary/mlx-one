@@ -8,7 +8,7 @@ import math
 import re
 import unicodedata
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -209,7 +209,7 @@ def _predictions(path: str | Path) -> list[str]:
 
 
 def _now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def _profile_metric(profile: str) -> tuple[str, str]:

@@ -7,7 +7,7 @@ import math
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, TypeAlias
 
@@ -196,7 +196,7 @@ class CalibrationStatus(str, Enum):
 
 
 def _utc_now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def _require_text(value: str, field_name: str) -> None:

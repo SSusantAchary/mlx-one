@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +36,7 @@ class CheckpointManager:
     ) -> Path:
         """Save JSON-serializable state and metadata."""
         metadata = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "model_name": model_name,
             "operation_type": operation_type,
             "progress_percentage": progress_percentage,

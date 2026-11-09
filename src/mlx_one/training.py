@@ -9,7 +9,7 @@ import shutil
 import time
 import uuid
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -648,4 +648,4 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
