@@ -75,7 +75,8 @@
           details('Operations and diagnostics', { operations: row.primary_operations, result_sha256: row.evidence_sha256,
             interfaces: row.interfaces, quality_status: row.quality_status, diagnostics: row.diagnostics,
             known_limitations: row.known_limitations, modes: row.modes, functional_decision: row.functional_decision,
-            release_approval: row.release_approval, execution_dtype: row.execution_dtype || 'Recorded profile' }));
+            qualification_release_approval: row.release_approval, package_release: row.package_release,
+            execution_dtype: row.execution_dtype || 'Recorded profile' }));
         return [identity, row.task, row.precision, evidence];
       }), 'Current native model support: selected checkpoints and primary workflows'));
     };

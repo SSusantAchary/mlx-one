@@ -6,6 +6,19 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+### 0.1.2 approved for publication — 2026-11-10
+
+- Add native T5, ViT, Kokoro, XLM-R and Nomic architecture types, plus additional
+  BERT retrieval profiles: ten verified checkpoint workflows and 45 types overall.
+- Provide dense/sparse/ColBERT/hybrid retrieval, paired reranking, encoder-decoder
+  generation, supervised image classification and bounded English speech.
+- Record 2,599 passing native tests and 54 final targeted checks; retain the ViT
+  hidden-state diagnostic failure alongside accepted classification results.
+- Refresh README, model explorer, seven modality counts and workflow documentation.
+- Prepare version 0.1.2 wheel/sdist with current source and package description.
+  [Release notes](docs/releases/0.1.2.md) and the
+  [release decision](docs/releases/0.1.2.json) track artifact publication.
+
 ### 0.1.1 approved for release — 2026-11-08
 
 - Complete real-checkpoint primary-workflow records for all 40 registered native

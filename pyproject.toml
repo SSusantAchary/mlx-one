@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mlx-one"
-version = "0.1.1"
+version = "0.1.2"
 description = "A unified MLX stack for multimodal AI on Apple Silicon."
 readme = "README.pypi.md"
 requires-python = ">=3.10"
@@ -60,7 +60,7 @@ dependencies = [
 Homepage = "https://github.com/SSusantAchary/mlx-one"
 Documentation = "https://ssusantachary.github.io/mlx-one/"
 "Model support" = "https://ssusantachary.github.io/mlx-one/models/support/"
-"Release notes" = "https://ssusantachary.github.io/mlx-one/releases/0.1.1/"
+"Release notes" = "https://ssusantachary.github.io/mlx-one/releases/0.1.2/"
 Repository = "https://github.com/SSusantAchary/mlx-one"
 Issues = "https://github.com/SSusantAchary/mlx-one/issues"
 Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"

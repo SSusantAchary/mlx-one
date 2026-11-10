@@ -8,7 +8,8 @@ and the [validation report](batch-1-sub-6b/REPORT.md) for recorded checks and li
 
 The [support inventory](../../status_models_testing.md) keeps the additional
 source profiles distinct from the dated 40-type **0.1.1** release approval.
-The next package release decision and publication are pending.
+Version **0.1.2** is approved for publication with these workflows.
+[Current release and publication record](../releases/0.1.2.md).
 [0.1.1 release record](../releases/0.1.1.md).
 
 ## Checkpoint compatibility and admission

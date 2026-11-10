@@ -4,12 +4,31 @@
   "release_approval": "APPROVED",
   "approval_date": "2026-11-08",
   "approval_source": "Maintainer instruction approving release after the model support review.",
-  "publication_status": "PENDING",
-  "published": false,
-  "published_install_version": "0.1.0a1",
+  "publication_status": "PUBLISHED",
+  "published": true,
+  "published_install_version": "0.1.1",
   "support_recorded_date": "2026-11-08",
   "support_catalog": "src/mlx_one/data/model_support_release_20261108.json",
   "support_catalog_sha256": "4ffe7cb6a4865f2904504ae6df1517b8a11d7a24864271880e6fd3fdea33cdcf",
   "scope": "40 registered native model types with passing selected primary workflows; exact checkpoints, precisions and operations are recorded in the support catalog.",
-  "target_install_version": "0.1.1"
+  "target_install_version": "0.1.1",
+  "publication_verification": {
+    "version": "0.1.1",
+    "source": "https://pypi.org/pypi/mlx-one/0.1.1/json",
+    "verified_date": "2026-11-10",
+    "files": [
+      {
+        "filename": "mlx_one-0.1.1-py3-none-any.whl",
+        "sha256": "b3cfd5a91a258a4c6175adc212f64a828bf52733c830c215b05b63aefeeabe88",
+        "upload_time": "2026-11-08T19:00:46.535040Z",
+        "url": "https://files.pythonhosted.org/packages/b4/15/f67a22c93041e382a514c76d78975f71310affbcdcf605f1a24ed95495d6/mlx_one-0.1.1-py3-none-any.whl"
+      },
+      {
+        "filename": "mlx_one-0.1.1.tar.gz",
+        "sha256": "c41604e99f591e7b4e9cdd4d0c46ef8acad27bfb6b85750b043bdcdc846b7003",
+        "upload_time": "2026-11-08T19:00:54.314721Z",
+        "url": "https://files.pythonhosted.org/packages/55/4d/3bf013d112b04b2b495c4c1a2ae3db253ed7714ea303c0cd10f5b12cff79/mlx_one-0.1.1.tar.gz"
+      }
+    ]
+  }
 }

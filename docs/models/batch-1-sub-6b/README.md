@@ -9,7 +9,9 @@ checkpoints can share one architecture type.
 The dated 40-type **0.1.1 release approval remains unchanged**. These changes
 need to be merged and published before they appear in an installation from PyPI.
 All ten profiles pass the technical release checks for their documented tasks.
-The next package release decision is pending. See
+The maintainer approved package **0.1.2** on 10 November 2026; the
+[release record](../../releases/0.1.2.json) tracks publication. Qualification
+files retain their original pre-release approval fields. See
 [results](../../qualification/batch-1-sub-6b/results.json), the
 [engineering report](REPORT.md), [source identities](references.md), and
 [development guidelines](../../../mlx_one_development_guidelines_v1.0.md).

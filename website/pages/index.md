@@ -74,10 +74,18 @@ remain visible alongside support.
 
 ## Release record
 
-**0.1.1 was approved for release on 8 November 2026**, with 40 model types.
-Its [dated release notes](releases/0.1.1.md) and publication record remain
-separate from the ten additional source-checkout workflows, which are technically
-validated for their documented tasks and ready for the next release decision.
+**0.1.2 was approved for publication on 10 November 2026**, including the ten
+additional workflows and all 45 model types in their documented scope.
+[Release notes](releases/0.1.2.md) ·
+[Publication state](../../docs/releases/0.1.2.json).
+The previously published [0.1.1 release](releases/0.1.1.md) covers the original
+40-type cohort.
+
+```bash
+python -m pip install --upgrade "mlx-one[server,vision,kokoro]==0.1.2"
+```
+
+Use the source installation above while the 0.1.2 artifacts are being uploaded.
 
 <p align="center">
   <a href="../../status_models_testing.md">
@@ -118,5 +126,5 @@ implemented components and [experimental documentation](experimental/index.md)
 for investigations, known failures and remaining gates.
 
 Apache-2.0 · [GitHub](https://github.com/SSusantAchary/mlx-one) ·
-[PyPI](https://pypi.org/project/mlx-one/0.1.1/) ·
+[PyPI](https://pypi.org/project/mlx-one/0.1.2/) ·
 [Citation and license](reference/citation.md)

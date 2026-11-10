@@ -12,6 +12,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = "src/mlx_one/data/model_support_release_20261108.json"
 RELEASE = "docs/releases/0.1.1.json"
+CURRENT_RELEASE = "docs/releases/0.1.2.json"
 CHECKPOINT_CATALOG = "src/mlx_one/data/batch_1_sub_6b.json"
 CHECKPOINT_RESULTS = "docs/qualification/batch-1-sub-6b/results.json"
 
@@ -240,6 +241,25 @@ def current_support(record, coverage):
     if len(set(identities)) != len(models):
         raise ValueError("Duplicate supported checkpoint profile")
     supported_types = {row["model_type"] for row in models}
+    current_release = json.loads((ROOT / CURRENT_RELEASE).read_text())
+    record(ROOT / CURRENT_RELEASE)
+    references = {row["path"]: row["sha256"] for row in current_release["support_catalogs"]}
+    if (set(references) != {CATALOG, CHECKPOINT_CATALOG}
+        or any(references[path] != hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+               for path in references)
+        or current_release["registered_model_types"] != len(supported_types)
+        or current_release["checkpoint_profile_count"] != len(models)):
+        raise ValueError("Current package release does not match its verified model catalogs")
+    for row in models:
+        row["package_release"] = {
+            "version": current_release["version"],
+            "approval": current_release["release_approval"],
+            "published": current_release["published"],
+        }
+        row["availability"] = (
+            f"Available in {current_release['version']}" if current_release["published"] else
+            f"{current_release['version']} approved; PyPI upload pending"
+        )
     for group in coverage["groups"]:
         group["supported"] = len(supported_types.intersection(group["model_types"]))
     return {
@@ -254,6 +274,7 @@ def current_support(record, coverage):
         "standard": catalog["support_standard"],
         "catalog": CATALOG,
         "release": release,
+        "current_release": current_release,
         "history": [
             {
                 "date": release["support_recorded_date"],

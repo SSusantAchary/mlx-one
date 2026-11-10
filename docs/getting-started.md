@@ -6,31 +6,30 @@ mlx-one requires Python 3.10 or newer and an Apple Silicon Mac with macOS 15 or
 later for model execution. The current MLX/Metal pair is pinned to 0.32.2;
 Python 3.12.11 is the tested development environment.
 
-**0.1.1 is approved for release** with passing primary workflows for
-[40 native model types](../status_models_testing.md). Publication is pending;
-the PyPI commands below target `0.1.1` for use once published. Use the
-[source setup](#source-installation-for-development) for the prepared code after
-the reviewed changes reach the repository. See [0.1.1 release notes](releases/0.1.1.md).
+**0.1.2 is approved for publication**, covering 45 native architecture types and
+50 verified checkpoint profiles. The [release decision](releases/0.1.2.json)
+tracks upload status separately. Use the [source setup](#source-installation-for-development)
+while artifacts are being uploaded. See [0.1.2 release notes](releases/0.1.2.md).
 
 ### Install from PyPI
 
-Install the 0.1.1 release once it is published:
+Install the 0.1.2 release once it is published:
 
 ```bash
-python -m pip install "mlx-one==0.1.1"
+python -m pip install "mlx-one==0.1.2"
 ```
 
 Include the HTTP server, vision and OCR dependencies with:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr]==0.1.1"
+python -m pip install "mlx-one[server,vision,ocr,kokoro]==0.1.2"
 mlx-one --version
 mlx-one registry list
 ```
 
-The [0.1.1 release notes](releases/0.1.1.md) record validation, and the
-[PyPI release page](https://pypi.org/project/mlx-one/0.1.1/) lists artifacts after
-publication. The previous published version is `0.1.0a1`. Model weights are
+The [0.1.2 release notes](releases/0.1.2.md) record validation, and the
+[PyPI release page](https://pypi.org/project/mlx-one/0.1.2/) lists artifacts after
+publication. The previous published version is `0.1.1`. Model weights are
 acquired separately under their publishers' terms.
 
 ### Source installation for development
@@ -63,8 +62,8 @@ See [dependency policy and tested minimums](../requirements/README.md).
 Qwen known-text alignment has separate optional language dependencies:
 
 ```bash
-python -m pip install "mlx-one[qwen-align-ja]==0.1.1"  # Japanese: nagisa==0.2.11
-python -m pip install "mlx-one[qwen-align-ko]==0.1.1"  # Korean: soynlp==0.0.493
+python -m pip install "mlx-one[qwen-align-ja]==0.1.2"  # Japanese: nagisa==0.2.11
+python -m pip install "mlx-one[qwen-align-ko]==0.1.2"  # Korean: soynlp==0.0.493
 ```
 
 Korean alignment also needs the checksummed `korean_dict_jieba.dict` in the local
@@ -78,7 +77,7 @@ request that bridge.
 For SAM3 image processing, install the existing vision extra:
 
 ```bash
-python -m pip install "mlx-one[vision]==0.1.1"
+python -m pip install "mlx-one[vision]==0.1.2"
 ```
 
 Meta's [SAM3 checkpoint](https://huggingface.co/facebook/sam3) requires authorized
@@ -97,7 +96,7 @@ directories, and Python RGB frame iterators need no video/audio decoder.
 Load one supported text model and start the bundled local UI:
 
 ```bash
-python -m pip install "mlx-one[server]==0.1.1"
+python -m pip install "mlx-one[server]==0.1.2"
 mlx-one serve Qwen/Qwen3-0.6B --inference-mode reference_dense
 ```
 

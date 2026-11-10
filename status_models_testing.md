@@ -4,7 +4,8 @@ Updated: **10 November 2026**. The current source has **45 native architecture
 types across seven modalities**, represented by **50 verified checkpoint
 profiles**: the dated 40-type release cohort below and ten additional profiles.
 The additional workflows meet the technical release criteria for their recorded
-tasks. Package release approval and publication remain separate steps.
+tasks. Version **0.1.2** is approved for publication on 10 November; its
+[release record](docs/releases/0.1.2.json) tracks upload status.
 
 [Model workflows and examples](docs/models/batch-1-sub-6b/README.md) ·
 [Ten-checkpoint validation results](docs/qualification/batch-1-sub-6b/results.json) ·
@@ -30,7 +31,7 @@ failed fixed hidden-state diagnostic retained. Kokoro is qualified for bounded
 
 ## Dated 0.1.1 release cohort
 
-Recorded: **8 November 2026**. **40/40 model types have passing primary-workflow records** under the MLX-LM-aligned functional standard. Each selected checkpoint is **SUPPORTED** for the operations below. **0.1.1 is approved for release on 8 November 2026; publication is pending.** See the [release notes](docs/releases/0.1.1.md).
+Recorded: **8 November 2026**. **40/40 model types have passing primary-workflow records** under the MLX-LM-aligned functional standard. Each selected checkpoint is **SUPPORTED** for the operations below. **0.1.1 was approved on 8 November 2026 and is published on PyPI.** See the [release notes](docs/releases/0.1.1.md).
 
 The required checks are architecture/state correctness, real checkpoint load and task output, applicable public interfaces, regressions and distribution checks. MLX-LM does not prescribe a blanket experimental label or universal broad-reliability certification. Corpus accuracy and reference comparisons remain recorded diagnostics. See the [release guide](mlx-one_model_release_guide.md) for upstream sources and policy.
 

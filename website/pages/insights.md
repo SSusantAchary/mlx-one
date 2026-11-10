@@ -42,10 +42,9 @@ share one model type. Search by model, task or precision.
 **Supported** means the selected checkpoint passes native task execution and
 relevant interface checks, backed by model tests, regressions and packaging
 checks. Accuracy and speed remain measurements of the recorded workload.
-The availability label distinguishes the approved **0.1.1** release cohort from
-the ten additional source-checkout profiles. Those profiles pass the technical
-checks for their documented tasks; the next package release decision and
-publication are pending. [Install the source workflows](../../docs/models/batch-1-sub-6b/README.md#install-from-the-working-tree).
+The availability label reads the current package release decision, keeping
+approval and PyPI publication separate. All profiles are included in the approved **0.1.2** release;
+[the release record](../../docs/releases/0.1.2.json) tracks upload status. [Install the source workflows](../../docs/models/batch-1-sub-6b/README.md#install-from-the-working-tree).
 
 [Quality and scope limitations](../models/support.md#known-quality-and-scope-limitations)
 include Florence page OCR accuracy, NER sample accuracy, LFM speech precision and

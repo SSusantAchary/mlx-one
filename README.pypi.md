@@ -17,7 +17,7 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="https://github.com/SSusantAchary/mlx-one/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
-  <img src="https://img.shields.io/badge/0.1.1-release%20approved-15845d" alt="0.1.1 approved for release">
+  <img src="https://img.shields.io/badge/0.1.2-release%20approved-15845d" alt="0.1.2 approved for release">
 </p>
 
 [**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
@@ -94,12 +94,13 @@ and retained diagnostics are in the linked model guide and results.
 
 ### Release Record
 
-The current model set is available from the source checkout. The dated
-**0.1.1 release approval covers 40 model types**, reviewed on 8 November 2026;
-the ten additional workflows are technically ready for release within their
-documented limits. The next package release decision and publication are pending.
-See the [support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md)
-and [release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md).
+**0.1.2 is approved for publication on 10 November 2026**, including the ten
+additional workflows and all 45 architecture types in their documented scope.
+The [release record](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.json) tracks artifact publication
+separately. The previously published **0.1.1** release covers the original
+40-type cohort. See the [support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md),
+[0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md) and
+[0.1.1 release history](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md).
 
 <p align="center">
   <a href="https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md">
@@ -139,16 +140,16 @@ version. From a checkout of the current source, install the task dependencies:
 python -m pip install -e '.[server,vision,kokoro]'
 ```
 
-For the 0.1.1 release cohort, install from PyPI once it is published:
+Install or upgrade to 0.1.2 when its files are available on PyPI:
 
 ```bash
-python -m pip install "mlx-one==0.1.1"
+python -m pip install --upgrade "mlx-one==0.1.2"
 ```
 
 For the HTTP server, vision and OCR dependencies:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr]==0.1.1"
+python -m pip install --upgrade "mlx-one[server,vision,ocr,kokoro]==0.1.2"
 mlx-one --version
 ```
 
@@ -156,8 +157,8 @@ For optional dependencies, audio/video decoding requirements and tested
 constraints, see [getting started](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md) and the
 [dependency policy](https://github.com/SSusantAchary/mlx-one/blob/main/requirements/README.md). For editable development setup, use the
 [source installation](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md#source-installation-for-development).
-See the [0.1.1 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) for validation and
-[PyPI files](https://pypi.org/project/mlx-one/0.1.1/#files) for published artifacts.
+See the [0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md) for validation and
+[PyPI files](https://pypi.org/project/mlx-one/0.1.2/#files) for artifact availability.
 
 ### Load a text checkpoint and generate
 
@@ -570,7 +571,7 @@ and [Web UI guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/ui.md
 | Setup and examples | [Getting started](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md) |
 | Model families and guides | [Model index](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md), [candidate catalog](https://github.com/SSusantAchary/mlx-one/blob/main/docs/model-catalog.md) |
 | Verified checkpoint workflows | [Usage and limits](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/README.md), [validation results](https://github.com/SSusantAchary/mlx-one/blob/main/docs/qualification/batch-1-sub-6b/results.json), [engineering report](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/REPORT.md) |
-| Release history | [0.1.1 support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md), [0.1.1 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) |
+| Release history | [Support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md), [0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md), [0.1.1 release history](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) |
 | Qualification and checkpoints | [Admission policy](https://github.com/SSusantAchary/mlx-one/blob/main/docs/model-admission.md), [checkpoint inventory](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/inventory.md) |
 | Design and package ownership | [Architecture](https://github.com/SSusantAchary/mlx-one/blob/main/docs/architecture/index.md), [repository summary](https://github.com/SSusantAchary/mlx-one/blob/main/docs/REPOSITORY_SUMMARY.md) |
 | Python, CLI and HTTP | [API guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/api/index.md), [HTTP reference](https://github.com/SSusantAchary/mlx-one/blob/main/docs/api/openai-compatibility.md), [Web UI](https://github.com/SSusantAchary/mlx-one/blob/main/docs/ui.md) |
@@ -588,7 +589,7 @@ author = {Achary, S. Susant},
 title  = {mlx-one: Unified Native MLX Stack for Apple Silicon},
 year   = {2026},
 url    = {https://github.com/SSusantAchary/mlx-one},
-note   = {Version 0.1.1. Native GPU-accelerated machine learning workflows on Apple Silicon}
+note   = {Version 0.1.2. Native GPU-accelerated machine learning workflows on Apple Silicon}
 }
 ```
 

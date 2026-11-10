@@ -151,6 +151,19 @@ class DatasetTests(unittest.TestCase):
             self.assertEqual(row['month'], row['date'][:7])
             self.assertEqual(len(row['commit']), 40)
 
+    def test_current_package_approval_is_separate_from_qualification_snapshots(self):
+        support = self.data['support']
+        release = support['current_release']
+        self.assertEqual(release['version'], '0.1.2')
+        self.assertEqual(release['release_approval'], 'APPROVED')
+        self.assertEqual(release['registered_model_types'], support['supported'])
+        self.assertEqual(release['checkpoint_profile_count'], len(support['models']))
+        for row in support['models']:
+            self.assertEqual(row['package_release']['version'], release['version'])
+            self.assertEqual(row['package_release']['published'], release['published'])
+        for reference in release['support_catalogs']:
+            self.assertEqual(reference['sha256'], self.sources[reference['path']])
+
 
 if __name__ == '__main__':
     unittest.main()
