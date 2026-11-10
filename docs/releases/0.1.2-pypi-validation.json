@@ -1,0 +1,93 @@
+{
+  "version": "0.1.2",
+  "prepared_date": "2026-11-10",
+  "status": "PASS",
+  "publication_status": "BLOCKED_AUTHENTICATION",
+  "source_commit": "fe1a66a8fcd1d51ad88672cae8410af9b85a2319",
+  "source_base_commit": "57389c99ac53304a7ddb050be4eeea91dffddd9c",
+  "release_approval": "APPROVED",
+  "support": {
+    "native_model_types": 45,
+    "modalities": 7,
+    "checkpoint_profiles": 50,
+    "additional_checkpoint_profiles": 10
+  },
+  "artifacts": [
+    {
+      "filename": "mlx_one-0.1.2-py3-none-any.whl",
+      "path": "dist/pypi-0.1.2/mlx_one-0.1.2-py3-none-any.whl",
+      "bytes": 2383267,
+      "sha256": "fb367b2e4af597df47f92fb7f18cac1c0304173e0c2c03517cf3f97e9c0596da"
+    },
+    {
+      "filename": "mlx_one-0.1.2.tar.gz",
+      "path": "dist/pypi-0.1.2/mlx_one-0.1.2.tar.gz",
+      "bytes": 2181589,
+      "sha256": "23e821de7e4c02c1c027a3568ac0d0481000b1185bede4b3d9e5ff2058cf6801"
+    }
+  ],
+  "validation": {
+    "twine_strict": "PASS",
+    "payload_audit": "PASS",
+    "isolated_wheel": "PASS",
+    "installed_cli_version": "0.1.2",
+    "pip_check": "PASS",
+    "focused_tests_passed": 39,
+    "website_tests_passed": 29,
+    "website_html_pages": 71,
+    "website_links": 8347,
+    "website_errors": 0,
+    "documentation": {
+      "files": 60,
+      "local_links": 1020,
+      "external_urls": 76,
+      "python_examples": 45,
+      "errors": []
+    }
+  },
+  "functional_evidence_reused": "docs/qualification/batch-1-sub-6b/results.json",
+  "production_python_change": "Only __version__ 0.1.1 -> 0.1.2; native model/runtime equations unchanged",
+  "historical_manifest_change": "Only proposed_version changed to 0.1.2; archived statuses and diagnostics unchanged",
+  "model_downloads": "NONE",
+  "checks": {
+    "website_tests": {
+      "path": "docs/qualification/release-0.1.2/website_tests.log",
+      "sha256": "b58cb0406e4f1f94fc9b75438686550a28b19fd2c39eaec4b53ae9f5ecd15f0f"
+    },
+    "focused_tests": {
+      "path": "docs/qualification/release-0.1.2/focused_tests.log",
+      "sha256": "fa1803e0b5add4ecfc76b233fdb78b9cdf7175ef0a954182ebbb8a3dcda3ff5d"
+    },
+    "website_build": {
+      "path": "docs/qualification/release-0.1.2/website_build.log",
+      "sha256": "b45f48879130d7187a2d40f28abd6a7f359eb83dd487dd8d07c77a8851a84430"
+    },
+    "twine": {
+      "path": "docs/qualification/release-0.1.2/twine.log",
+      "sha256": "c6f554853dfc2cba3ddbf7b0c2d8c632b213817c9392eab4f4c0985446e7523f"
+    },
+    "package_audit": {
+      "path": "docs/qualification/release-0.1.2/package_audit.json",
+      "sha256": "df9a759a85e1bb0ce4b7fdcc0b99be9dcf9ae72c4637bbd4dcc2435a8d28f62e"
+    },
+    "installed_wheel": {
+      "path": "docs/qualification/release-0.1.2/installed_wheel.json",
+      "sha256": "18c54e713f1a3e7e2c5ea86cec8ad3e7d40dc48048f89192904c7d02aed8b5c6"
+    },
+    "documentation": {
+      "path": "docs/qualification/release-0.1.2/documentation.json",
+      "sha256": "5a2b84410051931fe5e8312391a441df06071b22f054273c7662aa4e2dbcd320"
+    },
+    "package_sources": {
+      "path": "docs/qualification/release-0.1.2/package-source-sha256.json",
+      "sha256": "fc781e3c85a255274e63ba85890090df175d531ea1a86c9af84b6b03c116f97d"
+    }
+  },
+  "publication_attempt": {
+    "date": "2026-11-10",
+    "result": "No artifact uploaded; noninteractive credential lookup failed before upload",
+    "reason": "No PyPI API token found; local environment does not support trusted publishing",
+    "log": "docs/qualification/release-0.1.2/upload.log",
+    "log_sha256": "4da53ba945163cee1b621cf3069d1e6077161582165250f86ce878be1b227c30"
+  }
+}

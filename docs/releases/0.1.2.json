@@ -4,7 +4,7 @@
   "release_approval": "APPROVED",
   "approval_date": "2026-11-10",
   "approval_source": "Maintainer instruction: the pypi can be upgrade to 0.1.2 and push new files",
-  "publication_status": "PENDING",
+  "publication_status": "BLOCKED_AUTHENTICATION",
   "published": false,
   "published_install_version": "0.1.1",
   "target_install_version": "0.1.2",
@@ -25,5 +25,6 @@
     "sha256": "a8c6a2eee02f7030f1d3c59bf9d25db6809fed219dbdce6050b8dff38456f14f"
   },
   "source_base_commit": "57389c9",
-  "scope": "Original 40-type functional cohort plus ten additional qualified checkpoint profiles, adding five native types; recorded task limits and failed optional diagnostics remain unchanged."
+  "scope": "Original 40-type functional cohort plus ten additional qualified checkpoint profiles, adding five native types; recorded task limits and failed optional diagnostics remain unchanged.",
+  "publication_blocker": "No PyPI API token is configured in this environment. Validated artifacts are prepared for maintainer upload."
 }
