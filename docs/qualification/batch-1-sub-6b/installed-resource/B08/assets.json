@@ -1,0 +1,36 @@
+{
+  "checkpoint": "hexgrad/Kokoro-82M",
+  "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+  "assets": [
+    {
+      "path": "config.json",
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f",
+      "bytes": 2351
+    },
+    {
+      "path": "kokoro-v1_0.pth",
+      "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+      "bytes": 327212226
+    },
+    {
+      "path": "voices/af_heart.pt",
+      "sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+      "bytes": 523425
+    },
+    {
+      "path": "native/config.json",
+      "sha256": "df78c95b1a9b39d86ca3e85300bd643e17ccca5867718cb779c3f57f65e19e05",
+      "bytes": 2866
+    },
+    {
+      "path": "native/model.safetensors",
+      "sha256": "4e84e5ffc4998533a3f6a8a16b1647d5bcea6441b205e96601e8ec1d9c6390cf",
+      "bytes": 327128216
+    },
+    {
+      "path": "native/voices/af_heart.safetensors",
+      "sha256": "2c1c733b0e6576c810e268d3e440c21dea4e0f0131a3ba4cfc98d7fe6136d094",
+      "bytes": 522320
+    }
+  ]
+}

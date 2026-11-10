@@ -89,7 +89,15 @@ class InferenceService:
                 self._task_actor=InferenceActor(self._batching_config)
             actor=self._task_actor
         if loader is None and not hasattr(model,"model"):
-            if task==TaskKind.VOICE_ACTIVITY_DETECTION:
+            if task==TaskKind.TEXT_TO_TEXT:
+                from mlx_one.seq2seq import load_seq2seq_model
+
+                loader=load_seq2seq_model
+            elif task==TaskKind.IMAGE_CLASSIFICATION:
+                from mlx_one.classification.image import load_image_classification_model
+
+                loader=load_image_classification_model
+            elif task==TaskKind.VOICE_ACTIVITY_DETECTION:
                 from mlx_one.audio.vad import load_vad_model
 
                 loader=load_vad_model
@@ -130,7 +138,8 @@ class InferenceService:
 
                 loader=load_retrieval_model
         lease=self.pool.acquire(name,lambda:loader(model,**settings) if loader else model,
-            estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters()) + (
+            estimated_bytes=estimate,measure=lambda b:array_nbytes(b.model.parameters())
+            + array_nbytes(getattr(b,"auxiliary_arrays",{})) + (
                 array_nbytes(b.codec.parameters()) + array_nbytes(getattr(b.codec, '_window', None))
                 if getattr(b, 'codec', None) is not None else 0))
         return actor,lease

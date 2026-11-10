@@ -1,0 +1,79 @@
+{
+  "id": "B06",
+  "checkpoint": "google/vit-base-patch16-224",
+  "revision": "3f49326eb077187dfe1c2a2bb15fbd74e6ab91e3",
+  "license": "apache-2.0",
+  "parameter_metadata": {
+    "parameters": {
+      "F32": 86567656
+    },
+    "total": 86567656
+  },
+  "metadata_sha256": {
+    "config.json": "abdf73cc4ce79495a83f32a8c9265daa7a1363f5a3efa4704c88a6e7f45ad19d",
+    "preprocessor_config.json": "90d1ae427c27d2b9dcb01f6a62ba96aa67aac2de1697c59cd212055b5035c4a2",
+    "README.md": "edb38cc47675c7320f41d9c9760bb0cc88c5820b482d87e1b5b6b5cc5459938d"
+  },
+  "files": {
+    ".gitattributes": {
+      "rfilename": ".gitattributes",
+      "blobId": "2514e63570ec0eb13d617d6a316ac52e9eed9746",
+      "size": 744
+    },
+    "README.md": {
+      "rfilename": "README.md",
+      "blobId": "550f72aac12a408fe77b7a2fdebc85057a77c0d1",
+      "size": 5688
+    },
+    "config.json": {
+      "rfilename": "config.json",
+      "blobId": "21c61d3f8f3e50137a8c5fdd5bc9b085e286315a",
+      "size": 69665
+    },
+    "flax_model.msgpack": {
+      "rfilename": "flax_model.msgpack",
+      "blobId": "5f079399d5c4a8af31f21a05ad6913ea1a04f532",
+      "size": 346277993,
+      "lfs": {
+        "sha256": "e0c809a1fe1d79c51c4da8a9ebd6c0923bac317ca469a33c6620977054149471",
+        "size": 346277993,
+        "pointerSize": 134
+      }
+    },
+    "model.safetensors": {
+      "rfilename": "model.safetensors",
+      "blobId": "d1e886a1fdb46f99c6cf9e603ed1c22fbf5c8453",
+      "size": 346293852,
+      "lfs": {
+        "sha256": "1cea07110a4a47edc51420b2dda6f3b8b58e7256e8f44b4ea6aa9696162ccb5d",
+        "size": 346293852,
+        "pointerSize": 134
+      }
+    },
+    "preprocessor_config.json": {
+      "rfilename": "preprocessor_config.json",
+      "blobId": "70fbc148eb26a06bac351d46fddc0a23037b4ce4",
+      "size": 160
+    },
+    "pytorch_model.bin": {
+      "rfilename": "pytorch_model.bin",
+      "blobId": "a74020ed0ffd32c10585c3c21885b1a9e7f97d53",
+      "size": 346351599,
+      "lfs": {
+        "sha256": "5f17067668129d23b52524f90a805e7d9914c276d90a59a13ebe81a09e40ceca",
+        "size": 346351599,
+        "pointerSize": 134
+      }
+    },
+    "tf_model.h5": {
+      "rfilename": "tf_model.h5",
+      "blobId": "7665bbafc2d89b40ba2fa854a124762bfa528ccb",
+      "size": 346537664,
+      "lfs": {
+        "sha256": "30f9125423060139b80ddae09daa8a1b612eb1eda8fc34a0b58cdfe920cbbc0f",
+        "size": 346537664,
+        "pointerSize": 134
+      }
+    }
+  }
+}

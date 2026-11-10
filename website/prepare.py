@@ -21,6 +21,10 @@ REPOSITORY = "https://github.com/SSusantAchary/mlx-one"
 
 # One destination per maintained source. New model-family READMEs are discovered below.
 PAGES = {
+    "docs/models/batch-1-sub-6b/README.md": "models/workflows/index.md",
+    "docs/models/batch-1-sub-6b/references.md": "models/workflows/references.md",
+    "docs/models/batch-1-sub-6b/REPORT.md": "models/workflows/report.md",
+    "mlx_one_development_guidelines_v1.0.md": "reference/development-guidelines.md",
     "website/pages/index.md": "index.md",
     "website/pages/insights.md": "insights/index.md",
     "status_models_testing.md": "models/support.md",

@@ -1,0 +1,30 @@
+{
+  "task": "embedding",
+  "query": "What is the capital of France?",
+  "queries": [
+    "What is the capital of France?",
+    "Quelle est la capitale de la France?",
+    "Was ist die Hauptstadt von Frankreich?"
+  ],
+  "documents": [
+    "The capital of France is Paris.",
+    "Bananas are yellow fruit.",
+    "A compiler translates computer programs.",
+    "Berlin is the capital of Germany.",
+    "Madrid is the capital of Spain."
+  ],
+  "max_length": 512,
+  "pooling": "mean",
+  "normalize": true,
+  "first": [
+    "query: What is the capital of France?",
+    "query: Quelle est la capitale de la France?",
+    "query: Was ist die Hauptstadt von Frankreich?",
+    "passage: The capital of France is Paris.",
+    "passage: Bananas are yellow fruit.",
+    "passage: A compiler translates computer programs.",
+    "passage: Berlin is the capital of Germany.",
+    "passage: Madrid is the capital of Spain."
+  ],
+  "second": null
+}

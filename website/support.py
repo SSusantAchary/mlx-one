@@ -12,6 +12,8 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = "src/mlx_one/data/model_support_release_20261108.json"
 RELEASE = "docs/releases/0.1.1.json"
+CHECKPOINT_CATALOG = "src/mlx_one/data/batch_1_sub_6b.json"
+CHECKPOINT_RESULTS = "docs/qualification/batch-1-sub-6b/results.json"
 
 
 def registration_history():
@@ -110,6 +112,56 @@ def verified_result(root, claim, record):
     return result
 
 
+def verified_checkpoint(root, claim, saved, record):
+    """Verify a current-source profile while retaining failed diagnostic evidence."""
+    identity = ("id", "model_type", "model_id", "revision", "task", "precision",
+                "status", "admission_tier", "release_approval", "evidence", "numerical_status")
+    if any(claim.get(key) != saved.get(key) for key in identity):
+        raise ValueError("Checkpoint catalog differs from its saved result")
+    if claim["status"] != "SUPPORTED" or any(
+        saved.get("gates", {}).get(f"G{i}") != "PASS" for i in range(5)
+    ):
+        raise ValueError("Checkpoint has an incomplete functional gate")
+
+    def receipt(reference):
+        path = (root / reference["path"]).resolve()
+        if not path.is_relative_to(root.resolve()):
+            raise ValueError("Checkpoint evidence leaves the repository")
+        raw = path.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != reference["sha256"]:
+            raise ValueError("Checkpoint evidence checksum mismatch")
+        record(path)
+        return json.loads(raw)
+
+    native = receipt(claim["evidence"])
+    if native.get("installed_distribution", {}).get("status") != "PASS" or any(
+        native.get("interfaces", {}).get(key, {}).get("status") != "PASS"
+        for key in ("cli", "engine", "http")
+    ) or saved.get("interfaces", {}).get("python", {}).get("status") != "PASS":
+        raise ValueError("Checkpoint installed execution or interface mismatch")
+    checks = native.get("checks", {})
+    failures = {key for key, value in checks.items() if value.get("status") != "PASS"}
+    if native.get("status") == "PASS" and checks and not failures:
+        return native
+    # ViT classification was accepted with a separate checksum-bound decision.
+    # Its fixed hidden-state diagnostic is never rewritten or treated as passed.
+    if claim["model_type"] != "vit" or failures != {"hidden"}:
+        raise ValueError("Checkpoint native execution has an unaccepted failure")
+    if not all(checks.get(key, {}).get("status") == "PASS" for key in (
+        "processor", "logits", "top5_parity", "public_pipeline", "fp64_rounding_diagnostic"
+    )):
+        raise ValueError("ViT classification checks are incomplete")
+    if not claim.get("functional_decision") or claim["functional_decision"] != saved.get("functional_decision"):
+        raise ValueError("ViT needs its recorded functional decision")
+    decision = receipt(claim["functional_decision"])
+    if (decision.get("status") != "PASS_FUNCTIONAL"
+        or decision.get("fixed_1e4_hidden_diagnostic") != "FAIL"
+        or decision.get("installed_interfaces_evidence") != claim["evidence"]["path"]
+        or decision.get("installed_interfaces_status") != "PASS"):
+        raise ValueError("ViT functional decision does not match the installed result")
+    return native
+
+
 def current_support(record, coverage):
     catalog_path = ROOT / CATALOG
     release_path = ROOT / RELEASE
@@ -126,8 +178,8 @@ def current_support(record, coverage):
         raise ValueError("Release decision does not match the support catalog")
     expected = {name for group in coverage["groups"] for name in group["model_types"]}
     actual = [row["model_type"] for row in catalog["models"]]
-    if len(actual) != len(set(actual)) or set(actual) != expected:
-        raise ValueError("Support catalog must cover the registered model types exactly once")
+    if len(actual) != len(set(actual)) or not set(actual) <= expected:
+        raise ValueError("Release support catalog contains duplicates or unregistered model types")
     if catalog["model_type_count"] != len(actual):
         raise ValueError("Support catalog count differs from its records")
     groups = {name: group for group in coverage["groups"] for name in group["model_types"]}
@@ -143,6 +195,7 @@ def current_support(record, coverage):
                 "modality_id": groups[claim["model_type"]]["id"],
                 "task": ", ".join(claim["primary_operations"]),
                 "recorded_date": release["support_recorded_date"],
+                "availability": "0.1.1 approved release cohort",
                 "quality_status": result.get("quality_status"),
                 "interfaces": {
                     key: (value.get("status") if isinstance(value, dict) else value)
@@ -150,12 +203,53 @@ def current_support(record, coverage):
                 },
             }
         )
+    approved_models = list(models)
+    checkpoint_catalog = json.loads((ROOT / CHECKPOINT_CATALOG).read_text())
+    checkpoint_results = json.loads((ROOT / CHECKPOINT_RESULTS).read_text())
+    record(ROOT / CHECKPOINT_CATALOG)
+    record(ROOT / CHECKPOINT_RESULTS)
+    saved = {row["id"]: row for row in checkpoint_results["models"]}
+    profiles = checkpoint_catalog["models"]
+    if (checkpoint_catalog["checkpoint_count"] != len(profiles)
+        or len(saved) != len(profiles)
+        or {row["id"] for row in profiles} != set(saved)):
+        raise ValueError("Checkpoint catalog count differs from its saved results")
+    for claim in profiles:
+        if claim["model_type"] not in expected:
+            raise ValueError("Checkpoint profile has an unregistered model type")
+        native = verified_checkpoint(ROOT, claim, saved[claim["id"]], record)
+        models.append({
+            **claim,
+            "checkpoint": claim["model_id"],
+            "evidence": claim["evidence"]["path"],
+            "evidence_sha256": claim["evidence"]["sha256"],
+            "modality": groups[claim["model_type"]]["title"],
+            "modality_id": groups[claim["model_type"]]["id"],
+            "primary_operations": [claim["task"]],
+            "recorded_date": checkpoint_catalog["recorded_date"],
+            "availability": "Current source; next package release pending",
+            "execution_dtype": "float32",
+            "quality_status": native.get("quality", {}).get("status", claim["numerical_status"]),
+            "interfaces": {"python": "PASS", **{
+                key: value["status"] for key, value in native["interfaces"].items()
+            }},
+            "diagnostics": {key: value["status"] for key, value in native["checks"].items()},
+        })
+    identities = [(row["model_type"], row["checkpoint"], row["revision"], row["task"], row["precision"])
+                  for row in models]
+    if len(set(identities)) != len(models):
+        raise ValueError("Duplicate supported checkpoint profile")
+    supported_types = {row["model_type"] for row in models}
     for group in coverage["groups"]:
-        group["supported"] = sum(row["model_type"] in group["model_types"] for row in models)
+        group["supported"] = len(supported_types.intersection(group["model_types"]))
     return {
         "models": models,
-        "model_types": len(models),
-        "supported": len(models),
+        "approved_release_models": approved_models,
+        "model_types": coverage["total_model_types"],
+        "approved_release_model_types": len(approved_models),
+        "supported": len(supported_types),
+        "checkpoint_profiles": len(models),
+        "checkpoint_catalog": CHECKPOINT_CATALOG,
         "modalities": len(coverage["groups"]),
         "standard": catalog["support_standard"],
         "catalog": CATALOG,
@@ -163,12 +257,19 @@ def current_support(record, coverage):
         "history": [
             {
                 "date": release["support_recorded_date"],
-                "supported": len(models),
+                "supported": len(approved_models),
                 "source": CATALOG,
                 "basis": "Dated real-checkpoint campaign records",
-            }
+            },
+            {
+                "date": checkpoint_catalog["recorded_date"],
+                "supported": len(supported_types),
+                "source": CHECKPOINT_CATALOG,
+                "basis": "Verified current-source checkpoints plus the dated release cohort",
+            },
         ],
-        "history_note": "The 8 November campaign records 40 selected primary workflows. "
+        "history_note": "The 8 November record covers 40 types; the 10 November record "
+        "adds five types and ten checkpoint profiles. Counts are distinct architecture types. "
         "The earlier 23/7/10 audit used a different evidence policy and "
         "is not plotted as a comparable admission series.",
     }
@@ -176,12 +277,12 @@ def current_support(record, coverage):
 
 def support_table(data):
     lines = [
-        "| Model type / checkpoint | Primary operations | Precision | Status / evidence |",
-        "| --- | --- | --- | --- |",
+        "| Model type / checkpoint | Primary operations | Precision | Status / evidence | Availability |",
+        "| --- | --- | --- | --- | --- |",
     ]
     for row in data["support"]["models"]:
         lines.append(
             f"| `{row['model_type']}` — `{row['checkpoint']}` | {row['task']} | "
-            f"{row['precision']} | [Supported]({row['evidence']}) |"
+            f"{row['precision']} | [Supported]({row['evidence']}) | {row['availability']} |"
         )
     return "\n".join(lines)

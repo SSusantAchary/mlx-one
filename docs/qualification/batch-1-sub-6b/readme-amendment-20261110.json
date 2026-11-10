@@ -1,0 +1,27 @@
+{
+  "change": "README presentation organized by models and capabilities; removed campaign labels from model sections",
+  "date": "2026-11-10",
+  "files": {
+    "README.md": {
+      "previous_verified_sha256": "404b8da2e65002047d69baa83386f8af1598dd61d1356058d8b07182659108de",
+      "current_sha256": "dadfa43471b63a18c78d5d8c3834c9ed8031f7c83bd7df8d233e5ca69a285724"
+    },
+    "README.pypi.md": {
+      "previous_verified_sha256": "b27c319c90b5ba9473da82cdfba89da3ecc33e0b38714b88f301ff68fc7c2237",
+      "current_sha256": "f7aff5719e918997c0aaac754c44c14742e19535f6ccf420b379073d6d3f1628"
+    }
+  },
+  "model_runtime_sources": "UNCHANGED",
+  "documentation_checks": {
+    "files": 54,
+    "local_links": 929,
+    "external_urls": 74,
+    "python_examples": 38,
+    "errors": []
+  },
+  "strict_site_build": "PASS",
+  "generated_benchmark_blocks": "UNCHANGED",
+  "packaged_description": "SYNCED",
+  "model_downloads": "NONE",
+  "artifact_note": "Earlier wheel identities and their evidence remain unchanged; no new artifact was built for this documentation-only amendment."
+}

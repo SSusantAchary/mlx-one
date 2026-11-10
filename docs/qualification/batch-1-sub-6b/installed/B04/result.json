@@ -1,0 +1,85 @@
+{
+  "id": "B04",
+  "checkpoint": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "license": "apache-2.0",
+  "assets": [
+    {
+      "path": "1_Pooling/config.json",
+      "bytes": 190,
+      "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23",
+      "pinned_remote_sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23"
+    },
+    {
+      "path": "config.json",
+      "bytes": 645,
+      "sha256": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e",
+      "pinned_remote_sha256": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e"
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 122,
+      "sha256": "b8c64b5cece00d8424b4896ea75b512b6008576088497609dfeb6bd63e6d36b8",
+      "pinned_remote_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 470641600,
+      "sha256": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b",
+      "pinned_remote_sha256": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 229,
+      "sha256": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460",
+      "pinned_remote_sha256": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460"
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 53,
+      "sha256": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f",
+      "pinned_remote_sha256": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f"
+    },
+    {
+      "path": "sentencepiece.bpe.model",
+      "bytes": 5069051,
+      "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+      "pinned_remote_sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 239,
+      "sha256": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d",
+      "pinned_remote_sha256": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 9081518,
+      "sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8",
+      "pinned_remote_sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 526,
+      "sha256": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b",
+      "pinned_remote_sha256": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b"
+    },
+    {
+      "path": "unigram.json",
+      "bytes": 14763234,
+      "sha256": "71b44701d7efd054205115acfa6ef126c5d2f84bd3affe0c59e48163674d19a6",
+      "pinned_remote_sha256": "71b44701d7efd054205115acfa6ef126c5d2f84bd3affe0c59e48163674d19a6"
+    }
+  ],
+  "status": "VALIDATED_SCOPED",
+  "reference_exit_code": 0,
+  "native_exit_code": 0,
+  "reference": {
+    "transformers": "4.40.2",
+    "torch": "2.15.0",
+    "source_module": "transformers.models.bert.modeling_bert",
+    "source_sha256": "1f0f788f36652a3df7a18cf5fd5142279b38f8cd1fb8cd907f11fd8c785ded18",
+    "output_sha256": "02839a6c25f043404e6ea58db84631f94fecd92833b7752dc115b7f983f30dbf",
+    "parameter_count": 117653760
+  }
+}

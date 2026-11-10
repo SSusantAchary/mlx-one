@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "checks": {
+    "input_ids": {
+      "status": "PASS",
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0
+    },
+    "attention_mask": {
+      "status": "PASS",
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0
+    },
+    "encoder_hidden": {
+      "status": "PASS",
+      "max_abs_error": 7.152557373046875e-07,
+      "mean_abs_error": 3.545250493175445e-08
+    },
+    "teacher_forced_logits": {
+      "status": "PASS",
+      "max_abs_error": 3.24249267578125e-05,
+      "mean_abs_error": 3.4452107229299145e-06
+    },
+    "greedy_generation": {
+      "status": "PASS",
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0
+    },
+    "public_pipeline": {
+      "status": "PASS"
+    },
+    "runtime_independence": {
+      "status": "PASS",
+      "imported": []
+    }
+  },
+  "load_seconds": 0.22388091598986648,
+  "benchmark_samples": [
+    {
+      "seconds": 0.03365120801026933,
+      "emitted_tokens": 14
+    },
+    {
+      "seconds": 0.0362362920132,
+      "emitted_tokens": 14
+    },
+    {
+      "seconds": 0.04830662501626648,
+      "emitted_tokens": 14
+    },
+    {
+      "seconds": 0.09435383300296962,
+      "emitted_tokens": 14
+    },
+    {
+      "seconds": 0.10720195798785426,
+      "emitted_tokens": 14
+    },
+    {
+      "seconds": 0.11685354099608958,
+      "emitted_tokens": 14
+    }
+  ],
+  "breakdown": {
+    "encoder_seconds": 0.00749474999611266,
+    "actual_encoder_tokens": 24,
+    "first_decoder_token_seconds": 0.013131375017110258,
+    "cache": "none; bounded decoder prefix recomputation; encoder reused"
+  },
+  "example": {
+    "inputs": [
+      "translate English to German: The house is wonderful.",
+      "translate English to French: The book is on the table."
+    ],
+    "texts": [
+      "Das Haus ist wunderbar.",
+      "Le livre est sur la table."
+    ],
+    "token_ids": [
+      [
+        644,
+        4598,
+        229,
+        19250,
+        5,
+        1
+      ],
+      [
+        312,
+        6874,
+        259,
+        244,
+        50,
+        953,
+        5,
+        1
+      ]
+    ],
+    "finish_reasons": [
+      "eos",
+      "eos"
+    ],
+    "model": "<campaign-work>/owned/B05",
+    "revision": null,
+    "task": "text-to-text-generation"
+  },
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "peak_mlx_bytes": 254931858
+}

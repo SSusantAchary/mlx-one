@@ -1,0 +1,4 @@
+{
+  "superseded": "distribution-before-report-count-fix.json",
+  "reason": "The exact 45-type registry assertion passed, but the reported count used a shadowed tensor variable and incorrectly printed 2. The final verifier uses the preserved registry list and reruns all assertions."
+}

@@ -1,0 +1,2095 @@
+{
+  "schema_version": 1,
+  "campaign": "batch-1-sub-6b",
+  "recorded_date": "2026-11-10",
+  "checkpoint_count": 10,
+  "added_architecture_types": 5,
+  "registered_model_types": 45,
+  "support_standard": "mlx-lm-aligned-functional-v1",
+  "release_approval": "NOT_REQUESTED",
+  "note": "Development checkpoint support; the dated 40-type 0.1.1 approval is unchanged.",
+  "models": [
+    {
+      "id": "B01",
+      "model_type": "bert",
+      "model_id": "cross-encoder/ms-marco-MiniLM-L6-v2",
+      "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+      "license": "apache-2.0",
+      "task": "reranking",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 22713601,
+      "native_parameter_count": 22713601,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "assets": [
+        {
+          "path": "config.json",
+          "bytes": 794,
+          "sha256": "380e02c93f431831be65d99a4e7e5f67c133985bf2e77d9d4eba46847190bacc",
+          "pinned_remote_sha256": "380e02c93f431831be65d99a4e7e5f67c133985bf2e77d9d4eba46847190bacc"
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 90870598,
+          "sha256": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae",
+          "pinned_remote_sha256": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 132,
+          "sha256": "3c3507f36dff57bce437223db3b3081d1e2b52ec3e56ee55438193ecb2c94dd6",
+          "pinned_remote_sha256": "3c3507f36dff57bce437223db3b3081d1e2b52ec3e56ee55438193ecb2c94dd6"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 711396,
+          "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 1330,
+          "sha256": "a5c2e5a7b1a29a0702cd28c08a399b5ecc110c263009d17f7e3b415f25905fd8",
+          "pinned_remote_sha256": "a5c2e5a7b1a29a0702cd28c08a399b5ecc110c263009d17f7e3b415f25905fd8"
+        },
+        {
+          "path": "vocab.txt",
+          "bytes": 231508,
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "pinned_remote_sha256": null
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B01/native.json",
+        "sha256": "37f111d5abab85c01aa486df03bbe80cb8c28ce6140c3aa0c5fe061c9c6b3328"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B01/reference.json",
+        "sha256": "1226a1174951592e799e82deaf3d8fd1132bc13e906c2d5af8f6c0a9e44ab0d9"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B01/cleanup.json",
+        "sha256": "964afeaf6134511d3065f48d08b03b1c147549af5e505e080c3045c3966e92fc"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "token_type_ids": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 9.5367431640625e-07,
+          "mean_abs_error": 2.7707757865869098e-08,
+          "max_relative_error": 0.0008191742817871273,
+          "cosine_similarity": 1.0
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 2.6226043701171875e-06,
+          "mean_abs_error": 2.4802352527331095e-07,
+          "max_relative_error": 0.002797153778374195,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 4.0531158447265625e-06,
+          "mean_abs_error": 2.1827320040301856e-07,
+          "max_relative_error": 0.10508483648300171,
+          "cosine_similarity": 0.9999999403953552
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 3.814697265625e-06,
+          "mean_abs_error": 1.23977656585339e-06,
+          "max_relative_error": 1.398123572471377e-06,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 3.814697265625e-06,
+          "mean_abs_error": 1.239776611328125e-06,
+          "max_relative_error": 1.3981235434392615e-06,
+          "cosine_similarity": 1.0000000652121719
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          3,
+          4,
+          1,
+          2
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0
+      },
+      "known_limitations": [
+        "512 tokens including pair specials; scalar logit and separate sigmoid",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B02",
+      "model_type": "bert",
+      "model_id": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "license": "mit",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 33360000,
+      "native_parameter_count": 33212160,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "assets": [
+        {
+          "path": "1_Pooling/config.json",
+          "bytes": 190,
+          "sha256": "d1caf60c96f5fba2157c0c26b76d80818fad6cf0b8eb5e73ec372ff9818eba5c",
+          "pinned_remote_sha256": "d1caf60c96f5fba2157c0c26b76d80818fad6cf0b8eb5e73ec372ff9818eba5c"
+        },
+        {
+          "path": "config.json",
+          "bytes": 743,
+          "sha256": "094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750",
+          "pinned_remote_sha256": "094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750"
+        },
+        {
+          "path": "config_sentence_transformers.json",
+          "bytes": 124,
+          "sha256": "940d5f50db195fa6e5e6a4f122c095f77880de259d74b14a65779ed48bdd7c56",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 133466304,
+          "sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad",
+          "pinned_remote_sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad"
+        },
+        {
+          "path": "modules.json",
+          "bytes": 349,
+          "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+          "pinned_remote_sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf"
+        },
+        {
+          "path": "sentence_bert_config.json",
+          "bytes": 52,
+          "sha256": "84e39fda68ccbff05bfa723ae9c0e70e23e2ec373b76e0f8c6e71af72a693cbf",
+          "pinned_remote_sha256": "84e39fda68ccbff05bfa723ae9c0e70e23e2ec373b76e0f8c6e71af72a693cbf"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 125,
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "pinned_remote_sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 711396,
+          "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 366,
+          "sha256": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3",
+          "pinned_remote_sha256": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3"
+        },
+        {
+          "path": "vocab.txt",
+          "bytes": 231508,
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "pinned_remote_sha256": null
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B02/native.json",
+        "sha256": "aa9e7f13febb350106e4c6dd58d8fc310c599e1c059ac7133c20508634519e10"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B02/reference.json",
+        "sha256": "1e48b09ef59a19b3e48b38a969507444f5362e2cd6879f36e1a1cebfaea2ef14"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B02/cleanup.json",
+        "sha256": "6e607d08a5e394ff5e8cf2f08db72db943ed56ca563ddd82bf988404b7967e36"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "token_type_ids": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 9.5367431640625e-07,
+          "mean_abs_error": 1.5075114490059605e-08,
+          "max_relative_error": 0.00025475543225184083,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 2.86102294921875e-06,
+          "mean_abs_error": 2.3790974523762998e-07,
+          "max_relative_error": 0.04308058321475983,
+          "cosine_similarity": 1.0
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 3.814697265625e-06,
+          "mean_abs_error": 5.018160891268053e-07,
+          "max_relative_error": 0.04600510746240616,
+          "cosine_similarity": 0.9999998807907104
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 3.5762786865234375e-07,
+          "mean_abs_error": 5.171547456939152e-08,
+          "max_relative_error": 0.004104953724890947,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 3.5762786865234375e-07,
+          "mean_abs_error": 5.166285059014323e-08,
+          "max_relative_error": 0.0031758962120164336,
+          "cosine_similarity": 1.0000000632059767
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          4,
+          3,
+          2,
+          1
+        ],
+        "similarities": [
+          0.8485631998758618,
+          0.30194430278076195,
+          0.35273030271564876,
+          0.645310341981988,
+          0.6727580763960059
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0
+      },
+      "known_limitations": [
+        "384-D CLS + L2; 512 tokens; no default query instruction",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B03",
+      "model_type": "xlm-roberta",
+      "model_id": "BAAI/bge-m3",
+      "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+      "license": "mit",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32 backbone / FP16 auxiliary heads",
+      "source_parameter_count": 566705152,
+      "native_parameter_count": 567755777,
+      "native_module": "mlx_one.models.embeddings.xlm_roberta",
+      "assets": [
+        {
+          "path": "1_Pooling/config.json",
+          "bytes": 191,
+          "sha256": "e54c164a07274f2eb45bb724f54a79d1efcc90c41573887cd9a29aeee0597352",
+          "pinned_remote_sha256": "e54c164a07274f2eb45bb724f54a79d1efcc90c41573887cd9a29aeee0597352"
+        },
+        {
+          "path": "colbert_linear.pt",
+          "bytes": 2100674,
+          "sha256": "19bfbae397c2b7524158c919d0e9b19393c5639d098f0a66932c91ed8f5f9abb",
+          "pinned_remote_sha256": "19bfbae397c2b7524158c919d0e9b19393c5639d098f0a66932c91ed8f5f9abb"
+        },
+        {
+          "path": "config.json",
+          "bytes": 687,
+          "sha256": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa",
+          "pinned_remote_sha256": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa"
+        },
+        {
+          "path": "config_sentence_transformers.json",
+          "bytes": 123,
+          "sha256": "1eef72430e7194a1e59680e635aed81ffa083f05668dbc5bb1c56c04c0999c38",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "modules.json",
+          "bytes": 349,
+          "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+          "pinned_remote_sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf"
+        },
+        {
+          "path": "pytorch_model.bin",
+          "bytes": 2271145830,
+          "sha256": "b5e0ce3470abf5ef3831aa1bd5553b486803e83251590ab7ff35a117cf6aad38",
+          "pinned_remote_sha256": "b5e0ce3470abf5ef3831aa1bd5553b486803e83251590ab7ff35a117cf6aad38"
+        },
+        {
+          "path": "sentence_bert_config.json",
+          "bytes": 54,
+          "sha256": "eb9b44b13c0f52a3b3685c3b1cbdea1ba8b04bea123b98f61610048940776eb1",
+          "pinned_remote_sha256": "eb9b44b13c0f52a3b3685c3b1cbdea1ba8b04bea123b98f61610048940776eb1"
+        },
+        {
+          "path": "sentencepiece.bpe.model",
+          "bytes": 5069051,
+          "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+          "pinned_remote_sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+        },
+        {
+          "path": "sparse_linear.pt",
+          "bytes": 3516,
+          "sha256": "45c93804d2142b8f6d7ec6914ae23a1eee9c6a1d27d83d908a20d2afb3595ad9",
+          "pinned_remote_sha256": "45c93804d2142b8f6d7ec6914ae23a1eee9c6a1d27d83d908a20d2afb3595ad9"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 964,
+          "sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+          "pinned_remote_sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 17098108,
+          "sha256": "21106b6d7dab2952c1d496fb21d5dc9db75c28ed361a05f5020bbba27810dd08",
+          "pinned_remote_sha256": "21106b6d7dab2952c1d496fb21d5dc9db75c28ed361a05f5020bbba27810dd08"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 444,
+          "sha256": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4",
+          "pinned_remote_sha256": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4"
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B03/native.json",
+        "sha256": "68c6c03226a7dc0655d8b619419e1d7b123e97a8e4e70ae79ef69ac4065a366b"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B03/reference.json",
+        "sha256": "dd0e8bffa25254ddfaab1727ccb2420145d959801271daae241bcc4876c08a28"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B03/cleanup.json",
+        "sha256": "f7fe507284ec8da5464f31b43196db5dbdd27885cdaadf4fa80ba692f3a12af4"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 9.5367431640625e-07,
+          "mean_abs_error": 3.0019297270200695e-08,
+          "max_relative_error": 0.0010480183409526944,
+          "cosine_similarity": 1.0
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 1.33514404296875e-05,
+          "mean_abs_error": 4.108295001969964e-07,
+          "max_relative_error": 0.033018842339515686,
+          "cosine_similarity": 0.9999999403953552
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 3.454089164733887e-05,
+          "mean_abs_error": 1.8580893765829387e-06,
+          "max_relative_error": 0.06198370084166527,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 3.203749656677246e-07,
+          "mean_abs_error": 6.399720575700485e-08,
+          "max_relative_error": 0.004512088838964701,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "learned_sparse_weights": {
+          "status": "PASS",
+          "max_abs_error": 6.556510925292969e-07,
+          "mean_abs_error": 2.114525585739102e-07,
+          "max_relative_error": 9.813035831029993e-06,
+          "cosine_similarity": 0.9999999403953552
+        },
+        "colbert_embeddings": {
+          "status": "PASS",
+          "max_abs_error": 4.731118679046631e-07,
+          "mean_abs_error": 6.163470800402138e-08,
+          "max_relative_error": 0.0649452656507492,
+          "cosine_similarity": 0.9999998807907104
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 3.2782554626464844e-07,
+          "mean_abs_error": 6.37822952787026e-08,
+          "max_relative_error": 0.003991419064979876,
+          "cosine_similarity": 1.0000000234946134
+        },
+        "hybrid_ranking": {
+          "status": "PASS",
+          "scores": [
+            {
+              "index": 0,
+              "dense": 0.7948678597387534,
+              "sparse": 0.23317592440410595,
+              "colbert": 0.8405363383276927,
+              "score": 1.7053569753876778
+            },
+            {
+              "index": 4,
+              "dense": 0.5969639628991548,
+              "sparse": 0.1394830756821035,
+              "colbert": 0.5767793335927863,
+              "score": 1.2155882191965721
+            },
+            {
+              "index": 3,
+              "dense": 0.5750086790772576,
+              "sparse": 0.13887749138923,
+              "colbert": 0.5406711692712081,
+              "score": 1.1573430957652346
+            },
+            {
+              "index": 1,
+              "dense": 0.36099721484908187,
+              "sparse": 0.0,
+              "colbert": 0.38448632788427634,
+              "score": 0.7454835427333582
+            },
+            {
+              "index": 2,
+              "dense": 0.2736608014362712,
+              "sparse": 0.0,
+              "colbert": 0.3471530301556691,
+              "score": 0.6208138315919403
+            }
+          ]
+        },
+        "sparse_special_filter": {
+          "status": "PASS"
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          4,
+          3,
+          1,
+          2
+        ],
+        "similarities": [
+          0.794867803881661,
+          0.3609972593180137,
+          0.27366077522834426,
+          0.5750085428554191,
+          0.5969639675550061
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0,
+        "per_mode_rankings": {
+          "dense": [
+            0,
+            4,
+            3,
+            1,
+            2
+          ],
+          "sparse": [
+            0,
+            4,
+            3,
+            1,
+            2
+          ],
+          "colbert": [
+            0,
+            4,
+            3,
+            1,
+            2
+          ],
+          "score": [
+            0,
+            4,
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "known_limitations": [
+        "Dense/sparse/ColBERT; fixed-example reference; execution/timing through 512 tokens",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE",
+      "modes": {
+        "dense": "PASS",
+        "learned_sparse": "PASS",
+        "colbert": "PASS",
+        "hybrid": "PASS"
+      },
+      "conversion": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B03/conversion.json",
+        "sha256": "e698e71dea546a2c4496a15f8445561cc6b97d410f5e5a782f684132d5446145"
+      }
+    },
+    {
+      "id": "B04",
+      "model_type": "bert",
+      "model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+      "license": "apache-2.0",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 117653760,
+      "native_parameter_count": 117505920,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "assets": [
+        {
+          "path": "1_Pooling/config.json",
+          "bytes": 190,
+          "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23",
+          "pinned_remote_sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23"
+        },
+        {
+          "path": "config.json",
+          "bytes": 645,
+          "sha256": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e",
+          "pinned_remote_sha256": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e"
+        },
+        {
+          "path": "config_sentence_transformers.json",
+          "bytes": 122,
+          "sha256": "b8c64b5cece00d8424b4896ea75b512b6008576088497609dfeb6bd63e6d36b8",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 470641600,
+          "sha256": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b",
+          "pinned_remote_sha256": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b"
+        },
+        {
+          "path": "modules.json",
+          "bytes": 229,
+          "sha256": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460",
+          "pinned_remote_sha256": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460"
+        },
+        {
+          "path": "sentence_bert_config.json",
+          "bytes": 53,
+          "sha256": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f",
+          "pinned_remote_sha256": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f"
+        },
+        {
+          "path": "sentencepiece.bpe.model",
+          "bytes": 5069051,
+          "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+          "pinned_remote_sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 239,
+          "sha256": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d",
+          "pinned_remote_sha256": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 9081518,
+          "sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8",
+          "pinned_remote_sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 526,
+          "sha256": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b",
+          "pinned_remote_sha256": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b"
+        },
+        {
+          "path": "unigram.json",
+          "bytes": 14763234,
+          "sha256": "71b44701d7efd054205115acfa6ef126c5d2f84bd3affe0c59e48163674d19a6",
+          "pinned_remote_sha256": "71b44701d7efd054205115acfa6ef126c5d2f84bd3affe0c59e48163674d19a6"
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B04/native.json",
+        "sha256": "d4fead3f467a40d8d65487ffb847d8238277e133a847ccc32a1850ce0c5682d7"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B04/reference.json",
+        "sha256": "715261f846b3c0ae06ea284dc97791d23a6d9f5255b0103a9bfef68aa324990f"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B04/cleanup.json",
+        "sha256": "b890b31b7cd2df724737af3b003aedfcb6d7cb957aa071897f296a23ec30be3e"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "token_type_ids": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 9.5367431640625e-07,
+          "mean_abs_error": 2.8698654119807543e-08,
+          "max_relative_error": 0.0007000734913162887,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 1.9073486328125e-06,
+          "mean_abs_error": 2.093655950829998e-07,
+          "max_relative_error": 0.02477801963686943,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 3.159046173095703e-06,
+          "mean_abs_error": 2.688989013677201e-07,
+          "max_relative_error": 0.00874349009245634,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 9.238719940185547e-07,
+          "mean_abs_error": 1.6733285690406774e-07,
+          "max_relative_error": 0.004119407385587692,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 9.685754776000977e-07,
+          "mean_abs_error": 1.657400877282574e-07,
+          "max_relative_error": 0.0054166498591074995,
+          "cosine_similarity": 1.0000000612592665
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          4,
+          3,
+          1,
+          2
+        ],
+        "similarities": [
+          0.8302618176208905,
+          0.10472419997955655,
+          0.009525685807929823,
+          0.4336701316489714,
+          0.567164208383276
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0
+      },
+      "known_limitations": [
+        "384-D masked mean without normalization; 128-token sentence limit",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B05",
+      "model_type": "t5",
+      "model_id": "google-t5/t5-small",
+      "revision": "df1b051c49625cf57a3d0d8d3863ed4d13564fe4",
+      "license": "apache-2.0",
+      "task": "text-to-text-generation",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 60506624,
+      "native_parameter_count": 60506624,
+      "native_module": "mlx_one.models.language.t5",
+      "assets": [
+        {
+          "path": "config.json",
+          "bytes": 1206,
+          "sha256": "530e25060e3a8d5f7b0fcf53bfea9f3601165161f3b1914676e98d97cf07bcf1",
+          "pinned_remote_sha256": "530e25060e3a8d5f7b0fcf53bfea9f3601165161f3b1914676e98d97cf07bcf1"
+        },
+        {
+          "path": "generation_config.json",
+          "bytes": 147,
+          "sha256": "f5a1c7e2be8092018d8835128987edf0111637dd98e90599cc80310fef75d95a",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 242043056,
+          "sha256": "bd944e5f1b3ad9b70dd9d00010a517059e19265671076b8b0a4a58d9491842bc",
+          "pinned_remote_sha256": "bd944e5f1b3ad9b70dd9d00010a517059e19265671076b8b0a4a58d9491842bc"
+        },
+        {
+          "path": "spiece.model",
+          "bytes": 791656,
+          "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 1389353,
+          "sha256": "d2acde0d8d71dd30a711834b07781b9c89feaac33fd332f60507699282740066",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 2324,
+          "sha256": "d1e7146101aa96282057f374aa9c3b260fba2109e5990edb1775d6efc70ffa3c",
+          "pinned_remote_sha256": "d1e7146101aa96282057f374aa9c3b260fba2109e5990edb1775d6efc70ffa3c"
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B05/native.json",
+        "sha256": "8d6fbff7b20a6ea801a313999f7b12c9d9e3db34a4deb4fef815f9da48b974ac"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B05/reference.json",
+        "sha256": "168631f5396199c385400e5c470bcbb8ce36d29bf7f123097f9b53768bd1d4c2"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B05/cleanup.json",
+        "sha256": "990d70add28c717048d7f09d9f98f7f9a08245c0c45de08ffe572da45650e472"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS",
+          "max_abs_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "attention_mask": {
+          "status": "PASS",
+          "max_abs_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "encoder_hidden": {
+          "status": "PASS",
+          "max_abs_error": 7.152557373046875e-07,
+          "mean_abs_error": 3.545250493175445e-08
+        },
+        "teacher_forced_logits": {
+          "status": "PASS",
+          "max_abs_error": 3.24249267578125e-05,
+          "mean_abs_error": 3.4452107229299145e-06
+        },
+        "greedy_generation": {
+          "status": "PASS",
+          "max_abs_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "public_pipeline": {
+          "status": "PASS"
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {},
+      "known_limitations": [
+        "Greedy encoder-decoder only; 512 encoder tokens; bounded prefix recomputation",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B06",
+      "model_type": "vit",
+      "model_id": "google/vit-base-patch16-224",
+      "revision": "3f49326eb077187dfe1c2a2bb15fbd74e6ab91e3",
+      "license": "apache-2.0",
+      "task": "image-classification",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 86567656,
+      "native_parameter_count": 86567656,
+      "native_module": "mlx_one.models.classification.vit",
+      "assets": [
+        {
+          "path": "config.json",
+          "bytes": 69665,
+          "sha256": "abdf73cc4ce79495a83f32a8c9265daa7a1363f5a3efa4704c88a6e7f45ad19d",
+          "pinned_remote_sha256": "abdf73cc4ce79495a83f32a8c9265daa7a1363f5a3efa4704c88a6e7f45ad19d"
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 346293852,
+          "sha256": "1cea07110a4a47edc51420b2dda6f3b8b58e7256e8f44b4ea6aa9696162ccb5d",
+          "pinned_remote_sha256": "1cea07110a4a47edc51420b2dda6f3b8b58e7256e8f44b4ea6aa9696162ccb5d"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "bytes": 160,
+          "sha256": "90d1ae427c27d2b9dcb01f6a62ba96aa67aac2de1697c59cd212055b5035c4a2",
+          "pinned_remote_sha256": "90d1ae427c27d2b9dcb01f6a62ba96aa67aac2de1697c59cd212055b5035c4a2"
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B06/native.json",
+        "sha256": "d254e8a12c6d0f605bb35a9f6014d75962a5f913ad5d4c50341491ae942764c9"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B06/reference.json",
+        "sha256": "c6e5f32efff1dfc646b519a55d405e876f31f26c84e8770ef46c9e8a731e359c"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B06/cleanup.json",
+        "sha256": "cf0d491d44c7d6cb45971fa0b3a67cc64112006c33ea51f3951828aa8a88d7dc"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "processor": {
+          "status": "PASS",
+          "max_abs_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "logits": {
+          "status": "PASS",
+          "max_abs_error": 1.71661376953125e-05,
+          "mean_abs_error": 2.4779694740573177e-06
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 8.821487426757812e-06,
+          "mean_abs_error": 3.578611540433485e-07
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 1.3023614883422852e-05,
+          "mean_abs_error": 1.0291071248502703e-06
+        },
+        "hidden": {
+          "status": "FAIL",
+          "max_abs_error": 0.0002610534429550171,
+          "mean_abs_error": 3.3929134133359184e-06
+        },
+        "fp64_rounding_diagnostic": {
+          "status": "PASS",
+          "publisher_fp32_max_error": 0.00038655192703285213,
+          "native_fp32_max_error": 0.00021760808134829723,
+          "bound": "2 * publisher FP32-vs-FP64 max error + 1e-5; independent rounding diagnostic"
+        },
+        "top5_parity": {
+          "status": "PASS"
+        },
+        "public_pipeline": {
+          "status": "PASS"
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {},
+      "known_limitations": [
+        "Fixed 224 RGB supervised classification; no universal hidden-state parity",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "functional_decision": {
+        "path": "docs/qualification/batch-1-sub-6b/B06/functional-decision.json",
+        "sha256": "9207c29369746d4c80b5e0d18ab3a4d339fce6ef96a8bf433a4fbbd9d02fb03a"
+      },
+      "numerical_status": "CLASSIFICATION_PASS_WITH_RETAINED_HIDDEN_DIAGNOSTIC_FAIL"
+    },
+    {
+      "id": "B07",
+      "model_type": "xlm-roberta",
+      "model_id": "BAAI/bge-reranker-v2-m3",
+      "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+      "license": "apache-2.0",
+      "task": "reranking",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 567755777,
+      "native_parameter_count": 567755777,
+      "native_module": "mlx_one.models.embeddings.xlm_roberta",
+      "assets": [
+        {
+          "path": "config.json",
+          "bytes": 795,
+          "sha256": "13dcd6c31d9fec9d1d8e158702072f62d7fa7d312a64b9fe057bec9a08cfe41a",
+          "pinned_remote_sha256": "13dcd6c31d9fec9d1d8e158702072f62d7fa7d312a64b9fe057bec9a08cfe41a"
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 2271071852,
+          "sha256": "d9e3e081faff1eefb84019509b2f5558fd74c1a05a2c7db22f74174fcedb5286",
+          "pinned_remote_sha256": "d9e3e081faff1eefb84019509b2f5558fd74c1a05a2c7db22f74174fcedb5286"
+        },
+        {
+          "path": "sentencepiece.bpe.model",
+          "bytes": 5069051,
+          "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+          "pinned_remote_sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 964,
+          "sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+          "pinned_remote_sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 17098273,
+          "sha256": "69564b696052886ed0ac63fa393e928384e0f8caada38c1f4864a9bfbf379c15",
+          "pinned_remote_sha256": "69564b696052886ed0ac63fa393e928384e0f8caada38c1f4864a9bfbf379c15"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 1173,
+          "sha256": "7e4c1cc848840aeccdd763458c18dd525eb0f795c992e00ebe9c28554e7db2d4",
+          "pinned_remote_sha256": "7e4c1cc848840aeccdd763458c18dd525eb0f795c992e00ebe9c28554e7db2d4"
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B07/native.json",
+        "sha256": "e84d7ca60dcc8f648d6975ebb34eac53db41afd57def48d000dd497ef51323f5"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B07/reference.json",
+        "sha256": "b99bd3576d5581df37df41405483958d6874d7c1e1af3bccca8a07ecad222904"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B07/cleanup.json",
+        "sha256": "7ddedb007fb2e2c06590e64dea08abf6294693e99c9164bacbba13cc9cb61940"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 9.5367431640625e-07,
+          "mean_abs_error": 2.5094214706200546e-08,
+          "max_relative_error": 0.0008439827943220735,
+          "cosine_similarity": 1.0
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 1.5735626220703125e-05,
+          "mean_abs_error": 4.4261039988668927e-07,
+          "max_relative_error": 0.03526947647333145,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 3.170967102050781e-05,
+          "mean_abs_error": 1.5488124063267605e-06,
+          "max_relative_error": 0.22029274702072144,
+          "cosine_similarity": 0.9999998807907104
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 1.239776611328125e-05,
+          "mean_abs_error": 5.14984139954322e-06,
+          "max_relative_error": 2.129453378074686e-06,
+          "cosine_similarity": 1.0
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 1.239776611328125e-05,
+          "mean_abs_error": 5.14984130859375e-06,
+          "max_relative_error": 2.1294534691126103e-06,
+          "cosine_similarity": 0.9999999997601102
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          4,
+          3,
+          2,
+          1
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0
+      },
+      "known_limitations": [
+        "Raw paired score; fixed-example reference; execution/timing through 512 tokens",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B08",
+      "model_type": "kokoro",
+      "model_id": "hexgrad/Kokoro-82M",
+      "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+      "license": "apache-2.0",
+      "task": "speech-generation",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 81810022,
+      "native_parameter_count": 81765580,
+      "native_module": "mlx_one.models.audio.kokoro",
+      "assets": [
+        {
+          "path": "config.json",
+          "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f",
+          "bytes": 2351
+        },
+        {
+          "path": "kokoro-v1_0.pth",
+          "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+          "bytes": 327212226
+        },
+        {
+          "path": "voices/af_heart.pt",
+          "sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+          "bytes": 523425
+        },
+        {
+          "path": "native/config.json",
+          "sha256": "df78c95b1a9b39d86ca3e85300bd643e17ccca5867718cb779c3f57f65e19e05",
+          "bytes": 2866
+        },
+        {
+          "path": "native/model.safetensors",
+          "sha256": "4e84e5ffc4998533a3f6a8a16b1647d5bcea6441b205e96601e8ec1d9c6390cf",
+          "bytes": 327128216
+        },
+        {
+          "path": "native/voices/af_heart.safetensors",
+          "sha256": "2c1c733b0e6576c810e268d3e440c21dea4e0f0131a3ba4cfc98d7fe6136d094",
+          "bytes": 522320
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-resource/B08/native.json",
+        "sha256": "a8d88b0b8b2a1dca321377760e2906802c0c821a295699f8d3781d03a4ade9c9"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/B08/reference.json",
+        "sha256": "b7a68634e88baaaf9d0d0b71ef29b2dc292de4d6db97e418f6c56f311d3315dc"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-resource/B08/cleanup.json",
+        "sha256": "abaff56f5e53b47b1a75cbd8abec0722a9f11d37ef241ff056ee1bf6457f6957"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "albert": {
+          "status": "PASS",
+          "max_abs_error": 9.953975677490234e-06,
+          "mean_abs_error": 1.5553599723716616e-06
+        },
+        "durations": {
+          "status": "PASS",
+          "max_abs_error": 0.0,
+          "mean_abs_error": 0.0
+        },
+        "f0": {
+          "status": "PASS",
+          "max_abs_error": 0.000980377197265625,
+          "mean_abs_error": 4.494142922339961e-05
+        },
+        "noise": {
+          "status": "PASS",
+          "max_abs_error": 5.7220458984375e-06,
+          "mean_abs_error": 1.778086925696698e-06
+        },
+        "english_audio": {
+          "status": "PASS",
+          "model": "<campaign-work>/kokoro-resource-check-owned/native",
+          "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+          "voice": "af_heart",
+          "sample_rate": 24000,
+          "samples": 112800,
+          "duration_seconds": 4.7,
+          "waveform_float32_sha256": "b41d8ed530aee7cc30909b2cabc58ed0ad6b2d9aef697ff5b966a055ca342983",
+          "phonemes": "həlˈO, wˈɜɹld. ðɪs ɪz nˈATɪv spˈiʧ sˈɪnθəsˌɪs ˌɔn ˈæpᵊl sˈɪlɪkən.",
+          "durations": [
+            14,
+            2,
+            3,
+            2,
+            6,
+            6,
+            2,
+            3,
+            1,
+            2,
+            3,
+            4,
+            3,
+            13,
+            4,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            3,
+            2,
+            2,
+            1,
+            1,
+            1,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            3,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            1,
+            2,
+            2,
+            2,
+            3,
+            3,
+            13,
+            6,
+            1
+          ],
+          "text": "Hello, world. This is native speech synthesis on Apple Silicon.",
+          "wav_sha256": "d7fa01806eb6fcbbebf5e553435fd4561df40ed0929b6a930ceb9efd86b2604f",
+          "peak_amplitude": 0.4373791813850403,
+          "rms": 0.04820432513952255
+        },
+        "invalid_inputs": {
+          "status": "PASS",
+          "cases": {
+            "voice": "PASS",
+            "language": "PASS",
+            "empty": "PASS",
+            "phoneme_bound": "PASS",
+            "speed": "PASS"
+          }
+        }
+      },
+      "quality": {},
+      "known_limitations": [
+        "af_heart en-us only; 510 phonemes, 30 seconds, 24 kHz; no streaming",
+        "No quantized profile or external speed comparison admitted",
+        "Human/ASR review references the retained original WAV; installed synthesis has a separate hash. No exact stochastic waveform equality claim.",
+        "Actor reserves 3 GiB transient memory; configure at least that capacity in addition to resident weights (server task budget: 4 GiB)."
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE",
+      "conversion": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-resource/B08/conversion.json",
+        "sha256": "c26ea0476089642fc087ca22ec98de21b98e3695d27f9469ffbab66358d27d67"
+      },
+      "listening": {
+        "path": "docs/qualification/batch-1-sub-6b/B08/listening.json",
+        "sha256": "3111a29e0013bdddc5e80547bedcfe95b8f3a87b9e650f190ccdf2d119fed512"
+      },
+      "asr_roundtrip": {
+        "path": "docs/qualification/batch-1-sub-6b/B08/asr-roundtrip.json",
+        "sha256": "9f46cca408d242daae54a75e163ec7202d37b044a650e26bce025c5a216063a6"
+      },
+      "vocoder_diagnostic": {
+        "max_abs_error": 0.00026245787739753723,
+        "mean_abs_error": 4.185582383797737e-06,
+        "correlation": 0.9999999684598183,
+        "samples": 37800,
+        "scope": "controlled publisher harmonic excitation"
+      }
+    },
+    {
+      "id": "B09",
+      "model_type": "nomic_bert",
+      "model_id": "nomic-ai/nomic-embed-text-v1.5",
+      "revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+      "license": "apache-2.0",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 136731648,
+      "native_parameter_count": 136731648,
+      "native_module": "mlx_one.models.embeddings.nomic_bert",
+      "assets": [
+        {
+          "path": "1_Pooling/config.json",
+          "bytes": 286,
+          "sha256": "3d6180f7233df2f529d65ea60c8db4af614fb78cbe99fd81103dcfeb9f8166a5",
+          "pinned_remote_sha256": "3d6180f7233df2f529d65ea60c8db4af614fb78cbe99fd81103dcfeb9f8166a5"
+        },
+        {
+          "path": "config.json",
+          "bytes": 2538,
+          "sha256": "9ab00bd92cee80a569f708140b7b6c1661a65891ff3765b1519e181ba2f2c92b",
+          "pinned_remote_sha256": "9ab00bd92cee80a569f708140b7b6c1661a65891ff3765b1519e181ba2f2c92b"
+        },
+        {
+          "path": "config_sentence_transformers.json",
+          "bytes": 140,
+          "sha256": "482f42ca954f5a8d55bccbb437b8d6eb721ce19059c78330c815045ddd1a87eb",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 546938168,
+          "sha256": "9e7d262b1fe5ea350782829496efa831901b77486bbde1cea54a4c822d010d5c",
+          "pinned_remote_sha256": "9e7d262b1fe5ea350782829496efa831901b77486bbde1cea54a4c822d010d5c"
+        },
+        {
+          "path": "modules.json",
+          "bytes": 255,
+          "sha256": "f93c503b32fa7bc2e186843f0add961caa14eb68f7be516e327df3cadbcd541a",
+          "pinned_remote_sha256": "f93c503b32fa7bc2e186843f0add961caa14eb68f7be516e327df3cadbcd541a"
+        },
+        {
+          "path": "sentence_bert_config.json",
+          "bytes": 58,
+          "sha256": "9ee3935137f87c9ce6662ae17fe7afb7c9c64744a41247359fd228dc37e627b3",
+          "pinned_remote_sha256": "9ee3935137f87c9ce6662ae17fe7afb7c9c64744a41247359fd228dc37e627b3"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 695,
+          "sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+          "pinned_remote_sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 711396,
+          "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+          "pinned_remote_sha256": null
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 1191,
+          "sha256": "d7e0000bcc80134debd2222220427e6bf5fa20a669f40a0d0d1409cc18e0a9bc",
+          "pinned_remote_sha256": "d7e0000bcc80134debd2222220427e6bf5fa20a669f40a0d0d1409cc18e0a9bc"
+        },
+        {
+          "path": "vocab.txt",
+          "bytes": 231508,
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "pinned_remote_sha256": null
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B09/native.json",
+        "sha256": "5de4280f102b1cbf9cb3f8f8ce41c067ce2ed5e8537f685f8477051c9ad6feab"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B09/reference.json",
+        "sha256": "a67c51070642eb5035dc3703accaa6b7e53717da63aa0ce333bf31ced2374f3e"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B09/cleanup.json",
+        "sha256": "8849d2651639d3f5e9fe30466b2bec9156e32fa070579d810b4786fe8e50a1f5"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "token_type_ids": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 9.5367431640625e-07,
+          "mean_abs_error": 2.6652996254483696e-08,
+          "max_relative_error": 0.0015629903646185994,
+          "cosine_similarity": 1.0
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 1.1444091796875e-05,
+          "mean_abs_error": 2.0900955632896512e-07,
+          "max_relative_error": 0.09782245755195618,
+          "cosine_similarity": 1.0
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 1.1920928955078125e-05,
+          "mean_abs_error": 9.968528047465952e-07,
+          "max_relative_error": 0.12579508125782013,
+          "cosine_similarity": 1.0
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 2.421438694000244e-07,
+          "mean_abs_error": 3.010971738603985e-08,
+          "max_relative_error": 0.0021411844063550234,
+          "cosine_similarity": 1.0
+        },
+        "matryoshka_64": {
+          "status": "PASS",
+          "max_abs_error": 4.0605664253234863e-07,
+          "mean_abs_error": 8.194577105768985e-08,
+          "max_relative_error": 0.001200550002977252,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "matryoshka_128": {
+          "status": "PASS",
+          "max_abs_error": 5.178153514862061e-07,
+          "mean_abs_error": 6.574373401235789e-08,
+          "max_relative_error": 0.0012002687435597181,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "matryoshka_256": {
+          "status": "PASS",
+          "max_abs_error": 3.91155481338501e-07,
+          "mean_abs_error": 4.919340668152472e-08,
+          "max_relative_error": 0.0012004119344055653,
+          "cosine_similarity": 1.0
+        },
+        "matryoshka_512": {
+          "status": "PASS",
+          "max_abs_error": 2.905726432800293e-07,
+          "mean_abs_error": 3.658088942870563e-08,
+          "max_relative_error": 0.0018399326363578439,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "matryoshka_768": {
+          "status": "PASS",
+          "max_abs_error": 2.4400651454925537e-07,
+          "mean_abs_error": 3.018035599211544e-08,
+          "max_relative_error": 0.001840062323026359,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 1.6763806343078613e-07,
+          "mean_abs_error": 2.9713790539176443e-08,
+          "max_relative_error": 0.002141184367117992,
+          "cosine_similarity": 0.9999999970248421
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          3,
+          4,
+          2,
+          1
+        ],
+        "similarities": [
+          0.918866043929039,
+          0.4365605434235499,
+          0.47455103101408147,
+          0.7360611785032829,
+          0.7245381288250237
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0
+      },
+      "known_limitations": [
+        "768-D normalized default; explicit Matryoshka 64/128/256/512/768; through 512 tokens",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B10",
+      "model_type": "bert",
+      "model_id": "intfloat/multilingual-e5-small",
+      "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+      "license": "mit",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 117653760,
+      "native_parameter_count": 117505920,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "assets": [
+        {
+          "path": "1_Pooling/config.json",
+          "bytes": 200,
+          "sha256": "987f7a67a38fa564c849bb5d277c52ab9088a84368fc0be31a354125aebb12a0",
+          "pinned_remote_sha256": "987f7a67a38fa564c849bb5d277c52ab9088a84368fc0be31a354125aebb12a0"
+        },
+        {
+          "path": "config.json",
+          "bytes": 655,
+          "sha256": "69137736cab8b8903a07fe8afaafdda25aac55415a12a55d1bffa9f581abf959",
+          "pinned_remote_sha256": "69137736cab8b8903a07fe8afaafdda25aac55415a12a55d1bffa9f581abf959"
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 470641600,
+          "sha256": "1a55775f53449dac10a2bcbc312469fac40b96d53198c407081a831f81c98477",
+          "pinned_remote_sha256": "1a55775f53449dac10a2bcbc312469fac40b96d53198c407081a831f81c98477"
+        },
+        {
+          "path": "modules.json",
+          "bytes": 387,
+          "sha256": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+          "pinned_remote_sha256": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04"
+        },
+        {
+          "path": "sentence_bert_config.json",
+          "bytes": 57,
+          "sha256": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+          "pinned_remote_sha256": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529"
+        },
+        {
+          "path": "sentencepiece.bpe.model",
+          "bytes": 5069051,
+          "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+          "pinned_remote_sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 167,
+          "sha256": "d05497f1da52c5e09554c0cd874037a083e1dc1b9cfd48034d1c717f1afc07a7",
+          "pinned_remote_sha256": "d05497f1da52c5e09554c0cd874037a083e1dc1b9cfd48034d1c717f1afc07a7"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 17082730,
+          "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39",
+          "pinned_remote_sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 443,
+          "sha256": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b",
+          "pinned_remote_sha256": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b"
+        }
+      ],
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B10/native.json",
+        "sha256": "f671559aad3556d369e4def7782b45e21e9de3bf3747319eef316334b5259637"
+      },
+      "reference": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B10/reference.json",
+        "sha256": "d9f9b9a1a40afa6e645c8aecd4512e78863c6082530d67a7e50f6186a82e89f8"
+      },
+      "cleanup": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B10/cleanup.json",
+        "sha256": "b29d3da4e7e768c8d381c212b39962effe6d9c5c2423dad353e8f231d01f1db4"
+      },
+      "interfaces": {
+        "python": {
+          "status": "PASS"
+        },
+        "cli": {
+          "status": "PASS",
+          "exit_code": 0,
+          "error": null
+        },
+        "engine": {
+          "status": "PASS"
+        },
+        "canceled_request": {
+          "status": "PASS",
+          "exception": "CancelledError"
+        },
+        "closed_service": {
+          "status": "PASS"
+        },
+        "http": {
+          "status": "PASS",
+          "status_code": 200,
+          "error": null
+        },
+        "http_validation": {
+          "status": "PASS",
+          "unauthorized": 401,
+          "wrong_model": 404,
+          "malformed": 422
+        },
+        "http_shutdown": {
+          "status": "PASS"
+        }
+      },
+      "numerical_checks": {
+        "input_ids": {
+          "status": "PASS"
+        },
+        "attention_mask": {
+          "status": "PASS"
+        },
+        "embedding_hidden": {
+          "status": "PASS",
+          "max_abs_error": 4.76837158203125e-07,
+          "mean_abs_error": 1.1899382812430304e-08,
+          "max_relative_error": 0.0003771551710087806,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "first_layer": {
+          "status": "PASS",
+          "max_abs_error": 2.205371856689453e-06,
+          "mean_abs_error": 1.621281171537703e-07,
+          "max_relative_error": 0.04781276360154152,
+          "cosine_similarity": 1.0
+        },
+        "hidden": {
+          "status": "PASS",
+          "max_abs_error": 2.7120113372802734e-06,
+          "mean_abs_error": 3.0068324008425407e-07,
+          "max_relative_error": 0.04283401742577553,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "output": {
+          "status": "PASS",
+          "max_abs_error": 3.725290298461914e-07,
+          "mean_abs_error": 4.940970299571745e-08,
+          "max_relative_error": 0.004077103920280933,
+          "cosine_similarity": 1.0000001192092896
+        },
+        "public_pipeline": {
+          "status": "PASS",
+          "max_abs_error": 3.5762786865234375e-07,
+          "mean_abs_error": 4.864412280388327e-08,
+          "max_relative_error": 0.004077103750063396,
+          "cosine_similarity": 1.000000015664815
+        },
+        "runtime_independence": {
+          "status": "PASS",
+          "imported": []
+        }
+      },
+      "quality": {
+        "expected_top": 0,
+        "ranked_indices": [
+          0,
+          4,
+          3,
+          2,
+          1
+        ],
+        "similarities": [
+          0.8917251798962578,
+          0.654457824057586,
+          0.7242220900802613,
+          0.7971630393732894,
+          0.8052823856975838
+        ],
+        "status": "PASS",
+        "fixture": "batch1-controlled-retrieval-v1",
+        "samples": 5,
+        "recall_at_1": 1,
+        "reciprocal_rank": 1.0
+      },
+      "known_limitations": [
+        "384-D mean + L2; 512 tokens; explicit query:/passage: formatting",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "gates": {
+        "G0": "PASS",
+        "G1": "PASS",
+        "G2": "PASS",
+        "G3": "PASS",
+        "G4": "PASS",
+        "G5": "EVIDENCE_READY_FOR_MAINTAINER_REVIEW"
+      },
+      "gate_basis": "Bounded primary functional workflow; see shared verification and scope-specific diagnostics",
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    }
+  ]
+}

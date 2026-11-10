@@ -1,0 +1,61 @@
+{
+  "id": "B05",
+  "checkpoint": "google-t5/t5-small",
+  "revision": "df1b051c49625cf57a3d0d8d3863ed4d13564fe4",
+  "license": "apache-2.0",
+  "assets": [
+    {
+      "path": "config.json",
+      "bytes": 1206,
+      "sha256": "530e25060e3a8d5f7b0fcf53bfea9f3601165161f3b1914676e98d97cf07bcf1",
+      "pinned_remote_sha256": "530e25060e3a8d5f7b0fcf53bfea9f3601165161f3b1914676e98d97cf07bcf1"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 147,
+      "sha256": "f5a1c7e2be8092018d8835128987edf0111637dd98e90599cc80310fef75d95a",
+      "pinned_remote_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 242043056,
+      "sha256": "bd944e5f1b3ad9b70dd9d00010a517059e19265671076b8b0a4a58d9491842bc",
+      "pinned_remote_sha256": "bd944e5f1b3ad9b70dd9d00010a517059e19265671076b8b0a4a58d9491842bc"
+    },
+    {
+      "path": "spiece.model",
+      "bytes": 791656,
+      "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+      "pinned_remote_sha256": null
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 1389353,
+      "sha256": "d2acde0d8d71dd30a711834b07781b9c89feaac33fd332f60507699282740066",
+      "pinned_remote_sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 2324,
+      "sha256": "d1e7146101aa96282057f374aa9c3b260fba2109e5990edb1775d6efc70ffa3c",
+      "pinned_remote_sha256": "d1e7146101aa96282057f374aa9c3b260fba2109e5990edb1775d6efc70ffa3c"
+    }
+  ],
+  "status": "FAILED_VALIDATION",
+  "reference_exit_code": 0,
+  "native_exit_code": 0,
+  "reference": {
+    "texts": [
+      "translate English to German: The house is wonderful.",
+      "translate English to French: The book is on the table."
+    ],
+    "generated_texts": [
+      "Das Haus ist wunderbar.",
+      "Le livre est sur la table."
+    ],
+    "torch": "2.15.0",
+    "transformers": "4.40.2",
+    "source_sha256": "840dcd24dd86a32daa5d763b470d1f3a2c9866cce10d2b205df67b4733cdc326",
+    "parameter_count": 60506624
+  }
+}

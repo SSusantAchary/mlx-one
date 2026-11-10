@@ -1,0 +1,260 @@
+[
+  {
+    "id": "B01",
+    "checkpoint": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "license": "apache-2.0",
+    "parameter_metadata": {
+      "parameters": {
+        "I64": 512,
+        "F32": 22713601
+      },
+      "total": 22714113
+    },
+    "config": {
+      "model_type": "bert",
+      "architectures": [
+        "BertForSequenceClassification"
+      ],
+      "hidden_size": 384,
+      "vocab_size": 30522,
+      "max_position_embeddings": 512,
+      "torch_dtype": null,
+      "num_hidden_layers": 6
+    },
+    "weight_files": [
+      "model.safetensors",
+      "pytorch_model.bin"
+    ]
+  },
+  {
+    "id": "B02",
+    "checkpoint": "BAAI/bge-small-en-v1.5",
+    "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "license": "mit",
+    "parameter_metadata": {
+      "parameters": {
+        "I64": 512,
+        "F32": 33360000
+      },
+      "total": 33360512
+    },
+    "config": {
+      "model_type": "bert",
+      "architectures": [
+        "BertModel"
+      ],
+      "hidden_size": 384,
+      "vocab_size": 30522,
+      "max_position_embeddings": 512,
+      "torch_dtype": "float32",
+      "num_hidden_layers": 12
+    },
+    "weight_files": [
+      "model.safetensors",
+      "pytorch_model.bin"
+    ]
+  },
+  {
+    "id": "B03",
+    "checkpoint": "BAAI/bge-m3",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "license": "mit",
+    "parameter_metadata": null,
+    "config": {
+      "model_type": "xlm-roberta",
+      "architectures": [
+        "XLMRobertaModel"
+      ],
+      "hidden_size": 1024,
+      "vocab_size": 250002,
+      "max_position_embeddings": 8194,
+      "torch_dtype": "float32",
+      "num_hidden_layers": 24
+    },
+    "weight_files": [
+      "pytorch_model.bin"
+    ]
+  },
+  {
+    "id": "B04",
+    "checkpoint": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+    "license": "apache-2.0",
+    "parameter_metadata": {
+      "parameters": {
+        "I64": 512,
+        "F32": 117653760
+      },
+      "total": 117654272
+    },
+    "config": {
+      "model_type": "bert",
+      "architectures": [
+        "BertModel"
+      ],
+      "hidden_size": 384,
+      "vocab_size": 250037,
+      "max_position_embeddings": 512,
+      "torch_dtype": null,
+      "num_hidden_layers": 12
+    },
+    "weight_files": [
+      "model.safetensors",
+      "pytorch_model.bin"
+    ]
+  },
+  {
+    "id": "B05",
+    "checkpoint": "google-t5/t5-small",
+    "revision": "df1b051c49625cf57a3d0d8d3863ed4d13564fe4",
+    "license": "apache-2.0",
+    "parameter_metadata": {
+      "parameters": {
+        "F32": 60506880
+      },
+      "total": 60506880
+    },
+    "config": {
+      "model_type": "t5",
+      "architectures": [
+        "T5ForConditionalGeneration"
+      ],
+      "hidden_size": null,
+      "vocab_size": 32128,
+      "max_position_embeddings": null,
+      "torch_dtype": null,
+      "num_hidden_layers": null
+    },
+    "weight_files": [
+      "model.safetensors",
+      "pytorch_model.bin"
+    ]
+  },
+  {
+    "id": "B06",
+    "checkpoint": "google/vit-base-patch16-224",
+    "revision": "3f49326eb077187dfe1c2a2bb15fbd74e6ab91e3",
+    "license": "apache-2.0",
+    "parameter_metadata": {
+      "parameters": {
+        "F32": 86567656
+      },
+      "total": 86567656
+    },
+    "config": {
+      "model_type": "vit",
+      "architectures": [
+        "ViTForImageClassification"
+      ],
+      "hidden_size": 768,
+      "vocab_size": null,
+      "max_position_embeddings": null,
+      "torch_dtype": null,
+      "num_hidden_layers": 12
+    },
+    "weight_files": [
+      "model.safetensors",
+      "pytorch_model.bin"
+    ]
+  },
+  {
+    "id": "B07",
+    "checkpoint": "BAAI/bge-reranker-v2-m3",
+    "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+    "license": "apache-2.0",
+    "parameter_metadata": {
+      "parameters": {
+        "F32": 567755777
+      },
+      "total": 567755777
+    },
+    "config": {
+      "model_type": "xlm-roberta",
+      "architectures": [
+        "XLMRobertaForSequenceClassification"
+      ],
+      "hidden_size": 1024,
+      "vocab_size": 250002,
+      "max_position_embeddings": 8194,
+      "torch_dtype": "float32",
+      "num_hidden_layers": 24
+    },
+    "weight_files": [
+      "model.safetensors"
+    ]
+  },
+  {
+    "id": "B08",
+    "checkpoint": "hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "license": "apache-2.0",
+    "parameter_metadata": null,
+    "config": {
+      "model_type": null,
+      "architectures": null,
+      "hidden_size": null,
+      "vocab_size": null,
+      "max_position_embeddings": null,
+      "torch_dtype": null,
+      "num_hidden_layers": null
+    },
+    "weight_files": [
+      "kokoro-v1_0.pth"
+    ]
+  },
+  {
+    "id": "B09",
+    "checkpoint": "nomic-ai/nomic-embed-text-v1.5",
+    "revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+    "license": "apache-2.0",
+    "parameter_metadata": {
+      "parameters": {
+        "F32": 136731648
+      },
+      "total": 136731648
+    },
+    "config": {
+      "model_type": "nomic_bert",
+      "architectures": [
+        "NomicBertModel"
+      ],
+      "hidden_size": 768,
+      "vocab_size": 30528,
+      "max_position_embeddings": 2048,
+      "torch_dtype": "float32",
+      "num_hidden_layers": 12
+    },
+    "weight_files": [
+      "model.safetensors"
+    ]
+  },
+  {
+    "id": "B10",
+    "checkpoint": "intfloat/multilingual-e5-small",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "license": "mit",
+    "parameter_metadata": {
+      "parameters": {
+        "I64": 512,
+        "F32": 117653760
+      },
+      "total": 117654272
+    },
+    "config": {
+      "model_type": "bert",
+      "architectures": [
+        "BertModel"
+      ],
+      "hidden_size": 384,
+      "vocab_size": 250037,
+      "max_position_embeddings": 512,
+      "torch_dtype": "float32",
+      "num_hidden_layers": 12
+    },
+    "weight_files": [
+      "model.safetensors",
+      "pytorch_model.bin"
+    ]
+  }
+]

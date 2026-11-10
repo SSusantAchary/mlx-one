@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<checkout>/scripts/qualification/batch1_native.py", line 232, in <module>
+    main()
+  File "<checkout>/scripts/qualification/batch1_native.py", line 152, in main
+    if width > bundle.model.config.sentence_max_length:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NomicBertConfig' object has no attribute 'sentence_max_length'

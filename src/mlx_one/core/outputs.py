@@ -34,6 +34,16 @@ class EmbeddingModelOutput:
 
 
 @dataclass
+class RerankerModelOutput:
+    """Raw pair logits and their explicitly separate sigmoid probabilities."""
+
+    scores: Any
+    probabilities: Any
+    last_hidden_state: Any
+    logits: Any
+
+
+@dataclass
 class AudioModelOutput:
     text_logits: Any
     audio_logits: Any

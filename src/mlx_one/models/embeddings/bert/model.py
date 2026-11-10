@@ -15,7 +15,7 @@ from typing import Any
 import mlx.core as mx
 import mlx.nn as nn
 
-from mlx_one.core.outputs import EmbeddingModelOutput
+from mlx_one.core.outputs import EmbeddingModelOutput, RerankerModelOutput
 from mlx_one.models.embeddings.bert.config import BertEmbeddingConfig
 from mlx_one.models.shared.encoder import (
     bidirectional_attention_mask,
@@ -28,27 +28,19 @@ from mlx_one.models.shared.encoder import (
 def _activation(value: Any, name: str) -> Any:
     if name == "gelu":
         return nn.gelu(value)
-    return 0.5 * value * (
-        1 + mx.tanh(math.sqrt(2 / math.pi) * (value + 0.044715 * value**3))
-    )
+    return 0.5 * value * (1 + mx.tanh(math.sqrt(2 / math.pi) * (value + 0.044715 * value**3)))
 
 
 class BertEmbeddings(nn.Module):
     def __init__(self, config: BertEmbeddingConfig) -> None:
         super().__init__()
         self.word_embeddings = nn.Embedding(config.vocab_size, config.hidden_size)
-        self.position_embeddings = nn.Embedding(
-            config.max_position_embeddings, config.hidden_size
-        )
-        self.token_type_embeddings = nn.Embedding(
-            config.type_vocab_size, config.hidden_size
-        )
+        self.position_embeddings = nn.Embedding(config.max_position_embeddings, config.hidden_size)
+        self.token_type_embeddings = nn.Embedding(config.type_vocab_size, config.hidden_size)
         self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
-    def __call__(
-        self, input_ids: Any, token_type_ids: Any | None, position_ids: Any | None
-    ) -> Any:
+    def __call__(self, input_ids: Any, token_type_ids: Any | None, position_ids: Any | None) -> Any:
         batch, length = input_ids.shape
         if position_ids is None:
             position_ids = mx.broadcast_to(mx.arange(length)[None, :], (batch, length))
@@ -168,6 +160,7 @@ class BertForSentenceEmbedding(nn.Module):
         self.embeddings = BertEmbeddings(config)
         self.encoder = BertEncoder(config)
         self.pooler = BertPooler(config) if config.add_pooling_layer else None
+        self.classifier = nn.Linear(config.hidden_size, 1) if config.task == "reranking" else None
 
     def __call__(
         self,
@@ -177,9 +170,11 @@ class BertForSentenceEmbedding(nn.Module):
         token_type_ids: Any | None = None,
         position_ids: Any | None = None,
         output_hidden_states: bool = False,
-    ) -> EmbeddingModelOutput:
+    ) -> EmbeddingModelOutput | RerankerModelOutput:
         if input_ids.ndim != 2:
             raise ValueError("input_ids must have shape [batch, sequence]")
+        if not input_ids.shape[0] or not input_ids.shape[1]:
+            raise ValueError("input_ids requires a nonempty batch and sequence")
         if input_ids.shape[1] > self.config.sentence_max_length:
             raise ValueError("input sequence exceeds sentence_max_length")
         attention_mask = (
@@ -187,12 +182,24 @@ class BertForSentenceEmbedding(nn.Module):
             if attention_mask is None
             else attention_mask.astype(mx.bool_)
         )
+        if attention_mask.shape != input_ids.shape:
+            raise ValueError("attention_mask must match input_ids")
+        if token_type_ids is not None and token_type_ids.shape != input_ids.shape:
+            raise ValueError("token_type_ids must match input_ids")
         hidden = self.embeddings(input_ids, token_type_ids, position_ids)
         mask = bidirectional_attention_mask(attention_mask, hidden.dtype)
         hidden, states = self.encoder(hidden, mask, output_hidden_states)
-        pooled = masked_mean_pool(hidden, attention_mask)
-        embeddings = l2_normalize(pooled) if self.config.normalize_embeddings else pooled
         pooler_output = self.pooler(hidden) if self.pooler is not None else None
+        if self.classifier is not None:
+            logits = self.classifier(pooler_output)
+            scores = logits[:, 0]
+            return RerankerModelOutput(scores, mx.sigmoid(scores), hidden, logits)
+        pooled = (
+            hidden[:, 0]
+            if self.config.pooling == "cls"
+            else masked_mean_pool(hidden, attention_mask)
+        )
+        embeddings = l2_normalize(pooled) if self.config.normalize_embeddings else pooled
         return EmbeddingModelOutput(
             embeddings,
             hidden,

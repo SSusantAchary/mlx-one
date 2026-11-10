@@ -5,22 +5,26 @@ title: Home
 # MLX-One
 
 **One stack. Native MLX. Built for Apple Silicon.** MLX-One brings text generation,
-vision-language inference, audio, OCR, embeddings and segmentation into one native
+vision-language inference, audio, OCR, retrieval, classification and segmentation into one native
 MLX library. Load a model, run it from Python or the CLI, and serve a local chat UI
 and HTTP API. Native model implementations share checkpoint loading, execution and
 developer tooling on Apple Silicon.
 
-**0.1.1 approved for release · 8 November 2026.** All registered model types have
-passing primary-workflow records. [Release notes](releases/0.1.1.md) ·
-[Supported models and known limits](models/support.md).
+**45 native model types across seven modalities.** Generate text with T5 and
+causal language models, classify images with ViT, synthesize speech with Kokoro,
+and build search with BGE-M3, Nomic, multilingual E5 and paired rerankers.
+**50 verified checkpoint profiles** cover these architectures. All ten additional
+workflows meet the technical release criteria for their documented tasks.
+[Explore model workflows and examples](../../docs/models/batch-1-sub-6b/README.md) ·
+[Search verified checkpoints](insights/index.md#supported-model-explorer).
 
 <!-- insights:summary -->
 
-The installation examples target **0.1.1**. Publication is pending; until it is
-available on PyPI, use the [source installation](getting-started.md#source-installation-for-development).
+The latest workflows are available from this source checkout. From the repository
+root, install the server, image-processing and optional English speech extras:
 
 ```bash
-python -m pip install "mlx-one==0.1.1"
+python -m pip install -e '.[server,vision,kokoro]'
 ```
 
 ```bash
@@ -32,50 +36,61 @@ mlx-one generate openai-community/gpt2 "The future of local AI is" \
   --max-tokens 64 --temperature 0.8 --seed 0
 
 # Start the local chat UI and an OpenAI-compatible HTTP API.
-python -m pip install "mlx-one[server]==0.1.1"
 mlx-one serve LiquidAI/LFM2-350M --alias lfm2-local \
   --host 127.0.0.1 --port 8888 --inference-mode reference_dense
 ```
 
 [Get started](getting-started.md){ .md-button .md-button--primary }
-[Supported models](models/support.md){ .md-button }
+[Supported models](insights/index.md#supported-model-explorer){ .md-button }
 [How it works](reference/architecture.md){ .md-button }
 
 ## What it makes possible
-
-<p align="center">
-  <a href="../../status_models_testing.md">
-    <img src="../../docs/assets/mlx-one-supported-model-ecosystem.png" alt="MLX-One supported model ecosystem: 40 native model types across seven modalities" width="1200" loading="lazy">
-  </a>
-</p>
 
 <!-- insights:modalities -->
 
 [Explore model coverage, benchmarks and development progress](insights/index.md){ .md-button }
 
-Counts come from the verified support catalog and native registry on each build.
-Each type has a pinned checkpoint, precision, passing task record and applicable
-interface checks. Checkpoint sizes and quantizations share a model type.
+Each architecture type is counted once under its primary modality. Checkpoint
+sizes, revisions and quantizations share a type. The regression count records the
+Python 3.12 / Apple M4 run: 2,599 passed, 9 subtests and 95 skips; 54 final targeted
+checks also passed. The core regression matrix passed on Python 3.10–3.13.
+[Validation scope and results](../../docs/models/batch-1-sub-6b/REPORT.md).
 
 | Workflow | Native capabilities | Start here |
 | --- | --- | --- |
-| Text generation | Cached decoding, sampling, chat templates and token streaming | [Generate text](guides/generate.md) |
+| Text generation | Cached causal decoding, sampling and streaming; T5 encoder-decoder text-to-text | [Generate text](guides/generate.md) · [T5](../../docs/models/batch-1-sub-6b/README.md#t5-encoder-decoder-text-generation) |
 | Local applications | Python APIs, CLI workflows and HTTP/SSE serving | [Serve an API and chat UI](guides/serve.md) |
 | Vision-language | Supported static-image and text workflows | [Vision-language guide](guides/vision.md) |
-| Audio and speech | ASR, known-text alignment, voice activity detection and Q8 speech generation | [Audio guide](guides/audio.md) |
+| Audio and speech | ASR, alignment, voice activity detection, LFM speech and Kokoro English synthesis | [Audio guide](guides/audio.md) · [Kokoro](../../docs/models/batch-1-sub-6b/README.md#kokoro-native-english-speech) |
 | Documents | Line recognition and implemented page-model OCR workflows | [OCR guide](guides/ocr.md) |
-| Retrieval | Embeddings, similarity and Qwen3 reranking | [Embeddings and reranking](guides/retrieval.md) |
+| Retrieval | Dense embeddings, learned sparse weights, ColBERT token vectors, hybrid scores and paired reranking | [Embeddings and reranking](guides/retrieval.md) |
 | Segmentation and tracking | SAM3 image prompts and native offline/streaming video tracking | [SAM3 guide](models/segmentation/sam3.md) |
-| Classification | Sentiment, named entities and zero-shot image classification | [Classification guides](models/index.md#classification-guides) |
+| Classification | Sentiment, named entities, CLIP zero-shot images and supervised ViT images | [Classification guides](models/index.md#classification-guides) |
 
-The [support inventory](models/support.md) records exact checkpoints and operations.
+The [model explorer](insights/index.md#supported-model-explorer) records exact checkpoints and operations.
 [Performance reports](performance/index.md) retain measured workloads, and
 [known quality and scope limits](models/support.md#known-quality-and-scope-limitations)
 remain visible alongside support.
 
+## Release record
+
+**0.1.1 was approved for release on 8 November 2026**, with 40 model types.
+Its [dated release notes](releases/0.1.1.md) and publication record remain
+separate from the ten additional source-checkout workflows, which are technically
+validated for their documented tasks and ready for the next release decision.
+
+<p align="center">
+  <a href="../../status_models_testing.md">
+    <img src="../../docs/assets/mlx-one-supported-model-ecosystem.png" alt="MLX-One ecosystem illustration of the original 40-type 0.1.1 release cohort" width="1200" loading="lazy">
+  </a>
+</p>
+
+The illustration records the original 40-type release cohort. The modality cards
+above show the current 45-type registry.
+
 ## Find a guide
 
-- **New here?** [Get started](getting-started.md): install from PyPI, generate
+- **New here?** [Get started](getting-started.md): install the library, generate
   your first response and start the local server.
 - **Choosing a checkpoint?** [Choose a model](models/index.md) for model-family
   guides, input formats and implementation scope.

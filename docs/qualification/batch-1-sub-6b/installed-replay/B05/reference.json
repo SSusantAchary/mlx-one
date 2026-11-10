@@ -1,0 +1,14 @@
+{
+  "texts": [
+    "translate English to German: The house is wonderful.",
+    "translate English to French: The book is on the table."
+  ],
+  "generated_texts": [
+    "Das Haus ist wunderbar.",
+    "Le livre est sur la table."
+  ],
+  "torch": "2.15.0",
+  "transformers": "4.40.2",
+  "source_sha256": "840dcd24dd86a32daa5d763b470d1f3a2c9866cce10d2b205df67b4733cdc326",
+  "parameter_count": 60506624
+}

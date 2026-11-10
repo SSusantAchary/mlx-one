@@ -18,6 +18,8 @@ def sanitize_weights(weights: dict[str, Any], config: BertEmbeddingConfig) -> di
         if not config.add_pooling_layer and name in {"pooler.dense.weight", "pooler.dense.bias"}:
             continue
         name = name.replace(".attention.self.", ".attention.self_attn.")
+        if name in cleaned:
+            raise ValueError("duplicate BERT tensor after canonical mapping")
         cleaned[name] = value
     return cleaned
 
@@ -50,4 +52,7 @@ def weight_contract(config: BertEmbeddingConfig) -> WeightContract:
     if config.add_pooling_layer:
         expected["pooler.dense.weight"] = (dim, dim)
         expected["pooler.dense.bias"] = (dim,)
+    if config.task == "reranking":
+        expected["classifier.weight"] = (1, dim)
+        expected["classifier.bias"] = (1,)
     return WeightContract(expected)

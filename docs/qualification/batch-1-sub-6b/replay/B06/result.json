@@ -1,0 +1,81 @@
+{
+  "id": "B06",
+  "checkpoint": "google/vit-base-patch16-224",
+  "revision": "3f49326eb077187dfe1c2a2bb15fbd74e6ab91e3",
+  "license": "apache-2.0",
+  "assets": [
+    {
+      "path": "config.json",
+      "bytes": 69665,
+      "sha256": "abdf73cc4ce79495a83f32a8c9265daa7a1363f5a3efa4704c88a6e7f45ad19d",
+      "pinned_remote_sha256": "abdf73cc4ce79495a83f32a8c9265daa7a1363f5a3efa4704c88a6e7f45ad19d"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 346293852,
+      "sha256": "1cea07110a4a47edc51420b2dda6f3b8b58e7256e8f44b4ea6aa9696162ccb5d",
+      "pinned_remote_sha256": "1cea07110a4a47edc51420b2dda6f3b8b58e7256e8f44b4ea6aa9696162ccb5d"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 160,
+      "sha256": "90d1ae427c27d2b9dcb01f6a62ba96aa67aac2de1697c59cd212055b5035c4a2",
+      "pinned_remote_sha256": "90d1ae427c27d2b9dcb01f6a62ba96aa67aac2de1697c59cd212055b5035c4a2"
+    }
+  ],
+  "status": "FAILED_VALIDATION",
+  "reference_exit_code": 0,
+  "native_exit_code": 0,
+  "reference": {
+    "dataset": {
+      "dataset": "AIOmarRehan/AnimalsDataset",
+      "revision": "676c9639be89ef4847325dcdbf141051319129f2",
+      "license": "cc0-1.0",
+      "file": "data/train-00000-of-00001.parquet",
+      "rows": [
+        0,
+        1
+      ],
+      "files": [
+        {
+          "local_name": "0.jpg",
+          "sha256": "9e7e9d8e4986461f1f297a3c2bab0830080998ad4170b5e673d06a20beca2b9c",
+          "row": 0,
+          "labels": {
+            "label": 0
+          }
+        },
+        {
+          "local_name": "1.jpg",
+          "sha256": "5e865bd96bc9fda281a2b75c3007649ac67c9ac11e6081f67a1f390f99b30ca4",
+          "row": 1,
+          "labels": {
+            "label": 0
+          }
+        }
+      ]
+    },
+    "top5": [
+      [
+        281,
+        285,
+        282,
+        287,
+        283
+      ],
+      [
+        282,
+        285,
+        281,
+        332,
+        283
+      ]
+    ],
+    "attention_implementation": "eager",
+    "reference_eager_vs_default_max_error": 0.0,
+    "torch": "2.15.0",
+    "transformers": "4.40.2",
+    "source_sha256": "402ed74cc061b54cafd42b27d92ac23b107f908ec1b1a362166eb98a7e06ef9b",
+    "parameter_count": 86567656
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "id": "B07",
+  "checkpoint": "BAAI/bge-reranker-v2-m3",
+  "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+  "license": "apache-2.0",
+  "parameter_metadata": {
+    "parameters": {
+      "F32": 567755777
+    },
+    "total": 567755777
+  },
+  "metadata_sha256": {
+    "config.json": "13dcd6c31d9fec9d1d8e158702072f62d7fa7d312a64b9fe057bec9a08cfe41a",
+    "tokenizer_config.json": "7e4c1cc848840aeccdd763458c18dd525eb0f795c992e00ebe9c28554e7db2d4",
+    "special_tokens_map.json": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+    "README.md": "c887aa6dd2598f908bf0582ca7068cc816585c7a1b6a07df305b631ede0cb174"
+  },
+  "files": {
+    ".gitattributes": {
+      "rfilename": ".gitattributes",
+      "blobId": "52373fe24473b1aa44333d318f578ae6bf04b49b",
+      "size": 1570
+    },
+    "README.md": {
+      "rfilename": "README.md",
+      "blobId": "553540879ec61aea21df00434c984c0f760a3fcc",
+      "size": 17229
+    },
+    "assets/BEIR-bge-en-v1.5.png": {
+      "rfilename": "assets/BEIR-bge-en-v1.5.png",
+      "blobId": "04c10ca35a93a9e7addcb758eada3ed4bd523629",
+      "size": 56374
+    },
+    "assets/BEIR-e5-mistral.png": {
+      "rfilename": "assets/BEIR-e5-mistral.png",
+      "blobId": "236d46eb6277ad60230de001dfd6a40d045b448c",
+      "size": 40223
+    },
+    "assets/CMTEB-retrieval-bge-zh-v1.5.png": {
+      "rfilename": "assets/CMTEB-retrieval-bge-zh-v1.5.png",
+      "blobId": "b02707868af9da608747fad12cde2b116e4a6c86",
+      "size": 51484
+    },
+    "assets/llama-index.png": {
+      "rfilename": "assets/llama-index.png",
+      "blobId": "3bac2b657173d245738405767e31a2c790cdc064",
+      "size": 106473
+    },
+    "assets/miracl-bge-m3.png": {
+      "rfilename": "assets/miracl-bge-m3.png",
+      "blobId": "f6e542add093ce645f67e09f0eb758c4e0c688ed",
+      "size": 52028
+    },
+    "config.json": {
+      "rfilename": "config.json",
+      "blobId": "9f62673cb00ec41dcec8947b9ed16f6f2eb23ba2",
+      "size": 795
+    },
+    "model.safetensors": {
+      "rfilename": "model.safetensors",
+      "blobId": "773a0a7d7cc8a010835938a3a82a87eac8b21909",
+      "size": 2271071852,
+      "lfs": {
+        "sha256": "d9e3e081faff1eefb84019509b2f5558fd74c1a05a2c7db22f74174fcedb5286",
+        "size": 2271071852,
+        "pointerSize": 135
+      }
+    },
+    "sentencepiece.bpe.model": {
+      "rfilename": "sentencepiece.bpe.model",
+      "blobId": "7a3f40a75f870bc1f21700cd414dc2acc431583c",
+      "size": 5069051,
+      "lfs": {
+        "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+        "size": 5069051,
+        "pointerSize": 132
+      }
+    },
+    "special_tokens_map.json": {
+      "rfilename": "special_tokens_map.json",
+      "blobId": "b1879d702821e753ffe4245048eee415d54a9385",
+      "size": 964
+    },
+    "tokenizer.json": {
+      "rfilename": "tokenizer.json",
+      "blobId": "1c98a28b19c084901b2622d8e8b15e85eed13bff",
+      "size": 17098273,
+      "lfs": {
+        "sha256": "69564b696052886ed0ac63fa393e928384e0f8caada38c1f4864a9bfbf379c15",
+        "size": 17098273,
+        "pointerSize": 133
+      }
+    },
+    "tokenizer_config.json": {
+      "rfilename": "tokenizer_config.json",
+      "blobId": "328a00a9a560aadcf2a3064f917517359eb3cc26",
+      "size": 1173
+    }
+  }
+}

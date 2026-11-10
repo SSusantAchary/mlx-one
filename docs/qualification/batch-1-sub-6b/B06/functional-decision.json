@@ -1,0 +1,25 @@
+{
+  "status": "PASS_FUNCTIONAL",
+  "scope": "ViT supervised classification, exact pinned checkpoint and recorded image fixtures",
+  "fixed_1e4_hidden_diagnostic": "FAIL",
+  "class_logits": {
+    "status": "PASS",
+    "max_abs_error": 1.71661376953125e-05,
+    "mean_abs_error": 2.4779694740573177e-06
+  },
+  "top5_parity": {
+    "status": "PASS"
+  },
+  "reference_rounding": {
+    "status": "PASS",
+    "publisher_fp32_max_error": 0.00038655192703285213,
+    "native_fp32_max_error": 0.00021760808134829723,
+    "bound": "2 * publisher FP32-vs-FP64 max error + 1e-5; independent rounding diagnostic"
+  },
+  "basis": "Native FP32 is closer to the independent publisher FP64 output than publisher FP32 is; retain the failed fixed absolute hidden-state diagnostic. No claim of universal 1e-4 hidden-state parity.",
+  "acceptance_policy": "mlx_one_development_guidelines_v1.0.md sections 1, 6, 8 and 17: task correctness and claim-specific numerical diagnostics",
+  "gate_record": "docs/qualification/batch-1-sub-6b/diagnostic-fp64/B06/native.json",
+  "installed_interfaces_evidence": "docs/qualification/batch-1-sub-6b/installed/B06/native.json",
+  "installed_interfaces_status": "PASS",
+  "broader_hidden_parity": "NOT_CLAIMED; fixed 1e-4 diagnostic remains FAIL"
+}

@@ -7,6 +7,10 @@ availability remains task-specific; SAM3 uses its Python/CLI segmentation paths.
 
 [Getting started](../getting-started.md) · [Server and Web UI](../ui.md) · [HTTP compatibility](openai-compatibility.md)
 
+The source checkout adds [native Python, CLI, Engine and HTTP workflows](../models/batch-1-sub-6b/README.md):
+paired BERT/XLM-R reranking, dense/sparse/token retrieval, T5, supervised ViT and Kokoro.
+These new source APIs are separate from the dated 0.1.1 release cohort.
+
 ## CLI
 
 ### Inspect and plan

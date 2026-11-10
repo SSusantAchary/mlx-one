@@ -81,6 +81,7 @@ vision = ["pillow>=10,<13"]
 ocr = ["pillow>=10,<13", "pypdfium2>=4.30,<6", "tiktoken>=0.9,<1"]
 ocr-bench = ["rapidfuzz>=3,<4", "pyarrow>=20,<24"]
 audio = []  # Native MLX/NumPy/tokenizers are core; encoded media additionally requires FFmpeg.
+kokoro = ["phonemizer-fork==3.3.2", "espeakng-loader==0.2.4"]
 qwen-align-ja = ["nagisa==0.2.11"]
 qwen-align-ko = ["soynlp==0.0.493"]  # Also requires the pinned checkpoint dictionary.
 dev = [
@@ -107,6 +108,8 @@ where = ["src"]
 mlx_one = [
     "mlxboost/provenance/sources.yaml",
     "models/UPSTREAM_LICENSE",
+    "models/BATCH1_NOTICE.md",
+    "models/FLAGEMBEDDING_LICENSE",
     "models/classification/NOTICE.md",
     "models/vision_language/UPSTREAM_LICENSE",
     "models/vision_language/UPSTREAM.md",
@@ -132,6 +135,7 @@ mlx_one = [
     "models/detection/NOTICE.md",
     "models/depth/NOTICE.md",
     "models/audio/qwen3_asr/NOTICE",
+    "models/audio/kokoro/weight_shapes.json",
     "ui/dist/**/*",
 ]
 

@@ -1,0 +1,8 @@
+{
+  "transformers": "4.40.2",
+  "torch": "2.15.0",
+  "source_module": "transformers.models.bert.modeling_bert",
+  "source_sha256": "1f0f788f36652a3df7a18cf5fd5142279b38f8cd1fb8cd907f11fd8c785ded18",
+  "output_sha256": "02839a6c25f043404e6ea58db84631f94fecd92833b7752dc115b7f983f30dbf",
+  "parameter_count": 117653760
+}

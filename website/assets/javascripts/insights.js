@@ -60,7 +60,8 @@
       const rows = models.filter(row => (!modality.value || row.modality === modality.value)
         && (!precision.value || row.precision === precision.value)
         && (!query || [row.model_type, row.checkpoint, row.task, row.precision].join(' ').toLowerCase().includes(query)));
-      host.querySelector('[data-support-count]').textContent = `${rows.length} of ${models.length} supported model types shown.`;
+      const types = new Set(rows.map(row => row.model_type)).size;
+      host.querySelector('[data-support-count]').textContent = `${rows.length} of ${models.length} verified checkpoint profiles shown, covering ${types} of ${data.support.supported} supported model types.`;
       const container = host.querySelector('[data-support-table]');
       container.replaceChildren();
       if (!rows.length) { container.append(node('p', 'No models match. Reset filters to show all supported models.')); return; }
@@ -69,9 +70,12 @@
         identity.append(node('strong', row.model_type), node('div', row.checkpoint), node('code', row.revision));
         const evidence = node('div');
         evidence.append(node('span', 'Supported', 'insights-badge insights-status-supported'), document.createTextNode(' '),
-          link('Passing task record', `https://github.com/SSusantAchary/mlx-one/blob/${data.source_commit}/${row.evidence}`),
+          node('div', row.availability),
+          link('Task evidence', `https://github.com/SSusantAchary/mlx-one/blob/${data.source_commit}/${row.evidence}`),
           details('Operations and diagnostics', { operations: row.primary_operations, result_sha256: row.evidence_sha256,
-            interfaces: row.interfaces, quality_status: row.quality_status, execution_dtype: row.execution_dtype || 'Recorded profile' }));
+            interfaces: row.interfaces, quality_status: row.quality_status, diagnostics: row.diagnostics,
+            known_limitations: row.known_limitations, modes: row.modes, functional_decision: row.functional_decision,
+            release_approval: row.release_approval, execution_dtype: row.execution_dtype || 'Recorded profile' }));
         return [identity, row.task, row.precision, evidence];
       }), 'Current native model support: selected checkpoints and primary workflows'));
     };
@@ -118,17 +122,17 @@
     });
     admissions.forEach(p => {
       const dot = add('circle', { cx: x(p), cy: y(p.supported), r: 6, class: 'insights-admission-point' });
-      const tooltip = document.createElementNS(ns, 'title'); tooltip.textContent = `${p.date}: ${p.supported} supported primary workflows`; dot.append(tooltip);
-      add('text', { x: x(p), y: y(p.supported) - 14, 'text-anchor': 'end', class: 'insights-chart-label' }, `${p.supported} workflows · ${p.date}`);
+      const tooltip = document.createElementNS(ns, 'title'); tooltip.textContent = `${p.date}: ${p.supported} model types with passing primary workflows`; dot.append(tooltip);
+      add('text', { x: x(p), y: y(p.supported) - 14, 'text-anchor': 'end', class: 'insights-chart-label' }, `${p.supported} types · ${p.date}`);
     });
     add('text', { x: 48, y: 235, class: 'insights-chart-label' }, points[0].date);
     add('text', { x: 728, y: 235, 'text-anchor': 'end', class: 'insights-chart-label' }, new Date(lastTime).toISOString().slice(0, 10));
     target.append(svg);
     const legend = node('p', null, 'insights-legend');
-    legend.append(node('span', '━ Registered native types', 'insights-catalog-key'), node('span', '● Dated passing primary workflows', 'insights-smoke-key'));
+    legend.append(node('span', '━ Registered native types', 'insights-catalog-key'), node('span', '● Types with verified primary workflows', 'insights-smoke-key'));
     target.append(legend);
     host.querySelector('[data-registration-table]').append(table(
-      ['Month', 'Registered types', 'Registry snapshot', 'Passing primary workflows', 'Campaign date'],
+      ['Month', 'Registered types', 'Registry snapshot', 'Types with verified workflows', 'Validation record date'],
       registered.monthly.map(p => {
         const cohort = admissions.filter(a => a.date.slice(0, 7) === p.month).at(-1);
         return [p.month, p.registered, link(p.date, `https://github.com/SSusantAchary/mlx-one/commit/${p.commit}`),

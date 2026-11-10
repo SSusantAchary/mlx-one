@@ -51,6 +51,8 @@ class LoadedRetrievalModel:
     model_id: str
     revision: str | None
     architecture: str = "qwen3"
+    query_prefix: str = ""
+    document_prefix: str = ""
 
 
 def load_retrieval_model(
@@ -73,10 +75,13 @@ def load_retrieval_model(
         if task not in {None, "embedding"}:
             raise RetrievalModelLoadError("LFM2 ColBERT supports embedding only")
         return _load_colbert(root, model, revision, config_data)
-    if model_type in {"bert", "mpnet"}:
-        if task not in {None, "embedding"}:
-            raise RetrievalModelLoadError(f"{model_type} supports embedding only")
-        return _load_sentence_encoder(root, model, revision, model_type, config_data)
+    if model_type in {"bert", "mpnet", "xlm-roberta", "nomic_bert"}:
+        detected = detect_retrieval_task(root)
+        if task is not None and task != detected:
+            raise RetrievalModelLoadError("requested retrieval task conflicts with checkpoint head")
+        if detected == "reranking" and model_type not in {"bert", "xlm-roberta"}:
+            raise RetrievalModelLoadError(f"{model_type} has no native sequence-pair scorer")
+        return _load_sentence_encoder(root, model, revision, model_type, config_data, detected)
     if model_type != "qwen3":
         raise RetrievalModelLoadError(f"unsupported native retrieval model type: {model_type!r}")
     try:
@@ -165,10 +170,21 @@ def _load_sentence_encoder(
     revision: str | None,
     model_type: str,
     config_data: dict[str, Any],
+    task: RetrievalTask = "embedding",
 ) -> LoadedRetrievalModel:
     try:
         quantization = _quantization_config(config_data)
-        payload = _sentence_encoder_config(root, config_data)
+        payload = (
+            {
+                **config_data,
+                "task": "reranking",
+                "num_labels": len(config_data.get("id2label", {})),
+                "sentence_max_length": config_data.get("max_position_embeddings", 512)
+                - (config_data.get("pad_token_id", 1) + 1 if model_type == "xlm-roberta" else 0),
+            }
+            if task == "reranking"
+            else _sentence_encoder_config(root, config_data)
+        )
         registration = get_registration(model_type)
         config = registration.config_class().from_dict(payload)
         tokenizer = HFTokenizerAdapter.from_directory(root)
@@ -186,20 +202,52 @@ def _load_sentence_encoder(
     resolved_revision = revision
     if resolved_revision is None and re.fullmatch(r"[0-9a-f]{40,64}", root.name):
         resolved_revision = root.name
+    prefixes = _checkpoint_prefixes(root, str(model))
     return LoadedRetrievalModel(
-        native, tokenizer, "embedding", root, str(model), resolved_revision, model_type
+        native, tokenizer, task, root, str(model), resolved_revision, model_type, *prefixes
     )
+
+
+def _checkpoint_prefixes(root: Path, model_id: str) -> tuple[str, str]:
+    """Read explicit local formatting metadata, or the selected Hub profile."""
+    metadata = root / "mlx_one_retrieval.json"
+    if metadata.is_file():
+        value = _read_json(metadata)
+        pair = value.get("query_prefix", ""), value.get("document_prefix", "")
+        if not all(isinstance(prefix, str) for prefix in pair):
+            raise RetrievalModelLoadError("retrieval prefixes must be strings")
+        return pair
+    # Formatting is checkpoint policy, not architecture selection. A local copy
+    # outside the Hub cache carries its explicit mlx_one_retrieval.json sidecar.
+    hub_name = "models--intfloat--multilingual-e5-small"
+    if model_id == "intfloat/multilingual-e5-small" or hub_name in root.parts:
+        return "query: ", "passage: "
+    if (
+        model_id == "nomic-ai/nomic-embed-text-v1.5"
+        or "models--nomic-ai--nomic-embed-text-v1.5" in root.parts
+    ):
+        return "search_query: ", "search_document: "
+    return "", ""
 
 
 def _sentence_encoder_config(root: Path, config_data: dict[str, Any]) -> dict[str, Any]:
     """Honor supported Sentence Transformer pooling and normalization metadata."""
     pooling = _read_json(root / "1_Pooling" / "config.json")
-    if pooling.get("pooling_mode_mean_tokens") is not True or any(
-        type(value) is not bool or (key != "pooling_mode_mean_tokens" and value)
-        for key, value in pooling.items()
-        if key.startswith("pooling_mode_")
+    modes = [key for key, value in pooling.items() if key.startswith("pooling_mode_") and value]
+    if (
+        len(modes) != 1
+        or modes[0] not in {"pooling_mode_mean_tokens", "pooling_mode_cls_token"}
+        or any(
+            type(value) is not bool
+            for key, value in pooling.items()
+            if key.startswith("pooling_mode_")
+        )
     ):
-        raise ValueError("native sentence encoders require mean-token pooling only")
+        raise ValueError("native sentence encoders require exactly one mean or CLS pooling mode")
+    if config_data.get("model_type") not in {"bert", "xlm-roberta"} and modes != [
+        "pooling_mode_mean_tokens"
+    ]:
+        raise ValueError("CLS pooling is not implemented for this sentence encoder")
     dimension = pooling.get("word_embedding_dimension")
     if type(dimension) is not int or dimension != config_data.get("hidden_size"):
         raise ValueError("pooling dimension differs from the native encoder width")
@@ -224,6 +272,11 @@ def _sentence_encoder_config(root: Path, config_data: dict[str, Any]) -> dict[st
         ),
         "add_pooling_layer": False,
         "normalize_embeddings": normalize,
+        **(
+            {"pooling": "cls" if modes == ["pooling_mode_cls_token"] else "mean"}
+            if config_data.get("model_type") == "bert"
+            else {}
+        ),
     }
 
 
@@ -338,6 +391,17 @@ def _load_colbert(
 
 def detect_retrieval_task(root: str | Path) -> RetrievalTask:
     directory = Path(root)
+    config_path = directory / "config.json"
+    config = _read_json(config_path) if config_path.is_file() else {}
+    if config.get("model_type") in {"bert", "xlm-roberta"} and any(
+        str(name).endswith("ForSequenceClassification") for name in config.get("architectures", [])
+    ):
+        labels = config.get("num_labels", len(config.get("id2label", {})))
+        if labels != 1:
+            raise RetrievalModelLoadError(
+                "cross-encoder reranking requires a scalar classification head"
+            )
+        return "reranking"
     metadata_path = directory / "config_sentence_transformers.json"
     metadata = _read_json(metadata_path) if metadata_path.exists() else {}
     metadata_markers = " ".join(
@@ -396,6 +460,8 @@ def _resolve(
                     "config_sentence_transformers.json",
                     "1_Pooling/config.json",
                     "sentence_bert_config.json",
+                    "preprocessor_config.json",
+                    "mlx_one_retrieval.json",
                     "*.safetensors",
                     "*.safetensors.index.json",
                 ],

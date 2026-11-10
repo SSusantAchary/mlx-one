@@ -14,6 +14,14 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.retrieval:"+adapter f
     ("qwen3_embedding","Qwen3EmbeddingAdapter"),("qwen3_reranker","Qwen3RerankAdapter"),
     ("lfm2_colbert","LFM2ColBERTAdapter"))})
 
+BUILTIN_ADAPTERS.update({
+    "xlm-roberta": "mlx_one.engine.task_runners.retrieval:XLMRobertaAdapter",
+    "nomic_bert": "mlx_one.engine.task_runners.retrieval:NomicEmbeddingAdapter",
+    "t5": "mlx_one.engine.task_runners.batch1:T5Adapter",
+    "vit": "mlx_one.engine.task_runners.batch1:ViTAdapter",
+    "kokoro": "mlx_one.engine.task_runners.batch1:KokoroAdapter",
+})
+
 VISION_ADAPTERS={name:"mlx_one.engine.task_runners.multimodal:"+adapter for name,adapter in (
     ("qwen2_vl","Qwen2VLAdapter"),("qwen2_5_vl","Qwen25VLAdapter"),
     ("lfm2_vl","LFM2VLAdapter"),("qwen3_5","Qwen35VisionAdapter"))}
@@ -71,6 +79,10 @@ def task_specs(entry):
     if entry.model_type == "lfm2_colbert":
         tasks.discard(TaskKind.EMBEDDING)
     recipes = {
+        TaskKind.TEXT_TO_TEXT: ("encoder-decoder", (StageKind.ENCODE, StageKind.DECODE),
+                               "bounded-seq2seq"),
+        TaskKind.IMAGE_CLASSIFICATION: ("supervised-image", (StageKind.ENCODE, StageKind.SCORE),
+                                       "fixed-image-batches"),
         TaskKind.VOICE_ACTIVITY_DETECTION: ("vad", (StageKind.ENCODE, StageKind.SCORE),
                                              "audio-chunk-budget"),
         TaskKind.TEXT_GENERATION: ("causal", (StageKind.PREFILL, StageKind.DECODE), "token-budget"),

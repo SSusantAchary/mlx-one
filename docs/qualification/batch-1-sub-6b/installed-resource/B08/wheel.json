@@ -1,0 +1,5 @@
+{
+  "wheel": "mlx_one-0.1.1-py3-none-any.whl",
+  "sha256": "ea5a2e3f200844640086a54be5edc98ba005501db8a151d2ad74f4d1a9c7a5c6",
+  "note": "Real checkpoint verifies final Kokoro 3 GiB reservation and 4 GiB server budget."
+}

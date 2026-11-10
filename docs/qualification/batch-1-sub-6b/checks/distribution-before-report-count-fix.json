@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "wheel": "mlx_one-0.1.1-py3-none-any.whl",
+  "wheel_sha256": "aae2510d8dcac935aa76b91d2d7c2efdfbbe4df761f5fa0b8d0a92006574b0f3",
+  "installed_payload_files": 535,
+  "package_location": "inside isolated environment",
+  "registered_types": 2,
+  "admitted_checkpoint_profiles": 10,
+  "native_tiny_checks": {
+    "t5": {
+      "status": "PASS",
+      "max_abs_error": 7.450580596923828e-09
+    },
+    "vit": {
+      "status": "PASS",
+      "max_abs_error": 2.60770320892334e-08
+    },
+    "xlm-embedding": {
+      "status": "PASS",
+      "max_abs_error": 7.748603820800781e-07
+    },
+    "xlm-reranking": {
+      "status": "PASS",
+      "max_abs_error": 9.313225746154785e-10
+    }
+  },
+  "forbidden_reference_distributions": "ABSENT",
+  "pip_check": "PASS",
+  "version": "0.1.1"
+}

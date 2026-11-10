@@ -39,6 +39,7 @@ class FunctionDefinition(BaseModel):
     @classmethod
     def validate_parameters(cls, value):
         from mlx_one.text.harmony_tools import validate_schema
+
         validate_schema(value)
         return value
 
@@ -58,6 +59,7 @@ class FunctionCall(BaseModel):
     @classmethod
     def validate_arguments(cls, value: str) -> str:
         from mlx_one.text.harmony_tools import load_arguments
+
         load_arguments(value)
         return value
 
@@ -195,6 +197,8 @@ class EmbeddingRequest(BaseModel):
     input: str | list[str]
     dimensions: int | None = Field(default=None, ge=1)
     input_type: Literal["query", "document"] = "document"
+    instruction: str | None = None
+    apply_prefix: bool = True
 
     @field_validator("input")
     @classmethod

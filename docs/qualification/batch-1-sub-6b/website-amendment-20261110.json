@@ -1,0 +1,137 @@
+{
+  "date": "2026-11-10",
+  "change": "Present current model capabilities and verified checkpoints on GitHub Pages without campaign branding",
+  "files": {
+    "website/support.py": {
+      "previous_sha256": "9ad0f6708262edc551f20bbeaca7ce1bd8812f87fe17d0a6f772c13e0715061e",
+      "current_sha256": "9418fb897687a9c4330c552755ffeb8e01c90e2d787ac8cacc8566d3e7423129"
+    },
+    "website/README.md": {
+      "previous_sha256": "b63784d3e2657eb320b90e80e10c223f9357aec9aeacb9ec041408de7d4db1d9",
+      "current_sha256": "4a07c75467418a717cfdcdd3bc16ce47d43dc92db37ffd388a910f63d86de948"
+    },
+    "website/zensical.toml": {
+      "previous_sha256": "67626b7e12a5c41cfc8cd22dc46aefba4428c80bb69422b0c8eb6f3673f5ed3a",
+      "current_sha256": "3094fb7bb63fcf983e451777375d22bdcfeddba38d786d6d9e356719c622c6bf"
+    },
+    "website/insights.py": {
+      "previous_sha256": "91806a29494cc26c6cc5be9938d611c47f3f531b569db5b0d72b971e979d02d6",
+      "current_sha256": "0e476bdff7c9d1787282b4b52519e0a5afb4129589dd2c2b693a27791e7ed9d3"
+    },
+    "website/prepare.py": {
+      "previous_sha256": "4d70228beb3110c3d8f5903809eb05750b0809c419a28d6edb766c56c5c095c0",
+      "current_sha256": "55e79582f727071f9179ae83cb1c55110ae4ad6e3da5472c184e32b8cc9493ae"
+    },
+    "website/tests/test_support.py": {
+      "previous_sha256": "a2e820e3a860a205984409275fc733b28e90e4777d0b86e46aefe34480bfb223",
+      "current_sha256": "f8c68d651979835a03a6eafebdaa798a4fae2f7cf22d188a8f5d61dd9489297b"
+    },
+    "website/tests/test_insights.py": {
+      "previous_sha256": "4a8a66e501320bafef4b5db5754b6bdb53db8f31fdef18c184f2d2721734361f",
+      "current_sha256": "ae295b07be220e315fee5b1a69b60df4a64c4131813bb47c9e9f53f5c9833620"
+    },
+    "website/pages/insights.md": {
+      "previous_sha256": "14f62d4ee6b9636a67cc156900f5351f188e0ffa010488354798b8335e83f8c8",
+      "current_sha256": "de31c20a26fae5483d8907ac07ac2286429fd1869ad3c167a71a6abfef4b3072"
+    },
+    "website/pages/index.md": {
+      "previous_sha256": "842284bf75fbb2380ff4b5d48902821a7756263131439872c2a5356fd6525dab",
+      "current_sha256": "1994f1268b29102737680afd03ec56ed19c6386588add994785cc59b3a71d938"
+    },
+    "website/pages/guides/retrieval.md": {
+      "previous_sha256": "233937de9495a8ccab45e93573b5580b29d19b9f6645169f2cd935fd18257d3c",
+      "current_sha256": "cd7049800826e43b5d575987257eef8eb3934537ecf24da37be5f06d5d81536e"
+    },
+    "website/assets/javascripts/insights.js": {
+      "previous_sha256": "6840f5caa22af43024879e3e4ba38ef62ceae062a482205c1d49b67b93f6cff5",
+      "current_sha256": "bee4f3e7ced4967b694f7ea9ffde23d5addec90c599f19d328cc5acfa0fbfe41"
+    },
+    "docs/models/index.md": {
+      "previous_sha256": "136af08defc40066c84ef72ba16b184c23db0fda507d795e34c4dd89f9976e9c",
+      "current_sha256": "5e056fb01023f0ce12d9e7ea9b36eb60f7fdf295490e232c9859e712ed1e87f5"
+    },
+    "docs/models/batch-1-sub-6b/REPORT.md": {
+      "previous_sha256": "60d02d574af0f6c5bc2b59337dc286b32c7681f8a96d44148616ead132ffb1a6",
+      "current_sha256": "7e433bffd7732c2805d4121abaced9b8552fa3f294df8dad75c94cee81fd2041"
+    },
+    "docs/models/batch-1-sub-6b/README.md": {
+      "previous_sha256": "20ce1318f4425e01857c9174ea5b2998c18a97cc72889b3db8ca649cb44e3563",
+      "current_sha256": "8e431033de68bad9da35dcc10b0a4a8ded4ef364e627bd342b8d521a49fdbf56"
+    },
+    "docs/models/batch-1-sub-6b/references.md": {
+      "previous_sha256": "11c9e16991c9f8612153d871d600cba890b8dca85af403ac7d30558ce8c09c8c",
+      "current_sha256": "35e757205190370cb3d57d2aa6a7e15e1792a44f296f335a181cbbbfbb02aeb7"
+    },
+    "docs/api/openai-compatibility.md": {
+      "previous_sha256": "257e0f23113b1a6ce18c8d47acf48b4c664642412ea0530b236220954b2112ed",
+      "current_sha256": "a66075a01022866e2d26494538189a422347c615dbb3667665bedaa107b7b9c6"
+    },
+    "docs/api/index.md": {
+      "previous_sha256": "152ab0c7fb6ffb35cadab5a2720cf076e5ed50377e3601abab0e499e1a7294cb",
+      "current_sha256": "e7956ada4f2d06b6f8eb179b0df89ef663e255c55750c95411c735307aa674c1"
+    },
+    "src/mlx_one/models/audio/kokoro/README.md": {
+      "previous_sha256": "8ebcdc76b22c5269ca69cce676f64c8b6c681a468731d0ed3da1b2dadf44a441",
+      "current_sha256": "a2919a740e2e78958c4ea613cff331f88859f3a4d83a88e7d97768e72d6b2b99"
+    },
+    "src/mlx_one/models/language/t5/README.md": {
+      "previous_sha256": "bd59095a5e3cbedd15e05ec3082cbfd6652df16f55439b3c678faca139ec3ed3",
+      "current_sha256": "765591a77562765589da8032c65c04109a471648e7ab9ecf2884187e02d045f0"
+    },
+    "src/mlx_one/models/embeddings/nomic_bert/README.md": {
+      "previous_sha256": "fca3f10f46b6db5d05bace701cb99183682292004e6827f88865e65c3845ad1b",
+      "current_sha256": "84b1a50e236383a1baa0c921ab42679468a0ad53152c2e697cfd4963613c1b83"
+    },
+    "src/mlx_one/models/embeddings/xlm_roberta/README.md": {
+      "previous_sha256": "660ab3fb3f8636165fac6ff7f5238376687fe162dba357de9bba696b9e9f5e8a",
+      "current_sha256": "a9d557217d4602f8901950372908fb68a0ed23bdd8cec49494bbef3aa945981f"
+    },
+    "status_models_testing.md": {
+      "previous_verified_sha256": "29df896e647e0267b7a8e4b36b5ca745b882a3560a6f48b2482f507d5ba7036b",
+      "current_sha256": "5d94830b3a65f719d7b3e9dc9edf0118785156be556abad7095c61ee71a95ae5"
+    }
+  },
+  "current_coverage": {
+    "native_architecture_types": 45,
+    "modalities": 7,
+    "verified_checkpoint_profiles": 50,
+    "additional_profiles": 10
+  },
+  "release_record": "Dated 40-type 0.1.1 approval preserved. Additional profiles retain NOT_REQUESTED package release approval.",
+  "model_runtime_sources": "UNCHANGED against verified source-files.json snapshot",
+  "model_runtime_snapshot_sha256": "3cd45d161f8ff3a5a28168d6eed3231fc60f3efbd3ad1a6f5594a92335f831de",
+  "numerical_evidence": "UNCHANGED; ViT hidden diagnostic remains FAIL and classification acceptance decision is linked",
+  "website_checks": {
+    "status": "PASS",
+    "unit_tests": 28,
+    "html_pages": 69,
+    "local_links": 8174,
+    "link_errors": 0,
+    "javascript_syntax": "PASS"
+  },
+  "documentation_checks": {
+    "files": 59,
+    "local_links": 1012,
+    "external_urls": 90,
+    "python_examples": 45,
+    "errors": []
+  },
+  "pypi_readme_check": "PASS; unchanged",
+  "model_downloads": "NONE",
+  "commit_push_deploy_publish": "NOT_PERFORMED",
+  "artifact_note": "No package artifact rebuilt for this website/documentation-only amendment. Earlier artifact identities and results are preserved.",
+  "checks": {
+    "build": {
+      "path": "docs/qualification/batch-1-sub-6b/checks/website-amendment-20261110-build.log",
+      "sha256": "e06130a218ca44eda8820ec76ec98a01e0f6a61d8ee5de3aad545f0851572ca1"
+    },
+    "tests": {
+      "path": "docs/qualification/batch-1-sub-6b/checks/website-amendment-20261110-tests.log",
+      "sha256": "823bac32f40ee084c458f0468a27b100005e212c9735f78f7d0e8305dc338d6a"
+    },
+    "documentation": {
+      "path": "docs/qualification/batch-1-sub-6b/checks/website-amendment-20261110-documentation.log",
+      "sha256": "ffb8503755f8b6f16c6ce2e61ea5796c017db6b1b4b0dbfcb94c82a1c8e87d59"
+    }
+  }
+}

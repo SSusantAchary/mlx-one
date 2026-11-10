@@ -16,6 +16,7 @@ from mlx_one.retrieval.service import (
     _single_token,
     _validate_batch_options,
     _validate_texts,
+    format_embedding_texts,
 )
 
 
@@ -63,8 +64,10 @@ class RetrievalAdapter(NativeTaskAdapter):
         task = TaskKind(task)
         config = self.bundle.model.config
         late = self.family == "lfm2_colbert"
+        pair_encoder = self.family in {"bert", "xlm-roberta"} and self.bundle.task == "reranking"
         if task == TaskKind.RERANKING:
-            if self.family != "qwen3_reranker" or self.bundle.task != "reranking":
+            if (self.family not in {"bert", "xlm-roberta", "qwen3_reranker"}
+                    or self.bundle.task != "reranking"):
                 raise ValueError("checkpoint has no pair scoring task")
             query = payload["query"]
             texts = tuple(payload["documents"])
@@ -89,7 +92,7 @@ class RetrievalAdapter(NativeTaskAdapter):
         if input_type not in {"query", "document"}:
             raise ValueError("input_type must be query or document")
         instruction = payload.get("instruction", DEFAULT_RETRIEVAL_INSTRUCTION)
-        if not isinstance(instruction, str) or not instruction:
+        if not pair_encoder and (not isinstance(instruction, str) or not instruction):
             raise ValueError("instruction must be nonempty")
         size = (
             config.projection_dim
@@ -106,7 +109,18 @@ class RetrievalAdapter(NativeTaskAdapter):
             raise ValueError("dimensions differ from native encoder width")
         tokenizer = self.bundle.tokenizer
         encoder_masks = scoring_masks = None
-        if task == TaskKind.RERANKING:
+        type_ids = None
+        if task == TaskKind.RERANKING and pair_encoder:
+            if payload.get("instruction") is not None:
+                raise ValueError("sequence-pair rerankers do not accept Qwen instructions")
+            pairs = [tokenizer.encode_pair(query, text, max_length=limit) for text in texts]
+            sequences = tuple(tuple(pair[0]) for pair in pairs)
+            type_ids = tuple(tuple(pair[1]) for pair in pairs)
+            key = ("encoder-pairs",)
+            top_k = payload.get("top_k")
+            if top_k is not None and (type(top_k) is not int or top_k < 1):
+                raise ValueError("top_k must be positive")
+        elif task == TaskKind.RERANKING:
             prefix, suffix = tokenizer.encode(RERANK_PREFIX), tokenizer.encode(RERANK_SUFFIX)
             remaining = limit - len(prefix) - len(suffix)
             if remaining < 1:
@@ -134,17 +148,19 @@ class RetrievalAdapter(NativeTaskAdapter):
                 raise ValueError("instruction is only valid for queries")
             if late and input_type == "query":
                 limit = min(limit, config.query_max_length)
+            formatted = format_embedding_texts(
+                self.bundle, texts, input_type, payload.get("instruction"),
+                payload.get("apply_prefix", True)
+            ) if not late else texts
             sequences = tuple(
                 tuple(
                     tokenizer.encode(
-                        f"Instruct: {instruction}\nQuery:{t}"
-                        if input_type == "query" and self.family == "qwen3_embedding"
-                        else t,
+                        t,
                         add_special_tokens=True,
                         max_length=limit,
                     )
                 )
-                for t in texts
+                for t in formatted
             )
             if late and getattr(config, "query_prefix", None) is not None:
                 from mlx_one.retrieval.colbert import prepare_token_features
@@ -153,6 +169,8 @@ class RetrievalAdapter(NativeTaskAdapter):
                     tokenizer, config, texts, input_type=input_type, max_length=limit
                 )
             key = (size,)
+            if self.family == "nomic_bert":
+                key = (size, payload.get("dimensions") is not None)
         if any(not seq for seq in sequences):
             raise ValueError("empty tokenized input is unsupported")
         data = {
@@ -164,6 +182,8 @@ class RetrievalAdapter(NativeTaskAdapter):
         }
         if encoder_masks is not None:
             data.update(encoder_masks=encoder_masks, scoring_masks=scoring_masks)
+        if type_ids is not None:
+            data["type_ids"] = type_ids
         max_width = max(map(len, sequences))
         hidden = getattr(getattr(config, "text_config", config), "hidden_size", size)
         transient = len(sequences) * max_width * (hidden * 32 + max_width * 16 + size * 4)
@@ -196,10 +216,13 @@ class RetrievalAdapter(NativeTaskAdapter):
             key = len(seq) if self.family == "lfm2_colbert" else (len(seq) - 1).bit_length()
             groups.setdefault(key, []).append(index)
         outputs = {}
+        type_ids = [types for request in prepared for types in request.payload.get("type_ids", ())]
         for indices in groups.values():
             ids, masks = self.bundle.tokenizer.pad(
                 [sequences[i] for i in indices],
-                padding_side="right" if self.family == "bert" else "left",
+                padding_side="right" if self.family in {
+                    "bert", "mpnet", "xlm-roberta", "nomic_bert"
+                } else "left",
             )
             if any(
                 sum(mask) != len(sequences[index])
@@ -210,13 +233,17 @@ class RetrievalAdapter(NativeTaskAdapter):
             if self.family == "lfm2_colbert":
                 arguments["attention_mask"] = mx.array([encoder_masks[i] for i in indices])
                 arguments["embedding_mask"] = mx.array([scoring_masks[i] for i in indices])
-            if prepared[0].task == TaskKind.RERANKING:
+            if prepared[0].task == TaskKind.RERANKING and self.family in {"bert", "xlm-roberta"}:
+                arguments["token_type_ids"] = mx.array(
+                    [list(type_ids[i]) + [0] * (len(ids[0]) - len(type_ids[i])) for i in indices]
+                )
+            elif prepared[0].task == TaskKind.RERANKING:
                 arguments.update(
                     false_token_id=prepared[0].semantic_key[0],
                     true_token_id=prepared[0].semantic_key[1],
                 )
             elif hasattr(self.bundle.model.config, "validate_dimensions"):
-                arguments["dimensions"] = prepared[0].payload["size"]
+                arguments["dimensions"] = prepared[0].payload["options"].get("dimensions")
             result = self.bundle.model(mx.array(ids), **arguments)
             if prepared[0].task == TaskKind.RERANKING:
                 mx.eval(result.scores, result.probabilities)
@@ -281,11 +308,21 @@ class RetrievalAdapter(NativeTaskAdapter):
 
 class BertEmbeddingAdapter(RetrievalAdapter):
     family = "bert"
-    supported_tasks = (TaskKind.EMBEDDING,)
+    supported_tasks = (TaskKind.EMBEDDING, TaskKind.RERANKING)
 
 
 class MPNetEmbeddingAdapter(RetrievalAdapter):
     family = "mpnet"
+    supported_tasks = (TaskKind.EMBEDDING,)
+
+
+class XLMRobertaAdapter(RetrievalAdapter):
+    family = "xlm-roberta"
+    supported_tasks = (TaskKind.EMBEDDING, TaskKind.RERANKING)
+
+
+class NomicEmbeddingAdapter(RetrievalAdapter):
+    family = "nomic_bert"
     supported_tasks = (TaskKind.EMBEDDING,)
 
 
