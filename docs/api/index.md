@@ -1,6 +1,6 @@
 # Python, CLI and HTTP APIs
 
-**0.1.2 is approved for publication**, with 45 model types and 50 verified
+**0.1.2 is published on PyPI**, with 45 model types and 50 verified
 checkpoint profiles. [Release notes](../releases/0.1.2.md) identify the tested
 scope. Interface availability remains task-specific; SAM3 uses its Python/CLI
 segmentation paths.

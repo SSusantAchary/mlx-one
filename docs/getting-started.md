@@ -6,17 +6,17 @@ mlx-one requires Python 3.10 or newer and an Apple Silicon Mac with macOS 15 or
 later for model execution. The current MLX/Metal pair is pinned to 0.32.2;
 Python 3.12.11 is the tested development environment.
 
-**0.1.2 is approved for publication**, covering 45 native architecture types and
+**0.1.2 is published on PyPI**, covering 45 native architecture types and
 50 verified checkpoint profiles. The [release decision](releases/0.1.2.json)
-tracks upload status separately. Use the [source setup](#source-installation-for-development)
-while artifacts are being uploaded. See [0.1.2 release notes](releases/0.1.2.md).
+records the verified file identities. See [0.1.2 release notes](releases/0.1.2.md)
+or the [source setup](#source-installation-for-development) for development.
 
 ### Install from PyPI
 
-Install the 0.1.2 release once it is published:
+Install or upgrade to 0.1.2:
 
 ```bash
-python -m pip install "mlx-one==0.1.2"
+python -m pip install --upgrade "mlx-one==0.1.2"
 ```
 
 Include the HTTP server, vision and OCR dependencies with:
@@ -28,8 +28,8 @@ mlx-one registry list
 ```
 
 The [0.1.2 release notes](releases/0.1.2.md) record validation, and the
-[PyPI release page](https://pypi.org/project/mlx-one/0.1.2/) lists artifacts after
-publication. The previous published version is `0.1.1`. Model weights are
+[PyPI release page](https://pypi.org/project/mlx-one/0.1.2/) lists the published
+artifacts. The previous published version is `0.1.1`. Model weights are
 acquired separately under their publishers' terms.
 
 ### Source installation for development

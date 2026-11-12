@@ -1,11 +1,11 @@
 # Model support and validation records
 
-Updated: **10 November 2026**. The current source has **45 native architecture
+Updated: **12 November 2026**. The current source has **45 native architecture
 types across seven modalities**, represented by **50 verified checkpoint
 profiles**: the dated 40-type release cohort below and ten additional profiles.
 The additional workflows meet the technical release criteria for their recorded
-tasks. Version **0.1.2** is approved for publication on 10 November; its
-[release record](docs/releases/0.1.2.json) tracks upload status.
+tasks. Version **0.1.2** was published on PyPI on 11 November; its
+[release record](docs/releases/0.1.2.json) identifies the verified artifacts.
 
 [Model workflows and examples](docs/models/batch-1-sub-6b/README.md) ·
 [Ten-checkpoint validation results](docs/qualification/batch-1-sub-6b/results.json) ·

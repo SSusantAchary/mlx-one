@@ -6,11 +6,11 @@ The ten checkpoint profiles below cover BERT, XLM-R, Nomic, T5, ViT and Kokoro;
 the library has **45 architecture types across seven modalities**. Multiple
 checkpoints can share one architecture type.
 
-The dated 40-type **0.1.1 release approval remains unchanged**. These changes
-need to be merged and published before they appear in an installation from PyPI.
+The dated 40-type **0.1.1 release approval remains unchanged**. These workflows
+are included in **0.1.2**, published on PyPI on 11 November 2026.
 All ten profiles pass the technical release checks for their documented tasks.
 The maintainer approved package **0.1.2** on 10 November 2026; the
-[release record](../../releases/0.1.2.json) tracks publication. Qualification
+[release record](../../releases/0.1.2.json) identifies the published artifacts. Qualification
 files retain their original pre-release approval fields. See
 [results](../../qualification/batch-1-sub-6b/results.json), the
 [engineering report](REPORT.md), [source identities](references.md), and

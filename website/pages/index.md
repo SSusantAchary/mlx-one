@@ -74,7 +74,7 @@ remain visible alongside support.
 
 ## Release record
 
-**0.1.2 was approved for publication on 10 November 2026**, including the ten
+**0.1.2 was published on PyPI on 11 November 2026**, including the ten
 additional workflows and all 45 model types in their documented scope.
 [Release notes](releases/0.1.2.md) ·
 [Publication state](../../docs/releases/0.1.2.json).
@@ -85,7 +85,8 @@ The previously published [0.1.1 release](releases/0.1.1.md) covers the original
 python -m pip install --upgrade "mlx-one[server,vision,kokoro]==0.1.2"
 ```
 
-Use the source installation above while the 0.1.2 artifacts are being uploaded.
+The uploaded wheel and source archive match the validated artifact checksums.
+The source installation above remains available for development.
 
 <p align="center">
   <a href="../../status_models_testing.md">

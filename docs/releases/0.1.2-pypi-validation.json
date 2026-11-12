@@ -2,7 +2,7 @@
   "version": "0.1.2",
   "prepared_date": "2026-11-10",
   "status": "PASS",
-  "publication_status": "BLOCKED_AUTHENTICATION",
+  "publication_status": "PUBLISHED",
   "source_commit": "fe1a66a8fcd1d51ad88672cae8410af9b85a2319",
   "source_base_commit": "57389c99ac53304a7ddb050be4eeea91dffddd9c",
   "release_approval": "APPROVED",
@@ -89,5 +89,33 @@
     "reason": "No PyPI API token found; local environment does not support trusted publishing",
     "log": "docs/qualification/release-0.1.2/upload.log",
     "log_sha256": "4da53ba945163cee1b621cf3069d1e6077161582165250f86ce878be1b227c30"
+  },
+  "published": true,
+  "published_install_version": "0.1.2",
+  "publication_verification": {
+    "path": "docs/qualification/release-0.1.2/publication-20261112.json",
+    "sha256": "8bfba7e3d738986b6389148a2c7babcc6dff74e8edf3159c31a9f59d1d67324e",
+    "verified_date": "2026-11-12",
+    "source": "https://pypi.org/pypi/mlx-one/0.1.2/json",
+    "version": "0.1.2",
+    "status": "PASS",
+    "artifact_sha256_match": true,
+    "files": [
+      {
+        "filename": "mlx_one-0.1.2-py3-none-any.whl",
+        "sha256": "fb367b2e4af597df47f92fb7f18cac1c0304173e0c2c03517cf3f97e9c0596da",
+        "size": 2383267,
+        "upload_time": "2026-11-11T04:58:49.381018Z",
+        "url": "https://files.pythonhosted.org/packages/50/ba/17624c3f6633513b86f6008aaefd469612291968b1edb11b2ca69ab668fd/mlx_one-0.1.2-py3-none-any.whl"
+      },
+      {
+        "filename": "mlx_one-0.1.2.tar.gz",
+        "sha256": "23e821de7e4c02c1c027a3568ac0d0481000b1185bede4b3d9e5ff2058cf6801",
+        "size": 2181589,
+        "upload_time": "2026-11-11T04:58:51.428049Z",
+        "url": "https://files.pythonhosted.org/packages/40/09/41bd9fa219479b3eb749ad7f615f10b7722223f0f3d53e60d1f7ab3d5c26/mlx_one-0.1.2.tar.gz"
+      }
+    ],
+    "validated_source_commit": "fe1a66a8fcd1d51ad88672cae8410af9b85a2319"
   }
 }

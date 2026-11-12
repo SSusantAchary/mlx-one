@@ -6,7 +6,7 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
-### 0.1.2 approved for publication — 2026-11-10
+### 0.1.2 — published 2026-11-11
 
 - Add native T5, ViT, Kokoro, XLM-R and Nomic architecture types, plus additional
   BERT retrieval profiles: ten verified checkpoint workflows and 45 types overall.
@@ -15,9 +15,10 @@ alpha releases may refine planned interfaces.
 - Record 2,599 passing native tests and 54 final targeted checks; retain the ViT
   hidden-state diagnostic failure alongside accepted classification results.
 - Refresh README, model explorer, seven modality counts and workflow documentation.
-- Prepare version 0.1.2 wheel/sdist with current source and package description.
+- Publish the validated 0.1.2 wheel and source archive on PyPI. Verify on
+  12 November that both uploaded SHA-256 values match the audited artifacts.
   [Release notes](docs/releases/0.1.2.md) and the
-  [release decision](docs/releases/0.1.2.json) track artifact publication.
+  [release decision](docs/releases/0.1.2.json) record the published files.
 
 ### 0.1.1 approved for release — 2026-11-08
 

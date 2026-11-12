@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-12",
+  "change": "Mark PyPI 0.1.2 published after matching both remote artifact SHA-256 values; refresh release notes, README and website publication wording",
+  "previous_commit": "5c9a8b7be26d76fcc165ff94b8ad0a682bd5455a",
+  "files": {
+    "CHANGELOG.md": "47843fb85b0bc2e5ad662b955544f273809581b1df9de806bfacfa1d19381d01",
+    "README.md": "6a4085e738c21cdc42c8e864680c4056f41ee24ac13fbe9b38162a4de4d010fc",
+    "README.pypi.md": "e1dad1914aef8f721bbac3a629ece6798412fbcb521e3400d5209949ae07ec6e",
+    "docs/api/index.md": "026358e80b6c72430e3e0702a69687a5ecfbb4867a03eb093acba92a6649ad0b",
+    "docs/getting-started.md": "f94f572d55dee9f249995ef01f1d7ab5da5b708103058e0a34e3a66ffbbc3cba",
+    "docs/models/batch-1-sub-6b/README.md": "fa9a5cf62ecbbb2d71ee038eb083e615fc109bf9251e0202e94d3e18c33ebdd5",
+    "docs/models/index.md": "807046c1e887fb3065b5f2d1eda5434b7aaae79cbf4902eddfe69dd8e128d96a",
+    "docs/releases/0.1.2-pypi-validation.json": "8db4f8d3b6057ee09da17e4c0aa7b8b2aabf5879f70b2049c58f1be4a9c7049b",
+    "docs/releases/0.1.2-pypi.md": "f212e18272b4915e4ca4abe2e8b41ba6db52d8306f427e8d13dc6808c12e921b",
+    "docs/releases/0.1.2.json": "bc02dc907c762cac206209cb8b88b8d5c7def21675170418ccee9448ed0b35ab",
+    "docs/releases/0.1.2.md": "2a4ea0445e52fe06b5e174ea695bb4d5b7fcdab47921709fff9d161768bd98a1",
+    "status_models_testing.md": "b16db25d4f9e86c7a88ce4d66bd92902270fb77bb46b7ae5c0bb6f8d69484dcd",
+    "website/README.md": "0a1fbd1d123075aad81bd575c3b67eefdc5cb26ae68651f6cc78fa663f7e9085",
+    "website/pages/index.md": "4af692498e6c366859c90f5ec339e3ab98670aa14a67ed0bdb3c3784bfd81160",
+    "website/pages/insights.md": "78ad36b94dc22fa351693f0838844b0bf8e3e311028461a09f0f921f3e284663"
+  },
+  "pypi_status": "PUBLISHED",
+  "github_release_status": "PENDING_AUTHENTICATION",
+  "github_release_notes": "docs/releases/0.1.2-github.md",
+  "github_release_notes_sha256": "62593c79e504ca9e32deeed5d9bb15969e57e837ffe9524b974ab383d090d03f",
+  "package_python_sources": "UNCHANGED against the 0.1.2 artifact source manifest",
+  "package_rebuild": "NOT_PERFORMED",
+  "publication_verification": "docs/qualification/release-0.1.2/publication-20261112.json",
+  "documentation": {
+    "files": 61,
+    "local_links": 1023,
+    "external_urls": 78,
+    "python_examples": 45,
+    "errors": []
+  },
+  "website": {
+    "status": "PASS",
+    "unit_tests": 29,
+    "html_pages": 71,
+    "local_links": 8340,
+    "errors": []
+  },
+  "checks": {
+    "documentation": {
+      "path": "docs/qualification/release-0.1.2/publication-20261112-documentation.log",
+      "sha256": "22df2cd4e874b8c084632ab9a1db2fc49ff965676b0405175cbb3482e1a7f3f6"
+    },
+    "website_tests": {
+      "path": "docs/qualification/release-0.1.2/publication-20261112-website_tests.log",
+      "sha256": "c1900496307200d1c6bbb6fc08a9006691248192caebe3791f11a602a63bff10"
+    },
+    "website_build": {
+      "path": "docs/qualification/release-0.1.2/publication-20261112-website_build.log",
+      "sha256": "cd81a9e5b564af09667d05240416b43bed29d66d9afb754cba92d4779acaa006"
+    }
+  }
+}

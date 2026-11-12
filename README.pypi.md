@@ -17,7 +17,7 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="https://github.com/SSusantAchary/mlx-one/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
-  <img src="https://img.shields.io/badge/0.1.2-release%20approved-15845d" alt="0.1.2 approved for release">
+  <a href="https://pypi.org/project/mlx-one/0.1.2/"><img src="https://img.shields.io/badge/PyPI-0.1.2-15845d" alt="0.1.2 published on PyPI"></a>
 </p>
 
 [**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
@@ -94,10 +94,10 @@ and retained diagnostics are in the linked model guide and results.
 
 ### Release Record
 
-**0.1.2 is approved for publication on 10 November 2026**, including the ten
+**0.1.2 was published on PyPI on 11 November 2026**, including the ten
 additional workflows and all 45 architecture types in their documented scope.
-The [release record](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.json) tracks artifact publication
-separately. The previously published **0.1.1** release covers the original
+Both uploaded artifacts match the validated wheel and source archive; see the
+[release record](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.json). The previous **0.1.1** release covers the original
 40-type cohort. See the [support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md),
 [0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md) and
 [0.1.1 release history](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md).
@@ -140,7 +140,7 @@ version. From a checkout of the current source, install the task dependencies:
 python -m pip install -e '.[server,vision,kokoro]'
 ```
 
-Install or upgrade to 0.1.2 when its files are available on PyPI:
+Install or upgrade to the published 0.1.2 release:
 
 ```bash
 python -m pip install --upgrade "mlx-one==0.1.2"

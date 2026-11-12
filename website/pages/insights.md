@@ -43,8 +43,9 @@ share one model type. Search by model, task or precision.
 relevant interface checks, backed by model tests, regressions and packaging
 checks. Accuracy and speed remain measurements of the recorded workload.
 The availability label reads the current package release decision, keeping
-approval and PyPI publication separate. All profiles are included in the approved **0.1.2** release;
-[the release record](../../docs/releases/0.1.2.json) tracks upload status. [Install the source workflows](../../docs/models/batch-1-sub-6b/README.md#install-from-the-working-tree).
+approval and PyPI publication separate. All profiles are included in the published **0.1.2** release;
+[the release record](../../docs/releases/0.1.2.json) records the verified artifacts.
+[Install the release](../getting-started.md#install-from-pypi).
 
 [Quality and scope limitations](../models/support.md#known-quality-and-scope-limitations)
 include Florence page OCR accuracy, NER sample accuracy, LFM speech precision and
