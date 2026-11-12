@@ -14,11 +14,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml"><img src="https://github.com/SSusantAchary/mlx-one/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="https://github.com/SSusantAchary/mlx-one/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
-  <img src="https://img.shields.io/badge/0.1.1-release%20approved-15845d" alt="0.1.1 approved for release">
+  <a href="https://pypi.org/project/mlx-one/0.1.2/"><img src="https://img.shields.io/badge/PyPI-0.1.2-15845d" alt="0.1.2 published on PyPI"></a>
 </p>
 
 [**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
@@ -44,7 +43,64 @@ loading, execution and developer tooling.
 Hugging Face supplies configuration, tokenizer/processor assets and safe
 `safetensors` checkpoints. Native inference runs through MLX-One and Apple MLX.
 
-## Model support and release
+<a id="model-support-and-release"></a>
+
+## Native Model Coverage
+
+**45 native architecture types across seven modalities.** MLX-One supports
+causal and encoder-decoder text generation, vision-language inference, speech,
+OCR, dense and multi-representation retrieval, segmentation and classification.
+**50 verified checkpoint profiles** cover these types, including ten additional
+workflows that meet the technical release criteria for their documented tasks.
+Checkpoint variants share architecture types; each support record identifies the
+exact checkpoint, revision, precision, task and tested limits.
+
+**Validation on Apple M4 / 32 GiB:** 2,599 tests and 9 subtests passed, with
+95 optional tests skipped. A further 54 targeted checks passed after the final
+interface and memory-accounting changes. Python 3.10–3.13 regression checks,
+isolated-wheel installation and applicable Python, CLI, Engine and HTTP checks
+passed. Native checkpoint execution used Python 3.12 and MLX/Metal 0.32.2.
+
+[Live model explorer](https://ssusantachary.github.io/mlx-one/insights/#supported-model-explorer) ·
+[Model guides](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md) ·
+[Checkpoint workflows and limits](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/README.md) ·
+[Validation results](https://github.com/SSusantAchary/mlx-one/blob/main/docs/qualification/batch-1-sub-6b/results.json) ·
+[Engineering report](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/REPORT.md).
+
+### Verified Checkpoint Workflows
+
+The ten additional checkpoint profiles are listed below. The
+[support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md) retains the original 40-type cohort
+and the current counts by modality.
+
+| Checkpoint | Task | Verified behavior |
+| --- | --- | --- |
+| `google-t5/t5-small` | Text-to-text generation | Native encoder-decoder, teacher-forced logits and bounded greedy translation |
+| `google/vit-base-patch16-224` | Image classification | Fixed 224×224 RGB input, trained labels, matching class logits and top-five results |
+| `hexgrad/Kokoro-82M` | Speech synthesis | Native 24 kHz English speech with `af_heart`; reviewed audio and native ASR round trip |
+| `BAAI/bge-small-en-v1.5` | Dense retrieval | 384-D CLS embeddings with L2 normalization |
+| `BAAI/bge-m3` | Multi-representation retrieval | Dense vectors, learned sparse weights, ColBERT token vectors and hybrid scoring |
+| `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | Multilingual embeddings | 384-D masked mean vectors, preserving the publisher's unnormalized output; 128-token sentence limit |
+| `nomic-ai/nomic-embed-text-v1.5` | Dense retrieval | Role prefixes, normalized 768-D default and explicit Matryoshka dimensions 64/128/256/512/768 |
+| `intfloat/multilingual-e5-small` | Multilingual retrieval | 384-D masked mean plus L2 normalization, with `query:` / `passage:` prefixes |
+| `cross-encoder/ms-marco-MiniLM-L6-v2` | Paired reranking | Trained BERT pooler and scalar head, raw relevance logits and separate sigmoid scores |
+| `BAAI/bge-reranker-v2-m3` | Paired reranking | Native XLM-R classification head with source-logit and ranking checks |
+
+These workflows have pinned real-checkpoint and interface evidence. ViT's
+stricter hidden-state diagnostic remains failed; its supported scope is
+supervised classification. Kokoro supports the verified English voice, up to
+510 phonemes and 30 seconds per utterance. Full limits, conversion requirements
+and retained diagnostics are in the linked model guide and results.
+
+### Release Record
+
+**0.1.2 was published on PyPI on 11 November 2026**, including the ten
+additional workflows and all 45 architecture types in their documented scope.
+Both uploaded artifacts match the validated wheel and source archive; see the
+[release record](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.json). The previous **0.1.1** release covers the original
+40-type cohort. See the [support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md),
+[0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md) and
+[0.1.1 release history](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md).
 
 <p align="center">
   <a href="https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md">
@@ -52,33 +108,19 @@ Hugging Face supplies configuration, tokenizer/processor assets and safe
   </a>
 </p>
 
-**0.1.1 approved for release · 8 November 2026.** All **40 registered native
-model types** have passing primary-workflow records across **seven modalities**.
-Each supported entry identifies its checkpoint, immutable revision, precision,
-operations and saved result. Model tests, relevant public interfaces and package
-checks back the support decision.
-
-**Validation:** 2,573 tests passed, 9 subtests passed, 95 optional tests skipped
-on Apple M4 / 32 GiB with MLX/Metal 0.32.2. Downloaded qualification weights were
-removed after recording results. Accuracy diagnostics and known limits remain
-visible beside the supported workflows.
-
-[All 40 supported models](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md) ·
-[0.1.1 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) ·
-[Coverage and progress](https://ssusantachary.github.io/mlx-one/insights/).
-
-Installation examples target **0.1.1**. Check [PyPI availability](https://pypi.org/project/mlx-one/#history)
-before installing; if the release is not available yet, use the
-[source installation](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md#source-installation-for-development)
-after these changes reach the repository.
+The illustration shows the original 40-type release cohort. Current architecture
+counts are listed in [Supported Modalities and Models](#supported-modalities-and-models).
+Downloaded qualification weights were removed after recording results.
 
 ## Key Capabilities
 
 | Capability | What is implemented |
 | --- | --- |
-| Text generation | Cached decoding, seeded sampling, stop sequences, streaming and chat templates |
+| Text generation | Cached causal decoding, seeded sampling, stop sequences, streaming, chat templates and T5 encoder-decoder generation |
 | Multimodal inference | Native image/text, speech, OCR and segmentation workflows within family-specific limits |
-| Retrieval | Embedding vectors, instructed queries, similarity and native Qwen3 reranking |
+| Retrieval | Dense embeddings, role-aware queries, Matryoshka dimensions, learned sparse vectors, ColBERT and BERT/XLM-R/Qwen3 reranking |
+| Speech synthesis | Native Kokoro acoustic and vocoder execution, optional English G2P and 24 kHz WAV output |
+| Image classification | Supervised ViT class predictions and zero-shot CLIP workflows |
 | Developer access | Context-managed Python engine, task CLI, local Web UI and HTTP/SSE serving |
 | Inspection and planning | Safe artifact inspection, hardware profiles and workload memory estimates |
 | Training and evaluation | Experimental LoRA/QLoRA SFT, dataset validation, adapter export and evidence tooling |
@@ -92,16 +134,22 @@ Task availability varies by checkpoint and interface. See the
 
 Use Python 3.10+ on an Apple Silicon Mac running macOS 15+ for model execution.
 MLX and MLX Metal are pinned to 0.32.2; Python 3.12.11 is the tested development
-version. Install the 0.1.1 release from PyPI once it is published:
+version. From a checkout of the current source, install the task dependencies:
 
 ```bash
-python -m pip install "mlx-one==0.1.1"
+python -m pip install -e '.[server,vision,kokoro]'
+```
+
+Install or upgrade to the published 0.1.2 release:
+
+```bash
+python -m pip install --upgrade "mlx-one==0.1.2"
 ```
 
 For the HTTP server, vision and OCR dependencies:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr]==0.1.1"
+python -m pip install --upgrade "mlx-one[server,vision,ocr,kokoro]==0.1.2"
 mlx-one --version
 ```
 
@@ -109,8 +157,8 @@ For optional dependencies, audio/video decoding requirements and tested
 constraints, see [getting started](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md) and the
 [dependency policy](https://github.com/SSusantAchary/mlx-one/blob/main/requirements/README.md). For editable development setup, use the
 [source installation](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md#source-installation-for-development).
-See the [0.1.1 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) for validation and
-[PyPI files](https://pypi.org/project/mlx-one/0.1.1/#files) for published artifacts.
+See the [0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md) for validation and
+[PyPI files](https://pypi.org/project/mlx-one/0.1.2/#files) for artifact availability.
 
 ### Load a text checkpoint and generate
 
@@ -139,10 +187,33 @@ mlx-one generate openai-community/gpt2 "The future of local AI is" \
 
 Add `--stream` for incremental text or `--offline` for cached/local assets.
 
-### Start the HTTP server
+### Run Task-Specific Models
 
 ```bash
-python -m pip install "mlx-one[server]==0.1.1"
+mlx-one embed BAAI/bge-small-en-v1.5 'Paris is the capital of France.' --json-output
+
+mlx-one rerank cross-encoder/ms-marco-MiniLM-L6-v2 'capital of France' \
+  'Paris is the capital of France.' 'Bananas are yellow.' --json-output
+
+mlx-one seq2seq google-t5/t5-small \
+  'translate English to German: The house is wonderful.' --max-new-tokens 24
+
+mlx-one classify-image google/vit-base-patch16-224 ./image.jpg --top-k 5 --json-output
+
+mlx-one tts ./kokoro-native 'Hello, world.' --output ./speech.wav
+```
+
+Kokoro and BGE-M3 use safely converted local bundles; follow the
+[offline conversion guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/references.md#safe-offline-conversion).
+The [retrieval and reranking example](https://github.com/SSusantAchary/mlx-one/blob/main/examples/batch1_retrieval.py) combines a
+dense encoder with a paired scorer using MLX-One APIs. Use the recorded immutable
+revisions when reproducing the validation results.
+
+### Start the HTTP server
+
+The source installation above includes the server dependencies:
+
+```bash
 mlx-one serve LiquidAI/LFM2-350M --inference-mode reference_dense \
   --host 127.0.0.1 --port 8888 --alias lfm2-local
 ```
@@ -356,25 +427,26 @@ and rejected optional profiles remain in the
 
 | Modality | Available performance evidence | Remaining measurement gap |
 | --- | --- | --- |
-| Embeddings and reranking | No verified latency/throughput measurement in the current published evidence | Latency, throughput and memory unavailable; see [retrieval scope](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#retrieval-guides) |
+| Embeddings and reranking | Measured FP32 dense retrieval and paired reranking pipelines on M4 | [Workloads and measurements](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/REPORT.md#apple-m4-performance) include actual lengths, batching and timing boundaries |
 | SAM3 segmentation and tracking | Approximately 8.41 GB peak MLX allocation in controlled 32-frame single-object comparisons on M4 / 32 GB | Isolated latency/throughput not measured; [fixture report](https://github.com/SSusantAchary/mlx-one/blob/main/docs/sam3-qualification-m4-32gb.md) is not a general tracking benchmark |
 
 
 ## Supported Modalities and Models
 
-| Modality | Supported / registered types | Primary capabilities | Documentation |
+| Modality | Native architecture types | Primary capabilities | Documentation |
 | --- | ---: | --- | --- |
-| Text generation | 11 / 11 | Native completion/chat and applicable serving/streaming | [Text families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#text-generation-guides) |
-| Vision-language | 4 / 4 | Single-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL | [VLM families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#vision-language-guides) |
-| Audio & speech | 7 / 7 | ASR, known-text alignment, VAD and Q8 LFM2.5 speech generation | [Audio families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#audio-guides) |
-| OCR & documents | 6 / 6 | TrOCR line recognition and page text recognition | [OCR guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/OCR_TESTING.md) |
-| Embeddings & reranking | 5 / 5 | Embeddings, pair reranking and ColBERT token-level MaxSim | [Retrieval families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#retrieval-guides) |
-| Segmentation | 4 / 4 | SAM3 image prompts and native offline/streaming video workflows | [SAM3 guide](https://github.com/SSusantAchary/mlx-one/blob/main/src/mlx_one/models/segmentation/sam3/README.md) |
-| Classification | 3 / 3 | Sentiment, NER and zero-shot image classification | [Classification guides](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#classification-guides) |
-| **Total** | **40 / 40** | Selected primary workflows | [Exact checkpoints and results](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md) |
+| Text generation | 12 | Native completion/chat and T5 text-to-text generation | [Text families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#text-generation-guides) |
+| Vision-language | 4 | Single-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL | [VLM families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#vision-language-guides) |
+| Audio & speech | 8 | ASR, alignment, VAD, LFM speech and Kokoro synthesis | [Audio families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#audio-guides) |
+| OCR & documents | 6 | TrOCR line recognition and page text recognition | [OCR guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/OCR_TESTING.md) |
+| Embeddings & reranking | 7 | Dense, paired reranking, sparse and ColBERT retrieval | [Retrieval families](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#retrieval-guides) |
+| Segmentation | 4 | SAM3 image prompts and native offline/streaming video workflows | [SAM3 guide](https://github.com/SSusantAchary/mlx-one/blob/main/src/mlx_one/models/segmentation/sam3/README.md) |
+| Classification | 4 | Sentiment, NER, zero-shot images and supervised ViT | [Classification guides](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md#classification-guides) |
+| **Total** | **45** | Checkpoint-specific primary workflows across seven modalities | [Model index](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md) · [Checkpoint workflows](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/README.md) |
 
-Support applies to the checkpoint, precision and operations in the
-[verified catalog](https://github.com/SSusantAchary/mlx-one/blob/main/src/mlx_one/data/model_support_release_20261108.json).
+Support applies to the checkpoint, precision and operations recorded in the
+[0.1.1 catalog](https://github.com/SSusantAchary/mlx-one/blob/main/src/mlx_one/data/model_support_release_20261108.json) and
+[additional checkpoint results](https://github.com/SSusantAchary/mlx-one/blob/main/docs/qualification/batch-1-sub-6b/results.json).
 [Known quality and scope limits](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md#known-quality-and-scope-limitations)
 remain documented. [Admission policy](https://github.com/SSusantAchary/mlx-one/blob/main/docs/model-admission.md) explains the
 functional standard; optional experiments retain their own evidence and status.
@@ -473,6 +545,20 @@ curl http://127.0.0.1:8888/v1/chat/completions \
 
 Current native chat UI connected to a local model. Click the image for full resolution.
 
+Task-specific HTTP routes use the same server authentication and model lifecycle:
+
+| Task | Endpoint |
+| --- | --- |
+| Dense embeddings | `/v1/embeddings` |
+| Paired reranking | `/v1/rerank` |
+| T5 text-to-text generation | `/v1/tasks/text-to-text-generation` |
+| Supervised ViT classification | `/v1/tasks/image-classification` |
+| Kokoro speech generation | `/v1/tasks/speech-generation` |
+
+Serve a complete local task bundle with `mlx-one serve ./bundle --alias local`.
+See [task request formats and limits](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/README.md#engine-and-http)
+for image data URIs, generation bounds and the English speech profile.
+
 Use the [API guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/api/index.md) for retrieval, segmentation, training and
 advanced CLI/Python examples; the [HTTP compatibility reference](https://github.com/SSusantAchary/mlx-one/blob/main/docs/api/openai-compatibility.md)
 and [Web UI guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/ui.md) document request formats, streaming and settings.
@@ -484,7 +570,8 @@ and [Web UI guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/ui.md
 | Searchable documentation website | [MLX-One docs](https://ssusantachary.github.io/mlx-one/), [site maintenance](https://github.com/SSusantAchary/mlx-one/blob/main/website/README.md) |
 | Setup and examples | [Getting started](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md) |
 | Model families and guides | [Model index](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md), [candidate catalog](https://github.com/SSusantAchary/mlx-one/blob/main/docs/model-catalog.md) |
-| Current support and release | [All 40 supported models](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md), [0.1.1 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) |
+| Verified checkpoint workflows | [Usage and limits](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/README.md), [validation results](https://github.com/SSusantAchary/mlx-one/blob/main/docs/qualification/batch-1-sub-6b/results.json), [engineering report](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/batch-1-sub-6b/REPORT.md) |
+| Release history | [Support inventory](https://github.com/SSusantAchary/mlx-one/blob/main/status_models_testing.md), [0.1.2 release notes](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.md), [0.1.1 release history](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.md) |
 | Qualification and checkpoints | [Admission policy](https://github.com/SSusantAchary/mlx-one/blob/main/docs/model-admission.md), [checkpoint inventory](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/inventory.md) |
 | Design and package ownership | [Architecture](https://github.com/SSusantAchary/mlx-one/blob/main/docs/architecture/index.md), [repository summary](https://github.com/SSusantAchary/mlx-one/blob/main/docs/REPOSITORY_SUMMARY.md) |
 | Python, CLI and HTTP | [API guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/api/index.md), [HTTP reference](https://github.com/SSusantAchary/mlx-one/blob/main/docs/api/openai-compatibility.md), [Web UI](https://github.com/SSusantAchary/mlx-one/blob/main/docs/ui.md) |
@@ -502,7 +589,7 @@ author = {Achary, S. Susant},
 title  = {mlx-one: Unified Native MLX Stack for Apple Silicon},
 year   = {2026},
 url    = {https://github.com/SSusantAchary/mlx-one},
-note   = {Version 0.1.1. Native GPU-accelerated machine learning workflows on Apple Silicon}
+note   = {Version 0.1.2. Native GPU-accelerated machine learning workflows on Apple Silicon}
 }
 ```
 

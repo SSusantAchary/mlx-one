@@ -1,0 +1,8 @@
+{
+  "transformers": "4.40.2",
+  "torch": "2.15.0",
+  "source_module": "batch1_nomic_reference.modeling_hf_nomic_bert",
+  "source_sha256": "3b24a366c4cc31b869466ccfb7bbb8879e138c97f8de06c83d4fa1e31a21f149",
+  "output_sha256": "d4073a1838836bbfe2d5a37ddf0a6ac1e5a87c1d7177d52892f6481c8d820cf0",
+  "parameter_count": 136731648
+}

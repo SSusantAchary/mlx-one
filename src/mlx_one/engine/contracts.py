@@ -145,8 +145,12 @@ class SequenceState:
 
     def accept_event(self, *, request_id: str, model_epoch: int, event_no: int) -> bool:
         """Ignore stale lifecycle/transport events without touching committed state."""
-        if (request_id != self.request_id or model_epoch != self.model_epoch
-                or event_no <= self.last_event_no or self.phase.terminal):
+        if (
+            request_id != self.request_id
+            or model_epoch != self.model_epoch
+            or event_no <= self.last_event_no
+            or self.phase.terminal
+        ):
             return False
         self.last_event_no = event_no
         return True
@@ -297,6 +301,8 @@ class TaskKind(str, Enum):
     """Canonical service tasks; registry aliases remain available in introspection."""
 
     TEXT_GENERATION = "text-generation"
+    TEXT_TO_TEXT = "text-to-text-generation"
+    IMAGE_CLASSIFICATION = "image-classification"
     TEXT_CLASSIFICATION = "text-classification"
     TOKEN_CLASSIFICATION = "token-classification"
     ZERO_SHOT_IMAGE_CLASSIFICATION = "zero-shot-image-classification"
@@ -325,11 +331,18 @@ class TaskKind(str, Enum):
 
 
 def canonical_task(task: str | TaskKind) -> TaskKind:
-    return TaskKind({"asr": "transcription", "transcribe": "transcription",
-                     "align": "alignment", "audio.transcribe": "transcription",
-                     "audio.align": "alignment", "audio.detect_language": "language-detection",
-                     "audio.generate_speech": "speech-generation",
-                     "audio.speech_to_speech": "speech-to-speech"}.get(task, task))
+    return TaskKind(
+        {
+            "asr": "transcription",
+            "transcribe": "transcription",
+            "align": "alignment",
+            "audio.transcribe": "transcription",
+            "audio.align": "alignment",
+            "audio.detect_language": "language-detection",
+            "audio.generate_speech": "speech-generation",
+            "audio.speech_to_speech": "speech-to-speech",
+        }.get(task, task)
+    )
 
 
 class StageKind(str, Enum):
@@ -364,9 +377,13 @@ class RequestPhase(str, Enum):
     def validate_transition(self, target: RequestPhase) -> None:
         if self == target:
             return
-        allowed = {self.QUEUED: {self.PREPARING}, self.PREPARING: {self.ADMITTED},
-                   self.ADMITTED: {self.RUNNING}, self.RUNNING: {self.PAUSED, self.FINISHED},
-                   self.PAUSED: {self.RUNNING}}
+        allowed = {
+            self.QUEUED: {self.PREPARING},
+            self.PREPARING: {self.ADMITTED},
+            self.ADMITTED: {self.RUNNING},
+            self.RUNNING: {self.PAUSED, self.FINISHED},
+            self.PAUSED: {self.RUNNING},
+        }
         failures = {self.CANCELLED, self.TIMED_OUT, self.FAILED}
         if self.terminal or target not in allowed.get(self, set()) | failures:
             raise ValueError(f"invalid request transition: {self.value} -> {target.value}")
@@ -374,8 +391,11 @@ class RequestPhase(str, Enum):
 
 def request_phase(phase: Phase) -> RequestPhase:
     """Compatibility mapping: existing generation events and Phase values stay intact."""
-    legacy = {Phase.WAITING: RequestPhase.QUEUED, Phase.PREFILL: RequestPhase.RUNNING,
-              Phase.DECODE: RequestPhase.RUNNING}
+    legacy = {
+        Phase.WAITING: RequestPhase.QUEUED,
+        Phase.PREFILL: RequestPhase.RUNNING,
+        Phase.DECODE: RequestPhase.RUNNING,
+    }
     return legacy[phase] if phase in legacy else RequestPhase(phase.value)
 
 
@@ -393,13 +413,17 @@ class TaskSpec:
             raise ValueError("task must be canonical")
         if not self.runner_key or not self.batch_policy or not self.output_schema:
             raise ValueError("task requires runner, batching and output schema identities")
-        if not isinstance(self.stage_kinds, tuple) or not self.stage_kinds or any(
-                not isinstance(stage, StageKind) for stage in self.stage_kinds):
+        if (
+            not isinstance(self.stage_kinds, tuple)
+            or not self.stage_kinds
+            or any(not isinstance(stage, StageKind) for stage in self.stage_kinds)
+        ):
             raise ValueError("task requires immutable typed stages")
         if len(set(self.stage_kinds)) != len(self.stage_kinds):
             raise ValueError("duplicate task stages")
         if not isinstance(self.speculation_modes, tuple) or (
-                len(set(self.speculation_modes)) != len(self.speculation_modes)):
+            len(set(self.speculation_modes)) != len(self.speculation_modes)
+        ):
             raise ValueError("speculation modes must be an immutable unique tuple")
 
 
@@ -415,13 +439,24 @@ class LayerExecutionSpec:
     window_tokens: int | None = None
 
     def __post_init__(self) -> None:
-        kinds = {"full_kv", "sliding_kv", "cross_kv", "conv", "recurrent", "encoder_features",
-                 "predictor", "tracking", "codec"}
+        kinds = {
+            "full_kv",
+            "sliding_kv",
+            "cross_kv",
+            "conv",
+            "recurrent",
+            "encoder_features",
+            "predictor",
+            "tracking",
+            "codec",
+        }
         if self.layer_id < 0 or self.state_kind not in kinds or not self.position_policy:
             raise ValueError("invalid layer identity, state kind or position policy")
         dimensions = (self.query_heads, self.kv_heads, self.key_dim, self.value_dim)
-        if any(d is not None and (not isinstance(d, int) or isinstance(d, bool) or d < 1)
-               for d in dimensions):
+        if any(
+            d is not None and (not isinstance(d, int) or isinstance(d, bool) or d < 1)
+            for d in dimensions
+        ):
             raise ValueError("layer dimensions must be positive integers")
         if self.state_kind in {"full_kv", "sliding_kv", "cross_kv"}:
             if any(d is None for d in dimensions):
@@ -429,7 +464,8 @@ class LayerExecutionSpec:
             if self.query_heads % self.kv_heads:
                 raise ValueError("query heads must be divisible by KV heads")
         if (self.state_kind == "sliding_kv" and self.window_tokens is None) or (
-                self.window_tokens is not None and self.window_tokens < 1):
+            self.window_tokens is not None and self.window_tokens < 1
+        ):
             raise ValueError("sliding state requires a positive window")
 
 
@@ -448,9 +484,16 @@ class BatchCompatibilityKey:
     computation_identity: str
 
     def __post_init__(self) -> None:
-        if self.model_epoch < 0 or not all((self.model_instance, self.adapter_version,
-                self.precision_policy, self.state_schema, self.position_policy,
-                self.computation_identity)):
+        if self.model_epoch < 0 or not all(
+            (
+                self.model_instance,
+                self.adapter_version,
+                self.precision_policy,
+                self.state_schema,
+                self.position_policy,
+                self.computation_identity,
+            )
+        ):
             raise ValueError("batch compatibility requires complete versioned identity")
         if not isinstance(self.task, TaskKind) or not isinstance(self.stage, StageKind):
             raise ValueError("batch compatibility requires canonical task and stage")
@@ -469,8 +512,10 @@ class WorkItem:
     def __post_init__(self) -> None:
         if not self.request_id:
             raise ValueError("work requires request ownership")
-        if any(not isinstance(value, int) or isinstance(value, bool) or value < 0 for value in (
-                self.real_input_cost, self.output_bound, self.estimated_transient_bytes)):
+        if any(
+            not isinstance(value, int) or isinstance(value, bool) or value < 0
+            for value in (self.real_input_cost, self.output_bound, self.estimated_transient_bytes)
+        ):
             raise ValueError("work costs must be nonnegative integers")
         if self.cost_unit not in {"tokens", "samples", "pixels", "frames", "service_us"}:
             raise ValueError("invalid task cost unit")

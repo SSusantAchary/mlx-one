@@ -7,7 +7,6 @@ ResNet50 bottleneck/stride layout. No SAM3 or shared OCR math is modified.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 from pathlib import Path
@@ -17,6 +16,7 @@ import mlx.nn as nn
 from mlx.utils import tree_flatten
 
 from mlx_one.models.classification.clip import CLIPAttention
+from mlx_one.utils.hashing import sha256_file
 
 REVISION = "1d5f47bd3bdd2c4bbfa585418ffe6da5028b4c0b"
 HASHES = {
@@ -242,7 +242,7 @@ class DetrForObjectDetection(nn.Module):
 def load_detr(path):
     root = Path(path)
     for name, digest in HASHES.items():
-        if hashlib.file_digest((root / name).open("rb"), "sha256").hexdigest() != digest:
+        if sha256_file(root / name) != digest:
             raise ValueError(f"DETR asset checksum mismatch: {name}")
     cfg = json.loads((root / "config.json").read_text())
     if cfg["backbone"] != "resnet50" or cfg["d_model"] != 256:

@@ -1,0 +1,60 @@
+{
+  "schema_version": "mlx-one-release-decision-v1",
+  "version": "0.1.2",
+  "release_approval": "APPROVED",
+  "approval_date": "2026-11-10",
+  "approval_source": "Maintainer instruction: the pypi can be upgrade to 0.1.2 and push new files",
+  "publication_status": "PUBLISHED",
+  "published": true,
+  "published_install_version": "0.1.2",
+  "target_install_version": "0.1.2",
+  "registered_model_types": 45,
+  "checkpoint_profile_count": 50,
+  "support_catalogs": [
+    {
+      "path": "src/mlx_one/data/model_support_release_20261108.json",
+      "sha256": "4ffe7cb6a4865f2904504ae6df1517b8a11d7a24864271880e6fd3fdea33cdcf"
+    },
+    {
+      "path": "src/mlx_one/data/batch_1_sub_6b.json",
+      "sha256": "d3205d7605adda8e23bc940e47232a02ba6e79fcd0acfe9f865ee069b1e01cf2"
+    }
+  ],
+  "qualification_results": {
+    "path": "docs/qualification/batch-1-sub-6b/results.json",
+    "sha256": "a8c6a2eee02f7030f1d3c59bf9d25db6809fed219dbdce6050b8dff38456f14f"
+  },
+  "source_base_commit": "57389c9",
+  "scope": "Original 40-type functional cohort plus ten additional qualified checkpoint profiles, adding five native types; recorded task limits and failed optional diagnostics remain unchanged.",
+  "publication_date": "2026-11-11",
+  "publication_verification": {
+    "verified_date": "2026-11-12",
+    "source": "https://pypi.org/pypi/mlx-one/0.1.2/json",
+    "version": "0.1.2",
+    "status": "PASS",
+    "artifact_sha256_match": true,
+    "files": [
+      {
+        "filename": "mlx_one-0.1.2-py3-none-any.whl",
+        "sha256": "fb367b2e4af597df47f92fb7f18cac1c0304173e0c2c03517cf3f97e9c0596da",
+        "size": 2383267,
+        "upload_time": "2026-11-11T04:58:49.381018Z",
+        "url": "https://files.pythonhosted.org/packages/50/ba/17624c3f6633513b86f6008aaefd469612291968b1edb11b2ca69ab668fd/mlx_one-0.1.2-py3-none-any.whl"
+      },
+      {
+        "filename": "mlx_one-0.1.2.tar.gz",
+        "sha256": "23e821de7e4c02c1c027a3568ac0d0481000b1185bede4b3d9e5ff2058cf6801",
+        "size": 2181589,
+        "upload_time": "2026-11-11T04:58:51.428049Z",
+        "url": "https://files.pythonhosted.org/packages/40/09/41bd9fa219479b3eb749ad7f615f10b7722223f0f3d53e60d1f7ab3d5c26/mlx_one-0.1.2.tar.gz"
+      }
+    ],
+    "validated_source_commit": "fe1a66a8fcd1d51ad88672cae8410af9b85a2319"
+  },
+  "github_release": {
+    "tag_name": "0.1.2",
+    "publication_status": "PENDING",
+    "validated_source_commit": "fe1a66a8fcd1d51ad88672cae8410af9b85a2319",
+    "notes": "docs/releases/0.1.2-github.md"
+  }
+}

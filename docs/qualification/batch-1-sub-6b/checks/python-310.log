@@ -1,0 +1,174 @@
+........................................................................ [  3%]
+................................................................ssssss.s [  6%]
+...ssssssssssssss....................................................... [  9%]
+.........ssssss......................................................... [ 12%]
+................................sssssssssssssssssssss.sssss.....ss.sssss [ 15%]
+..s.ss..ss.............................................................. [ 18%]
+........................................................................ [ 21%]
+........................................................................ [ 24%]
+.............................sssssss.................................... [ 27%]
+........................................................................ [ 30%]
+........................................................................ [ 33%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+..............s......................................................... [ 43%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 52%]
+........................................................................ [ 55%]
+........................................................................ [ 58%]
+........................................................................ [ 61%]
+........................................................................ [ 64%]
+........................................................................ [ 67%]
+........................................................................ [ 71%]
+........................................................................ [ 74%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+...........................................................sss.......... [ 89%]
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+...................................................................................................                                     [100%]
+=============================== warnings summary ===============================
+../../../../../..<python-matrix-work>/venv310/lib/python3.10/site-packages/fastapi/testclient.py:1
+  <python-matrix-work>/venv310/lib/python3.10/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/models/test_turboquant_contracts.py: 1 warning
+tests/models/test_turboquant_native.py: 49 warnings
+  <checkout>/benchmarks/turboquant/oracle.py:37: RuntimeWarning: divide by zero encountered in matmul
+    return (np.asarray(x, np.float64) * signs) @ h.T / np.sqrt(n)
+
+tests/models/test_turboquant_contracts.py: 1 warning
+tests/models/test_turboquant_native.py: 49 warnings
+  <checkout>/benchmarks/turboquant/oracle.py:37: RuntimeWarning: overflow encountered in matmul
+    return (np.asarray(x, np.float64) * signs) @ h.T / np.sqrt(n)
+
+tests/models/test_turboquant_contracts.py: 1 warning
+tests/models/test_turboquant_native.py: 49 warnings
+  <checkout>/benchmarks/turboquant/oracle.py:37: RuntimeWarning: invalid value encountered in matmul
+    return (np.asarray(x, np.float64) * signs) @ h.T / np.sqrt(n)
+
+tests/models/test_turboquant_native.py: 40 warnings
+  <checkout>/tests/models/test_turboquant_native.py:48: RuntimeWarning: divide by zero encountered in matmul
+    expected = np.array(xr).astype(np.float64) @ weight.T
+
+tests/models/test_turboquant_native.py: 40 warnings
+  <checkout>/tests/models/test_turboquant_native.py:48: RuntimeWarning: overflow encountered in matmul
+    expected = np.array(xr).astype(np.float64) @ weight.T
+
+tests/models/test_turboquant_native.py: 40 warnings
+  <checkout>/tests/models/test_turboquant_native.py:48: RuntimeWarning: invalid value encountered in matmul
+    expected = np.array(xr).astype(np.float64) @ weight.T
+
+tests/models/test_turboquant_native.py: 12 warnings
+  <checkout>/tests/models/test_turboquant_native.py:77: RuntimeWarning: divide by zero encountered in matmul
+    [bank[e] @ row.astype(np.float64) for e, row in zip(indices.ravel(), xrows, strict=False)]
+
+tests/models/test_turboquant_native.py: 12 warnings
+  <checkout>/tests/models/test_turboquant_native.py:77: RuntimeWarning: overflow encountered in matmul
+    [bank[e] @ row.astype(np.float64) for e, row in zip(indices.ravel(), xrows, strict=False)]
+
+tests/models/test_turboquant_native.py: 12 warnings
+  <checkout>/tests/models/test_turboquant_native.py:77: RuntimeWarning: invalid value encountered in matmul
+    [bank[e] @ row.astype(np.float64) for e, row in zip(indices.ravel(), xrows, strict=False)]
+
+tests/optimization/test_last_logits.py: 10 warnings
+  <checkout>/tests/optimization/test_last_logits.py:60: RuntimeWarning: divide by zero encountered in matmul
+    return value @ np.arange(28, dtype=np.float32).reshape(4, 7)
+
+tests/optimization/test_last_logits.py: 10 warnings
+  <checkout>/tests/optimization/test_last_logits.py:60: RuntimeWarning: overflow encountered in matmul
+    return value @ np.arange(28, dtype=np.float32).reshape(4, 7)
+
+tests/optimization/test_last_logits.py: 10 warnings
+  <checkout>/tests/optimization/test_last_logits.py:60: RuntimeWarning: invalid value encountered in matmul
+    return value @ np.arange(28, dtype=np.float32).reshape(4, 7)
+
+tests/optimization/test_sdpa_gqa.py: 59 warnings
+  <checkout>/tests/optimization/test_sdpa_gqa.py:24: RuntimeWarning: divide by zero encountered in matmul
+    scores = q.astype(np.float64) @ k.transpose(0, 1, 3, 2) * scale
+
+tests/optimization/test_sdpa_gqa.py: 59 warnings
+  <checkout>/tests/optimization/test_sdpa_gqa.py:24: RuntimeWarning: overflow encountered in matmul
+    scores = q.astype(np.float64) @ k.transpose(0, 1, 3, 2) * scale
+
+tests/optimization/test_sdpa_gqa.py: 59 warnings
+  <checkout>/tests/optimization/test_sdpa_gqa.py:24: RuntimeWarning: invalid value encountered in matmul
+    scores = q.astype(np.float64) @ k.transpose(0, 1, 3, 2) * scale
+
+tests/optimization/test_sdpa_gqa.py: 59 warnings
+  <checkout>/tests/optimization/test_sdpa_gqa.py:33: RuntimeWarning: divide by zero encountered in matmul
+    return probability @ v
+
+tests/optimization/test_sdpa_gqa.py: 59 warnings
+  <checkout>/tests/optimization/test_sdpa_gqa.py:33: RuntimeWarning: overflow encountered in matmul
+    return probability @ v
+
+tests/optimization/test_sdpa_gqa.py: 59 warnings
+  <checkout>/tests/optimization/test_sdpa_gqa.py:33: RuntimeWarning: invalid value encountered in matmul
+    return probability @ v
+
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-1-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-2-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-4-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-8-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-1-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-2-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-4-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-8-256]
+  <checkout>/tests/optimization/test_sdpa_gqa.py:47: RuntimeWarning: divide by zero encountered in matmul
+    return np.stack([left[i] @ right[j] for i, j in zip(lhs_indices, rhs_indices, strict=True)])
+
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-1-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-2-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-4-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-8-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-1-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-2-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-4-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-8-256]
+  <checkout>/tests/optimization/test_sdpa_gqa.py:47: RuntimeWarning: overflow encountered in matmul
+    return np.stack([left[i] @ right[j] for i, j in zip(lhs_indices, rhs_indices, strict=True)])
+
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-1-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-2-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-4-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-0-8-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-1-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-2-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-4-256]
+tests/optimization/test_sdpa_gqa.py::test_gqa_and_lower_right_causality_match_independent_high_precision[16-9-8-256]
+  <checkout>/tests/optimization/test_sdpa_gqa.py:47: RuntimeWarning: invalid value encountered in matmul
+    return np.stack([left[i] @ right[j] for i, j in zip(lhs_indices, rhs_indices, strict=True)])
+
+tests/test_paged_architectures.py::test_paged_per_layer_layouts_not_global_dimensions[128]
+  <checkout>/tests/test_paged_architectures.py:41: RuntimeWarning: divide by zero encountered in matmul
+    attended=(probs/probs.sum(axis=-1,keepdims=True))@v
+
+tests/test_paged_architectures.py::test_paged_per_layer_layouts_not_global_dimensions[128]
+  <checkout>/tests/test_paged_architectures.py:41: RuntimeWarning: overflow encountered in matmul
+    attended=(probs/probs.sum(axis=-1,keepdims=True))@v
+
+tests/test_paged_architectures.py::test_paged_per_layer_layouts_not_global_dimensions[128]
+  <checkout>/tests/test_paged_architectures.py:41: RuntimeWarning: invalid value encountered in matmul
+    attended=(probs/probs.sum(axis=-1,keepdims=True))@v
+
+tests/test_paged_hybrid.py::test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot
+tests/test_paged_hybrid.py::test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot
+  <checkout>/src/mlx_one/engine/hybrid.py:59: RuntimeWarning: divide by zero encountered in matmul
+    return mx.softmax(scores, axis=-1, precise=True) @ packed_v
+
+tests/test_paged_hybrid.py::test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot
+tests/test_paged_hybrid.py::test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot
+  <checkout>/src/mlx_one/engine/hybrid.py:59: RuntimeWarning: overflow encountered in matmul
+    return mx.softmax(scores, axis=-1, precise=True) @ packed_v
+
+tests/test_paged_hybrid.py::test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot
+tests/test_paged_hybrid.py::test_hybrid_chunk_budget_is_preserved_with_final_aligned_snapshot
+  <checkout>/src/mlx_one/engine/hybrid.py:59: RuntimeWarning: invalid value encountered in matmul
+    return mx.softmax(scores, axis=-1, precise=True) @ packed_v
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2255 passed, 122 skipped, 724 warnings, 9 subtests passed in 42.20s

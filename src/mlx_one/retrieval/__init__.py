@@ -5,6 +5,7 @@ from mlx_one.retrieval.loading import (
     RetrievalModelLoadError,
     load_retrieval_model,
 )
+from mlx_one.retrieval.multi import MultiRepresentationResult, encode_multi, hybrid_scores
 from mlx_one.retrieval.schemas import EmbeddingResult, RerankItem, RerankResult
 from mlx_one.retrieval.service import embed, rerank
 
@@ -17,4 +18,7 @@ __all__ = [
     "embed",
     "load_retrieval_model",
     "rerank",
+    "MultiRepresentationResult",
+    "encode_multi",
+    "hybrid_scores",
 ]

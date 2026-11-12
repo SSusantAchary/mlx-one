@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<checkout>/scripts/qualification/batch1_native.py", line 144, in <module>
+    main()
+  File "<checkout>/scripts/qualification/batch1_native.py", line 137, in main
+    native_source_sha256={str(p.relative_to(Path.cwd())):sha(p)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.11_1/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 682, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: 'src/mlx_one/inference_qualification.py' is not in the subpath of '<checkout>'

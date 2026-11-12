@@ -1,0 +1,6 @@
+{
+  "candidate": "interfaces-v2",
+  "wheel": "mlx_one-0.1.1-py3-none-any.whl",
+  "sha256": "1c8c0b996977f6584df3571bd492ad839c7dbc0147934d636d421490ed083ccc",
+  "notes": "ViT actor counts patch tokens; task server configured for batches up to eight."
+}

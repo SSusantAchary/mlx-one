@@ -1,0 +1,79 @@
+{
+  "id": "B09",
+  "checkpoint": "nomic-ai/nomic-embed-text-v1.5",
+  "revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+  "license": "apache-2.0",
+  "assets": [
+    {
+      "path": "1_Pooling/config.json",
+      "bytes": 286,
+      "sha256": "3d6180f7233df2f529d65ea60c8db4af614fb78cbe99fd81103dcfeb9f8166a5",
+      "pinned_remote_sha256": "3d6180f7233df2f529d65ea60c8db4af614fb78cbe99fd81103dcfeb9f8166a5"
+    },
+    {
+      "path": "config.json",
+      "bytes": 2538,
+      "sha256": "9ab00bd92cee80a569f708140b7b6c1661a65891ff3765b1519e181ba2f2c92b",
+      "pinned_remote_sha256": "9ab00bd92cee80a569f708140b7b6c1661a65891ff3765b1519e181ba2f2c92b"
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 140,
+      "sha256": "482f42ca954f5a8d55bccbb437b8d6eb721ce19059c78330c815045ddd1a87eb",
+      "pinned_remote_sha256": null
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 546938168,
+      "sha256": "9e7d262b1fe5ea350782829496efa831901b77486bbde1cea54a4c822d010d5c",
+      "pinned_remote_sha256": "9e7d262b1fe5ea350782829496efa831901b77486bbde1cea54a4c822d010d5c"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 255,
+      "sha256": "f93c503b32fa7bc2e186843f0add961caa14eb68f7be516e327df3cadbcd541a",
+      "pinned_remote_sha256": "f93c503b32fa7bc2e186843f0add961caa14eb68f7be516e327df3cadbcd541a"
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 58,
+      "sha256": "9ee3935137f87c9ce6662ae17fe7afb7c9c64744a41247359fd228dc37e627b3",
+      "pinned_remote_sha256": "9ee3935137f87c9ce6662ae17fe7afb7c9c64744a41247359fd228dc37e627b3"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 695,
+      "sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+      "pinned_remote_sha256": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "pinned_remote_sha256": null
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 1191,
+      "sha256": "d7e0000bcc80134debd2222220427e6bf5fa20a669f40a0d0d1409cc18e0a9bc",
+      "pinned_remote_sha256": "d7e0000bcc80134debd2222220427e6bf5fa20a669f40a0d0d1409cc18e0a9bc"
+    },
+    {
+      "path": "vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "pinned_remote_sha256": null
+    }
+  ],
+  "status": "VALIDATED_SCOPED",
+  "reference_exit_code": 0,
+  "native_exit_code": 0,
+  "reference": {
+    "transformers": "4.40.2",
+    "torch": "2.15.0",
+    "source_module": "batch1_nomic_reference.modeling_hf_nomic_bert",
+    "source_sha256": "3b24a366c4cc31b869466ccfb7bbb8879e138c97f8de06c83d4fa1e31a21f149",
+    "output_sha256": "d4073a1838836bbfe2d5a37ddf0a6ac1e5a87c1d7177d52892f6481c8d820cf0",
+    "parameter_count": 136731648
+  }
+}

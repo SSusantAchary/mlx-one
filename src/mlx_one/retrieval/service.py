@@ -20,6 +20,37 @@ RERANK_PREFIX = (
 RERANK_SUFFIX = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
 
 
+def format_embedding_texts(bundle, values, input_type, instruction=None, apply_prefix=True):
+    """One formatting policy shared by direct calls and the native task actor."""
+    if type(apply_prefix) is not bool:
+        raise ValueError("apply_prefix must be a boolean")
+    if input_type not in {"query", "document"}:
+        raise ValueError("input_type must be query or document")
+    if input_type == "document" and instruction is not None:
+        raise ValueError("instruction is only valid for query embeddings")
+    if instruction is not None and (not isinstance(instruction, str) or not instruction):
+        raise ValueError("query instruction must be nonempty text")
+    if not apply_prefix:
+        if instruction is not None:
+            raise ValueError("raw text cannot also specify a formatting instruction")
+        return tuple(values)
+    if bundle.architecture.startswith("qwen3"):
+        prefix = (
+            f"Instruct: {instruction or DEFAULT_RETRIEVAL_INSTRUCTION}\nQuery:"
+            if input_type == "query"
+            else ""
+        )
+    else:
+        prefix = (
+            getattr(bundle, "query_prefix", "")
+            if input_type == "query"
+            else getattr(bundle, "document_prefix", "")
+        )
+        if instruction is not None:
+            prefix = instruction + prefix
+    return tuple(prefix + text for text in values)
+
+
 def embed(
     model: str | Path | LoadedRetrievalModel,
     texts: str | Sequence[str],
@@ -32,6 +63,7 @@ def embed(
     revision: str | None = None,
     offline: bool = False,
     cache_dir: str | Path | None = None,
+    apply_prefix: bool = True,
 ) -> EmbeddingResult:
     bundle = _bundle(
         model,
@@ -64,14 +96,7 @@ def embed(
         size = bundle.model.config.hidden_size
         if dimensions not in {None, size}:
             raise ValueError(f"dimensions must equal the native embedding width ({size})")
-    task = DEFAULT_RETRIEVAL_INSTRUCTION if instruction is None else instruction
-    if input_type == "query" and (not isinstance(task, str) or not task):
-        raise ValueError("query instruction must be non-empty text")
-    formatted = (
-        tuple(f"Instruct: {task}\nQuery:{value}" for value in values)
-        if input_type == "query" and bundle.architecture.startswith("qwen3")
-        else values
-    )
+    formatted = format_embedding_texts(bundle, values, input_type, instruction, apply_prefix)
     vectors: list[tuple[float, ...]] = []
     import mlx.core as mx
 
@@ -81,11 +106,14 @@ def embed(
             for value in formatted[start : start + batch_size]
         ]
         ids, masks = bundle.tokenizer.pad(
-            sequences, padding_side="right" if bundle.architecture == "bert" else "left"
+            sequences,
+            padding_side="right"
+            if bundle.architecture in {"bert", "mpnet", "xlm-roberta", "nomic_bert"}
+            else "left",
         )
         arguments = {"attention_mask": mx.array(masks)}
         if hasattr(bundle.model.config, "validate_dimensions"):
-            arguments["dimensions"] = size
+            arguments["dimensions"] = dimensions
         output = bundle.model(mx.array(ids), **arguments)
         mx.eval(output.embeddings)
         vectors.extend(tuple(float(item) for item in row) for row in output.embeddings.tolist())
@@ -106,7 +134,7 @@ def rerank(
     *,
     instruction: str | None = None,
     top_k: int | None = None,
-    max_length: int = 8192,
+    max_length: int | None = None,
     batch_size: int = 8,
     revision: str | None = None,
     offline: bool = False,
@@ -125,9 +153,15 @@ def rerank(
         raise ValueError("documents must be a sequence of strings, not one string")
     values = tuple(documents)
     _validate_texts(values, "documents")
+    if max_length is None:
+        max_length = bundle.model.config.max_seq_length
     _validate_batch_options(max_length, batch_size, bundle.model.config.max_seq_length)
     if top_k is not None and (isinstance(top_k, bool) or not isinstance(top_k, int) or top_k < 1):
         raise ValueError("top_k must be null or a positive integer")
+    if bundle.architecture in {"bert", "xlm-roberta"}:
+        if instruction is not None:
+            raise ValueError("sequence-pair rerankers do not accept a Qwen instruction template")
+        return _rerank_encoder(bundle, query, values, max_length, batch_size, top_k)
     task = DEFAULT_RETRIEVAL_INSTRUCTION if instruction is None else instruction
     if not isinstance(task, str) or not task:
         raise ValueError("reranking instruction must be non-empty text")
@@ -166,6 +200,31 @@ def rerank(
     if top_k is not None:
         results = results[:top_k]
     return RerankResult(query, tuple(results), bundle.model_id, bundle.revision)
+
+
+def _rerank_encoder(bundle, query, values, max_length, batch_size, top_k):
+    """Score paired tokens with a trained native encoder classification head."""
+    import mlx.core as mx
+
+    results = []
+    for start in range(0, len(values), batch_size):
+        pairs = [
+            bundle.tokenizer.encode_pair(query, text, max_length=max_length)
+            for text in values[start : start + batch_size]
+        ]
+        ids, masks = bundle.tokenizer.pad([pair[0] for pair in pairs])
+        types = [pair[1] + [0] * (len(ids[0]) - len(pair[1])) for pair in pairs]
+        output = bundle.model(
+            mx.array(ids), attention_mask=mx.array(masks), token_type_ids=mx.array(types)
+        )
+        mx.eval(output.scores, output.probabilities)
+        for offset, (score, probability) in enumerate(
+            zip(output.scores.tolist(), output.probabilities.tolist(), strict=True)
+        ):
+            index = start + offset
+            results.append(RerankItem(index, values[index], float(score), float(probability)))
+    results.sort(key=lambda item: (-item.score, item.index))
+    return RerankResult(query, tuple(results[:top_k]), bundle.model_id, bundle.revision)
 
 
 def _bundle(

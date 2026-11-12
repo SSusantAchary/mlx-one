@@ -85,6 +85,13 @@ class HFTokenizerAdapter:
         if not isinstance(text, str):
             raise TypeError("text must be a string")
         values = list(self._tokenizer.encode(text, add_special_tokens=add_special_tokens).ids)
+        if max_length is not None and add_special_tokens and len(values) > max_length:
+            overhead = self._tokenizer.num_special_tokens_to_add(is_pair=False)
+            if max_length <= overhead:
+                raise ValueError("max_length leaves no room for text and special tokens")
+            encoded = self._tokenizer.encode(text, add_special_tokens=False)
+            encoded.truncate(max_length - overhead)
+            return list(self._tokenizer.post_process(encoded, add_special_tokens=True).ids)
         return values if max_length is None else values[:max_length]
 
     def decode(self, token_ids: Iterable[int], *, skip_special_tokens: bool = True) -> str:
@@ -93,6 +100,30 @@ class HFTokenizerAdapter:
                 [int(value) for value in token_ids], skip_special_tokens=skip_special_tokens
             )
         )
+
+    def encode_pair(
+        self, first: str, second: str, *, max_length: int
+    ) -> tuple[list[int], list[int]]:
+        """Encode a true sequence pair, preserving segment IDs and terminal specials.
+
+        Truncate the longer side first without mutating the shared tokenizer's
+        truncation configuration. This keeps concurrent requests independent.
+        """
+        if not isinstance(first, str) or not isinstance(second, str):
+            raise TypeError("pair inputs must be strings")
+        overhead = self._tokenizer.num_special_tokens_to_add(is_pair=True)
+        if type(max_length) is not int or max_length < overhead + 2:
+            raise ValueError("max_length leaves no capacity for a nonempty sequence pair")
+        left = self._tokenizer.encode(first, add_special_tokens=False)
+        right = self._tokenizer.encode(second, add_special_tokens=False)
+        lengths = [len(left.ids), len(right.ids)]
+        while sum(lengths) > max_length - overhead:
+            index = 0 if lengths[0] > lengths[1] else 1
+            lengths[index] -= 1
+        left.truncate(lengths[0])
+        right.truncate(lengths[1])
+        encoded = self._tokenizer.post_process(left, right, add_special_tokens=True)
+        return list(encoded.ids), list(encoded.type_ids)
 
     def pad(
         self, sequences: Sequence[Sequence[int]], *, padding_side: str = "right"

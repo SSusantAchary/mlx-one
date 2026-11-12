@@ -137,7 +137,22 @@ def checkpoint_task_profiles(model_type=None):
     from importlib.resources import files
 
     payload = json.loads(files("mlx_one").joinpath("data/native_tasks.json").read_text())
-    return tuple(row for row in payload["profiles"]
+    batch = json.loads(files("mlx_one").joinpath("data/batch_1_sub_6b.json").read_text())
+    def identity(row):
+        return row["model_type"], row["model_id"], row["revision"], row["task"]
+    profiles = {identity(row): row for row in payload["profiles"]}
+    for row in batch["models"]:
+        if row["status"] != "SUPPORTED":
+            raise ValueError("Batch checkpoint metadata contains an unadmitted workflow")
+        # A later exact-checkpoint result supersedes the old planned task entry,
+        # while the original dated manifest remains intact for provenance.
+        profiles[identity(row)] = {
+            **row, "architecture_implemented": True, "checkpoint_loaded": True,
+            "functional_tested": True, "python_api": True, "cli": True, "http": True,
+            "wheel_verified": True, "release_qualified": False, "decision": "SUPPORTED",
+            "source_parity": row["numerical_status"] == "PASS_FOR_RECORDED_SCOPE",
+        }
+    return tuple(row for row in profiles.values()
                  if model_type is None or row["model_type"] == model_type)
 
 

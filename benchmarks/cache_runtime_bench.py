@@ -19,7 +19,7 @@ import sys
 import time
 from copy import copy
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -315,7 +315,7 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
                     )
         after = await runtime(client)
     return {
-        "timestamp": datetime.now(UTC).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "hardware": hardware_metadata(),
         "server_runtime_before": before,
         "server_runtime_after": after,
@@ -357,7 +357,7 @@ def main() -> None:
             matrix_args.base_url = base_url
             matrices.append(asyncio.run(main_async(matrix_args)))
         payload = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "models": models,
             "matrices": matrices,
         }

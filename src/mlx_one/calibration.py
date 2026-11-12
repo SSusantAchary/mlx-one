@@ -12,7 +12,7 @@ import tempfile
 import time
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from importlib import metadata, resources
 from pathlib import Path
 from typing import Any
@@ -611,7 +611,7 @@ def _safety_message(code: str) -> str:
 
 
 def _now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def _gib(value: int | None) -> str:

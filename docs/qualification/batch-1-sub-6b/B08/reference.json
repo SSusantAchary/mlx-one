@@ -1,0 +1,15 @@
+{
+  "phonemes": "h\u0259l\u02c8O w\u02c8\u025c\u0279ld.",
+  "voice": "af_heart",
+  "sample_rate": 24000,
+  "torch": "2.15.0",
+  "source_files": {
+    "kokoro/istftnet.py": "66515cb3369d1c0bbb2015ad7293d019fb1f80fefcb2d56e70e73b6b146af11c",
+    "kokoro/model.py": "301c55350a068c4ed3b4cbd1209d2afb848bebca72db5657405e47e9dfb604db",
+    "kokoro/custom_stft.py": "94fed3f9ac22bba31135bf8c4ea795762c7ab3ff44f1984d11e7babf27462d69",
+    "kokoro/modules.py": "6e14dadc706efc9a8d90e8b4919d45d57342555b242c642cd26f26c65eedc085"
+  },
+  "parameter_count": 81810022,
+  "waveform_samples": 37800,
+  "source_revision": "dfb907a02bba8152ca444717ca5d78747ccb4bec"
+}

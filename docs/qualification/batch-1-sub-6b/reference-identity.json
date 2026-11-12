@@ -1,0 +1,21 @@
+{
+  "transformers": {
+    "version": "4.40.2",
+    "commit": "4fdf58afb72b0754da30037fc800b6044e7d9c99"
+  },
+  "nomic_code": {
+    "revision": "7710840340a098cfb869c4f65e87cf2b1b70caca",
+    "license": "apache-2.0"
+  },
+  "reference_source_sha256": {
+    "nomic-bert-7710840340a098cfb869c4f65e87cf2b1b70caca/modeling_hf_nomic_bert.py": "3b24a366c4cc31b869466ccfb7bbb8879e138c97f8de06c83d4fa1e31a21f149",
+    "nomic-bert-7710840340a098cfb869c4f65e87cf2b1b70caca/configuration_hf_nomic_bert.py": "f7871694b8de3d3df4ac6640313d5799ce323261a0fb90c5cc567ecc34a0039e",
+    "FlagEmbedding-897baa67c0ffddbfccf4e6776ff55310d67809d4/FlagEmbedding/finetune/embedder/encoder_only/m3/modeling.py": "ef9f37f511cf9b7ceaf89a2bd569276ca0058cc8dc401545b9b4b688c9801f4f",
+    "FlagEmbedding-897baa67c0ffddbfccf4e6776ff55310d67809d4/FlagEmbedding/inference/embedder/encoder_only/m3.py": "e795219b34d96340c7adaf4902f771aaca9246448f9d1dd334b1757cb0c1f978",
+    "misaki-fba1236595f2d2bf21d414ba6e57d25256afada3/misaki/espeak.py": "ebc39e807eeae7b99322109d8477aa16b605427f9cc852a4b1f6f72c45806a09",
+    "kokoro-dfb907a02bba8152ca444717ca5d78747ccb4bec/kokoro/istftnet.py": "66515cb3369d1c0bbb2015ad7293d019fb1f80fefcb2d56e70e73b6b146af11c",
+    "kokoro-dfb907a02bba8152ca444717ca5d78747ccb4bec/kokoro/model.py": "301c55350a068c4ed3b4cbd1209d2afb848bebca72db5657405e47e9dfb604db",
+    "kokoro-dfb907a02bba8152ca444717ca5d78747ccb4bec/kokoro/custom_stft.py": "94fed3f9ac22bba31135bf8c4ea795762c7ab3ff44f1984d11e7babf27462d69",
+    "kokoro-dfb907a02bba8152ca444717ca5d78747ccb4bec/kokoro/modules.py": "6e14dadc706efc9a8d90e8b4919d45d57342555b242c642cd26f26c65eedc085"
+  }
+}

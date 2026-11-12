@@ -172,7 +172,8 @@ def create_app(
     except RuntimeError:
         primary = None
     if primary is not None and (hasattr(primary, "classification") or hasattr(primary, "ner")
-                                or hasattr(primary, "zero_shot") or hasattr(primary, "vad")):
+                                or hasattr(primary, "zero_shot") or hasattr(primary, "vad")
+                                or hasattr(primary, "native_task")):
         if (settings.inference_mode not in {None, "reference_dense"}
                 or settings.execution_dtype not in {None, "float32"}):
             raise ValueError("classification tasks require native FP32 reference execution")
@@ -219,6 +220,18 @@ def create_app(
         engine.bind_actor(jobs)
     bearer = HTTPBearer(auto_error=False)
     services = dict(task_services or {})
+    owned_native_task_service = None
+    if primary is not None and hasattr(primary, "native_task"):
+        from mlx_one.engine.batching import BatchingConfig
+        from mlx_one.engine.service import InferenceService
+
+        owned_native_task_service = InferenceService(batching_config=BatchingConfig(
+            max_sequences=8, max_scheduled_tokens=8192,
+            task_transient_budget_bytes=(4 if primary.architecture == "kokoro" else 1)*1024**3,
+            timeout=settings.timeout,
+            queue_size=settings.queue_size))
+        owned_native_task_service.register_task("primary", primary.native_task)
+        services.setdefault(primary.task_name, owned_native_task_service)
     try:
         primary_retrieval = getattr(manager.current_model(), "retrieval", None)
         if primary_retrieval is not None:
@@ -361,6 +374,8 @@ def create_app(
                 owned_ner_service.close()
             if owned_classification_service is not None:
                 owned_classification_service.close()
+            if owned_native_task_service is not None:
+                owned_native_task_service.close()
             if owned_audio_service is not None:
                 owned_audio_service.close()
             if owned_ocr_service is not None:
@@ -863,6 +878,8 @@ def create_app(
         if service is None:
             return _error(400, "the loaded model does not support embeddings", "capability_error")
         values = [body.input] if isinstance(body.input, str) else body.input
+        formatting = {name: getattr(body, name) for name in ("instruction", "apply_prefix")
+                      if name in body.model_fields_set}
         try:
             result = await _call_service(
                 jobs,
@@ -870,6 +887,7 @@ def create_app(
                 values,
                 input_type=body.input_type,
                 dimensions=body.dimensions,
+                **formatting,
             )
         except QueueFullError:
             return _error(429, "task queue is full", "rate_limit_error")
@@ -940,6 +958,9 @@ def create_app(
     )
 
     install_classification_routes(app, manager, services, authorization_dependency)
+    from mlx_one.server.batch1 import install_native_task_routes
+
+    install_native_task_routes(app, manager, services, authorization_dependency)
     install_token_classification_routes(app, manager, services, authorization_dependency)
     install_zero_shot_routes(app, manager, services, authorization_dependency)
     from mlx_one.server.vad import install_vad_routes

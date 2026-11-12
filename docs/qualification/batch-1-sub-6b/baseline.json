@@ -1,0 +1,28 @@
+{
+  "source_commit": "d922903d7e49cc2bf950715b50af12b1fa1ccc8f",
+  "python": "3.12.11",
+  "platform": "macOS-15.8.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "packages": {
+    "mlx": "0.32.2",
+    "mlx-metal": "0.32.2",
+    "numpy": "2.5.2",
+    "tokenizers": "0.23.2",
+    "huggingface-hub": "1.30.0",
+    "pytest": "9.1.1"
+  },
+  "original_registered_types": 40,
+  "base_branch": "fix/ci-release-checks",
+  "guidelines_source": "mlx-one-ci-fix/mlx_one_development_guidelines_v1.0.md",
+  "model_tests": "PASS (baseline; see verification.json for final implementation)",
+  "memory_bytes": 34359738368,
+  "chip": "Apple M4",
+  "baseline_result": {
+    "passed": 2254,
+    "skipped": 118,
+    "subtests_passed": 9,
+    "warnings": 2
+  },
+  "test_command": "python -m pytest --no-cov -q",
+  "baseline_log_sha256": "d8f2e112f8ee538ecdace1e2335e22da8275285127ba9791187399cba04514be"
+}

@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "campaign": "batch-1-sub-6b",
+  "recorded_date": "2026-11-10",
+  "checkpoint_count": 10,
+  "added_architecture_types": 5,
+  "registered_model_types": 45,
+  "support_standard": "mlx-lm-aligned-functional-v1",
+  "release_approval": "NOT_REQUESTED",
+  "note": "Development checkpoint support; the dated 40-type 0.1.1 approval is unchanged.",
+  "models": [
+    {
+      "id": "B01",
+      "model_type": "bert",
+      "model_id": "cross-encoder/ms-marco-MiniLM-L6-v2",
+      "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+      "license": "apache-2.0",
+      "task": "reranking",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 22713601,
+      "native_parameter_count": 22713601,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B01/native.json",
+        "sha256": "37f111d5abab85c01aa486df03bbe80cb8c28ce6140c3aa0c5fe061c9c6b3328"
+      },
+      "known_limitations": [
+        "512 tokens including pair specials; scalar logit and separate sigmoid",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B02",
+      "model_type": "bert",
+      "model_id": "BAAI/bge-small-en-v1.5",
+      "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "license": "mit",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 33360000,
+      "native_parameter_count": 33212160,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B02/native.json",
+        "sha256": "aa9e7f13febb350106e4c6dd58d8fc310c599e1c059ac7133c20508634519e10"
+      },
+      "known_limitations": [
+        "384-D CLS + L2; 512 tokens; no default query instruction",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B03",
+      "model_type": "xlm-roberta",
+      "model_id": "BAAI/bge-m3",
+      "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+      "license": "mit",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32 backbone / FP16 auxiliary heads",
+      "source_parameter_count": 566705152,
+      "native_parameter_count": 567755777,
+      "native_module": "mlx_one.models.embeddings.xlm_roberta",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B03/native.json",
+        "sha256": "68c6c03226a7dc0655d8b619419e1d7b123e97a8e4e70ae79ef69ac4065a366b"
+      },
+      "known_limitations": [
+        "Dense/sparse/ColBERT; fixed-example reference; execution/timing through 512 tokens",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE",
+      "modes": {
+        "dense": "PASS",
+        "learned_sparse": "PASS",
+        "colbert": "PASS",
+        "hybrid": "PASS"
+      }
+    },
+    {
+      "id": "B04",
+      "model_type": "bert",
+      "model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+      "license": "apache-2.0",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 117653760,
+      "native_parameter_count": 117505920,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B04/native.json",
+        "sha256": "d4fead3f467a40d8d65487ffb847d8238277e133a847ccc32a1850ce0c5682d7"
+      },
+      "known_limitations": [
+        "384-D masked mean without normalization; 128-token sentence limit",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B05",
+      "model_type": "t5",
+      "model_id": "google-t5/t5-small",
+      "revision": "df1b051c49625cf57a3d0d8d3863ed4d13564fe4",
+      "license": "apache-2.0",
+      "task": "text-to-text-generation",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 60506624,
+      "native_parameter_count": 60506624,
+      "native_module": "mlx_one.models.language.t5",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-replay/B05/native.json",
+        "sha256": "8d6fbff7b20a6ea801a313999f7b12c9d9e3db34a4deb4fef815f9da48b974ac"
+      },
+      "known_limitations": [
+        "Greedy encoder-decoder only; 512 encoder tokens; bounded prefix recomputation",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B06",
+      "model_type": "vit",
+      "model_id": "google/vit-base-patch16-224",
+      "revision": "3f49326eb077187dfe1c2a2bb15fbd74e6ab91e3",
+      "license": "apache-2.0",
+      "task": "image-classification",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 86567656,
+      "native_parameter_count": 86567656,
+      "native_module": "mlx_one.models.classification.vit",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B06/native.json",
+        "sha256": "d254e8a12c6d0f605bb35a9f6014d75962a5f913ad5d4c50341491ae942764c9"
+      },
+      "known_limitations": [
+        "Fixed 224 RGB supervised classification; no universal hidden-state parity",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "functional_decision": {
+        "path": "docs/qualification/batch-1-sub-6b/B06/functional-decision.json",
+        "sha256": "9207c29369746d4c80b5e0d18ab3a4d339fce6ef96a8bf433a4fbbd9d02fb03a"
+      },
+      "numerical_status": "CLASSIFICATION_PASS_WITH_RETAINED_HIDDEN_DIAGNOSTIC_FAIL"
+    },
+    {
+      "id": "B07",
+      "model_type": "xlm-roberta",
+      "model_id": "BAAI/bge-reranker-v2-m3",
+      "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+      "license": "apache-2.0",
+      "task": "reranking",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 567755777,
+      "native_parameter_count": 567755777,
+      "native_module": "mlx_one.models.embeddings.xlm_roberta",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B07/native.json",
+        "sha256": "e84d7ca60dcc8f648d6975ebb34eac53db41afd57def48d000dd497ef51323f5"
+      },
+      "known_limitations": [
+        "Raw paired score; fixed-example reference; execution/timing through 512 tokens",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B08",
+      "model_type": "kokoro",
+      "model_id": "hexgrad/Kokoro-82M",
+      "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+      "license": "apache-2.0",
+      "task": "speech-generation",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 81810022,
+      "native_parameter_count": 81765580,
+      "native_module": "mlx_one.models.audio.kokoro",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed-resource/B08/native.json",
+        "sha256": "a8d88b0b8b2a1dca321377760e2906802c0c821a295699f8d3781d03a4ade9c9"
+      },
+      "known_limitations": [
+        "af_heart en-us only; 510 phonemes, 30 seconds, 24 kHz; no streaming",
+        "No quantized profile or external speed comparison admitted",
+        "Human/ASR review references the retained original WAV; installed synthesis has a separate hash. No exact stochastic waveform equality claim.",
+        "Actor reserves 3 GiB transient memory; configure at least that capacity in addition to resident weights (server task budget: 4 GiB)."
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B09",
+      "model_type": "nomic_bert",
+      "model_id": "nomic-ai/nomic-embed-text-v1.5",
+      "revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+      "license": "apache-2.0",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 136731648,
+      "native_parameter_count": 136731648,
+      "native_module": "mlx_one.models.embeddings.nomic_bert",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B09/native.json",
+        "sha256": "5de4280f102b1cbf9cb3f8f8ce41c067ce2ed5e8537f685f8477051c9ad6feab"
+      },
+      "known_limitations": [
+        "768-D normalized default; explicit Matryoshka 64/128/256/512/768; through 512 tokens",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    },
+    {
+      "id": "B10",
+      "model_type": "bert",
+      "model_id": "intfloat/multilingual-e5-small",
+      "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+      "license": "mit",
+      "task": "embedding",
+      "status": "SUPPORTED",
+      "admission_tier": "VALIDATED_SCOPED",
+      "release_approval": "NOT_REQUESTED",
+      "precision": "FP32",
+      "storage_precision": "FP32",
+      "source_parameter_count": 117653760,
+      "native_parameter_count": 117505920,
+      "native_module": "mlx_one.models.embeddings.bert",
+      "evidence": {
+        "path": "docs/qualification/batch-1-sub-6b/installed/B10/native.json",
+        "sha256": "f671559aad3556d369e4def7782b45e21e9de3bf3747319eef316334b5259637"
+      },
+      "known_limitations": [
+        "384-D mean + L2; 512 tokens; explicit query:/passage: formatting",
+        "No quantized profile or external speed comparison admitted"
+      ],
+      "numerical_status": "PASS_FOR_RECORDED_SCOPE"
+    }
+  ]
+}

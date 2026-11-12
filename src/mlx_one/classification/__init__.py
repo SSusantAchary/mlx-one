@@ -1,5 +1,6 @@
 """Native text classification through the shared MLX-One task service."""
 
+from mlx_one.classification.image import classify_image, load_image_classification_model
 from mlx_one.classification.loading import (
     load_classification_model,
     load_token_classification_model,
@@ -25,4 +26,6 @@ __all__ = [
     "ClassificationResult",
     "classify",
     "load_classification_model",
+    "classify_image",
+    "load_image_classification_model",
 ]

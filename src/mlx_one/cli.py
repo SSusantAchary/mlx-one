@@ -916,7 +916,10 @@ def zero_shot_image_command(model, image, labels, top_k, json_output):
 @click.option("--input-type", type=click.Choice(["query", "document"]), default="document")
 @click.option("--instruction", help="Retrieval instruction for query embeddings.")
 @click.option("--dimensions", type=click.IntRange(min=1))
-@click.option("--max-length", type=click.IntRange(min=1), default=8192, show_default=True)
+@click.option("--max-length", type=click.IntRange(min=1), default=None,
+              help="Token limit; defaults to the checkpoint capacity, bounded at 8192.")
+@click.option("--apply-prefix/--raw-text", default=True,
+              help="Apply the checkpoint's query/document prefix, or embed already formatted text.")
 @click.option("--batch-size", type=click.IntRange(min=1), default=8, show_default=True)
 @click.option("--json-output", "as_json", is_flag=True)
 def embed_command(
@@ -928,7 +931,8 @@ def embed_command(
     input_type: str,
     instruction: str | None,
     dimensions: int | None,
-    max_length: int,
+    max_length: int | None,
+    apply_prefix: bool,
     batch_size: int,
     as_json: bool,
 ) -> None:
@@ -940,6 +944,7 @@ def embed_command(
             input_type=input_type,  # type: ignore[arg-type]
             instruction=instruction,
             dimensions=dimensions,
+            apply_prefix=apply_prefix,
             max_length=max_length,
             batch_size=batch_size,
             revision=revision,
@@ -955,7 +960,7 @@ def embed_command(
         click.echo(f"{index}\t{json.dumps(vector)}")
 
 
-@main.command("rerank", help="Rerank documents with native Qwen3-Reranker.")
+@main.command("rerank", help="Rerank documents with a native sequence-pair or Qwen3 scorer.")
 @click.argument("model")
 @click.argument("query")
 @click.argument("documents", nargs=-1, required=True)
@@ -964,7 +969,8 @@ def embed_command(
 @click.option("--cache-dir", type=click.Path(file_okay=False, path_type=str))
 @click.option("--instruction", help="Retrieval instruction used to judge each pair.")
 @click.option("--top-k", type=click.IntRange(min=1))
-@click.option("--max-length", type=click.IntRange(min=1), default=8192, show_default=True)
+@click.option("--max-length", type=click.IntRange(min=1), default=None,
+              help="Token limit; defaults to the checkpoint's validated capacity.")
 @click.option("--batch-size", type=click.IntRange(min=1), default=8, show_default=True)
 @click.option("--json-output", "as_json", is_flag=True)
 def rerank_command(
@@ -976,7 +982,7 @@ def rerank_command(
     cache_dir: str | None,
     instruction: str | None,
     top_k: int | None,
-    max_length: int,
+    max_length: int | None,
     batch_size: int,
     as_json: bool,
 ) -> None:
@@ -1565,6 +1571,87 @@ main.add_command(audio_group)
 
 
 main.add_command(ocr_command)
+
+
+@main.command("seq2seq",help="Generate bounded text-to-text outputs with native T5.")
+@click.argument("model")
+@click.argument("text")
+@click.option("--revision")
+@click.option("--offline",is_flag=True)
+@click.option("--max-new-tokens",type=click.IntRange(1,511),default=32)
+@click.option("--json-output",is_flag=True)
+def seq2seq_command(model: str,text: str,revision: str | None,offline: bool,
+                    max_new_tokens: int,json_output: bool) -> None:
+    """Use encoder-decoder generation without a causal-chat wrapper."""
+    from mlx_one.seq2seq import generate
+
+    try:
+        result=generate(model,text,revision=revision,offline=offline,max_new_tokens=max_new_tokens)
+    except (OSError,RuntimeError,ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json() if json_output else result.texts[0])
+
+
+@main.command("classify-image",help="Classify RGB images with a native supervised ViT.")
+@click.argument("model")
+@click.argument("images",nargs=-1,required=True,type=click.Path(exists=True,dir_okay=False,path_type=Path))
+@click.option("--revision")
+@click.option("--offline",is_flag=True)
+@click.option("--top-k",type=click.IntRange(1),default=5)
+@click.option("--json-output",is_flag=True)
+def classify_image_command(model: str,images: tuple[Path,...],revision: str | None,
+                           offline: bool,top_k: int,json_output: bool) -> None:
+    """Use the checkpoint's trained labels rather than zero-shot CLIP candidates."""
+    from mlx_one.classification.image import classify_image
+
+    try:
+        result=classify_image(model,images,revision=revision,offline=offline,top_k=top_k)
+    except (OSError,RuntimeError,ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json() if json_output else "\n".join(
+        prediction["labels"][0]["label"] for prediction in result.predictions))
+
+
+@main.command("embed-multi",help="Return native BGE-M3 dense, learned sparse and token vectors.")
+@click.argument("model")
+@click.argument("texts",nargs=-1,required=True)
+@click.option("--revision")
+@click.option("--offline",is_flag=True)
+@click.option("--max-length",type=click.IntRange(2,8192),default=512)
+@click.option("--json-output",is_flag=True)
+def multi_embedding_command(model: str,texts: tuple[str,...],revision: str | None,
+                             offline: bool,max_length: int,json_output: bool) -> None:
+    """Expose all three trained representation heads as distinct result fields."""
+    from mlx_one.retrieval import encode_multi
+
+    try:
+        result=encode_multi(model,texts,revision=revision,offline=offline,max_length=max_length)
+    except (OSError,RuntimeError,ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json())
+
+
+@main.command("tts",help="Synthesize English with a safely converted native Kokoro bundle.")
+@click.argument("model")
+@click.argument("text")
+@click.option("--output",required=True,type=click.Path(dir_okay=False,path_type=Path))
+@click.option("--voice",default="af_heart")
+@click.option("--language",default="en-us")
+@click.option("--phonemes",is_flag=True)
+@click.option("--speed",type=click.FloatRange(0.5,2),default=1.0)
+@click.option("--json-output",is_flag=True)
+def tts_command(model: str,text: str,output: Path,voice: str,language: str,
+                phonemes: bool,speed: float,json_output: bool) -> None:
+    """Write mono PCM16 WAV and retain explicit voice/sample-rate metadata."""
+    from mlx_one.audio.kokoro import synthesize
+
+    try:
+        result=synthesize(model,text,voice=voice,language=language,phonemes=phonemes,speed=speed)
+        result.save(output)
+    except (OSError,RuntimeError,ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(result.to_json() if json_output else str(output))
+
 
 if __name__ == "__main__":
     main()

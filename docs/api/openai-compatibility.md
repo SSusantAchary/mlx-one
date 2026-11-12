@@ -1,4 +1,11 @@
-# HTTP compatibility — revamp increment
+# HTTP compatibility
+
+The source checkout adds explicit native task routes for T5, supervised ViT and
+Kokoro, alongside the existing embedding/rerank routes. These operations are not
+chat completions. See the [request fields, limits and examples](../models/batch-1-sub-6b/README.md#engine-and-http).
+The following raw-completion notes describe the earlier revamp increment.
+
+## Historical raw-completion increment
 
 Single startup model; existing bearer-key policy applies to generation/discovery/runtime. Version stays 0.1.0a1. Existing multimodal endpoints and public Python APIs remain available. No checkpoint is newly release-qualified.
 

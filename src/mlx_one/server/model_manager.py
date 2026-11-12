@@ -211,6 +211,14 @@ class ModelManager:
 
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
+        if hasattr(bundle, "native_task"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization={}, revision=bundle.revision, tasks=(bundle.task_name,),
+                modalities=("image",) if bundle.architecture == "vit" else
+                           ("text", "audio") if bundle.architecture == "kokoro" else ("text",),
+            )
         if hasattr(bundle, "retrieval"):
             return ModelMetadata(
                 id=self._alias or bundle.model_id, architecture=bundle.architecture,
@@ -319,6 +327,33 @@ def _load_serving_model(model_id, **options):
 
     retrieval_task = options.pop("retrieval_task", None)
     local_retrieval = Path(model_id).expanduser()
+    if (local_retrieval / "config.json").is_file():
+        task_type = json.loads((local_retrieval / "config.json").read_text()).get("model_type")
+        if task_type in {"t5", "vit", "kokoro"}:
+            if retrieval_task or any(options.get(k) for k in (
+                "checkpoint_path", "expected_files", "tokenizer_source"
+            )):
+                raise ValueError("native task serving requires the complete task checkpoint bundle")
+            from mlx_one.server.batch1 import NativeTaskServingBundle
+
+            kwargs = {k: v for k, v in options.items() if k in {"revision", "offline", "cache_dir"}}
+            if task_type == "t5":
+                from mlx_one.seq2seq import load_seq2seq_model
+
+                task_bundle = load_seq2seq_model(model_id, **kwargs)
+                task_name = "text-to-text-generation"
+                capacity = task_bundle.model.config.n_positions
+            elif task_type == "vit":
+                from mlx_one.classification.image import load_image_classification_model
+
+                task_bundle = load_image_classification_model(model_id, **kwargs)
+                task_name, capacity = "image-classification", task_bundle.model.config.image_size
+            else:
+                from mlx_one.audio.kokoro import load_kokoro_model
+
+                task_bundle = load_kokoro_model(model_id, **kwargs)
+                task_name, capacity = "speech-generation", 510
+            return NativeTaskServingBundle(task_bundle, task_name, capacity)
     if retrieval_task is None and (local_retrieval / "config.json").is_file():
         try:
             retrieval_task = detect_retrieval_task(local_retrieval)

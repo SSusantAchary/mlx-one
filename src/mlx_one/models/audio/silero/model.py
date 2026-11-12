@@ -6,7 +6,6 @@ tinygrad_model.py and selected published 16-kHz safetensors; MIT.
 
 from __future__ import annotations
 
-import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -16,6 +15,7 @@ from mlx.utils import tree_flatten
 
 from mlx_one.models.audio.parakeet.model import PredictorLSTM
 from mlx_one.models.audio.silero.config import SileroConfig
+from mlx_one.utils.hashing import sha256_file
 
 REVISION = "60b7ffa243625ebdc1070275a29f18c87843786a"
 MODEL_ID = "snakers4/silero-vad-16k"
@@ -76,7 +76,7 @@ def load_silero(path, *, revision=REVISION):
         raise ValueError("unsupported Silero source/checkpoint revision")
     root = Path(path)
     weights = root / "silero_vad_16k.safetensors"
-    if hashlib.file_digest(weights.open("rb"), "sha256").hexdigest() != WEIGHT_SHA256:
+    if sha256_file(weights) != WEIGHT_SHA256:
         raise ValueError("Silero safetensors checksum mismatch")
     tensors = mx.load(str(weights))
     mapped = {}

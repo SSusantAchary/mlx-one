@@ -1,0 +1,199 @@
+{
+  "status": "FAIL",
+  "checks": {
+    "processor": {
+      "status": "PASS",
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0
+    },
+    "logits": {
+      "status": "PASS",
+      "max_abs_error": 1.71661376953125e-05,
+      "mean_abs_error": 2.4779694740573177e-06
+    },
+    "embedding_hidden": {
+      "status": "PASS",
+      "max_abs_error": 8.821487426757812e-06,
+      "mean_abs_error": 3.578611540433485e-07
+    },
+    "first_layer": {
+      "status": "PASS",
+      "max_abs_error": 1.3023614883422852e-05,
+      "mean_abs_error": 1.0291071248502703e-06
+    },
+    "hidden": {
+      "status": "FAIL",
+      "max_abs_error": 0.0002610534429550171,
+      "mean_abs_error": 3.3929134133359184e-06
+    },
+    "top5_parity": {
+      "status": "PASS"
+    },
+    "public_pipeline": {
+      "status": "PASS"
+    },
+    "runtime_independence": {
+      "status": "PASS",
+      "imported": []
+    }
+  },
+  "load_seconds": 0.18333641599747352,
+  "benchmark_samples": [
+    {
+      "batch_size": 1,
+      "seconds": 0.025260790978791192
+    },
+    {
+      "batch_size": 1,
+      "seconds": 0.025579000008292496
+    },
+    {
+      "batch_size": 1,
+      "seconds": 0.02566075001959689
+    },
+    {
+      "batch_size": 1,
+      "seconds": 0.026243916974635795
+    },
+    {
+      "batch_size": 1,
+      "seconds": 0.02632916599395685
+    },
+    {
+      "batch_size": 8,
+      "seconds": 0.1653844160027802
+    },
+    {
+      "batch_size": 8,
+      "seconds": 0.1562331669847481
+    },
+    {
+      "batch_size": 8,
+      "seconds": 0.15599450000445358
+    },
+    {
+      "batch_size": 8,
+      "seconds": 0.15675774999544956
+    },
+    {
+      "batch_size": 8,
+      "seconds": 0.15562379200127907
+    }
+  ],
+  "breakdown": {
+    "scope": "full loaded-model Python pipeline including image processing",
+    "dataset": {
+      "dataset": "AIOmarRehan/AnimalsDataset",
+      "revision": "676c9639be89ef4847325dcdbf141051319129f2",
+      "license": "cc0-1.0",
+      "file": "data/train-00000-of-00001.parquet",
+      "rows": [
+        0,
+        1
+      ],
+      "files": [
+        {
+          "local_name": "0.jpg",
+          "sha256": "9e7e9d8e4986461f1f297a3c2bab0830080998ad4170b5e673d06a20beca2b9c",
+          "row": 0,
+          "labels": {
+            "label": 0
+          }
+        },
+        {
+          "local_name": "1.jpg",
+          "sha256": "5e865bd96bc9fda281a2b75c3007649ac67c9ac11e6081f67a1f390f99b30ca4",
+          "row": 1,
+          "labels": {
+            "label": 0
+          }
+        }
+      ]
+    }
+  },
+  "example": {
+    "predictions": [
+      {
+        "labels": [
+          {
+            "index": 281,
+            "label": "tabby, tabby cat",
+            "score": 0.46033522486686707,
+            "logit": 11.376370429992676
+          },
+          {
+            "index": 285,
+            "label": "Egyptian cat",
+            "score": 0.3163650929927826,
+            "logit": 11.001312255859375
+          },
+          {
+            "index": 282,
+            "label": "tiger cat",
+            "score": 0.20681844651699066,
+            "logit": 10.57625675201416
+          },
+          {
+            "index": 287,
+            "label": "lynx, catamount",
+            "score": 0.00551249785348773,
+            "logit": 6.951433181762695
+          },
+          {
+            "index": 283,
+            "label": "Persian cat",
+            "score": 0.0010830448009073734,
+            "logit": 5.324191570281982
+          }
+        ]
+      },
+      {
+        "labels": [
+          {
+            "index": 282,
+            "label": "tiger cat",
+            "score": 0.44230377674102783,
+            "logit": 9.707606315612793
+          },
+          {
+            "index": 285,
+            "label": "Egyptian cat",
+            "score": 0.3671620786190033,
+            "logit": 9.52141284942627
+          },
+          {
+            "index": 281,
+            "label": "tabby, tabby cat",
+            "score": 0.11874285340309143,
+            "logit": 8.392569541931152
+          },
+          {
+            "index": 332,
+            "label": "Angora, Angora rabbit",
+            "score": 0.009771499782800674,
+            "logit": 5.895079135894775
+          },
+          {
+            "index": 283,
+            "label": "Persian cat",
+            "score": 0.008251069113612175,
+            "logit": 5.7259521484375
+          }
+        ]
+      }
+    ],
+    "model": "<campaign-work>/owned/B06",
+    "revision": null,
+    "task": "image-classification",
+    "score_semantics": "supervised-class-softmax"
+  },
+  "device": {
+    "device_name": "Apple M4",
+    "max_recommended_working_set_size": 22906503168,
+    "memory_size": 34359738368,
+    "architecture": "applegpu_g16g",
+    "max_buffer_length": 17179869184,
+    "resource_limit": 499000
+  },
+  "peak_mlx_bytes": 1534932064
+}

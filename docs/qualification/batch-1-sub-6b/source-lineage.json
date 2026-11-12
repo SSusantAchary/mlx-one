@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "models": [
+    {
+      "id": "B01",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed-replay/B01/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B02",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed-replay/B02/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B03",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed/B03/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B04",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed/B04/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B05",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed-replay/B05/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B06",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed/B06/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B07",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed/B07/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B08",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed-resource/B08/native.json",
+      "changes_after_checkpoint_run": {},
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B09",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed/B09/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    },
+    {
+      "id": "B10",
+      "real_checkpoint_evidence": "docs/qualification/batch-1-sub-6b/installed/B10/native.json",
+      "changes_after_checkpoint_run": {
+        "core/release_support.py": "Exact checkpoint status metadata; no model math changed",
+        "server/app.py": "Kokoro server task budget raised to 4 GiB; other task budgets unchanged",
+        "engine/adapter_registry.py": "Merge exact checkpoint metadata; model dispatch unchanged",
+        "models/audio/kokoro/config.py": "Stricter Kokoro profile validation; final Kokoro wheel run verifies it",
+        "engine/task_runners/batch1.py": "Conservative Kokoro transient reservation; other adapters and model equations unchanged"
+      },
+      "neural_forward_source_unchanged": true
+    }
+  ],
+  "full_native_regression_passed": 2599,
+  "final_targeted_regression_passed": 54,
+  "note": "Final Kokoro was rerun after admission changes. Final distribution verifies installed bytes against the final wheel; no new forward math differs from its recorded real checkpoint run."
+}

@@ -4,10 +4,11 @@ title: Models, coverage and progress
 
 # Models, coverage and progress
 
-**0.1.1 is approved for release.** Explore the 40 native model types with passing
-primary workflows across seven modalities. Current support comes from the
-verified model catalog; measured performance and package publication are shown
-separately. [Release notes](../releases/0.1.1.md).
+Explore **45 native model types across seven modalities**, represented by
+**50 verified checkpoint profiles**. These include T5 text-to-text, supervised
+ViT classification, Kokoro speech and multilingual retrieval alongside the
+original 40-type release cohort.
+[Model workflows and examples](../../docs/models/batch-1-sub-6b/README.md).
 
 <div data-insights-root data-source="../assets/data/insights.json"></div>
 
@@ -17,8 +18,9 @@ separately. [Release notes](../releases/0.1.1.md).
 
 ## Supported model explorer
 
-Every row identifies a supported model type, its pinned checkpoint, precision,
-tested primary operations and saved result. Search by model, task or precision.
+Every row identifies a checkpoint profile, its architecture type, pinned revision,
+precision, tested primary operations and saved result. Multiple checkpoints can
+share one model type. Search by model, task or precision.
 
 <div class="insights-controls">
 <label>Find a model or task<input type="search" data-support-search placeholder="Try GPT-OSS, speech, SAM3 or Q8" disabled></label>
@@ -31,7 +33,7 @@ tested primary operations and saved result. Search by model, task or precision.
 <div class="insights-table" data-support-table></div>
 
 <details markdown="1" class="insights-fallback">
-<summary>All 40 supported models (also available without JavaScript)</summary>
+<summary>All verified checkpoint profiles (also available without JavaScript)</summary>
 
 <!-- insights:supported -->
 
@@ -40,12 +42,17 @@ tested primary operations and saved result. Search by model, task or precision.
 **Supported** means the selected checkpoint passes native task execution and
 relevant interface checks, backed by model tests, regressions and packaging
 checks. Accuracy and speed remain measurements of the recorded workload.
-Publication is pending; installation examples target the approved **0.1.1**
-release for use once its artifacts are uploaded.
+The availability label reads the current package release decision, keeping
+approval and PyPI publication separate. All profiles are included in the published **0.1.2** release;
+[the release record](../../docs/releases/0.1.2.json) records the verified artifacts.
+[Install the release](../getting-started.md#install-from-pypi).
 
 [Quality and scope limitations](../models/support.md#known-quality-and-scope-limitations)
 include Florence page OCR accuracy, NER sample accuracy, LFM speech precision and
 the optional SAM MPS reference discrepancy. Optional failed tasks are excluded.
+ViT classification passes while its fixed hidden-state diagnostic remains failed;
+Kokoro is qualified for bounded `af_heart` English speech. The
+[workflow guide](../../docs/models/batch-1-sub-6b/README.md) records these limits.
 
 ## Model coverage over time
 
@@ -53,9 +60,11 @@ the optional SAM MPS reference discrepancy. Optional failed tasks are excluded.
 <div class="insights-table" data-registration-table></div>
 
 Registered types follow dated Git snapshots. Functional admissions are a separate
-series: the 8 November campaign records 40 passing primary workflows. No
-comparable earlier campaign point is established, so the historical 23/7/10 audit
-is not connected to this series. Monthly rows retain the actual snapshot date.
+series: the 8 November record covers 40 model types and the 10 November record
+covers 45. Ten additional checkpoint profiles add five architecture types;
+variants do not inflate the type count. The historical 23/7/10 audit used a
+different policy and is not connected to this series. Monthly rows retain the
+actual registry snapshot date.
 
 ## Performance dashboard
 
@@ -95,7 +104,7 @@ dated records.
 
 The earlier five catalogs contain checkpoint/task/precision profiles, including
 optional tasks and alternative revisions. Their counting unit and historical
-labels differ from the 40 supported model types above. Original blockers remain
+labels differ from the current checkpoint profiles above. Original blockers remain
 visible for those exact profiles.
 
 <details markdown="1" class="insights-history">

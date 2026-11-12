@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-10",
+  "change": "Align README and GitHub Pages on 45 model types, seven modalities, 50 verified checkpoint profiles and technical release readiness of the ten additional workflows",
+  "files": {
+    "README.md": {
+      "previous_sha256": "dadfa43471b63a18c78d5d8c3834c9ed8031f7c83bd7df8d233e5ca69a285724",
+      "current_sha256": "891dfe20f43f6bf73973ab065b47763d9611fb7f830157bb1297b9fd42fab561"
+    },
+    "README.pypi.md": {
+      "previous_sha256": "f7aff5719e918997c0aaac754c44c14742e19535f6ccf420b379073d6d3f1628",
+      "current_sha256": "c254704105d0d05ef7af839c209f2e1c4c7663402c0a2e97de38f663b8d082ac"
+    },
+    "website/pages/index.md": {
+      "previous_sha256": "1994f1268b29102737680afd03ec56ed19c6386588add994785cc59b3a71d938",
+      "current_sha256": "d783f5bce464fcf1cbd581f87db14bca263791a5d6e4e37addff3bd8a86d8c27"
+    },
+    "website/README.md": {
+      "previous_sha256": "4a07c75467418a717cfdcdd3bc16ce47d43dc92db37ffd388a910f63d86de948",
+      "current_sha256": "53b7bbe6ebe35f3235a5d9ff52124ec20f113abfebe73ea841ac67194869a6b3"
+    }
+  },
+  "documentation_checks": {
+    "files": 54,
+    "local_links": 936,
+    "external_urls": 75,
+    "python_examples": 38,
+    "errors": []
+  },
+  "strict_website_build": {
+    "status": "PASS",
+    "html_pages": 69,
+    "local_links": 8174,
+    "errors": []
+  },
+  "pypi_readme": "GENERATED_AND_CHECKED",
+  "source_and_display_counts": "MATCH_VERIFIED_CATALOGS",
+  "native_runtime_sources": "UNCHANGED against verified source-files.json snapshot",
+  "package_release_decision": "UNCHANGED; additional profiles retain NOT_REQUESTED",
+  "model_downloads": "NONE",
+  "commit_push_publication": "NOT_PERFORMED; user will push and merge the feature branch",
+  "deployment_trigger": ".github/workflows/docs-site.yml deploys on main; feature-branch PR builds without deploying",
+  "artifact_note": "Existing model results, wheel identities and earlier documentation snapshots remain unchanged. No artifact rebuild for this documentation-only follow-up.",
+  "checks": {
+    "documentation": {
+      "path": "docs/qualification/batch-1-sub-6b/checks/readme-pages-20261110-documentation.log",
+      "sha256": "8d7bbac8e3966f7c8458a40cb90456237c8797948603921473886e48e102a665"
+    },
+    "website": {
+      "path": "docs/qualification/batch-1-sub-6b/checks/readme-pages-20261110-website.log",
+      "sha256": "1a59c51510afabc18010de0719b4e4fb63d4c599e47380fa9ff01ed5326e6961"
+    }
+  }
+}

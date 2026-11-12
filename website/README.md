@@ -43,8 +43,8 @@ SHA-256 and the source-to-page mapping. No benchmark JSON or evidence is rewritt
 | Content | Maintained source |
 | --- | --- |
 | Home and short task guides | `website/pages/` |
-| Current supported models | `src/mlx_one/data/model_support_release_20261108.json` and its checksummed result files |
-| Release approval and publication state | `docs/releases/0.1.1.json`, with notes in `docs/releases/0.1.1.md` |
+| Current supported models | `src/mlx_one/data/model_support_release_20261108.json`, `src/mlx_one/data/batch_1_sub_6b.json` and their verified result files |
+| Release approval and publication state | `docs/releases/0.1.2.json`, with notes in `docs/releases/0.1.2.md`; the 0.1.1 record remains historical |
 | Support and known limits / historical audit | `status_models_testing.md` / `docs/qualification/history/model-status-before-20261108.md` |
 | Installation, APIs, architecture and experiments | Existing Markdown under `docs/` |
 | Family implementation guides | `src/mlx_one/models/*/*/README.md`, discovered automatically |
@@ -65,9 +65,10 @@ and add the destination to `nav` in `zensical.toml`. New model-family READMEs
 automatically get pages and search entries; the canonical model index remains
 their navigation entry point.
 
-Installation examples target the approved `0.1.1` release and identify publication
-as pending until its artifacts are uploaded. The release record retains the last
-published version separately. Historical measurements keep their original version
+The homepage and model workflow guide install from the current source checkout.
+Current package installation examples target the published `0.1.2` release;
+its release record contains the verified PyPI file identities. Version `0.1.1`
+remains a dated release cohort. Historical measurements keep their original version
 and workload identities. `README.pypi.md` is generated from the main README with
 absolute links by `python scripts/release/pypi_readme.py`; use `--check` to verify it.
 
@@ -99,12 +100,13 @@ repository settings instead.
 ## Coverage and progress dashboard
 
 `website/pages/insights.md` owns the layout; `website/support.py` verifies the current
-40-model catalog against the native registry and each selected result's checksum,
-checkpoint identity and passing native task status. The homepage counters, all
+dated release catalog and the current-source checkpoint catalog against the
+native registry, saved results, functional gates and installed execution receipts.
+Result checksums and checkpoint identities must match. The homepage counters, all
 seven modality cards and the primary model explorer use this catalog. A failed
 quality diagnostic stays visible; it does not become a passed benchmark. The
-release card reads the maintainer decision and keeps approval separate from
-publication. Building the site does not publish the package.
+release record reads the dated maintainer decision and keeps approval separate
+from publication. Building the site does not publish the package.
 
 `website/insights.py` also builds
 `assets/data/insights.json` from five existing catalogs (text, VLM, audio, OCR and
@@ -118,7 +120,12 @@ Registry metadata is evaluated in isolation without importing the MLX-One packag
 or model runtime. No model download, package release, network request or benchmark
 execution is needed to generate the dashboard data.
 
-The primary explorer shows 40 supported model types. The historical explorer
+The primary explorer shows 50 verified checkpoint profiles covering 45 distinct
+architecture types. Availability labels distinguish the 40-type approved 0.1.1
+cohort from ten additional checkpoint profiles. Both are included in the
+published `0.1.2` release; approval and upload remain separately recorded. BERT and XLM-R checkpoint variants count once per type.
+The public workflow guide is staged under `models/workflows/`; archived evidence
+paths retain their original identities. The historical explorer
 retains the older checkpoint/task/precision profiles and unique pinned revisions;
 its statuses preserve blockers, WIP and experimental scopes for those exact
 profiles. Missing historical release-qualification fields remain unknown. No raw
@@ -126,8 +133,9 @@ manifest status or benchmark result is rewritten.
 
 The current coverage chart uses first-parent native registry snapshots, with
 monthly rows retaining their actual source dates and commits. Functional campaign
-admissions are a separate dated series; the November 8 campaign supplies one
-40-workflow point. The older 23/7/10 audit is not plotted as an admission point.
+admissions are a separate dated series: the November 8 record covers 40 types,
+and the November 10 record covers 45. These count architecture types with passing
+primary workflows, not checkpoint variants. The older 23/7/10 audit is not plotted as an admission point.
 
 The historical profile curve uses first-parent snapshots of the versioned manifests. Its
 first-recorded and first-smoke dates are when evidence reached the branch, not

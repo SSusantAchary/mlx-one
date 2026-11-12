@@ -4,22 +4,29 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: macos-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Create isolated test environment
+        run: |
+          python -m venv .venv
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Install package
         run: |
@@ -30,8 +37,22 @@ jobs:
       - name: Ruff lint with explicit inherited debt
         run: python scripts/release/check_lint.py
 
+      - name: Verify test environment
+        run: |
+          python -c 'import sys; print(sys.executable); print(sys.version)'
+          python -m pytest --version
+          python -m pip check
+
       - name: Pytest
-        run: pytest
+        run: python -m pytest --junitxml=test-results/pytest.xml
+
+      - name: Preserve pytest report
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: pytest-python-${{ matrix.python-version }}
+          path: test-results/pytest.xml
+          if-no-files-found: ignore
 
       - name: Build distributions
         run: |
@@ -41,8 +62,8 @@ jobs:
   clean-wheel:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: "3.12"
       - name: Build wheel

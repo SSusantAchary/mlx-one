@@ -30,6 +30,9 @@ class BertEmbeddingConfig:
     sentence_max_length: int = 256
     add_pooling_layer: bool = True
     normalize_embeddings: bool = True
+    pooling: str = "mean"
+    task: str = "embedding"
+    num_labels: int = 1
     extra: Mapping[str, Any] = field(default_factory=dict, repr=False)
 
     def __post_init__(self) -> None:
@@ -37,6 +40,14 @@ class BertEmbeddingConfig:
             raise ConfigError(
                 f"BertEmbeddingConfig cannot represent model_type={self.model_type!r}"
             )
+        if self.pooling not in {"mean", "cls"}:
+            raise ConfigError("BERT pooling must be mean or cls")
+        if self.task not in {"embedding", "reranking"}:
+            raise ConfigError("BERT task must be embedding or reranking")
+        if type(self.num_labels) is not int or self.num_labels < 1:
+            raise ConfigError("BERT num_labels must be a positive integer")
+        if self.task == "reranking" and (self.num_labels != 1 or not self.add_pooling_layer):
+            raise ConfigError("BERT reranking requires one label and the trained pooler")
         for name in (
             "vocab_size",
             "hidden_size",
@@ -54,9 +65,7 @@ class BertEmbeddingConfig:
             "hidden_size", self.hidden_size, "num_attention_heads", self.num_attention_heads
         )
         validate_dropout("hidden_dropout_prob", self.hidden_dropout_prob)
-        validate_dropout(
-            "attention_probs_dropout_prob", self.attention_probs_dropout_prob
-        )
+        validate_dropout("attention_probs_dropout_prob", self.attention_probs_dropout_prob)
         if self.hidden_act not in {"gelu", "gelu_new"}:
             raise ConfigError(f"unsupported BERT activation: {self.hidden_act}")
         if self.position_embedding_type != "absolute":
@@ -81,3 +90,8 @@ class BertEmbeddingConfig:
             return cls(**payload)
         except TypeError as exc:
             raise ConfigError(f"invalid BERT embedding configuration: {exc}") from exc
+
+    @property
+    def max_seq_length(self) -> int:
+        """Shared retrieval capacity for embedding and sequence-pair scoring."""
+        return self.sentence_max_length

@@ -1,11 +1,15 @@
 # Python, CLI and HTTP APIs
 
-**0.1.1 approved for release:** [40 model types](../../status_models_testing.md)
-have passing primary-workflow records and applicable interface checks.
-[Release notes](../releases/0.1.1.md) identify the tested scope. Interface
-availability remains task-specific; SAM3 uses its Python/CLI segmentation paths.
+**0.1.2 is published on PyPI**, with 45 model types and 50 verified
+checkpoint profiles. [Release notes](../releases/0.1.2.md) identify the tested
+scope. Interface availability remains task-specific; SAM3 uses its Python/CLI
+segmentation paths.
 
 [Getting started](../getting-started.md) · [Server and Web UI](../ui.md) · [HTTP compatibility](openai-compatibility.md)
+
+The source checkout adds [native Python, CLI, Engine and HTTP workflows](../models/batch-1-sub-6b/README.md):
+paired BERT/XLM-R reranking, dense/sparse/token retrieval, T5, supervised ViT and Kokoro.
+These workflows are included in 0.1.2; the dated 0.1.1 cohort remains identifiable.
 
 ## CLI
 

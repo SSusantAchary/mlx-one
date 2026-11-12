@@ -35,25 +35,25 @@ STATUSES = {
 
 MODALITIES = (
     ('text', 'Text generation', {'text'}, 'models/index.md#text-generation-guides',
-     'GPT-OSS, Llama, Qwen, Gemma and more',
+     'GPT-OSS, Llama, Qwen, Gemma and T5 text-to-text',
      '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="m10 7-3 3 3 3m4-6 3 3-3 3"/>'),
     ('vision', 'Vision-language', {'vision-language'}, 'models/index.md#vision-language-guides',
      'Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL',
      '<path d="M3 7V5a2 2 0 0 1 2-2h2m10 0h2a2 2 0 0 1 2 2v2M3 17v2a2 2 0 0 0 2 2h2m10 0h2a2 2 0 0 0 2-2v-2"/><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2"/>'),
-    ('audio', 'Audio & speech', {'asr', 'audio', 'audio-language'}, 'models/index.md#audio-guides',
-     'Whisper, Moonshine, Qwen ASR, Parakeet, LFM2 Audio and Silero',
+    ('audio', 'Audio & speech', {'asr', 'audio', 'audio-language', 'tts'}, 'models/index.md#audio-guides',
+     'Whisper, Moonshine, Qwen ASR, Parakeet, LFM2 Audio, Silero and Kokoro',
      '<path d="M3 10v4m4-7v10m5-15v20m5-15v10m4-7v4"/>'),
     ('ocr', 'OCR & documents', {'ocr'}, 'models/index.md#ocr-and-documents',
      'TrOCR, GOT-OCR, Florence, PaddleOCR, LightOnOCR and DeepSeek',
      '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h5M14 2v6h6M14 2l6 6"/><path d="M15 13h-1a1 1 0 0 0-1 1v1m6-2h1a1 1 0 0 1 1 1v1m-8 4v1a1 1 0 0 0 1 1h1m4 0h1a1 1 0 0 0 1-1v-1"/>'),
     ('retrieval', 'Embeddings & reranking', {'embedding', 'reranking'}, 'models/index.md#retrieval-guides',
-     'BERT, MPNet, Qwen3 Embedding, Qwen3 Reranker and ColBERT',
+     'BERT, BGE-M3, Nomic, multilingual E5, Qwen3, MPNet and ColBERT',
      '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>'),
     ('segmentation', 'Segmentation', {'segmentation'}, 'models/index.md#segmentation-guides',
      'SAM3 image, interactive prompts and video tracking',
      '<path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"/>'),
     ('classification', 'Classification', {'classification'}, 'models/index.md#classification-guides',
-     'DistilBERT sentiment, BERT NER and CLIP zero-shot images',
+     'ViT supervised images, CLIP zero-shot images, sentiment and named entities',
      '<path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zm11 3 2 2 4-5"/>'),
 )
 
@@ -111,7 +111,7 @@ def modality_cards_html(data):
         icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + spec[-1] + '</svg>'
         output.append(f'<a class="modality-card" href="{group["target"]}">{icon}'
                       f'<span class="modality-title">{html.escape(group["title"])}</span>'
-                      f'<span class="modality-count"><strong>{group["supported"]}/{group["count"]}</strong> model types supported</span>'
+                      f'<span class="modality-count"><strong>{group["count"]}</strong> native model types</span>'
                       f'<span class="modality-description">{html.escape(group["description"])}</span></a>')
     output.append('</div>')
     return '\n'.join(output)
@@ -228,6 +228,10 @@ def make_data(record):
         record(source)
         return json.loads(source.read_text())
 
+    verification = load('docs/qualification/batch-1-sub-6b/verification.json')
+    if verification['native_regression']['status'] != 'PASS':
+        raise ValueError('Native regression summary has no passing recorded run')
+
     models = []
     for scope, (path, _) in CATALOGS.items():
         models.extend(profiles(scope, load(path)))
@@ -331,6 +335,7 @@ def make_data(record):
                     'release_qualification_unrecorded': sum(r['release_qualified'] is None for r in models),
                     'by_status': dict(Counter(r['status'] for r in models)),
                     'by_modality': dict(Counter(r['modality'] for r in models))},
+        'verification': verification,
         'status_definitions': {key: {'label': label, 'description': description} for key, (label, description) in STATUSES.items()},
         'models': models, 'history': history, 'weeks': weekly_milestones(changelog.read_text()),
         'performance': cohorts,
@@ -341,13 +346,9 @@ def make_data(record):
 
 def summary_html(data):
     support = data['support']
-    release = support['release']
     cards = [(support['model_types'], 'Native model types'), (support['modalities'], 'Modality categories'),
-             (f'{support["supported"]}/{support["model_types"]}', 'Primary workflows passed'),
-             (release['version'],
-              'Approved for release · publication pending' if not release['published']
-              and release['release_approval'] == 'APPROVED' else 'Published release'
-              if release['published'] else 'Release candidate')]
+             (support['checkpoint_profiles'], 'Verified checkpoint profiles'),
+             (f'{data["verification"]["native_regression"]["passed"]:,}', 'Native regression tests passed')]
     return '<div class="insights-cards">' + ''.join(
         f'<div class="insights-card"><strong>{value}</strong><span>{html.escape(label)}</span></div>' for value, label in cards) + '</div>'
 

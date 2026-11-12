@@ -1,0 +1,47 @@
+{
+  "albert": {
+    "shape": [
+      1,
+      15,
+      768
+    ],
+    "max_abs_error": 9.953975677490234e-06,
+    "mean_abs_error": 1.5553599723716616e-06,
+    "allclose_1e4": true
+  },
+  "f0": {
+    "shape": [
+      1,
+      126
+    ],
+    "max_abs_error": 0.000980377197265625,
+    "mean_abs_error": 4.494142922339961e-05,
+    "allclose_1e4": true
+  },
+  "noise": {
+    "shape": [
+      1,
+      126
+    ],
+    "max_abs_error": 5.7220458984375e-06,
+    "mean_abs_error": 1.778086925696698e-06,
+    "allclose_1e4": true
+  },
+  "durations": {
+    "shape": [
+      15
+    ],
+    "max_abs_error": 0.0,
+    "mean_abs_error": 0.0,
+    "allclose_1e4": true
+  },
+  "waveform": {
+    "shape": [
+      37800
+    ],
+    "max_abs_error": 0.02486000582575798,
+    "mean_abs_error": 0.0010831070831045508,
+    "allclose_1e4": false,
+    "correlation": 0.9989056686781553
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "checkpoint": "openai/whisper-tiny",
+  "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+  "audio_sha256": "f0d40f0c852841d6cf826007de35d51600b5d6db13015dbc8e5e4d7090a4c186",
+  "reference": "Hello, world. This is native speech synthesis on Apple Silicon.",
+  "transcript": "Hello, world. This is native speech synthesis on Apple Silicon.",
+  "reference_words": 10,
+  "word_errors": 0,
+  "wer": 0.0,
+  "status": "MEASURED",
+  "normalization": "lowercase a-z word tokens",
+  "resampling": "explicit NumPy linear interpolation from 24 kHz to 16 kHz",
+  "scope": "one native TTS-to-native ASR sample; not a corpus or human listening result"
+}

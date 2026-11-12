@@ -1,0 +1,8 @@
+{
+  "transformers": "4.40.2",
+  "torch": "2.15.0",
+  "source_module": "transformers.models.xlm_roberta.modeling_xlm_roberta",
+  "source_sha256": "9c3b511caa0b4afa36220d6ea7ff8dbb6f452d826a4fe7b862f152c4eff9f0b1",
+  "output_sha256": "4573231d7a498f2aabad01df3ea83028c3a10614252ee66454823313a4f7f043",
+  "parameter_count": 567755777
+}

@@ -110,24 +110,59 @@ class DatasetTests(unittest.TestCase):
         self.assertNotIn('mlx', sys.modules)
         self.assertNotIn('mlx_one', sys.modules)
 
-    def test_current_support_is_bound_to_all_registered_types(self):
+    def test_release_support_remains_bound_to_its_reviewed_catalog_during_growth(self):
         current = self.data['support']
-        self.assertEqual(current['supported'], self.data['modality_coverage']['total_model_types'])
-        self.assertEqual(len(current['models']), len({r['model_type'] for r in current['models']}))
+        catalog = json.loads((ROOT / current['catalog']).read_text())
+        self.assertEqual(current['approved_release_model_types'], catalog['model_type_count'])
+        self.assertEqual(current['model_types'], self.data['modality_coverage']['total_model_types'])
+        self.assertEqual({r['model_type'] for r in current['approved_release_models']},
+                         {r['model_type'] for r in catalog['models']})
+        types = {r['model_type'] for r in current['models']}
+        self.assertEqual(current['supported'], len(types))
         for row in current['models']:
             self.assertEqual(row['status'], 'SUPPORTED')
             self.assertEqual(row['evidence_sha256'], self.sources[row['evidence']])
         for group in self.data['modality_coverage']['groups']:
-            self.assertEqual(group['supported'], group['count'])
+            self.assertEqual(group['supported'], len(types.intersection(group['model_types'])))
+            self.assertLessEqual(group['supported'], group['count'])
+
+    def test_current_checkpoint_profiles_do_not_inflate_architecture_counts(self):
+        current = self.data['support']
+        catalog = json.loads((ROOT / current['checkpoint_catalog']).read_text())
+        additional = [row for row in current['models'] if row.get('release_approval') == 'NOT_REQUESTED']
+        self.assertEqual(len(additional), catalog['checkpoint_count'])
+        self.assertEqual(current['checkpoint_profiles'], 50)
+        self.assertEqual(current['supported'], 45)
+        self.assertEqual({r['checkpoint'] for r in additional}, {r['model_id'] for r in catalog['models']})
+        self.assertTrue({'t5', 'vit', 'kokoro', 'nomic_bert', 'xlm-roberta'} <=
+                        {r['model_type'] for r in additional})
+        vit = next(row for row in additional if row['model_type'] == 'vit')
+        self.assertEqual(vit['diagnostics']['hidden'], 'FAIL')
+        self.assertEqual(vit['diagnostics']['logits'], 'PASS')
+        self.assertEqual(vit['functional_decision']['sha256'], self.sources[vit['functional_decision']['path']])
 
     def test_admission_history_is_separate_from_registry_history(self):
         support = self.data['support']
-        self.assertEqual(len(support['history']), 1)
-        self.assertEqual(support['history'][0]['supported'], len(support['models']))
+        self.assertEqual(len(support['history']), 2)
+        self.assertEqual(support['history'][0]['supported'], support['approved_release_model_types'])
         self.assertEqual(support['history'][0]['date'], support['release']['support_recorded_date'])
+        self.assertEqual(support['history'][-1]['supported'], support['supported'])
         for row in support['registration_history']['monthly']:
             self.assertEqual(row['month'], row['date'][:7])
             self.assertEqual(len(row['commit']), 40)
+
+    def test_current_package_approval_is_separate_from_qualification_snapshots(self):
+        support = self.data['support']
+        release = support['current_release']
+        self.assertEqual(release['version'], '0.1.2')
+        self.assertEqual(release['release_approval'], 'APPROVED')
+        self.assertEqual(release['registered_model_types'], support['supported'])
+        self.assertEqual(release['checkpoint_profile_count'], len(support['models']))
+        for row in support['models']:
+            self.assertEqual(row['package_release']['version'], release['version'])
+            self.assertEqual(row['package_release']['published'], release['published'])
+        for reference in release['support_catalogs']:
+            self.assertEqual(reference['sha256'], self.sources[reference['path']])
 
 
 if __name__ == '__main__':

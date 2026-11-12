@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from mlx_one.text.schemas import TextGenerationOptions
+from mlx_one.utils.hashing import sha256_file
 from mlx_one.vision.loading import load_vlm_model
 from mlx_one.vision.public import VisionLanguageEngine
 
@@ -33,7 +34,7 @@ def load_document_bundle(path, *, revision=REVISION, offline=True):
         raise ValueError("document QA requires the exact local existing Q4 checkpoint")
     root = Path(path)
     for name, expected in HASHES.items():
-        if hashlib.file_digest((root / name).open("rb"), "sha256").hexdigest() != expected:
+        if sha256_file(root / name) != expected:
             raise ValueError(f"document QA checkpoint asset mismatch: {name}")
     bundle = load_vlm_model(root, revision=REVISION, offline=True)
     from mlx_one.vision.processing import Qwen25ImageProcessor

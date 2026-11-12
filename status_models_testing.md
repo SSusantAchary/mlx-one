@@ -1,12 +1,45 @@
-# Testing and support status of the 40 native model types
+# Model support and validation records
 
-Updated: **8 November 2026**. **40/40 model types have passing primary-workflow records** under the MLX-LM-aligned functional standard. Each selected checkpoint is **SUPPORTED** for the operations below. **0.1.1 is approved for release on 8 November 2026; publication is pending.** See the [release notes](docs/releases/0.1.1.md).
+Updated: **12 November 2026**. The current source has **45 native architecture
+types across seven modalities**, represented by **50 verified checkpoint
+profiles**: the dated 40-type release cohort below and ten additional profiles.
+The additional workflows meet the technical release criteria for their recorded
+tasks. Version **0.1.2** was published on PyPI on 11 November; its
+[release record](docs/releases/0.1.2.json) identifies the verified artifacts.
+
+[Model workflows and examples](docs/models/batch-1-sub-6b/README.md) ·
+[Ten-checkpoint validation results](docs/qualification/batch-1-sub-6b/results.json) ·
+[Validation report and limitations](docs/models/batch-1-sub-6b/REPORT.md).
+
+## Current native coverage
+
+| Modality | Native architecture types |
+| --- | ---: |
+| Text generation | 12 |
+| Vision-language | 4 |
+| Audio & speech | 8 |
+| OCR & documents | 6 |
+| Embeddings & reranking | 7 |
+| Segmentation | 4 |
+| Classification | 4 |
+| **Total** | **45** |
+
+New source workflows include T5, supervised ViT, Kokoro, BGE-M3, BGE Reranker,
+Nomic and additional BERT retrieval profiles. ViT classification passes with its
+failed fixed hidden-state diagnostic retained. Kokoro is qualified for bounded
+`af_heart` English speech. Exact revisions and limits are in the linked results.
+
+## Dated 0.1.1 release cohort
+
+Recorded: **8 November 2026**. **40/40 model types have passing primary-workflow records** under the MLX-LM-aligned functional standard. Each selected checkpoint is **SUPPORTED** for the operations below. **0.1.1 was approved on 8 November 2026 and is published on PyPI.** See the [release notes](docs/releases/0.1.1.md).
 
 The required checks are architecture/state correctness, real checkpoint load and task output, applicable public interfaces, regressions and distribution checks. MLX-LM does not prescribe a blanket experimental label or universal broad-reliability certification. Corpus accuracy and reference comparisons remain recorded diagnostics. See the [release guide](mlx-one_model_release_guide.md) for upstream sources and policy.
 
 [Current technical readiness](docs/qualification/model-release-20261108/RELEASE_CANDIDATE.md) · [machine-readable support catalog](src/mlx_one/data/model_support_release_20261108.json) · [repairs and diagnostic limits](docs/qualification/model-release-20261108/RESOLUTIONS.md).
 
-## Current counts by modality
+<a id="current-counts-by-modality"></a>
+
+### 0.1.1 counts by modality
 
 | Modality | Model types | Supported |
 | --- | ---: | ---: |
@@ -19,7 +52,9 @@ The required checks are architecture/state correctness, real checkpoint load and
 | Classification | 3 | 3 |
 | **Total** | **40** | **40** |
 
-## Current supported models
+<a id="current-supported-models"></a>
+
+## 0.1.1 supported models
 
 These are 40 registered model types, each represented by an exact checkpoint and precision. A model type does not represent every checkpoint size or optional task extension. Full revisions and result hashes are stored in the catalog.
 

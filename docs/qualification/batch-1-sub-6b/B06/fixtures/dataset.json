@@ -1,0 +1,28 @@
+{
+  "dataset": "AIOmarRehan/AnimalsDataset",
+  "revision": "676c9639be89ef4847325dcdbf141051319129f2",
+  "license": "cc0-1.0",
+  "file": "data/train-00000-of-00001.parquet",
+  "rows": [
+    0,
+    1
+  ],
+  "files": [
+    {
+      "local_name": "0.jpg",
+      "sha256": "9e7e9d8e4986461f1f297a3c2bab0830080998ad4170b5e673d06a20beca2b9c",
+      "row": 0,
+      "labels": {
+        "label": 0
+      }
+    },
+    {
+      "local_name": "1.jpg",
+      "sha256": "5e865bd96bc9fda281a2b75c3007649ac67c9ac11e6081f67a1f390f99b30ca4",
+      "row": 1,
+      "labels": {
+        "label": 0
+      }
+    }
+  ]
+}

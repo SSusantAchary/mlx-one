@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mlx-one"
-version = "0.1.1"
+version = "0.1.2"
 description = "A unified MLX stack for multimodal AI on Apple Silicon."
 readme = "README.pypi.md"
 requires-python = ">=3.10"
@@ -60,7 +60,7 @@ dependencies = [
 Homepage = "https://github.com/SSusantAchary/mlx-one"
 Documentation = "https://ssusantachary.github.io/mlx-one/"
 "Model support" = "https://ssusantachary.github.io/mlx-one/models/support/"
-"Release notes" = "https://ssusantachary.github.io/mlx-one/releases/0.1.1/"
+"Release notes" = "https://ssusantachary.github.io/mlx-one/releases/0.1.2/"
 Repository = "https://github.com/SSusantAchary/mlx-one"
 Issues = "https://github.com/SSusantAchary/mlx-one/issues"
 Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"
@@ -81,9 +81,12 @@ vision = ["pillow>=10,<13"]
 ocr = ["pillow>=10,<13", "pypdfium2>=4.30,<6", "tiktoken>=0.9,<1"]
 ocr-bench = ["rapidfuzz>=3,<4", "pyarrow>=20,<24"]
 audio = []  # Native MLX/NumPy/tokenizers are core; encoded media additionally requires FFmpeg.
+kokoro = ["phonemizer-fork==3.3.2", "espeakng-loader==0.2.4"]
 qwen-align-ja = ["nagisa==0.2.11"]
 qwen-align-ko = ["soynlp==0.0.493"]  # Also requires the pinned checkpoint dictionary.
 dev = [
+    "setuptools>=77.0.3",
+    "tomli>=2.0.1; python_version < '3.11'",
     "fastapi>=0.115,<1",
     "httpx>=0.27,<1",
     "pydantic>=2.13.5,<3",
@@ -105,6 +108,8 @@ where = ["src"]
 mlx_one = [
     "mlxboost/provenance/sources.yaml",
     "models/UPSTREAM_LICENSE",
+    "models/BATCH1_NOTICE.md",
+    "models/FLAGEMBEDDING_LICENSE",
     "models/classification/NOTICE.md",
     "models/vision_language/UPSTREAM_LICENSE",
     "models/vision_language/UPSTREAM.md",
@@ -130,6 +135,7 @@ mlx_one = [
     "models/detection/NOTICE.md",
     "models/depth/NOTICE.md",
     "models/audio/qwen3_asr/NOTICE",
+    "models/audio/kokoro/weight_shapes.json",
     "ui/dist/**/*",
 ]
 

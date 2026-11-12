@@ -10,7 +10,7 @@ import sys
 import tempfile
 import time
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from importlib.metadata import version
 from pathlib import Path
 from statistics import median
@@ -265,7 +265,7 @@ def main() -> None:
     report = {
         "schema_version": 1,
         "mlx_version": mlx_version,
-        "qualified_at": datetime.now(UTC).isoformat(),
+        "qualified_at": datetime.now(timezone.utc).isoformat(),
         "repository_commit": commit,
         "environment": {
             "python": platform.python_version(),
