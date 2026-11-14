@@ -37,6 +37,7 @@ from mlx_one.hardware import (
     load_hardware_profile,
 )
 from mlx_one.inspection import InspectionError, inspect_model
+from mlx_one.mlxboost import MLXBoostConfig
 from mlx_one.planning import PlanningError, estimate_memory, plan_inference, plan_training
 from mlx_one.retrieval import (
     EmbeddingResult,
@@ -103,9 +104,10 @@ from mlx_one.text import (
 )
 from mlx_one.training import SFTTrainer
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 __all__ = [
+    "MLXBoostConfig",
     "VADEngine", "VADResult", "VADSession",
     "ZeroShotImageEngine", "zero_shot_classify",
     "TokenClassificationEngine", "TokenClassificationResult", "token_classify",

@@ -4,6 +4,16 @@ All notable changes to mlx-one are documented here. The project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reaches 1.0;
 alpha releases may refine planned interfaces.
 
+## 0.1.3
+
+- Integrate opt-in GPT-OSS-20B MXFP4/Q4 MLXBoost dispatch and bounded prefill
+  into the package, Engine and serving CLI; export `MLXBoostConfig`.
+- Add `mlx-one upgrade` for Git installation using the CLI's Python interpreter,
+  with ref selection, extras, dry run and optional dependency preservation.
+- Preserve current main's 0.1.2 model workflows and package license notices.
+- GPT-OSS acceleration defaults remain off; 128K Kilo agent workflows need
+  end-to-end validation. Historical benchmark results are not new release tests.
+
 ## Unreleased
 
 ### 0.1.2 — published 2026-11-11

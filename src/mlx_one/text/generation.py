@@ -331,6 +331,14 @@ def _stream_bundle_impl(
     from mlx_one.ops.logits import LogitsMode
 
     math_policy = _math_policy or getattr(_cache_runtime, "math_policy", REFERENCE_MATH)
+    gptoss_state = None
+    boost_config = getattr(_cache_runtime, "mlxboost_config", None)
+    gptoss_mlx_lm = getattr(boost_config, "gptoss_mlx_lm", False)
+    if gptoss_mlx_lm or getattr(boost_config, "gptoss_prefill_sort", False):
+        from mlx_one.mlxboost.gptoss import GPTOSSExperiment
+
+        feature = "mlx_lm_moe" if gptoss_mlx_lm else "prefill_sort"
+        gptoss_state = GPTOSSExperiment(frozenset({feature}))
     request_observer = _math_observer or current_observer()
     if on_execution is None:
         on_execution = request_observer
@@ -424,9 +432,15 @@ def _stream_bundle_impl(
                  and produced == 0 else
                  math_policy.prefill_chunk_size if produced == 0 and
                  math_policy.prefill_chunk_size is not None else len(current))
+        if gptoss_mlx_lm and phase == "prefill":
+            width = 2048
         start = 0
         while start < len(current):
             stop = min(start + width, len(current))
+            if gptoss_mlx_lm and phase == "prefill" and len(current) - start > 1:
+                # Match generate_step: prefill all but the final prompt token,
+                # then use that last token for the first generation step.
+                stop = min(stop, len(current) - 1)
             if (phase == "prefill" and _cache_runtime is not None
                     and getattr(_cache_runtime, "hybrid_state", False) and stop == len(current)):
                 page = _cache_runtime.config.block_size_tokens
@@ -472,10 +486,18 @@ def _stream_bundle_impl(
                             amount = execution_forecast(
                                 _cache_runtime, bundle.model.config, batch=1,
                                 chunk=len(part), history=cache[0].offset)["bytes"]
+                            if (gptoss_state is not None and phase == "prefill"
+                                    and 16 <= len(part) <= (2048 if gptoss_mlx_lm else 1024)):
+                                # Bound extra assignment/gather/reorder buffers for BF16 top-four.
+                                amount += 16 * len(part) * 4 * 2880 * 2
                             if transactional:
                                 amount += CacheBundle(cache).allocated_nbytes
                             execution.enter_context(_cache_runtime.transient_reservation(amount))
                         staged = CacheBundle(cache).clone() if transactional else None
+                        if gptoss_state is not None:
+                            from mlx_one.mlxboost.gptoss import _bind_gptoss
+
+                            execution.enter_context(_bind_gptoss(gptoss_state))
                         forward_started = time.perf_counter()
                         with math_execution(math_policy, family=bundle.architecture,
                                             phase=phase, observer=request_observer):
@@ -529,12 +551,15 @@ def _stream_bundle_impl(
                                                     tuple(prompt_ids[:boundary]))
             if on_execution is not None:
                 elapsed_ms = (time.perf_counter() - forward_started) * 1000
-                on_execution({"kind": "forward", "phase": phase,
+                event = {"kind": "forward", "phase": phase,
                               "duration_ms": getattr(output, "forward_duration_ms", elapsed_ms),
                               "at": time.perf_counter(),
                               "batch_size": getattr(output, "batch_size", 1),
                               "input_tokens": len(part), "logits_dtype": (str(output.logits.dtype)
-                                  if output.logits is not None else "not_projected")})
+                                  if output.logits is not None else "not_projected")}
+                if gptoss_state is not None:
+                    event["mlxboost_dispatch"] = dict(gptoss_state.dispatch)
+                on_execution(event)
             if request_observer is not None and getattr(request_observer, "capture_bytes", False):
                 request_observer({"kind": "cache_bytes",
                                   "bytes": sum(int(getattr(entry, "nbytes", 0))
@@ -542,6 +567,8 @@ def _stream_bundle_impl(
             if request_observer is not None and getattr(request_observer, "capture_state", False):
                 request_observer({"kind": "state", "logits": output.logits,
                                   "cache": cache, "input_ids": part, "phase": phase})
+            if gptoss_mlx_lm and start < len(current):
+                mx.clear_cache()
             if _yield_prefill_progress and start < len(current):
                 yield GenerationChunk(None, "", emitted)
         if cancelled():

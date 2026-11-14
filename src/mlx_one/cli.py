@@ -20,6 +20,7 @@ from mlx_one.audio.evaluation import (
 )
 from mlx_one.benchmark import BenchmarkError, benchmark_inference, load_prompts
 from mlx_one.calibration import CalibrationError, run_calibration
+from mlx_one.cli_upgrade import upgrade_command
 from mlx_one.comparison import ComparisonError, compare_results, load_gates, load_result
 from mlx_one.datasets import DatasetError, dataset_spec_from_path, load_records, preview_dataset
 from mlx_one.diagnostics import collect_doctor_report, doctor_report_json, format_doctor_report
@@ -99,6 +100,9 @@ def _positive_int_or_auto(
 @click.version_option(__version__, prog_name="mlx-one")
 def main() -> None:
     """Train anywhere. Prove it on Apple Silicon."""
+
+
+main.add_command(upgrade_command)
 
 
 from mlx_one.segmentation.cli import segment_command, track_command
@@ -507,6 +511,10 @@ def generate_command(
 )
 @click.option("--mlxboost-fast-decode/--no-mlxboost-fast-decode", default=False,
               help="Experimental B1 calibration lookup shortcut; requires mlxboost_b1.")
+@click.option("--mlxboost-gptoss-prefill-sort/--no-mlxboost-gptoss-prefill-sort", default=False,
+              help="Opt-in GPT-OSS-20B MXFP4/Q4 prefill sorting on M4 32 GB; requires mlxboost_b1.")
+@click.option("--mlxboost-gptoss-mlx-lm/--no-mlxboost-gptoss-mlx-lm", default=False,
+              help="Pinned MLX-LM GPT-OSS MoE/prefill experiment; requires mlxboost_b1.")
 @click.option(
     "--execution-dtype", type=click.Choice(["float32", "float16", "bfloat16"]), default=None
 )
@@ -584,6 +592,8 @@ def serve_command(
     cache_backend: str | None,
     inference_mode: str | None,
     mlxboost_fast_decode: bool,
+    mlxboost_gptoss_prefill_sort: bool,
+    mlxboost_gptoss_mlx_lm: bool,
     execution_dtype: str | None,
     max_prefill_tokens: int,
     admission_policy: str,
@@ -655,7 +665,9 @@ def serve_command(
             prefix_cache_bytes=prefix_cache_mib * 1024**2,
             cache_backend=cache_backend,
             inference_mode=inference_mode,
-            mlxboost_config=MLXBoostConfig(fast_decode=mlxboost_fast_decode),
+            mlxboost_config=MLXBoostConfig(fast_decode=mlxboost_fast_decode,
+                                         gptoss_prefill_sort=mlxboost_gptoss_prefill_sort,
+                                         gptoss_mlx_lm=mlxboost_gptoss_mlx_lm),
             execution_dtype=execution_dtype, max_prefill_tokens=max_prefill_tokens,
             admission_policy=admission_policy,
             memory_pressure_config=(MemoryPressureConfig(
