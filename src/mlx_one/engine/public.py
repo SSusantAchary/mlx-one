@@ -80,10 +80,21 @@ class Engine:
         spec_type: str = "none",
         spec_draft_n_max: int = 3,
         draft_model: LoadedTextModel | None = None,
+        mlxboost_config: Any = None,
     ) -> None:
+        from mlx_one.mlxboost import MLXBoostConfig
+
+        if mlxboost_config is not None and not isinstance(mlxboost_config, MLXBoostConfig):
+            raise TypeError("mlxboost_config must be MLXBoostConfig")
+        if (mlxboost_config is not None and mlxboost_config.enabled
+                and inference_mode != "mlxboost_b1"):
+            raise ValueError("MLXBoost features require explicit inference_mode=mlxboost_b1")
         self._math_policy = (math_policy if math_policy is not None else
             NativeMathPolicy.optimized() if inference_mode == "native_optimized"
             else REFERENCE_MATH)
+        if inference_mode == "mlxboost_b1" and (spec_type != "none"
+                or math_policy is not None and math_policy != REFERENCE_MATH):
+            raise ValueError("MLXBoost B1 requires reference math and no speculation")
         if not isinstance(self._math_policy, NativeMathPolicy):
             raise TypeError("math_policy must be a NativeMathPolicy")
         optimized_operators = (self._math_policy.attention != "reference" or
@@ -112,6 +123,8 @@ class Engine:
         backend = resolve_backend(inference_mode, cache_config.backend if cache_config else None)
         config = (replace(cache_config, backend=backend)
                   if cache_config else CacheConfig(backend=backend))
+        if inference_mode == "mlxboost_b1" and cache_config is None:
+            config = replace(config, prefix_cache_enabled=False)
         if cache_config is None and (self._math_policy != REFERENCE_MATH
                                      or inference_mode == "native_optimized"):
             config = replace(config, prefix_cache_enabled=False)
@@ -200,7 +213,7 @@ class Engine:
                 lambda: construct_runtime(
                 self._bundle, config, inference_mode, batching=self._batching_config,
                 pressure=self._pressure, registry=qualification_registry,
-                profile=qualification_profile))
+                profile=qualification_profile, mlxboost_config=mlxboost_config))
             self._cache_manager.math_policy = self._math_policy
             inference_mode = self._selection["resolved_mode"]
             self._inference_mode = inference_mode

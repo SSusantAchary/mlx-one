@@ -208,6 +208,34 @@ class ModelManager:
 
     def model_info(self) -> ModelMetadata:
         bundle = self.current_model()
+        if hasattr(bundle, "vad"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization={}, revision=bundle.revision,
+                tasks=("voice-activity-detection",), modalities=("audio",),
+            )
+        if hasattr(bundle, "zero_shot"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization={}, revision=bundle.revision,
+                tasks=("zero-shot-image-classification",), modalities=("text", "image"),
+            )
+        if hasattr(bundle, "ner"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization={}, revision=bundle.revision,
+                tasks=("token-classification",), modalities=("text",),
+            )
+        if hasattr(bundle, "classification"):
+            return ModelMetadata(
+                id=self._alias or bundle.model_id, architecture=bundle.architecture,
+                context_length=bundle.context_length, parameter_count=None,
+                quantization={}, revision=bundle.revision,
+                tasks=("text-classification",), modalities=("text",),
+            )
         if hasattr(bundle, "ocr"):
             return ModelMetadata(
                 id=self._alias or bundle.model_id, architecture=bundle.architecture,
@@ -272,6 +300,68 @@ def _tokenizer_fingerprint(tokenizer: Any) -> tuple[object, ...]:
 
 def _load_serving_model(model_id, **options):
     import json
+
+    if (Path(model_id).expanduser() / "silero_vad_16k.safetensors").is_file():
+        if any(options.get(k) for k in ("checkpoint_path", "expected_files", "tokenizer_source")):
+            raise ValueError("VAD requires exact locally pinned source assets")
+        from mlx_one.audio.vad import load_vad_model
+        from mlx_one.server.vad import VADServingBundle
+
+        return VADServingBundle(load_vad_model(model_id, **{
+            k: v for k, v in options.items() if k in {"revision", "offline", "cache_dir"}}))
+
+    local_clip = Path(model_id).expanduser()
+    is_clip = str(model_id) == "openai/clip-vit-base-patch32"
+    if (local_clip / "config.json").is_file():
+        is_clip = json.loads((local_clip / "config.json").read_text()).get("model_type") == "clip"
+    if is_clip:
+        if any(options.get(key) for key in (
+            "checkpoint_path", "expected_files", "tokenizer_source"
+        )):
+            raise ValueError("CLIP requires its locally audited conversion and processor assets")
+        from mlx_one.classification.loading import load_zero_shot_image_model
+        from mlx_one.server.classification import ZeroShotServingBundle
+
+        return ZeroShotServingBundle(load_zero_shot_image_model(
+            model_id, **{k: v for k, v in options.items()
+                         if k in {"revision", "offline", "cache_dir"}}))
+
+    local_ner = Path(model_id).expanduser()
+    is_ner = str(model_id) == "dslim/bert-base-NER"
+    if (local_ner / "config.json").is_file():
+        payload_ner = json.loads((local_ner / "config.json").read_text())
+        is_ner = "BertForTokenClassification" in payload_ner.get("architectures", [])
+    if is_ner:
+        if any(options.get(key) for key in (
+            "checkpoint_path", "expected_files", "tokenizer_source"
+        )):
+            raise ValueError("NER requires its hash-verified tokenizer and checkpoint assets")
+        from mlx_one.classification import load_token_classification_model
+        from mlx_one.server.classification import TokenClassificationServingBundle
+
+        return TokenClassificationServingBundle(load_token_classification_model(
+            model_id, **{k: v for k, v in options.items()
+                         if k in {"revision", "offline", "cache_dir"}}))
+
+    local_classification = Path(model_id).expanduser()
+    is_sst2 = str(model_id) == (
+        "distilbert/distilbert-base-uncased-finetuned-sst-2-english")
+    if (local_classification / "config.json").is_file():
+        is_sst2 = json.loads((local_classification / "config.json").read_text()).get(
+            "model_type") == "distilbert"
+    if is_sst2:
+        if any(options.get(key) for key in (
+            "checkpoint_path", "expected_files", "tokenizer_source"
+        )):
+            raise ValueError(
+                "classification requires its hash-verified tokenizer and checkpoint assets"
+            )
+        from mlx_one.classification import load_classification_model
+        from mlx_one.server.classification import ClassificationServingBundle
+
+        return ClassificationServingBundle(load_classification_model(
+            model_id, **{k: v for k, v in options.items()
+                         if k in {"revision", "offline", "cache_dir"}}))
 
     from mlx_one.ocr.loading import load_ocr_model
     from mlx_one.ocr.registry import ocr_family

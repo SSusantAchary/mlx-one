@@ -1,0 +1,122 @@
+schema_version: 1
+upstream_repositories:
+- name: mlx
+  repository: https://github.com/ml-explore/mlx
+  revision: 1f8e74e3f12f31365464a6867c6579f0e9b29d85
+  license: MIT
+  files:
+  - path: LICENSE
+    sha256: ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01
+    local_capture: local/mlxboost/sources/mlx/captured/LICENSE
+  - path: mlx/backend/metal/quantized.cpp
+    sha256: 44483286a359afb7f35d8a9c1658ffaec6ff6c01a7ab34ac7bb35cf6438804a6
+    local_capture: local/mlxboost/sources/mlx/captured/mlx/backend/metal/quantized.cpp
+  - path: mlx/backend/metal/kernels/quantized.h
+    sha256: 2a007016da606afe569adb9adcc05e00f14558ad2e094bcb4f8974beb53c316f
+    local_capture: local/mlxboost/sources/mlx/captured/mlx/backend/metal/kernels/quantized.h
+  - path: python/mlx/nn/layers/quantized.py
+    sha256: 1797a3571484ad3134224354b7f130c0931f495691aa8e54eb55329d674bb00b
+    local_capture: local/mlxboost/sources/mlx/captured/python/mlx/nn/layers/quantized.py
+  missing: []
+- name: mlx_comparison
+  repository: https://github.com/ml-explore/mlx
+  revision: 36969c094354086e15d2a327a9c50feb20b9cf11
+  license: MIT
+  files:
+  - path: LICENSE
+    sha256: ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01
+    local_capture: local/mlxboost/sources/mlx_comparison/captured/LICENSE
+  - path: mlx/backend/metal/quantized.cpp
+    sha256: 947e92b5d51134f329698b2497a8315b135a0012994af385ef296adb962b5850
+    local_capture: local/mlxboost/sources/mlx_comparison/captured/mlx/backend/metal/quantized.cpp
+  - path: mlx/backend/metal/kernels/quantized.h
+    sha256: 040ee89ae58555104ff0edfbb1546f15bca4e372fab4350ed613f66ab3c2d393
+    local_capture: local/mlxboost/sources/mlx_comparison/captured/mlx/backend/metal/kernels/quantized.h
+  - path: python/mlx/nn/layers/quantized.py
+    sha256: 8ca4574a212f14cbec4c446826474583ef0bf1e2cb1630574fd730c77af03b33
+    local_capture: local/mlxboost/sources/mlx_comparison/captured/python/mlx/nn/layers/quantized.py
+  missing: []
+- name: mlx_lm
+  repository: https://github.com/ml-explore/mlx-lm
+  revision: 93e6d4a6447b3080861985947f0820e76fcb957d
+  license: MIT
+  files:
+  - path: LICENSE
+    sha256: ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01
+    local_capture: local/mlxboost/sources/mlx_lm/captured/LICENSE
+  - path: mlx_lm/generate.py
+    sha256: 9d46803799f99d6fc7c35fff2d4357c79b1a25ae98cc63efeaaebeb50a7b5f33
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/generate.py
+  - path: mlx_lm/server.py
+    sha256: 8d475058966cf90afcf8cb857f218c2b9dbc01ad1c506d9726de655a90d80723
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/server.py
+  - path: mlx_lm/sample_utils.py
+    sha256: 3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/sample_utils.py
+  - path: mlx_lm/tokenizer_utils.py
+    sha256: a6c3b727ae30989c5d65d4c1e81b8616cd3e960f02cf6e9cd5474c14926fe49f
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/tokenizer_utils.py
+  - path: mlx_lm/utils.py
+    sha256: 2803ff8d2298b0854797d78b16387c394801d16c57bfb30cf42ac4efbdee2873
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/utils.py
+  - path: mlx_lm/models/cache.py
+    sha256: c96cb169fd5e0ec4584a162dd61dc62ab08ccdca03a9850f8a491ce6809145e6
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/cache.py
+  - path: mlx_lm/models/base.py
+    sha256: 63d8e58a4b6f8c0902719499c693647fbf486bbd5d22b09868a07d37e08c83d6
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/base.py
+  - path: mlx_lm/models/activations.py
+    sha256: 6f7d756897deb322af4fe98e040df76e9358a91d76521e51f14d734fdd0fb05f
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/activations.py
+  - path: mlx_lm/models/pipeline.py
+    sha256: 5897f414f550584442594c766fc91ca53d72a8eb1e242ffbc5bababcd7a4ae35
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/pipeline.py
+  - path: mlx_lm/models/qwen2.py
+    sha256: 937e0321ef06a34efbd66d2ce0ce1e715aab98da4acefa376c8cd29291a0bc83
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/qwen2.py
+  - path: mlx_lm/models/qwen3.py
+    sha256: 7e29b7055d8e526a0ede6e2740a3038ad24d0cef6a1abb446c411d3fbd0efa2d
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/qwen3.py
+  - path: mlx_lm/models/llama.py
+    sha256: dfb656511e6740781cd0563f7994a78b3404c199b9aebaa2fbca28a19e280891
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/llama.py
+  - path: mlx_lm/models/lfm2.py
+    sha256: 558dcbec61442b1f7216c0122d08d44083ea71d1510be23f4f934e62b0f71376
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/lfm2.py
+  - path: mlx_lm/models/rope_utils.py
+    sha256: 06466d57dfe1ccc1e61ba595c0a8f2dd3a14bcb5c6a1d06c67591dc03128606b
+    local_capture: local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/rope_utils.py
+  missing: []
+- name: omlx
+  repository: https://github.com/jundot/omlx
+  revision: 9de79bc39a01c1f3fec1e849903aaf0dd5478d7a
+  license: Apache-2.0
+  files:
+  - path: LICENSE
+    sha256: de69b4352c9952cd5f0f4b8cb4584782a07f02c9ba82aeb5d496aa2b7fe5457d
+    local_capture: local/mlxboost/sources/omlx/captured/LICENSE
+  - path: docs/custom-kernels.md
+    sha256: 33925981f6cee6b9cdeddc72978f88d075fc2049a11fe96b475138b87794c3c1
+    local_capture: local/mlxboost/sources/omlx/captured/docs/custom-kernels.md
+  - path: omlx/engine_core.py
+    sha256: ba8d3360cca98d0345442b0f5fc5f5c3e6dfb6489a702663ef2fb5f9bef32720
+    local_capture: local/mlxboost/sources/omlx/captured/omlx/engine_core.py
+  - path: omlx/custom_kernels/quant_matmul/fast.py
+    sha256: a8c6bfb61daf00b44b31e20302c2e86a81023d34a61d0e6796cb4e863f0c1698
+    local_capture: local/mlxboost/sources/omlx/captured/omlx/custom_kernels/quant_matmul/fast.py
+  - path: omlx/custom_kernels/quant_matmul/csrc/bindings.cpp
+    sha256: 6b9a6aa37a8f9dbd4846ebcd30b3559331057a1f15fe22764b975b1674c9d1f5
+    local_capture: local/mlxboost/sources/omlx/captured/omlx/custom_kernels/quant_matmul/csrc/bindings.cpp
+  - path: omlx/custom_kernels/quant_matmul/csrc/MLX_LICENSE.txt
+    sha256: ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01
+    local_capture: local/mlxboost/sources/omlx/captured/omlx/custom_kernels/quant_matmul/csrc/MLX_LICENSE.txt
+    license: MIT
+  - path: setup.py
+    sha256: 4214148d7ceafc7b6037a3831f9a59962528b4187457384bfffe8ced68f27ab8
+    local_capture: local/mlxboost/sources/omlx/captured/setup.py
+  missing:
+  - NOTICE
+  license_notes: Root Apache-2.0; quant_matmul/csrc includes Apple MLX MIT license.
+    No oMLX code copied into MLX-One.
+adapted_components: []
+scope: Source study only; no newly copied or adapted upstream runtime component.

@@ -36,8 +36,8 @@ loading, execution and developer tooling.
   memory planning helps choose bounded workloads for a device.
 - **Extensible architectures:** configuration-driven registration and reusable
   components support language, vision, audio and retrieval families.
-- **Optional acceleration:** MLXBoost provides an opt-in host-overhead optimization
-  for eligible profiles, with explicit fallback and experimental status.
+- **Optional acceleration:** MLXBoost includes opt-in host-overhead and GPT-OSS
+  expert-execution features, with explicit eligibility, fallback and status.
 
 Hugging Face supplies configuration, tokenizer/processor assets and safe
 `safetensors` checkpoints. Native inference runs through MLX-One and Apple MLX.
@@ -62,16 +62,16 @@ Task availability varies by checkpoint and interface. See the
 
 Use Python 3.10+ on an Apple Silicon Mac running macOS 15+ for model execution.
 MLX and MLX Metal are pinned to 0.32.2; Python 3.12.11 is the tested development
-version. Install the published alpha from PyPI:
+version. Install from Git in your active Python environment (for example, `mlx`):
 
 ```bash
-python -m pip install "mlx-one==0.1.0a1"
+python -m pip install "mlx-one @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 ```
 
 For the HTTP server, vision and OCR dependencies:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr]==0.1.0a1"
+python -m pip install "mlx-one[server,vision,ocr] @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 mlx-one --version
 ```
 
@@ -79,8 +79,20 @@ For optional dependencies, audio/video decoding requirements and tested
 constraints, see [getting started](docs/getting-started.md) and the
 [dependency policy](requirements/README.md). For editable development setup, use the
 [source installation](docs/getting-started.md#source-installation-for-development).
-See the [0.1.0a1 release notes](https://github.com/SSusantAchary/mlx-one/releases/tag/0.1.0a1)
-for published artifacts and validation.
+Git installs use the selected repository revision; model weights are downloaded separately.
+
+### Upgrade from Git
+
+```bash
+mlx-one upgrade --dry-run
+mlx-one upgrade
+```
+
+The upgrade installs Git `main` with the `server` extra in the CLI's Python
+environment, including updates that keep the same version number. Use
+`mlx-one upgrade --extras server,vision,ocr` for additional extras or `--ref`
+to select a branch, tag or commit. See [upgrade options](docs/getting-started.md#upgrade-from-git).
+The command is available after installing a Git revision that includes it.
 
 ### Load a text checkpoint and generate
 
@@ -112,7 +124,7 @@ Add `--stream` for incremental text or `--offline` for cached/local assets.
 ### Start the HTTP server
 
 ```bash
-python -m pip install "mlx-one[server]==0.1.0a1"
+python -m pip install "mlx-one[server] @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 mlx-one serve LiquidAI/LFM2-350M --inference-mode reference_dense \
   --host 127.0.0.1 --port 8888 --alias lfm2-local
 ```
@@ -396,11 +408,30 @@ paged, dense-batch and hybrid-batch paths have explicit capability and evidence
 requirements; source implementation does not establish production qualification.
 See the [runtime guide](docs/experimental/inference-runtime.md).
 
-MLXBoost is an optional execution module. `mlxboost_b1` and `fast_decode` require
-explicit opt-in; feature flags default off. The measured path skips unnecessary
-calibration lookup work for eligible profiles. It adds no custom Metal kernel
-and changes no model equations. Unsupported profiles report fallback or raise
-under strict handling. It remains experimental, with no rollout approval.
+MLXBoost ships inside `mlx-one`; it needs no separate package. `mlxboost_b1`
+requires explicit opt-in, and feature flags default off. The `fast_decode` host
+optimization skips unnecessary calibration lookup work for eligible profiles
+without changing model equations. Unsupported profiles report fallback or raise
+under strict handling.
+
+GPT-OSS-20B MXFP4/Q4 also has an opt-in recipe using pinned MLX-LM expert sorting,
+grouped matrix dispatch, compiled SwiGLU and bounded prefill. Select it with
+`MLXBoostConfig(gptoss_mlx_lm=True)` in the Python engine, or serve it through
+the regular CLI:
+
+```bash
+mlx-one serve /path/to/gpt-oss-20b-MXFP4-Q4 \
+  --offline --inference-mode mlxboost_b1 --mlxboost-gptoss-mlx-lm \
+  --parallel 1 --prefix-cache-mib 0 --no-cache-prompt \
+  --cache-type-k bf16 --cache-type-v bf16
+```
+
+The initial recipe is scoped to M4 / 32 GiB and MLX/Metal 0.32.2. Its compiled
+arithmetic can change outputs relative to the eager path; it remains an explicit
+experimental feature, separate from model support. See the
+[GPT-OSS feature and serving guide](docs/mlxboost/gptoss-serving.md) for setup,
+eligibility, rollback and limits. `MLXBoostConfig` is also available directly
+from `mlx_one` alongside `Engine` and `CacheConfig`.
 
 [MLXBoost experiments](docs/experimental/mlxboost.md) retain off/on HTTP results,
 failed model qualification gates, methodology and future requirements. The

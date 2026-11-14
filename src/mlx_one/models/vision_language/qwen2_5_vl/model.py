@@ -94,6 +94,9 @@ class Qwen2_5VisionTransformer(nn.Module):
         positions, full_lengths = vision_position_ids(grid_thw, self.config.spatial_merge_size)
         if sum(full_lengths) != hidden.shape[0]:
             raise ValueError("vision grid patch count does not match pixel patches")
+        # Pinned Qwen2.5 source full attention is per temporal grid, not across
+        # all time grids of a clip. Static images (temporal=1) are unchanged.
+        full_lengths = tuple(int(h) * int(w) for t, h, w in grid_thw for _ in range(int(t)))
         window_index, window_lengths = _window_plan(grid_thw, self.config)
         group = self.config.spatial_merge_size**2
         grouped = hidden.reshape(-1, group, hidden.shape[-1])
@@ -176,6 +179,7 @@ class Qwen2_5_VLForConditionalGeneration(nn.Module):
         pixel_values_videos: Any | None = None,
         image_grid_thw: Sequence[Sequence[int]] | None = None,
         video_grid_thw: Sequence[Sequence[int]] | None = None,
+        second_per_grid_ts: Sequence[float] | None = None,
         mm_token_type_ids: Any | None = None,
         attention_mask: Any | None = None,
         position_ids: Any | None = None,
@@ -213,6 +217,16 @@ class Qwen2_5_VLForConditionalGeneration(nn.Module):
             base = mx.arange(offset, offset + input_ids.shape[1])[None, :]
             position_ids = mx.stack((base, base, base), axis=0)
             rope_deltas = mx.zeros((input_ids.shape[0], 1), dtype=base.dtype)
+        elif video_grid_thw is not None:
+            from mlx_one.models.vision_language.qwen2_5_vl.positions import video_position_ids
+
+            position_ids, rope_deltas = video_position_ids(
+                input_ids, mm_token_type_ids=mm_token_type_ids,
+                image_grid_thw=image_grid_thw, video_grid_thw=video_grid_thw,
+                spatial_merge_size=self.config.vision_config.spatial_merge_size,
+                attention_mask=attention_mask, second_per_grid_ts=second_per_grid_ts,
+                tokens_per_second=self.config.vision_config.tokens_per_second,
+            )
         else:
             position_ids, rope_deltas = multimodal_position_ids(
                 input_ids,

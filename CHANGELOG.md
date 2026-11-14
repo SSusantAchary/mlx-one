@@ -6,6 +6,24 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+### Git installation and upgrades
+
+- Add `mlx-one upgrade` to install from the project Git repository in the CLI's
+  Python environment, including same-version code updates. Support a Git ref,
+  optional extras, dependency preservation and a dry run.
+- Use Git installation instructions in the README and getting-started guide.
+
+### GPT-OSS MLXBoost feature
+
+- Integrate GPT-OSS-20B MXFP4/Q4 acceleration into the existing `mlx-one`
+  package, Python engine and `mlx-one serve` CLI. Export `MLXBoostConfig` from
+  the top-level Python API.
+- Add explicit expert-sorting/grouped-dispatch/compiled-activation opt-in with
+  bounded prefill, profile checks and reference fallback. Defaults remain off;
+  the source-aligned recipe can change output relative to eager arithmetic.
+- Align this older checkout's package/runtime labels to the maintainer's existing
+  0.1.2 version. This entry records local development, not a new publication.
+
 ### Proof-based alpha candidate — 2026-10-21
 
 - Add independent cache-position/content controls, long-context shape diagnostics,

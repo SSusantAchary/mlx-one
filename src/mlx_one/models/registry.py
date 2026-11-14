@@ -7,6 +7,35 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
     """Architecture metadata is independent of task scheduling and runtime bindings."""
     return (
         *ocr_registrations(),
+        ModelRegistration(
+            "silero_vad", "mlx_one.models.audio.silero.config:SileroConfig",
+            "mlx_one.models.audio.silero.model:SileroModel", "audio",
+            frozenset({"forward", "vad"}),
+            loader_path="mlx_one.audio.vad:load_vad_model",
+            tasks=frozenset({"voice-activity-detection"}),
+        ),
+        ModelRegistration(
+            "clip", "mlx_one.models.classification.clip_config:CLIPConfig",
+            "mlx_one.models.classification.clip:CLIPModel", "classification",
+            frozenset({"forward", "image", "text"}),
+            loader_path="mlx_one.classification.loading:load_zero_shot_image_model",
+            tasks=frozenset({"zero-shot-image-classification"}),
+        ),
+        ModelRegistration(
+            "bert_token_classification",
+            "mlx_one.models.classification.bert_ner_config:BertNERConfig",
+            "mlx_one.models.classification.bert_ner:BertForTokenClassification", "classification",
+            frozenset({"forward", "tag"}),
+            loader_path="mlx_one.classification.loading:load_token_classification_model",
+            tasks=frozenset({"token-classification"}),
+        ),
+        ModelRegistration(
+            "distilbert", "mlx_one.models.classification.config:DistilBertConfig",
+            "mlx_one.models.classification.distilbert:DistilBertClassifier", "classification",
+            frozenset({"forward", "classify"}),
+            loader_path="mlx_one.classification.loading:load_classification_model",
+            tasks=frozenset({"text-classification"}),
+        ),
         *(
             ModelRegistration(
                 model_type,

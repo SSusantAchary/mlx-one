@@ -23,6 +23,15 @@ BUILTIN_ADAPTERS.update({name:"mlx_one.engine.task_runners.speech:"+adapter
     for name,adapter in (("whisper","WhisperAdapter"),("moonshine","MoonshineAdapter"),
     ("qwen3_asr","Qwen3ASRAdapter"),("qwen3_forced_aligner","Qwen3AlignmentAdapter"))})
 
+BUILTIN_ADAPTERS["clip"] = "mlx_one.engine.task_runners.zero_shot_image:CLIPZeroShotAdapter"
+BUILTIN_ADAPTERS["silero_vad"] = "mlx_one.engine.task_runners.vad:SileroVADAdapter"
+
+BUILTIN_ADAPTERS["bert_token_classification"] = (
+    "mlx_one.engine.task_runners.token_classification:BertTokenClassificationAdapter")
+
+BUILTIN_ADAPTERS["distilbert"] = (
+    "mlx_one.engine.task_runners.classification:DistilBertClassificationAdapter")
+
 BUILTIN_ADAPTERS["lfm2_audio"]="mlx_one.engine.task_runners.lfm_audio:LFM2AudioAdapter"
 BUILTIN_ADAPTERS.update({name: "mlx_one.engine.task_runners.ocr:OCRTaskAdapter"
     for name in ("trocr", "got_ocr2", "florence2", "paddleocr_vl", "lightonocr", "deepseek_ocr")})
@@ -61,9 +70,17 @@ def task_specs(entry):
     if entry.model_type == "lfm2_colbert":
         tasks.discard(TaskKind.EMBEDDING)
     recipes = {
+        TaskKind.VOICE_ACTIVITY_DETECTION: ("vad", (StageKind.ENCODE, StageKind.SCORE),
+                                             "audio-chunk-budget"),
         TaskKind.TEXT_GENERATION: ("causal", (StageKind.PREFILL, StageKind.DECODE), "token-budget"),
         TaskKind.VISION_LANGUAGE: ("multimodal", (StageKind.ENCODE, StageKind.PREFILL,
                                                 StageKind.DECODE), "media-buckets"),
+        TaskKind.ZERO_SHOT_IMAGE_CLASSIFICATION: ("zero-shot-image",
+            (StageKind.ENCODE, StageKind.SCORE), "single-image-candidate-budget"),
+        TaskKind.TOKEN_CLASSIFICATION: ("token-classification", (StageKind.ENCODE, StageKind.SCORE),
+                                        "length-buckets"),
+        TaskKind.TEXT_CLASSIFICATION: ("classification", (StageKind.ENCODE, StageKind.SCORE),
+                                       "length-buckets"),
         TaskKind.EMBEDDING: ("encoder", (StageKind.ENCODE,), "length-buckets"),
         TaskKind.LATE_INTERACTION: ("late-interaction", (StageKind.ENCODE, StageKind.SCORE),
                                    "length-buckets"),

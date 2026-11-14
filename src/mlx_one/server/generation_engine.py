@@ -107,8 +107,10 @@ class GenerationEngine:
         qualification_profile: dict[str, Any] | None = None,
         cache_type_k: str = "f16",
         cache_type_v: str = "f16",
+        mlxboost_config: Any = None,
     ) -> None:
         self.manager = manager
+        self._mlxboost_config = mlxboost_config
         self._inference_mode = inference_mode
         self._requested_mode = inference_mode
         self._qualification_registry = qualification_registry
@@ -742,7 +744,7 @@ class GenerationEngine:
                 bundle, self._cache_config, self._requested_mode,
                 batching=self._actor.config if self._actor is not None else None,
                 pressure=self._pressure, registry=self._qualification_registry,
-                profile=self._qualification_profile)
+                profile=self._qualification_profile, mlxboost_config=self._mlxboost_config)
             try:
                 if self._pressure is not None:
                     self._pressure.start()

@@ -6,36 +6,68 @@ mlx-one requires Python 3.10 or newer and an Apple Silicon Mac with macOS 15 or
 later for model execution. The current MLX/Metal pair is pinned to 0.32.2;
 Python 3.12.11 is the tested development environment.
 
-### Install from PyPI
+### Install from Git
 
-Install the published alpha directly:
+Activate your intended Python environment (for example, `mlx`), then install
+from the repository. Git must be available on your PATH:
 
 ```bash
-python -m pip install "mlx-one==0.1.0a1"
+python -m pip install "mlx-one @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 ```
 
 Include the HTTP server, vision and OCR dependencies with:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr]==0.1.0a1"
+python -m pip install "mlx-one[server,vision,ocr] @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 mlx-one --version
 mlx-one registry list
 ```
 
-The [0.1.0a1 release notes](https://github.com/SSusantAchary/mlx-one/releases/tag/0.1.0a1)
-link the [PyPI release](https://pypi.org/project/mlx-one/0.1.0a1/), distribution
-artifacts and recorded validation. Model weights are acquired separately under
-their publishers' terms.
+Model weights are acquired separately under their publishers' terms.
+
+### Upgrade from Git
+
+After installing a revision containing the upgrade command:
+
+```bash
+mlx-one upgrade --dry-run                  # inspect without installing
+mlx-one upgrade                            # Git main, with server dependencies
+mlx-one upgrade --extras server,vision,ocr  # choose the extras you need
+mlx-one upgrade --ref main                  # or a branch, tag, or exact commit
+mlx-one upgrade --no-deps                   # keep installed dependencies unchanged
+mlx-one --version
+```
+
+`mlx-one upgrade` uses the Python interpreter that owns the CLI. Activate your
+intended environment before installing; `python -m mlx_one.cli upgrade` explicitly
+uses the active Python interpreter. The package source is always the project's Git
+repository; dependencies may be fetched from the configured package index.
+Upgrades force reinstallation so a new Git commit is installed even when the
+version remains 0.1.2. Dependencies are also reinstalled by default; `--no-deps`
+keeps them unchanged and should be followed by `python -m pip check`.
+The default extras are `server`; specify all desired extras explicitly, or pass
+`--extras ""` for core only. Restart running mlx-one processes after upgrading.
+Git installation replaces an existing editable installation.
+
+If your existing CLI does not have `upgrade` yet, bootstrap it with:
+
+```bash
+python -m pip install --upgrade --force-reinstall \
+  "mlx-one[server] @ git+https://github.com/SSusantAchary/mlx-one.git@main"
+```
+
+Git `main` only includes features that have been pushed and merged there. For
+unmerged work, select its pushed branch or commit instead. A local change alone
+is not available through Git installation.
 
 ### Source installation for development
 
-Clone the repository for an editable development installation:
+Clone the repository for an editable development installation. Use your already
+activated `mlx` environment if available; otherwise create an environment first:
 
 ```bash
 git clone https://github.com/SSusantAchary/mlx-one.git
 cd mlx-one
-python3 -m venv .venv
-source .venv/bin/activate
 python -m pip install -e .
 ```
 
@@ -57,8 +89,8 @@ See [dependency policy and tested minimums](../requirements/README.md).
 Qwen known-text alignment has separate optional language dependencies:
 
 ```bash
-python -m pip install "mlx-one[qwen-align-ja]==0.1.0a1"  # Japanese: nagisa==0.2.11
-python -m pip install "mlx-one[qwen-align-ko]==0.1.0a1"  # Korean: soynlp==0.0.493
+python -m pip install "mlx-one[qwen-align-ja] @ git+https://github.com/SSusantAchary/mlx-one.git@main"  # Japanese: nagisa==0.2.11
+python -m pip install "mlx-one[qwen-align-ko] @ git+https://github.com/SSusantAchary/mlx-one.git@main"  # Korean: soynlp==0.0.493
 ```
 
 Korean alignment also needs the checksummed `korean_dict_jieba.dict` in the local
@@ -72,7 +104,7 @@ request that bridge.
 For SAM3 image processing, install the existing vision extra:
 
 ```bash
-python -m pip install "mlx-one[vision]==0.1.0a1"
+python -m pip install "mlx-one[vision] @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 ```
 
 Meta's [SAM3 checkpoint](https://huggingface.co/facebook/sam3) requires authorized
@@ -91,7 +123,7 @@ directories, and Python RGB frame iterators need no video/audio decoder.
 Load one supported text model and start the bundled local UI:
 
 ```bash
-python -m pip install "mlx-one[server]==0.1.0a1"
+python -m pip install "mlx-one[server] @ git+https://github.com/SSusantAchary/mlx-one.git@main"
 mlx-one serve Qwen/Qwen3-0.6B --inference-mode reference_dense
 ```
 
