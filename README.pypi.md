@@ -128,6 +128,22 @@ Downloaded qualification weights were removed after recording results.
 Task availability varies by checkpoint and interface. See the
 [model guides](https://github.com/SSusantAchary/mlx-one/blob/main/docs/models/index.md) for supported inputs and limitations.
 
+## Version 0.1.3
+
+GPT-OSS-20B MLXBoost is now integrated as an opt-in feature. The package also
+includes `mlx-one upgrade` for Git updates. After 0.1.3 is published to PyPI:
+
+```bash
+python -m pip install --upgrade "mlx-one[server]==0.1.3"
+mlx-one --version
+```
+
+For Git installation and upgrade options, see the
+[installation guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md).
+GPT-OSS acceleration remains opt-in, with profile restrictions and fallback;
+see the [serving guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/mlxboost/gptoss-serving.md).
+Full 128K Kilo agent workflows require end-to-end validation.
+
 ## Quick Start
 
 ### Installation

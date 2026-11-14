@@ -1,5 +1,36 @@
 # Getting started
 
+## Version 0.1.3 installation and upgrades
+
+After publication, install in your active `mlx` Python environment:
+
+```bash
+python -m pip install --upgrade "mlx-one[server]==0.1.3"
+```
+
+Alternatively, install from Git after the changes have been pushed:
+
+```bash
+python -m pip install --upgrade --force-reinstall \
+  "mlx-one[server] @ git+https://github.com/SSusantAchary/mlx-one.git@release/v0.1.3"
+```
+
+The new CLI command always upgrades from the project Git repository using the
+CLI's Python interpreter:
+
+```bash
+mlx-one upgrade --dry-run
+mlx-one upgrade --ref release/v0.1.3
+mlx-one upgrade --ref main --extras server,vision,ocr
+mlx-one upgrade --no-deps
+```
+
+The default Git ref is `main` and default extras are `server`. Specify all desired
+extras, or `--extras ""` for core only. Upgrades force reinstallation for same-version
+Git updates. Dependencies are also reinstalled unless `--no-deps` is supplied.
+Restart running servers after installation. Git installation includes only pushed
+code; `main` includes these changes after merge.
+
 ## Installation
 
 mlx-one requires Python 3.10 or newer and an Apple Silicon Mac with macOS 15 or

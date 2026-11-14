@@ -58,16 +58,32 @@ def construct_runtime(bundle, config, mode, *, batching=None, pressure=None,
 
         mx = sys.modules.get("mlx.core")
         precision = getattr(bundle.model, "_mlx_one_execution_policy", {})
+        dtype = precision.get("dtype")
+        gptoss_boost = boost.gptoss_prefill_sort or boost.gptoss_mlx_lm
+        if gptoss_boost and dtype is None:
+            embedding = getattr(getattr(bundle.model, "model", None), "embed_tokens", None)
+            scales = getattr(embedding, "scales", None)
+            if scales is not None:
+                dtype = str(scales.dtype).rsplit(".", 1)[-1]
         boost, boost_failure = boost.resolve(
-            family=bundle.architecture, dtype=precision.get("dtype"),
+            family=bundle.architecture, dtype=dtype,
             quantization=getattr(bundle, "quantization", {}) or {}, backend=config.backend,
             slots=getattr(batching, "max_sequences", 1),
             cache_reuse=config.prefix_cache_enabled and config.prefix_cache_budget_bytes > 0,
             mlx_version=version("mlx"),
+            model_config=getattr(bundle.model, "config", None),
+            device_info=mx.device_info() if gptoss_boost and mx else None,
+            cache_types=(config.key_type, config.value_type),
             metal_available=bool(mx and mx.metal.is_available()
                                  and mx.default_device() == mx.gpu))
-        boost_reason = (boost_failure or
-                        "experimental host lookup; numerical/model qualification is separate")
+        if boost_failure:
+            boost_reason = boost_failure
+        elif boost.gptoss_mlx_lm:
+            boost_reason = "experimental pinned MLX-LM MoE/prefill; source-aligned math"
+        elif boost.gptoss_prefill_sort:
+            boost_reason = "experimental GPT-OSS prefill sorting; decode remains unchanged"
+        else:
+            boost_reason = "experimental host lookup; numerical/model qualification is separate"
         if boost_failure is not None:
             mode = "reference_dense"
     weight_identity = _model_identity(bundle)
