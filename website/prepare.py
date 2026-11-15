@@ -212,8 +212,8 @@ def stage():
     (data / "insights.json").write_text(json.dumps(insights, indent=2, allow_nan=False) + "\n")
     brand = GENERATED / "assets/brand"
     brand.mkdir(parents=True)
-    logo = ROOT / "ui/static/mlx-one-logo.png"
-    shutil.copyfile(logo, brand / "mark.png")
+    logo = ROOT / "ui/static/mlx-one-mark.png"
+    shutil.copyfile(logo, brand / "mark-orange.png")
     record(logo)
     manifest = {"source_commit": revision, "source_sha256": dict(sorted(sources.items())),
                 "pages": dict(sorted(pages.items())), "generated_pages": len(targets)}

@@ -4,7 +4,7 @@ title: Home
 
 # MLX-One
 
-<p align="center"><img src="../../mlx-one.png" alt="mlx-one three-bar logo" width="1000"></p>
+<p align="center"><img src="../../mlx-one.png" alt="mlx-one black and orange logo" width="1000"></p>
 
 **One stack. Native MLX. Built for Apple Silicon.** MLX-One brings text generation,
 vision-language inference, audio, OCR, retrieval, classification and segmentation into one native
@@ -93,7 +93,7 @@ remain visible alongside support.
 
 ## Release 0.1.4
 
-**Prepared for maintainer publication.** This update adds the redesigned chat
+**Published on PyPI on 15 November 2026.** This update adds the redesigned chat
 workspace, live generation and terminal progress, reasoning-aware output-limit
 handling, and an 8192-token GPT-OSS UI recommendation with low effort. Explicit
 output limits are preserved. Eligible native execution has bounded performance
@@ -104,11 +104,14 @@ workflows still need end-to-end validation.
 [Publication handoff](releases/0.1.4-pypi.md) ·
 [Recorded performance and limits](performance/serving-updates.md).
 
-After publication:
+Install the published release:
 
 ```bash
 python -m pip install --upgrade "mlx-one[server,vision,kokoro]==0.1.4"
 ```
+
+The new orange branding is a Git follow-up; the published 0.1.4 artifacts retain
+their original bundled icon. Install current Git source for the updated UI mark.
 
 The 45-type, 50-profile model-support catalog is retained from the reviewed
 [0.1.2 model release](releases/0.1.2.md); this is a maintenance release.

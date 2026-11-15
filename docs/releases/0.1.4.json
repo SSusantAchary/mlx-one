@@ -1,11 +1,11 @@
 {
   "schema_version": "mlx-one-release-decision-v1",
   "version": "0.1.4",
-  "release_approval": "PREPARATION_AUTHORIZED",
+  "release_approval": "APPROVED",
   "preparation_date": "2026-11-15",
-  "approval_source": "Maintainer requested local changes, Git push steps and PyPI preparation for v0.1.4.",
-  "publication_status": "PREPARED",
-  "published": false,
+  "approval_source": "Maintainer published the tagged 0.1.4 artifacts on PyPI; uploaded hashes verified on 2026-11-15.",
+  "publication_status": "PUBLISHED",
+  "published": true,
   "target_install_version": "0.1.4",
   "registered_model_types": 45,
   "checkpoint_profile_count": 50,
@@ -55,5 +55,32 @@
       "status": "PASS"
     }
   ],
-  "validation_record": "docs/releases/0.1.4-validation.json"
+  "validation_record": "docs/releases/0.1.4-validation.json",
+  "published_install_version": "0.1.4",
+  "publication_date": "2026-11-15",
+  "publication_verification": {
+    "verified_date": "2026-11-15",
+    "source": "https://pypi.org/pypi/mlx-one/0.1.4/json",
+    "version": "0.1.4",
+    "status": "PASS",
+    "artifact_sha256_match": true,
+    "files": [
+      {
+        "filename": "mlx_one-0.1.4-py3-none-any.whl",
+        "sha256": "b4bd589d8402de96128a976c193476542bf633d536aa342cdb6a6dd8c2533077",
+        "size": 2411993,
+        "upload_time": "2026-11-15T11:13:41",
+        "url": "https://files.pythonhosted.org/packages/b6/40/cc231a7ec1dee0151c94c0ca3f51e8663b6b46dd90993fcdd2cc95591319/mlx_one-0.1.4-py3-none-any.whl"
+      },
+      {
+        "filename": "mlx_one-0.1.4.tar.gz",
+        "sha256": "cce2fc0ac844eb5d0a4bb70e5798ef5d21da7217c889ac827a9fd415e0ebf439",
+        "size": 2207814,
+        "upload_time": "2026-11-15T11:13:44",
+        "url": "https://files.pythonhosted.org/packages/a3/85/9f8c4a92677fc806351b51c32b0b09babe852597bc35e0566b5bab06f77a/mlx_one-0.1.4.tar.gz"
+      }
+    ],
+    "validated_source_commit": "e3cd2bed55567133d3a045a654ed5ea7b5e75614"
+  },
+  "validated_source_commit": "e3cd2bed55567133d3a045a654ed5ea7b5e75614"
 }

@@ -3,8 +3,8 @@
   "version": "0.1.4",
   "date": "2026-11-15",
   "status": "PASS_FOR_RECORDED_SCOPE",
-  "publication_status": "PENDING",
-  "source_state": "Prepared local working tree; maintainer commit/push and hosted checks pending.",
+  "publication_status": "PUBLISHED",
+  "source_state": "Historical validation of tagged 0.1.4 commit; later branding changes are separate.",
   "source_base_commit": "180556f",
   "python": "3.12.11",
   "mlx": "0.32.2",
@@ -105,5 +105,11 @@
     "No new 45-model campaign or full 128K HTTP/tool validation.",
     "Sustained long-response decode remains variable at recorded 15.39/21.11 tok/s.",
     "No package uploaded, tag created or website deployed by this preparation."
-  ]
+  ],
+  "validated_source_commit": "e3cd2bed55567133d3a045a654ed5ea7b5e75614",
+  "publication_verification": {
+    "date": "2026-11-15",
+    "artifact_sha256_match": true,
+    "source": "https://pypi.org/pypi/mlx-one/0.1.4/json"
+  }
 }

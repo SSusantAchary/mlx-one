@@ -44,7 +44,7 @@ relevant interface checks, backed by model tests, regressions and packaging
 checks. Accuracy and speed remain measurements of the recorded workload.
 The availability label reads the current package release decision, keeping
 approval and PyPI publication separate. The published **0.1.2** record retains the verified model artifacts. The current
-**0.1.4** maintenance candidate is prepared with upload pending; its
+**0.1.4** maintenance release is published, with uploaded file checksums verified; its
 [release record](../../docs/releases/0.1.4.json) preserves the same support catalogs.
 [Install the release](../getting-started.md#install-from-pypi).
 

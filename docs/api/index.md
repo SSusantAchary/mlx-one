@@ -1,6 +1,6 @@
 # Python, CLI and HTTP APIs
 
-**0.1.4 is prepared for maintainer publication**, retaining 45 model types and
+**0.1.4 is published on PyPI**, retaining 45 model types and
 50 verified checkpoint profiles from the reviewed model catalog.
 [Release notes](../releases/0.1.4.md) identify the maintenance changes and limits. Interface availability remains task-specific; SAM3 uses its Python/CLI
 segmentation paths.
