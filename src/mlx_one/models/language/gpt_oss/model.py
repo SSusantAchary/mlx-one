@@ -14,7 +14,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import KVCache
 from mlx_one.core.outputs import ModelOutput
 from mlx_one.core.sliding_cache import SlidingKVCache
-from mlx_one.mlxboost.gptoss import try_attention, try_moe
+from mlx_one.mlxboost.gptoss import try_attention, try_decode_attention, try_moe
 from mlx_one.models.shared.decoder import attention_mask_for
 from mlx_one.models.shared.moe_decoder import validate_decoder_state
 from mlx_one.models.shared.sparse import SelectedExperts
@@ -110,10 +110,13 @@ class Attention(nn.Module):
         if cache is not None:
             k, v = cache.update(k, v)
             k, v = k.astype(q.dtype), v.astype(q.dtype)
-        out = try_attention(
-            q, k, v, self.sinks,
-            full_causal_single_query=n == 1 and self.window is None and attention_mask is None,
-        )
+        out = (try_decode_attention(q, k, v, self.sinks, window=self.window)
+               if n == 1 and attention_mask is None else None)
+        if out is None:
+            out = try_attention(
+                q, k, v, self.sinks,
+                full_causal_single_query=n == 1 and self.window is None and attention_mask is None,
+            )
         if out is None:
             mask = attention_mask_for(
                 n, offset, retained, window=self.window, padding=attention_mask, dtype=q.dtype

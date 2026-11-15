@@ -16,8 +16,9 @@ def test_import_and_reference_execution_do_not_initialize_mlx():
             sys.executable,
             "-c",
             (
-                "import sys; from mlx_one.mlxboost.gptoss import try_moe; "
+                "import sys; from mlx_one.mlxboost.gptoss import try_moe, try_decode_attention; "
                 "assert try_moe(None, None, None, None) is None; "
+                "assert try_decode_attention(None, None, None, None) is None; "
                 "assert 'mlx.core' not in sys.modules"
             ),
         ],

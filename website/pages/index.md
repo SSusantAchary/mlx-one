@@ -4,11 +4,30 @@ title: Home
 
 # MLX-One
 
+<p align="center"><img src="../../mlx-one.png" alt="mlx-one three-bar logo" width="1000"></p>
+
 **One stack. Native MLX. Built for Apple Silicon.** MLX-One brings text generation,
 vision-language inference, audio, OCR, retrieval, classification and segmentation into one native
 MLX library. Load a model, run it from Python or the CLI, and serve a local chat UI
 and HTTP API. Native model implementations share checkpoint loading, execution and
 developer tooling on Apple Silicon.
+
+## Why MLX-One?
+
+Native model implementations, shared loading and task APIs, Python and CLI access,
+and a local HTTP server bring the workflow together on Apple Silicon.
+
+## Architecture
+
+<p align="center">
+  <a href="../../mlx-one_arch-visible-borders.png"><img src="../../mlx-one_arch-visible-borders.png" alt="MLX-One architecture with clearly outlined runtime and execution layers" width="1100" loading="lazy"></a>
+</p>
+
+The artwork includes planned CPT/RL and broader MTP goals. See the
+[implemented architecture](reference/architecture.md) for current boundaries and
+[MLXBoost measurements](performance/serving-updates.md) for observed limits.
+
+## Model coverage
 
 **45 native model types across seven modalities.** Generate text with T5 and
 causal language models, classify images with ViT, synthesize speech with Kokoro,
@@ -72,21 +91,28 @@ The [model explorer](insights/index.md#supported-model-explorer) records exact c
 [known quality and scope limits](models/support.md#known-quality-and-scope-limitations)
 remain visible alongside support.
 
-## Release record
+## Release 0.1.4
 
-**0.1.2 was published on PyPI on 11 November 2026**, including the ten
-additional workflows and all 45 model types in their documented scope.
-[Release notes](releases/0.1.2.md) ·
-[Publication state](../../docs/releases/0.1.2.json).
-The previously published [0.1.1 release](releases/0.1.1.md) covers the original
-40-type cohort.
+**Prepared for maintainer publication.** This update adds the redesigned chat
+workspace, live generation and terminal progress, reasoning-aware output-limit
+handling, and an 8192-token GPT-OSS UI recommendation with low effort. Explicit
+output limits are preserved. Eligible native execution has bounded performance
+improvements; sustained long-response speed remains variable. Full 128K agent
+workflows still need end-to-end validation.
+
+[Release notes](releases/0.1.4.md) ·
+[Publication handoff](releases/0.1.4-pypi.md) ·
+[Recorded performance and limits](performance/serving-updates.md).
+
+After publication:
 
 ```bash
-python -m pip install --upgrade "mlx-one[server,vision,kokoro]==0.1.2"
+python -m pip install --upgrade "mlx-one[server,vision,kokoro]==0.1.4"
 ```
 
-The uploaded wheel and source archive match the validated artifact checksums.
-The source installation above remains available for development.
+The 45-type, 50-profile model-support catalog is retained from the reviewed
+[0.1.2 model release](releases/0.1.2.md); this is a maintenance release.
+
 
 <p align="center">
   <a href="../../status_models_testing.md">
@@ -127,5 +153,5 @@ implemented components and [experimental documentation](experimental/index.md)
 for investigations, known failures and remaining gates.
 
 Apache-2.0 · [GitHub](https://github.com/SSusantAchary/mlx-one) ·
-[PyPI](https://pypi.org/project/mlx-one/0.1.2/) ·
+[PyPI](https://pypi.org/project/mlx-one/) ·
 [Citation and license](reference/citation.md)

@@ -44,7 +44,7 @@ SHA-256 and the source-to-page mapping. No benchmark JSON or evidence is rewritt
 | --- | --- |
 | Home and short task guides | `website/pages/` |
 | Current supported models | `src/mlx_one/data/model_support_release_20261108.json`, `src/mlx_one/data/batch_1_sub_6b.json` and their verified result files |
-| Release approval and publication state | `docs/releases/0.1.2.json`, with notes in `docs/releases/0.1.2.md`; the 0.1.1 record remains historical |
+| Release approval and publication state | `docs/releases/0.1.4.json`, with notes in `docs/releases/0.1.4.md`; previous records remain historical |
 | Support and known limits / historical audit | `status_models_testing.md` / `docs/qualification/history/model-status-before-20261108.md` |
 | Installation, APIs, architecture and experiments | Existing Markdown under `docs/` |
 | Family implementation guides | `src/mlx_one/models/*/*/README.md`, discovered automatically |
@@ -66,8 +66,9 @@ automatically get pages and search entries; the canonical model index remains
 their navigation entry point.
 
 The homepage and model workflow guide install from the current source checkout.
-Current package installation examples target the published `0.1.2` release;
-its release record contains the verified PyPI file identities. Version `0.1.1`
+Current package installation examples target `0.1.4` after publication; its
+release record currently says PREPARED. Historical records retain published
+artifact identities. Version `0.1.1`
 remains a dated release cohort. Historical measurements keep their original version
 and workload identities. `README.pypi.md` is generated from the main README with
 absolute links by `python scripts/release/pypi_readme.py`; use `--check` to verify it.
@@ -122,8 +123,8 @@ execution is needed to generate the dashboard data.
 
 The primary explorer shows 50 verified checkpoint profiles covering 45 distinct
 architecture types. Availability labels distinguish the 40-type approved 0.1.1
-cohort from ten additional checkpoint profiles. Both are included in the
-published `0.1.2` release; approval and upload remain separately recorded. BERT and XLM-R checkpoint variants count once per type.
+cohort from ten additional checkpoint profiles. Both were included in the published `0.1.2` model release and are retained
+in the prepared `0.1.4` maintenance candidate; upload is pending. BERT and XLM-R checkpoint variants count once per type.
 The public workflow guide is staged under `models/workflows/`; archived evidence
 paths retain their original identities. The historical explorer
 retains the older checkpoint/task/precision profiles and unique pinned revisions;

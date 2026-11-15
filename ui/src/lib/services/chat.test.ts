@@ -56,3 +56,29 @@ describe('transcribeAudio', () => {
     expect(result.text).toBe('local transcript');
   });
 });
+
+it('reports reasoning progress and length termination without inventing answer text', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(
+    'data: {"choices":[{"delta":{}}],"mlx_progress":{"generated_tokens":64,"phase":"reasoning","reasoning_tokens":60}}\n\n' +
+    'data: {"choices":[{"delta":{},"finish_reason":"length"}],"mlx":{"generated_tokens":64,"reasoning_tokens":60}}\n\n' +
+    'data: [DONE]\n\n', { status: 200 }
+  )));
+  const text = vi.fn(), progress = vi.fn();
+  const result = await streamChat('model', [], { temperature: 0.7, top_p: 0.9,
+    max_tokens: 64, api_key: '', reasoning: 'auto', reasoning_budget: -1 },
+    new AbortController().signal, text, progress);
+  expect(progress).toHaveBeenCalledWith({ generated_tokens: 64, phase: 'reasoning', reasoning_tokens: 60 });
+  expect(text).not.toHaveBeenCalled();
+  expect(result.finishReason).toBe('length');
+});
+
+it('rejects an incomplete stream so the UI can clear its busy state', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(
+    'data: {"choices":[{"delta":{"content":"partial"}}]}\n\n', { status: 200 }
+  )));
+  const text = vi.fn();
+  await expect(streamChat('model', [], { temperature: 0, top_p: 1, max_tokens: 64,
+    api_key: '', reasoning: 'auto', reasoning_budget: -1 }, new AbortController().signal,
+    text)).rejects.toThrow('stream ended before completion');
+  expect(text).toHaveBeenCalledWith('partial', '');
+});

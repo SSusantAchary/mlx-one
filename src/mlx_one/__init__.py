@@ -104,7 +104,7 @@ from mlx_one.text import (
 )
 from mlx_one.training import SFTTrainer
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 __all__ = [
     "MLXBoostConfig",

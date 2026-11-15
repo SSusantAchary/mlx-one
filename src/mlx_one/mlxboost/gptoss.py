@@ -321,3 +321,27 @@ def try_attention(queries, keys, values, sinks, *, full_causal_single_query):
         state.failed.add(key)
         state.dispatch["attention stock: candidate compile/runtime failure"] += 1
         return None
+
+
+def try_decode_attention(queries, keys, values, sinks, *, window=None):
+    """Stock sink-aware SDPA without a redundant mask for the pinned B1 recipe.
+
+    A single full-history query has no future keys. Sliding histories retain
+    the reference mask: changing their key count can change floating arithmetic.
+    Unsupported layouts and other recipes retain the caller's reference path.
+    """
+    state = _context.get()
+    if state is None or "mlx_lm_moe" not in state.features or window is not None:
+        return None
+    import mlx.core as mx
+
+    if (mx.default_device() != mx.gpu or queries.shape != (1, 64, 1, 64)
+            or keys.ndim != 4 or keys.shape[:2] != (1, 8) or keys.shape[-1] != 64
+            or keys.shape[2] < 1 or values.shape != keys.shape or sinks.shape != (64,)
+            or queries.dtype != mx.bfloat16 or keys.dtype != queries.dtype
+            or values.dtype != queries.dtype):
+        return None
+    result = mx.fast.scaled_dot_product_attention(
+        queries, keys, values, scale=0.125, sinks=sinks.astype(queries.dtype))
+    state.dispatch["attention candidate: unmasked_sdpa"] += 1
+    return result

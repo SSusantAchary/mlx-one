@@ -49,13 +49,14 @@ class PerformanceReportingTests(unittest.TestCase):
             )
         )
 
-    def test_readme_summary_is_current_before_architecture(self):
+    def test_readme_summary_is_current_after_quick_start(self):
         text = (ROOT / "README.md").read_text()
         table = report.render_summary(self.records)
         self.assertIn(table, text)
         position = text.index(report.SUMMARY_START)
         self.assertGreater(position, text.index("## Quick Start"))
-        self.assertLess(position, text.index("## Architecture"))
+        self.assertGreater(text.index("## Architecture"), text.index("## Why MLX-One?"))
+        self.assertLess(text.index("## Architecture"), text.index("## Quick Start"))
         self.assertNotIn(report.START, text)
         self.assertNotIn("Experimental; bounded functional smoke", text)
 

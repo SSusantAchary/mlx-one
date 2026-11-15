@@ -43,8 +43,9 @@ share one model type. Search by model, task or precision.
 relevant interface checks, backed by model tests, regressions and packaging
 checks. Accuracy and speed remain measurements of the recorded workload.
 The availability label reads the current package release decision, keeping
-approval and PyPI publication separate. All profiles are included in the published **0.1.2** release;
-[the release record](../../docs/releases/0.1.2.json) records the verified artifacts.
+approval and PyPI publication separate. The published **0.1.2** record retains the verified model artifacts. The current
+**0.1.4** maintenance candidate is prepared with upload pending; its
+[release record](../../docs/releases/0.1.4.json) preserves the same support catalogs.
 [Install the release](../getting-started.md#install-from-pypi).
 
 [Quality and scope limitations](../models/support.md#known-quality-and-scope-limitations)

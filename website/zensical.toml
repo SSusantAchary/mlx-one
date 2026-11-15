@@ -14,7 +14,7 @@ nav = [
   { "Home" = "index.md" },
   { "Coverage & progress" = "insights/index.md" },
   { "Supported models" = "insights/index.md" },
-  { "0.1.2 release" = "releases/0.1.2.md" },
+  { "0.1.4 release" = "releases/0.1.4.md" },
   { "Get started" = "getting-started.md" },
   { "Choose a model" = "models/index.md" },
   { "Model workflows" = "models/workflows/index.md" },
@@ -58,6 +58,7 @@ nav = [
     { "Audio" = "performance/audio.md" },
     { "OCR" = "performance/ocr.md" },
     { "HTTP serving" = "performance/http.md" },
+    { "Recent serving measurements" = "performance/serving-updates.md" },
     { "Methodology and evidence" = "performance/methodology.md" },
   ] },
   { "Reference" = [

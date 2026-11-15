@@ -1,0 +1,109 @@
+{
+  "schema_version": "mlx-one-maintenance-release-validation-v1",
+  "version": "0.1.4",
+  "date": "2026-11-15",
+  "status": "PASS_FOR_RECORDED_SCOPE",
+  "publication_status": "PENDING",
+  "source_state": "Prepared local working tree; maintainer commit/push and hosted checks pending.",
+  "source_base_commit": "180556f",
+  "python": "3.12.11",
+  "mlx": "0.32.2",
+  "platform": "Apple Silicon macOS",
+  "checks": {
+    "regressions": {
+      "passed": 2378,
+      "subtests_passed": 9,
+      "skipped": 124,
+      "real_checkpoint_tests_opt_in": false,
+      "note": "All collected tests completed after correcting actor logging delegation; tiny synthetic MLX tests may initialize Metal. No model downloads."
+    },
+    "ui_unit_tests": {
+      "passed": 14
+    },
+    "browser_scenarios": {
+      "passed": 9,
+      "server": "Isolated fake engine; source checkout imported explicitly."
+    },
+    "svelte": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "ui_static_build": "PASS",
+    "website_unit_tests": {
+      "passed": 29
+    },
+    "website_build": {
+      "html_pages": 74,
+      "local_links": 8740,
+      "errors": 0
+    },
+    "website_browser": {
+      "desktop": [
+        1440,
+        1050
+      ],
+      "mobile": [
+        390,
+        844
+      ],
+      "images_loaded": true,
+      "horizontal_overflow": false
+    },
+    "documentation": {
+      "files": 6,
+      "local_links": 228,
+      "python_examples": 9,
+      "errors": 0
+    },
+    "ruff": {
+      "new_findings": 0,
+      "inherited_findings": 65
+    },
+    "twine_strict": "PASS",
+    "payload_and_notices": "PASS",
+    "isolated_wheel": {
+      "status": "PASS",
+      "version": "0.1.4",
+      "model_types": 45,
+      "installed_inside_venv": true,
+      "reference_packages_absent": true,
+      "server_help_flags": true,
+      "packaged_ui_http": true,
+      "entry_assets_checked": 11,
+      "scope": "Isolated installed-wheel imports, registry, CLI and packaged HTTP UI; no model loaded or downloaded."
+    },
+    "isolated_pip_check": "PASS",
+    "documentation_all": {
+      "files": 54,
+      "local_links": 951,
+      "python_examples": 38,
+      "errors": 0
+    }
+  },
+  "artifacts": [
+    {
+      "filename": "mlx_one-0.1.4-py3-none-any.whl",
+      "sha256": "b4bd589d8402de96128a976c193476542bf633d536aa342cdb6a6dd8c2533077",
+      "bytes": 2411993,
+      "status": "PASS"
+    },
+    {
+      "filename": "mlx_one-0.1.4.tar.gz",
+      "sha256": "cce2fc0ac844eb5d0a4bb70e5798ef5d21da7217c889ac827a9fd415e0ebf439",
+      "bytes": 2207814,
+      "status": "PASS"
+    }
+  ],
+  "retained_hardware_evidence": {
+    "date": "2026-11-14",
+    "native_attention_checks": 15,
+    "source": "docs/mlxboost/long-response-results.json",
+    "note": "Existing opt-in Metal checks and actual GPT-OSS requests retained with their original source and workload identities; not a new full-model campaign."
+  },
+  "limitations": [
+    "Only Python 3.12.11 regression/clean-wheel checks were rerun for this candidate; the hosted Python matrix awaits the maintainer push.",
+    "No new 45-model campaign or full 128K HTTP/tool validation.",
+    "Sustained long-response decode remains variable at recorded 15.39/21.11 tok/s.",
+    "No package uploaded, tag created or website deployed by this preparation."
+  ]
+}

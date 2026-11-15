@@ -473,6 +473,10 @@ def generate_command(
 @click.option("--context-length", "context_length", "-c", type=click.IntRange(min=1))
 @click.option("--queue-size", type=click.IntRange(min=1), default=8, show_default=True)
 @click.option("--timeout", type=click.FloatRange(min=0), default=600.0, show_default=True)
+@click.option("--log-level", type=click.Choice(["debug", "info", "warning", "error"]),
+              default="info", show_default=True)
+@click.option("--log-progress-interval", type=click.FloatRange(min=0), default=3.0,
+              show_default=True, help="Seconds between decode progress logs; 0 disables progress.")
 @click.option("--warmup/--no-warmup", default=True, show_default=True)
 @click.option("--parallel", "parallel", "-np", type=click.IntRange(min=1), default=1)
 @click.option(
@@ -585,6 +589,8 @@ def serve_command(
     queue_size: int,
     timeout: float,
     warmup: bool,
+    log_level: str,
+    log_progress_interval: float,
     parallel: int,
     prefill_chunk_size: int | None,
     max_batch_tokens: int | None,
@@ -624,6 +630,11 @@ def serve_command(
 
     try:
         import uvicorn
+
+        from mlx_one.server.runtime_logging import configure_runtime_logging, event
+
+        configure_runtime_logging(log_level, interval=log_progress_interval)
+        event("initialize", "starting native MLX server")
 
         from mlx_one.engine.modes import ACTOR_MODES
         from mlx_one.engine.pressure import MemoryPressureConfig
@@ -715,6 +726,7 @@ def serve_command(
             scheduler = GenerationScheduler(max_pending=queue_size, parallel=parallel,
                                             timeout=timeout)
         try:
+            event("load_model", "loading %s", model)
             bundle = scheduler.execute(
                 lambda: manager.load(
                     model,
@@ -789,6 +801,7 @@ def serve_command(
                     and not hasattr(bundle, "classification") and not hasattr(bundle, "ner")
                     and not hasattr(bundle, "zero_shot") and not hasattr(bundle, "vad")
                     and not hasattr(bundle, "retrieval")):
+                event("warmup", "starting one-token model warmup")
                 def warmup_stream(cancel):
                     return engine.stream(
                         model=manager.model_info().id,
@@ -803,6 +816,7 @@ def serve_command(
                     list(scheduler.schedule_sync(warmup_stream))
                 else:
                     scheduler.execute(lambda: list(warmup_stream(threading.Event())))
+                event("warmup", "completed")
                 if transcription_service is not None:
                     scheduler.execute(transcription_service.warmup)
             quantization = (
@@ -810,16 +824,18 @@ def serve_command(
                 if bundle.quantization
                 else "none"
             )
-            click.echo("mlx-one\n")
-            click.echo(f"Model        {manager.model_info().id}")
-            click.echo("Backend      MLX")
-            click.echo("Device       Apple Silicon")
-            click.echo(f"Architecture {bundle.architecture}")
-            click.echo(f"Quantization {quantization}\n")
+            event("load_model", "model loaded | model = %s | architecture = %s | quantization = %s",
+                  manager.model_info().id, bundle.architecture, quantization)
+            event("device", "backend = MLX | device = Apple Silicon GPU")
             if transcription_service is not None:
-                click.echo("Transcription enabled (private native Whisper sidecar)\n")
-            click.echo(f"API          http://{host}:{port}/v1")
-            click.echo(f"UI           http://{host}:{port}")
+                event("configure", "private native Whisper transcription sidecar enabled")
+            event("configure", "slots = %d | context = %s | KV = %s/%s | prefix budget = %d MiB",
+                  parallel, manager.model_info().context_length, config.cache_type_k,
+                  config.cache_type_v, config.prefix_cache_bytes // 1024**2)
+            selection = getattr(engine, "_selection", {})
+            event("configure", "execution = %s | %s", selection.get("resolved_mode"),
+                  selection.get("reason", "explicit configuration"))
+            event("endpoints", "API http://%s:%d/v1 | UI http://%s:%d", host, port, host, port)
             uvicorn.run(
                 create_app(
                     model_manager=manager,
@@ -835,8 +851,10 @@ def serve_command(
                 ),
                 host=host,
                 port=port,
+                log_level=log_level,
             )
         finally:
+            event("shutdown", "cleaning up model and scheduler")
             scheduler.close(finalizer=manager.unload)
     except (ImportError, OSError, RuntimeError, ValueError) as exc:
         if isinstance(exc, ImportError) and exc.name in {"fastapi", "uvicorn"}:

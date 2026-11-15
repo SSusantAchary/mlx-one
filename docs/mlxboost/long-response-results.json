@@ -1,0 +1,117 @@
+{
+  "date": "2026-11-14",
+  "hardware": "Apple M4, 32 GiB",
+  "model": "gpt-oss-20b-MXFP4-Q4",
+  "context": 16384,
+  "cache": "bf16/bf16",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "reasoning_effort": "low",
+  "controlled_request": {
+    "model": "gpt-oss-20b",
+    "messages": [
+      {
+        "role": "user",
+        "content": "code fastapi server for 1000 concurrent user to accept request for embedding generation"
+      }
+    ],
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "seed": 0,
+    "reasoning_effort": "low",
+    "max_tokens": 1024,
+    "stream": true
+  },
+  "controlled_before": {
+    "generated_tokens": 1024,
+    "reasoning_tokens": 34,
+    "decode_tokens_per_second": 19.384366739681894,
+    "tokens_per_second": 19.208776730088914,
+    "decode_ms": 43195.80774765927,
+    "generation_latency_ms": 53308.96466696868,
+    "time_to_first_token_ms": 534.0975419967435,
+    "server_text_ttft_ms": 1975.7667919620872
+  },
+  "controlled_after": {
+    "generated_tokens": 1024,
+    "reasoning_tokens": 34,
+    "decode_tokens_per_second": 28.908128370530424,
+    "tokens_per_second": 28.527530083377513,
+    "decode_ms": 27833.641001023352,
+    "generation_latency_ms": 35895.15100000426,
+    "time_to_first_token_ms": 506.808916979935,
+    "server_text_ttft_ms": 1888.7452500057407
+  },
+  "visible_response_hash_equal": true,
+  "visible_response_sha256": "9645854b6ddae47320d92d209be35cbe11179db1ec48d974c381435e392812a2",
+  "long_ui_run": {
+    "settings": {
+      "max_tokens": 8192,
+      "reasoning_effort": "low",
+      "temperature": 0.7,
+      "top_p": 0.9
+    },
+    "timings": {
+      "prompt_tokens": 83,
+      "generated_tokens": 2016,
+      "reasoning_tokens": 34,
+      "decode_tokens_per_second": 15.38542114771045,
+      "tokens_per_second": 15.327696169932286,
+      "time_to_first_token_ms": 520.9203750127926,
+      "server_text_ttft_ms": 1914.6314170211554
+    },
+    "first_visible_client_ms": 2345,
+    "completed_normally": true
+  },
+  "decision": "PARTIAL: 8192-token recommendation and bounded attention optimization ready; sustained long-response throughput remains unresolved.",
+  "rejected_candidate": "Cropping sliding attention changed the seeded response. Sliding attention remains on the original reference path.",
+  "validation": {
+    "native_attention_tests": 15,
+    "backend_regressions": 135,
+    "ui_tests": 14,
+    "browser_scenarios": 9
+  },
+  "source_sha256": {
+    "src/mlx_one/mlxboost/gptoss.py": "4bb381447ff5c0ce862d6988d117bf31017aeb39c1dde7b063829532b4efb552",
+    "src/mlx_one/models/language/gpt_oss/model.py": "5ca637041218d5c5f2e0b0b869a0903877d521208084511d2465580e76d8e07b"
+  },
+  "limits": [
+    "One before/after request, not a randomized thermal/power crossover.",
+    "Matching visible text does not prove all internal token IDs or arbitrary-request parity.",
+    "Long UI response still measured about 15.4 decode tok/s; no sustained 30+ claim.",
+    "macOS thermal state raw value 1 (fair) and Low Power Mode false were observed, without proving the bottleneck is thermal.",
+    "No memory guard, model precision or output-token counting shortcut was disabled.",
+    "A subsequent browser-free long request averaged 21.11 decode tok/s, with recent rate falling from about 32.6 to about 12.5 tok/s. Sequential UI/API runs do not isolate a browser effect; sustained variability remains unresolved."
+  ],
+  "long_api_run": {
+    "request": {
+      "model": "gpt-oss-20b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "code fastapi server for 1000 concurrent user to accept request for embedding generation"
+        }
+      ],
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "seed": 0,
+      "reasoning_effort": "low",
+      "max_tokens": 8192,
+      "stream": true
+    },
+    "timings": {
+      "prompt_tokens": 83,
+      "generated_tokens": 2016,
+      "reasoning_tokens": 34,
+      "decode_tokens_per_second": 21.112193120311417,
+      "tokens_per_second": 21.00727055791955,
+      "time_to_first_token_ms": 534.9298749933951,
+      "server_text_ttft_ms": 1884.7855829517357,
+      "decode_ms": 78922.87651030347,
+      "generation_latency_ms": 95966.77466697292
+    },
+    "finish_reason": "stop",
+    "done": true,
+    "answer_sha256": "7c0e4306a27d66c97b8dd72b7464aceaa468e6fe15b9f71e575a5cdf21888185"
+  }
+}

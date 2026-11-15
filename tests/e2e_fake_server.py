@@ -37,6 +37,13 @@ class FakeEngine:
         messages = kwargs["messages"]
         assert isinstance(cancel, threading.Event)
         assert isinstance(messages, list)
+        if "reasoning-only" in messages[-1]["content"] and kwargs["options"].max_tokens <= 512:
+            yield GenerationEvent(progress={
+                "generated_tokens": 64, "phase": "reasoning", "reasoning_tokens": 60})
+            time.sleep(1)
+            yield GenerationEvent(finish_reason="length", metrics={"prompt_tokens": 20,
+                "generated_tokens": 512, "reasoning_tokens": 508, "context_used": 532})
+            return
         if "long" in messages[-1]["content"]:
             yield GenerationEvent(text="\n".join(f"Response line {line}" for line in range(100)))
         elif "slow" not in messages[-1]["content"]:

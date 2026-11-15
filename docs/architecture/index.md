@@ -1,5 +1,7 @@
 # Architecture
 
+[![MLX-One architecture with visible section borders](../../mlx-one_arch-visible-borders.png)](../../mlx-one_arch-visible-borders.png)
+
 ## Implemented text execution path
 
 The native text inference path is:
@@ -80,7 +82,7 @@ implementations remain within mlx-one.
 
 ## Visual architecture and planning
 
-[Full-resolution artwork](../../mlx-one_arch.png) preserves the project’s existing
+[Full-resolution artwork](../../mlx-one_arch-visible-borders.png) preserves the project’s existing
 visual identity. MTP, CPT and RL labels in the artwork include planned workflows;
 see the [inference-engine roadmap](inference-engine.md) and
 [development roadmap](../roadmap.md). Existing bounded Qwen3.5 MTP support does
