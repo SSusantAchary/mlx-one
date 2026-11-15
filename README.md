@@ -15,7 +15,7 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
-  <a href="https://pypi.org/project/mlx-one/0.1.2/"><img src="https://img.shields.io/badge/PyPI-0.1.2-15845d" alt="0.1.2 published on PyPI"></a>
+  <a href="docs/releases/0.1.4.md"><img src="https://img.shields.io/badge/release-0.1.4%20prepared-15845d" alt="0.1.4 prepared; publication pending"></a>
 </p>
 
 [**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
@@ -40,6 +40,43 @@ loading, execution and developer tooling.
 
 Hugging Face supplies configuration, tokenizer/processor assets and safe
 `safetensors` checkpoints. Native inference runs through MLX-One and Apple MLX.
+
+## Architecture
+
+<p align="center">
+  <a href="mlx-one_arch-visible-borders.png">
+    <img src="mlx-one_arch-visible-borders.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
+  </a>
+</p>
+
+Click the artwork for full resolution. It includes planned workflows such as
+CPT and RL and broader MTP goals. Those labels do not establish implementation
+or qualification; existing bounded Qwen3.5 MTP options have their own scope.
+The optional MLXBoost module ships inside MLX-One; a separate distribution is a
+[proposal](docs/architecture/mlxboost-module-boundary.md).
+
+The implemented native text path is:
+
+```text
+Python Engine / HTTP + SSE / CLI
+                 ↓
+Prepared prompt + identity + resolved execution plan
+                 ↓
+Reference execution or InferenceActor + BatchScheduler
+                 ↓
+Native model adapter → dense / paged / hybrid runner
+                 ↓
+CacheManager → ownership, prefix index, page arena, hybrid state
+                 ↓
+MLX + Metal + unified memory
+```
+
+The actor owns request state, sampling and cancellation. Cache reservations and
+memory-pressure telemetry govern admission; matching evidence gates optimized
+backend selection. Native model equations stay within family packages.
+See [architecture and principles](docs/architecture/index.md),
+[repository layout](docs/REPOSITORY_SUMMARY.md) and
+[runtime experiments](docs/experimental/inference-runtime.md).
 
 <a id="model-support-and-release"></a>
 
@@ -126,21 +163,26 @@ Downloaded qualification weights were removed after recording results.
 Task availability varies by checkpoint and interface. See the
 [model guides](docs/models/index.md) for supported inputs and limitations.
 
-## Version 0.1.3
+## Version 0.1.4
 
-GPT-OSS-20B MLXBoost is now integrated as an opt-in feature. The package also
-includes `mlx-one upgrade` for Git updates. After 0.1.3 is published to PyPI:
+**Prepared for maintainer publication; not uploaded by this checkout.** This
+release refreshes the chat workspace, adds serving progress/timing logs, fixes
+GPT-OSS reasoning-only streams and recommends an 8192-token output budget with
+low reasoning effort when context allows. Explicit user limits are preserved.
+Native sampling and eligible GPT-OSS execution have bounded optimizations;
+sustained long-response speed remains variable. Full 128K HTTP/tool workflows
+are not qualified by these short-context measurements.
+
+[Release notes](docs/releases/0.1.4.md) ·
+[Measured results and limits](docs/mlxboost/serving-overhead.md) ·
+[Push and PyPI publication steps](docs/releases/0.1.4-pypi.md).
+
+After publication:
 
 ```bash
-python -m pip install --upgrade "mlx-one[server]==0.1.3"
+python -m pip install --upgrade "mlx-one[server]==0.1.4"
 mlx-one --version
 ```
-
-For Git installation and upgrade options, see the
-[installation guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/getting-started.md).
-GPT-OSS acceleration remains opt-in, with profile restrictions and fallback;
-see the [serving guide](https://github.com/SSusantAchary/mlx-one/blob/main/docs/mlxboost/gptoss-serving.md).
-Full 128K Kilo agent workflows require end-to-end validation.
 
 ## Quick Start
 
@@ -154,16 +196,16 @@ version. From a checkout of the current source, install the task dependencies:
 python -m pip install -e '.[server,vision,kokoro]'
 ```
 
-Install or upgrade to the published 0.1.2 release:
+After maintainer publication, install or upgrade to 0.1.4:
 
 ```bash
-python -m pip install --upgrade "mlx-one==0.1.2"
+python -m pip install --upgrade "mlx-one==0.1.4"
 ```
 
 For the HTTP server, vision and OCR dependencies:
 
 ```bash
-python -m pip install --upgrade "mlx-one[server,vision,ocr,kokoro]==0.1.2"
+python -m pip install --upgrade "mlx-one[server,vision,ocr,kokoro]==0.1.4"
 mlx-one --version
 ```
 
@@ -171,8 +213,9 @@ For optional dependencies, audio/video decoding requirements and tested
 constraints, see [getting started](docs/getting-started.md) and the
 [dependency policy](requirements/README.md). For editable development setup, use the
 [source installation](docs/getting-started.md#source-installation-for-development).
-See the [0.1.2 release notes](docs/releases/0.1.2.md) for validation and
-[PyPI files](https://pypi.org/project/mlx-one/0.1.2/#files) for artifact availability.
+See the [0.1.4 release notes](docs/releases/0.1.4.md) for changes and validation
+scope, and the [publication handoff](docs/releases/0.1.4-pypi.md) for artifacts.
+Git installs use the selected revision; `mlx-one upgrade` upgrades from Git main.
 
 ### Load a text checkpoint and generate
 
@@ -465,43 +508,6 @@ Support applies to the checkpoint, precision and operations recorded in the
 remain documented. [Admission policy](docs/model-admission.md) explains the
 functional standard; optional experiments retain their own evidence and status.
 
-## Architecture
-
-<p align="center">
-  <a href="mlx-one_arch.png">
-    <img src="mlx-one_arch.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
-  </a>
-</p>
-
-Click the artwork for full resolution. It includes planned workflows such as
-CPT and RL and broader MTP goals. Those labels do not establish implementation
-or qualification; existing bounded Qwen3.5 MTP options have their own scope.
-The optional MLXBoost module ships inside MLX-One; a separate distribution is a
-[proposal](docs/architecture/mlxboost-module-boundary.md).
-
-The implemented native text path is:
-
-```text
-Python Engine / HTTP + SSE / CLI
-                 ↓
-Prepared prompt + identity + resolved execution plan
-                 ↓
-Reference execution or InferenceActor + BatchScheduler
-                 ↓
-Native model adapter → dense / paged / hybrid runner
-                 ↓
-CacheManager → ownership, prefix index, page arena, hybrid state
-                 ↓
-MLX + Metal + unified memory
-```
-
-The actor owns request state, sampling and cancellation. Cache reservations and
-memory-pressure telemetry govern admission; matching evidence gates optimized
-backend selection. Native model equations stay within family packages.
-See [architecture and principles](docs/architecture/index.md),
-[repository layout](docs/REPOSITORY_SUMMARY.md) and
-[runtime experiments](docs/experimental/inference-runtime.md).
-
 ## Native Inference Engine and MLXBoost
 
 `mlx_one.Engine` manages a native text model's lifecycle, synchronous generation,
@@ -513,11 +519,17 @@ paged, dense-batch and hybrid-batch paths have explicit capability and evidence
 requirements; source implementation does not establish production qualification.
 See the [runtime guide](docs/experimental/inference-runtime.md).
 
-MLXBoost is an optional execution module. `mlxboost_b1` and `fast_decode` require
-explicit opt-in; feature flags default off. The measured path skips unnecessary
-calibration lookup work for eligible profiles. It adds no custom Metal kernel
-and changes no model equations. Unsupported profiles report fallback or raise
-under strict handling. It remains experimental, with no rollout approval.
+MLXBoost ships inside `mlx-one` and requires explicit `mlxboost_b1` opt-in;
+feature flags default off. `fast_decode` reduces eligible host overhead. The
+GPT-OSS MXFP4/Q4 recipe uses pinned expert dispatch, compiled activation and
+bounded prefill, selected with `MLXBoostConfig(gptoss_mlx_lm=True)` or
+`--mlxboost-gptoss-mlx-lm`. Unsupported configurations retain explicit fallback
+or strict errors. Optimizations remain profile-specific and experimental.
+
+The 0.1.4 maintenance changes add native sampling improvements and conservative
+full-history decode attention. Sustained long responses still slow down; the
+[measurements](docs/mlxboost/serving-overhead.md) retain that limitation.
+See the [GPT-OSS serving guide](docs/mlxboost/gptoss-serving.md) for setup.
 
 [MLXBoost experiments](docs/experimental/mlxboost.md) retain off/on HTTP results,
 failed model qualification gates, methodology and future requirements. The
@@ -553,11 +565,12 @@ curl http://127.0.0.1:8888/v1/chat/completions \
 
 <p align="center">
   <a href="mlx_One_chat_ui.png">
-    <img src="mlx_One_chat_ui.png" alt="Current MLX-One native chat UI in dark mode, connected to a local LFM2 model" width="900">
+    <img src="mlx_One_chat_ui.png" alt="Earlier MLX-One native chat UI in dark mode, connected to a local LFM2 model" width="900">
   </a>
 </p>
 
-Current native chat UI connected to a local model. Click the image for full resolution.
+Earlier native chat UI connected to a local model. The 0.1.4 workspace adds
+session tabs, history and message actions; see the [current UI guide](docs/ui.md).
 
 Task-specific HTTP routes use the same server authentication and model lifecycle:
 
@@ -585,7 +598,7 @@ and [Web UI guide](docs/ui.md) document request formats, streaming and settings.
 | Setup and examples | [Getting started](docs/getting-started.md) |
 | Model families and guides | [Model index](docs/models/index.md), [candidate catalog](docs/model-catalog.md) |
 | Verified checkpoint workflows | [Usage and limits](docs/models/batch-1-sub-6b/README.md), [validation results](docs/qualification/batch-1-sub-6b/results.json), [engineering report](docs/models/batch-1-sub-6b/REPORT.md) |
-| Release history | [Support inventory](status_models_testing.md), [0.1.2 release notes](docs/releases/0.1.2.md), [0.1.1 release history](docs/releases/0.1.1.md) |
+| Release history | [Support inventory](status_models_testing.md), [0.1.4 release notes](docs/releases/0.1.4.md), [0.1.2 release history](docs/releases/0.1.2.md), [0.1.1 release history](docs/releases/0.1.1.md) |
 | Qualification and checkpoints | [Admission policy](docs/model-admission.md), [checkpoint inventory](docs/benchmarks/inventory.md) |
 | Design and package ownership | [Architecture](docs/architecture/index.md), [repository summary](docs/REPOSITORY_SUMMARY.md) |
 | Python, CLI and HTTP | [API guide](docs/api/index.md), [HTTP reference](docs/api/openai-compatibility.md), [Web UI](docs/ui.md) |
@@ -603,7 +616,7 @@ author = {Achary, S. Susant},
 title  = {mlx-one: Unified Native MLX Stack for Apple Silicon},
 year   = {2026},
 url    = {https://github.com/SSusantAchary/mlx-one},
-note   = {Version 0.1.2. Native GPU-accelerated machine learning workflows on Apple Silicon}
+note   = {Version 0.1.4. Native GPU-accelerated machine learning workflows on Apple Silicon}
 }
 ```
 

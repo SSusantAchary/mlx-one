@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-14",
+  "api_checks": [
+    {
+      "test": "streaming_text",
+      "passed": true,
+      "done_received": true,
+      "finish_reason": "stop",
+      "first_visible_s": 1.2170174160273746,
+      "wall_s": 1.2427544579841197,
+      "text": "OK",
+      "metrics": {
+        "generated_tokens": 28,
+        "decode_tokens_per_second": 36.764729690712514,
+        "tokens_per_second": 22.994457308537648
+      }
+    },
+    {
+      "test": "tool_call",
+      "passed": true,
+      "tool": "add_numbers",
+      "arguments": {
+        "a": 17,
+        "b": 25
+      }
+    },
+    {
+      "test": "tool_result_roundtrip",
+      "passed": true,
+      "answer": "The sum of 17 and 25 is **42**.",
+      "finish_reason": "stop"
+    }
+  ],
+  "unsupported_capability": "required/named tool choice returns HTTP 400; auto and none tested",
+  "output_quality_comparison": {
+    "prompt": {
+      "model": "gpt-oss-20b",
+      "temperature": 0,
+      "seed": 0,
+      "max_tokens": 512,
+      "reasoning_effort": "low",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a Python function that returns the sum of two integers. Include one example."
+        }
+      ],
+      "tools": [],
+      "stream": true,
+      "stream_options": {
+        "include_usage": true
+      }
+    },
+    "baseline": {
+      "content_sha256": "a2d1671d48f3a950b2fa49b57dc9b652eb11e20cd17f831d7242b0d7dbbbf935",
+      "finish_reason": "length",
+      "generated_tokens": 512,
+      "decode_tokens_per_second": 18.10119714235261
+    },
+    "patched": {
+      "content_sha256": "a2d1671d48f3a950b2fa49b57dc9b652eb11e20cd17f831d7242b0d7dbbbf935",
+      "finish_reason": "length",
+      "generated_tokens": 512,
+      "decode_tokens_per_second": 36.47860225898925
+    },
+    "visible_text_equal": true,
+    "done_received": true
+  },
+  "quality_conclusion": "Both original and patched versions generated identical repetitive visible text and reached 512 tokens. Existing quality failure, not fixed by this patch.",
+  "scope": "HTTP/SSE and simulated arithmetic-tool round trip. Not a full Kilo client session."
+}

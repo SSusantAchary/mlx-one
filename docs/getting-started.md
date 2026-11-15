@@ -1,26 +1,28 @@
 # Getting started
 
-## Version 0.1.3 installation and upgrades
+## Version 0.1.4 installation and upgrades
 
 After publication, install in your active `mlx` Python environment:
 
 ```bash
-python -m pip install --upgrade "mlx-one[server]==0.1.3"
+python -m pip install --upgrade "mlx-one[server]==0.1.4"
 ```
 
 Alternatively, install from Git after the changes have been pushed:
 
 ```bash
 python -m pip install --upgrade --force-reinstall \
-  "mlx-one[server] @ git+https://github.com/SSusantAchary/mlx-one.git@release/v0.1.3"
+  "mlx-one[server] @ git+https://github.com/SSusantAchary/mlx-one.git@release/v0.1.4"
 ```
+
+### Upgrade from Git
 
 The new CLI command always upgrades from the project Git repository using the
 CLI's Python interpreter:
 
 ```bash
 mlx-one upgrade --dry-run
-mlx-one upgrade --ref release/v0.1.3
+mlx-one upgrade --ref release/v0.1.4
 mlx-one upgrade --ref main --extras server,vision,ocr
 mlx-one upgrade --no-deps
 ```
@@ -44,23 +46,23 @@ or the [source setup](#source-installation-for-development) for development.
 
 ### Install from PyPI
 
-Install or upgrade to 0.1.2:
+After publication, install or upgrade to 0.1.4:
 
 ```bash
-python -m pip install --upgrade "mlx-one==0.1.2"
+python -m pip install --upgrade "mlx-one==0.1.4"
 ```
 
 Include the HTTP server, vision and OCR dependencies with:
 
 ```bash
-python -m pip install "mlx-one[server,vision,ocr,kokoro]==0.1.2"
+python -m pip install "mlx-one[server,vision,ocr,kokoro]==0.1.4"
 mlx-one --version
 mlx-one registry list
 ```
 
-The [0.1.2 release notes](releases/0.1.2.md) record validation, and the
-[PyPI release page](https://pypi.org/project/mlx-one/0.1.2/) lists the published
-artifacts. The previous published version is `0.1.1`. Model weights are
+The [0.1.4 release notes](releases/0.1.4.md) describe this candidate. Its
+[publication handoff](releases/0.1.4-pypi.md) records build and upload steps;
+publication is pending. Historical 0.1.2 model evidence remains dated. Model weights are
 acquired separately under their publishers' terms.
 
 ### Source installation for development
@@ -93,8 +95,8 @@ See [dependency policy and tested minimums](../requirements/README.md).
 Qwen known-text alignment has separate optional language dependencies:
 
 ```bash
-python -m pip install "mlx-one[qwen-align-ja]==0.1.2"  # Japanese: nagisa==0.2.11
-python -m pip install "mlx-one[qwen-align-ko]==0.1.2"  # Korean: soynlp==0.0.493
+python -m pip install "mlx-one[qwen-align-ja]==0.1.4"  # Japanese: nagisa==0.2.11
+python -m pip install "mlx-one[qwen-align-ko]==0.1.4"  # Korean: soynlp==0.0.493
 ```
 
 Korean alignment also needs the checksummed `korean_dict_jieba.dict` in the local
@@ -108,7 +110,7 @@ request that bridge.
 For SAM3 image processing, install the existing vision extra:
 
 ```bash
-python -m pip install "mlx-one[vision]==0.1.2"
+python -m pip install "mlx-one[vision]==0.1.4"
 ```
 
 Meta's [SAM3 checkpoint](https://huggingface.co/facebook/sam3) requires authorized
@@ -127,7 +129,7 @@ directories, and Python RGB frame iterators need no video/audio decoder.
 Load one supported text model and start the bundled local UI:
 
 ```bash
-python -m pip install "mlx-one[server]==0.1.2"
+python -m pip install "mlx-one[server]==0.1.4"
 mlx-one serve Qwen/Qwen3-0.6B --inference-mode reference_dense
 ```
 

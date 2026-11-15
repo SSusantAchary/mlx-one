@@ -1,11 +1,12 @@
-import type { Message, Settings, StreamResult } from '$lib/types/api';
+import type { Message, Settings, StreamResult, RuntimeInfo, StreamProgress } from '$lib/types/api';
 
 export async function streamChat(
   model: string,
   messages: Message[],
   settings: Settings,
   signal: AbortSignal,
-  onText: (text: string, reasoning: string) => void
+  onText: (text: string, reasoning: string) => void,
+  onProgress?: (progress: StreamProgress) => void
 ): Promise<StreamResult> {
   const { api_key, ...generation } = settings;
   const response = await fetch('/v1/chat/completions', {
@@ -33,7 +34,7 @@ export async function streamChat(
   if (!response.body) throw new Error('Streaming response has no body');
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
-  let buffer = ''; let finishReason: string | null = null; let metrics: Record<string, number> = {};
+  let buffer = ''; let finishReason: string | null = null; let metrics: Partial<RuntimeInfo> = {};
   while (true) {
     const { done, value } = await reader.read();
     buffer += decoder.decode(value ?? new Uint8Array(), { stream: !done });
@@ -48,9 +49,11 @@ export async function streamChat(
         onText(choice.delta.content ?? '', choice.delta.reasoning_content ?? '');
       }
       if (choice?.finish_reason) finishReason = choice.finish_reason;
+      if (chunk.mlx_progress) onProgress?.(chunk.mlx_progress);
       if (chunk.mlx) metrics = chunk.mlx;
     }
     if (done) break;
   }
+  if (!finishReason) throw new Error('The stream ended before completion. Partial output is kept; retry the response.');
   return { finishReason, metrics };
 }

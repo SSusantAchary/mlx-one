@@ -12,7 +12,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = "src/mlx_one/data/model_support_release_20261108.json"
 RELEASE = "docs/releases/0.1.1.json"
-CURRENT_RELEASE = "docs/releases/0.1.2.json"
+CURRENT_RELEASE = "docs/releases/0.1.4.json"
 CHECKPOINT_CATALOG = "src/mlx_one/data/batch_1_sub_6b.json"
 CHECKPOINT_RESULTS = "docs/qualification/batch-1-sub-6b/results.json"
 
@@ -258,7 +258,7 @@ def current_support(record, coverage):
         }
         row["availability"] = (
             f"Available in {current_release['version']}" if current_release["published"] else
-            f"{current_release['version']} approved; PyPI upload pending"
+            f"{current_release['version']} prepared; PyPI upload pending"
         )
     for group in coverage["groups"]:
         group["supported"] = len(supported_types.intersection(group["model_types"]))

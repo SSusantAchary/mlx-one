@@ -5,8 +5,8 @@
 </script>
 <footer aria-label="Runtime statistics">
   <span class="live"></span><b>MLX</b><span>{runtime?.chip ?? 'Apple Silicon'}</span>
-  <span>{runtime?.tokens_per_second?.toFixed(1) ?? '—'} tok/s</span>
-  <span>TTFT {runtime?.time_to_first_token_ms?.toFixed(0) ?? '—'} ms</span>
+  <span title="First-to-last model token interval">decode {runtime?.decode_tokens_per_second?.toFixed(1) ?? '—'} tok/s</span><span title="Whole engine request, including prefill">overall {runtime?.tokens_per_second?.toFixed(1) ?? '—'} tok/s</span>
+  <span>model TTFT {runtime?.time_to_first_token_ms?.toFixed(0) ?? '—'} ms</span>
   <span>{fmt(runtime?.memory_used_bytes)}</span>
   <span>{runtime?.context_used ?? 0} / {context || '—'} ctx</span>
   <span>slots {runtime?.scheduler?.active_slots ?? 0}/{runtime?.scheduler?.parallel_slots ?? '—'}</span>

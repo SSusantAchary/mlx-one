@@ -79,7 +79,10 @@ def test_explicit_mode_and_b1_are_required():
         MLXBoostConfig(fast_decode=1)
 
 
-def test_fast_decode_skips_only_impossible_calibration_lookup(monkeypatch):
+@pytest.mark.parametrize("mode", ["mlxboost_b1", "reference_dense"])
+@pytest.mark.parametrize("boost", [MLXBoostConfig(), MLXBoostConfig(gptoss_mlx_lm=True),
+                                  MLXBoostConfig(fast_decode=True)])
+def test_empty_calibration_lookup_preserves_live_candidates(monkeypatch, mode, boost):
     from mlx_one.engine import reporting, selection
     from mlx_one.engine.pressure import execution_forecast
 
@@ -90,10 +93,10 @@ def test_fast_decode_skips_only_impossible_calibration_lookup(monkeypatch):
     records = []
     runtime = SimpleNamespace(
         qualification_registry=SimpleNamespace(records=lambda: tuple(records)),
-        mode="mlxboost_b1",
+        mode=mode,
         bundle=object(),
         config=SimpleNamespace(key_type="f16"),
-        mlxboost_config=MLXBoostConfig(fast_decode=True),
+        mlxboost_config=boost,
     )
     model = SimpleNamespace(
         hidden_size=896,
@@ -117,8 +120,4 @@ def test_fast_decode_skips_only_impossible_calibration_lookup(monkeypatch):
     monkeypatch.setattr("dataclasses.asdict", lambda x: x)
     assert forecast() == enabled and calls == ["source"]
     records.clear()
-    runtime.mlxboost_config = MLXBoostConfig()
-    assert forecast() == enabled and calls == ["source", "source"]
-    runtime.mlxboost_config = MLXBoostConfig(fast_decode=True)
-    runtime.mode = "reference_dense"
-    assert forecast() == enabled and calls == ["source", "source", "source"]
+    assert forecast() == enabled and calls == ["source"]

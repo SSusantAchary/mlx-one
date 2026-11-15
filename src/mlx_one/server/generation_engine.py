@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 import sys
 import threading
 import time
@@ -20,7 +19,8 @@ from mlx_one.engine.modes import (
 )
 from mlx_one.engine.reporting import native_report
 from mlx_one.server.model_manager import ModelManager
-from mlx_one.server.scheduler import current_queue_ms
+from mlx_one.server.runtime_logging import RequestLog, logged_events
+from mlx_one.server.scheduler import current_queue_ms, current_slot
 from mlx_one.text import TextGenerationOptions, stream_chat
 from mlx_one.utils.memory import get_memory_snapshot
 
@@ -32,6 +32,7 @@ class GenerationEvent:
     finish_reason: str | None = None
     metrics: dict[str, Any] | None = None
     tool_calls: list[dict[str, Any]] | None = None
+    progress: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -179,19 +180,24 @@ class GenerationEngine:
         _prompt: str | None = None,
     ) -> Iterator[GenerationEvent]:
         lifecycle: dict[str, Any] = {}
+        request_log = RequestLog(current_slot())
+        lifecycle["request_log"] = request_log
+        request_log.emit("launch", "processing request | max_tokens = %d | context limit = %s",
+                         options.max_tokens, context_length)
         acquire = getattr(self.manager, "model_lease", None)
-        lease = acquire() if callable(acquire) else None
+        lease = None
         try:
+            lease = acquire() if callable(acquire) else None
             from mlx_one.vision.loading import LoadedVLM
             if isinstance(self.manager.current_model(), LoadedVLM):
                 if tools or spec_type != "none" or context_shift:
                     raise ValueError("VLM tools, speculation and context shifting are unsupported")
                 if self._inference_mode not in {None, "reference_dense"}:
                     raise ValueError("VLM serving requires the reference inference mode")
-                yield from self._stream_vision(model, messages, options, cancel,
-                    context_length, cache_type_k, cache_type_v, _prompt)
+                yield from logged_events(self._stream_vision(model, messages, options, cancel,
+                    context_length, cache_type_k, cache_type_v, _prompt), request_log)
                 return
-            yield from self._stream_request(
+            yield from logged_events(self._stream_request(
                 model=model,
                 messages=messages,
                 options=options,
@@ -215,12 +221,12 @@ class GenerationEngine:
                 raw_prompt=_prompt,
                 tools=tools, tool_choice=tool_choice, parallel_tool_calls=parallel_tool_calls,
                 reasoning_effort=reasoning_effort,
-            )
+            ), request_log)
         except Exception as exc:
-            logging.getLogger(__name__).warning("Native generation failed (%s)",
-                                               type(exc).__name__)
+            request_log.stop("failed", exc)
             raise
         finally:
+            request_log.stop("cancelled" if cancel.is_set() else "interrupted")
             harmony = lifecycle.get("harmony")
             if harmony is not None:
                 harmony.close()
@@ -439,7 +445,7 @@ class GenerationEngine:
         harmony = None
         visible_stops = None
         external_stop = False
-        if bundle.architecture == "gpt_oss" and raw_prompt is None and tools is not None:
+        if bundle.architecture == "gpt_oss" and raw_prompt is None:
             from mlx_one.text.harmony_tools import HarmonyToolParser, VisibleStops
             harmony = HarmonyToolParser(
                 bundle.tokenizer, tools=tools or (), tool_choice=tool_choice,
@@ -450,6 +456,12 @@ class GenerationEngine:
         from mlx_one.engine.timing import RequestTiming
 
         timings = RequestTiming(started, trace=self._collect_execution_metrics)
+        request_log = lifecycle["request_log"]
+
+        def observe_execution(observation):
+            timings.observe(observation)
+            request_log.observe(observation)
+
         prefill_chunk_size = self._prefill_chunk_size
         if harmony is not None:
             prefill_chunk_size = _fit_tool_prefill(runtime, bundle.model.config,
@@ -481,7 +493,7 @@ class GenerationEngine:
             speculative_stats=speculative_stats,
             reasoning_budget=reasoning_budget,
             yield_steps=True,
-            on_execution=timings.observe,
+            on_execution=observe_execution,
             _cooperative=self._actor is not None,
             _prefill_chunk_size=prefill_chunk_size,
             **({"_yield_prefill_progress": True, "_token_events_only": True}
@@ -492,6 +504,7 @@ class GenerationEngine:
         )
         from mlx_one.engine.batching import ForwardRequest
 
+        last_progress_at = -float("inf")
         try:
             chunk = next(iterator)
             while True:
@@ -501,6 +514,11 @@ class GenerationEngine:
                     continue
                 if chunk.token_id is not None:
                     generated = chunk.generated_tokens
+                progress = None
+                now = time.perf_counter()
+                if chunk.token_id is not None and now - last_progress_at >= 0.25:
+                    progress = {"generated_tokens": generated, "phase": "generating"}
+                    last_progress_at = now
                 if harmony is not None:
                     text = harmony.feed(chunk.token_id) if chunk.token_id is not None else ""
                     terminal_id = getattr(chunk, "terminal_token_id", None)
@@ -513,7 +531,11 @@ class GenerationEngine:
                     text = visible_stops.feed(text)
                     if text and first_at is None:
                         first_at = time.perf_counter()
-                    yield GenerationEvent(text=text)
+                    if progress is not None:
+                        progress.update(
+                            phase="reasoning" if harmony.channel == "analysis" else "generating",
+                            reasoning_tokens=harmony.reasoning_tokens)
+                    yield GenerationEvent(text=text, progress=progress)
                     if visible_stops.matched:
                         external_stop, finish_reason = True, "stop"
                         break
@@ -521,7 +543,7 @@ class GenerationEngine:
                     text, thought = parser.feed(chunk.text) if chunk.text else ("", "")
                     if text and first_at is None:
                         first_at = time.perf_counter()
-                    yield GenerationEvent(text=text, reasoning_content=thought)
+                    yield GenerationEvent(text=text, reasoning_content=thought, progress=progress)
                 elif chunk.finish_reason is None:
                     yield GenerationEvent()
                 if chunk.finish_reason is not None:

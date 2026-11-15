@@ -1134,7 +1134,8 @@ async def _sse(
                 disconnected = True
                 break
             if (not event.text and not event.reasoning_content and not event.tool_calls
-                    and event.finish_reason is None and not first):
+                    and event.finish_reason is None and not first
+                    and getattr(event, "progress", None) is None):
                 if time.monotonic() - last_emitted >= 15:
                     heartbeat = {"id": completion_id, "object": "chat.completion.chunk",
                                  "created": created, "model": model,
@@ -1164,6 +1165,8 @@ async def _sse(
                     {"index": 0, "delta": delta, "finish_reason": event.finish_reason}
                 ],
             }
+            if getattr(event, "progress", None) is not None:
+                payload["mlx_progress"] = event.progress
             if event.metrics is not None:
                 payload["mlx"] = event.metrics
             yield f"data: {json.dumps(payload, separators=(',', ':'))}\n\n"

@@ -11,6 +11,9 @@ on:
       - CITATION.bib
       - LICENSE
       - CHANGELOG.md
+      - mlx-one.png
+      - mlx-one_arch-visible-borders.png
+      - pyproject.toml
       - mlx_One_chat_ui.png
       - ui/static/mlx-one-logo.png
       - src/mlx_one/models/**/README.md
@@ -29,6 +32,9 @@ on:
       - CITATION.bib
       - LICENSE
       - CHANGELOG.md
+      - mlx-one.png
+      - mlx-one_arch-visible-borders.png
+      - pyproject.toml
       - mlx_One_chat_ui.png
       - ui/static/mlx-one-logo.png
       - src/mlx_one/models/**/README.md

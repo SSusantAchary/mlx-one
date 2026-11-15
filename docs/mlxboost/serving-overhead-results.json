@@ -1,0 +1,167 @@
+{
+  "date": "2026-11-14",
+  "protocol": "sequential-server-88-input-256-output-v1",
+  "hardware": "Apple M4, 32 GiB",
+  "python": "3.13.4",
+  "mlx": "0.32.2",
+  "model": "gpt-oss-20b-MXFP4-Q4",
+  "revision": null,
+  "revision_note": "Local checkpoint path; runtime revision is unspecified. No new checkpoint qualification is implied.",
+  "context_limit": 16384,
+  "kv_precision": "bf16",
+  "prefix_reuse": false,
+  "parallel": 1,
+  "mlxboost_recipe": "gptoss_mlx_lm",
+  "seed": 0,
+  "temperature": 0,
+  "tools": [],
+  "request": {
+    "model": "gpt-oss-20b",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a Python function that checks whether an integer is prime. Include a short explanation and three example calls."
+      }
+    ],
+    "tools": [],
+    "temperature": 0,
+    "seed": 0,
+    "max_tokens": 256,
+    "stream": false
+  },
+  "repetitions_per_server": 3,
+  "runs": {
+    "before": [
+      {
+        "run": 1,
+        "client_wall_s": 13.80559441697551,
+        "prompt_tokens": 88,
+        "generated_tokens": 256,
+        "tokens_per_second": 18.602132236716212,
+        "decode_tokens_per_second": 19.39045471865795,
+        "generation_latency_ms": 13761.863249994349,
+        "prefill_ms": 514.8679160047323,
+        "decode_ms": 6491.439329227433,
+        "time_to_first_token_ms": 610.6237079948187,
+        "server_text_ttft_ms": 7307.208249985706,
+        "model_token_gap_p50_ms": 50.31554104061797,
+        "model_token_gap_p95_ms": 60.74099999386817,
+        "message_sha256": "5709743494b8042f2dac1ba5c26f361e0a86b5cc4d41beafce5f999c302decdf"
+      },
+      {
+        "run": 2,
+        "client_wall_s": 13.921304791991133,
+        "prompt_tokens": 88,
+        "generated_tokens": 256,
+        "tokens_per_second": 18.43447993572256,
+        "decode_tokens_per_second": 19.131964932057993,
+        "generation_latency_ms": 13887.020458001643,
+        "prefill_ms": 471.7973759979941,
+        "decode_ms": 6567.82098748954,
+        "time_to_first_token_ms": 558.288750005886,
+        "server_text_ttft_ms": 7217.963000002783,
+        "model_token_gap_p50_ms": 51.042582956142724,
+        "model_token_gap_p95_ms": 60.67241705022752,
+        "message_sha256": "5709743494b8042f2dac1ba5c26f361e0a86b5cc4d41beafce5f999c302decdf"
+      },
+      {
+        "run": 3,
+        "client_wall_s": 13.64521024998976,
+        "prompt_tokens": 88,
+        "generated_tokens": 256,
+        "tokens_per_second": 18.78346142267613,
+        "decode_tokens_per_second": 19.514127995312666,
+        "generation_latency_ms": 13629.010875010863,
+        "prefill_ms": 478.7760839681141,
+        "decode_ms": 6407.373534049839,
+        "time_to_first_token_ms": 561.3366670440882,
+        "server_text_ttft_ms": 7110.482458025217,
+        "model_token_gap_p50_ms": 50.60058395611122,
+        "model_token_gap_p95_ms": 61.27437500981614,
+        "message_sha256": "5709743494b8042f2dac1ba5c26f361e0a86b5cc4d41beafce5f999c302decdf"
+      }
+    ],
+    "after": [
+      {
+        "run": 1,
+        "client_wall_s": 7.270877917006146,
+        "prompt_tokens": 88,
+        "generated_tokens": 256,
+        "tokens_per_second": 35.36897683427854,
+        "decode_tokens_per_second": 37.8989524237868,
+        "generation_latency_ms": 7237.981499987654,
+        "prefill_ms": 502.2591660381295,
+        "decode_ms": 6433.897872862872,
+        "time_to_first_token_ms": 509.42145800217986,
+        "server_text_ttft_ms": 3886.714000022039,
+        "model_token_gap_p50_ms": 25.76733398018405,
+        "model_token_gap_p95_ms": 27.46783394832164,
+        "message_sha256": "5709743494b8042f2dac1ba5c26f361e0a86b5cc4d41beafce5f999c302decdf"
+      },
+      {
+        "run": 2,
+        "client_wall_s": 7.192917915992439,
+        "prompt_tokens": 88,
+        "generated_tokens": 256,
+        "tokens_per_second": 35.83325519613868,
+        "decode_tokens_per_second": 38.256448841708334,
+        "generation_latency_ms": 7144.201624963898,
+        "prefill_ms": 475.0532079488039,
+        "decode_ms": 6404.705879976973,
+        "time_to_first_token_ms": 478.48633397370577,
+        "server_text_ttft_ms": 3744.440709007904,
+        "model_token_gap_p50_ms": 25.739209027960896,
+        "model_token_gap_p95_ms": 28.50620896788314,
+        "message_sha256": "5709743494b8042f2dac1ba5c26f361e0a86b5cc4d41beafce5f999c302decdf"
+      },
+      {
+        "run": 3,
+        "client_wall_s": 7.192063665948808,
+        "prompt_tokens": 88,
+        "generated_tokens": 256,
+        "tokens_per_second": 35.71271174411897,
+        "decode_tokens_per_second": 38.14425767905171,
+        "generation_latency_ms": 7168.315916031133,
+        "prefill_ms": 478.60195802059025,
+        "decode_ms": 6414.055451692548,
+        "time_to_first_token_ms": 483.00033301347867,
+        "server_text_ttft_ms": 3830.1450830185786,
+        "model_token_gap_p50_ms": 25.812875013798475,
+        "model_token_gap_p95_ms": 26.892959023825824,
+        "message_sha256": "5709743494b8042f2dac1ba5c26f361e0a86b5cc4d41beafce5f999c302decdf"
+      }
+    ]
+  },
+  "medians": {
+    "before": {
+      "tokens_per_second": 18.602132236716212,
+      "decode_tokens_per_second": 19.39045471865795,
+      "generation_latency_ms": 13761.863249994349,
+      "prefill_ms": 478.7760839681141,
+      "decode_ms": 6491.439329227433,
+      "time_to_first_token_ms": 561.3366670440882,
+      "server_text_ttft_ms": 7217.963000002783,
+      "client_wall_s": 13.80559441697551
+    },
+    "after": {
+      "tokens_per_second": 35.71271174411897,
+      "decode_tokens_per_second": 38.14425767905171,
+      "generation_latency_ms": 7168.315916031133,
+      "prefill_ms": 478.60195802059025,
+      "decode_ms": 6414.055451692548,
+      "time_to_first_token_ms": 483.00033301347867,
+      "server_text_ttft_ms": 3830.1450830185786,
+      "client_wall_s": 7.192917915992439
+    }
+  },
+  "response_messages_equal": true,
+  "baseline_source_commit": "e08fc1d",
+  "patched_pressure_sha256": "001d1b696159cc9d25158d1d1263e8843eee92fd4b9ec0566ff2a45dbe0e746d",
+  "source_comparison": "Only engine/pressure.py differs from the installed baseline production Python sources.",
+  "limitations": [
+    "Single short prompt, greedy generation capped at 256 tokens; not full-context or quality qualification.",
+    "Non-streaming HTTP requests; interactive Kilo tool execution and SSE delivery are not benchmarked.",
+    "Sequential baseline then patch; no randomized thermal/power crossover.",
+    "No matched llama.cpp run: user log has different prompts and Q4 KV."
+  ]
+}

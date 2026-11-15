@@ -41,26 +41,48 @@ def select_token(logits: Any, options: TextGenerationOptions, randomizer: random
         return int(mx.argmax(logits).item())
     probabilities = mx.softmax(logits / options.temperature, axis=-1)
     mx.eval(probabilities)
-    ranked = sorted(enumerate(probabilities.tolist()), key=lambda item: item[1], reverse=True)
+    # NumPy supports the float32 export; BF16 -> FP32 is exact and does not
+    # change the probabilities produced by the model's softmax.
+    return _sample_probabilities(probabilities.astype(mx.float32), options, randomizer)
+
+
+def _sample_probabilities(probabilities, options, randomizer):
+    """Vectorize ranking/CDF work while preserving the existing Python RNG.
+
+    Stable descending order retains token-ID order for ties. Float64 cumsum
+    matches the old sequential Python-float accumulation. Keep Python's sum
+    for normalizers: its rounding differs across supported Python versions,
+    so replacing it with NumPy's pairwise sum can change seeded boundaries.
+    """
+    import numpy as np
+
+    values = np.asarray(probabilities)
+    if values.dtype == np.float32:
+        bits = values.view(np.uint32)
+        if np.all((bits & 0xFFFF) == 0) and np.all(values >= 0):
+            # BF16 probabilities exported as FP32 have zero low mantissa bits.
+            # Their nonnegative IEEE encodings preserve numeric order. Stable
+            # uint16 ranking uses NumPy's bounded integer sort, avoiding a
+            # vocabulary-sized floating-point comparison sort. No rounding.
+            keys = (bits >> 16).astype(np.uint16)
+            keys[values == 0] = 0  # +0 and -0 must remain stable ties.
+            order = np.argsort(~keys, kind="stable")
+        else:
+            order = np.argsort(-values, kind="stable")
+    else:
+        order = np.argsort(-values, kind="stable")
+    weights = np.asarray(values, dtype=np.float64)
     if options.top_k is not None:
-        ranked = ranked[: options.top_k]
+        order = order[: options.top_k]
+    ranked = weights[order]
+    cumulative = np.cumsum(ranked, dtype=np.float64)
     if options.top_p < 1.0:
-        cutoff = options.top_p * sum(probability for _, probability in ranked)
-        selected: list[tuple[int, float]] = []
-        cumulative = 0.0
-        for item in ranked:
-            selected.append(item)
-            cumulative += item[1]
-            if cumulative >= cutoff:
-                break
-        ranked = selected
-    total = sum(value for _, value in ranked)
+        cutoff = options.top_p * sum(ranked.tolist())
+        count = min(int(np.searchsorted(cumulative, cutoff, side="left")) + 1, len(order))
+        order, ranked, cumulative = order[:count], ranked[:count], cumulative[:count]
+    total = sum(ranked.tolist())
     if not math.isfinite(total) or total <= 0:
         raise RuntimeError("sampling probabilities are invalid")
     threshold = randomizer.random() * total
-    cumulative = 0.0
-    for token, probability in ranked:
-        cumulative += probability
-        if threshold <= cumulative:
-            return int(token)
-    return int(ranked[-1][0])
+    index = min(int(np.searchsorted(cumulative, threshold, side="left")), len(order) - 1)
+    return int(order[index])

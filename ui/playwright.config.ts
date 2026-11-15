@@ -9,6 +9,7 @@ export default defineConfig({
   },
   webServer: {
     command: '../.venv/bin/python ../tests/e2e_fake_server.py',
+    env: { PYTHONPATH: '../src' },
     url: 'http://127.0.0.1:8199/health',
     reuseExistingServer: !process.env.CI,
     timeout: 20_000

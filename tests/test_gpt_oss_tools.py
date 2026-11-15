@@ -721,3 +721,37 @@ def test_checkpoint_layout_places_instructions_before_tools_in_one_developer_mes
     assert prompt.index("# Instructions") < prompt.index("Use coding tools carefully.")
     assert prompt.index("Use coding tools carefully.") < prompt.index("# Tools")
     assert prompt.index("# Tools") < prompt.index("<|start|>user")
+
+
+def test_sse_progress_keeps_hidden_generation_live_without_exposing_analysis():
+    from mlx_one.server.app import _sse
+
+    async def source():
+        yield GenerationEvent()
+        yield GenerationEvent(progress={"generated_tokens": 64, "phase": "reasoning",
+                                       "reasoning_tokens": 60})
+        yield GenerationEvent(finish_reason="length", metrics={"generated_tokens": 64,
+                                                             "reasoning_tokens": 60})
+
+    async def collect():
+        req = SimpleNamespace(is_disconnected=lambda: asyncio.sleep(0, result=False))
+        return [part async for part in _sse(req, source(), "id", 1, "model")]
+
+    parts = asyncio.run(collect())
+    events = [json.loads(part[6:]) for part in parts if part.startswith("data: {")]
+    progress = next(e for e in events if "mlx_progress" in e)
+    assert progress["mlx_progress"] == {"generated_tokens": 64, "phase": "reasoning",
+                                       "reasoning_tokens": 60}
+    assert not progress["choices"][0]["delta"].get("content")
+    assert events[-1]["choices"][0]["finish_reason"] == "length"
+    assert events[-1]["mlx"]["reasoning_tokens"] == 60
+    assert parts[-1] == "data: [DONE]\n\n"
+
+
+def test_no_tool_harmony_parser_counts_reasoning_and_streams_only_answer():
+    p = HarmonyToolParser(Tokenizer(), tools=[])
+    assert feed(p, '<|channel|>analysis<|message|>private reasoning') == ''
+    assert p.reasoning_tokens > 0
+    assert feed(p, '<|end|><|start|>assistant<|channel|>final<|message|>Hello') == 'Hello'
+    feed(p, '<|return|>')
+    assert p.finish('stop') == 'stop'

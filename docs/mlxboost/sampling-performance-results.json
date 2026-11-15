@@ -1,0 +1,156 @@
+{
+  "date": "2026-11-14",
+  "hardware": "Apple M4, 32 GiB",
+  "python": "3.13.4",
+  "mlx": "0.32.2",
+  "model": "gpt-oss-20b-MXFP4-Q4",
+  "runtime_revision": null,
+  "context_limit": 16384,
+  "cache": "bf16/bf16",
+  "parallel": 1,
+  "prefix_reuse": false,
+  "recipe": "gptoss_mlx_lm",
+  "request": {
+    "model": "gpt-oss-20b",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a Python function that checks whether a number is prime, then explain how it works."
+      }
+    ],
+    "tools": [],
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "seed": 0,
+    "max_tokens": 128
+  },
+  "baseline": "Original Python sorting sampler; earlier calibration-lookup fix already enabled.",
+  "baseline_excluded_runs": {
+    "1": "Overlapped separate tiny-array MLX sampler validation; use runs 2-4."
+  },
+  "source_sha256": {
+    "src/mlx_one/text/sampling.py": "f8c36615affc7f23ba41a90671706d44c8f7f2ee99699d78919d515248b5816f",
+    "src/mlx_one/engine/pressure.py": "001d1b696159cc9d25158d1d1263e8843eee92fd4b9ec0566ff2a45dbe0e746d"
+  },
+  "runs": {
+    "before": [
+      {
+        "run": 2,
+        "wall_s": 10.383138709003106,
+        "prompt_tokens": 85,
+        "generated_tokens": 128,
+        "tokens_per_second": 12.348667818738196,
+        "decode_tokens_per_second": 12.898229994672613,
+        "generation_latency_ms": 10365.49058399396,
+        "decode_ms": 3177.829706459306,
+        "time_to_first_token_ms": 519.0148749970831,
+        "message_sha256": "a63551fd22269a10512d391443b76326a1a742fb33453b4f870f38eeed9d2338"
+      },
+      {
+        "run": 3,
+        "wall_s": 10.450611916952766,
+        "prompt_tokens": 85,
+        "generated_tokens": 128,
+        "tokens_per_second": 12.268693298022523,
+        "decode_tokens_per_second": 12.814851613381549,
+        "generation_latency_ms": 10433.058915950824,
+        "decode_ms": 3191.648329840973,
+        "time_to_first_token_ms": 522.5229999632575,
+        "message_sha256": "a63551fd22269a10512d391443b76326a1a742fb33453b4f870f38eeed9d2338"
+      },
+      {
+        "run": 4,
+        "wall_s": 10.373760292015504,
+        "prompt_tokens": 85,
+        "generated_tokens": 128,
+        "tokens_per_second": 12.370505233468545,
+        "decode_tokens_per_second": 13.032197557701505,
+        "generation_latency_ms": 10347.19258302357,
+        "decode_ms": 3174.260497384239,
+        "time_to_first_token_ms": 601.9134580274113,
+        "message_sha256": "a63551fd22269a10512d391443b76326a1a742fb33453b4f870f38eeed9d2338"
+      }
+    ],
+    "after": [
+      {
+        "run": 1,
+        "wall_s": 4.604882124986034,
+        "prompt_tokens": 85,
+        "generated_tokens": 128,
+        "tokens_per_second": 27.976732538623676,
+        "decode_tokens_per_second": 31.453568789734952,
+        "generation_latency_ms": 4575.230499962345,
+        "decode_ms": 3275.978507124819,
+        "time_to_first_token_ms": 537.3504169983789,
+        "message_sha256": "a63551fd22269a10512d391443b76326a1a742fb33453b4f870f38eeed9d2338"
+      },
+      {
+        "run": 2,
+        "wall_s": 4.438762833015062,
+        "prompt_tokens": 85,
+        "generated_tokens": 128,
+        "tokens_per_second": 28.95383762237207,
+        "decode_tokens_per_second": 32.19095063591567,
+        "generation_latency_ms": 4420.830208051484,
+        "decode_ms": 3204.163331480231,
+        "time_to_first_token_ms": 475.49962502671406,
+        "message_sha256": "a63551fd22269a10512d391443b76326a1a742fb33453b4f870f38eeed9d2338"
+      },
+      {
+        "run": 3,
+        "wall_s": 4.384854124975391,
+        "prompt_tokens": 85,
+        "generated_tokens": 128,
+        "tokens_per_second": 29.307545136010553,
+        "decode_tokens_per_second": 32.857604166111535,
+        "generation_latency_ms": 4367.47599998489,
+        "decode_ms": 3125.689291919116,
+        "time_to_first_token_ms": 502.21133296145126,
+        "message_sha256": "a63551fd22269a10512d391443b76326a1a742fb33453b4f870f38eeed9d2338"
+      }
+    ]
+  },
+  "medians": {
+    "before": {
+      "tokens_per_second": 12.348667818738196,
+      "decode_tokens_per_second": 12.898229994672613,
+      "generation_latency_ms": 10365.49058399396,
+      "decode_ms": 3177.829706459306,
+      "time_to_first_token_ms": 522.5229999632575
+    },
+    "after": {
+      "tokens_per_second": 28.95383762237207,
+      "decode_tokens_per_second": 32.19095063591567,
+      "generation_latency_ms": 4420.830208051484,
+      "decode_ms": 3204.163331480231,
+      "time_to_first_token_ms": 502.21133296145126
+    }
+  },
+  "identical_response_message_hashes": true,
+  "long_request": {
+    "max_tokens": 512,
+    "prompt_tokens": 85,
+    "generated_tokens": 512,
+    "tokens_per_second": 31.906389478989762,
+    "decode_tokens_per_second": 32.90464904142614,
+    "generation_latency_ms": 16046.942582994234,
+    "decode_ms": 12595.732840825804,
+    "time_to_first_token_ms": 517.0289999805391
+  },
+  "validation": {
+    "cpu_regressions_passed": 192,
+    "sampler_unit_tests_included": 33,
+    "actual_mlx_seed_comparisons_passed": 30,
+    "dtypes": [
+      "float32",
+      "bfloat16"
+    ]
+  },
+  "limits": [
+    "Short fixed prompts; not a matched llama.cpp comparison or full-context qualification.",
+    "Non-streaming HTTP requests; not a full Kilo agent session.",
+    "Existing repetitive-output quality failure is unchanged.",
+    "Sequential before/after with no randomized thermal/power crossover.",
+    "Same seeded response messages on tested prompts do not prove arbitrary-model bitwise identity."
+  ]
+}

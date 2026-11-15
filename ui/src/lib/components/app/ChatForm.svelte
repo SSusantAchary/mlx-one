@@ -1,19 +1,26 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import {
-    ArrowUp, AudioLines, ChevronDown, FileAudio, MessageSquareText,
+    ArrowUp, AudioLines, FileAudio, MessageSquareText,
     Mic, Plus, Settings2, Square, X
   } from '@lucide/svelte';
 
+  import ContextUsage from './ContextUsage.svelte';
+  import ModelBadge from './ModelBadge.svelte';
+  import type { Message, ModelInfo } from '$lib/types/api';
+
   const MAX_RECORDING_SECONDS = 5 * 60;
   let {
-    busy, transcribing, transcriptionEnabled, model, value = $bindable(''),
+    busy, transcribing, transcriptionEnabled, model, modelInfo, messages = [], context = 0, value = $bindable(''),
     onsubmit, onstop, onaudio, oncanceltranscription, opensettings, opensystem, onerror
   } = $props<{
     busy: boolean;
     transcribing: boolean;
     transcriptionEnabled: boolean;
     model: string;
+    modelInfo?: ModelInfo["mlx"];
+    messages?: Message[];
+    context?: number;
     value?: string;
     onsubmit: (text: string) => void;
     onstop: () => void;
@@ -138,7 +145,7 @@
       {#if !recording && !transcribing}
         <button class="round mic" onclick={startRecording} disabled={!transcriptionEnabled || busy} aria-label="Record audio" title={transcriptionEnabled ? 'Record audio' : 'Start the server with --transcription-model to enable the microphone'}><Mic size={20} /></button>
       {/if}
-      <div class="model" title={model}><span>{model || 'No model'}</span><ChevronDown size={15} /></div>
+      <ContextUsage {messages} {context}/><button class="model" title={model} onclick={opensettings}><ModelBadge {model} info={modelInfo}/></button>
       {#if busy}<button class="send stop" onclick={onstop} aria-label="Stop generation"><Square size={16} fill="currentColor" /></button>{:else}<button class="send" onclick={send} aria-label="Send message" disabled={!value.trim() || transcribing || recording}><ArrowUp size={21} /></button>{/if}
     </div>
   </div>
@@ -149,5 +156,5 @@
 <style>
   .composer{position:relative;max-width:64rem;margin:0 auto;min-height:11rem;padding:1.3rem 1.35rem 1rem;border:1px solid var(--line);border-radius:2rem;background:var(--panel);box-shadow:0 20px 60px rgb(0 0 0 / 9%)}
   textarea{width:100%;min-height:5.8rem;max-height:13rem;resize:none;border:0;background:transparent;color:var(--ink);outline:none;font-size:1.08rem;line-height:1.5;padding:0}
-  .bar,.leading,.trailing{display:flex;align-items:center}.bar{justify-content:space-between;gap:.75rem}.leading,.trailing{gap:.55rem}.round,.send{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink)}.round:hover,.round.active{border-color:var(--accent);color:var(--accent)}button:disabled{opacity:.35;cursor:not-allowed}.send{border:0;background:var(--accent);color:#062417}.send.stop{background:#df665e;color:white}.mic{background:transparent}.model{height:2.6rem;max-width:19rem;display:flex;align-items:center;gap:.4rem;padding:0 .8rem;border:1px solid var(--line);border-radius:1rem;background:var(--bg);font-size:.8rem}.model span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.menu{position:absolute;z-index:10;left:1rem;bottom:4.5rem;width:min(21rem,calc(100vw - 3rem));padding:.45rem;border:1px solid var(--line);border-radius:1rem;background:var(--panel);box-shadow:0 22px 60px rgb(0 0 0 / 18%)}.menu button{width:100%;display:flex;align-items:flex-start;gap:.75rem;border:0;border-radius:.7rem;background:transparent;color:var(--ink);padding:.7rem;text-align:left}.menu button:hover{background:var(--accent2)}.menu span{display:grid;gap:.15rem}.menu small{color:var(--muted);font-size:.68rem}.file{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.recording-label,.transcribing{display:flex;align-items:center;gap:.45rem;color:var(--muted);font-size:.78rem}.recording-label i{width:.55rem;height:.55rem;border-radius:50%;background:#e6534b;animation:pulse 1s infinite}.danger{color:#d84e47}.record-stop,.cancel-text{border:0;border-radius:.7rem;padding:.6rem .75rem;background:var(--accent2);color:var(--ink);display:flex;align-items:center;gap:.4rem;font-size:.75rem}.cancel-text{background:transparent;color:var(--muted)}.hint{display:block;text-align:center;margin:.55rem;color:var(--muted);font-size:.7rem}@keyframes pulse{50%{opacity:.3}}@media(max-width:680px){.composer{min-height:9.5rem;border-radius:1.4rem}.model{max-width:8.5rem}.transcribing{font-size:0}.hint{display:none}}
+  .bar,.leading,.trailing{display:flex;align-items:center}.bar{justify-content:space-between;gap:.75rem}.leading,.trailing{gap:.55rem}.leading{flex-shrink:0}.trailing{flex:1;justify-content:flex-end;min-width:0}.round,.send{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink)}.round:hover,.round.active{border-color:var(--accent);color:var(--accent)}button:disabled{opacity:.35;cursor:not-allowed}.send{border:0;background:var(--ink);color:var(--bg)}.send.stop{background:#df665e;color:white}.mic{background:transparent}.model{min-width:0;flex:0 1 auto;height:2.6rem;max-width:19rem;display:flex;align-items:center;gap:.4rem;padding:0 .2rem;border:0;border-radius:1rem;background:transparent;font-size:.8rem}.menu{position:absolute;z-index:10;left:1rem;bottom:4.5rem;width:min(21rem,calc(100vw - 3rem));padding:.45rem;border:1px solid var(--line);border-radius:1rem;background:var(--panel);box-shadow:0 22px 60px rgb(0 0 0 / 18%)}.menu button{width:100%;display:flex;align-items:flex-start;gap:.75rem;border:0;border-radius:.7rem;background:transparent;color:var(--ink);padding:.7rem;text-align:left}.menu button:hover{background:var(--accent2)}.menu span{display:grid;gap:.15rem}.menu small{color:var(--muted);font-size:.68rem}.file{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.recording-label,.transcribing{display:flex;align-items:center;gap:.45rem;color:var(--muted);font-size:.78rem}.recording-label i{width:.55rem;height:.55rem;border-radius:50%;background:#e6534b;animation:pulse 1s infinite}.danger{color:#d84e47}.record-stop,.cancel-text{border:0;border-radius:.7rem;padding:.6rem .75rem;background:var(--accent2);color:var(--ink);display:flex;align-items:center;gap:.4rem;font-size:.75rem}.cancel-text{background:transparent;color:var(--muted)}.hint{display:block;text-align:center;margin:.55rem;color:var(--muted);font-size:.7rem}@keyframes pulse{50%{opacity:.3}}@media(max-width:680px){.composer{min-height:9.5rem;border-radius:1.4rem}.model{max-width:8.5rem}.transcribing{font-size:0}.hint{display:none}}
 </style>

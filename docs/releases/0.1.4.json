@@ -1,0 +1,59 @@
+{
+  "schema_version": "mlx-one-release-decision-v1",
+  "version": "0.1.4",
+  "release_approval": "PREPARATION_AUTHORIZED",
+  "preparation_date": "2026-11-15",
+  "approval_source": "Maintainer requested local changes, Git push steps and PyPI preparation for v0.1.4.",
+  "publication_status": "PREPARED",
+  "published": false,
+  "target_install_version": "0.1.4",
+  "registered_model_types": 45,
+  "checkpoint_profile_count": 50,
+  "support_catalogs": [
+    {
+      "path": "src/mlx_one/data/model_support_release_20261108.json",
+      "sha256": "4ffe7cb6a4865f2904504ae6df1517b8a11d7a24864271880e6fd3fdea33cdcf"
+    },
+    {
+      "path": "src/mlx_one/data/batch_1_sub_6b.json",
+      "sha256": "d3205d7605adda8e23bc940e47232a02ba6e79fcd0acfe9f865ee069b1e01cf2"
+    }
+  ],
+  "qualification_results": {
+    "path": "docs/qualification/batch-1-sub-6b/results.json",
+    "sha256": "a8c6a2eee02f7030f1d3c59bf9d25db6809fed219dbdce6050b8dff38456f14f"
+  },
+  "source_base_commit": "180556f",
+  "scope": "Serving, sampling, UI and documentation maintenance; no new model admissions. Existing checkpoint-specific support catalogs are retained.",
+  "performance_evidence": [
+    "docs/mlxboost/serving-overhead-results.json",
+    "docs/mlxboost/sampling-performance-results.json",
+    "docs/mlxboost/long-response-results.json"
+  ],
+  "limitations": [
+    "MLXBoost remains opt-in and profile-specific.",
+    "Sustained long-response throughput remains variable; no sustained 30+ tok/s claim.",
+    "Full 128K HTTP/tool workflows remain unqualified.",
+    "Historical model results are reused for their recorded scopes, not relabeled as fresh 0.1.4 tests."
+  ],
+  "github_release": {
+    "tag_name": "v0.1.4",
+    "publication_status": "PENDING",
+    "notes": "docs/releases/0.1.4-github.md"
+  },
+  "artifacts": [
+    {
+      "filename": "mlx_one-0.1.4-py3-none-any.whl",
+      "sha256": "b4bd589d8402de96128a976c193476542bf633d536aa342cdb6a6dd8c2533077",
+      "bytes": 2411993,
+      "status": "PASS"
+    },
+    {
+      "filename": "mlx_one-0.1.4.tar.gz",
+      "sha256": "cce2fc0ac844eb5d0a4bb70e5798ef5d21da7217c889ac827a9fd415e0ebf439",
+      "bytes": 2207814,
+      "status": "PASS"
+    }
+  ],
+  "validation_record": "docs/releases/0.1.4-validation.json"
+}

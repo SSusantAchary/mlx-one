@@ -4,6 +4,57 @@ All notable changes to mlx-one are documented here. The project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reaches 1.0;
 alpha releases may refine planned interfaces.
 
+## 0.1.4 — prepared 2026-11-15
+
+- Refresh the three-bar logo and architecture artwork; place Architecture after
+  Why MLX-One in the README and website. Prepare package metadata and local
+  distributions; publication remains a maintainer action.
+
+- Raise the context-bounded GPT-OSS UI output recommendation to 8192 tokens;
+  coalesce streamed text rendering without dropping the final tail.
+- Avoid redundant full-history single-query masks in the opt-in GPT-OSS
+  source-aligned recipe. Keep sliding attention and unsupported layouts on
+  reference execution. Record a fixed-request improvement from 19.38 to 28.91
+  decode tok/s; sustained long UI responses remain unresolved at about 15.4 tok/s.
+
+- Use low-reasoning-effort UI defaults for GPT-OSS coding requests while
+  preserving explicit user output limits. Expose GPT-OSS
+  reasoning effort separately from generic thinking-marker controls. Verify
+  the previously blank FastAPI prompt produces visible code and stops normally.
+
+- Fix blank/stalled-looking GPT-OSS streams by applying token-aware Harmony
+  parsing to ordinary chat as well as tool requests, counting hidden reasoning,
+  and emitting throttled SSE progress metadata. Add visible generation status,
+  output-limit notices and context-bounded retry with more tokens. Preserve
+  partial output on interruption and report incomplete streams explicitly.
+
+- Redesign the bundled chat workspace with a dark sidebar, session tabs/history
+  and search, per-message edit/regenerate/branch/delete controls, backend model
+  badges, per-turn timing snapshots and a context-usage popover. Preserve audio
+  and streaming workflows; distinguish decode/overall throughput and explicitly
+  indicate that MCP management is unavailable. Rebuild packaged static assets.
+
+- Preserve bidirectional actor forward requests through the runtime logging
+  wrapper so batched HTTP generation and prefix isolation continue working.
+
+- Add elapsed, terminal-colored serving lifecycle and request timing logs, with
+  slot/task IDs, rate-limited decode progress, separate model/visible TTFT,
+  cache/context/memory summaries and interrupted/failure status. Add
+  `--log-level` and `--log-progress-interval`; honor `NO_COLOR`.
+
+- Vectorize nonzero-temperature sampling with stable ranking and CDF selection;
+  use exact BF16 integer-key ranking when applicable. Preserve Python RNG,
+  normalization, top-k/top-p ordering and the greedy path. On a matched M4 test,
+  median temperature-0.7 decode throughput increased from 12.90 to 32.19 tok/s,
+  with identical response messages. See the sampling performance evidence.
+
+- Skip activation-calibration identity/report construction when no activation-peak
+  candidate exists, including GPT-OSS MLXBoost serving. Live registry additions
+  still trigger full validation; analytical memory forecasts and admission checks
+  remain active. On a fixed 88-input/256-output request (three runs, M4 32 GiB),
+  median decode throughput increased from 19.39 to 38.14 tok/s, with identical
+  response messages. See `docs/mlxboost/serving-overhead.md` for protocol limits.
+
 ## 0.1.3
 
 - Integrate opt-in GPT-OSS-20B MXFP4/Q4 MLXBoost dispatch and bounded prefill
@@ -13,8 +64,6 @@ alpha releases may refine planned interfaces.
 - Preserve current main's 0.1.2 model workflows and package license notices.
 - GPT-OSS acceleration defaults remain off; 128K Kilo agent workflows need
   end-to-end validation. Historical benchmark results are not new release tests.
-
-## Unreleased
 
 ### 0.1.2 — published 2026-11-11
 

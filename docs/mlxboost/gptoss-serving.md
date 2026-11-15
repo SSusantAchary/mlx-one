@@ -1,6 +1,6 @@
 # Serve GPT-OSS-20B from the main checkout
 
-The GPT-OSS MLXBoost implementation is a feature inside `mlx-one` 0.1.3, not
+The GPT-OSS MLXBoost implementation is a feature inside `mlx-one` 0.1.4, not
 a separate accelerator package. Install from Git in your already activated
 `mlx` environment after these changes have been pushed and merged to `main`:
 
@@ -16,11 +16,11 @@ For later updates, run `mlx-one upgrade`. Preview with `mlx-one upgrade --dry-ru
 use `--ref` for a pushed branch or commit. Local unpushed changes are not included
 in a Git installation. See [all upgrade options](../getting-started.md#upgrade-from-git).
 
-The package, Python API and CLI identify as 0.1.3. The feature uses the existing
-pinned MLX/Metal 0.32.2 pairing. Once 0.1.3 is published, install it with:
+The package, Python API and CLI identify as 0.1.4. The feature uses the existing
+pinned MLX/Metal 0.32.2 pairing. Once 0.1.4 is published, install it with:
 
 ```bash
-python -m pip install --upgrade "mlx-one[server]==0.1.3"
+python -m pip install --upgrade "mlx-one[server]==0.1.4"
 ```
 
 Python configuration uses the normal package API:
