@@ -1,7 +1,7 @@
 <!-- Generated from README.md by scripts/release/pypi_readme.py. -->
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx-one.png" alt="mlx-one" width="1000">
+  <img src="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx-one.png" alt="mlx-one black and orange logo" width="1000">
 </p>
 
 <h1 align="center">mlx-one</h1>
@@ -17,7 +17,7 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
   <a href="https://github.com/SSusantAchary/mlx-one/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
-  <a href="https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.4.md"><img src="https://img.shields.io/badge/release-0.1.4%20prepared-15845d" alt="0.1.4 prepared; publication pending"></a>
+  <a href="https://pypi.org/project/mlx-one/0.1.4/"><img src="https://img.shields.io/badge/PyPI-0.1.4-15845d" alt="0.1.4 published on PyPI"></a>
 </p>
 
 [**Quick Start**](#quick-start) | [**Performance**](#model-performance) · [VLM](#vision-language-model-performance) · [Audio](#audio-model-performance) · [OCR](#ocr-model-performance) | [**Models**](#supported-modalities-and-models) | [**Architecture**](#architecture) | [**APIs**](#python-cli-and-http-apis) | [**Documentation**](#documentation)
@@ -167,7 +167,7 @@ Task availability varies by checkpoint and interface. See the
 
 ## Version 0.1.4
 
-**Prepared for maintainer publication; not uploaded by this checkout.** This
+**Published on PyPI on 15 November 2026.** This
 release refreshes the chat workspace, adds serving progress/timing logs, fixes
 GPT-OSS reasoning-only streams and recommends an 8192-token output budget with
 low reasoning effort when context allows. Explicit user limits are preserved.
@@ -179,7 +179,7 @@ are not qualified by these short-context measurements.
 [Measured results and limits](https://github.com/SSusantAchary/mlx-one/blob/main/docs/mlxboost/serving-overhead.md) ·
 [Push and PyPI publication steps](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.4-pypi.md).
 
-After publication:
+Install the published release:
 
 ```bash
 python -m pip install --upgrade "mlx-one[server]==0.1.4"
@@ -198,7 +198,7 @@ version. From a checkout of the current source, install the task dependencies:
 python -m pip install -e '.[server,vision,kokoro]'
 ```
 
-After maintainer publication, install or upgrade to 0.1.4:
+Install or upgrade to the published 0.1.4 release:
 
 ```bash
 python -m pip install --upgrade "mlx-one==0.1.4"

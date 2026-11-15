@@ -66,8 +66,8 @@ automatically get pages and search entries; the canonical model index remains
 their navigation entry point.
 
 The homepage and model workflow guide install from the current source checkout.
-Current package installation examples target `0.1.4` after publication; its
-release record currently says PREPARED. Historical records retain published
+Current package installation examples target `0.1.4` from PyPI; its
+release record includes verified uploaded checksums. Historical records retain published
 artifact identities. Version `0.1.1`
 remains a dated release cohort. Historical measurements keep their original version
 and workload identities. `README.pypi.md` is generated from the main README with
@@ -124,7 +124,7 @@ execution is needed to generate the dashboard data.
 The primary explorer shows 50 verified checkpoint profiles covering 45 distinct
 architecture types. Availability labels distinguish the 40-type approved 0.1.1
 cohort from ten additional checkpoint profiles. Both were included in the published `0.1.2` model release and are retained
-in the prepared `0.1.4` maintenance candidate; upload is pending. BERT and XLM-R checkpoint variants count once per type.
+in the published `0.1.4` maintenance release. BERT and XLM-R checkpoint variants count once per type.
 The public workflow guide is staged under `models/workflows/`; archived evidence
 paths retain their original identities. The historical explorer
 retains the older checkpoint/task/precision profiles and unique pinned revisions;

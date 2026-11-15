@@ -85,8 +85,8 @@ nav = [
 
 [project.theme]
 language = "en"
-logo = "assets/brand/mark.png"
-favicon = "assets/brand/mark.png"
+logo = "assets/brand/mark-orange.png"
+favicon = "assets/brand/mark-orange.png"
 features = [
   "content.code.copy",
   "navigation.footer",

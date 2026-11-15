@@ -155,9 +155,9 @@ class DatasetTests(unittest.TestCase):
         support = self.data['support']
         release = support['current_release']
         self.assertEqual(release['version'], '0.1.4')
-        self.assertEqual(release['release_approval'], 'PREPARATION_AUTHORIZED')
-        self.assertFalse(release['published'])
-        self.assertTrue(all('upload pending' in row['availability'] for row in support['models']))
+        self.assertEqual(release['release_approval'], 'APPROVED')
+        self.assertTrue(release['published'])
+        self.assertTrue(all(row['availability'] == 'Available in 0.1.4' for row in support['models']))
         self.assertEqual(release['registered_model_types'], support['supported'])
         self.assertEqual(release['checkpoint_profile_count'], len(support['models']))
         for row in support['models']:

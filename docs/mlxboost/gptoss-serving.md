@@ -17,7 +17,7 @@ use `--ref` for a pushed branch or commit. Local unpushed changes are not includ
 in a Git installation. See [all upgrade options](../getting-started.md#upgrade-from-git).
 
 The package, Python API and CLI identify as 0.1.4. The feature uses the existing
-pinned MLX/Metal 0.32.2 pairing. Once 0.1.4 is published, install it with:
+pinned MLX/Metal 0.32.2 pairing. Install the published 0.1.4 runtime with:
 
 ```bash
 python -m pip install --upgrade "mlx-one[server]==0.1.4"

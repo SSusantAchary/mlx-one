@@ -15,7 +15,7 @@ on:
       - mlx-one_arch-visible-borders.png
       - pyproject.toml
       - mlx_One_chat_ui.png
-      - ui/static/mlx-one-logo.png
+      - ui/static/mlx-one-mark.png
       - src/mlx_one/models/**/README.md
       - src/mlx_one/data/**
       - benchmarks/audio/checkpoints.json
@@ -36,7 +36,7 @@ on:
       - mlx-one_arch-visible-borders.png
       - pyproject.toml
       - mlx_One_chat_ui.png
-      - ui/static/mlx-one-logo.png
+      - ui/static/mlx-one-mark.png
       - src/mlx_one/models/**/README.md
       - src/mlx_one/data/**
       - benchmarks/audio/checkpoints.json

@@ -4,7 +4,16 @@ All notable changes to mlx-one are documented here. The project follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reaches 1.0;
 alpha releases may refine planned interfaces.
 
-## 0.1.4 — prepared 2026-11-15
+## Unreleased
+
+- Replace the wordmark with the maintainer-supplied black-and-orange design;
+  derive a compact mark for the chat UI, documentation header and favicon.
+  Preserve the uploaded wordmark exactly and the historical tagged assets.
+- Verify PyPI 0.1.4 publication against both recorded artifact hashes and update
+  README/site/release status. Keep the existing v0.1.4 tag and distributions
+  unchanged; the new bundled icon is a subsequent Git change.
+
+## 0.1.4 — published 2026-11-15
 
 - Refresh the three-bar logo and architecture artwork; place Architecture after
   Why MLX-One in the README and website. Prepare package metadata and local

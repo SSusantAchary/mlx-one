@@ -2,7 +2,7 @@
 
 ## Version 0.1.4 installation and upgrades
 
-After publication, install in your active `mlx` Python environment:
+Install the published 0.1.4 release in your active `mlx` Python environment:
 
 ```bash
 python -m pip install --upgrade "mlx-one[server]==0.1.4"
@@ -46,7 +46,7 @@ or the [source setup](#source-installation-for-development) for development.
 
 ### Install from PyPI
 
-After publication, install or upgrade to 0.1.4:
+Install or upgrade to the published 0.1.4 release:
 
 ```bash
 python -m pip install --upgrade "mlx-one==0.1.4"
@@ -62,7 +62,7 @@ mlx-one registry list
 
 The [0.1.4 release notes](releases/0.1.4.md) describe this candidate. Its
 [publication handoff](releases/0.1.4-pypi.md) records build and upload steps;
-publication is pending. Historical 0.1.2 model evidence remains dated. Model weights are
+the uploaded 0.1.4 file checksums have been verified. Historical 0.1.2 model evidence remains dated. Model weights are
 acquired separately under their publishers' terms.
 
 ### Source installation for development

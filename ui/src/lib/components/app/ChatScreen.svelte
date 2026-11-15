@@ -200,7 +200,7 @@
 <div class="shell" class:empty={!$messages.length}>
   {#if drawerOpen || sidebarOpen}<button class="backdrop" onclick={() => { closePanel(); sidebarOpen = false; }} aria-label="Close panel"></button>{/if}
   <aside class="navigation" class:open={sidebarOpen} aria-label="Main navigation" inert={drawerOpen || (viewportWidth <= 650 && !sidebarOpen)}>
-    <div class="brand"><img src={`${base}/mlx-one-logo.png`} alt=""/><strong>mlx-one</strong><small>LOCAL</small><button class="icon-button mobile-close" aria-label="Close navigation" onclick={() => sidebarOpen = false}><X size={16}/></button></div>
+    <div class="brand"><img src={`${base}/mlx-one-mark.png`} alt=""/><strong>mlx-one</strong><small>LOCAL</small><button class="icon-button mobile-close" aria-label="Close navigation" onclick={() => sidebarOpen = false}><X size={16}/></button></div>
     <nav>
       <button onclick={() => newChat()} disabled={$streaming || transcribing}><SquarePen size={19}/> New chat</button>
       <button onclick={() => searching = !searching} aria-expanded={searching}><Search size={19}/> Search</button>
