@@ -1,0 +1,39 @@
+[
+  {
+    "binary": "_ext.cpython-312-darwin.so",
+    "architecture": "arm64",
+    "rpaths": [
+      "@loader_path",
+      "@loader_path/../../../mlx/lib"
+    ],
+    "dependencies": [
+      "@rpath/libmlxboost_ops.dylib",
+      "@rpath/libmlx.dylib",
+      "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+      "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+      "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+      "/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib"
+    ]
+  },
+  {
+    "binary": "libmlxboost_ops.dylib",
+    "architecture": "arm64",
+    "rpaths": [
+      "@loader_path",
+      "@loader_path/../../../mlx/lib"
+    ],
+    "dependencies": [
+      "@rpath/libmlxboost_ops.dylib",
+      "@rpath/libmlx.dylib",
+      "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+      "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+      "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+      "/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib",
+      "/usr/lib/libobjc.A.dylib"
+    ]
+  }
+]

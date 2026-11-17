@@ -1,0 +1,17 @@
+{
+  "eager_mlx_import": false,
+  "flavor": "standard",
+  "installed_from_wheel": true,
+  "opt_in_fallback": "extension_unavailable",
+  "reference_smoke": "PASS",
+  "status": {
+    "binary_path": null,
+    "installed": false,
+    "loadable": false,
+    "metal_available": null,
+    "mlx_version": "0.32.2",
+    "reason": "extension_unavailable"
+  },
+  "strict_missing_extension": "PASS",
+  "version": "0.1.2"
+}

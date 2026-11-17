@@ -8,7 +8,7 @@ release gate. No status or acceptance threshold changes with this reorganization
 | Area | Evidence and investigations |
 | --- | --- |
 | Native tasks | [Text, VLM, audio, OCR, retrieval, segmentation and added task profiles](native-tasks.md) |
-| MLXBoost | [Optional host optimization, measurements, regressions and proposals](mlxboost.md) |
+| MLXBoost | [Optional host optimization, measurements, regressions and proposals](mlxboost.md); [kernel performance scorecard](mlxboost-performance-scorecard.md) |
 | Inference runtime | [Caches, prefix reuse, attention, memory, scheduling and context experiments](inference-runtime.md) |
 | Blockers | [Known limitations by model, runtime, modality and deployment](known-limitations.md) |
 | Checkpoints | [Authoritative inventory](../benchmarks/inventory.md), [model index](../models/index.md) |

@@ -1,0 +1,23 @@
+{
+  "format": "Metal GPU trace bundle",
+  "path": "local/mlxboost-phase0/resume/axpby.gputrace",
+  "gui_readability": "not opened in Xcode GUI",
+  "files": {
+    "417248857E2D1BD0": {
+      "bytes": 135842224,
+      "sha256": "2d2e729831a995a39778164c93ea1b2e8d87f7d8b1e717386d3d816f46f416b2"
+    },
+    "index": {
+      "bytes": 13339,
+      "sha256": "5410d7725befc405d79c058fd527d029b00d15fe9b1c4009401d8396518b5f20"
+    },
+    "metadata": {
+      "bytes": 1136,
+      "sha256": "a0fc07627447ef48ef7af455e5db770a3da130e7dc030fd0ea1e321322caa1c9"
+    },
+    "store0": {
+      "bytes": 16588,
+      "sha256": "72e182ff730e94af774eb06d119b4cf27934b35c152dd3167928231b29c1d68e"
+    }
+  }
+}

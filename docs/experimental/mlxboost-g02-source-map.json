@@ -1,0 +1,726 @@
+{
+  "schema_version": 1,
+  "milestone": "G02 DESIGN ONLY",
+  "implementation_status": "NOT IMPLEMENTED / NOT ACTIVATED",
+  "qualification_status": "No G02 GPU, numerical, dispatch, model or wheel qualification performed",
+  "audit_date": "2026-11-15",
+  "repository_head": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+  "working_tree_note": "File hashes identify actually inspected bytes in dirty shared tree; HEAD is not assertion bytes are committed",
+  "local_model_sources": [
+    {
+      "local_path": "src/mlx_one/models/shared/reference_activations.py",
+      "sha256": "84096c1c794ef02c7ce740cd40cdb2677e6e12dd1ddef6eb46907aa5c1da6d45",
+      "line_count": 20,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 20
+        }
+      ],
+      "role": "Compiled standard and precise FP32 contracts"
+    },
+    {
+      "local_path": "src/mlx_one/models/shared/reference_math.py",
+      "sha256": "d305e4cf6020703002074419687fc86fd1bf0eef49d9035018e32de5a02ed890",
+      "line_count": 112,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 23
+        }
+      ],
+      "role": "Lazy compiled helper delegation"
+    },
+    {
+      "local_path": "src/mlx_one/models/shared/transformer.py",
+      "sha256": "60fb5d9f59459059f2777788d33928a708784944f47a8e0a09df61a9926c1889",
+      "line_count": 296,
+      "inspected_line_spans": [
+        {
+          "start": 232,
+          "end": 245
+        }
+      ],
+      "role": "Alternate policy-aware projection path"
+    },
+    {
+      "local_path": "src/mlx_one/models/shared/sparse.py",
+      "sha256": "672b2e2291059724be5536df40d9e8b98a424f5e4cf0ea814e76f6bd29de85f4",
+      "line_count": 80,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 80
+        }
+      ],
+      "role": "Selected experts and distinct GPT-OSS activation"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/qwen2/reference_math.py",
+      "sha256": "d892918ee021e14cdc841a1388abeb15332aee4d39f6bb8ad58ffd6c41d34b56",
+      "line_count": 122,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 25
+        },
+        {
+          "start": 89,
+          "end": 122
+        }
+      ],
+      "role": "Qwen2/2.5 graph"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/qwen3/reference_math.py",
+      "sha256": "2d9884c49ae0870c9b40b7d2109346f7507989c7d19f0895a79841f1b6a2794d",
+      "line_count": 123,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 25
+        },
+        {
+          "start": 90,
+          "end": 123
+        }
+      ],
+      "role": "Qwen3 public graph"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/qwen3/upstream_math.py",
+      "sha256": "220bd74d0a6a0ebfb4f1a132fb51694102c09916698a440c68b4cc59e0be36c2",
+      "line_count": 49,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 22
+        }
+      ],
+      "role": "Distinct header-recorded MLX-LM v0.31.3 compiled helper"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/qwen3/upstream_model.py",
+      "sha256": "6aa393c3af91aade8793cc6b509b9a31a9e8b6025c1d66c7a28a53703828c09e",
+      "line_count": 183,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 23
+        },
+        {
+          "start": 69,
+          "end": 100
+        }
+      ],
+      "role": "Qwen3 upstream candidate graph"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/llama/reference_math.py",
+      "sha256": "2d5cc8b0790216559d88d95adae4e02c89ce5bb09e155cbd9b34ba45bcc2e7b3",
+      "line_count": 136,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 25
+        },
+        {
+          "start": 102,
+          "end": 136
+        }
+      ],
+      "role": "Llama bias and graph"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/llama/config.py",
+      "sha256": "d3358617ce8cc5b385e6cc88b76891d716b4452c279df5a67eec1031c512702a",
+      "line_count": 130,
+      "inspected_line_spans": [
+        {
+          "start": 23,
+          "end": 35
+        },
+        {
+          "start": 65,
+          "end": 74
+        }
+      ],
+      "role": "Llama silu guard"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/lfm2/reference_math.py",
+      "sha256": "a2f942f9ca29d0c86d697a0902cc7728617f058a71335c04fb3639bc1e125670",
+      "line_count": 179,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 18
+        },
+        {
+          "start": 114,
+          "end": 179
+        }
+      ],
+      "role": "LFM2 width and graph"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/lfm2/config.py",
+      "sha256": "558f7f587953ba3d1806c96dbf6d0781bc7b9467eae85841a9515692248429d4",
+      "line_count": 155,
+      "inspected_line_spans": [
+        {
+          "start": 23,
+          "end": 35
+        },
+        {
+          "start": 66,
+          "end": 80
+        }
+      ],
+      "role": "LFM2 guard"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/gemma3/model.py",
+      "sha256": "cbdb97fb89e4f64cecaa9c90808ccedfb7af8af7daae3b86330882646d3de190",
+      "line_count": 183,
+      "inspected_line_spans": [
+        {
+          "start": 107,
+          "end": 138
+        }
+      ],
+      "role": "Gemma GELU exclusion"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/gemma3/config.py",
+      "sha256": "5b7dba2e460cedf603bac085f164fb672b2bcf9218fa3e1c4046a2e6b4e50a5e",
+      "line_count": 109,
+      "inspected_line_spans": [
+        {
+          "start": 17,
+          "end": 34
+        },
+        {
+          "start": 56,
+          "end": 67
+        }
+      ],
+      "role": "Gemma tanh GELU config"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/gpt_oss/model.py",
+      "sha256": "cb71b7f868361b8aea397bca9ff4e0159697c0699fdc421e12d64826b75854a5",
+      "line_count": 242,
+      "inspected_line_spans": [
+        {
+          "start": 123,
+          "end": 155
+        }
+      ],
+      "role": "GPT-OSS routing and experts"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/gpt_oss/config.py",
+      "sha256": "11361ddc44f7ad8c9430274d42665339979ab58b1d04120f29aa60ab17d9ae37",
+      "line_count": 182,
+      "inspected_line_spans": [
+        {
+          "start": 21,
+          "end": 36
+        },
+        {
+          "start": 65,
+          "end": 81
+        }
+      ],
+      "role": "GPT-OSS limits"
+    },
+    {
+      "local_path": "src/mlx_one/models/language/gpt_oss/weights.py",
+      "sha256": "22933debbdc74218aeea1ae7b110431e6a1187a6c9afc93d1175fef8d301f807",
+      "line_count": 74,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 42
+        }
+      ],
+      "role": "Interleaved checkpoint split"
+    },
+    {
+      "local_path": "src/mlx_one/mlxboost/gptoss_kernels.py",
+      "sha256": "bfd6475b04f8ce60443475a1ba7a31a2ca1225974bd191f362fcb8f5a4bdb3b7",
+      "line_count": 270,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 39
+        },
+        {
+          "start": 201,
+          "end": 235
+        }
+      ],
+      "role": "Existing separate GPT-OSS experiment"
+    },
+    {
+      "local_path": "src/mlx_one/mlxboost/g03/schemas.py",
+      "sha256": "13f60e63b3fe32bffe81b78b90910e56f7fded1abab03b2b17debb0d70bfe1e8",
+      "line_count": 166,
+      "inspected_line_spans": [
+        {
+          "start": 1,
+          "end": 14
+        }
+      ],
+      "role": "G03 tolerance identity, not blanket G02 policy"
+    }
+  ],
+  "upstream_sources": [
+    {
+      "repository": "https://github.com/ml-explore/mlx-lm",
+      "revision": "93e6d4a6447b3080861985947f0820e76fcb957d",
+      "revision_provenance": "Existing local/mlxboost/sources/sources.json capture; hashes computed here",
+      "license": "MIT",
+      "files": [
+        {
+          "local_path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/activations.py",
+          "sha256": "6f7d756897deb322af4fe98e040df76e9358a91d76521e51f14d734fdd0fb05f",
+          "line_count": 70,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 34
+            }
+          ],
+          "role": "Standard, precise and OpenAI helpers",
+          "upstream_path": "mlx_lm/models/activations.py",
+          "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/activations.py"
+        },
+        {
+          "local_path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/qwen2.py",
+          "sha256": "937e0321ef06a34efbd66d2ce0ce1e715aab98da4acefa376c8cd29291a0bc83",
+          "line_count": 239,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 24
+            },
+            {
+              "start": 88,
+              "end": 101
+            }
+          ],
+          "role": "Pinned Qwen2 projection graph",
+          "upstream_path": "mlx_lm/models/qwen2.py",
+          "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/qwen2.py"
+        },
+        {
+          "local_path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/qwen3.py",
+          "sha256": "7e29b7055d8e526a0ede6e2740a3038ad24d0cef6a1abb446c411d3fbd0efa2d",
+          "line_count": 234,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 24
+            },
+            {
+              "start": 88,
+              "end": 101
+            }
+          ],
+          "role": "Pinned Qwen3 projection graph",
+          "upstream_path": "mlx_lm/models/qwen3.py",
+          "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/qwen3.py"
+        },
+        {
+          "local_path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/llama.py",
+          "sha256": "dfb656511e6740781cd0563f7994a78b3404c199b9aebaa2fbca28a19e280891",
+          "line_count": 274,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 25
+            },
+            {
+              "start": 100,
+              "end": 116
+            }
+          ],
+          "role": "Pinned Llama projection graph",
+          "upstream_path": "mlx_lm/models/llama.py",
+          "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/llama.py"
+        },
+        {
+          "local_path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/lfm2.py",
+          "sha256": "558dcbec61442b1f7216c0122d08d44083ea71d1510be23f4f934e62b0f71376",
+          "line_count": 324,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 25
+            },
+            {
+              "start": 114,
+              "end": 139
+            }
+          ],
+          "role": "Pinned LFM2 projection graph",
+          "upstream_path": "mlx_lm/models/lfm2.py",
+          "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/lfm2.py"
+        },
+        {
+          "local_path": "local/mlxboost/sources/mlx_lm/captured/LICENSE",
+          "sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+          "line_count": 21,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 21
+            }
+          ],
+          "role": "MLX-LM MIT notice",
+          "upstream_path": "LICENSE",
+          "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/LICENSE"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/ml-explore/mlx",
+      "revision": "v0.32.2",
+      "revision_provenance": "Phase 0 exact-tag capture and manifest; no new commit resolution",
+      "license": "MIT",
+      "files": [
+        {
+          "local_path": "/tmp/mlxboost-phase0-references/mlx/examples/extensions/CMakeLists.txt",
+          "sha256": "661b015ba23c500f5567038801fdb83cae2c24ded125074b00ea92c926c23635",
+          "line_count": 78,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 78
+            }
+          ],
+          "role": "Existing optional build conventions",
+          "upstream_path": "examples/extensions/CMakeLists.txt",
+          "upstream_url": "https://github.com/ml-explore/mlx/blob/v0.32.2/examples/extensions/CMakeLists.txt"
+        },
+        {
+          "local_path": "/tmp/mlxboost-phase0-references/mlx/examples/extensions/bindings.cpp",
+          "sha256": "ea664308e50f62e4b5a1127b73fa942363b150ba109d91474ed6e5e73a8309d4",
+          "line_count": 39,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 39
+            }
+          ],
+          "role": "MLX nanobind module conventions",
+          "upstream_path": "examples/extensions/bindings.cpp",
+          "upstream_url": "https://github.com/ml-explore/mlx/blob/v0.32.2/examples/extensions/bindings.cpp"
+        },
+        {
+          "local_path": "/tmp/mlxboost-phase0-references/mlx/LICENSE",
+          "sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+          "line_count": 21,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 21
+            }
+          ],
+          "role": "MLX MIT notice",
+          "upstream_path": "LICENSE",
+          "upstream_url": "https://github.com/ml-explore/mlx/blob/v0.32.2/LICENSE"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/Hmbown/ZMLX",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "revision_provenance": "Parent approved exact-revision capture and Phase 0 selector; hashes computed here",
+      "license": "MIT",
+      "files": [
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/kernels/transformer.py",
+          "sha256": "15c50a43a989f8ff7ec5ff730afdb1f9655042e55a7ad4fd9b71c75f830b63a3",
+          "line_count": 1311,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 123
+            },
+            {
+              "start": 882,
+              "end": 1009
+            }
+          ],
+          "role": "Concatenated/separate SwiGLU forward, VJP, discovered-kernel registry",
+          "upstream_path": "src/zmlx/kernels/transformer.py",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/kernels/transformer.py"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/patch/patterns/swiglu_mlp.py",
+          "sha256": "8fce362e12c358ef0382ef5e1630183d2ad2ebee096427b3c2d3e7b5387f575a",
+          "line_count": 333,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 62
+            },
+            {
+              "start": 111,
+              "end": 137
+            },
+            {
+              "start": 150,
+              "end": 324
+            }
+          ],
+          "role": "Structural detection and optional quant branches",
+          "upstream_path": "src/zmlx/patch/patterns/swiglu_mlp.py",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/patch/patterns/swiglu_mlp.py"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/msl.py",
+          "sha256": "28b7421767c1e5d54f63d35f8b93f0e5c6c2570c295206c40bf5e250454f8421",
+          "line_count": 70,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 38
+            }
+          ],
+          "role": "T-valued sigmoid helper; not blanket FP32",
+          "upstream_path": "src/zmlx/msl.py",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/msl.py"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/metal.py",
+          "sha256": "1381ba983971eb2aa6a2d42c85e19dbd531ff8b6d294718638e643cede9c16ee",
+          "line_count": 424,
+          "inspected_line_spans": [
+            {
+              "start": 59,
+              "end": 89
+            },
+            {
+              "start": 113,
+              "end": 150
+            },
+            {
+              "start": 211,
+              "end": 360
+            },
+            {
+              "start": 375,
+              "end": 418
+            }
+          ],
+          "role": "DispatchThreads wrapper, copy telemetry, construction and wall timers",
+          "upstream_path": "src/zmlx/metal.py",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/metal.py"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/docs/KERNELS.md",
+          "sha256": "6b84afebaeea60c7f434d6fd35b7fc29a7ca442f324f47b3a0d68f7849be8449",
+          "line_count": 200,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 23
+            },
+            {
+              "start": 54,
+              "end": 69
+            },
+            {
+              "start": 168,
+              "end": 174
+            }
+          ],
+          "role": "Catalog and fused primitive distinctions",
+          "upstream_path": "docs/KERNELS.md",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/docs/KERNELS.md"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/docs/BENCHMARKS.md",
+          "sha256": "495cc5fd46ca6a47337b900a55ad7c3294cf30adbdbc5a13e8e0ebbeb4e6098b",
+          "line_count": 164,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 54
+            },
+            {
+              "start": 107,
+              "end": 139
+            }
+          ],
+          "role": "Isolated raw measurement methodology and historical limits",
+          "upstream_path": "docs/BENCHMARKS.md",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/docs/BENCHMARKS.md"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/docs/TOUR.md",
+          "sha256": "f4cf47206d2ff97388532d67305750ad0fcdf5c913c19bfd3cb8e31ab75bfe8b",
+          "line_count": 66,
+          "inspected_line_spans": [
+            {
+              "start": 31,
+              "end": 66
+            }
+          ],
+          "role": "Greedy validation and decode guard claims; not reproduced",
+          "upstream_path": "docs/TOUR.md",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/docs/TOUR.md"
+        },
+        {
+          "local_path": "/tmp/mlxboost-g01-g02-references/zmlx/LICENSE",
+          "sha256": "c0f22d895babcc1afa3f06ac5dd1fd1edc8f06ae9edc09e18ca9128a5abfb4d7",
+          "line_count": 21,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 21
+            }
+          ],
+          "role": "ZMLX MIT notice",
+          "upstream_path": "LICENSE",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/LICENSE"
+        },
+        {
+          "local_path": "/tmp/mlxboost-phase0-references/zmlx/src/zmlx/patch/__init__.py",
+          "sha256": "e491298ab99e7ac52275ea8e05e76c3a0d9af315b3c59075996ed30f5ba01de9",
+          "line_count": 551,
+          "inspected_line_spans": [
+            {
+              "start": 1,
+              "end": 27
+            },
+            {
+              "start": 44,
+              "end": 104
+            },
+            {
+              "start": 110,
+              "end": 128
+            },
+            {
+              "start": 238,
+              "end": 285
+            }
+          ],
+          "role": "Fidelity/performance exclusions and overrides",
+          "upstream_path": "src/zmlx/patch/__init__.py",
+          "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/patch/__init__.py"
+        }
+      ]
+    }
+  ],
+  "installed_mlx_reference_files": [
+    {
+      "local_path": ".venv/lib/python3.12/site-packages/mlx/nn/layers/activations.py",
+      "sha256": "153660ac19d4fe93d6ca15f67ad8527ed03b0e860e36192f3815e1d3daf73ed1",
+      "line_count": 673,
+      "inspected_line_spans": [
+        {
+          "start": 18,
+          "end": 30
+        },
+        {
+          "start": 130,
+          "end": 175
+        }
+      ],
+      "role": "Installed compiled SiLU and GELU",
+      "revision_provenance": "Installed mlx-0.32.2.dist-info; text read without importing or executing MLX"
+    },
+    {
+      "local_path": ".venv/lib/python3.12/site-packages/mlx/include/mlx/backend/metal/kernels/unary_ops.h",
+      "sha256": "0a5492b65ae39ecb6d8b04e64ea5007e0a4ff60d8d9428559bfbfd03387ece2a",
+      "line_count": 454,
+      "inspected_line_spans": [
+        {
+          "start": 308,
+          "end": 315
+        }
+      ],
+      "role": "Stable sigmoid shader; tag-byte match not asserted",
+      "revision_provenance": "Installed mlx-0.32.2.dist-info; text read without importing or executing MLX"
+    }
+  ],
+  "unversioned_reference_copies": {
+    "note": "references_libs/mlx-lm-main has no nested .git; parent MLX-One HEAD is not upstream revision. Prefer pinned captures.",
+    "files": [
+      {
+        "local_path": "references_libs/mlx-lm-main/mlx_lm/models/activations.py",
+        "sha256": "6f7d756897deb322af4fe98e040df76e9358a91d76521e51f14d734fdd0fb05f",
+        "line_count": 70,
+        "inspected_line_spans": [
+          {
+            "start": 1,
+            "end": 35
+          }
+        ],
+        "role": "Unversioned local reference comparison"
+      },
+      {
+        "local_path": "references_libs/mlx-lm-main/mlx_lm/models/qwen3.py",
+        "sha256": "7e29b7055d8e526a0ede6e2740a3038ad24d0cef6a1abb446c411d3fbd0efa2d",
+        "line_count": 234,
+        "inspected_line_spans": [
+          {
+            "start": 1,
+            "end": 35
+          }
+        ],
+        "role": "Unversioned local reference comparison"
+      },
+      {
+        "local_path": "references_libs/mlx-lm-main/mlx_lm/models/llama.py",
+        "sha256": "dfb656511e6740781cd0563f7994a78b3404c199b9aebaa2fbca28a19e280891",
+        "line_count": 274,
+        "inspected_line_spans": [
+          {
+            "start": 1,
+            "end": 35
+          }
+        ],
+        "role": "Unversioned local reference comparison"
+      }
+    ]
+  },
+  "additional_header_recorded_lineage": {
+    "path": "src/mlx_one/models/language/qwen3/upstream_math.py",
+    "mlx_lm_version": "v0.31.3",
+    "upstream_commit": "ed1fca4cef15a824c5f1702c80f70b4cffc8e4dd",
+    "provenance": "Local adaptation header, not newly fetched checkout"
+  },
+  "web_inspected_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/ml-explore/mlx/v0.32.2/python/mlx/nn/layers/activations.py",
+      "revision": "v0.32.2",
+      "line_spans": [
+        [
+          130,
+          137
+        ],
+        [
+          163,
+          175
+        ]
+      ],
+      "sha256": null,
+      "note": "Primary web source inspected; raw bytes not captured. Installed file independently hashed."
+    }
+  ],
+  "unverified_details": [
+    "Actual compiled baseline launch count, intermediate rounding and memory allocation",
+    "MLX-One runtime projection dtype per checkpoint/profile",
+    "Runtime tails, stride behavior and cost of any row-contiguity copies",
+    "MLX 0.32.2 execution compatibility of ZMLX source: not tested",
+    "Historical upstream numbers are not MLX-One performance evidence"
+  ],
+  "failure_policy": "Existing numerical policies unchanged; failed reference controls block attribution and promotion; valid unsupported metadata or no exact qualified evidence uses original reference fallback"
+}

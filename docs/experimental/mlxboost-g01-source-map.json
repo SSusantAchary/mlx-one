@@ -1,0 +1,697 @@
+{
+  "schema_version": 1,
+  "study": "G01 residual addition plus RMSNorm design only",
+  "status": "NOT_IMPLEMENTED_NOT_ACTIVATED",
+  "g01_gpu_tests": "NOT_RUN",
+  "g01_performance": "NOT_MEASURED",
+  "inspection_date": "2026-11-15",
+  "repository_head": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+  "worktree_note": "Local files hashed as inspected; HEAD is not a claim that dirty content equals committed content. Source map itself is not self-hashed.",
+  "upstream_pins": {
+    "mlx": "1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+    "mlx_lm": "93e6d4a6447b3080861985947f0820e76fcb957d",
+    "zmlx": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5"
+  },
+  "hash_algorithm": "sha256",
+  "line_number_base": 1,
+  "entries": [
+    {
+      "path": "src/mlx_one/models/language/qwen2/reference_math.py",
+      "sha256": "d892918ee021e14cdc841a1388abeb15332aee4d39f6bb8ad58ffd6c41d34b56",
+      "line_spans": [
+        [
+          100,
+          122
+        ]
+      ],
+      "purpose": "Exact local block graph; runtime authority",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/qwen3/reference_math.py",
+      "sha256": "2d9884c49ae0870c9b40b7d2109346f7507989c7d19f0895a79841f1b6a2794d",
+      "line_spans": [
+        [
+          43,
+          44
+        ],
+        [
+          105,
+          123
+        ]
+      ],
+      "purpose": "Exact local block graph; runtime authority",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/llama/reference_math.py",
+      "sha256": "2d5cc8b0790216559d88d95adae4e02c89ce5bb09e155cbd9b34ba45bcc2e7b3",
+      "line_spans": [
+        [
+          114,
+          136
+        ]
+      ],
+      "purpose": "Exact local block graph; runtime authority",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/lfm2/reference_math.py",
+      "sha256": "a2f942f9ca29d0c86d697a0902cc7728617f058a71335c04fb3639bc1e125670",
+      "line_spans": [
+        [
+          64,
+          65
+        ],
+        [
+          138,
+          179
+        ]
+      ],
+      "purpose": "Exact local block graph; runtime authority",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/qwen2/model.py",
+      "sha256": "a05382d052add5c6fd1216d8794e11937259bb5893c9e32f7a49f8651ec19778",
+      "line_spans": [
+        [
+          25,
+          30
+        ],
+        [
+          58,
+          72
+        ]
+      ],
+      "purpose": "Local model loop, final norm, reference-first and state ownership",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/qwen3/model.py",
+      "sha256": "39a744416350e8f346d2782f7df12c16e9cf613e9af987698700932ec8e269db",
+      "line_spans": [
+        [
+          29,
+          34
+        ],
+        [
+          60,
+          79
+        ]
+      ],
+      "purpose": "Local model loop, final norm, reference-first and state ownership",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/llama/model.py",
+      "sha256": "9cada0dada4809f84eee18e6706af55248899559616267b6f10adc4f0814542c",
+      "line_spans": [
+        [
+          28,
+          33
+        ],
+        [
+          59,
+          73
+        ]
+      ],
+      "purpose": "Local model loop, final norm, reference-first and state ownership",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/lfm2/model.py",
+      "sha256": "26fa80f421582b3091df11b5c549e518c44ebae25ec49d5409d8bf222bbf2c20",
+      "line_spans": [
+        [
+          28,
+          34
+        ],
+        [
+          56,
+          87
+        ]
+      ],
+      "purpose": "Local model loop, final norm, reference-first and state ownership",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/qwen2/config.py",
+      "sha256": "03e9003396655adc5665e361447372ae7af1eed9970529fc09bc7db8a44ddfd7",
+      "line_spans": [
+        [
+          1,
+          65
+        ]
+      ],
+      "purpose": "Config epsilon defaults; loaded checkpoint remains authoritative",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/qwen3/config.py",
+      "sha256": "aeae8cd66c31e4698f9f52fd29cd6bf0c586221e24b678a9a958b5503ab3018e",
+      "line_spans": [
+        [
+          1,
+          65
+        ]
+      ],
+      "purpose": "Config epsilon defaults; loaded checkpoint remains authoritative",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/llama/config.py",
+      "sha256": "d3358617ce8cc5b385e6cc88b76891d716b4452c279df5a67eec1031c512702a",
+      "line_spans": [
+        [
+          1,
+          65
+        ]
+      ],
+      "purpose": "Config epsilon defaults; loaded checkpoint remains authoritative",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/lfm2/config.py",
+      "sha256": "558f7f587953ba3d1806c96dbf6d0781bc7b9467eae85841a9515692248429d4",
+      "line_spans": [
+        [
+          1,
+          65
+        ]
+      ],
+      "purpose": "Config epsilon defaults; loaded checkpoint remains authoritative",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/gemma3/config.py",
+      "sha256": "5b7dba2e460cedf603bac085f164fb672b2bcf9218fa3e1c4046a2e6b4e50a5e",
+      "line_spans": [
+        [
+          1,
+          65
+        ]
+      ],
+      "purpose": "Config epsilon defaults; loaded checkpoint remains authoritative",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/gemma3/model.py",
+      "sha256": "cbdb97fb89e4f64cecaa9c90808ccedfb7af8af7daae3b86330882646d3de190",
+      "line_spans": [
+        [
+          12,
+          28
+        ],
+        [
+          118,
+          132
+        ],
+        [
+          149,
+          163
+        ]
+      ],
+      "purpose": "Offset RMSNorm weight, clipped FP16 residual, postnorm/pre-norm graph",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/models/language/qwen3/upstream_model.py",
+      "sha256": "6aa393c3af91aade8793cc6b509b9a31a9e8b6025c1d66c7a28a53703828c09e",
+      "line_spans": [
+        [
+          87,
+          126
+        ]
+      ],
+      "purpose": "Separate candidate-only Qwen3 route, not public qualification",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/inference_baseline.py",
+      "sha256": "885a505dd005a3af4efb40fd707898468004bf28b932bab3329fdc0805d6cda4",
+      "line_spans": [
+        [
+          30,
+          30
+        ]
+      ],
+      "purpose": "Frozen dtype tolerances",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/ops/numerical_trace.py",
+      "sha256": "3619444fd78a8c01797604bcc95930c46d7048832a0ffa0299cca4c192baf7a9",
+      "line_spans": [
+        [
+          104,
+          145
+        ]
+      ],
+      "purpose": "Finite-required frozen tensor comparison contract",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "src/mlx_one/mlxboost/g03/schemas.py",
+      "sha256": "13f60e63b3fe32bffe81b78b90910e56f7fded1abab03b2b17debb0d70bfe1e8",
+      "line_spans": [
+        [
+          1,
+          34
+        ]
+      ],
+      "purpose": "Existing G03 tolerances and default-off; not G01 authorization",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "tests/models/test_local_reference_math.py",
+      "sha256": "c3d890374bfa6c3f88c5a5c033a2851b95ed3424c74948d63f387281eeac7563",
+      "line_spans": [
+        [
+          1,
+          84
+        ]
+      ],
+      "purpose": "Existing model tests inspected; not G01 test evidence",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "tests/models/test_reference_first_cache_contracts.py",
+      "sha256": "5d9638bf17dc472199e33a18ecbea79d170a9962f109b83e3460f58a1c582c54",
+      "line_spans": [
+        [
+          1,
+          41
+        ]
+      ],
+      "purpose": "Existing model tests inspected; not G01 test evidence",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "tests/models/test_numerical_invariants_native.py",
+      "sha256": "6fbbe9ad2fdfaa05f5a43d4d1b79ace5a9e19efe2601620145cf42fbe657c102",
+      "line_spans": [
+        [
+          1,
+          114
+        ]
+      ],
+      "purpose": "Existing model tests inspected; not G01 test evidence",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/mlx/mlx/backend/metal/kernels/rms_norm.metal",
+      "sha256": "b2e04e377fdad1d645581f9beeaf9cbb06d1ad32926161e06cbc15240caf12bf",
+      "line_spans": [
+        [
+          10,
+          83
+        ],
+        [
+          85,
+          163
+        ]
+      ],
+      "purpose": "Pinned RMSNorm FP32 reduction, exact cast and weight order",
+      "revision": "1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "upstream_url": "https://github.com/ml-explore/mlx/blob/1f8e74e3f12f31365464a6867c6579f0e9b29d85/mlx/backend/metal/kernels/rms_norm.metal",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/mlx/mlx/fast.cpp",
+      "sha256": "29b31f96bdb02afdadbde3f2bcf42cf458fc69385a908bbde9fc3a14d23de077",
+      "line_spans": [
+        [
+          53,
+          120
+        ]
+      ],
+      "purpose": "Result type, validation, conversion and fallback semantics",
+      "revision": "1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "upstream_url": "https://github.com/ml-explore/mlx/blob/1f8e74e3f12f31365464a6867c6579f0e9b29d85/mlx/fast.cpp",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/mlx/LICENSE",
+      "sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "line_spans": [
+        [
+          1,
+          21
+        ]
+      ],
+      "purpose": "MIT license and Apple notice",
+      "revision": "1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "upstream_url": "https://github.com/ml-explore/mlx/blob/1f8e74e3f12f31365464a6867c6579f0e9b29d85/LICENSE",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/qwen2.py",
+      "sha256": "937e0321ef06a34efbd66d2ce0ce1e715aab98da4acefa376c8cd29291a0bc83",
+      "line_spans": [
+        [
+          99,
+          123
+        ]
+      ],
+      "purpose": "Pinned upstream family block equation comparison",
+      "revision": "93e6d4a6447b3080861985947f0820e76fcb957d",
+      "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/qwen2.py",
+      "provenance": "existing_capture_manifest"
+    },
+    {
+      "path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/qwen3.py",
+      "sha256": "7e29b7055d8e526a0ede6e2740a3038ad24d0cef6a1abb446c411d3fbd0efa2d",
+      "line_spans": [
+        [
+          114,
+          143
+        ]
+      ],
+      "purpose": "Pinned upstream family block equation comparison",
+      "revision": "93e6d4a6447b3080861985947f0820e76fcb957d",
+      "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/qwen3.py",
+      "provenance": "existing_capture_manifest"
+    },
+    {
+      "path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/llama.py",
+      "sha256": "dfb656511e6740781cd0563f7994a78b3404c199b9aebaa2fbca28a19e280891",
+      "line_spans": [
+        [
+          124,
+          149
+        ]
+      ],
+      "purpose": "Pinned upstream family block equation comparison",
+      "revision": "93e6d4a6447b3080861985947f0820e76fcb957d",
+      "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/llama.py",
+      "provenance": "existing_capture_manifest"
+    },
+    {
+      "path": "local/mlxboost/sources/mlx_lm/captured/mlx_lm/models/lfm2.py",
+      "sha256": "558dcbec61442b1f7216c0122d08d44083ea71d1510be23f4f934e62b0f71376",
+      "line_spans": [
+        [
+          208,
+          243
+        ]
+      ],
+      "purpose": "Pinned upstream family block equation comparison",
+      "revision": "93e6d4a6447b3080861985947f0820e76fcb957d",
+      "upstream_url": "https://github.com/ml-explore/mlx-lm/blob/93e6d4a6447b3080861985947f0820e76fcb957d/mlx_lm/models/lfm2.py",
+      "provenance": "existing_capture_manifest"
+    },
+    {
+      "path": "local/mlxboost/sources/mlx_lm/captured/LICENSE",
+      "sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "line_spans": [
+        [
+          1,
+          21
+        ]
+      ],
+      "purpose": "MLX-LM MIT license",
+      "revision": "93e6d4a6447b3080861985947f0820e76fcb957d",
+      "upstream_url": null,
+      "provenance": "existing_capture_manifest"
+    },
+    {
+      "path": "/tmp/mlxboost-phase0-references/zmlx/src/zmlx/patch/__init__.py",
+      "sha256": "e491298ab99e7ac52275ea8e05e76c3a0d9af315b3c59075996ed30f5ba01de9",
+      "line_spans": [
+        [
+          74,
+          126
+        ],
+        [
+          244,
+          315
+        ],
+        [
+          363,
+          373
+        ]
+      ],
+      "purpose": "Family fidelity/performance exclusions and reversible patch policy",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/patch/__init__.py",
+      "provenance": "existing_phase0_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/kernels/transformer.py",
+      "sha256": "15c50a43a989f8ff7ec5ff730afdb1f9655042e55a7ad4fd9b71c75f830b63a3",
+      "line_spans": [
+        [
+          239,
+          298
+        ],
+        [
+          374,
+          468
+        ],
+        [
+          472,
+          550
+        ]
+      ],
+      "purpose": "Actual two-output and normalized-only math, cast ordering, guards and layouts",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/kernels/transformer.py",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/patch/patterns/residual_norm.py",
+      "sha256": "f8980d52c5c406c40f342efd4dd0ecada5ce3b533ef09cec70daae2e828160f8",
+      "line_spans": [
+        [
+          1,
+          140
+        ]
+      ],
+      "purpose": "Actual model patch uses norms.add_rms_norm, broad name matching and class replacement",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/patch/patterns/residual_norm.py",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/docs/KERNELS.md",
+      "sha256": "6b84afebaeea60c7f434d6fd35b7fc29a7ca442f324f47b3a0d68f7849be8449",
+      "line_spans": [
+        [
+          1,
+          21
+        ],
+        [
+          58,
+          65
+        ]
+      ],
+      "purpose": "Catalog output contracts; no local speed evidence",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/docs/KERNELS.md",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/docs/BENCHMARKS.md",
+      "sha256": "495cc5fd46ca6a47337b900a55ad7c3294cf30adbdbc5a13e8e0ebbeb4e6098b",
+      "line_spans": [
+        [
+          1,
+          57
+        ]
+      ],
+      "purpose": "Repeated tokens, isolation and reproducibility method",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/docs/BENCHMARKS.md",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/docs/TOUR.md",
+      "sha256": "f4cf47206d2ff97388532d67305750ad0fcdf5c913c19bfd3cb8e31ab75bfe8b",
+      "line_spans": [
+        [
+          58,
+          66
+        ]
+      ],
+      "purpose": "Documented family exclusion behavior",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/docs/TOUR.md",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/LICENSE",
+      "sha256": "c0f22d895babcc1afa3f06ac5dd1fd1edc8f06ae9edc09e18ca9128a5abfb4d7",
+      "line_spans": [
+        [
+          1,
+          21
+        ]
+      ],
+      "purpose": "MIT license and Hunter Bown notice",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/LICENSE",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "references_libs/mlx-lm-main/mlx_lm/kernels/norm_add_norm.py",
+      "sha256": "8535350019f31de0aeb02d71783a34fae6b0f324d5772c23a235e99a5395e1a6",
+      "line_spans": [
+        [
+          1,
+          110
+        ],
+        [
+          135,
+          198
+        ]
+      ],
+      "purpose": "Non-authoritative newer archive comparison: postnorm plus weighted FP32 stream plus optional prenorm",
+      "revision": null,
+      "upstream_url": null,
+      "provenance": "unversioned_archive_content_hash_only"
+    },
+    {
+      "path": ".venv/lib/python3.12/site-packages/mlx/nn/layers/normalization.py",
+      "sha256": "0873ca425d5de6dd462d336ff45a2563f945abeebef3f5146bfc7c83af54be83",
+      "line_spans": [
+        [
+          131,
+          164
+        ]
+      ],
+      "purpose": "Installed nn.RMSNorm forwards to mx.fast.rms_norm; not an upstream source pin",
+      "revision": "installed distribution source",
+      "upstream_url": null,
+      "provenance": "installed_source_content_hash"
+    },
+    {
+      "path": "local/mlxboost/sources/sources.json",
+      "sha256": "efa91f941dbdf93b2aada4ce6a403b87a68317bedf27a2bdc9d38e35254dae50",
+      "line_spans": [
+        [
+          1,
+          197
+        ]
+      ],
+      "purpose": "Existing exact upstream capture provenance manifest",
+      "revision": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+      "upstream_url": null,
+      "provenance": "current_worktree"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/kernels/norms.py",
+      "sha256": "8eaab570998cc3eb62aa5d900aab48a285c5afc311498b0e2344504d5baf9448",
+      "line_spans": [
+        [
+          641,
+          703
+        ],
+        [
+          786,
+          871
+        ]
+      ],
+      "purpose": "Actual patched add_rms_norm caches unrounded FP32 residual for RMS and numerator; distinct rounded sum output",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/kernels/norms.py",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/msl.py",
+      "sha256": "28b7421767c1e5d54f63d35f8b93f0e5c6c2570c295206c40bf5e250454f8421",
+      "line_spans": [
+        [
+          43,
+          60
+        ]
+      ],
+      "purpose": "SIMD first-level and tree remainder sum reduction",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/msl.py",
+      "provenance": "approved_parent_capture"
+    },
+    {
+      "path": "/tmp/mlxboost-g01-g02-references/zmlx/src/zmlx/metal.py",
+      "sha256": "1381ba983971eb2aa6a2d42c85e19dbd531ff8b6d294718638e643cede9c16ee",
+      "line_spans": [
+        [
+          113,
+          119
+        ],
+        [
+          240,
+          257
+        ],
+        [
+          375,
+          418
+        ]
+      ],
+      "purpose": "Row-contiguity override, actual MLX kernel construction and copy-risk interface",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "upstream_url": "https://github.com/Hmbown/ZMLX/blob/d8cd0d88d4299ca6821d706f9d5b4a3520d688f5/src/zmlx/metal.py",
+      "provenance": "approved_parent_capture"
+    }
+  ],
+  "gaps": [
+    {
+      "path": "mlx/backend/metal/rms_norm.cpp",
+      "revision": "1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "state": "UPSTREAM_404",
+      "effect": "Do not cite nonexistent backend file; fast.cpp and kernels/rms_norm.metal are inspected authorities."
+    },
+    {
+      "path": "references_libs/mlx-lm-main",
+      "state": "UNKNOWN_UPSTREAM_REVISION",
+      "effect": "Parent MLX-One git revision must not be attributed to this nested source archive."
+    }
+  ],
+  "verification": {
+    "kind": "backend_free_source_hash_and_line_span_check",
+    "gpu_imports": false,
+    "tests_or_benchmarks": "No G01 runtime tests or benchmarks executed."
+  }
+}

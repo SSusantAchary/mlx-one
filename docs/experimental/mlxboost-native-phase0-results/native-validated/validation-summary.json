@@ -1,0 +1,192 @@
+{
+  "benchmark_rows": [
+    {
+      "dtype": "float16",
+      "length": 256,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.202,
+      "reference_median_ms": 0.22241650000000002,
+      "run": "run1"
+    },
+    {
+      "dtype": "float16",
+      "length": 4096,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2263125,
+      "reference_median_ms": 0.262,
+      "run": "run1"
+    },
+    {
+      "dtype": "float16",
+      "length": 65536,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.240792,
+      "reference_median_ms": 0.27227049999999997,
+      "run": "run1"
+    },
+    {
+      "dtype": "float32",
+      "length": 256,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2232085,
+      "reference_median_ms": 0.245604,
+      "run": "run1"
+    },
+    {
+      "dtype": "float32",
+      "length": 4096,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.22549999999999998,
+      "reference_median_ms": 0.2610205,
+      "run": "run1"
+    },
+    {
+      "dtype": "float32",
+      "length": 65536,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2627915,
+      "reference_median_ms": 0.282771,
+      "run": "run1"
+    },
+    {
+      "dtype": "float16",
+      "length": 256,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2106875,
+      "reference_median_ms": 0.23014600000000002,
+      "run": "run2"
+    },
+    {
+      "dtype": "float16",
+      "length": 4096,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2241035,
+      "reference_median_ms": 0.2588125,
+      "run": "run2"
+    },
+    {
+      "dtype": "float16",
+      "length": 65536,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.21027099999999999,
+      "reference_median_ms": 0.2210415,
+      "run": "run2"
+    },
+    {
+      "dtype": "float32",
+      "length": 256,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.22227049999999998,
+      "reference_median_ms": 0.24447950000000002,
+      "run": "run2"
+    },
+    {
+      "dtype": "float32",
+      "length": 4096,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2098125,
+      "reference_median_ms": 0.2568755,
+      "run": "run2"
+    },
+    {
+      "dtype": "float32",
+      "length": 65536,
+      "max_abs_error": 0.0,
+      "native_median_ms": 0.2451875,
+      "reference_median_ms": 0.2685415,
+      "run": "run2"
+    }
+  ],
+  "branch": "feat/mlxboost-native-phase0",
+  "failure_ids_sha256": [
+    "03da13e3f2e54ef56046cbe72e0d59f4e70473141bb5cac7e97c7d3351a5bc1c",
+    "078178262f5f6bc1b8362e3c944ea018da5777dde7c8a4887d2fa1b949a373a7",
+    "171317110e8396d9c11df101f800ab905883df3c2fa92a90627f57b092f02026",
+    "189b7002b5b72a1f16986b0d80f30fc3d91a48a4989a384499cf7db7719ce17c",
+    "199b412fb605a8a77d3b2abd5af655f8d0213d0e2b0d150d329999528330b30b",
+    "2c91f0a43602ad695cb1ba23883b4ac0a3cfebe7c8201a0a8a730a0576f318a2",
+    "2e67747b12d77815d36b262fbdc79e376ebfb15ffb5c2ae78a6413ffa1b076b1",
+    "49a2cb68516f0600c0d47d005fe590041d2203c286cf1491e90a3a636ac675ae",
+    "4b1701137b25198e91fe3faa28397c3b830235c5296517b2bac8faed94bc6c74",
+    "4d0e05620ae21ec0043b1ade15cd541592602d31c583c4a8176e385e22b43ad1",
+    "51d24a0d9e79601c6fce81e9437c177ba217d3cf939ba617e1e00fd4ab5a62e1",
+    "56c1bbf1be6b08b55e82a21183cb0fd9c2fa3d479f7343a3240dd7639127f8b9",
+    "63490e395739b4de4312059b7beff7fcfafad61d114277fe885897851ddb0eb1",
+    "6b3f4413cdef1b5ec8247f2c1647eeab5f827585d715702dd734bd74052057a9",
+    "6cc2401f3c84f4d2fd870558dec55a823c3a9b53be39aec85ecb3f166044d404",
+    "75ea995ba98da46c5b93354316865fb6b4184c4d9b8bdf1c6cb7fb3239ab3bc3",
+    "7df5b50a8c7ea9eea5768434ae701637a16f225de7615d42e9c0c6ae1942264b",
+    "91f8ed77e87cca2660c00685631b1ff58cd9afc0033e53b764249cd3c32f15e8",
+    "99a8cdc463a339994ab97fe499b810f188a221bce04d03b6729606ec29d9bc3c",
+    "a67cc15d2b9a449682488d1ef8fca233a2131f51d3a94d8f82e7ebfec1a7cd8c",
+    "ba13902002142e548281d60e1e5d168d2154db89c19362c18d53eb3913209071",
+    "bbceb653ce8e1855d8a67d884b94f38a051f35a97c2382cd5c86bf069977a934",
+    "cc53aa24502bc6955b275aa154cee084730c59949cc75ce1cde14690d9071fc4",
+    "d4de784ab18897b1e8094b96f216fa046bdc261276edca300fa6d55953639232",
+    "e04d85a964a9587c1030c83fee61bf5fdbbef4b267c2598fea55ad5604a03870",
+    "f0a3562fba8d350e8455a6d85c63427054db768ad803772c8efb77f8f1db7dcc",
+    "f8f809ce5205d0bbc35797883de61d3f87d5775b9dcdece990a25833518d860c"
+  ],
+  "failures_by_module": {
+    "tests.native_tasks.test_classification_service": 12,
+    "tests.native_tasks.test_clip_service": 3,
+    "tests.native_tasks.test_depth_candidate": 2,
+    "tests.native_tasks.test_detr_candidate": 2,
+    "tests.native_tasks.test_distilbert_classifier": 1,
+    "tests.native_tasks.test_ner_service": 4,
+    "tests.native_tasks.test_vit_classifier": 1,
+    "tests.native_tasks.test_vit_diagnostics": 1,
+    "tests.unit.test_model_performance_reporting.PerformanceReportingTests": 1
+  },
+  "full_regression": {
+    "failed": 27,
+    "passed": 2391,
+    "seconds": 56.21,
+    "skipped": 84
+  },
+  "measured_samples": {
+    "startup_processes": 6,
+    "tuning": 400,
+    "warm_comparison": 1200
+  },
+  "metal_found": true,
+  "metallib_found": true,
+  "model_benchmarks": {
+    "checkpoint": "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+    "context": 128,
+    "output_tokens_requested": 16,
+    "promotion": false,
+    "record": "b2423c8b33a695218cb4e112343aac19b803f3dffa916b2df78bd0a220da2d7e.json",
+    "revision": "6474d4c1a05bd7bd634a9c993560e4e7272eda3d",
+    "scope": "reference_only"
+  },
+  "model_promotions": [],
+  "native_blocker_resolved": true,
+  "native_runtime_approvals": [],
+  "new_failure_count": 0,
+  "numerical_atol_rtol": {
+    "float16": 0.001,
+    "float32": 1e-06
+  },
+  "numerical_cases": 180,
+  "numerical_max_abs_error": {
+    "float16": 0.0,
+    "float32": 0.0
+  },
+  "phase0_installed_native_wheel_tests": {
+    "failed": 0,
+    "passed": 123,
+    "seconds": 1.62,
+    "skipped": 0
+  },
+  "phase0_source_tests": {
+    "failed": 0,
+    "passed": 123,
+    "seconds": 1.77,
+    "skipped": 0
+  },
+  "schema_version": 1,
+  "starting_commit": "4cad1634562c5c12933882deb0b8ab3c9461dd97",
+  "status": "EXPERIMENTAL",
+  "xcode": "Xcode 26.3\nBuild version 17C529"
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "repository": "https://github.com/ml-explore/mlx",
+      "revision": "v0.32.2",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01"
+        },
+        {
+          "path": "examples/extensions/CMakeLists.txt",
+          "sha256": "661b015ba23c500f5567038801fdb83cae2c24ded125074b00ea92c926c23635"
+        },
+        {
+          "path": "examples/extensions/axpby/axpby.cpp",
+          "sha256": "03e31d407b2894e4c13077c8dfbfc1b5d84274ec9d9248fa0b55daf9af91b9ee"
+        },
+        {
+          "path": "examples/extensions/axpby/axpby.h",
+          "sha256": "1fbb49a9a647bc53e58d9d66f3271ae207e23e30309ccdebdcc1d73e1f9b9298"
+        },
+        {
+          "path": "examples/extensions/axpby/axpby.metal",
+          "sha256": "cc862603badaadbe63a4eab569a4c19ff94b2318613818a0e43156cc4289a599"
+        },
+        {
+          "path": "examples/extensions/bindings.cpp",
+          "sha256": "ea664308e50f62e4b5a1127b73fa942363b150ba109d91474ed6e5e73a8309d4"
+        },
+        {
+          "path": "examples/extensions/setup.py",
+          "sha256": "6fee74b1027719039348167141027612d93bf17817fcb1c59f022b42c405df5d"
+        },
+        {
+          "path": "mlx/backend/metal/device.h",
+          "sha256": "ab1e07495b916a86eb762cddc68c6f1ae5e4c61020baacdea3c0dadd59150603"
+        },
+        {
+          "path": "mlx/backend/metal/metal.h",
+          "sha256": "80762515d31b24b29f8af5dbca766d0e7713447b9a7af588ad8e08820856d40c"
+        },
+        {
+          "path": "mlx/primitives.h",
+          "sha256": "8d41b1955d681949b0526f9a7ca1051add0fd1ec21ca5cd853ac8e78671eb73e"
+        },
+        {
+          "path": "python/mlx/extension.py",
+          "sha256": "ccab3caf8660bf6b43ec949f147c64bac95e914ab8cab6a8afac090d69aebd27"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/Hmbown/ZMLX",
+      "revision": "d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "c0f22d895babcc1afa3f06ac5dd1fd1edc8f06ae9edc09e18ca9128a5abfb4d7"
+        },
+        {
+          "path": "src/zmlx/autotune.py",
+          "sha256": "2a77c5b1bedaeffc807bec43868bd0ac0362bb68298a6cafd0a5395c050bcb00"
+        },
+        {
+          "path": "src/zmlx/cache.py",
+          "sha256": "741b232589d2804b0e017a0deb34e9cf7291185bcc31ffc21fff182ab91da552"
+        },
+        {
+          "path": "src/zmlx/metal.py",
+          "sha256": "1381ba983971eb2aa6a2d42c85e19dbd531ff8b6d294718638e643cede9c16ee"
+        },
+        {
+          "path": "src/zmlx/patch/__init__.py",
+          "sha256": "e491298ab99e7ac52275ea8e05e76c3a0d9af315b3c59075996ed30f5ba01de9"
+        },
+        {
+          "path": "src/zmlx/profile.py",
+          "sha256": "460451b21a10e2d0cd0baee7e689ca8b0c378de16f18b356ac7664a59633ea80"
+        },
+        {
+          "path": "src/zmlx/registry.py",
+          "sha256": "f964d2a3b5e52347aec7bd53a6f3ef27bc884ede0abf139605b32f8fe03c98fa"
+        }
+      ]
+    }
+  ],
+  "adaptation": "MLX extension API patterns; Apple notice retained. ZMLX source study only."
+}

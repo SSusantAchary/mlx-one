@@ -438,6 +438,32 @@ failed model qualification gates, methodology and future requirements. The
 [module boundary ADR](docs/architecture/mlxboost-module-boundary.md) explains
 current ownership and the proposed future package boundary.
 
+### MLX-Boost Performance Scorecard — experimental
+
+Recorded achievements include the accepted Phase 0 native bridge and offline
+tooling, implemented Q4/Q8 GEMV kernels, and a correctness-tested MoE combine
+prototype. These implementation milestones do not establish model acceleration.
+
+Implementation success and performance qualification are separate. Saved
+measurements on **Apple M4 / 32 GiB, MLX/Metal 0.32.2** show:
+
+| Implementation | Verified measurement | Status |
+| --- | --- | --- |
+| Phase 0 AXPBY and F01–F04 infrastructure | 123 acceptance tests; 180 numerical cases with zero error. FP16 `[4096]`: stock/native **262.0000/226.3125 µs** and **258.8125/224.1035 µs** in two runs | Foundation accepted; demo remains experimental |
+| G03 affine Q4 GEMV | FP16/group 64, K×N=2048×2048: stock **61.845 µs**, native **134.120 µs** (**0.4611×**) | **UNQUALIFIED** |
+| G03 affine Q8 GEMV | FP16/group 64, K×N=896×896: stock **22.047 µs**, native **29.389 µs** (**0.7502×**) | **UNQUALIFIED** |
+| Fused MoE combine prototype | 17 focused tests pass; FP16 `[1,4,2048]`: stock **0.536458 ms**, native **0.540542 ms**; no speed win | Operator rejected; model blocked |
+
+Latencies are synchronized wall time. AXPBY uses 50 warm samples/backend per
+run; GEMV uses 50 windows of 16 calls, divided per call; MoE uses three paired
+trials. These protocols are separate. The MoE operator's extra peak allocation
+fell from **20,480 to 4,100 bytes**; no model-memory improvement was measured.
+G03's measured forced-native model decode was slower. These entries establish
+**no model acceleration**; default-off fallback and correctness gates remain.
+See the [full scorecard, model timings, memory scopes and source/license notices](docs/experimental/mlxboost-performance-scorecard.md).
+[Evidence availability](docs/experimental/mlxboost-performance-scorecard.md#evidence-availability)
+identifies the records included in the publication commit and the local-only raw artifacts.
+
 ## Python, CLI and HTTP APIs
 
 Stream text through the Python engine:
