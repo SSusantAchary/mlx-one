@@ -1,0 +1,25 @@
+{
+  "filename": "mlx_one-0.1.2-py3-none-any.whl",
+  "tag": "py3-none-any",
+  "sha256": "e90f06d11ac74aa2e765972d38f0a683b582533e44cb3dfd670b3c4ebef9d257",
+  "native_entries": [
+    "mlx_one/mlxboost/native/MLX_LICENSE.txt",
+    "mlx_one/mlxboost/native/NOTICE.txt",
+    "mlx_one/mlxboost/native/__init__.py",
+    "mlx_one/mlxboost/native/__main__.py",
+    "mlx_one/mlxboost/native/autotune.py",
+    "mlx_one/mlxboost/native/capabilities.py",
+    "mlx_one/mlxboost/native/dispatcher.py",
+    "mlx_one/mlxboost/native/profiling.py",
+    "mlx_one/mlxboost/native/registry.py",
+    "mlx_one/mlxboost/native/schemas.py",
+    "mlx_one/mlxboost/native/_build/CMakeLists.txt",
+    "mlx_one/mlxboost/native/_build/axpby.cpp",
+    "mlx_one/mlxboost/native/_build/axpby.h",
+    "mlx_one/mlxboost/native/_build/axpby.metal",
+    "mlx_one/mlxboost/native/_build/bindings.cpp",
+    "mlx_one/mlxboost/native/_build/build_identity.py"
+  ],
+  "compiled_assets": [],
+  "entry_count": 525
+}

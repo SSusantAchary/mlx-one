@@ -1,0 +1,21 @@
+{
+  "eager_mlx_import": false,
+  "flavor": "native",
+  "installed_from_wheel": true,
+  "native_smoke": "PASS",
+  "opt_in_fallback": "missing_evidence",
+  "reference_smoke": "PASS",
+  "status": {
+    "binary_path": "_ext.cpython-312-darwin.so",
+    "binary_sha256": "ce5fc268b762b3c7d23813fedd4deb862fc2ec577663a19209a76625f51206bc",
+    "implementation_sha256": "d3ae71d1cbd5649cf7b7327f9f0370c41cc7df702f2251247e284aa756ff0f32",
+    "installed": true,
+    "loadable": true,
+    "metal_available": true,
+    "mlx_build_sha256": "0c9db159aedd2951bb77610c8b028c4ef79bc64ccc4c73b07a4452a60612ac03",
+    "mlx_version": "0.32.2",
+    "reason": "available_experimental"
+  },
+  "strict_unqualified": "PASS",
+  "version": "0.1.2"
+}

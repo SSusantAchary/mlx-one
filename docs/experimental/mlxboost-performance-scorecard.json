@@ -1,0 +1,639 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-17",
+  "scope": "Existing evidence extraction only; no experiments or tests executed by this documentation update",
+  "hardware": {
+    "chip": "Apple M4",
+    "gpu_architecture": "applegpu_g16g",
+    "memory_gib": 32,
+    "macos": "15.8.2",
+    "mlx": "0.32.2",
+    "mlx_metal": "0.32.2",
+    "xcode": "26.3"
+  },
+  "timing": "Synchronized wall including dispatch/evaluation/GPU completion; not isolated GPU time. Thermals and caches uncontrolled. Different protocols must not be pooled.",
+  "speedup_definition": "stock latency / native latency; below 1 means native slower",
+  "production_activation": "NONE",
+  "reference_cached_fresh": "OPEN; max logit error 0.03515625; no policy change",
+  "kernels": [
+    {
+      "name": "mlxboost.axpby.v1",
+      "implementation": "F01-F04 accepted; native C++/Metal demo",
+      "qualification": "EXPERIMENTAL operator; no runtime approval or model acceleration",
+      "source": "MLX v0.32.2 examples/extensions/axpby and extension API; commit 1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "license": "MLX-One Apache-2.0; Apple MLX MIT adaptation; src/mlx_one/mlxboost/native/NOTICE.txt and MLX_LICENSE.txt",
+      "correctness": "123 acceptance tests; independent native wheel 123; 180 FP16/FP32 numerical cases, max error 0",
+      "method": "2 runs x 6 dtype/length cases x 50 warm samples/backend, 10 warmups; 1200 timed samples total; contiguous B1; alpha=.75 beta=-.25",
+      "native_execution": "Evaluated native primitive and Metal capture receipt; no per-dispatch numeric counter in these Phase 0 records",
+      "dispatch_count": null,
+      "measurements": [
+        {
+          "run": "run1",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float16",
+          "seed": 7,
+          "shape": [
+            256
+          ],
+          "stock_ms": 0.22241650000000002,
+          "native_ms": 0.202,
+          "speedup": 1.1010717821782179,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 3092,
+          "native_peak_mlx_bytes": 3092,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run1/6f1442d645d4a12e125e132af8753cccd4e7fd09c3de7a40ce1a104bbc300b25.json",
+            "sha256": "6f1442d645d4a12e125e132af8753cccd4e7fd09c3de7a40ce1a104bbc300b25"
+          }
+        },
+        {
+          "run": "run1",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float32",
+          "seed": 7,
+          "shape": [
+            4096
+          ],
+          "stock_ms": 0.2610205,
+          "native_ms": 0.22549999999999998,
+          "speedup": 1.157518847006652,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 98328,
+          "native_peak_mlx_bytes": 98328,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run1/7b3484d9bf536f66a4a6e68df3d341cd1d59d23ca79a13346f74f43b98c92ca2.json",
+            "sha256": "7b3484d9bf536f66a4a6e68df3d341cd1d59d23ca79a13346f74f43b98c92ca2"
+          }
+        },
+        {
+          "run": "run1",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float16",
+          "seed": 7,
+          "shape": [
+            65536
+          ],
+          "stock_ms": 0.27227049999999997,
+          "native_ms": 0.240792,
+          "speedup": 1.1307290109305956,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 786452,
+          "native_peak_mlx_bytes": 786452,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run1/8321178b2ba2ae741a4a3a8e4a392f6ed0ae17a8f139f33f80d75b388c73bdca.json",
+            "sha256": "8321178b2ba2ae741a4a3a8e4a392f6ed0ae17a8f139f33f80d75b388c73bdca"
+          }
+        },
+        {
+          "run": "run1",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float32",
+          "seed": 7,
+          "shape": [
+            65536
+          ],
+          "stock_ms": 0.282771,
+          "native_ms": 0.2627915,
+          "speedup": 1.0760279537199642,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 1572888,
+          "native_peak_mlx_bytes": 1572888,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run1/99a9db654fd180604078e5c9ba63c72acc134c023c04a599311f289378ca829e.json",
+            "sha256": "99a9db654fd180604078e5c9ba63c72acc134c023c04a599311f289378ca829e"
+          }
+        },
+        {
+          "run": "run1",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float16",
+          "seed": 7,
+          "shape": [
+            4096
+          ],
+          "stock_ms": 0.262,
+          "native_ms": 0.2263125,
+          "speedup": 1.1576912455122894,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 49172,
+          "native_peak_mlx_bytes": 49172,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run1/ac34609a3df5b75a76d4adebb4990f94efaa402cefe155d028a66a623f16c965.json",
+            "sha256": "ac34609a3df5b75a76d4adebb4990f94efaa402cefe155d028a66a623f16c965"
+          }
+        },
+        {
+          "run": "run1",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float32",
+          "seed": 7,
+          "shape": [
+            256
+          ],
+          "stock_ms": 0.245604,
+          "native_ms": 0.2232085,
+          "speedup": 1.1003344406687021,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 6168,
+          "native_peak_mlx_bytes": 6168,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run1/dd6d78e21672bfa71a02b46f2d05c34c2b91cb09d722d15397d08ba8aaceee9d.json",
+            "sha256": "dd6d78e21672bfa71a02b46f2d05c34c2b91cb09d722d15397d08ba8aaceee9d"
+          }
+        },
+        {
+          "run": "run2",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float32",
+          "seed": 7,
+          "shape": [
+            4096
+          ],
+          "stock_ms": 0.2568755,
+          "native_ms": 0.2098125,
+          "speedup": 1.2243098004170387,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 98328,
+          "native_peak_mlx_bytes": 98328,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run2/03bb68846ad48d115c59b0bd2d80c5789339f8b76464253f9960558e2f2582b7.json",
+            "sha256": "03bb68846ad48d115c59b0bd2d80c5789339f8b76464253f9960558e2f2582b7"
+          }
+        },
+        {
+          "run": "run2",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float32",
+          "seed": 7,
+          "shape": [
+            65536
+          ],
+          "stock_ms": 0.2685415,
+          "native_ms": 0.2451875,
+          "speedup": 1.0952495539128217,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 1572888,
+          "native_peak_mlx_bytes": 1572888,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run2/7cbf0936a0fc65a9d218116092e65a8c59872687dd57ca8f30d3ad1d1a5bc1b2.json",
+            "sha256": "7cbf0936a0fc65a9d218116092e65a8c59872687dd57ca8f30d3ad1d1a5bc1b2"
+          }
+        },
+        {
+          "run": "run2",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float32",
+          "seed": 7,
+          "shape": [
+            256
+          ],
+          "stock_ms": 0.24447950000000002,
+          "native_ms": 0.22227049999999998,
+          "speedup": 1.0999187926422986,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 6168,
+          "native_peak_mlx_bytes": 6168,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run2/b0cb1e0526bd68423050222e24f0004cdd013b1fd35b151b746c418d62b8bfe5.json",
+            "sha256": "b0cb1e0526bd68423050222e24f0004cdd013b1fd35b151b746c418d62b8bfe5"
+          }
+        },
+        {
+          "run": "run2",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float16",
+          "seed": 7,
+          "shape": [
+            256
+          ],
+          "stock_ms": 0.23014600000000002,
+          "native_ms": 0.2106875,
+          "speedup": 1.0923571640462773,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 3092,
+          "native_peak_mlx_bytes": 3092,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run2/b6606f132aa92eddda265126f55e655cc6a60c4eec310b1c1d176fba79e36aff.json",
+            "sha256": "b6606f132aa92eddda265126f55e655cc6a60c4eec310b1c1d176fba79e36aff"
+          }
+        },
+        {
+          "run": "run2",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float16",
+          "seed": 7,
+          "shape": [
+            65536
+          ],
+          "stock_ms": 0.2210415,
+          "native_ms": 0.21027099999999999,
+          "speedup": 1.0512219944737982,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 786452,
+          "native_peak_mlx_bytes": 786452,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run2/bf035f17c911e93143ce10c5b7eb3231124d28feb2640b50b6b68af628022fc2.json",
+            "sha256": "bf035f17c911e93143ce10c5b7eb3231124d28feb2640b50b6b68af628022fc2"
+          }
+        },
+        {
+          "run": "run2",
+          "alpha": 0.75,
+          "batch": 1,
+          "beta": -0.25,
+          "dtype": "float16",
+          "seed": 7,
+          "shape": [
+            4096
+          ],
+          "stock_ms": 0.2588125,
+          "native_ms": 0.2241035,
+          "speedup": 1.154879330309433,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 49172,
+          "native_peak_mlx_bytes": 49172,
+          "memory_scope": "shared profiling-window process peak, not isolated output/workspace",
+          "evidence": {
+            "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/measurements/run2/e8ba0afc3b19922a4d0ac407d385992d59c422e66d176277f8ebf85ec9ca7933.json",
+            "sha256": "e8ba0afc3b19922a4d0ac407d385992d59c422e66d176277f8ebf85ec9ca7933"
+          }
+        }
+      ],
+      "model_reference_only": {
+        "model": "Qwen2.5-0.5B Q8",
+        "input_tokens": 128,
+        "output_tokens": 16,
+        "backend": "reference_dense",
+        "native_model_execution": false,
+        "ttft_ms": 49.6042919694446,
+        "prefill_tps_derived": 2613.8941584849913,
+        "decode_tps": 126.33498384309591,
+        "peak_mlx_bytes": 679129024,
+        "evidence": {
+          "path": "docs/experimental/mlxboost-native-phase0-results/native-validated/model-reference/b2423c8b33a695218cb4e112343aac19b803f3dffa916b2df78bd0a220da2d7e.json",
+          "sha256": "b2423c8b33a695218cb4e112343aac19b803f3dffa916b2df78bd0a220da2d7e"
+        }
+      }
+    },
+    {
+      "name": "quantized_gemv_q4",
+      "implementation": "Native C++/Metal affine packed uint32 GEMV, optional scoped adapter",
+      "qualification": "UNQUALIFIED; 0/171 configurations met >=10% operator target; all 8 admitted original model scopes failed gates",
+      "source": "MLX v0.32.2 mlx/backend/metal/kernels/quantized.h and quantized.metal; commit 1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "license": "MLX-One Apache-2.0; Apple MLX MIT references; src/mlx_one/mlxboost/g03/NOTICE.txt; ZMLX/llama.cpp studied, no code copied",
+      "correctness": "105 G03 tests + 123 Phase 0 = 228; FP16/BF16, groups32/64/128, tails, layout/stream/fallback; representative operation error below; model logits/state/fresh gates failed",
+      "method": "50 randomized warm windows/backend, 5 warmups, 16 distinct evaluated calls/window; latency divided by 16; exact original packed weights and identical random activations",
+      "native_execution": "C++ atomic after actual eval_gpu encoding, observed after synchronization; 912 encodings per representative scope",
+      "measurements": [
+        {
+          "model": "llama-q4",
+          "role": "q_proj",
+          "M": 1,
+          "K": 2048,
+          "N": 2048,
+          "bits": 4,
+          "dtype": "float16",
+          "group": 64,
+          "calls_per_window": 16,
+          "stock_us_per_call": 61.845062500000004,
+          "native_us_per_call": 134.1198125,
+          "speedup": 0.46111802087405995,
+          "max_abs_error": 9.5367431640625e-07,
+          "stock_peak_mlx_bytes": 695513872,
+          "native_peak_mlx_bytes": 695513872,
+          "memory_scope": "shared profiling-window process peak including loaded model and batched outputs",
+          "materialized_encodings": 912,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/affine-llama-q4/d28c39467a1eb2a3aa6400ac82f27ad75e7d5a4e8a9cee62252bbf8dba81be77.json",
+            "sha256": "d28c39467a1eb2a3aa6400ac82f27ad75e7d5a4e8a9cee62252bbf8dba81be77",
+            "selector": {
+              "M": 1,
+              "role": "q_proj",
+              "calls_per_timing_window": 16,
+              "candidate": "g03_current"
+            }
+          }
+        },
+        {
+          "model": "llama-q4",
+          "role": "lm_head",
+          "M": 1,
+          "K": 2048,
+          "N": 128256,
+          "bits": 4,
+          "dtype": "float16",
+          "group": 64,
+          "calls_per_window": 16,
+          "stock_us_per_call": 1395.99478125,
+          "native_us_per_call": 1636.2200312500001,
+          "speedup": 0.8531827960714559,
+          "max_abs_error": 3.0517578125e-05,
+          "stock_peak_mlx_bytes": 704029456,
+          "native_peak_mlx_bytes": 704029456,
+          "memory_scope": "shared profiling-window process peak including loaded model and batched outputs",
+          "materialized_encodings": 912,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/affine-llama-q4/d28c39467a1eb2a3aa6400ac82f27ad75e7d5a4e8a9cee62252bbf8dba81be77.json",
+            "sha256": "d28c39467a1eb2a3aa6400ac82f27ad75e7d5a4e8a9cee62252bbf8dba81be77",
+            "selector": {
+              "M": 1,
+              "role": "lm_head",
+              "calls_per_timing_window": 16,
+              "candidate": "g03_current"
+            }
+          }
+        }
+      ],
+      "model_diagnostics": [
+        {
+          "model": "llama-q4",
+          "context": 128,
+          "backend": "mlx_reference",
+          "repeats": 5,
+          "decode_tps": 109.66011333958147,
+          "prefill_tps": 1106.0174686152818,
+          "ttft_ms": 116.64504196960479,
+          "peak_mlx_bytes": 950900936,
+          "materialized_native_dispatches_per_request": 0,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        },
+        {
+          "model": "llama-q4",
+          "context": 128,
+          "backend": "forced_g03",
+          "repeats": 5,
+          "decode_tps": 93.81699230247956,
+          "prefill_tps": 1113.7250294806456,
+          "ttft_ms": 115.54774997057393,
+          "peak_mlx_bytes": 950900936,
+          "materialized_native_dispatches_per_request": 14351,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        },
+        {
+          "model": "llama-q4",
+          "context": 4096,
+          "backend": "mlx_reference",
+          "repeats": 5,
+          "decode_tps": 90.7448472835513,
+          "prefill_tps": 960.5652420601332,
+          "ttft_ms": 4273.052333039232,
+          "peak_mlx_bytes": 2320537616,
+          "materialized_native_dispatches_per_request": 0,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        },
+        {
+          "model": "llama-q4",
+          "context": 4096,
+          "backend": "forced_g03",
+          "repeats": 5,
+          "decode_tps": 78.75383933053533,
+          "prefill_tps": 965.7333533342453,
+          "ttft_ms": 4246.649292006623,
+          "peak_mlx_bytes": 2320537616,
+          "materialized_native_dispatches_per_request": 14351,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "quantized_gemv_q8",
+      "implementation": "Native C++/Metal affine packed uint32 GEMV, optional scoped adapter",
+      "qualification": "UNQUALIFIED; 0/171 configurations met >=10% operator target; all 8 admitted original model scopes failed gates",
+      "source": "MLX v0.32.2 mlx/backend/metal/kernels/quantized.h and quantized.metal; commit 1f8e74e3f12f31365464a6867c6579f0e9b29d85",
+      "license": "MLX-One Apache-2.0; Apple MLX MIT references; src/mlx_one/mlxboost/g03/NOTICE.txt; ZMLX/llama.cpp studied, no code copied",
+      "correctness": "105 G03 tests + 123 Phase 0 = 228; FP16/BF16, groups32/64/128, tails, layout/stream/fallback; representative operation error below; model logits/state/fresh gates failed",
+      "method": "50 randomized warm windows/backend, 5 warmups, 16 distinct evaluated calls/window; latency divided by 16; exact original packed weights and identical random activations",
+      "native_execution": "C++ atomic after actual eval_gpu encoding, observed after synchronization; 912 encodings per representative scope",
+      "measurements": [
+        {
+          "model": "qwen25-q8",
+          "role": "q_proj",
+          "M": 1,
+          "K": 896,
+          "N": 896,
+          "bits": 8,
+          "dtype": "float16",
+          "group": 64,
+          "calls_per_window": 16,
+          "stock_us_per_call": 22.046875,
+          "native_us_per_call": 29.38934375,
+          "speedup": 0.7501656106220473,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 527469840,
+          "native_peak_mlx_bytes": 527469840,
+          "memory_scope": "shared profiling-window process peak including loaded model and batched outputs",
+          "materialized_encodings": 912,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/affine-qwen25-q8/a5628833efb9e3b88ce7a190d8057595376a012ef3d37a9f88f8c43657d0011c.json",
+            "sha256": "a5628833efb9e3b88ce7a190d8057595376a012ef3d37a9f88f8c43657d0011c",
+            "selector": {
+              "M": 1,
+              "role": "q_proj",
+              "calls_per_timing_window": 16,
+              "candidate": "g03_current"
+            }
+          }
+        },
+        {
+          "model": "qwen25-q8",
+          "role": "lm_head",
+          "M": 1,
+          "K": 896,
+          "N": 151936,
+          "bits": 8,
+          "dtype": "float16",
+          "group": 64,
+          "calls_per_window": 16,
+          "stock_us_per_call": 1353.1783750000002,
+          "native_us_per_call": 1355.5729375,
+          "speedup": 0.9982335421180537,
+          "max_abs_error": 0.0,
+          "stock_peak_mlx_bytes": 537683472,
+          "native_peak_mlx_bytes": 537683472,
+          "memory_scope": "shared profiling-window process peak including loaded model and batched outputs",
+          "materialized_encodings": 912,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/affine-qwen25-q8/a5628833efb9e3b88ce7a190d8057595376a012ef3d37a9f88f8c43657d0011c.json",
+            "sha256": "a5628833efb9e3b88ce7a190d8057595376a012ef3d37a9f88f8c43657d0011c",
+            "selector": {
+              "M": 1,
+              "role": "lm_head",
+              "calls_per_timing_window": 16,
+              "candidate": "g03_current"
+            }
+          }
+        }
+      ],
+      "model_diagnostics": [
+        {
+          "model": "qwen25-q8",
+          "context": 128,
+          "backend": "mlx_reference",
+          "repeats": 5,
+          "decode_tps": 131.2264767440536,
+          "prefill_tps": 1965.594419957594,
+          "ttft_ms": 65.82987500587478,
+          "peak_mlx_bytes": 679129024,
+          "materialized_native_dispatches_per_request": 0,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        },
+        {
+          "model": "qwen25-q8",
+          "context": 128,
+          "backend": "forced_g03",
+          "repeats": 5,
+          "decode_tps": 108.44278677878339,
+          "prefill_tps": 2243.30351175127,
+          "ttft_ms": 57.64883401570842,
+          "peak_mlx_bytes": 679129024,
+          "materialized_native_dispatches_per_request": 21463,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        },
+        {
+          "model": "qwen25-q8",
+          "context": 4096,
+          "backend": "mlx_reference",
+          "repeats": 5,
+          "decode_tps": 114.86436025807795,
+          "prefill_tps": 2392.221832776553,
+          "ttft_ms": 1719.0974580007605,
+          "peak_mlx_bytes": 2365501224,
+          "materialized_native_dispatches_per_request": 0,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        },
+        {
+          "model": "qwen25-q8",
+          "context": 4096,
+          "backend": "forced_g03",
+          "repeats": 5,
+          "decode_tps": 105.94591189616504,
+          "prefill_tps": 2380.143122327844,
+          "ttft_ms": 1725.768915959634,
+          "peak_mlx_bytes": 2365501224,
+          "materialized_native_dispatches_per_request": 21463,
+          "evidence": {
+            "path": "local/mlxboost-upstream/20261116-1794812262942167000/measurements/sustained-model-samples.csv",
+            "sha256": "eac7155c65ec99a71674aa6c5cc2589ede10cf618fa8014a707009a1b1f69259",
+            "aggregation": "five per-backend/context repeats; median phase times/throughput, maximum peak MLX bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fused MoE combine K4",
+      "implementation": "Isolated mx.fast.metal_kernel prototype under benchmarks/moe_port; not in product wheels or model registry",
+      "qualification": "REJECT operator; MODEL BLOCKED, no usable local MoE checkpoint",
+      "source": "ZMLX src/zmlx/kernels/moe.py exact/no-FMA combine; commit d8cd0d88d4299ca6821d706f9d5b4a3520d688f5",
+      "license": "MIT, Copyright (c) 2026 Hunter Bown; full text in benchmarks/moe_port/NOTICE.txt",
+      "geometry": {
+        "dtype": "float16",
+        "experts": [
+          1,
+          4,
+          2048
+        ],
+        "weights": [
+          1,
+          4
+        ]
+      },
+      "correctness": "17 focused tests passed FP16/BF16, cancellation, tails, strides, routing preservation, fallback/lifecycle; corrected FP16 pilot exact",
+      "method": "3 interleaved paired synchronized trials after 3 warmups; distinct evaluated inputs; 4-byte GPU marker included",
+      "stock_ms": 0.536458,
+      "native_ms": 0.540542,
+      "speedup": 0.992444620399525,
+      "paired_speedups": [
+        0.9811478873239438,
+        0.9657750924072506,
+        1.086772347429729
+      ],
+      "max_abs_error": 0.0,
+      "memory": {
+        "native": {
+          "active_before_bytes": 131152,
+          "output_bytes": 4096,
+          "peak_bytes": 135252,
+          "peak_extra_bytes": 4100
+        },
+        "reference": {
+          "active_before_bytes": 131152,
+          "output_bytes": 4096,
+          "peak_bytes": 151632,
+          "peak_extra_bytes": 20480
+        }
+      },
+      "native_execution": "9 GPU-written markers: 3 timed + 4 first/warmup + 1 correctness + 1 memory probe",
+      "materialized_markers": 9,
+      "model_ttft_ms": null,
+      "model_prefill_tps": null,
+      "model_decode_tps": null,
+      "model_memory_delta_bytes": null,
+      "evidence": {
+        "path": "local/mlxboost-moe/20261117-1794936250077786000/pilot-corrected/9fa98070bc6a4fdb4d197632ccdfc649dc51bc0922b98f68dd1c0ab02ab72086.json",
+        "sha256": "9fa98070bc6a4fdb4d197632ccdfc649dc51bc0922b98f68dd1c0ab02ab72086"
+      },
+      "superseded_attempt": "Initial FP32 accumulation: 15 passed/2 cancellation failures; corrected without weakening tolerances; initial timing is not used"
+    }
+  ]
+}

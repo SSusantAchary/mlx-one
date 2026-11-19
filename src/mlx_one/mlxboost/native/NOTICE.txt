@@ -1,0 +1,7 @@
+MLXBoost Phase 0 is an experimental demonstration, not model qualification.
+CMake/nanobind/primitive/encoder API patterns adapted from Apple MLX v0.32.2:
+https://github.com/ml-explore/mlx/tree/v0.32.2/examples/extensions
+Copyright © 2023-2025 Apple Inc. MIT license in MLX_LICENSE.txt.
+ZMLX source studied at d8cd0d88d4299ca6821d706f9d5b4a3520d688f5:
+https://github.com/Hmbown/ZMLX
+MIT, Copyright (c) 2026 Hunter Bown. No ZMLX code copied or runtime dependency added.

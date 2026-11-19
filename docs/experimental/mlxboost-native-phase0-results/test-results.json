@@ -1,0 +1,106 @@
+{
+  "api_regression": "applicable existing backend-free/tiny-model CLI/HTTP/SSE tests included in full suite; no real-checkpoint HTTP/SSE run",
+  "baseline_failure_identity_matches": true,
+  "branch": "feat/mlxboost-native-phase0",
+  "captures": "not generated: full Xcode unavailable",
+  "combined_backend_free": {
+    "failed": 0,
+    "passed": 135,
+    "skipped": 75
+  },
+  "failure_ids_sha256": [
+    "03da13e3f2e54ef56046cbe72e0d59f4e70473141bb5cac7e97c7d3351a5bc1c",
+    "078178262f5f6bc1b8362e3c944ea018da5777dde7c8a4887d2fa1b949a373a7",
+    "171317110e8396d9c11df101f800ab905883df3c2fa92a90627f57b092f02026",
+    "189b7002b5b72a1f16986b0d80f30fc3d91a48a4989a384499cf7db7719ce17c",
+    "199b412fb605a8a77d3b2abd5af655f8d0213d0e2b0d150d329999528330b30b",
+    "2c91f0a43602ad695cb1ba23883b4ac0a3cfebe7c8201a0a8a730a0576f318a2",
+    "2e67747b12d77815d36b262fbdc79e376ebfb15ffb5c2ae78a6413ffa1b076b1",
+    "49a2cb68516f0600c0d47d005fe590041d2203c286cf1491e90a3a636ac675ae",
+    "4b1701137b25198e91fe3faa28397c3b830235c5296517b2bac8faed94bc6c74",
+    "4d0e05620ae21ec0043b1ade15cd541592602d31c583c4a8176e385e22b43ad1",
+    "51d24a0d9e79601c6fce81e9437c177ba217d3cf939ba617e1e00fd4ab5a62e1",
+    "56c1bbf1be6b08b55e82a21183cb0fd9c2fa3d479f7343a3240dd7639127f8b9",
+    "63490e395739b4de4312059b7beff7fcfafad61d114277fe885897851ddb0eb1",
+    "6b3f4413cdef1b5ec8247f2c1647eeab5f827585d715702dd734bd74052057a9",
+    "6cc2401f3c84f4d2fd870558dec55a823c3a9b53be39aec85ecb3f166044d404",
+    "75ea995ba98da46c5b93354316865fb6b4184c4d9b8bdf1c6cb7fb3239ab3bc3",
+    "7df5b50a8c7ea9eea5768434ae701637a16f225de7615d42e9c0c6ae1942264b",
+    "91f8ed77e87cca2660c00685631b1ff58cd9afc0033e53b764249cd3c32f15e8",
+    "99a8cdc463a339994ab97fe499b810f188a221bce04d03b6729606ec29d9bc3c",
+    "a67cc15d2b9a449682488d1ef8fca233a2131f51d3a94d8f82e7ebfec1a7cd8c",
+    "ba13902002142e548281d60e1e5d168d2154db89c19362c18d53eb3913209071",
+    "bbceb653ce8e1855d8a67d884b94f38a051f35a97c2382cd5c86bf069977a934",
+    "cc53aa24502bc6955b275aa154cee084730c59949cc75ce1cde14690d9071fc4",
+    "d4de784ab18897b1e8094b96f216fa046bdc261276edca300fa6d55953639232",
+    "e04d85a964a9587c1030c83fee61bf5fdbbef4b267c2598fea55ad5604a03870",
+    "f0a3562fba8d350e8455a6d85c63427054db768ad803772c8efb77f8f1db7dcc",
+    "f8f809ce5205d0bbc35797883de61d3f87d5775b9dcdece990a25833518d860c"
+  ],
+  "failures_by_module": {
+    "tests.native_tasks.test_classification_service": 12,
+    "tests.native_tasks.test_clip_service": 3,
+    "tests.native_tasks.test_depth_candidate": 2,
+    "tests.native_tasks.test_detr_candidate": 2,
+    "tests.native_tasks.test_distilbert_classifier": 1,
+    "tests.native_tasks.test_ner_service": 4,
+    "tests.native_tasks.test_vit_classifier": 1,
+    "tests.native_tasks.test_vit_diagnostics": 1,
+    "tests.unit.test_model_performance_reporting.PerformanceReportingTests": 1
+  },
+  "full_baseline": {
+    "failed": 27,
+    "passed": 2268,
+    "seconds": 43.48,
+    "skipped": 84
+  },
+  "full_changed": {
+    "failed": 27,
+    "passed": 2333,
+    "seconds": 43.11,
+    "skipped": 141
+  },
+  "measurements": {
+    "dtypes": [
+      "float16",
+      "float32"
+    ],
+    "lengths": [
+      256,
+      4096,
+      65536
+    ],
+    "native_samples": 0,
+    "runs": 2,
+    "scope": "reference operator only; synchronized wall time",
+    "total_measured_samples": 600,
+    "trials_per_case": 50,
+    "warmup_per_case": 10
+  },
+  "models": "Qwen2.5-0.5B Q8 and Qwen3-0.6B Q8 exact local assets absent; no model benchmark or ten-model campaign run",
+  "models_promoted": [],
+  "native_compile": {
+    "cpp_primitive": "compiled",
+    "metal": "blocked: xcrun metal missing",
+    "nanobind_binding": "compiled",
+    "numerical_matrix": "not measured",
+    "tuning": "not measured",
+    "wheel": "not built"
+  },
+  "native_runtime_approvals": [],
+  "new_failures": 0,
+  "original_targeted_baseline": {
+    "failed": 0,
+    "passed": 78,
+    "skipped": 10
+  },
+  "phase0_gpu_session": {
+    "failed": 0,
+    "passed": 65,
+    "seconds": 0.78,
+    "skipped": 57
+  },
+  "qualification": "EXPERIMENTAL; mandatory native gates incomplete",
+  "schema_version": 1,
+  "starting_commit": "4cad1634562c5c12933882deb0b8ab3c9461dd97"
+}

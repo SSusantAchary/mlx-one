@@ -1,0 +1,23 @@
+[
+  {
+    "flavor": "native",
+    "filename": "mlx_one-0.1.2-cp312-cp312-macosx_15_0_arm64.whl",
+    "sha256": "d20628515f8fefd436b508b1815136c3b7afbbe21dc3e725ece9b8c18f4661fe",
+    "assets": [
+      "mlx_one/mlxboost/native/_build_info.json",
+      "mlx_one/mlxboost/native/_ext.cpython-312-darwin.so",
+      "mlx_one/mlxboost/native/libmlxboost_ops.dylib",
+      "mlx_one/mlxboost/native/mlxboost.metallib"
+    ],
+    "wheel_metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp312-cp312-macosx_15_0_arm64\n\n",
+    "entry_count": 529
+  },
+  {
+    "flavor": "standard",
+    "filename": "mlx_one-0.1.2-py3-none-any.whl",
+    "sha256": "b9a150436d56d057b5d91df29b7fafe27891d03f6fcc29e7bd2b251ea8154103",
+    "assets": [],
+    "wheel_metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.2.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
+    "entry_count": 525
+  }
+]

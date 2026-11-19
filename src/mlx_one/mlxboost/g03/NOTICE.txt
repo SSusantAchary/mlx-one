@@ -1,0 +1,6 @@
+G03 is a separate experimental MLX affine Q4/Q8 milestone.
+Packed-format and arithmetic-order APIs adapted from Apple MLX v0.32.2.
+Apple's MIT license is shipped in ../native/MLX_LICENSE.txt.
+ZMLX d8cd0d88d4299ca6821d706f9d5b4a3520d688f5 and llama.cpp
+de32b268c4ad55d45f3b7b16c029f4e077f4ba74 were source-study references only.
+No GGML formats, third-party inference code or external runtime dependency added.
