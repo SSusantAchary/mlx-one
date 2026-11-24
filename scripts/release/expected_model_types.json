@@ -9,6 +9,7 @@
   "got_ocr2",
   "gpt2",
   "gpt_oss",
+  "inkling2_loop",
   "kokoro",
   "lfm2",
   "lfm2_audio",

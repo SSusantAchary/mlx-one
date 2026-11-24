@@ -119,7 +119,8 @@ def validate_finite_safetensors(path: str | Path) -> None:
             pass
     except SafetensorError as exc:
         raise ValueError(f"invalid safetensors checkpoint: {path.name}") from exc
-    formats = {"F16": ("<f2", 2), "F32": ("<f4", 4), "F64": ("<f8", 8), "BF16": ("<u2", 2)}
+    formats = {"F16": ("<f2", 2), "F32": ("<f4", 4), "F64": ("<f8", 8),
+               "BF16": ("<u2", 2), "F8_E4M3": ("u1", 1)}
     with path.open("rb") as stream:
         header_size = int.from_bytes(stream.read(8), "little")
         if header_size > 16 * 1024**2:
@@ -144,11 +145,13 @@ def validate_finite_safetensors(path: str | Path) -> None:
                 if not chunk:
                     raise ValueError(f"truncated floating tensor: {name}")
                 values = np.frombuffer(chunk, dtype=numpy_dtype)
-                finite = (
-                    np.all((values & 0x7F80) != 0x7F80)
-                    if dtype == "BF16"
-                    else np.isfinite(values).all()
-                )
+                if dtype == "BF16":
+                    finite = np.all((values & 0x7F80) != 0x7F80)
+                elif dtype == "F8_E4M3":
+                    # E4M3FN uses the maximum exponent for finite values except ±NaN.
+                    finite = np.all((values & 0x7F) != 0x7F)
+                else:
+                    finite = np.isfinite(values).all()
                 if not finite:
                     raise ValueError(f"non-finite checkpoint tensor: {name}")
                 remaining -= len(chunk)

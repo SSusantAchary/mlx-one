@@ -517,6 +517,7 @@ def create_app(
                         bundle, len(prepared.token_ids) + body.max_tokens,
                         key_bits=_cache_bits(settings.cache_type_k),
                         value_bits=_cache_bits(settings.cache_type_v),
+                        speculative=settings.spec_type == "draft-mtp",
                         prefix_cache_bytes=int(stats.get("prefix_bytes", 0)),
                     )
 
@@ -727,6 +728,7 @@ def create_app(
                         max(prompt_tokens - reused_tokens, 0) + body.max_tokens,
                         key_bits=_cache_bits(settings.cache_type_k),
                         value_bits=_cache_bits(settings.cache_type_v),
+                        speculative=settings.spec_type == "draft-mtp",
                         prefix_cache_bytes=int(
                             cache_stats.get(
                                 "prefix_bytes", cache_stats.get("bytes", 0)

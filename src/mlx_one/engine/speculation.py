@@ -12,7 +12,10 @@ SPECULATION_VERSION='native-speculation-v1'
 
 
 def validate_mtp(bundle,*,temperature=0):
-    if (bundle.architecture!='qwen3_5' or not hasattr(bundle.model,'mtp')
+    if bundle.architecture == "inkling2_loop":
+        if not getattr(bundle.model, "drafter", None):
+            raise ModelCapabilityUnsupported("Inkling MTP requires the native DSpark sidecar")
+    elif (bundle.architecture!='qwen3_5' or not hasattr(bundle.model,'mtp')
             or not callable(getattr(bundle.model,'make_mtp_cache',None))):
         raise ModelCapabilityUnsupported('native MTP requires complete Qwen3.5 predictor weights')
     if temperature!=0:

@@ -39,6 +39,9 @@ def resolved_mode(backend: str) -> str:
 
 
 def validate_mode(bundle, plan, mode: str | None) -> None:
+    if getattr(bundle, "architecture", None) == "inkling2_loop" and mode not in {
+            None, "reference_dense"}:
+        raise ModelCapabilityUnsupported("Inkling currently supports native reference B1 only")
     if getattr(getattr(bundle, "model", None), "_mlx_one_qwen3_candidate", False):
         from mlx_one.models.language.qwen3.upstream_adapter import validate_candidate_runtime
 
@@ -95,6 +98,8 @@ def configure_execution_dtype(bundle, execution_dtype: str | None) -> None:
         return
     if execution_dtype not in {"float32", "float16", "bfloat16"}:
         raise ModelCapabilityUnsupported("execution dtype must be float32, float16 or bfloat16")
+    if getattr(bundle, "architecture", None) == "inkling2_loop":
+        raise ModelCapabilityUnsupported("Inkling uses the checkpoint's mixed precision")
     quantized = bool(getattr(bundle, "quantization", {}))
     if quantized:
         from mlx_one.engine.adapters import quantized_modules

@@ -140,6 +140,9 @@ class Engine:
                 tokenizer_source=tokenizer_source,
             ))
         )
+        if self._bundle.architecture == "inkling2_loop" and cache_config is None:
+            config = replace(config, key_type="bf16", value_type="bf16",
+                             prefix_cache_enabled=False)
         if getattr(self._bundle.model, "_mlx_one_qwen3_candidate", False):
             from mlx_one.models.language.qwen3.upstream_adapter import validate_candidate_runtime
 
@@ -278,7 +281,9 @@ class Engine:
             **self.runtime_stats(),
             "cache": {
                 "dense_kv": True,
-                "quantized_kv": bundle.architecture not in {"gemma3_text", "gpt_oss"} and not (
+                "quantized_kv": bundle.architecture not in {
+                    "gemma3_text", "gpt_oss", "inkling2_loop"
+                } and not (
                     bundle.architecture == "phi3"
                     and getattr(bundle.model.config, "sliding_window", None)
                 ),

@@ -52,7 +52,7 @@ def test_coverage_is_lazy_in_fresh_interpreter():
     script = """
 import sys
 from mlx_one.engine.adapter_registry import runtime_coverage
-assert len(runtime_coverage())==45
+assert len(runtime_coverage())==46
 assert not any(n=='mlx' or n.startswith('mlx.') for n in sys.modules)
 assert not any(n.startswith('mlx_one.models.') and n.endswith('.model') for n in sys.modules)
 """

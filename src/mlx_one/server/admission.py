@@ -41,13 +41,18 @@ class MemoryAdmission:
         value_bits: int = 16,
         prefix_cache_bytes: int = 0,
         multimodal_bytes: int = 0,
+        speculative: bool = False,
     ) -> AdmissionDecision:
-        requested = forecast_kv_bytes(
-            bundle.model.config,
-            tokens,
-            key_bits=key_bits,
-            value_bits=value_bits,
-        )
+        estimate = getattr(bundle.model, "request_cache_bytes", None)
+        if callable(estimate):
+            requested = estimate(tokens, speculative=speculative)
+        else:
+            requested = forecast_kv_bytes(
+                bundle.model.config,
+                tokens,
+                key_bits=key_bits,
+                value_bits=value_bits,
+            )
         snapshot = get_memory_snapshot()
         usage = MemoryUsage(
             prefix_cache_bytes=prefix_cache_bytes,

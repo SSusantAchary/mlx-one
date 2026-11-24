@@ -21,6 +21,7 @@ def test_inventory_accounts_for_every_registration_without_promoting_declaration
     assert {k for k, r in rows.items() if r["integration_kind"] == "architecture_only"} == set()
     assert rows["sam3_tracker_video"]["integration_kind"] == "reference_loader_declared"
     assert rows["sam3_tracker_video"]["parent_model_type"] is None
+    assert rows["inkling2_loop"]["task_status"] == {"text-generation": "loader_declared"}
     assert rows["qwen3_5"]["task_status"]["vision-language-generation"] == "loader_declared"
     for row in rows.values():
         from mlx_one.engine.runtime_specs import BUILTIN_ADAPTERS
@@ -49,7 +50,7 @@ def test_inventory_imports_neither_mlx_nor_model_math_in_a_fresh_process():
 import json,sys
 from mlx_one.runtime_baseline import registry_inventory
 r=registry_inventory()
-assert len(r['registrations']) == 45
+assert len(r['registrations']) == 46
 assert not any(n == 'mlx' or n.startswith('mlx.') for n in sys.modules)
 assert not any(n.startswith('mlx_one.models.language.') and n.endswith('.model')
                for n in sys.modules)

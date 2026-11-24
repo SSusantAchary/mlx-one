@@ -635,5 +635,154 @@
       },
       "superseded_attempt": "Initial FP32 accumulation: 15 passed/2 cancellation failures; corrected without weakening tolerances; initial timing is not used"
     }
-  ]
+  ],
+  "inkling2_mini_native": {
+    "implementation": "native BF16 dense B1 with opt-in chronological DSpark",
+    "checkpoint": "Youssofal--Inkling-2-Mini-MTPLX-Bare-Speed",
+    "apple_silicon": "M4",
+    "unified_memory_gib": 32,
+    "macos": "15.8.3",
+    "mlx": "0.32.2",
+    "mlx_metal": "0.32.2",
+    "configured_context_tokens": 131072,
+    "paired_repetitions": 1,
+    "temperature": 0.0,
+    "seed": 17,
+    "draft_limit": 3,
+    "prompt_ids_sha256": "7ac9145fab923183d11d10582f921a456039fd59dd157f4e1800344d008de7fb",
+    "matching_completion_ids_sha256": "e090be5861a34f117841c7cbeddf4265762140d4cf7185112b645c9caa52bf51",
+    "runs": {
+      "reference": {
+        "accepted_draft_tokens": 0,
+        "actual_prefill_tokens": 1424,
+        "cleanup": true,
+        "decode_tokens_per_second": 16.47610509309934,
+        "drafted_tokens": 0,
+        "generated_tokens": 96,
+        "peak_mlx_bytes": 16404301490,
+        "prompt_tokens": 1424,
+        "prompt_tokens_per_second": 73.73572074305069,
+        "time_to_first_token_ms": 19624.306541000806
+      },
+      "draft-mtp": {
+        "accepted_draft_tokens": 51,
+        "actual_prefill_tokens": 1424,
+        "cleanup": true,
+        "decode_tokens_per_second": 13.38611879208174,
+        "drafted_tokens": 65,
+        "generated_tokens": 96,
+        "peak_mlx_bytes": 16461485464,
+        "prompt_tokens": 1424,
+        "prompt_tokens_per_second": 76.92103013889088,
+        "time_to_first_token_ms": 18847.23587500048
+      }
+    },
+    "full_window_reservation": {
+      "ceiling_bytes": 22906503168,
+      "kv_budget": 5054829056,
+      "projected_bytes": 22505791912,
+      "reserved_bytes": 5054829056,
+      "scope": "reservation only, no prefill",
+      "status": "PASS"
+    },
+    "long_context_64k": {
+      "prompt_tokens": 65536,
+      "prompt_sha256": "6b1b6bb1c766b3eedba64ae28d2b47277386c3016d14684e1a5a75839d880e2f",
+      "method": "One greedy B1 request per path. TTFT excludes model load. Reference interrupted.",
+      "native_flags": [
+        "MLX_ONE_INKLING_LONG_ATTN=1",
+        "MLX_ONE_INKLING_FUSED_CONV=1"
+      ],
+      "memory_ceiling_bytes": 22906503168,
+      "runs": {
+        "mlx-one": {
+          "status": "incomplete",
+          "generated_tokens": 3110,
+          "ttft_seconds": 2156.5940249580017,
+          "decode_tokens_per_second": 7.710792358449299,
+          "peak_mlx_bytes": 18763050768,
+          "output_sha256": "3734656f16498b2bf2e0f925045e52e902a6866cdf64399eef371c646a798e50",
+          "decode_tps_at_3072_outputs": 7.71
+        },
+        "mlx-one-optimized": {
+          "status": "complete",
+          "generated_tokens": 4096,
+          "ttft_seconds": 1528.2601322500013,
+          "decode_tokens_per_second": 7.784664196704546,
+          "peak_mlx_bytes": 18635718322,
+          "output_sha256": "26e84439c932d1f9793afb9a43c2df885f4567e74d1d516397e802cd67fddd94",
+          "decode_tps_at_3072_outputs": 7.79
+        },
+        "mtplx": {
+          "status": "complete",
+          "generated_tokens": 4096,
+          "ttft_seconds": 637.558259458001,
+          "decode_tokens_per_second": 17.084510122670473,
+          "peak_mlx_bytes": 19417981894,
+          "output_sha256": "ad8b73ea8ed42b1ab1bc7501f37aeb14bceb9aa9585ee19e1746e8f453d8dc93",
+          "decode_tps_at_3072_outputs": 16.89
+        }
+      },
+      "prefix_reference_tokens_matched": 3110,
+      "native_attention_bit_checks_passed": true,
+      "cleanup": true,
+      "mtplx_decode_speed_matched": false,
+      "tests": "19 native Inkling tests passed"
+    },
+    "grouped_nvfp4_2k_1k": {
+      "prompt_tokens": 2048,
+      "generated_tokens": 1024,
+      "prompt_sha256": "eaa7834c68ed919d4981bd8367153c3a3fbd08f91813a6f33a0d8755f44d539b",
+      "output_sha256": "b6e1473aefb7e89aaeaff051dca39fbb27c53aceeb4878480918be691e2ec613",
+      "method": "One greedy DSpark depth 3 pair, stock first. TTFT excludes model load.",
+      "runs": {
+        "stock_panel": {
+          "ttft_seconds": 27.231560958003683,
+          "decode_tokens_per_second": 15.885478002039003,
+          "peak_mlx_bytes": 16700254632
+        },
+        "grouped_nvfp4_panel": {
+          "ttft_seconds": 27.316013833995385,
+          "decode_tokens_per_second": 15.57841970941001,
+          "peak_mlx_bytes": 16700024228
+        }
+      },
+      "paired_decode_change_percent": -1.93,
+      "bitwise_panel_rows": 4,
+      "grouped_projection_forms_passed": 2,
+      "grouped_projection_forms_observed": 2,
+      "verified_panels_per_run": 290,
+      "drafted_tokens_per_run": 873,
+      "accepted_draft_tokens_per_run": 440,
+      "cleanup": true,
+      "model_acceleration_qualified": false,
+      "long_context_measured": false
+    },
+    "full_window_generation_verified": false,
+    "model_acceleration_qualified": false,
+    "attribution": "Powered by MTPLX by Youssof Altoukhi",
+    "upstream": "https://github.com/youssofal/mtplx",
+    "prefix_commit_2k_1k": {
+      "prompt_tokens": 2048,
+      "generated_tokens": 1024,
+      "output_sha256": "b6e1473aefb7e89aaeaff051dca39fbb27c53aceeb4878480918be691e2ec613",
+      "matched_stock_output_ids": true,
+      "verified_panels_per_run": 290,
+      "cleanup": true,
+      "runs": {
+        "stock_panel": {
+          "ttft_seconds": 27.231560958003683,
+          "decode_tokens_per_second": 15.885478002039003,
+          "peak_mlx_bytes": 16700254632
+        },
+        "prefix_commit": {
+          "ttft_seconds": 27.39326849999634,
+          "decode_tokens_per_second": 15.06238233618009,
+          "peak_mlx_bytes": 16700250676
+        }
+      },
+      "paired_decode_change_percent": -5.18,
+      "model_acceleration_qualified": false
+    }
+  }
 }

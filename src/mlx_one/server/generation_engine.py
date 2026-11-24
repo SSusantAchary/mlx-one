@@ -394,6 +394,11 @@ class GenerationEngine:
             from mlx_one.engine.selection import validate_context_admission
 
             validate_context_admission(runtime, prompt_tokens, options.max_tokens)
+        inkling_draft = bundle.architecture == "inkling2_loop" and spec_type == "draft-mtp"
+        if inkling_draft:
+            from mlx_one.engine.speculation import validate_mtp
+
+            validate_mtp(bundle, temperature=options.temperature)
         handle = runtime.create_handle(
             f"server-{time.time_ns()}",
             key_type=cache_type_k,
@@ -401,6 +406,8 @@ class GenerationEngine:
         )
         handle.metadata["is_cancelled"] = cancel.is_set
         handle.metadata["prepared_prompt"] = prepared
+        if inkling_draft:
+            handle.metadata["inkling_speculation"] = True
         handle.metadata["semantic_boundary"] = (
             prepared.semantic_boundary if cache_prompt and runtime.config.backend == "dense"
             and runtime.plan.prefix_shareable else 0)

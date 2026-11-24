@@ -104,6 +104,8 @@ def stream_generate(
     handle = _cache_manager.create_handle(f"engine-{time.time_ns()}",
                                          key_type=key_type, value_type=value_type)
     handle.metadata["is_cancelled"] = is_cancelled
+    if bundle.architecture == "inkling2_loop" and _spec_type == "draft-mtp":
+        handle.metadata["inkling_speculation"] = True
     fingerprint = _cache_manager.fingerprint(namespace=_cache_namespace,
                                              key_type=key_type, value_type=value_type)
     try:
@@ -331,6 +333,10 @@ def _stream_bundle_impl(
     from mlx_one.ops.logits import LogitsMode
 
     math_policy = _math_policy or getattr(_cache_runtime, "math_policy", REFERENCE_MATH)
+    inkling = bundle.architecture == "inkling2_loop"
+    inkling_draft = inkling and spec_type == "draft-mtp"
+    if inkling and (_cache_runtime is None or _cooperative):
+        raise ValueError("Inkling generation requires a managed native reference B1 request")
     gptoss_state = None
     boost_config = getattr(_cache_runtime, "mlxboost_config", None)
     gptoss_mlx_lm = getattr(boost_config, "gptoss_mlx_lm", False)
@@ -434,7 +440,10 @@ def _stream_bundle_impl(
                  math_policy.prefill_chunk_size is not None else len(current))
         if gptoss_mlx_lm and phase == "prefill":
             width = 2048
+        if inkling and phase == "prefill":
+            width = bundle.model.prefill_width(width, len(prompt_ids))
         start = 0
+        native_greedy_token = None
         while start < len(current):
             stop = min(start + width, len(current))
             if gptoss_mlx_lm and phase == "prefill" and len(current) - start > 1:
@@ -502,11 +511,13 @@ def _stream_bundle_impl(
                         with math_execution(math_policy, family=bundle.architecture,
                                             phase=phase, observer=request_observer):
                             mode = None
-                            if math_policy.logits == "last_only":
+                            if math_policy.logits == "last_only" or inkling:
                                 mode = (LogitsMode.NO_LOGITS if start < len(current) and
                                         not getattr(request_observer, "capture_state", False)
                                         else LogitsMode.LAST_ONLY)
                             kwargs = {"cache": staged.entries if staged else cache}
+                            if inkling_draft:
+                                kwargs["output_hidden_states"] = True
                             if mode is not None:
                                 kwargs["logits_mode"] = mode
                             output = bundle.model(mx.array([part]), **kwargs)
@@ -526,13 +537,28 @@ def _stream_bundle_impl(
                                         "unused intermediate logits must not be projected")
                             # NO_LOGITS is allowed only for unused intermediate chunks.
                             if output.logits is not None:
-                                mx.eval(output.logits)
+                                if inkling:
+                                    state = [t for entry in cache for t in entry.tensors()]
+                                    if not forced_tokens and options.temperature == 0:
+                                        chosen = mx.argmax(output.logits[0, -1])
+                                        mx.eval(chosen, state)
+                                        native_greedy_token = int(chosen.item())
+                                    else:
+                                        mx.eval(output.logits, state)
+                                else:
+                                    mx.eval(output.logits)
                             else:
                                 from mlx_one.engine.transactions import component_tensors
 
-                                state = [tensor for entry in kwargs["cache"]
-                                         for tensor in component_tensors(entry)]
+                                state = [tensor for entry in kwargs["cache"] for tensor in (
+                                    entry.tensors() if inkling else component_tensors(entry))]
                                 mx.eval(output.last_hidden_state, state)
+                            if inkling_draft and not cancelled():
+                                from mlx_one.models.language.inkling2.speculation import (
+                                    observe_draft,
+                                )
+
+                                observe_draft(bundle.model, output.hidden_states, cache[0].draft)
                         if cancelled():
                             return
                         if staged is not None:
@@ -604,8 +630,15 @@ def _stream_bundle_impl(
 
             validate_mtp(bundle,temperature=options.temperature)
             if (produced+1<maximum and not forced_tokens
+                    and not (inkling_draft and (
+                        produced == 0 or using_forced or token in eos_token_ids))
                     and not (reasoning_active and reasoning_budget>=0)):
-                proposal=SpeculativeProposal(bundle,cache,runtime=_cache_runtime,
+                proposal_type = SpeculativeProposal
+                if inkling_draft:
+                    from mlx_one.models.language.inkling2.speculation import InklingProposal
+
+                    proposal_type = InklingProposal
+                proposal=proposal_type(bundle,cache,runtime=_cache_runtime,
                     handle=_cache_handle,cancelled=cancelled,observer=on_execution)
                 proposal.propose_mtp(token,output.last_hidden_state[:,-1:],
                                     min(spec_draft_n_max,maximum-produced-1))
@@ -617,6 +650,12 @@ def _stream_bundle_impl(
                     for key,value in (("drafted_tokens",proposal.drafted),
                                       ("accepted_draft_tokens",proposal.accepted)):
                         speculative_stats[key]=speculative_stats.get(key,0)+value
+                    if inkling_draft and getattr(proposal, "panel_used", False):
+                        speculative_stats["verified_panels"] = (
+                            speculative_stats.get("verified_panels", 0) + 1)
+                    if inkling_draft and getattr(proposal, "panel_declined", False):
+                        speculative_stats["declined_panels"] = (
+                            speculative_stats.get("declined_panels", 0) + 1)
         if (spec_type=="draft-model" and produced+1<maximum and not forced_tokens
                 and not (reasoning_active and reasoning_budget>=0)):
             from mlx_one.engine.speculation import (

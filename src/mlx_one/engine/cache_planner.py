@@ -91,7 +91,7 @@ def _layer_spec(index: int, cache: Any, config: Any) -> LayerCacheSpec:
         max_window_tokens=(getattr(config, "sliding_window", None)
                            if kind is CacheKind.ROTATING_KV else getattr(cache, "max_size", None)),
         quantizable=attention and getattr(cache, "supports_quantization", True),
-        shareable_prefix=attention,
+        shareable_prefix=attention and getattr(cache, "supports_prefix_sharing", True),
         trimmable=callable(getattr(cache, "trim", None)),
         batchable=attention and getattr(cache, "supports_batching", True),
         block_compatible=attention and heads is not None and head_dim is not None

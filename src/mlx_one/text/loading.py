@@ -105,7 +105,9 @@ def load_text_model(
         registration = get_registration(model_type)
         if not registration.loader_path or not registration.supports("text-generation"):
             raise ValueError(f"model type {model_type!r} has no native text loader")
-        quantization = _quantization_config(config_data)
+        inkling = model_type == "inkling2_loop"
+        quantization = ({"bits": 4, "group_size": 16, "mode": "nvfp4"}
+                        if inkling else _quantization_config(config_data))
         config = registration.config_class().from_dict(config_data)
         tokenizer_root = (
             _resolve_tokenizer(
@@ -116,9 +118,17 @@ def load_text_model(
         )
         tokenizer = _load_tokenizer(tokenizer_root, model_type)
         chat_template = ChatTemplate.from_directory(tokenizer_root, model_type, tokenizer)
-        _check_checkpoint_memory(root)
+        _check_checkpoint_memory(root, extra_bytes=(
+            (root / "mtp.safetensors").stat().st_size + 256 * 1024**2
+            if inkling and (root / "mtp.safetensors").is_file() else 0))
         tensors = registration.sanitizer()(_read_safetensors(root), config)
-        if _qwen3_candidate:
+        if inkling:
+            from mlx_one.models.language.inkling2.weights import load_parameters
+
+            native = load_parameters(root, config, tensors)
+            if adapter_path is not None:
+                raise ValueError("Inkling adapter weights are unsupported")
+        elif _qwen3_candidate:
             from mlx_one.models.language.qwen3.upstream_model import Qwen3UpstreamForCausalLM
 
             native = Qwen3UpstreamForCausalLM(config)
@@ -139,12 +149,13 @@ def load_text_model(
         eos_token_ids = _eos_token_ids({**config_data, **{
             key: generation_config[key] for key in ("eos_token_id",) if key in generation_config
         }})
-        if quantization:
-            _prepare_quantized_model(native, tensors, quantization)
-            _validate_quantized_tensors(native, tensors)
-        else:
-            registration.weight_contract()(config).validate(tensors)
-        native.load_weights(list(tensors.items()), strict=True)
+        if not inkling:
+            if quantization:
+                _prepare_quantized_model(native, tensors, quantization)
+                _validate_quantized_tensors(native, tensors)
+            else:
+                registration.weight_contract()(config).validate(tensors)
+            native.load_weights(list(tensors.items()), strict=True)
         if adapter_path is not None:
             from mlx_one.tuning import load_adapter
 
@@ -427,7 +438,7 @@ def _check_mxfp4_core():
         ) from exc
 
 
-def _check_checkpoint_memory(root):
+def _check_checkpoint_memory(root, *, extra_bytes=0):
     """Reject weights larger than the detected Metal working-set headroom.
 
     This is a detectable lower bound; runtime admission still owns KV/transients.
@@ -438,7 +449,7 @@ def _check_checkpoint_memory(root):
     files, _ = _checkpoint_files(root)
     info = mx.device_info()
     recommended = info.get("max_recommended_working_set_size")
-    if recommended and sum(path.stat().st_size for path in files) > (
+    if recommended and sum(path.stat().st_size for path in files) + extra_bytes > (
         recommended - mx.get_active_memory()
     ):
         raise TextModelLoadError("INSUFFICIENT_MEMORY: checkpoint exceeds detected Metal "

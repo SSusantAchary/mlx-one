@@ -759,10 +759,9 @@ def serve_command(
                 )
                 transcription_service = NativeTranscriptionService(transcription_bundle)
             if spec_type == "draft-mtp":
-                if bundle.architecture != "qwen3_5" or not getattr(bundle.model, "mtp", None):
-                    raise ValueError(
-                        "draft-mtp requires a Qwen3.5 checkpoint with native MTP weights"
-                    )
+                from mlx_one.engine.speculation import validate_mtp
+
+                validate_mtp(bundle)
             if (
                 reasoning == "on"
                 and (
@@ -826,6 +825,8 @@ def serve_command(
             )
             event("load_model", "model loaded | model = %s | architecture = %s | quantization = %s",
                   manager.model_info().id, bundle.architecture, quantization)
+            if bundle.architecture == "inkling2_loop":
+                click.echo("Powered by MTPLX · https://github.com/youssofal/mtplx")
             event("device", "backend = MLX | device = Apple Silicon GPU")
             if transcription_service is not None:
                 event("configure", "private native Whisper transcription sidecar enabled")

@@ -161,6 +161,9 @@ class CacheManager:
         with self._lock:
             self._ensure_open()
             backend = self.config.backend
+            if getattr(self.bundle, "architecture", None) == "inkling2_loop" and (
+                    backend != "dense" or key_type != "bf16" or value_type != "bf16"):
+                raise CacheTopologyUnsupported("Inkling requires reference dense BF16 cache")
             if backend == "paged":
                 from mlx_one.engine.paged import PagedKVCache
 
@@ -226,6 +229,14 @@ class CacheManager:
         tokens = uncached + max(max_new_tokens, 0)
         key_type = str(handle.metadata.get("key_type", "f16"))
         value_type = str(handle.metadata.get("value_type", "f16"))
+        if getattr(self.bundle, "architecture", None) == "inkling2_loop":
+            amount = self.bundle.model.configure_request_cache(
+                handle.bundle.entries, prompt_tokens + max_new_tokens,
+                speculative=bool(handle.metadata.get("inkling_speculation")))
+            handle.metadata["admission_request"] = {
+                "prompt_tokens": prompt_tokens, "requested_output_tokens": max_new_tokens,
+                "estimated_kv_growth_bytes": amount, "total_growth_bytes": amount}
+            return amount
         key_bits = _cache_bits(key_type)
         value_bits = _cache_bits(value_type)
         if handle.backend in {"block", "paged"}:

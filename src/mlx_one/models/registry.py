@@ -339,6 +339,16 @@ def builtin_registrations() -> tuple[ModelRegistration, ...]:
             tasks=frozenset({"vision-language-generation"}),
         ),
         ModelRegistration(
+            "inkling2_loop",
+            "mlx_one.models.language.inkling2.config:InklingConfig",
+            "mlx_one.models.language.inkling2.model:InklingForCausalLM",
+            "causal-lm",
+            frozenset({"forward", "cache", "generate", "stream", "text-only", "mtp"}),
+            "mlx_one.models.language.inkling2.weights:sanitize_weights",
+            loader_path="mlx_one.text.loading:load_text_model",
+            tasks=frozenset({"text-generation"}),
+        ),
+        ModelRegistration(
             "qwen3_5",
             "mlx_one.models.vision_language.qwen3_5.config:Qwen3_5Config",
             "mlx_one.models.vision_language.qwen3_5.model:Qwen3_5ForConditionalGeneration",
