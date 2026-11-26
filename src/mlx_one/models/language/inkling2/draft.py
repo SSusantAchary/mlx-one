@@ -86,10 +86,14 @@ class DraftBlock(nn.Module):
         position = entry.offset
         q = self.rotate(self.normalize(self.heads(x, "q"), "self_attn.q_norm"), position)
         k = self.rotate(self.normalize(self.heads(x, "k"), "self_attn.k_norm"), position)
-        key, value = self.proposal_kv(entry, k, self.heads(x, "v"))
-        out = mx.fast.scaled_dot_product_attention(
-            q, key, value, scale=self.cfg["head_dim"] ** -0.5,
-        )
+        v = self.heads(x, "v")
+        if hasattr(entry, "attention"):
+            out = entry.attention(q, k, v)
+        else:
+            key, value = self.proposal_kv(entry, k, v)
+            out = mx.fast.scaled_dot_product_attention(
+                q, key, value, scale=self.cfg["head_dim"] ** -0.5,
+            )
         return linear(
             out.transpose(0, 2, 1, 3).reshape(*x.shape[:2], -1),
             self.w["self_attn.o_proj.weight"],
@@ -198,7 +202,8 @@ class Drafter(nn.Module):
         """Propose greedy tokens from the Markov-conditioned draft logits."""
         if not 1 <= count < self.width:
             raise ValueError("DSpark proposal count exceeds its trained block")
-        embed = target.embed_tokens(mx.array([[anchor]]))
+        anchor_ids = mx.asarray(anchor, mx.int32).reshape(1)
+        embed = target.embed_tokens(anchor_ids[None])
         dtype = embed.dtype
         masks = mx.broadcast_to(self.mask, (1, self.width - 1, embed.shape[-1]))
         h, residual = mx.concatenate([embed, masks], axis=1), None
@@ -217,7 +222,7 @@ class Drafter(nn.Module):
             inputs.astype(mx.float32), weights[:, 2 * rank :]
         ) + self.markov["rnn_proj.bias"].astype(mx.float32)
         folded = self.fold(target.unembed)
-        state, prev = mx.zeros((1, rank), dtype), mx.array([anchor])
+        state, prev = mx.zeros((1, rank), dtype), anchor_ids
         guesses = []
         for i in range(count):
             inputs = mx.concatenate(

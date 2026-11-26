@@ -358,6 +358,24 @@ def _stream_bundle_impl(
         from mlx_one.engine.speculation import validate_mtp
 
         validate_mtp(bundle,temperature=options.temperature)
+    adaptive = None
+    continuous_dspark = False
+    if (inkling_draft and getattr(bundle.model, "continuous_dspark", False)
+            and not getattr(bundle.model, "adaptive_verification", False)
+            and reasoning_budget < 0 and not _forced_token_ids
+            and math_policy == REFERENCE_MATH
+            and getattr(_cache_runtime, "mode", None) != "native_optimized"
+            and not getattr(request_observer, "capture_state", False)
+            and not getattr(request_observer, "profile_math", False)):
+        from mlx_one.models.language.inkling2.long_attention import _supported_gpu
+
+        continuous_dspark = mx.default_device() == mx.gpu and _supported_gpu()
+    if inkling_draft and getattr(bundle.model, "adaptive_verification", False):
+        from mlx_one.models.language.inkling2.long_attention import _supported_gpu
+        from mlx_one.models.language.inkling2.speculation import AdaptiveVerification
+
+        if mx.default_device() == mx.gpu and _supported_gpu():
+            adaptive = AdaptiveVerification()
     if spec_type=="draft-model":
         from mlx_one.engine.speculation import validate_external
 
@@ -434,6 +452,8 @@ def _stream_bundle_impl(
         if not current:
             raise ValueError("prompt cache must leave at least one token for prefill")
         phase = "prefill" if produced == 0 else "decode"
+        if adaptive is not None and phase == "decode":
+            decode_started = time.perf_counter()
         width = (_prefill_chunk_size if (_cooperative or _yield_prefill_progress)
                  and produced == 0 else
                  math_policy.prefill_chunk_size if produced == 0 and
@@ -442,9 +462,25 @@ def _stream_bundle_impl(
             width = 2048
         if inkling and phase == "prefill":
             width = bundle.model.prefill_width(width, len(prompt_ids))
+            if getattr(request_observer, "capture_state", False):
+                width = min(width, 128)
+        proposal = None
+        # The last emitted token is the uncomputed anchor of the next round.
+        # This round verifies it directly and emits only its successors.
+        carried_anchor = continuous_dspark and phase == "decode" and maximum - produced > 1
+        if carried_anchor:
+            from mlx_one.models.language.inkling2.speculation import InklingProposal
+
+            proposal = InklingProposal(
+                bundle, cache, runtime=_cache_runtime, handle=_cache_handle,
+                cancelled=cancelled, observer=on_execution,
+            )
+            depth = min(spec_draft_n_max, 3, maximum - produced - 1)
+            proposal.allow_metal_replay = True
+            proposal.propose_mtp(tokens[-1], None, depth)
         start = 0
         native_greedy_token = None
-        while start < len(current):
+        while not carried_anchor and start < len(current):
             stop = min(start + width, len(current))
             if gptoss_mlx_lm and phase == "prefill" and len(current) - start > 1:
                 # Match generate_step: prefill all but the final prompt token,
@@ -487,14 +523,20 @@ def _stream_bundle_impl(
 
                 transactional = any(isinstance(entry, BlockKVCache) for entry in cache)
                 staged = None
+                grouped = (inkling and phase == "prefill" and len(part) > 128
+                           and getattr(bundle.model, "group_prefill", False))
                 try:
                     with ExitStack() as execution:
                         if _cache_runtime is not None:
                             from mlx_one.engine.pressure import execution_forecast
 
+                            chunk = 128 if grouped else len(part)
+                            history = cache[0].offset + (len(part) - chunk)
                             amount = execution_forecast(
                                 _cache_runtime, bundle.model.config, batch=1,
-                                chunk=len(part), history=cache[0].offset)["bytes"]
+                                chunk=chunk, history=history)["bytes"]
+                            if grouped:
+                                amount *= 2
                             if (gptoss_state is not None and phase == "prefill"
                                     and 16 <= len(part) <= (2048 if gptoss_mlx_lm else 1024)):
                                 # Bound extra assignment/gather/reorder buffers for BF16 top-four.
@@ -520,7 +562,13 @@ def _stream_bundle_impl(
                                 kwargs["output_hidden_states"] = True
                             if mode is not None:
                                 kwargs["logits_mode"] = mode
-                            output = bundle.model(mx.array([part]), **kwargs)
+                            if grouped:
+                                output = bundle.model.prefill_group(mx.array([part]),
+                                                                    cancelled=cancelled, **kwargs)
+                                if output is None:
+                                    return
+                            else:
+                                output = bundle.model(mx.array([part]), **kwargs)
                             if mode is not None:
                                 from mlx_one.engine.modes import ModelCapabilityUnsupported
 
@@ -539,7 +587,8 @@ def _stream_bundle_impl(
                             if output.logits is not None:
                                 if inkling:
                                     state = [t for entry in cache for t in entry.tensors()]
-                                    if not forced_tokens and options.temperature == 0:
+                                    if (not forced_tokens and options.temperature == 0
+                                            and _logits_processor is None):
                                         chosen = mx.argmax(output.logits[0, -1])
                                         mx.eval(chosen, state)
                                         native_greedy_token = int(chosen.item())
@@ -553,7 +602,9 @@ def _stream_bundle_impl(
                                 state = [tensor for entry in kwargs["cache"] for tensor in (
                                     entry.tensors() if inkling else component_tensors(entry))]
                                 mx.eval(output.last_hidden_state, state)
-                            if inkling_draft and not cancelled():
+                            if inkling_draft and grouped:
+                                mx.eval(cache[0].draft.tensors())
+                            elif inkling_draft and not cancelled():
                                 from mlx_one.models.language.inkling2.speculation import (
                                     observe_draft,
                                 )
@@ -598,6 +649,8 @@ def _stream_bundle_impl(
             if _yield_prefill_progress and start < len(current):
                 yield GenerationChunk(None, "", emitted)
         if cancelled():
+            if proposal is not None:
+                proposal.close()
             return
         if on_cache_update is not None and produced == 0 and not prompt_cache_published:
             staged = (_cache_runtime.publish_staged_prefix(
@@ -606,33 +659,46 @@ def _stream_bundle_impl(
             if not staged:
                 on_cache_update(tuple(prompt_ids), cache)
             prompt_cache_published = True
-        logits = output.logits[0, -1]
-        if _logits_processor is not None:
-            logits = _logits_processor(tuple(tokens), logits)
         using_forced = bool(forced_tokens)
-        if request_observer is not None and getattr(request_observer, "profile_math", False):
-            from mlx_one.ops.profiling import phase as math_phase
+        if carried_anchor:
+            candidates = proposal.candidates[1:]
+            if not candidates:
+                proposal.close()
+                raise RuntimeError("Inkling DSpark returned no verified successor")
+        else:
+            logits = output.logits[0, -1]
+            if _logits_processor is not None:
+                logits = _logits_processor(tuple(tokens), logits)
+            if native_greedy_token is not None:
+                token = native_greedy_token
+            elif request_observer is not None and getattr(request_observer, "profile_math", False):
+                from mlx_one.ops.profiling import phase as math_phase
 
-            with math_phase("sampling", observer=request_observer):
+                with math_phase("sampling", observer=request_observer):
+                    token = (forced_tokens.popleft() if using_forced else
+                             select_token(logits, options, randomizer))
+            else:
                 token = (forced_tokens.popleft() if using_forced else
                          select_token(logits, options, randomizer))
-        else:
-            token = (forced_tokens.popleft() if using_forced else
-                     select_token(logits, options, randomizer))
-        candidates = [token]
+            candidates = [token]
         step_yielded = False
-        proposal=None
         step_events=[]
-        if spec_type not in {"none","draft-mtp","draft-model"}:
-            raise ValueError("unsupported speculation policy")
-        if spec_type=="draft-mtp":
-            from mlx_one.engine.speculation import SpeculativeProposal, validate_mtp
-
-            validate_mtp(bundle,temperature=options.temperature)
+        if spec_type=="draft-mtp" and not carried_anchor:
+            depth = min(spec_draft_n_max, maximum - produced - 1)
+            if adaptive is not None and phase == "decode":
+                draft_started = time.perf_counter()
+                adaptive.record_b1(draft_started - decode_started)
+                depth = adaptive.choose(
+                    min(depth, bundle.model.drafter.width - 1),
+                    cache[0].offset, bundle.model.verify_panel_proofs,
+                )
             if (produced+1<maximum and not forced_tokens
+                    and depth
                     and not (inkling_draft and (
                         produced == 0 or using_forced or token in eos_token_ids))
                     and not (reasoning_active and reasoning_budget>=0)):
+                from mlx_one.engine.speculation import SpeculativeProposal
+
                 proposal_type = SpeculativeProposal
                 if inkling_draft:
                     from mlx_one.models.language.inkling2.speculation import InklingProposal
@@ -640,22 +706,27 @@ def _stream_bundle_impl(
                     proposal_type = InklingProposal
                 proposal=proposal_type(bundle,cache,runtime=_cache_runtime,
                     handle=_cache_handle,cancelled=cancelled,observer=on_execution)
-                proposal.propose_mtp(token,output.last_hidden_state[:,-1:],
-                                    min(spec_draft_n_max,maximum-produced-1))
+                proposal.propose_mtp(token, output.last_hidden_state[:, -1:], depth)
                 if cancelled():
                     proposal.close()
                     return
                 candidates=proposal.candidates or [token]
-                if speculative_stats is not None:
-                    for key,value in (("drafted_tokens",proposal.drafted),
-                                      ("accepted_draft_tokens",proposal.accepted)):
-                        speculative_stats[key]=speculative_stats.get(key,0)+value
-                    if inkling_draft and getattr(proposal, "panel_used", False):
-                        speculative_stats["verified_panels"] = (
-                            speculative_stats.get("verified_panels", 0) + 1)
-                    if inkling_draft and getattr(proposal, "panel_declined", False):
-                        speculative_stats["declined_panels"] = (
-                            speculative_stats.get("declined_panels", 0) + 1)
+        if spec_type == "draft-mtp" and proposal is not None and speculative_stats is not None:
+            for key, value in (("drafted_tokens", proposal.drafted),
+                               ("accepted_draft_tokens", proposal.accepted)):
+                speculative_stats[key] = speculative_stats.get(key, 0) + value
+            if inkling_draft and getattr(proposal, "panel_used", False):
+                speculative_stats["verified_panels"] = (
+                    speculative_stats.get("verified_panels", 0) + 1
+                )
+            if inkling_draft and getattr(proposal, "panel_declined", False):
+                speculative_stats["declined_panels"] = (
+                    speculative_stats.get("declined_panels", 0) + 1
+                )
+            if carried_anchor:
+                speculative_stats["continuous_rounds"] = (
+                    speculative_stats.get("continuous_rounds", 0) + 1
+                )
         if (spec_type=="draft-model" and produced+1<maximum and not forced_tokens
                 and not (reasoning_active and reasoning_budget>=0)):
             from mlx_one.engine.speculation import (
@@ -750,7 +821,17 @@ def _stream_bundle_impl(
                     else:
                         yield event
             if proposal is not None:
-                proposal.commit(produced-before_produced)
+                committed = produced - before_produced
+                # commit() counts the anchor and leaves the last sampled token pending.
+                proposal.commit(committed + int(carried_anchor))
+                if adaptive is not None and getattr(proposal, "panel_used", False) and committed:
+                    # Include B1, draft, verification, and state commit in the cost.
+                    adaptive.record_panel(depth, time.perf_counter() - decode_started, committed)
+                    if speculative_stats is not None:
+                        key = f"adaptive_{depth + 1}_row_panels"
+                        speculative_stats[key] = speculative_stats.get(key, 0) + 1
+                        key = "adaptive_committed_tokens"
+                        speculative_stats[key] = speculative_stats.get(key, 0) + committed
         finally:
             if proposal is not None:
                 proposal.close()

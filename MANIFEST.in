@@ -1,4 +1,6 @@
 include LICENSE README.md pyproject.toml
+include setup.py
+recursive-include src/mlx_one/mlxboost/native/_build *.cpp *.mm *.h *.metal CMakeLists.txt
 include requirements/alpha-tested-constraints.txt
 recursive-include src/mlx_one *.py *.json *.yaml *.html *.js *.css *.png *.txt UPSTREAM_LICENSE NOTICE NOTICE.md
 prune local

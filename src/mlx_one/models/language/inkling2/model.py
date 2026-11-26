@@ -15,9 +15,18 @@ from mlx_one.ops.logits import LogitsMode
 from . import expert_scatter, grouped_experts, prompt_attention, short_conv, verify
 from .activations import expert_inputs
 from .attention import attend, chronological_attention
+from .attention_metal import window_panel_attention
 from .cache import InklingKVCache
-from .long_attention import try_global_attention
+from .long_attention import _supported_gpu, try_global_attention
 from .precision import AffineWeight, packed_logical_shape
+
+
+def _native_default(option):
+    """Use the measured native route on the pinned M4, with explicit overrides."""
+    value = os.environ.get("MLX_ONE_INKLING_" + option)
+    if value is not None:
+        return value == "1"
+    return mx.default_device() == mx.gpu and _supported_gpu()
 
 
 def linear(x, weight):
@@ -32,6 +41,62 @@ def linear(x, weight):
 
 def shared_linear(x, weights):
     return [linear(x, w) for w in weights]
+
+
+class AttentionProjections(nn.Module):
+    """One affine weight bank for the query, relative projection, and gate."""
+
+    def __init__(self, weights):
+        super().__init__()
+        sizes = [w.codes.shape[0] for w in weights]
+        self.cuts = [sizes[0], sizes[0] + sizes[1]]
+        self.bank = AffineWeight(
+            *(mx.concatenate([getattr(w, field) for w in weights], axis=0)
+              for field in ("codes", "scales", "biases")),
+            weights[0].bits, weights[0].group_size,
+        )
+        self.proofs = {}
+
+    @classmethod
+    def prepare(cls, weights):
+        if not all(isinstance(w, AffineWeight) for w in weights):
+            return None
+        formats = {(w.bits, w.group_size, w.codes.shape[1], w.scales.dtype, w.biases.dtype)
+                   for w in weights}
+        if len(formats) != 1 or any(w.codes.shape[0] % 8 for w in weights):
+            return None
+        return cls(weights)
+
+    def reference(self, x):
+        bank = self.bank
+        return shared_linear(x, [
+            AffineWeight(bank.codes[start:stop], bank.scales[start:stop],
+                         bank.biases[start:stop], bank.bits, bank.group_size)
+            for start, stop in zip((0, *self.cuts), (*self.cuts, bank.codes.shape[0]), strict=True)
+        ])
+
+    def __call__(self, x):
+        rows = x.shape[1]
+        panel = verify.active.get() is not None
+        if mx.default_device() != mx.gpu or rows not in (1, 2, 3, 4, 128):
+            return self.reference(x)
+        signature = (rows, panel, x.dtype)
+        proof = self.proofs.get(signature)
+        if proof is False:
+            return self.reference(x)
+        try:
+            output = mx.split(linear(x, self.bank), self.cuts, axis=-1)
+            if proof is None:
+                reference = self.reference(x)
+                self.proofs[signature] = bool(mx.all(mx.stack([
+                    verify.same_bits(a, b) for a, b in zip(output, reference, strict=True)
+                ])).item())
+                if not self.proofs[signature]:
+                    return reference
+            return output
+        except (RuntimeError, ValueError):
+            self.proofs[signature] = False
+            return self.reference(x)
 
 
 def cross_pass_message(queries, states, scale):
@@ -219,7 +284,7 @@ class Convolution(nn.Module):
             if is_dynamic
             else weights.pop(stem + ".weight")[:, 0, :].T
         ).astype(mx.float32)
-        self.fused_decode = os.environ.get("MLX_ONE_INKLING_FUSED_CONV") == "1"
+        self.fused_decode = _native_default("FUSED_CONV")
         self.prefill_conv_proofs = None
 
     def __call__(self, x, cache, slot, drive=None, add=None, out_dtype=None, tape=None):
@@ -240,12 +305,17 @@ class Convolution(nn.Module):
 
 
 class Layer(nn.Module):
-    def __init__(self, weights, cfg, index, attn_query, mlp_query, mode):
+    def __init__(self, weights, cfg, index, attn_query, mlp_query, mode, *,
+                 overlap_prefill=False, window_panel=False):
         super().__init__()
         self.cfg = cfg
         self.sliding = index in cfg["local_layer_ids"]
-        self.long_attention = not self.sliding and os.environ.get("MLX_ONE_INKLING_LONG_ATTN") == "1"
+        self.long_attention = (
+            not self.sliding and _native_default("LONG_ATTN")
+        )
         self.flash_prompt = os.environ.get("MLX_ONE_INKLING_FLASH_PROMPT") == "1"
+        self.overlap_prefill = overlap_prefill
+        self.window_panel = window_panel
         self.boundary = index % cfg["n_layers_per_attn_res_block"] == 0
         self.attn_query, self.mlp_query = attn_query, mlp_query
         self.eps = cfg["rms_norm_eps"]
@@ -271,6 +341,11 @@ class Layer(nn.Module):
         self.q_scale = weights.pop(stem + "q_l2_clip.scale")
         self.r_scale = weights.pop(stem + "rel_l2_clip.scale")
         self.rel_basis = weights.pop(stem + "rel_logits_proj.proj")
+        self.attention_projections = None
+        if os.environ.get("MLX_ONE_INKLING_PROJECTION_BANK") == "1":
+            self.attention_projections = AttentionProjections.prepare((self.q, self.r, self.gate))
+            if self.attention_projections is not None:
+                self.q = self.r = self.gate = None
         self.convs = [
             Convolution(weights, stem + k, not self.sliding)
             for k in ("k_sconv", "v_sconv")
@@ -294,7 +369,11 @@ class Layer(nn.Module):
         cfg = self.cfg
         shape = (*q_input.shape[:2], self.q_scale.shape[0])
         width = self.q_scale.shape[-1]
-        if q_input is k_input and k_input is v_input:
+        if self.attention_projections is not None:
+            q_lin, r_lin, gate_lin = self.attention_projections(q_input)
+            sink = linear(q_input, self.sink)
+            k_lin, v_lin = linear(k_input, self.k), linear(v_input, self.v)
+        elif q_input is k_input and k_input is v_input:
             q_lin, r_lin, sink, gate_lin, k_lin, v_lin = shared_linear(
                 q_input, [self.q, self.r, self.sink, self.gate, self.k, self.v],
             )
@@ -324,7 +403,9 @@ class Layer(nn.Module):
         k_rows, v_rows = k.transpose(0, 2, 1, 3), v.transpose(0, 2, 1, 3)
         basis = self.rel_basis.astype(rel.dtype)
         if tape is not None:
-            profiles = mx.concatenate([row @ basis for row in mx.split(rel, rel.shape[1], 1)], axis=1)
+            profiles = mx.concatenate(
+                [row @ basis for row in mx.split(rel, rel.shape[1], 1)], axis=1,
+            )
         else:
             profiles = rel @ basis
         k, v = kv.update(k_rows, v_rows)
@@ -332,6 +413,15 @@ class Layer(nn.Module):
         if tape is not None:
             if window:
                 tape.window = (k, v)
+                if self.window_panel and mx.default_device() == mx.gpu:
+                    signature = ("window_attention", query.shape[2], window, k.shape[2] >= window)
+                    heads_first = verify.qualified(
+                        signature,
+                        lambda: window_panel_attention(query, k, v, profiles, sink, window),
+                        lambda: chronological_attention(query, k, v, profiles, sink, window),
+                    )
+            elif hasattr(kv, "panel_attention"):
+                heads_first = kv.panel_attention(query, k_rows, v_rows, profiles, sink)
             else:
                 heads_first = try_global_attention(
                     query, kv.keys, kv.values, profiles, sink, kv.offset, verify=True,
@@ -339,11 +429,21 @@ class Layer(nn.Module):
             if heads_first is None:
                 heads_first = chronological_attention(query, k, v, profiles, sink, window)
         elif self.flash_prompt and q_input.shape[1] > 32:
-            heads_first = prompt_attention.prompt_attention(query, k, v, profiles, sink, window)
+            if window:
+                heads_first = prompt_attention.prompt_attention(
+                    query, k, v, profiles, sink, window,
+                )
+            else:
+                heads_first = prompt_attention.prompt_attention(
+                    query, kv.keys, kv.values, profiles, sink, window, count=kv.offset,
+                )
         if heads_first is None and self.long_attention:
             heads_first = try_global_attention(query, kv.keys, kv.values, profiles, sink, kv.offset)
         if heads_first is None:
-            heads_first = attend(query, k, v, profiles, sink, window)
+            if self.overlap_prefill and tape is None and q_input.shape[1] > 1:
+                heads_first = attend(query, k, v, profiles, sink, window, overlap_tiles=True)
+            else:
+                heads_first = attend(query, k, v, profiles, sink, window)
         h = heads_first.transpose(0, 2, 1, 3).reshape(*q_input.shape[:2], -1)
         gated = (h.astype(mx.float32) * mx.sigmoid(gate_lin.astype(mx.float32))).astype(h.dtype)
         return linear(gated, self.out)
@@ -408,11 +508,37 @@ class InklingForCausalLM(nn.Module):
         count = cfg["num_hidden_layers"]
         self.visit_order = config.visit_order
         self.eps = cfg["rms_norm_eps"]
-        self.verify_panels = os.environ.get("MLX_ONE_INKLING_VERIFY_PANEL") == "1"
+        self.verify_panels = _native_default("VERIFY_PANEL")
+        self.continuous_dspark = (
+            self.verify_panels and _native_default("CONTINUOUS_DSPARK")
+        )
+        self.replay_mode = os.environ.get("MLX_ONE_INKLING_METAL_REPLAY", "")
+        self.replay_extension = None
+        self.replay_error = None
+        if self.continuous_dspark and self.replay_mode in {"panel", "round"} and _supported_gpu():
+            from mlx_one.mlxboost.native.capabilities import load_extension
+
+            try:
+                extension = load_extension()
+                extension.install_replay()
+                self.replay_extension = extension
+            except (RuntimeError, AttributeError) as exc:
+                self.replay_error = str(exc)
+        self.adaptive_verification = (
+            self.verify_panels and os.environ.get("MLX_ONE_INKLING_ADAPTIVE_DSPARK") == "1"
+        )
         self.commit_panel_prefix = os.environ.get("MLX_ONE_INKLING_PANEL_PREFIX_COMMIT") == "1"
+        self.async_draft_commit = os.environ.get("MLX_ONE_INKLING_ASYNC_DRAFT_COMMIT") == "1"
         self.verify_panel_proofs = {}
         self.verify_stage_proofs = {}
-        self.flash_prompt = os.environ.get("MLX_ONE_INKLING_FLASH_PROMPT") == "1"
+        overlap_prefill = _native_default("PREFILL_OVERLAP")
+        self.overlap_prefill = (
+            overlap_prefill and mx.default_device() == mx.gpu and _supported_gpu()
+        )
+        self.group_prefill = (self.overlap_prefill
+                              and os.environ.get("MLX_ONE_INKLING_PREFILL_GROUP_512") == "1")
+        window_panel = (self.verify_panels and os.environ.get("MLX_ONE_INKLING_WINDOW_PANEL") == "1"
+                        and mx.default_device() == mx.gpu and _supported_gpu())
         self.embed_tokens = Embedding(
             weights.pop("embed.weight"), weights.pop("embed_norm.weight"), self.eps
         )
@@ -436,7 +562,10 @@ class InklingForCausalLM(nn.Module):
             }
             aq = weights.pop(f"attn_res.attn_queries.{index - 1}") if index else None
             mq = weights.pop(f"attn_res.mlp_queries.{index}")
-            self.layers.append(Layer(params, cfg, index, aq, mq, quant_modes[index]))
+            self.layers.append(Layer(
+                params, cfg, index, aq, mq, quant_modes[index],
+                overlap_prefill=self.overlap_prefill, window_panel=window_panel,
+            ))
         if weights:
             raise ValueError(f"Unrecognized Inkling target tensors: {sorted(weights)}")
         self.prefill_conv_proofs = {}
@@ -451,9 +580,35 @@ class InklingForCausalLM(nn.Module):
                      for index in self.visit_order)
 
     def prefill_width(self, maximum, prompt_tokens):
-        if self.flash_prompt and prompt_tokens >= 8192 and prompt_attention.available():
-            return min(maximum, 512)
-        return min(maximum, 128)
+        return min(maximum, 512 if self.group_prefill else 128)
+
+    def prefill_group(self, ids, *, cache, logits_mode, output_hidden_states=False,
+                      cancelled):
+        # Keep every projection, attention and draft observation at the B1
+        # reference width. Only the submission and synchronization change.
+        hidden, pending = [], []
+        for first in range(0, ids.shape[1], 128):
+            if cancelled():
+                mx.synchronize()
+                return None
+            tile, captures = self.forward(ids[:, first:first + 128], cache, output_hidden_states)
+            state = [t for entry in cache for t in entry.tensors()]
+            if output_hidden_states:
+                draft = cache[0].draft
+                self.drafter.observe(captures, draft)
+                state.extend(draft.tensors())
+            tile = mx.depends(tile, state)
+            mx.async_eval(tile)
+            del state
+            # The GPU submission owns its inputs. Keep only the completion token
+            # on the host so append-only KV banks can be donated to the next tile.
+            hidden.append(tile)
+            pending.append(tile)
+            if len(pending) >= 2:
+                mx.eval(pending.pop(0))
+        last = mx.concatenate(hidden, axis=1)
+        logits = None if logits_mode == LogitsMode.NO_LOGITS else self.head(hidden[-1][:, -1:])
+        return ModelOutput(logits, last, cache)
 
     def layer_execution_specs(self):
         cfg = self.cfg
@@ -517,6 +672,9 @@ class InklingForCausalLM(nn.Module):
             raise ValueError("Inkling text requires B1 and one cache per loop visit")
         closed, captured = [], {}
         x = self.embed_tokens(ids)
+        prefill = tapes is None and ids.shape[1] > 1
+        overlap = prefill and self.overlap_prefill
+        pending = []
         for visit, index in enumerate(self.visit_order):
             if index == self.start:
                 if visit == self.start:
@@ -537,7 +695,14 @@ class InklingForCausalLM(nn.Module):
             state = cache[visit]
             tape = tapes[visit] if tapes is not None else None
             x = self.layers[index](x, closed, state.kv, state.conv, message, tape)
-            if tapes is None and ids.shape[1] > 1 and not state.max_size:
+            if overlap and (visit + 1) % 4 == 0:
+                # Bound evaluated work to two groups of visits, as in the tiled read.
+                checkpoint = (x, *state.tensors())
+                mx.async_eval(*checkpoint)
+                if len(pending) == 2:
+                    mx.eval(*pending.pop(0))
+                pending.append(checkpoint)
+            elif prefill and not overlap and not state.max_size:
                 # Finish each global attention before building the next long-context mask.
                 mx.eval(x, *state.tensors())
         last = read_blocks(closed, x, self.final_query, self.eps,

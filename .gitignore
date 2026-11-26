@@ -14,6 +14,11 @@ runs/
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
+# Optional MLXBoost editable-build outputs; source/standard wheels exclude these.
+/src/mlx_one/mlxboost/native/_ext*.so
+/src/mlx_one/mlxboost/native/*.dylib
+/src/mlx_one/mlxboost/native/*.metallib
+/src/mlx_one/mlxboost/native/_build_info.json
 __pycache__/
 node_modules/
 .svelte-kit/

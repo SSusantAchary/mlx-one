@@ -106,6 +106,13 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 mlx_one = [
+    "mlxboost/native/NOTICE.txt",
+    "mlxboost/native/MLX_LICENSE.txt",
+    "mlxboost/native/_build/*.cpp",
+    "mlxboost/native/_build/*.mm",
+    "mlxboost/native/_build/*.h",
+    "mlxboost/native/_build/*.metal",
+    "mlxboost/native/_build/CMakeLists.txt",
     "mlxboost/provenance/sources.yaml",
     "models/UPSTREAM_LICENSE",
     "models/BATCH1_NOTICE.md",

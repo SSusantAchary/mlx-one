@@ -69,7 +69,7 @@ def query_tile_rows(batch, heads, key_columns):
     return max(1, (4 * 1024 * 1024) // (batch * heads * key_columns))
 
 
-def stock_attention(query, key, value, profiles, sink, window):
+def stock_attention(query, key, value, profiles, sink, window, *, overlap_tiles=False):
     """Tile the query axis so a long prompt never builds its full quadratic bias tensor."""
     batch, heads, rows, width = query.shape
     keys = key.shape[2]
@@ -91,19 +91,25 @@ def stock_attention(query, key, value, profiles, sink, window):
             query[:, :, start:end], key, value, scale=width**-0.5, mask=bias
         )
         if rows > step:
-            mx.eval(part)
+            if overlap_tiles:
+                # Queue the next tile before waiting for the oldest pending tile.
+                mx.async_eval(part)
+                if len(parts) >= 2:
+                    mx.eval(parts[-2])
+            else:
+                mx.eval(part)
         parts.append(part)
     return parts[0] if len(parts) == 1 else mx.concatenate(parts, axis=2)
 
 
-def attend(query, key, value, profiles, sink, window):
+def attend(query, key, value, profiles, sink, window, *, overlap_tiles=False):
     if query.shape[0] == 1 and mx.default_device() == mx.gpu and mx.metal.is_available():
         # Bound mask workspace to the stock tile size without copying the KV history.
         count = key.shape[2]
         tiles = min(8, query_tile_rows(1, query.shape[1], count))
         if query.shape[2] <= tiles:
             return grouped_sink_attention(query, key, value, profiles, sink, window)
-    return stock_attention(query, key, value, profiles, sink, window)
+    return stock_attention(query, key, value, profiles, sink, window, overlap_tiles=overlap_tiles)
 
 
 def chronological_attention(query, key, value, profiles, sink, window):

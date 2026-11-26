@@ -33,7 +33,8 @@ def describe_cache(entries, plan) -> list[dict[str, Any]]:
         if hasattr(cache, "_blocks"):
             tensors = [ref.block.state for ref in cache._blocks]
         else:
-            attributes = vars(cache) if hasattr(cache, "__dict__") else {}
+            storage = getattr(cache, "kv", cache)
+            attributes = vars(storage) if hasattr(storage, "__dict__") else {}
             tensors = {key: value for key, value in attributes.items()
                        if key in {"keys", "values", "_keys", "_values", "state",
                                   "conv_state", "recurrent_state"}}
