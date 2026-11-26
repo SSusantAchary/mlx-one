@@ -14,6 +14,7 @@ class InklingKVCache:
         self.kv = SlidingKVCache(window) if window else KVCache()
         self.conv = [None] * 4
         self.draft = None
+        self.replay = None
 
     @property
     def offset(self):
@@ -26,12 +27,14 @@ class InklingKVCache:
     @property
     def allocated_nbytes(self):
         draft = self.draft.allocated_nbytes if self.draft else 0
-        return self.kv.allocated_nbytes + _tree_nbytes(self.conv) + draft
+        workspace = self.replay.workspace_bytes if self.replay else 0
+        return self.kv.allocated_nbytes + _tree_nbytes(self.conv) + draft + workspace
 
     def reset(self):
         self.kv.reset()
         self.conv = [None] * 4
         self.draft = None
+        self.replay = None
 
     release = reset
 

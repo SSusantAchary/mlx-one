@@ -26,12 +26,14 @@ def _supported_gpu():
             and mx.device_info().get("architecture") == "applegpu_g16g")
 
 
-@lru_cache(maxsize=1)
-def _kernels():
+@lru_cache(maxsize=2)
+def _kernels(separate_rows=False):
     partials = mx.fast.metal_kernel(
-        name="mlx_one_inkling_long_partials",
-        input_names=["q", "kc", "vc", "prof", "sink", "geometry"],
-        output_names=["po", "pm", "ps"], source=metal.PARTIALS, header=metal.HEADER,
+        name="mlx_one_inkling_long_partials" + ("_delta" if separate_rows else ""),
+        input_names=["q", "kc", "vc", "prof", "sink", "geometry"]
+        + (["new_k", "new_v"] if separate_rows else []),
+        output_names=["po", "pm", "ps"], source=metal.partials_source(separate_rows),
+        header=metal.HEADER,
         ensure_row_contiguous=False,
     )
     merge = mx.fast.metal_kernel(
@@ -54,8 +56,8 @@ def _plan(rows, keys):
     return ((0, rows, 64),)
 
 
-def _launch(query, keys, values, profiles, sink, count, plan, sink_first):
-    partials, merge = _kernels()
+def _launch(query, keys, values, profiles, sink, count, plan, sink_first, *, appended=()):
+    partials, merge = _kernels(bool(appended))
     rows = query.shape[2]
     q = mx.contiguous(query.transpose(0, 2, 1, 3))
     profiles = mx.contiguous(profiles)
@@ -68,11 +70,12 @@ def _launch(query, keys, values, profiles, sink, count, plan, sink_first):
             last = min(first + _LAUNCH_ROWS, end)
             n = last - first
             chains = n * 24 * blocks
-            geometry = mx.array([count - rows + first, count], mx.int32)
+            geometry = (mx.concatenate([count - rows + first, count]) if appended else
+                        mx.array([count - rows + first, count], mx.int32))
             common = [("T", mx.bfloat16), ("BLOCKS", blocks)]
             state = partials(
                 inputs=[q[:, first:last], keys, values, profiles[:, first:last],
-                        sink[:, first:last], geometry],
+                        sink[:, first:last], geometry, *appended],
                 template=[*common, ("ROWS", 8), ("SCALE", _SCALE), ("SINK_FIRST", sink_first)],
                 grid=(256 * blocks, 8, (n + 7) // 8), threadgroup=(256, 1, 1),
                 output_shapes=[(chains * 128,), (chains,), (chains,)],

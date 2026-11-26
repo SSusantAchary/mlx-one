@@ -2,6 +2,19 @@ MLXBoost Phase 0 is an experimental demonstration, not model qualification.
 CMake/nanobind/primitive/encoder API patterns adapted from Apple MLX v0.32.2:
 https://github.com/ml-explore/mlx/tree/v0.32.2/examples/extensions
 Copyright © 2023-2025 Apple Inc. MIT license in MLX_LICENSE.txt.
+Inkling SIMD prompt attention follows the 128-wide Steel SDPA reduction
+order in mlx/backend/metal/kernels/steel/attn/kernels/steel_attention.h
+and mlx/backend/metal/kernels/steel/attn/mma.h at MLX v0.32.2
+(1f8e74e3f12f31365464a6867c6579f0e9b29d85).
+https://github.com/ml-explore/mlx/tree/v0.32.2/mlx/backend/metal/kernels/steel/attn
+Inkling sliding-window verification uses the single-pass sink and reduction
+order from mlx/backend/metal/kernels/sdpa_vector.h at the same MLX revision.
 ZMLX source studied at d8cd0d88d4299ca6821d706f9d5b4a3520d688f5:
 https://github.com/Hmbown/ZMLX
 MIT, Copyright (c) 2026 Hunter Bown. No ZMLX code copied or runtime dependency added.
+
+The Metal encoder recorder and pipeline reflection in _build/replay_recorder.mm,
+replay_reflection.mm and replay_trace.h adapt MTPLX by Youssof Altoukhi, v2.13.0
+(bebe21b5ba36af3688335ab66d365509fd042fad), under Apache-2.0.
+Powered by MTPLX https://github.com/youssofal/MTPLX
+See mlx_one/models/language/inkling2/MTPLX_LICENSE.txt and MTPLX_NOTICE.txt.

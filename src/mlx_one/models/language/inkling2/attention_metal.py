@@ -7,6 +7,8 @@ from functools import lru_cache
 
 import mlx.core as mx
 
+from ._long_attention_metal import HEADER
+
 
 @lru_cache(maxsize=1)
 def _grouped_mask_kernel():
@@ -56,3 +58,86 @@ def grouped_sink_attention(query, key, value, profiles, sink, window):
         key, value, scale=width**-0.5, mask=mask, sinks=sink[0].T.reshape(-1),
     )
     return result.reshape(query.shape)
+
+
+@lru_cache(maxsize=1)
+def _window_panel_kernel():
+    # Follows MTPLX 2.13.0 attend.py's window-panel threadgroup layout and
+    # MLX v0.32.2 sdpa_vector's single-pass reduction with an initial sink.
+    return mx.fast.metal_kernel(
+        name="mlx_one_inkling_window_panel", input_names=["q", "k", "v", "p", "s"],
+        output_names=["out"], ensure_row_contiguous=False, header=HEADER,
+        source="""
+            const int head = int(threadgroup_position_in_grid.x);
+            const int row = int(threadgroup_position_in_grid.y);
+            const int chain = int(simdgroup_index_in_threadgroup);
+            const int lane = int(thread_index_in_simdgroup);
+            const int rows = q_shape[2], count = k_shape[2];
+            const int end = count - rows + row + 1;
+            const int first = max(0, end - WINDOW);
+            const int kvhead = head / 3;
+            const float scale = 0.08838834764831845f;
+            const device T* qp = q + head * q_strides[1] + row * q_strides[2];
+            const device T* bias = p + row * p_strides[1] + head * p_strides[2];
+            float query[4];
+            for (int d = 0; d < 4; ++d) {
+                query[d] = scale * float(qp[(4 * lane + d) * q_strides[3]]);
+            }
+            Chain state;
+            chain_open(state);
+            if (chain == 0) {
+                state.peak = float(s[row * s_strides[1] + head * s_strides[2]]);
+                state.mass = 1.0f;
+            }
+            for (int pos = first + chain; pos < end; pos += 32) {
+                const device T* kp = k + kvhead * k_strides[1] + pos * k_strides[2];
+                const device T* vp = v + kvhead * v_strides[1] + pos * v_strides[2];
+                float keys[4], values[4];
+                for (int d = 0; d < 4; ++d) {
+                    keys[d] = float(kp[(4 * lane + d) * k_strides[3]]);
+                    values[d] = float(vp[(4 * lane + d) * v_strides[3]]);
+                }
+                const float b = float(bias[(end - 1 - pos) * p_strides[3]]);
+                if (b >= -3.3895313892515355e38f) {
+                    chain_take(state, key_logit(query, keys, b), values);
+                }
+            }
+            threadgroup float peaks[32], masses[32], transpose[32 * 32];
+            if (lane == 0) {
+                peaks[chain] = state.peak;
+                masses[chain] = state.mass;
+            }
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+            const float peak = peaks[lane];
+            const float rescale = metal::fast::exp(peak - simd_max(peak));
+            const float mass = simd_sum(masses[lane] * rescale);
+            for (int d = 0; d < 4; ++d) {
+                transpose[lane * 32 + chain] = state.acc[d];
+                threadgroup_barrier(mem_flags::mem_threadgroup);
+                const float total = simd_sum(transpose[chain * 32 + lane] * rescale);
+                threadgroup_barrier(mem_flags::mem_threadgroup);
+                if (lane == 0) {
+                    out[((head * rows + row) * 128) + 4 * chain + d] =
+                        T(mass == 0 ? total : total / mass);
+                }
+            }
+        """,
+    )
+
+
+def window_panel_attention(query, key, value, profiles, sink, window):
+    """Read the existing chronological window directly for each verification row."""
+    rows = query.shape[2]
+    count = key.shape[2]
+    if (not 2 <= rows <= 4 or not rows <= count <= window + rows
+            or not 0 < window <= 1024 or query.shape != (1, 24, rows, 128)
+            or key.shape != (1, 8, count, 128) or value.shape != key.shape
+            or profiles.shape != (1, rows, 24, 1024) or sink.shape != (1, rows, 24)
+            or any(a.dtype != mx.bfloat16 for a in (query, key, value, profiles, sink))):
+        return None
+    return _window_panel_kernel()(
+        inputs=[query, key, value, profiles, sink],
+        template=[("T", query.dtype), ("WINDOW", window)],
+        grid=(1024 * 24, rows, 1), threadgroup=(1024, 1, 1),
+        output_shapes=[query.shape], output_dtypes=[query.dtype],
+    )[0]

@@ -16,6 +16,53 @@ def observe_draft(model, captures, cache):
     mx.eval(*cache.tensors())
 
 
+def panel_signature(rows, offset):
+    return rows, offset.bit_length(), offset < 4095 <= offset + rows - 1
+
+
+class AdaptiveVerification:
+    """Request-local cost estimates for the existing two- and four-row panels."""
+
+    def __init__(self):
+        self.b1 = 0.0
+        self.rounds = 0
+        self.depth = 0
+        self.panel_costs = {}
+
+    @staticmethod
+    def _average(old, value):
+        return 0.8 * old + 0.2 * value if old else value
+
+    def record_b1(self, seconds):
+        self.b1 = self._average(self.b1, seconds)
+        self.rounds += 1
+
+    def record_panel(self, depth, seconds, committed):
+        old_seconds, old_committed = self.panel_costs.get(depth, (0.0, 0.0))
+        self.panel_costs[depth] = (
+            self._average(old_seconds, seconds), self._average(old_committed, committed),
+        )
+
+    def choose(self, maximum, offset, proofs):
+        if self.rounds < 4:
+            return 0
+        available = [depth for depth in (1, 3) if depth <= maximum
+                     and proofs.get(panel_signature(depth + 1, offset)) is not False]
+        fresh = next((depth for depth in available if depth not in self.panel_costs), 0)
+        if fresh:
+            return fresh
+        gains = {depth: self.b1 * self.panel_costs[depth][1] / self.panel_costs[depth][0]
+                 for depth in available}
+        best = max(gains, key=gains.get, default=0)
+        if gains.get(self.depth, 0.0) < 1.03:
+            self.depth = best if gains.get(best, 0.0) >= 1.10 else 0
+        elif gains[best] >= 1.05 * gains[self.depth]:
+            self.depth = best
+        if self.rounds % 32 == 0:
+            return next((depth for depth in available if depth != self.depth), self.depth)
+        return self.depth
+
+
 class InklingProposal(SpeculativeProposal):
     def propose_mtp(self, first, hidden, maximum):
         from mlx_one.engine.pressure import execution_forecast
@@ -26,20 +73,78 @@ class InklingProposal(SpeculativeProposal):
         self.boundaries = [tuple(entry.boundary() for entry in self.cache)]
         self.captures = []
         self._pending_panel = None
+        replay = None
+        if (getattr(self, "allow_metal_replay", False) and count == 3
+                and getattr(model, "replay_extension", None) is not None
+                and model.verify_panel_proofs.get(panel_signature(4, self.cache[0].offset))):
+            from .replay import RoundReplay
+
+            if self.cache[0].replay is None:
+                self.cache[0].replay = RoundReplay(model.replay_extension, model.replay_mode)
+            session = self.cache[0].replay
+            if session.plan(model, self.cache):
+                replay = session
         try:
             if self.runtime is not None:
                 # Each potentially kept row can retain one version of the local window.
                 windows = sum(c.allocated_nbytes for c in self.cache if c.max_size)
+                if self.cache[0].max_size and getattr(self.cache[0], "replay", None):
+                    windows -= self.cache[0].replay.workspace_bytes
                 amount = execution_forecast(
                     self.runtime, model.config, batch=1, chunk=count + 1,
                     history=self.cache[0].offset, phase="decode",
                     explicit_bytes=count * windows,
                 )["bytes"]
-                self.resources.enter_context(self.runtime.transient_reservation(amount))
+                if replay is not None and replay.program is None:
+                    from mlx_one.engine.cache_errors import CacheCapacityError
+
+                    from .replay import WORKSPACE_LIMIT
+
+                    try:
+                        self.resources.enter_context(
+                            self.runtime.transient_reservation(amount + WORKSPACE_LIMIT))
+                    except CacheCapacityError as exc:
+                        replay.decline(f"replay workspace admission: {exc}")
+                        self._report_replay(replay, "declined")
+                        replay = None
+                        self.resources.enter_context(self.runtime.transient_reservation(amount))
+                else:
+                    self.resources.enter_context(self.runtime.transient_reservation(amount))
             if self.cancelled():
                 return self
             draft_started = time.perf_counter()
-            guesses = model.drafter.propose(model, first, draft, count)
+            guesses = None
+
+            def draft_guess():
+                nonlocal guesses
+                if guesses is None:
+                    guesses = model.drafter.propose(model, first, draft, count)
+                return guesses
+
+            self._check_replay = None
+            if replay is not None:
+                from .replay import install
+
+                try:
+                    outputs = replay.prepare(self, first, draft_guess)
+                except (ValueError, RuntimeError) as exc:
+                    replay.decline(exc)
+                    outputs = None
+                if replay.reason:
+                    self._report_replay(replay, "declined")
+                if outputs is not None:
+                    if replay.proven:
+                        offset = self.cache[0].offset
+                        packet, logits, captures, tapes = install(
+                            self.cache, outputs, len(model.capture_ids))
+                        self._report_replay(replay, "served")
+                        stage = f"replay-{replay.stage}"
+                        replay.advance()
+                        self._finish_panel(first, offset, 4, packet, logits, captures, tapes,
+                                           draft_started, stage)
+                        return self
+                    self._check_replay = (replay, outputs)
+            guesses = draft_guess()
             if (getattr(model, "verify_panels", False) and mx.default_device() == mx.gpu
                     and _supported_gpu() and self._verify_panel(first, guesses, draft_started)):
                 return self
@@ -67,7 +172,7 @@ class InklingProposal(SpeculativeProposal):
             return False
         offset = self.cache[0].offset
         # Bucket below/above the attention dispatch boundary and by context tier.
-        signature = (rows, offset.bit_length(), offset < 4095 <= offset + rows - 1)
+        signature = panel_signature(rows, offset)
         proof = model.verify_panel_proofs.get(signature)
         if proof is False:
             self.panel_declined = True
@@ -75,6 +180,9 @@ class InklingProposal(SpeculativeProposal):
 
         guesses = guesses.astype(mx.int32)
         panel_ids = mx.concatenate([mx.array([first], mx.int32), guesses])
+        if getattr(model, "continuous_dspark", False):
+            # Start the draft while Python builds the existing native target graph.
+            mx.async_eval(panel_ids)
         logits, captures, tapes = model.verify_panel(panel_ids[None], self.cache)
         state = [t for c in self.cache for t in c.tensors()]
         if proof is None:
@@ -87,6 +195,27 @@ class InklingProposal(SpeculativeProposal):
         kept = mx.cumprod(matched.astype(mx.int32), axis=0).sum().astype(mx.int32)
         packet = mx.concatenate([kept[None], predictions])
         mx.eval(packet, captures, state)
+        if self._check_replay is not None:
+            from .replay import expected_outputs
+
+            replay, outputs = self._check_replay
+            reference = expected_outputs(self.cache, panel_ids, logits, captures, tapes)
+            replay.check(outputs, reference, offset)
+            self._report_replay(replay, "declined" if replay.reason else "checked")
+            self._check_replay = None
+        self._finish_panel(first, offset, rows, packet, logits, captures, tapes, started,
+                           "verify-panel")
+        return True
+
+    def _report_replay(self, replay, status):
+        if self.observer is not None:
+            self.observer({"kind": "metal_replay", "stage": replay.stage, "status": status,
+                           "offset": self.cache[0].offset, "reason": replay.reason,
+                           "dispatches": replay.program.dispatches if replay.program else 0,
+                           "workspace_bytes": replay.workspace_bytes})
+
+    def _finish_panel(self, first, offset, rows, packet, logits, captures, tapes, started, stage):
+        model = self.bundle.model
         accepted, *predictions_host = packet.tolist()
         if getattr(model, "commit_panel_prefix", False):
             # Like MTPLX's round commit, select a single KV/conv prefix after
@@ -95,14 +224,15 @@ class InklingProposal(SpeculativeProposal):
         else:
             self.captures = [tuple(t[:, r:r + 1] for t in captures) for r in range(rows)]
             for kept in range(1, rows + 1):
-                self.boundaries.append(tuple(tape.boundary(offset, kept, entry.max_size)
-                                             for tape, entry in zip(tapes, self.cache, strict=True)))
+                self.boundaries.append(tuple(
+                    tape.boundary(offset, kept, entry.max_size)
+                    for tape, entry in zip(tapes, self.cache, strict=True)
+                ))
         self.panel_used = True
         self.drafted = rows - 1
         self.accepted = accepted
         self.candidates = [first, *predictions_host[:accepted + 1]]
-        self._observe_verify(started, rows, logits, "verify-panel")
-        return True
+        self._observe_verify(started, rows, logits, stage)
 
     def _prove_panel(self, signature, ids, logits, captures, tapes, offset):
         # Copy only the newly written full-KV rows before replaying on these banks.
@@ -133,8 +263,10 @@ class InklingProposal(SpeculativeProposal):
                 )
                 checks.extend((f"visit {visit} convolution {slot}", same_bits(a, b))
                               for slot, (a, b) in enumerate(zip(conv, entry.conv, strict=True)))
-            checks.extend((f"draft capture {tap}", same_bits(a[:, index:index + 1], b))
-                          for tap, (a, b) in enumerate(zip(captures, ref.hidden_states, strict=True)))
+            checks.extend(
+                (f"draft capture {tap}", same_bits(a[:, index:index + 1], b))
+                for tap, (a, b) in enumerate(zip(captures, ref.hidden_states, strict=True))
+            )
             checks.append(("logits", same_bits(logits[:, index:index + 1], ref.logits)))
             verdicts = mx.stack([equal for _, equal in checks]).tolist()
             if first_mismatch is None:
@@ -156,7 +288,9 @@ class InklingProposal(SpeculativeProposal):
     def _accept_panel(self, first, guesses, predictions):
         self.drafted = len(guesses)
         self.candidates = [first, predictions[0]]
-        for guess, expected, following in zip(guesses, predictions, predictions[1:]):
+        for guess, expected, following in zip(
+            guesses, predictions[:-1], predictions[1:], strict=True,
+        ):
             if guess != expected or self.cancelled():
                 break
             self.accepted += 1
@@ -216,7 +350,14 @@ class InklingProposal(SpeculativeProposal):
                 captures = tuple(mx.concatenate(tap, axis=1)
                                  for tap in zip(*self.captures[:rows], strict=True))
         if captures:
-            observe_draft(self.bundle.model, captures, self.cache[0].draft)
+            model = self.bundle.model
+            draft = self.cache[0].draft
+            if getattr(model, "async_draft_commit", False) and mx.default_device() == mx.gpu:
+                # The following round consumes these tensors on the same MLX stream.
+                model.drafter.observe(captures, draft)
+                mx.async_eval(*draft.tensors())
+            else:
+                observe_draft(model, captures, draft)
         self.boundaries.clear()
         self._pending_panel = None
         if self.handle is not None:

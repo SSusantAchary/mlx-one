@@ -224,6 +224,7 @@ PARTIALS = """
     for (int p = p_from; p <= P; p += span) {
         const device T* kp = kg + size_t(p) * kc_strides[2];
         const device T* vp = vg + size_t(p) * vc_strides[2];
+        // APPENDED_ROWS
         float kv[4], vv[4];
         for (int j = 0; j < 4; ++j) {
             kv[j] = static_cast<float>(kp[4 * lane + j]);
@@ -304,3 +305,13 @@ MERGE = """
         }
     }
 """
+
+def partials_source(separate_rows):
+    if not separate_rows:
+        return PARTIALS
+    return PARTIALS.replace("// APPENDED_ROWS", """
+        if (p >= pos0) {
+            kp = new_k + size_t(g) * new_k_strides[1] + size_t(p - pos0) * new_k_strides[2];
+            vp = new_v + size_t(g) * new_v_strides[1] + size_t(p - pos0) * new_v_strides[2];
+        }
+    """)
