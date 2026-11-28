@@ -137,6 +137,8 @@ mlx_one = [
     "models/audio/silero/LICENSE",
     "models/detection/NOTICE.md",
     "models/depth/NOTICE.md",
+    "models/image_generation/NOTICE.md",
+    "models/image_generation/MFLUX_LICENSE.txt",
     "models/audio/qwen3_asr/NOTICE",
     "models/audio/kokoro/weight_shapes.json",
     "ui/dist/**/*",

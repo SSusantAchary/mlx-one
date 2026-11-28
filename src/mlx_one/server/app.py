@@ -23,12 +23,15 @@ from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from mlx_one.diagnostics import collect_doctor_report
+from mlx_one.engine.execution_context import QueueFullError as DeviceQueueFullError
 from mlx_one.engine.memory import AdmissionStatus
 from mlx_one.engine.modes import ACTOR_MODES, ModelCapabilityUnsupported
 from mlx_one.engine.selection import load_evidence
+from mlx_one.image import ImageEngine, ImageMemoryError
 from mlx_one.server.admission import MemoryAdmission
 from mlx_one.server.config import ServerConfig
 from mlx_one.server.generation_engine import GenerationEngine, GenerationEvent
+from mlx_one.server.images import ImageGenerationRequest, ImageRequestAbandoned, wait_for_image
 from mlx_one.server.media import ImageResolver, MediaError
 from mlx_one.server.model_manager import ModelManager
 from mlx_one.server.scheduler import GenerationScheduler, QueueFullError, RequestTimeoutError
@@ -162,8 +165,10 @@ def create_app(
     task_services: Mapping[str, Any] | None = None,
     image_resolver: ImageResolver | None = None,
     memory_admission: MemoryAdmission | None = None,
+    image_engines: Mapping[str, ImageEngine] | None = None,
 ) -> FastAPI:
     settings = config or ServerConfig(warmup=False, cache_prompt=False, timeout=0)
+    image_models = dict(image_engines or {})
     manager = model_manager or ModelManager(
         alias=settings.alias, context_length=settings.context_length
     )
@@ -380,6 +385,8 @@ def create_app(
                 owned_audio_service.close()
             if owned_ocr_service is not None:
                 owned_ocr_service.close()
+            for image_engine in image_models.values():
+                image_engine.close()
             manager.unload()
 
         try:
@@ -434,8 +441,56 @@ def create_app(
                     },
                 }
                 for item in manager.list_models()
+            ] + [
+                {"id": name, "object": "model", "owned_by": "mlx-one", "mlx": {
+                    "architecture": item.profile.family,
+                    "revision": item.profile.revision,
+                    "tasks": [item.profile.task.value],
+                    "modalities": ["image", "text"],
+                    "quantization": item.profile.precision(item.quantization),
+                }}
+                for name, item in image_models.items()
+                if name != item.profile.q4_model
+                and item.quantization in item.profile.qualified_precisions
             ],
         }
+
+    @app.post("/v1/images/generations")
+    async def generate_image(
+        payload: ImageGenerationRequest, request: Request,
+        auth: None | JSONResponse = authorization_dependency,
+    ) -> Any:
+        if auth is not None:
+            return auth
+        image_engine = image_models.get(payload.model)
+        if image_engine is None:
+            return _error(404, "unknown image model", "invalid_request_error",
+                          code="model_not_found")
+        try:
+            result = await wait_for_image(request, payload, image_engine, settings.timeout)
+        except ValueError as exc:
+            return _error(400, str(exc), "invalid_request_error")
+        except DeviceQueueFullError:
+            return _error(429, "image generation queue is full", "rate_limit_error")
+        except ImageMemoryError as exc:
+            return JSONResponse(status_code=503, content={"error": {
+                "message": str(exc), "type": "server_error", "code": "insufficient_memory",
+            }})
+        except ImageRequestAbandoned as exc:
+            return _error(exc.status, exc.message, "invalid_request_error")
+        except Exception:
+            return _error(500, "", "server_error")
+        return {
+            "created": int(time.time()),
+            "data": [{"b64_json": base64.b64encode(result.png).decode("ascii")}],
+        }
+
+    @app.post("/v1/images/edits", include_in_schema=False)
+    async def edit_image(auth: None | JSONResponse = authorization_dependency) -> Any:
+        if auth is not None:
+            return auth
+        return _error(400, "image editing is unavailable", "invalid_request_error",
+                      code="unsupported_operation")
 
     @app.get("/v1/runtime")
     async def runtime(auth: None | JSONResponse = authorization_dependency) -> Any:
