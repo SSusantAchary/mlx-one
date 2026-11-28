@@ -1,6 +1,6 @@
 # Native MLX port of mlx-vlm/florence2/config.py
 # Reference revision: e9af376626b04ba0cdad23b1476fd7a4a583d721
-# See ../UPSTREAM.md and ../UPSTREAM_LICENSE for attribution and local changes.
+# See ../UPSTREAM.txt and ../UPSTREAM_LICENSE for attribution and local changes.
 from dataclasses import dataclass, field
 
 from mlx_one.models.ocr._layers import BaseModelConfig

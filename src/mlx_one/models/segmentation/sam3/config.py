@@ -1,5 +1,5 @@
 # Copyright 2025 Meta AI and The HuggingFace Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0. See LICENSE and NOTICE.md.
+# Licensed under the Apache License, Version 2.0. See LICENSE and NOTICE.
 # Native MLX port of Transformers revision 6133195dcb; no PyTorch runtime.
 """Backend-free SAM3 configuration schemas."""
 

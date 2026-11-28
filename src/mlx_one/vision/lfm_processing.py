@@ -1,7 +1,7 @@
 """Liquid static-image NaFlex packing and checkpoint-configured tiling.
 
 The resize and tile rules follow the MIT-licensed MLX-VLM LFM2-VL processor;
-see models/vision_language/UPSTREAM.md. No external inference runtime is used.
+see models/vision_language/UPSTREAM.txt. No external inference runtime is used.
 """
 
 from __future__ import annotations

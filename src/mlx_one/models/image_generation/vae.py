@@ -1,7 +1,7 @@
 """Native VAE decoder with FLUX.2 and Z-Image latent normalization.
 
 Reference equations: Diffusers AutoencoderKLFlux2 and AutoencoderKL, and the
-MFLUX family decoders. See NOTICE.md for source revisions and licenses.
+MFLUX family decoders. See NOTICE for source revisions and licenses.
 """
 
 import mlx.core as mx

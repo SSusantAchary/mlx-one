@@ -1,7 +1,7 @@
 """Publisher LFM Audio modules with the shared native MLX-One LFM2 backbone.
 
 Audio embedding/head adaptation: MIT, Prince Canuma and mlx-audio contributors.
-See UPSTREAM.md and UPSTREAM_LICENSE for the frozen source revision.
+See UPSTREAM.txt and UPSTREAM_LICENSE for the frozen source revision.
 """
 
 from __future__ import annotations
