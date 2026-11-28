@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "mlx-one"
 version = "0.1.4"
 description = "A unified MLX stack for multimodal AI on Apple Silicon."
-readme = "README.pypi.md"
+readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
@@ -58,12 +58,11 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/SSusantAchary/mlx-one"
-Documentation = "https://ssusantachary.github.io/mlx-one/"
-"Model support" = "https://ssusantachary.github.io/mlx-one/models/support/"
-"Release notes" = "https://ssusantachary.github.io/mlx-one/releases/0.1.4/"
+Documentation = "https://github.com/SSusantAchary/mlx-one#documentation"
+"Model support" = "https://github.com/SSusantAchary/mlx-one#supported-modalities-and-models"
+"Release notes" = "https://github.com/SSusantAchary/mlx-one/releases"
 Repository = "https://github.com/SSusantAchary/mlx-one"
 Issues = "https://github.com/SSusantAchary/mlx-one/issues"
-Changelog = "https://github.com/SSusantAchary/mlx-one/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 tracking = ["mlflow"]
@@ -116,13 +115,13 @@ mlx_one = [
     "mlxboost/native/_build/CMakeLists.txt",
     "mlxboost/provenance/sources.yaml",
     "models/UPSTREAM_LICENSE",
-    "models/BATCH1_NOTICE.md",
+    "models/BATCH1_NOTICE.txt",
     "models/FLAGEMBEDDING_LICENSE",
-    "models/classification/NOTICE.md",
+    "models/classification/NOTICE",
     "models/vision_language/UPSTREAM_LICENSE",
-    "models/vision_language/UPSTREAM.md",
+    "models/vision_language/UPSTREAM.txt",
     "models/ocr/UPSTREAM_LICENSE",
-    "models/ocr/UPSTREAM.md",
+    "models/ocr/UPSTREAM.txt",
     "models/ocr/provenance.json",
     "quantization/turboquant/LICENSE.txt",
     "quantization/turboquant/NOTICE.txt",
@@ -137,15 +136,15 @@ mlx_one = [
     "models/language/inkling2/NEYWA_LICENSE.txt",
     "models/language/gemma3/UPSTREAM_LICENSE",
     "models/language/phi3/UPSTREAM_LICENSE",
-    "models/segmentation/sam3/NOTICE.md",
+    "models/segmentation/sam3/NOTICE",
     "models/audio/lfm2_audio/UPSTREAM_LICENSE",
-    "models/audio/lfm2_audio/UPSTREAM.md",
+    "models/audio/lfm2_audio/UPSTREAM.txt",
     "models/audio/parakeet/NOTICE",
     "models/audio/moonshine/NOTICE",
     "models/audio/silero/LICENSE",
-    "models/detection/NOTICE.md",
-    "models/depth/NOTICE.md",
-    "models/image_generation/NOTICE.md",
+    "models/detection/NOTICE",
+    "models/depth/NOTICE",
+    "models/image_generation/NOTICE",
     "models/image_generation/MFLUX_LICENSE.txt",
     "models/audio/qwen3_asr/NOTICE",
     "models/audio/kokoro/weight_shapes.json",

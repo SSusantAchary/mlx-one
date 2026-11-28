@@ -4,7 +4,6 @@ import copy
 import importlib.util
 import json
 import math
-import re
 import shutil
 import tempfile
 import unittest
@@ -62,23 +61,21 @@ class PerformanceReportingTests(unittest.TestCase):
 
     def test_detailed_report_retains_all_measurements(self):
         table = report.relative_links(report.render(self.inventory, self.records), report.REPORT)
-        self.assertIn(table, report.REPORT.read_text())
+        for record in self.records:
+            target = report.relative_links(f"[run]({record['path']})", report.REPORT)
+            self.assertIn(target.removeprefix("[run]"), table)
 
     def test_readme_retains_all_modality_performance_tables_and_charts(self):
         homepage = (ROOT / "README.md").read_text()
         for modality in ("VLM", "AUDIO", "OCR"):
             start = f"<!-- MLX-ONE-{modality}-BENCHMARK-START -->"
             end = f"<!-- MLX-ONE-{modality}-BENCHMARK-END -->"
-            detailed = (ROOT / f"docs/benchmarks/{modality.lower()}/performance.md").read_text()
-
-            def content(text, start=start, end=end):
-                self.assertEqual(text.count(start), 1)
-                self.assertEqual(text.count(end), 1)
-                block = text.split(start)[1].split(end)[0]
-                # Link bases differ; every table, value, chart and caveat must match.
-                return re.sub(r"\]\([^)]+\)", "](link)", block)
-
-            self.assertEqual(content(homepage), content(detailed))
+            self.assertEqual(homepage.count(start), 1)
+            self.assertEqual(homepage.count(end), 1)
+            section = homepage.split(start)[1].split(end)[0]
+            self.assertIn("| Model |", section)
+            self.assertRegex(section, r"!\[[^]]+\]\([^)]+\.png\)")
+            self.assertRegex(section, r"\]\([^)]+\.json\)")
         for section in ("### GPT-OSS native HTTP serving", "## Additional Modality Performance"):
             self.assertIn(section, homepage)
 

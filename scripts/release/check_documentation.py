@@ -16,28 +16,19 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
+REPO_LINKS = {
+    "github.com": (
+        "/SSusantAchary/mlx-one/blob/main/",
+        "/SSusantAchary/mlx-one/tree/main/",
+    ),
+    "raw.githubusercontent.com": ("/SSusantAchary/mlx-one/main/",),
+}
 OWNERS = {
     "README.md": [
         ("model-performance-summary:start", "model-performance-summary:end"),
         ("MLX-ONE-VLM-BENCHMARK-START", "MLX-ONE-VLM-BENCHMARK-END"),
         ("MLX-ONE-AUDIO-BENCHMARK-START", "MLX-ONE-AUDIO-BENCHMARK-END"),
         ("MLX-ONE-OCR-BENCHMARK-START", "MLX-ONE-OCR-BENCHMARK-END"),
-    ],
-    "docs/benchmarks/text-performance.md": [("model-performance:start", "model-performance:end")],
-    "docs/benchmarks/vlm/performance.md": [
-        ("MLX-ONE-VLM-BENCHMARK-START", "MLX-ONE-VLM-BENCHMARK-END")
-    ],
-    "docs/benchmarks/audio/performance.md": [
-        ("MLX-ONE-AUDIO-BENCHMARK-START", "MLX-ONE-AUDIO-BENCHMARK-END")
-    ],
-    "docs/benchmarks/ocr/performance.md": [
-        ("MLX-ONE-OCR-BENCHMARK-START", "MLX-ONE-OCR-BENCHMARK-END")
-    ],
-    "docs/experimental/native-tasks.md": [
-        ("mlx-one:verified-task-results:start", "mlx-one:verified-task-results:end")
-    ],
-    "docs/experimental/mlxboost.md": [
-        ("mlx-one:mlxboost-summary:start", "mlx-one:mlxboost-summary:end")
     ],
 }
 
@@ -122,31 +113,7 @@ def parse(path):
 
 
 def default_files():
-    files = [ROOT / name for name in OWNERS]
-    files += [
-        ROOT / ("docs/" + name)
-        for name in (
-            "getting-started.md",
-            "api/index.md",
-            "architecture/index.md",
-            "development.md",
-            "model-catalog.md",
-            "documentation-generation.md",
-            "readme-restructuring-audit.md",
-            "readme-restructuring-results.md",
-            "benchmarks/README.md",
-            "benchmarks/http-performance.md",
-            "benchmarks/audio/README.md",
-            "benchmarks/vlm/README.md",
-            "benchmarks/ocr/README.md",
-            "architecture/mlxboost-module-boundary.md",
-            "validation/ocr-hf-2026-10-25/report.md",
-        )
-    ]
-    files += sorted((ROOT / "docs/experimental").glob("*.md"))
-    files += sorted((ROOT / "docs/models").glob("*.md"))
-    files += sorted((ROOT / "src/mlx_one/models").glob("*/*/README.md"))
-    return sorted(set(files))
+    return [ROOT / "README.md"]
 
 
 def check(files):
@@ -165,10 +132,17 @@ def check(files):
                 errors.append(f"{label}: invalid generated markers {start}")
         for url in parsed.links:
             parts = urlsplit(url)
-            if parts.scheme or parts.netloc:
+            prefix = next(
+                (v for v in REPO_LINKS.get(parts.netloc, ()) if parts.path.startswith(v)),
+                None,
+            )
+            if prefix is not None:
+                target = (ROOT / unquote(parts.path.removeprefix(prefix))).resolve()
+            elif parts.scheme or parts.netloc:
                 external.add(url)
                 continue
-            target = (path.parent / unquote(parts.path)).resolve() if parts.path else path
+            else:
+                target = (path.parent / unquote(parts.path)).resolve() if parts.path else path
             local += 1
             if not target.exists():
                 errors.append(f"{label}: missing target {url}")
@@ -183,12 +157,8 @@ def check(files):
                 "Experimental; bounded functional smoke",
                 "Text checkpoint status",
                 "docs/benchmarks/inventory.json",
-            ]
-            forbidden += [
-                f"<!-- {pair[0]} -->"
-                for name, pairs in OWNERS.items()
-                if name.startswith("docs/experimental/")
-                for pair in pairs
+                "<!-- mlx-one:verified-task-results:start -->",
+                "<!-- mlx-one:mlxboost-summary:start -->",
             ]
             for value in forbidden:
                 if value in text:

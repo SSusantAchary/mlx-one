@@ -1,7 +1,7 @@
 """Z-Image Turbo B1 text-to-image denoiser in checkpoint tensor layout.
 
 Reference equations: Diffusers transformer_z_image.py and MFLUX z_image_transformer.
-See NOTICE.md for source revisions and licenses.
+See NOTICE for source revisions and licenses.
 """
 
 import mlx.core as mx

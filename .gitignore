@@ -28,6 +28,8 @@ test-results/
 
 # Developer-only context and preserved private research
 /local/
+*.md
+!/README.md
 /references_libs/
 /scripts/qualification/checkpoint-paths.local.json
 

@@ -1,7 +1,7 @@
 """FLUX.2 Klein distilled text-to-image denoiser in checkpoint tensor layout.
 
 Reference equations: Diffusers transformer_flux2.py and MFLUX flux2_transformer.
-See NOTICE.md for source revisions and licenses.
+See NOTICE for source revisions and licenses.
 """
 
 import mlx.core as mx

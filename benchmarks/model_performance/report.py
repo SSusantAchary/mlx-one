@@ -371,16 +371,11 @@ def render_summary(records):
         "Different model architectures and precisions affect comparison.",
         "",
         "![MLX-One text-model decode speed by nominal parameter size on Apple M4]"
-        "(docs/benchmarks/figures/text-model-decode-bars.png)",
+        "(https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/"
+        "docs/benchmarks/figures/text-model-decode-bars.png)",
         "",
         "The chart labels the historical cohort and separate standardized GPT-2 result. "
-        "[Full tables and exact provenance](docs/benchmarks/text-performance.md), "
-        "[methodology](docs/benchmarks/README.md) and "
-        "[chart reproduction](docs/benchmarks/figures/README.md) retain all records. "
-        "Standardized 128/128 runs, [HTTP serving](docs/benchmarks/http-performance.md), "
-        "[VLM](docs/benchmarks/vlm/performance.md), "
-        "[audio](docs/benchmarks/audio/performance.md) and "
-        "[OCR](docs/benchmarks/ocr/performance.md) use separate protocols.",
+        "Standardized 128/128 runs, HTTP serving, VLM, audio, and OCR use separate protocols.",
         SUMMARY_END,
     ]
     return "\n".join(parts)
@@ -473,9 +468,16 @@ def main():
         readme: replace_block(
             readme.read_text(), SUMMARY_START, SUMMARY_END, render_summary(records)
         ),
-        REPORT: replace_block(REPORT.read_text(), START, END, relative_links(table, REPORT)),
-        **{EVIDENCE / k: v for k, v in derived(inventory, records).items()},
     }
+    reports = derived(inventory, records)
+    files[EVIDENCE / "coverage.json"] = reports["coverage.json"]
+    if args.write:
+        files.update({EVIDENCE / k: v for k, v in reports.items() if k.endswith(".md")})
+        detailed = relative_links(table, REPORT)
+        files[REPORT] = (
+            replace_block(REPORT.read_text(), START, END, detailed)
+            if REPORT.is_file() else f"{START}\n{detailed}\n{END}\n"
+        )
     for path, content in files.items():
         if args.write:
             path.write_text(content)

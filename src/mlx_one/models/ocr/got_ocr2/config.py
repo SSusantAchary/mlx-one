@@ -1,6 +1,6 @@
 # Native MLX port of mlx-vlm/got/config.py
 # Reference revision: e9af376626b04ba0cdad23b1476fd7a4a583d721
-# See ../UPSTREAM.md and ../UPSTREAM_LICENSE for attribution and local changes.
+# See ../UPSTREAM.txt and ../UPSTREAM_LICENSE for attribution and local changes.
 import inspect
 from dataclasses import dataclass
 

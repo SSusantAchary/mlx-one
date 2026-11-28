@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="mlx-one.png" alt="mlx-one black and orange logo" width="1000">
+  <img src="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx-one.png" alt="mlx-one black and orange logo" width="1000">
 </p>
 
 <h1 align="center">mlx-one</h1>
@@ -13,7 +13,7 @@
 
 <p align="center">
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
+  <a href="https://github.com/SSusantAchary/mlx-one/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache 2.0 License"></a>
   <img src="https://img.shields.io/badge/platform-Apple%20Silicon-black?logo=apple" alt="Apple Silicon">
   <a href="https://pypi.org/project/mlx-one/0.1.4/"><img src="https://img.shields.io/badge/PyPI-0.1.4-15845d" alt="0.1.4 published on PyPI"></a>
 </p>
@@ -44,16 +44,15 @@ Hugging Face supplies configuration, tokenizer/processor assets and safe
 ## Architecture
 
 <p align="center">
-  <a href="mlx-one_arch-visible-borders.png">
-    <img src="mlx-one_arch-visible-borders.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
+  <a href="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx-one_arch-visible-borders.png">
+    <img src="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx-one_arch-visible-borders.png" alt="mlx-one API, inference and training runtimes, native execution layer, and Apple MLX architecture" width="1100">
   </a>
 </p>
 
 Click the artwork for full resolution. It includes planned workflows such as
 CPT and RL and broader MTP goals. Those labels do not establish implementation
 or qualification; existing bounded Qwen3.5 MTP options have their own scope.
-The optional MLXBoost module ships inside MLX-One; a separate distribution is a
-[proposal](docs/architecture/mlxboost-module-boundary.md).
+The optional MLXBoost module ships inside MLX-One.
 
 The implemented native text path is:
 
@@ -74,9 +73,6 @@ MLX + Metal + unified memory
 The actor owns request state, sampling and cancellation. Cache reservations and
 memory-pressure telemetry govern admission; matching evidence gates optimized
 backend selection. Native model equations stay within family packages.
-See [architecture and principles](docs/architecture/index.md),
-[repository layout](docs/REPOSITORY_SUMMARY.md) and
-[runtime experiments](docs/experimental/inference-runtime.md).
 
 <a id="model-support-and-release"></a>
 
@@ -96,17 +92,11 @@ interface and memory-accounting changes. Python 3.10–3.13 regression checks,
 isolated-wheel installation and applicable Python, CLI, Engine and HTTP checks
 passed. Native checkpoint execution used Python 3.12 and MLX/Metal 0.32.2.
 
-[Live model explorer](https://ssusantachary.github.io/mlx-one/insights/#supported-model-explorer) ·
-[Model guides](docs/models/index.md) ·
-[Checkpoint workflows and limits](docs/models/batch-1-sub-6b/README.md) ·
-[Validation results](docs/qualification/batch-1-sub-6b/results.json) ·
-[Engineering report](docs/models/batch-1-sub-6b/REPORT.md).
+[Checkpoint validation results](https://github.com/SSusantAchary/mlx-one/blob/main/docs/qualification/batch-1-sub-6b/results.json).
 
 ### Verified Checkpoint Workflows
 
-The ten additional checkpoint profiles are listed below. The
-[support inventory](status_models_testing.md) retains the original 40-type cohort
-and the current counts by modality.
+The ten additional checkpoint profiles are listed below.
 
 | Checkpoint | Task | Verified behavior |
 | --- | --- | --- |
@@ -125,21 +115,19 @@ These workflows have pinned real-checkpoint and interface evidence. ViT's
 stricter hidden-state diagnostic remains failed; its supported scope is
 supervised classification. Kokoro supports the verified English voice, up to
 510 phonemes and 30 seconds per utterance. Full limits, conversion requirements
-and retained diagnostics are in the linked model guide and results.
+and retained diagnostics are in the linked validation results.
 
 ### Release Record
 
 **0.1.2 was published on PyPI on 11 November 2026**, including the ten
 additional workflows and all 45 architecture types in their documented scope.
 Both uploaded artifacts match the validated wheel and source archive; see the
-[release record](docs/releases/0.1.2.json). The previous **0.1.1** release covers the original
-40-type cohort. See the [support inventory](status_models_testing.md),
-[0.1.2 release notes](docs/releases/0.1.2.md) and
-[0.1.1 release history](docs/releases/0.1.1.md).
+[release record](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.2.json). The previous **0.1.1** release covers the original
+40-type cohort. See the [0.1.1 release record](https://github.com/SSusantAchary/mlx-one/blob/main/docs/releases/0.1.1.json).
 
 <p align="center">
-  <a href="status_models_testing.md">
-    <img src="docs/assets/mlx-one-supported-model-ecosystem.png" alt="MLX-One supported model ecosystem: 40 native model types across seven modalities" width="1200">
+  <a href="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/assets/mlx-one-supported-model-ecosystem.png">
+    <img src="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/assets/mlx-one-supported-model-ecosystem.png" alt="MLX-One supported model ecosystem: 40 native model types across seven modalities" width="1200">
   </a>
 </p>
 
@@ -160,8 +148,7 @@ Downloaded qualification weights were removed after recording results.
 | Inspection and planning | Safe artifact inspection, hardware profiles and workload memory estimates |
 | Training and evaluation | Experimental LoRA/QLoRA SFT, dataset validation, adapter export and evidence tooling |
 
-Task availability varies by checkpoint and interface. See the
-[model guides](docs/models/index.md) for supported inputs and limitations.
+Task availability varies by checkpoint and interface.
 
 ## Version 0.1.4
 
@@ -173,9 +160,7 @@ Native sampling and eligible GPT-OSS execution have bounded optimizations;
 sustained long-response speed remains variable. Full 128K HTTP/tool workflows
 are not qualified by these short-context measurements.
 
-[Release notes](docs/releases/0.1.4.md) ·
-[Measured results and limits](docs/mlxboost/serving-overhead.md) ·
-[Push and PyPI publication steps](docs/releases/0.1.4-pypi.md).
+[GitHub releases](https://github.com/SSusantAchary/mlx-one/releases).
 
 Install the published release:
 
@@ -209,19 +194,11 @@ python -m pip install --upgrade "mlx-one[server,vision,ocr,kokoro]==0.1.4"
 mlx-one --version
 ```
 
-For optional dependencies, audio/video decoding requirements and tested
-constraints, see [getting started](docs/getting-started.md) and the
-[dependency policy](requirements/README.md). For editable development setup, use the
-[source installation](docs/getting-started.md#source-installation-for-development).
-See the [0.1.4 release notes](docs/releases/0.1.4.md) for changes and validation
-scope, and the [publication handoff](docs/releases/0.1.4-pypi.md) for artifacts.
 Git installs use the selected revision; `mlx-one upgrade` upgrades from Git main.
 
 ### Load a text checkpoint and generate
 
-The native GPT-2 checkpoint has a passing primary-workflow record in the
-[support inventory](status_models_testing.md). The engine loads the model
-on entry and releases its resources on exit:
+The engine loads the model on entry and releases its resources on exit:
 
 ```python
 from mlx_one import Engine
@@ -260,9 +237,8 @@ mlx-one classify-image google/vit-base-patch16-224 ./image.jpg --top-k 5 --json-
 mlx-one tts ./kokoro-native 'Hello, world.' --output ./speech.wav
 ```
 
-Kokoro and BGE-M3 use safely converted local bundles; follow the
-[offline conversion guide](docs/models/batch-1-sub-6b/references.md#safe-offline-conversion).
-The [retrieval and reranking example](examples/batch1_retrieval.py) combines a
+Kokoro and BGE-M3 use safely converted local bundles.
+The [retrieval and reranking example](https://github.com/SSusantAchary/mlx-one/blob/main/examples/batch1_retrieval.py) combines a
 dense encoder with a paired scorer using MLX-One APIs. Use the recorded immutable
 revisions when reproducing the validation results.
 
@@ -276,8 +252,7 @@ mlx-one serve LiquidAI/LFM2-350M --inference-mode reference_dense \
 ```
 
 Open `http://127.0.0.1:8888` for the bundled chat UI. The same process exposes
-OpenAI-compatible endpoints at `/v1`. The [server guide](docs/ui.md) covers model
-aliases, optional Bearer authentication and runtime configuration.
+OpenAI-compatible endpoints at `/v1`.
 
 <!-- model-performance-summary:start -->
 ## Model Performance
@@ -300,9 +275,9 @@ MLX / Metal 0.32.2 / 0.32.2; macOS-15.7.9-arm64-arm-64bit; Python 3.12.11. TTFT 
 
 Affine Q4/Q8 use group size 64. These bounded experimental measurements are not release qualification, full-context validation or Python/HTTP throughput. Different model architectures and precisions affect comparison.
 
-![MLX-One text-model decode speed by nominal parameter size on Apple M4](docs/benchmarks/figures/text-model-decode-bars.png)
+![MLX-One text-model decode speed by nominal parameter size on Apple M4](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/text-model-decode-bars.png)
 
-The chart labels the historical cohort and separate standardized GPT-2 result. [Full tables and exact provenance](docs/benchmarks/text-performance.md), [methodology](docs/benchmarks/README.md) and [chart reproduction](docs/benchmarks/figures/README.md) retain all records. Standardized 128/128 runs, [HTTP serving](docs/benchmarks/http-performance.md), [VLM](docs/benchmarks/vlm/performance.md), [audio](docs/benchmarks/audio/performance.md) and [OCR](docs/benchmarks/ocr/performance.md) use separate protocols.
+The chart labels the historical cohort and separate standardized GPT-2 result. Standardized 128/128 runs, HTTP serving, VLM, audio, and OCR use separate protocols.
 <!-- model-performance-summary:end -->
 
 ### GPT-OSS native HTTP serving
@@ -311,11 +286,11 @@ Measured on Apple M4 with 32 GB unified memory, Python 3.12, using the native ML
 
 | Model name | Parameters | Configured context (tokens) | Quantization/precision | Prefill tokens/sec | Decode tokens/sec | Native first-token time (ms) | Peak MLX memory (GiB) |
 |---|---|---:|---|---:|---:|---:|---:|
-| [mlx-community/gpt-oss-20b-MXFP4-Q4](docs/validation/gpt-oss-kilo-2026-10-23.json) | 20B / 3.6B active | 131,072 | Mixed MXFP4 / affine Q4–Q8 | **75.95** | **18.96** | 2355.38 | 10.608 |
+| [mlx-community/gpt-oss-20b-MXFP4-Q4](https://github.com/SSusantAchary/mlx-one/blob/main/docs/validation/gpt-oss-kilo-2026-10-23.json) | 20B / 3.6B active | 131,072 | Mixed MXFP4 / affine Q4–Q8 | **75.95** | **18.96** | 2355.38 | 10.608 |
 
-Native first-token time includes hidden analysis; the median first actionable tool delta arrived at **7.127 seconds**, after argument validation. The configured 131,072-token context was not tested at its full length. See the [full measurements and methodology](docs/GPT_OSS_KILO_COMPATIBILITY.md#measured-performance). Standardized direct-model 128/128 coverage remains unchanged.
+Native first-token time includes hidden analysis; the median first actionable tool delta arrived at **7.127 seconds**, after argument validation. The configured 131,072-token context was not tested at its full length. Standardized direct-model 128/128 coverage remains unchanged.
 
-The historical serving report does not record an immutable local checkpoint revision or MLX version; it cannot qualify the current pinned GPT-OSS targets. See [HTTP provenance](docs/benchmarks/http-performance.md).
+The historical serving report does not record an immutable local checkpoint revision or MLX version; it cannot qualify the current pinned GPT-OSS targets.
 
 
 <!-- MLX-ONE-VLM-BENCHMARK-START -->
@@ -323,28 +298,28 @@ The historical serving report does not record an immutable local checkpoint revi
 
 Actual **direct-model native MLX/Metal** inference on pinned checkpoint revisions. These are image-inference measurements; Python Engine, CLI and HTTP serving overhead are separate. Functional and quality limits are recorded with the evidence.
 
-**VLM-HF-S1 v1:** one 512 × 512 padded image from [Hugging Face documentation-images](https://huggingface.co/datasets/huggingface/documentation-images), with dataset revision and image hashes pinned in the [workload manifest](benchmarks/vlm/hf-images.json). Batch 1, fixed prompt, greedy generation up to 128 emitted tokens; one warmup and five repetitions, per-column median. EOS is respected and actual output counts determine speed. Each checkpoint retains its own resize/tiling. TTFT includes image decoding/preprocessing; prefill combines vision encoding, projection and language prefill. “Vision processing” means image decoding/preprocessing only.
+**VLM-HF-S1 v1:** one 512 × 512 padded image from [Hugging Face documentation-images](https://huggingface.co/datasets/huggingface/documentation-images), with dataset revision and image hashes pinned in the [workload manifest](https://github.com/SSusantAchary/mlx-one/blob/main/benchmarks/vlm/hf-images.json). Batch 1, fixed prompt, greedy generation up to 128 emitted tokens; one warmup and five repetitions, per-column median. EOS is respected and actual output counts determine speed. Each checkpoint retains its own resize/tiling. TTFT includes image decoding/preprocessing; prefill combines vision encoding, projection and language prefill. “Vision processing” means image decoding/preprocessing only.
 
 Q4/Q8 denote the published checkpoint format; vision or projector modules may retain floating-point weights.
 
-![MLX-One VLM decode speed by nominal model size, with time to first token](docs/benchmarks/figures/vlm-model-performance.png)
+![MLX-One VLM decode speed by nominal model size, with time to first token](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/vlm-model-performance.png)
 
-[VLM size-versus-speed scatter plot](docs/benchmarks/figures/vlm-model-size-vs-decode.svg) · [VLM chart SVG](docs/benchmarks/figures/vlm-model-performance.svg) · [Chart data and reproduction](docs/benchmarks/figures/README.md#vlm-and-audio-charts)
+[VLM size-versus-speed scatter plot](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/vlm-model-size-vs-decode.svg) · [VLM chart SVG](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/vlm-model-performance.svg)
 
 **Measured hardware:** Apple M4, 32 GiB; macOS-15.8.1-arm64-arm-64bit; MLX 0.32.2; Python 3.12.11. Separate execution cohort.
 
 | Model | Precision | Images | Vision processing (ms) | Prefill TPS | Decode TPS | TTFT (ms) | Peak MLX memory (GiB) | Scores |
 |---|---|---:|---:|---:|---:|---:|---:|---|
-| [Qwen2-VL 2B](docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **279.68** | **67.28** | 1290.28 | 1.755 | [Scores](docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) |
-| [Qwen2.5-VL 3B](docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **215.86** | **41.19** | 1670.08 | 3.164 | [Scores](docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) |
-| [Qwen3.5 0.8B](docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) | Q4 | 1 | 4.81 | **717.75** | **68.78** | 401.16 | 1.129 | [Scores](docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) |
-| [LFM2-VL 450M](docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) | Q8 | 1 | 7.16 | **1739.05** | **154.33** | 169.97 | 1.163 | [Scores](docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) |
-| [LFM2.5-VL 3B](docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) | Q4 | 1 | 7.37 | **300.73** | **52.01** | 942.38 | 2.801 | [Scores](docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) |
+| [Qwen2-VL 2B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **279.68** | **67.28** | 1290.28 | 1.755 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V01-VLM-HF-S1.json) |
+| [Qwen2.5-VL 3B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) | Q4 | 1 | 6.05 | **215.86** | **41.19** | 1670.08 | 3.164 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V02-VLM-HF-S1.json) |
+| [Qwen3.5 0.8B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) | Q4 | 1 | 4.81 | **717.75** | **68.78** | 401.16 | 1.129 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V03-VLM-HF-S1.json) |
+| [LFM2-VL 450M](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) | Q8 | 1 | 7.16 | **1739.05** | **154.33** | 169.97 | 1.163 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V04-VLM-HF-S1.json) |
+| [LFM2.5-VL 3B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) | Q4 | 1 | 7.37 | **300.73** | **52.01** | 942.38 | 2.801 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/results/V05-VLM-HF-S1.json) |
 
 **Actual fused input / emitted output tokens per repetition:** Qwen2-VL 2B: 359 / 112; Qwen2.5-VL 3B: 359 / 79; Qwen3.5 0.8B: 284 / 106; LFM2-VL 450M: 282 / 128; LFM2.5-VL 3B: 281 / 101.
 
 
-High-resolution (1024 × 1024), four-image and OCR workloads remain separate. The HF image protocol is not pooled with the earlier synthetic-image protocol. See the [methodology and coverage](docs/benchmarks/vlm/README.md), [pinned checkpoint inventory](docs/benchmarks/vlm/benchmark_plan.json), and [manual download/inference/benchmark runbook](docs/VLM_TESTING.md). Text-model measurements above use different protocols. See the [checkpoint smoke and cleanup report](docs/validation/vlm-hf-2026-10-24/report.md).
+High-resolution (1024 × 1024), four-image and OCR workloads remain separate. The HF image protocol is not pooled with the earlier synthetic-image protocol. See the [pinned checkpoint inventory](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/vlm/benchmark_plan.json). Text-model measurements use different protocols.
 <!-- MLX-ONE-VLM-BENCHMARK-END -->
 
 
@@ -357,22 +332,22 @@ Protocol: batch 1, one warmup, five repetitions, median; actual audio durations.
 
 ### Speech Recognition Performance
 
-![MLX-One speech recognition throughput by nominal model size, with single-clip WER and peak memory](docs/benchmarks/figures/audio-asr-performance.png)
+![MLX-One speech recognition throughput by nominal model size, with single-clip WER and peak memory](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/audio-asr-performance.png)
 
-[ASR size-versus-throughput scatter plot](docs/benchmarks/figures/audio-model-size-vs-asr.svg) · [ASR chart SVG](docs/benchmarks/figures/audio-asr-performance.svg)
+[ASR size-versus-throughput scatter plot](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/audio-model-size-vs-asr.svg) · [ASR chart SVG](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/audio-asr-performance.svg)
 
 | Model | Precision | Audio (s) | Latency (ms) | RTF ↓ | Audio sec/sec ↑ | WER (%) | Peak MLX (GiB) | Scores |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Whisper Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) | FP32 | 10.000 | 2144.869 | 0.214 | **4.662** | 4.167 | 0.485 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) |
-| [Whisper Large v3 Turbo](docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) | FP16 | 10.000 | 7666.962 | 0.767 | **1.304** | 4.167 | 2.694 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) |
-| [Distil-Whisper Large v3](docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) | FP16 | 10.000 | 5433.400 | 0.543 | **1.840** | 0.000 | 2.596 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) |
-| [Moonshine Tiny](docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) | FP32 | 10.000 | 117.038 | 0.012 | **85.443** | 4.167 | 0.191 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) |
-| [Moonshine Base](docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) | FP32 | 10.000 | 153.511 | 0.015 | **65.142** | 12.500 | 0.423 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) |
-| [Qwen3-ASR 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) | Q8 / BF16 | 10.000 | 528.726 | 0.053 | **18.913** | 0.000 | 1.281 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) |
-| [Qwen3-ASR 1.7B](docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) | Q8 / BF16 | 10.000 | 1017.307 | 0.102 | **9.830** | 0.000 | 2.656 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) |
-| [Parakeet TDT v2](docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) | FP32 | 10.000 | 169.265 | 0.017 | **59.079** | 0.000 | 2.383 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) |
-| [Parakeet TDT v3](docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) | FP32 | 10.000 | 174.019 | 0.017 | **57.465** | 0.000 | 2.417 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) |
-| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) | Q4 / BF16 | 10.000 | 547.659 | 0.055 | **18.260** | 4.167 | 1.472 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) |
+| [Whisper Tiny](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) | FP32 | 10.000 | 2144.869 | 0.214 | **4.662** | 4.167 | 0.485 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A01-ASR-S1.json) |
+| [Whisper Large v3 Turbo](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) | FP16 | 10.000 | 7666.962 | 0.767 | **1.304** | 4.167 | 2.694 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A02-ASR-S1.json) |
+| [Distil-Whisper Large v3](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) | FP16 | 10.000 | 5433.400 | 0.543 | **1.840** | 0.000 | 2.596 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A03-ASR-S1.json) |
+| [Moonshine Tiny](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) | FP32 | 10.000 | 117.038 | 0.012 | **85.443** | 4.167 | 0.191 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A04-ASR-S1.json) |
+| [Moonshine Base](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) | FP32 | 10.000 | 153.511 | 0.015 | **65.142** | 12.500 | 0.423 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A05-ASR-S1.json) |
+| [Qwen3-ASR 0.6B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) | Q8 / BF16 | 10.000 | 528.726 | 0.053 | **18.913** | 0.000 | 1.281 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A06-ASR-S1.json) |
+| [Qwen3-ASR 1.7B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) | Q8 / BF16 | 10.000 | 1017.307 | 0.102 | **9.830** | 0.000 | 2.656 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A07-ASR-S1.json) |
+| [Parakeet TDT v2](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) | FP32 | 10.000 | 169.265 | 0.017 | **59.079** | 0.000 | 2.383 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A08-ASR-S1.json) |
+| [Parakeet TDT v3](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) | FP32 | 10.000 | 174.019 | 0.017 | **57.465** | 0.000 | 2.417 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A09-ASR-S1.json) |
+| [LFM2.5 Audio 1.5B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) | Q4 / BF16 | 10.000 | 547.659 | 0.055 | **18.260** | 4.167 | 1.472 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A10-ASR-S1.json) |
 
 Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; ASR-S1.
 
@@ -380,20 +355,20 @@ Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepare
 
 | Model | Precision | Audio (s) | Latency (ms) | Mean boundary error (ms) | Peak MLX (GiB) | Scores |
 | --- | --- | --- | --- | --- | --- | --- |
-| [Qwen3-ForcedAligner 0.6B](docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) | Q8 / BF16 | 10.000 | 189.892 | — | 1.546 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) |
+| [Qwen3-ForcedAligner 0.6B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) | Q8 / BF16 | 10.000 | 189.892 | — | 1.546 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A11-ALIGN-S1.json) |
 
 Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; ALIGN-S1.
 
 ### Speech Generation Performance
 
-![MLX-One speech generation throughput, with separate TTS and speech-to-speech workloads and the failed longer case](docs/benchmarks/figures/audio-speech-generation.png)
+![MLX-One speech generation throughput, with separate TTS and speech-to-speech workloads and the failed longer case](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/audio-speech-generation.png)
 
-[Speech generation chart SVG](docs/benchmarks/figures/audio-speech-generation.svg) · [Chart data and reproduction](docs/benchmarks/figures/README.md#vlm-and-audio-charts). Speech quality and alignment accuracy retain their documented limits.
+[Speech generation chart SVG](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/audio-speech-generation.svg). Speech quality and alignment accuracy retain their documented limits.
 
 | Model | Precision | Task | First audio (ms) | Output (s) | RTF ↓ | Audio sec/sec ↑ | Peak MLX (GiB) | Scores |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) | Q4 / BF16 | synthesize | 328.986 | 12.320 | 0.312 | **3.207** | 1.850 | [Scores](docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) |
-| [LFM2.5 Audio 1.5B](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) | Q4 / BF16 | speech-to-speech | — | — | — | — | — | [Failed; WIP](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) |
+| [LFM2.5 Audio 1.5B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) | Q4 / BF16 | synthesize | 328.986 | 12.320 | 0.312 | **3.207** | 1.850 | [Scores](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A12-TTS-S1.json) |
+| [LFM2.5 Audio 1.5B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) | Q4 / BF16 | speech-to-speech | — | — | — | — | — | [Failed; WIP](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-S1.json) |
 
 Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm; TTS-S1.
 
@@ -403,13 +378,12 @@ Measured on Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepare
 
 | Model | First audio (ms) | Output (s) | RTF ↓ | Audio sec/sec ↑ | Peak MLX (GiB) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [LFM2.5 Audio 1.5B Q4](docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-HF-Q1-direct-model-prepared-pcm.json) | 426.127 | 15.360 | 0.349 | **2.867** | 2.016 |
+| [LFM2.5 Audio 1.5B Q4](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/audio/results/hf-2026-10-24/A13-STS-HF-Q1-direct-model-prepared-pcm.json) | 426.127 | 15.360 | 0.349 | **2.867** | 2.016 |
 
 Apple M4, 32 GiB; MLX 0.32.2; native MLX/Metal; direct-model-prepared-pcm. Experimental; speech quality requires listening review.
 
-Independent alignment boundary accuracy was not measured in this historical cohort; the newer TIMIT timing checks are recorded in the current support inventory. Q4 LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder. Current Q8 speech support and newer alignment results are in the [support inventory](status_models_testing.md).
+Independent alignment boundary accuracy was not measured in this historical cohort; newer TIMIT timing checks used a separate workload. Q4 LFM speech-to-speech exceeded its output bound on this fixture; its sampled diagnostic also had unstable waveform amplitude. No speed is published for that failed task. TTS timings do not establish perceptual quality. Qwen ASR streaming reprocesses a bounded accumulated utterance; it is not a causal streaming encoder.
 
-[Methodology and coverage](docs/benchmarks/audio/README.md) · [Manual download, Python/CLI/HTTP and benchmark commands](docs/AUDIO_TESTING.md)
 <!-- MLX-ONE-AUDIO-BENCHMARK-END -->
 
 
@@ -420,23 +394,22 @@ Experimental native OCR on **100 randomly selected document images** from [OmniA
 
 **Apple M4, 32 GiB unified memory · MLX 0.32.2 · direct-model inference · native MLX/Metal · batch 1.** One 16-token warmup, then one timed request per image; image-dependent input lengths and a 1,023-token output cap, greedy decoding. Actual token counts are retained in JSON. Latency is the median of completed requests; pages/s is completed pages divided by total inference time, including failed requests. Peak memory is the maximum observed MLX allocation, including weights.
 
-![OCR throughput on 100 document images](docs/benchmarks/figures/ocr-omni100-performance.png)
+![OCR throughput on 100 document images](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/ocr-omni100-performance.png)
 
 | Model | Precision | Completed | Median latency (s) | Pages/s | Markdown-ref. CER ↓ | Peak MLX (GiB) | Truncated |
 |---|---|---:|---:|---:|---:|---:|---:|
-| [TrOCR Base Printed](docs/benchmarks/ocr/omni100-20261025/O01.json) | FP32 | [Line crops required](docs/benchmarks/ocr/omni100-20261025/O01.json) | — | — | — | — | — |
-| [TrOCR Base Handwritten](docs/benchmarks/ocr/omni100-20261025/O02.json) | FP32 | [Line crops required](docs/benchmarks/ocr/omni100-20261025/O02.json) | — | — | — | — | — |
-| [GOT-OCR 2.0](docs/benchmarks/ocr/omni100-20261025/O03.json) | Affine Q4 | [97/100](docs/benchmarks/ocr/omni100-20261025/O03.json) | 12.42 | **0.114** | 74.5% | 1.673 | 56 |
-| [Florence-2 Base FT](docs/benchmarks/ocr/omni100-20261025/O04.json) | FP16 | [97/100](docs/benchmarks/ocr/omni100-20261025/O04.json) | 6.60 | **0.197** | 78.3% | 1.201 | 61 |
-| [PaddleOCR-VL 1.5](docs/benchmarks/ocr/omni100-20261025/O05.json) | Affine Q4 | [97/100](docs/benchmarks/ocr/omni100-20261025/O05.json) | 13.87 | **0.087** | 59.8% | 1.560 | 53 |
-| [LightOnOCR 2 1B](docs/benchmarks/ocr/omni100-20261025/O06.json) | BF16 | [97/100](docs/benchmarks/ocr/omni100-20261025/O06.json) | 31.53 | **0.032** | 67.7% | 8.661 | 64 |
-| [DeepSeek-OCR](docs/benchmarks/ocr/omni100-20261025/O07.json) | Affine Q4 | [97/100](docs/benchmarks/ocr/omni100-20261025/O07.json) | 13.59 | **0.076** | 51.2% | 3.810 | 41 |
+| [TrOCR Base Printed](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O01.json) | FP32 | [Line crops required](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O01.json) | — | — | — | — | — |
+| [TrOCR Base Handwritten](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O02.json) | FP32 | [Line crops required](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O02.json) | — | — | — | — | — |
+| [GOT-OCR 2.0](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O03.json) | Affine Q4 | [97/100](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O03.json) | 12.42 | **0.114** | 74.5% | 1.673 | 56 |
+| [Florence-2 Base FT](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O04.json) | FP16 | [97/100](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O04.json) | 6.60 | **0.197** | 78.3% | 1.201 | 61 |
+| [PaddleOCR-VL 1.5](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O05.json) | Affine Q4 | [97/100](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O05.json) | 13.87 | **0.087** | 59.8% | 1.560 | 53 |
+| [LightOnOCR 2 1B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O06.json) | BF16 | [97/100](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O06.json) | 31.53 | **0.032** | 67.7% | 8.661 | 64 |
+| [DeepSeek-OCR](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O07.json) | Affine Q4 | [97/100](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/omni100-20261025/O07.json) | 13.59 | **0.076** | 51.2% | 3.810 | 41 |
 
 CER uses NFKC and whitespace normalization against Markdown references; formatting and reading order affect this score, which can exceed 100%. Failed requests count as empty predictions. This is an MLX-One corpus test, separate from OmniAI’s official leaderboard and the synthetic OCR-S* protocol.
 
 TrOCR requires annotated line crops, absent from this page dataset. PaddleOCR-VL uses direct page transcription; its separate layout pipeline is not included. No layout accuracy or JSON extraction score is claimed by this page test.
 
-[Methodology, per-image predictions and cleanup evidence](docs/benchmarks/ocr/omni100-20261025/README.md) · [OCR limitations and manual commands](docs/OCR_TESTING.md)
 
 ### Handwriting: 10 line images
 
@@ -444,19 +417,19 @@ The same seeded sample of 10 test-split images from [handwritten_text_ocr](https
 
 **Apple M4, 32 GiB · MLX 0.32.2 · native MLX/Metal · direct-model inference · batch 1.**
 
-![OCR throughput on 10 handwritten lines](docs/benchmarks/figures/ocr-hand10-performance.png)
+![OCR throughput on 10 handwritten lines](https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/docs/benchmarks/figures/ocr-hand10-performance.png)
 
 | Model | Precision | Completed | Median latency (s) | Images/s | CER ↓ | WER ↓ | Peak MLX (GiB) | Truncated |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| [TrOCR Base Printed (printed baseline)](docs/benchmarks/ocr/hand10-20261025/O01.json) | FP32 | [10/10](docs/benchmarks/ocr/hand10-20261025/O01.json) | 0.27 | **3.608** | 80.6% | 100.0% | 1.488 | 0 |
-| [TrOCR Base Handwritten](docs/benchmarks/ocr/hand10-20261025/O02.json) | FP32 | [10/10](docs/benchmarks/ocr/hand10-20261025/O02.json) | 0.21 | **4.670** | 4.4% | 10.6% | 1.488 | 0 |
-| [GOT-OCR 2.0](docs/benchmarks/ocr/hand10-20261025/O03.json) | Affine Q4 | [10/10](docs/benchmarks/ocr/hand10-20261025/O03.json) | 0.67 | **1.491** | 40.6% | 94.7% | 1.673 | 0 |
-| [Florence-2 Base FT](docs/benchmarks/ocr/hand10-20261025/O04.json) | FP16 | [10/10](docs/benchmarks/ocr/hand10-20261025/O04.json) | 0.30 | **3.051** | 97.9% | 143.6% | 1.201 | 1 |
-| [PaddleOCR-VL 1.5](docs/benchmarks/ocr/hand10-20261025/O05.json) | Affine Q4 | [10/10](docs/benchmarks/ocr/hand10-20261025/O05.json) | 1.13 | **0.790** | 13.8% | 43.6% | 1.540 | 0 |
-| [LightOnOCR 2 1B](docs/benchmarks/ocr/hand10-20261025/O06.json) | BF16 | [10/10](docs/benchmarks/ocr/hand10-20261025/O06.json) | 0.98 | **1.102** | 6.9% | 33.0% | 2.766 | 0 |
-| [DeepSeek-OCR](docs/benchmarks/ocr/hand10-20261025/O07.json) | Affine Q4 | [10/10](docs/benchmarks/ocr/hand10-20261025/O07.json) | 6.68 | **0.150** | 24.7% | 48.9% | 3.810 | 0 |
+| [TrOCR Base Printed (printed baseline)](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O01.json) | FP32 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O01.json) | 0.27 | **3.608** | 80.6% | 100.0% | 1.488 | 0 |
+| [TrOCR Base Handwritten](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O02.json) | FP32 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O02.json) | 0.21 | **4.670** | 4.4% | 10.6% | 1.488 | 0 |
+| [GOT-OCR 2.0](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O03.json) | Affine Q4 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O03.json) | 0.67 | **1.491** | 40.6% | 94.7% | 1.673 | 0 |
+| [Florence-2 Base FT](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O04.json) | FP16 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O04.json) | 0.30 | **3.051** | 97.9% | 143.6% | 1.201 | 1 |
+| [PaddleOCR-VL 1.5](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O05.json) | Affine Q4 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O05.json) | 1.13 | **0.790** | 13.8% | 43.6% | 1.540 | 0 |
+| [LightOnOCR 2 1B](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O06.json) | BF16 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O06.json) | 0.98 | **1.102** | 6.9% | 33.0% | 2.766 | 0 |
+| [DeepSeek-OCR](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O07.json) | Affine Q4 | [10/10](https://github.com/SSusantAchary/mlx-one/blob/main/docs/benchmarks/ocr/hand10-20261025/O07.json) | 6.68 | **0.150** | 24.7% | 48.9% | 3.810 | 0 |
 
-TrOCR Printed is an out-of-domain baseline. Page models process the same cropped lines in their OCR mode; this small sample is not a general handwriting qualification. Handwriting timings are separate from the 100-page workload. [Protocol, predictions, truncations and coverage](docs/benchmarks/ocr/hand10-20261025/README.md).
+TrOCR Printed is an out-of-domain baseline. Page models process the same cropped lines in their OCR mode; this small sample is not a general handwriting qualification. Handwriting timings are separate from the 100-page workload.
 
 <!-- MLX-ONE-OCR-BENCHMARK-END -->
 
@@ -476,37 +449,30 @@ concurrent-serving rates. p95 uses the nearest-rank method.
 | CLIP ViT-B/32 | One image, two labels | 80.19 | 89.68 |
 | Silero VAD | One second of decoded mono 16 kHz audio | 16.35 | 22.97 |
 
-[Task measurement protocol and raw-run locators](docs/native_tasks/task-performance.md)
-retain exact workload and provenance details. Current model support is recorded
-in the [40-model inventory](status_models_testing.md); older quality measurements
-and rejected optional profiles remain in the
-[task evidence](docs/experimental/native-tasks.md).
+### Retrieval and Segmentation
 
 | Modality | Available performance evidence | Remaining measurement gap |
 | --- | --- | --- |
-| Embeddings and reranking | Measured FP32 dense retrieval and paired reranking pipelines on M4 | [Workloads and measurements](docs/models/batch-1-sub-6b/REPORT.md#apple-m4-performance) include actual lengths, batching and timing boundaries |
-| SAM3 segmentation and tracking | Approximately 8.41 GB peak MLX allocation in controlled 32-frame single-object comparisons on M4 / 32 GB | Isolated latency/throughput not measured; [fixture report](docs/sam3-qualification-m4-32gb.md) is not a general tracking benchmark |
+| Embeddings and reranking | Measured FP32 dense retrieval and paired reranking pipelines on M4 | Timings depend on input lengths and batching |
+| SAM3 segmentation and tracking | Approximately 8.41 GB peak MLX allocation in controlled 32-frame single-object comparisons on M4 / 32 GB | Isolated latency and throughput were outside the fixture scope |
 
 
 ## Supported Modalities and Models
 
-| Modality | Native architecture types | Primary capabilities | Documentation |
-| --- | ---: | --- | --- |
-| Text generation | 12 | Native completion/chat and T5 text-to-text generation | [Text families](docs/models/index.md#text-generation-guides) |
-| Vision-language | 4 | Single-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL | [VLM families](docs/models/index.md#vision-language-guides) |
-| Audio & speech | 8 | ASR, alignment, VAD, LFM speech and Kokoro synthesis | [Audio families](docs/models/index.md#audio-guides) |
-| OCR & documents | 6 | TrOCR line recognition and page text recognition | [OCR guide](docs/OCR_TESTING.md) |
-| Embeddings & reranking | 7 | Dense, paired reranking, sparse and ColBERT retrieval | [Retrieval families](docs/models/index.md#retrieval-guides) |
-| Segmentation | 4 | SAM3 image prompts and native offline/streaming video workflows | [SAM3 guide](src/mlx_one/models/segmentation/sam3/README.md) |
-| Classification | 4 | Sentiment, NER, zero-shot images and supervised ViT | [Classification guides](docs/models/index.md#classification-guides) |
-| **Total** | **45** | Checkpoint-specific primary workflows across seven modalities | [Model index](docs/models/index.md) · [Checkpoint workflows](docs/models/batch-1-sub-6b/README.md) |
+| Modality | Native architecture types | Primary capabilities |
+| --- | ---: | --- |
+| Text generation | 12 | Native completion/chat and T5 text-to-text generation |
+| Vision-language | 4 | Single-image/text inference for Qwen2-VL, Qwen2.5-VL, Qwen3.5 and LFM2-VL |
+| Audio & speech | 8 | ASR, alignment, VAD, LFM speech and Kokoro synthesis |
+| OCR & documents | 6 | TrOCR line recognition and page text recognition |
+| Embeddings & reranking | 7 | Dense, paired reranking, sparse and ColBERT retrieval |
+| Segmentation | 4 | SAM3 image prompts and native offline/streaming video workflows |
+| Classification | 4 | Sentiment, NER, zero-shot images and supervised ViT |
+| **Total** | **45** | Checkpoint-specific primary workflows across seven modalities |
 
 Support applies to the checkpoint, precision and operations recorded in the
-[0.1.1 catalog](src/mlx_one/data/model_support_release_20261108.json) and
-[additional checkpoint results](docs/qualification/batch-1-sub-6b/results.json).
-[Known quality and scope limits](status_models_testing.md#known-quality-and-scope-limitations)
-remain documented. [Admission policy](docs/model-admission.md) explains the
-functional standard; optional experiments retain their own evidence and status.
+[0.1.1 catalog](https://github.com/SSusantAchary/mlx-one/blob/main/src/mlx_one/data/model_support_release_20261108.json) and
+[additional checkpoint results](https://github.com/SSusantAchary/mlx-one/blob/main/docs/qualification/batch-1-sub-6b/results.json).
 
 ## Native Inference Engine and MLXBoost
 
@@ -517,7 +483,6 @@ existing `generate()` and `stream_generate()` functions remain available.
 Dense reference execution is the default, with one active sequence. Block,
 paged, dense-batch and hybrid-batch paths have explicit capability and evidence
 requirements; source implementation does not establish production qualification.
-See the [runtime guide](docs/experimental/inference-runtime.md).
 
 MLXBoost ships inside `mlx-one` and requires explicit `mlxboost_b1` opt-in;
 feature flags default off. `fast_decode` reduces eligible host overhead. The
@@ -527,14 +492,7 @@ bounded prefill, selected with `MLXBoostConfig(gptoss_mlx_lm=True)` or
 or strict errors. Optimizations remain profile-specific and experimental.
 
 The 0.1.4 maintenance changes add native sampling improvements and conservative
-full-history decode attention. Sustained long responses still slow down; the
-[measurements](docs/mlxboost/serving-overhead.md) retain that limitation.
-See the [GPT-OSS serving guide](docs/mlxboost/gptoss-serving.md) for setup.
-
-[MLXBoost experiments](docs/experimental/mlxboost.md) retain off/on HTTP results,
-failed model qualification gates, methodology and future requirements. The
-[module boundary ADR](docs/architecture/mlxboost-module-boundary.md) explains
-current ownership and the proposed future package boundary.
+full-history decode attention. Sustained long responses still slow down.
 
 ### MLX-Boost Performance Scorecard — experimental
 
@@ -558,9 +516,7 @@ trials. These protocols are separate. The MoE operator's extra peak allocation
 fell from **20,480 to 4,100 bytes**; no model-memory improvement was measured.
 G03's measured forced-native model decode was slower. These entries establish
 **no model acceleration**; default-off fallback and correctness gates remain.
-See the [full scorecard, model timings, memory scopes and source/license notices](docs/experimental/mlxboost-performance-scorecard.md).
-[Evidence availability](docs/experimental/mlxboost-performance-scorecard.md#evidence-availability)
-identifies the records included in the publication commit and the local-only raw artifacts.
+See the [machine-readable MLXBoost scorecard](https://github.com/SSusantAchary/mlx-one/blob/main/docs/experimental/mlxboost-performance-scorecard.json).
 
 ## Python, CLI and HTTP APIs
 
@@ -590,13 +546,13 @@ curl http://127.0.0.1:8888/v1/chat/completions \
 ```
 
 <p align="center">
-  <a href="mlx_One_chat_ui.png">
-    <img src="mlx_One_chat_ui.png" alt="Earlier MLX-One native chat UI in dark mode, connected to a local LFM2 model" width="900">
+  <a href="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx_One_chat_ui.png">
+    <img src="https://raw.githubusercontent.com/SSusantAchary/mlx-one/main/mlx_One_chat_ui.png" alt="Earlier MLX-One native chat UI in dark mode, connected to a local LFM2 model" width="900">
   </a>
 </p>
 
 Earlier native chat UI connected to a local model. The 0.1.4 workspace adds
-session tabs, history and message actions; see the [current UI guide](docs/ui.md).
+session tabs, history and message actions.
 
 Task-specific HTTP routes use the same server authentication and model lifecycle:
 
@@ -609,28 +565,13 @@ Task-specific HTTP routes use the same server authentication and model lifecycle
 | Kokoro speech generation | `/v1/tasks/speech-generation` |
 
 Serve a complete local task bundle with `mlx-one serve ./bundle --alias local`.
-See [task request formats and limits](docs/models/batch-1-sub-6b/README.md#engine-and-http)
-for image data URIs, generation bounds and the English speech profile.
-
-Use the [API guide](docs/api/index.md) for retrieval, segmentation, training and
-advanced CLI/Python examples; the [HTTP compatibility reference](docs/api/openai-compatibility.md)
-and [Web UI guide](docs/ui.md) document request formats, streaming and settings.
 
 ## Documentation
 
-| Start here | Reference |
-| --- | --- |
-| Searchable documentation website | [MLX-One docs](https://ssusantachary.github.io/mlx-one/), [site maintenance](website/README.md) |
-| Setup and examples | [Getting started](docs/getting-started.md) |
-| Model families and guides | [Model index](docs/models/index.md), [candidate catalog](docs/model-catalog.md) |
-| Verified checkpoint workflows | [Usage and limits](docs/models/batch-1-sub-6b/README.md), [validation results](docs/qualification/batch-1-sub-6b/results.json), [engineering report](docs/models/batch-1-sub-6b/REPORT.md) |
-| Release history | [Support inventory](status_models_testing.md), [0.1.4 release notes](docs/releases/0.1.4.md), [0.1.2 release history](docs/releases/0.1.2.md), [0.1.1 release history](docs/releases/0.1.1.md) |
-| Qualification and checkpoints | [Admission policy](docs/model-admission.md), [checkpoint inventory](docs/benchmarks/inventory.md) |
-| Design and package ownership | [Architecture](docs/architecture/index.md), [repository summary](docs/REPOSITORY_SUMMARY.md) |
-| Python, CLI and HTTP | [API guide](docs/api/index.md), [HTTP reference](docs/api/openai-compatibility.md), [Web UI](docs/ui.md) |
-| Measurements and methodology | [Benchmarks](docs/benchmarks/README.md) |
-| Experimental features and blockers | [Experimental index](docs/experimental/README.md), [known limitations](docs/experimental/known-limitations.md) |
-| Development and checks | [Development guide](docs/development.md), [roadmap](docs/roadmap.md), [documentation generation](docs/documentation-generation.md) |
+- [Quick Start](#quick-start) for setup, examples, and server commands.
+- [Supported Modalities and Models](#supported-modalities-and-models) for checkpoint scope.
+- [Python, CLI and HTTP APIs](#python-cli-and-http-apis) for request examples.
+- [GitHub releases](https://github.com/SSusantAchary/mlx-one/releases) for release history.
 
 ## Citation
 
@@ -646,9 +587,9 @@ note   = {Version 0.1.4. Native GPU-accelerated machine learning workflows on Ap
 }
 ```
 
-See [CITATION.bib](CITATION.bib) for the repository citation file.
+See [CITATION.bib](https://github.com/SSusantAchary/mlx-one/blob/main/CITATION.bib) for the repository citation file.
 
 ## License
 
-MLX-One is released under the [Apache License 2.0](LICENSE).
+MLX-One is released under the [Apache License 2.0](https://github.com/SSusantAchary/mlx-one/blob/main/LICENSE).
 Model checkpoints retain their separate terms.

@@ -98,7 +98,7 @@ def main():
             else ignore
         )
         shutil.copytree(ROOT / folder, target, ignore=selected_ignore)
-    for name in ["README.md", "pyproject.toml", "MANIFEST.in", "LICENSE", "CHANGELOG.md"]:
+    for name in ["README.md", "pyproject.toml", "MANIFEST.in", "LICENSE"]:
         shutil.copy2(ROOT / name, candidate / name)
     candidate_report = candidate / report.relative_to(ROOT)
     candidate_report.parent.mkdir(parents=True, exist_ok=True)

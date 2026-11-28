@@ -2,7 +2,7 @@
 
 Architecture: Transformers 4.57.1, Apache-2.0. The OpenAI repository is MIT;
 the pinned HF weight card has no license field. Only the audited exact
-safetensors conversion is accepted; see NOTICE.md for provenance limits.
+safetensors conversion is accepted; see NOTICE for provenance limits.
 """
 
 from __future__ import annotations

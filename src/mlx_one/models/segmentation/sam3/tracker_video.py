@@ -1,7 +1,7 @@
 # Copyright 2025 Meta AI and The HuggingFace Team. All rights reserved.
-# Licensed under the Apache License, Version 2.0. See LICENSE and NOTICE.md.
+# Licensed under the Apache License, Version 2.0. See LICENSE and NOTICE.
 # Native MLX port of Transformers revision 6133195dcb; no PyTorch runtime.
-"""Native MLX inference port; see NOTICE.md for reference provenance."""
+"""Native MLX inference port; see NOTICE for reference provenance."""
 
 from __future__ import annotations
 from ._runtime import (
