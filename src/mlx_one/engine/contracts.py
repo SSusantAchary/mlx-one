@@ -317,6 +317,7 @@ class TaskKind(str, Enum):
     AUDIO_LANGUAGE = "audio-language"
     SPEECH_GENERATION = "speech-generation"
     SPEECH_TO_SPEECH = "speech-to-speech"
+    IMAGE_GENERATION = "image-generation"
     IMAGE_SEGMENTATION = "image-segmentation"
     MASK_GENERATION = "mask-generation"
     VIDEO_SEGMENTATION = "video-segmentation"

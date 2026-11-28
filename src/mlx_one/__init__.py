@@ -36,6 +36,7 @@ from mlx_one.hardware import (
     list_hardware_profiles,
     load_hardware_profile,
 )
+from mlx_one.image import ImageEngine, ImageResult
 from mlx_one.inspection import InspectionError, inspect_model
 from mlx_one.mlxboost import MLXBoostConfig
 from mlx_one.planning import PlanningError, estimate_memory, plan_inference, plan_training
@@ -147,6 +148,8 @@ __all__ = [
     "EmbeddingResult",
     "Engine",
     "EngineRequestHandle",
+    "ImageEngine",
+    "ImageResult",
     "MetricProvenance",
     "MetricValue",
     "HardwareSpec",

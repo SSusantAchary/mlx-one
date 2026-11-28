@@ -468,6 +468,11 @@ def generate_command(
     "--transcription-revision",
     help="Hugging Face branch, tag, or commit for the transcription model.",
 )
+@click.option("--image-model", help="Optional pinned native text-to-image model ID.")
+@click.option("--image-checkpoint", type=click.Path(exists=True, file_okay=False),
+              help="Local checkpoint directory for --image-model.")
+@click.option("--image-quantization", type=click.Choice(["4", "8"]),
+              help="Affine denoiser precision for --image-model.")
 @click.option("--alias", help="Public model ID exposed by the API.")
 @click.option("--api-key", multiple=True, envvar="MLX_ONE_API_KEY", help="Accepted Bearer key.")
 @click.option("--context-length", "context_length", "-c", type=click.IntRange(min=1))
@@ -583,6 +588,9 @@ def serve_command(
     tokenizer_source: str | None,
     transcription_model: str | None,
     transcription_revision: str | None,
+    image_model: str | None,
+    image_checkpoint: str | None,
+    image_quantization: str | None,
     alias: str | None,
     api_key: tuple[str, ...],
     context_length: int | None,
@@ -710,6 +718,21 @@ def serve_command(
             spec_draft_n_max=spec_draft_n_max,
             transcription_enabled=transcription_model is not None,
         )
+        image_engine = None
+        if image_model is not None:
+            from mlx_one.image import ImageEngine
+
+            image_engine = ImageEngine(
+                image_model,
+                checkpoint=image_checkpoint,
+                quantization=int(image_quantization) if image_quantization else None,
+                offline=offline,
+                process_ceiling_bytes=(
+                    process_ceiling_mib * 1024**2 if process_ceiling_mib else None
+                ),
+            )
+        elif image_checkpoint is not None or image_quantization is not None:
+            raise ValueError("--image-checkpoint and --image-quantization require --image-model")
         manager = ModelManager(alias=alias, context_length=context_length)
         if inference_mode in ACTOR_MODES:
             from mlx_one.engine.actor import InferenceActor
@@ -844,6 +867,7 @@ def serve_command(
                     scheduler=scheduler,
                     config=config,
                     memory_admission=memory_admission,
+                    image_engines={image_model: image_engine} if image_engine is not None else None,
                     task_services=(
                         {"transcription": transcription_service}
                         if transcription_service is not None
@@ -856,7 +880,11 @@ def serve_command(
             )
         finally:
             event("shutdown", "cleaning up model and scheduler")
-            scheduler.close(finalizer=manager.unload)
+            try:
+                scheduler.close(finalizer=manager.unload)
+            finally:
+                if image_engine is not None:
+                    image_engine.close()
     except (ImportError, OSError, RuntimeError, ValueError) as exc:
         if isinstance(exc, ImportError) and exc.name in {"fastapi", "uvicorn"}:
             raise click.ClickException(
@@ -1599,6 +1627,10 @@ def ship() -> None:
 
 # Keep the existing top-level transcription commands as compatible entry points.
 main.add_command(audio_group)
+
+from mlx_one.image.cli import image_group  # noqa: E402
+
+main.add_command(image_group)
 
 
 main.add_command(ocr_command)

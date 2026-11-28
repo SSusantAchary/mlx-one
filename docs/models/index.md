@@ -28,6 +28,12 @@ blanket experimental label for the supported primary workflows.
   [candidate catalog](../model-catalog.md) and
   [optional experiments](../experimental/README.md) retain their distinct scopes.
 
+## Image generation
+
+The [native image generation guide](image-generation.md) covers the FLUX.2
+Klein 4B and Z-Image Turbo implementation, execution profiles and current
+qualification status.
+
 ## Reading the evidence
 
 **Supported** identifies a passing selected real-checkpoint workflow with model,

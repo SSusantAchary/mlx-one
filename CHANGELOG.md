@@ -6,6 +6,15 @@ alpha releases may refine planned interfaces.
 
 ## Unreleased
 
+### Native text-to-image
+
+- Add the native MLX `ImageEngine`, image CLI, and OpenAI-compatible generations
+  route for pinned FLUX.2 Klein 4B and Z-Image Turbo checkpoint layouts.
+- Add strict safetensors loading and reusable affine denoiser export. Load
+  pinned FLUX.2 Klein 4B and Z-Image Turbo community Q4 bundles directly with
+  the native engine. Metal fixture checks passed. Full-checkpoint qualification
+  remains pending.
+
 - Replace the wordmark with the maintainer-supplied black-and-orange design;
   derive a compact mark for the chat UI, documentation header and favicon.
   Preserve the uploaded wordmark exactly and the historical tagged assets.

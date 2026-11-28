@@ -1,0 +1,75 @@
+{
+  "campaign": "IMG-01",
+  "starting_commit": "d99d26a8f3a6aa3e13b7babe87e15acfa8e62f21",
+  "host": {
+    "model": "Mac16,12",
+    "chip": "Apple M4",
+    "unified_memory_bytes": 34359738368,
+    "macos": "15.8.3",
+    "python": "3.12.11",
+    "mlx": "0.32.2"
+  },
+  "references": {
+    "mflux": "86245d339a8d957c57da5d97b2914f0aefcbc048",
+    "diffusers": "509b7658e8d99a811050f26ce4ed0a40b65ccfee",
+    "diffusers_z_image_pipeline": "9380e58821092ad05e618fa8a259030136ba43c0",
+    "tongyi_z_image": "26f23eda626ffadda020b04ff79488e1d72004cd"
+  },
+  "profile_status": [
+    {
+      "model": "black-forest-labs/FLUX.2-klein-4B",
+      "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+      "bf16": "component_parity_partial",
+      "q4": "tiny_python_cli_sdk_passed",
+      "q8": "tiny_conversion_reload_passed",
+      "full_checkpoint": "pending_manual_download",
+      "performance": null
+    },
+    {
+      "model": "Tongyi-MAI/Z-Image-Turbo",
+      "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+      "bf16": "component_parity_partial",
+      "q4": "tiny_python_cli_sdk_passed",
+      "q8": "tiny_conversion_reload_passed",
+      "full_checkpoint": "pending_manual_download",
+      "performance": null
+    }
+  ],
+  "component_fixture": {
+    "dtype": "bfloat16",
+    "normalized_rmse_max": 0.03,
+    "cosine_min": 0.999,
+    "atol": 0.08,
+    "rtol": 0.08,
+    "within_tolerance_fraction_min": 0.99,
+    "results": [
+      {
+        "component": "flux2_klein_tiny_denoiser",
+        "normalized_rmse": 0.0027423305436968803,
+        "cosine": 0.9999963045120239,
+        "max_absolute_difference": 0.0078125,
+        "within_tolerance_fraction": 1.0
+      },
+      {
+        "component": "z_image_turbo_tiny_denoiser",
+        "normalized_rmse": 0.006005181465297937,
+        "cosine": 0.9999820590019226,
+        "max_absolute_difference": 0.0107421875,
+        "within_tolerance_fraction": 1.0
+      },
+      {
+        "component": "flux2_klein_official_vae",
+        "normalized_rmse": 0.01113353855907917,
+        "cosine": 0.9999386072158813,
+        "max_absolute_difference": 0.0205078125,
+        "within_tolerance_fraction": 1.0
+      }
+    ]
+  },
+  "verification": {
+    "targeted_tests_passed": 74,
+    "openai_sdk": "2.54.0",
+    "sdks_match_python_and_cli_pngs": true,
+    "isolated_wheel": "passed"
+  }
+}
