@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// MLX-One host module: models/language/inkling2/expert_scatter.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
             const uint column = thread_position_in_grid.x;

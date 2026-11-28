@@ -9,11 +9,14 @@ policy. See models/UPSTREAM_LICENSE and the reference-first source provenance.
 import mlx.core as mx
 import mlx.nn as nn
 
+from mlx_one.models.shared.metal_activations import try_swiglu
+
 
 def swiglu(gate, x):
     from mlx_one.models.shared.reference_activations import swiglu as compiled_swiglu
 
-    return compiled_swiglu(gate, x)
+    candidate = try_swiglu(gate, x)
+    return compiled_swiglu(gate, x) if candidate is None else candidate
 
 
 def precise_swiglu(h, gate, x):

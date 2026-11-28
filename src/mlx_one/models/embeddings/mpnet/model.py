@@ -23,11 +23,12 @@ from mlx_one.models.shared.encoder import (
     l2_normalize,
     masked_mean_pool,
 )
+from mlx_one.models.shared.metal_activations import gelu
 
 
 def _activation(value: Any, name: str) -> Any:
     if name == "gelu":
-        return nn.gelu(value)
+        return gelu(value)
     return 0.5 * value * (
         1 + mx.tanh(math.sqrt(2 / math.pi) * (value + 0.044715 * value**3))
     )

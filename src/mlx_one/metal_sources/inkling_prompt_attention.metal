@@ -4,7 +4,7 @@
 // See MTPLX_NOTICE.txt and MTPLX_LICENSE.txt.
 // Source: mtplx/models/inkling/fast/prompt_flash.py.
 // Reduction order follows MLX v0.32.2 Steel SDPA. See mlxboost/native/NOTICE.txt.
-// MLX-One host module: models/language/inkling2/_prompt_attention_metal.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
     using Frag = mlx::steel::BaseMMAFrag<float, 8, 8>;

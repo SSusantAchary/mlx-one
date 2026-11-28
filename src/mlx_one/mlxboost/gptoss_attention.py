@@ -37,7 +37,7 @@ def _reduce_kernel():
     )
 
 
-def attention(queries, keys, values, sinks, *, blocks=64):
+def attention(queries, keys, values, sinks, *, blocks=32):
     """Full cached causal attention for a last-position query; None if unsupported."""
     if (
         mx.default_device() != mx.gpu
@@ -53,11 +53,13 @@ def attention(queries, keys, values, sinks, *, blocks=64):
         or blocks not in {32, 64, 128, 256}
     ):
         return None
+    tokens_per_split = (keys.shape[2] + blocks - 1) // blocks
+    subgroups = 1 if tokens_per_split <= 16 else 4 if tokens_per_split <= 32 else 8
     partials, sums, maxs = _split_kernel()(
         inputs=[queries, keys, values, sinks],
-        template=[("T", queries.dtype), ("BLOCKS", blocks)],
-        grid=(8 * 32, 8, blocks),
-        threadgroup=(32, 8, 1),
+        template=[("T", queries.dtype), ("BLOCKS", blocks), ("SUBGROUPS", subgroups)],
+        grid=(8 * 32, subgroups, blocks),
+        threadgroup=(32, subgroups, 1),
         output_shapes=[(64, blocks, 64), (64, blocks), (64, blocks)],
         output_dtypes=[queries.dtype, mx.float32, mx.float32],
     )

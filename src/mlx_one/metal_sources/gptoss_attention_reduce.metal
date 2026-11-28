@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // Adapted from MLX v0.32.2 sdpa_vector.h, commit
 // 1f8e74e3f12f31365464a6867c6579f0e9b29d85; see models/UPSTREAM_LICENSE.
-// MLX-One host module: mlxboost/gptoss_attention.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
         uint lane = thread_position_in_threadgroup.x;

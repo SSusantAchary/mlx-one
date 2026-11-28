@@ -59,7 +59,7 @@ def _read_expression(name, bits, dim):
     return f"(float({encoded}) * float({name}s[{group}]) + float({name}b[{group}]))"
 
 
-def kernel_source(formats, dim, row_count=1):
+def kernel_source(formats, dim, row_count=1, *, parallel_pages=False):
     """Bounded segment tensors plus persistent per-row table chunks."""
     names = ["q", "segment_ids", "positions", "widths", "lengths", "scale"]
     names.extend(f"table{i}" for i in range(row_count))
@@ -72,6 +72,28 @@ def kernel_source(formats, dim, row_count=1):
             names.extend([name] if bits is None else [name, name + "s", name + "b"])
         k = _read_expression(f"k{i}", bits, dim).replace("kh * P", "(slot * HK + kh) * P")
         v = _read_expression(f"v{i}", bits, dim).replace("kh * P", "(slot * HK + kh) * P")
+        if parallel_pages:
+            blocks.append(f"""
+        if (sid == segment_ids[{i}]) {{
+            for (int t = 0; t < count; ++t) {{
+                if (start + t >= lengths[row] || start + t > positions[row * Q + qi]) break;
+                float score = 0.0f;
+                for (uint j = 0; j < D / 32; ++j) {{
+                    uint d = lane + j * 32;
+                    score += query[j] * {k};
+                }}
+                score = simd_sum(score) * scale[0];
+                float next_m = max(m, score);
+                float alpha = exp(m - next_m), beta = exp(score - next_m);
+                for (uint j = 0; j < D / 32; ++j) {{
+                    uint d = lane + j * 32;
+                    acc[j] = acc[j] * alpha + {v} * beta;
+                }}
+                l = l * alpha + beta;
+                m = next_m;
+            }}
+        }}""")
+            continue
         blocks.append(f"""
         for (uint page = 0; page < 16; ++page) {{
             int sid = table[page * 4], slot = table[page * 4 + 1];
@@ -98,6 +120,10 @@ def kernel_source(formats, dim, row_count=1):
         }}""")
     if len(names) > 30:
         raise ValueError("Metal kernel exceeds its buffer binding limit")
+    if parallel_pages:
+        from mlx_one.metal_source import metal_source
+
+        return names, metal_source("paged_attention_pages.metal", segments="\n".join(blocks))
     source = """
         uint d = thread_position_in_threadgroup.x;
         uint group = threadgroup_position_in_grid.y;
@@ -114,14 +140,28 @@ def kernel_source(formats, dim, row_count=1):
 
 
 @lru_cache(maxsize=64)
-def _kernel(formats, dim, rows=1):
+def _kernel(formats, dim, rows=1, *, parallel_pages=False):
     import mlx.core as mx
 
-    names, source = kernel_source(formats, dim, rows)
+    names, source = kernel_source(formats, dim, rows, parallel_pages=parallel_pages)
     tag = "".join(str(bits or 0) for bits in formats)
-    return mx.fast.metal_kernel(name=f"arena_attention_{dim}_{rows}_{tag}", input_names=names,
+    variant = "pages" if parallel_pages else "serial"
+    return mx.fast.metal_kernel(name=f"arena_attention_{variant}_{dim}_{rows}_{tag}",
+                               input_names=names,
                                output_names=["out"], source=source,
                                ensure_row_contiguous=True)
+
+
+@lru_cache(maxsize=1)
+def _merge_pages_kernel():
+    import mlx.core as mx
+
+    from mlx_one.metal_source import metal_source
+
+    return mx.fast.metal_kernel(
+        name="arena_attention_merge_pages", input_names=["partial"], output_names=["out"],
+        source=metal_source("paged_attention_merge.metal"),
+    )
 
 
 def paged_attention(queries, rows, positions, widths, *, scale):
@@ -157,14 +197,28 @@ def paged_attention(queries, rows, positions, widths, *, scale):
                     or layout.key_dtype != cache.dtype or layout.value_dtype != cache.dtype
                     or layout.quantization_bits not in {None, cache.bits}):
                 raise ModelCapabilityUnsupported("unsupported arena page layout")
+    parallel_pages = batch == length == 1 and dim in (64, 128) and rows[0].bits is None
     accum = maximum = normalizer = None
     pos, real_widths = mx.array(positions), mx.array(widths)
     lengths = mx.array([c.offset for c in rows])
     empty = mx.array([[-1, -1, 0, 0]] * 16, dtype=mx.int32)
+    chunk_segments = {}
+    for cache in rows:
+        for index, entry in cache.page_table.entries.items():
+            chunk_segments.setdefault(index // 16, set()).add(entry[0])
     with arena.lease():
-        for chunk in sorted({key for c in rows for key in c.page_table.chunks}):
-            ids = sorted({entry[0] for c in rows for index, entry in c.page_table.entries.items()
-                          if index // 16 == chunk})
+        chunks = sorted(chunk_segments.items())
+        partitions = [
+            ([c.page_table.chunks.get(chunk, empty) for c in rows], ids, 16)
+            for chunk, ids in chunks
+        ]
+        if parallel_pages and 1 < len(chunks) <= 8:
+            all_ids = set().union(*(ids for _, ids in chunks))
+            if len(all_ids) <= (30 - 6 - batch) // 2:
+                table = mx.concatenate([tables[0] for tables, _, _ in partitions], axis=0)
+                partitions = [([table], all_ids, table.shape[0])]
+        for tables, ids, pages in partitions:
+            ids = sorted(ids)
             # 6 common + B tables + at most 24 segment arrays fit Metal's 31 bindings.
             quantized = any(arena.segments[sid].layout.quantization_bits for sid in ids)
             group_size = max(1, (30 - 6 - batch) // (6 if quantized else 2))
@@ -174,22 +228,41 @@ def paged_attention(queries, rows, positions, widths, *, scale):
                 formats = tuple(s.layout.quantization_bits for s in segments)
                 inputs = [queries, mx.array(selected), pos, real_widths, lengths,
                           mx.array([scale], dtype=mx.float32)]
-                inputs.extend(c.page_table.chunks.get(chunk, empty) for c in rows)
+                inputs.extend(tables)
                 for segment in segments:
                     inputs.extend(segment.state)
-                warp = 1 << max(5, (dim - 1).bit_length())
+                warp = 32 if parallel_pages else 1 << max(5, (dim - 1).bit_length())
                 layout = segments[0].layout
                 if any((s.layout.head_dim, s.layout.num_kv_heads, s.layout.page_tokens)
                        != (dim, layout.num_kv_heads, rows[0].block_tokens) for s in segments):
                     raise ModelCapabilityUnsupported("incompatible arena segment layouts")
                 template = [("B", batch), ("H", heads), ("HK", layout.num_kv_heads),
                             ("Q", length), ("D", dim), ("P", rows[0].block_tokens), ("W", warp)]
-                partial = _kernel(formats, dim, batch)(
+                output_shape = (batch, heads, length, dim + 2)
+                partial = _kernel(formats, dim, batch, parallel_pages=parallel_pages)(
                     inputs=inputs, template=template,
-                    grid=(warp, batch * heads * length, 1), threadgroup=(warp, 1, 1),
-                    output_shapes=[(batch, heads, length, dim + 2)], output_dtypes=[mx.float32])[0]
+                    grid=(warp, batch * heads * length, pages if parallel_pages else 1),
+                    threadgroup=(warp, 1, 1),
+                    output_shapes=[(pages, *output_shape) if parallel_pages else output_shape],
+                    output_dtypes=[mx.float32])[0]
+                if parallel_pages and len(partitions) == 1 and len(ids) <= group_size:
+                    result = _merge_pages_kernel()(
+                        inputs=[partial[:, 0, :, 0]],
+                        template=[("T", queries.dtype), ("D", dim)],
+                        grid=(32, heads, 1), threadgroup=(32, 1, 1),
+                        output_shapes=[queries.shape], output_dtypes=[queries.dtype],
+                    )[0]
+                    mx.eval(result)
+                    return result
                 pm = partial[..., dim:dim + 1]
                 pl, pa = partial[..., dim + 1:], partial[..., :dim]
+                if parallel_pages:
+                    merged_max = mx.max(pm, axis=0)
+                    center = mx.where(merged_max == -float("inf"), 0, merged_max)
+                    factor = mx.exp(pm - center)
+                    pm = merged_max
+                    pl = mx.sum(pl * factor, axis=0)
+                    pa = mx.sum(pa * factor, axis=0)
                 if accum is None:
                     maximum, normalizer, accum = pm, pl, pa
                 else:

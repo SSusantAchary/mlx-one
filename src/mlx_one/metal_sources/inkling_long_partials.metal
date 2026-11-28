@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Adapted from MTPLX v2.13.0, commit bebe21b5ba36af3688335ab66d365509fd042fad,
 // models/inkling/fast/{attend,prefill_attend}.py. See MTPLX_NOTICE.txt.
-// MLX-One host module: models/language/inkling2/_long_attention_metal.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
     const int rho = int(threadgroup_position_in_grid.x);

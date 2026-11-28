@@ -8,6 +8,7 @@ import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.models.shared.execution import project
+from mlx_one.models.shared.metal_activations import try_gelu
 from mlx_one.ops.attention import attention, select_attention
 from mlx_one.ops.numerical_trace import emit
 from mlx_one.ops.profiling import phase
@@ -293,4 +294,5 @@ class DecoderLayer(nn.Module):
 
 
 def quick_gelu(value: Any) -> Any:
-    return value * mx.sigmoid(1.702 * value)
+    candidate = try_gelu(value, form=2)
+    return value * mx.sigmoid(1.702 * value) if candidate is None else candidate

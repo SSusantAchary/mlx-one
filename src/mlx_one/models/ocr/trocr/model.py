@@ -11,6 +11,7 @@ import mlx.nn as nn
 
 from mlx_one.core.cache import make_encoder_decoder_caches
 from mlx_one.models.ocr._layers import LanguageModelOutput
+from mlx_one.models.shared.metal_activations import gelu
 
 
 class Attention(nn.Module):
@@ -89,7 +90,7 @@ class ViTLayer(nn.Module):
 
     def __call__(self, x):
         x = x + self.attention(self.layernorm_before(x))
-        return x + self.output.dense(nn.gelu(self.intermediate.dense(self.layernorm_after(x))))
+        return x + self.output.dense(gelu(self.intermediate.dense(self.layernorm_after(x))))
 
 
 class ViT(nn.Module):
@@ -134,7 +135,7 @@ class DecoderLayer(nn.Module):
     def __call__(self, x, source, cache):
         x = self.self_attn_layer_norm(x + self.self_attn(x, cache=cache))
         x = self.encoder_attn_layer_norm(x + self.encoder_attn(x, source, cache))
-        return self.final_layer_norm(x + self.fc2(nn.gelu(self.fc1(x))))
+        return self.final_layer_norm(x + self.fc2(gelu(self.fc1(x))))
 
 
 class Decoder(nn.Module):

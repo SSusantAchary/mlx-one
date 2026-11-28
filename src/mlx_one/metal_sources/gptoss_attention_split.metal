@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: MIT
 // Adapted from MLX v0.32.2 sdpa_vector.h, commit
 // 1f8e74e3f12f31365464a6867c6579f0e9b29d85; see models/UPSTREAM_LICENSE.
-// MLX-One host module: mlxboost/gptoss_attention.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
         constexpr int G = 8;
-        constexpr int HPT = 8;
+        constexpr int HPT = G;
         constexpr int D = 64;
         constexpr float lowest = -3.402823466e+38f;
         uint lane = thread_position_in_threadgroup.x;
@@ -17,7 +17,7 @@
         int chunk = (N + BLOCKS - 1) / BLOCKS;
         int start = int(block) * chunk;
         int end = min(N, start + chunk);
-        int sub = (chunk + HPT - 1) / HPT;
+        int sub = (chunk + SUBGROUPS - 1) / SUBGROUPS;
         int s0 = start + int(g) * sub;
         int s1 = min(end, s0 + sub);
         uint base_head = kv_head * G;
@@ -59,11 +59,23 @@
                     accumulator[h][i] = accumulator[h][i] * correction + weight * vr[i];
             }
         }
-        threadgroup float local_output[G * HPT * D];
-        threadgroup float local_sums[G * HPT];
-        threadgroup float local_maxs[G * HPT];
+        if (SUBGROUPS == 1) {
+            for (int h = 0; h < HPT; ++h) {
+                uint index = (base_head + h) * BLOCKS + block;
+                for (int i = 0; i < 2; ++i)
+                    partials[index * D + lane * 2 + i] = T(accumulator[h][i]);
+                if (lane == 0) {
+                    sums[index] = denominator[h];
+                    maxs[index] = largest[h];
+                }
+            }
+            return;
+        }
+        threadgroup float local_output[G * SUBGROUPS * D];
+        threadgroup float local_sums[G * SUBGROUPS];
+        threadgroup float local_maxs[G * SUBGROUPS];
         for (int h = 0; h < HPT; ++h) {
-            uint slot = h * HPT + g;
+            uint slot = h * SUBGROUPS + g;
             float inv = denominator[h] > 0 ? 1.0f / denominator[h] : 0;
             for (int i = 0; i < 2; ++i)
                 local_output[slot * D + lane * 2 + i] = accumulator[h][i] * inv;
@@ -73,21 +85,24 @@
             }
         }
         threadgroup_barrier(mem_flags::mem_threadgroup);
-        float largest_value = lowest;
-        for (int s = 0; s < HPT; ++s)
-            largest_value = max(largest_value, local_maxs[g * HPT + s]);
-        float sum = 0, acc[2] = {0, 0};
-        for (int s = 0; s < HPT; ++s) {
-            float factor = local_sums[g * HPT + s]
-                * fast::exp(local_maxs[g * HPT + s] - largest_value);
-            sum += factor;
+        for (uint h = g; h < HPT; h += SUBGROUPS) {
+            uint slot = h * SUBGROUPS;
+            float largest_value = lowest;
+            for (int s = 0; s < SUBGROUPS; ++s)
+                largest_value = max(largest_value, local_maxs[slot + s]);
+            float sum = 0, acc[2] = {0, 0};
+            for (int s = 0; s < SUBGROUPS; ++s) {
+                float factor = local_sums[slot + s]
+                    * fast::exp(local_maxs[slot + s] - largest_value);
+                sum += factor;
+                for (int i = 0; i < 2; ++i)
+                    acc[i] += factor * local_output[(slot + s) * D + lane * 2 + i];
+            }
+            uint index = (base_head + h) * BLOCKS + block;
             for (int i = 0; i < 2; ++i)
-                acc[i] += factor * local_output[(g * HPT + s) * D + lane * 2 + i];
-        }
-        uint head = base_head + g;
-        for (int i = 0; i < 2; ++i)
-            partials[(head * BLOCKS + block) * D + lane * 2 + i] = T(acc[i]);
-        if (lane == 0) {
-            sums[head * BLOCKS + block] = sum;
-            maxs[head * BLOCKS + block] = largest_value;
+                partials[index * D + lane * 2 + i] = T(acc[i]);
+            if (lane == 0) {
+                sums[index] = sum;
+                maxs[index] = largest_value;
+            }
         }

@@ -1,4 +1,4 @@
-// MLX-One host module: quantization/turboquant/kernels/tq3_expert_qmv.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
     uint tid = thread_position_in_threadgroup.x;

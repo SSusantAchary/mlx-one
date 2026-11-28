@@ -6,6 +6,7 @@ import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.models.ocr._layers import check_array_shape
+from mlx_one.models.shared.metal_activations import try_gelu
 
 from .config import VisionConfig
 
@@ -25,7 +26,9 @@ class MlpFC(nn.Module):
         self.gelu = nn.GELU()
 
     def __call__(self, x):
-        return self.fc2(self.gelu(self.fc1(x)))
+        hidden = self.fc1(x)
+        candidate = try_gelu(hidden)
+        return self.fc2(self.gelu(hidden) if candidate is None else candidate)
 
 
 class Mlp(nn.Module):
