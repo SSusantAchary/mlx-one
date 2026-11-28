@@ -1,7 +1,7 @@
 // Copyright © 2025 Apple Inc.
 // SPDX-License-Identifier: MIT
 // Adapted from the pinned local MLX-LM gated_delta.py; see models/UPSTREAM_LICENSE.
-// MLX-One host module: models/vision_language/qwen3_5/reference_delta.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
         auto n = thread_position_in_grid.z;

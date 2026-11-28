@@ -1,6 +1,6 @@
 // Copyright © 2026 Neywa Labs Inc, Abdur Rahim
 // SPDX-License-Identifier: MIT
-// MLX-One host module: models/language/inkling2/grouped_experts.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
 inline float decode_nvfp4(uchar bits) {

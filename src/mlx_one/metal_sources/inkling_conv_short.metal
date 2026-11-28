@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Adapted from MTPLX v2.13.0, commit bebe21b5ba36af3688335ab66d365509fd042fad.
 // Source: mtplx/models/inkling/short_conv.py. See MTPLX_NOTICE.txt.
-// MLX-One host module: models/language/inkling2/short_conv.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
             const uint c = thread_position_in_grid.x;

@@ -12,7 +12,7 @@ from mlx_one.core.outputs import ModelOutput
 from mlx_one.engine.contracts import LayerExecutionSpec
 from mlx_one.ops.logits import LogitsMode
 
-from . import expert_scatter, grouped_experts, prompt_attention, short_conv, verify
+from . import controller_pack, expert_scatter, grouped_experts, prompt_attention, short_conv, verify
 from .activations import expert_inputs
 from .attention import attend, chronological_attention
 from .attention_metal import window_panel_attention
@@ -142,12 +142,23 @@ class Controller(nn.Module):
         self.down = weights.pop(stem + ".down_weight")
         self.forget = weights.pop(stem + ".forget_weight").astype(mx.float32)
         self.gain = weights.pop(stem + ".gain_weight").astype(mx.float32)
+        self.pack_proofs = None
 
     def __call__(self, x, message, eps):
         x = x.astype(mx.float32)
         message = message.astype(mx.float32)
-        mixed = mx.concatenate([norm(x, None, eps), norm(message, None, eps)], axis=-1)
-        state = linear(mixed.astype(self.down.dtype), self.down)
+        def reference():
+            return mx.concatenate([norm(x, None, eps), norm(message, None, eps)], axis=-1).astype(
+                self.down.dtype
+            )
+
+        if self.pack_proofs is None or verify.active.get() is not None:
+            mixed = reference()
+        else:
+            mixed = controller_pack.pack(
+                x, message, eps, self.down.dtype, reference, self.pack_proofs
+            )
+        state = linear(mixed, self.down)
         state = state.astype(mx.float32)
         forget, gain = shared_linear(state, [self.forget, self.gain])
         return (1 - mx.tanh(forget)) * x + mx.tanh(gain) * message
@@ -573,6 +584,10 @@ class InklingForCausalLM(nn.Module):
             for layer in self.layers:
                 for conv in layer.convs:
                     conv.prefill_conv_proofs = self.prefill_conv_proofs
+        if os.environ.get("MLX_ONE_INKLING_CONTROLLER_PACK") == "1" and _supported_gpu():
+            for layer in self.layers:
+                for controller in layer.controllers:
+                    controller.pack_proofs = {}
 
     def make_cache(self):
         return tuple(InklingKVCache(self.cfg["sliding_window_size"]

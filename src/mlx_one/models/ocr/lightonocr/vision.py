@@ -6,6 +6,7 @@ import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.models.ocr._layers import check_array_shape, rotate_half
+from mlx_one.models.shared.metal_activations import swiglu
 
 from .vision_config import VisionConfig
 
@@ -121,7 +122,7 @@ class MLP(nn.Module):
         self.up_proj = nn.Linear(dim, hidden_dim, bias=False)
 
     def __call__(self, x) -> mx.array:
-        return self.down_proj(nn.silu(self.gate_proj(x)) * self.up_proj(x))
+        return self.down_proj(swiglu(self.gate_proj(x), self.up_proj(x)))
 
 
 class EncoderLayer(nn.Module):

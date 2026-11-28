@@ -3,7 +3,7 @@
 // Adapted from MTPLX v2.13.0, commit bebe21b5ba36af3688335ab66d365509fd042fad.
 // See MTPLX_NOTICE.txt and MTPLX_LICENSE.txt.
 // Sources: mtplx/models/inkling/fast/{affine_lane,qproduct}.py.
-// MLX-One host module: models/language/inkling2/_verify_affine_metal.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
 namespace affine_lane {

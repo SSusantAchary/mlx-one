@@ -1,7 +1,7 @@
 // Copyright 2026 Youssof Altoukhi. SPDX-License-Identifier: Apache-2.0
 // Adapted from MTPLX v2.13.0, models/inkling/fast/round_program.py.
 // See MTPLX_LICENSE.txt and MTPLX_NOTICE.txt.
-// MLX-One host module: models/language/inkling2/_replay_draft_attention.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
     uint c = threadgroup_position_in_grid.x;

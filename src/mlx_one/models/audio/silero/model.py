@@ -15,6 +15,7 @@ from mlx.utils import tree_flatten
 
 from mlx_one.models.audio.parakeet.model import PredictorLSTM
 from mlx_one.models.audio.silero.config import SileroConfig
+from mlx_one.models.shared.metal_reductions import try_split_spectrum_magnitude
 from mlx_one.utils.hashing import sha256_file
 
 REVISION = "60b7ffa243625ebdc1070275a29f18c87843786a"
@@ -40,7 +41,9 @@ class SileroModel(nn.Module):
         # ReflectionPad1d((0,64)): excludes the final sample at the reflected edge.
         padded = mx.concatenate((x, x[:, -65:-1][:, ::-1]), axis=1)
         spectrum = self.stft_conv(padded[:, :, None])
-        x = mx.sqrt(spectrum[:, :, :129] ** 2 + spectrum[:, :, 129:] ** 2)
+        x = try_split_spectrum_magnitude(spectrum)
+        if x is None:
+            x = mx.sqrt(spectrum[:, :, :129] ** 2 + spectrum[:, :, 129:] ** 2)
         stages = {"stft": spectrum.transpose(0, 2, 1), "magnitude": x.transpose(0, 2, 1)}
         for i in range(1, 5):
             x = nn.relu(getattr(self, f"conv{i}")(x))

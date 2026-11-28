@@ -15,6 +15,7 @@ import mlx.nn as nn
 
 from mlx_one.core.cache import make_kv_caches
 from mlx_one.models.audio.qwen3_asr.config import QwenASRConfig, QwenAudioConfig, audio_token_length
+from mlx_one.models.shared.metal_activations import try_swiglu
 from mlx_one.models.shared.transformer import causal_mask
 
 
@@ -58,8 +59,11 @@ class TextMLP(nn.Module):
 
     def __call__(self, x: Any) -> Any:
         gate = self.gate_proj(x)
-        activated = nn.silu(gate.astype(mx.float32)).astype(gate.dtype)
-        return self.down_proj(activated * self.up_proj(x))
+        value = self.up_proj(x)
+        activated = try_swiglu(gate, value)
+        if activated is None:
+            activated = nn.silu(gate.astype(mx.float32)).astype(gate.dtype) * value
+        return self.down_proj(activated)
 
 
 class AudioAttention(nn.Module):

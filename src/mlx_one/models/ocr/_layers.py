@@ -13,6 +13,7 @@ import mlx.nn as nn
 
 from mlx_one.core.cache import EncoderDecoderKVCache
 from mlx_one.core.cache import KVCache as NativeKVCache
+from mlx_one.models.shared.metal_activations import swiglu
 from mlx_one.models.shared.reference_math import attention_mask
 
 
@@ -215,7 +216,7 @@ class SwiGLUMLP(nn.Module):
         self.down_proj = nn.Linear(hidden_dim, dim, bias=bias)
 
     def __call__(self, x):
-        return self.down_proj(nn.silu(self.gate_proj(x)) * self.up_proj(x))
+        return self.down_proj(swiglu(self.gate_proj(x), self.up_proj(x)))
 
 
 class DeepseekMLP(SwiGLUMLP):

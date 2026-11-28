@@ -11,6 +11,7 @@ import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.models.language.t5.config import T5Config, relative_bucket
+from mlx_one.models.shared.metal_reductions import try_t5_norm
 
 
 @dataclass
@@ -27,6 +28,9 @@ class T5Norm(nn.Module):
         self.eps = config.layer_norm_epsilon
 
     def __call__(self, x):
+        candidate = try_t5_norm(x, self.weight, self.eps)
+        if candidate is not None:
+            return candidate
         variance = mx.mean(x.astype(mx.float32) ** 2, axis=-1, keepdims=True)
         return x * mx.rsqrt(variance + self.eps) * self.weight
 

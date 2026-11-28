@@ -1,4 +1,4 @@
-// MLX-One host module: models/language/inkling2/verify.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
             const uint lane = thread_index_in_simdgroup;

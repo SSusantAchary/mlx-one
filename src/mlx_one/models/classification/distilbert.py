@@ -15,6 +15,7 @@ from mlx.utils import tree_flatten
 from tokenizers import BertWordPieceTokenizer
 
 from mlx_one.models.classification.config import DistilBertConfig
+from mlx_one.models.shared.metal_activations import gelu
 
 MODEL_ID = "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
 REVISION = "714eb0fa89d2f80546fda750413ed43d93601a13"
@@ -75,7 +76,7 @@ class FFN(nn.Module):
         self.lin2 = nn.Linear(cfg.hidden_dim, cfg.dim)
 
     def __call__(self, x):
-        return self.lin2(nn.gelu(self.lin1(x)))
+        return self.lin2(gelu(self.lin1(x)))
 
 
 class Block(nn.Module):

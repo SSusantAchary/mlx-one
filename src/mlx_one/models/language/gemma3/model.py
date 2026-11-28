@@ -6,6 +6,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import KVCache
 from mlx_one.core.sliding_cache import SlidingKVCache
 from mlx_one.models.shared.decoder import CausalLM, attention_mask_for, prepare_decoder
+from mlx_one.models.shared.metal_activations import try_gelu
 from mlx_one.models.shared.transformer import apply_rope
 
 
@@ -112,7 +113,9 @@ class Gemma3MLP(nn.Module):
         self.down_proj = nn.Linear(config.intermediate_size, config.hidden_size, bias=False)
 
     def __call__(self, hidden):
-        return self.down_proj(nn.gelu_approx(self.gate_proj(hidden)) * self.up_proj(hidden))
+        gate, value = self.gate_proj(hidden), self.up_proj(hidden)
+        candidate = try_gelu(gate, form=1, value=value)
+        return self.down_proj(nn.gelu_approx(gate) * value if candidate is None else candidate)
 
 
 class Gemma3DecoderLayer(nn.Module):

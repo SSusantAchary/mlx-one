@@ -9,6 +9,7 @@ from mlx_one.models.shared.encoder import (
     l2_normalize,
     masked_mean_pool,
 )
+from mlx_one.models.shared.metal_activations import try_swiglu
 
 
 class NomicEmbeddings(nn.Module):
@@ -55,7 +56,9 @@ class NomicMLP(nn.Module):
 
     def __call__(self, hidden):
         # Publisher fc11 is the value projection, fc12 is the SiLU gate.
-        return self.fc2(self.fc11(hidden) * nn.silu(self.fc12(hidden)))
+        value, gate = self.fc11(hidden), self.fc12(hidden)
+        activated = try_swiglu(gate, value)
+        return self.fc2(value * nn.silu(gate) if activated is None else activated)
 
 
 class NomicLayer(nn.Module):

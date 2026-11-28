@@ -12,6 +12,7 @@ import mlx.core as mx
 import mlx.nn as nn
 
 from mlx_one.models.audio.parakeet.config import ParakeetConfig
+from mlx_one.models.shared.metal_activations import split_glu
 
 
 class FeedForward(nn.Module):
@@ -60,10 +61,7 @@ class Convolution(nn.Module):
         self.pointwise_conv2 = nn.Conv1d(d, d, 1, bias=config.convolution_bias)
 
     def __call__(self, x, valid):
-        first, gate = mx.split(self.pointwise_conv1(x), 2, axis=-1)
-        x = first * mx.sigmoid(gate)
-        if valid is not None:
-            x = mx.where(valid[..., None], x, 0)
+        x = split_glu(self.pointwise_conv1(x), valid)
         return self.pointwise_conv2(nn.silu(self.norm(self.depthwise_conv(x))))
 
 

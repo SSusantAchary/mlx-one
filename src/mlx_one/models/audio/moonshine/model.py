@@ -15,6 +15,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import EncoderDecoderKVCache, make_encoder_decoder_caches
 from mlx_one.core.outputs import ASRModelOutput
 from mlx_one.models.audio.moonshine.config import MoonshineConfig, encoded_length
+from mlx_one.models.shared.metal_activations import try_swiglu
 
 
 class MoonshineAttention(nn.Module):
@@ -89,7 +90,8 @@ class MoonshineMLP(nn.Module):
         hidden = self.fc1(hidden)
         if self.gated:
             value, gate = mx.split(hidden, 2, axis=-1)
-            hidden = value * nn.silu(gate)
+            activated = try_swiglu(gate, value)
+            hidden = value * nn.silu(gate) if activated is None else activated
         else:
             hidden = nn.gelu(hidden)
         return self.fc2(hidden)

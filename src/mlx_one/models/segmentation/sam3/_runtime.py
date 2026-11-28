@@ -27,6 +27,8 @@ import mlx.nn as mlx_nn
 import numpy as np
 from tqdm import tqdm as tqdm
 
+from mlx_one.models.shared.metal_activations import gelu, try_gelu
+
 try:
     from typing import Unpack as Unpack
 except ImportError:  # Python 3.10; annotations in the port are deferred.
@@ -725,7 +727,7 @@ class GELU(Module):
 
     def forward(self, x):
         return Tensor(
-            mlx_nn.gelu(raw(x)) if self.approximate == "none" else mlx_nn.gelu_approx(raw(x))
+            gelu(raw(x)) if self.approximate == "none" else _gelu_approx(raw(x))
         )
 
 
@@ -1066,8 +1068,13 @@ def create_bidirectional_mask(config, inputs_embeds, attention_mask=None, **kwar
     return attention_mask.bool().unsqueeze(1).unsqueeze(1)
 
 
+def _gelu_approx(x):
+    candidate = try_gelu(x, form=1)
+    return mlx_nn.gelu_approx(x) if candidate is None else candidate
+
+
 def _gelu(x):
-    return Tensor(mlx_nn.gelu(raw(x)))
+    return Tensor(gelu(raw(x)))
 
 
 ACT2FN = {

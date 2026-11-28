@@ -1,7 +1,7 @@
 // Copyright 2026 Youssof Altoukhi
 // SPDX-License-Identifier: Apache-2.0
 // Adapted from MTPLX 2.13.0, mtplx/models/inkling. See MTPLX_NOTICE.txt.
-// MLX-One host module: models/language/inkling2/activations.py
+// Native Metal implementation by MLX-One
 // Begin shader source
 
             uint i = thread_position_in_grid.x;

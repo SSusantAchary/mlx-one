@@ -18,6 +18,7 @@ import mlx.nn as nn
 from mlx_one.core.cache import EncoderDecoderKVCache, make_encoder_decoder_caches
 from mlx_one.core.outputs import ASRModelOutput
 from mlx_one.models.audio.whisper.config import WhisperConfig
+from mlx_one.models.shared.metal_activations import gelu
 
 
 class WhisperAttention(nn.Module):
@@ -88,7 +89,7 @@ class WhisperEncoderLayer(nn.Module):
         attended, _ = self.self_attn(self.self_attn_layer_norm(hidden))
         hidden = residual + self.dropout(attended)
         residual = hidden
-        hidden = self.activation_dropout(nn.gelu(self.fc1(self.final_layer_norm(hidden))))
+        hidden = self.activation_dropout(gelu(self.fc1(self.final_layer_norm(hidden))))
         return residual + self.dropout(self.fc2(hidden))
 
 
@@ -135,7 +136,7 @@ class WhisperDecoderLayer(nn.Module):
         )
         hidden = residual + self.dropout(attended)
         residual = hidden
-        hidden = self.activation_dropout(nn.gelu(self.fc1(self.final_layer_norm(hidden))))
+        hidden = self.activation_dropout(gelu(self.fc1(self.final_layer_norm(hidden))))
         hidden = residual + self.dropout(self.fc2(hidden))
         return hidden, self_weights, cross_weights
 
@@ -161,8 +162,8 @@ class WhisperEncoder(nn.Module):
                 "input_features must match configured mel bins and padded frame length"
             )
         hidden = input_features.transpose(0, 2, 1)
-        hidden = nn.gelu(self.conv1(hidden))
-        hidden = nn.gelu(self.conv2(hidden))
+        hidden = gelu(self.conv1(hidden))
+        hidden = gelu(self.conv2(hidden))
         positions = self.embed_positions(mx.arange(self.config.max_source_positions))
         hidden = self.dropout(hidden + positions[None, ...])
         states = [hidden] if output_hidden_states else None
