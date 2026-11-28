@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
-    { name = "S Susant Achary" }
+    { name = "Susant Achary" }
 ]
 keywords = [
     "mlx",
@@ -112,6 +112,7 @@ mlx_one = [
     "mlxboost/native/_build/*.mm",
     "mlxboost/native/_build/*.h",
     "mlxboost/native/_build/*.metal",
+    "metal_sources/*.metal",
     "mlxboost/native/_build/CMakeLists.txt",
     "mlxboost/provenance/sources.yaml",
     "models/UPSTREAM_LICENSE",

@@ -5,6 +5,8 @@ from functools import lru_cache
 
 import mlx.core as mx
 
+from mlx_one.metal_source import metal_source
+
 from ._verify_affine_metal import HEADER
 
 active = ContextVar("inkling_verify_panel", default=None)
@@ -17,16 +19,7 @@ def _affine_kernel():
         input_names=["x", "codes", "scales", "biases"],
         output_names=["out"],
         header=HEADER,
-        source="""
-            const uint lane = thread_index_in_simdgroup;
-            const uint row = threadgroup_position_in_grid.x * 4 + simdgroup_index_in_threadgroup;
-            float result[W][1];
-            qmv_rows<W, 1, K, BITS, GROUP, VPT>(
-                codes, scales, biases, x, K, row, lane, result);
-            if (lane == 0) {
-                for (int r = 0; r < W; ++r) out[r * N + row] = T(result[r][0]);
-            }
-        """,
+        source=metal_source("inkling_verify_affine_panel.metal"),
     )
 
 

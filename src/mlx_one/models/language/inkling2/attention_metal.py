@@ -7,6 +7,8 @@ from functools import lru_cache
 
 import mlx.core as mx
 
+from mlx_one.metal_source import metal_source
+
 from ._long_attention_metal import HEADER
 
 
@@ -17,21 +19,7 @@ def _grouped_mask_kernel():
         input_names=["profiles", "keys"],
         output_names=["mask"],
         ensure_row_contiguous=False,
-        source="""
-            const int col = thread_position_in_grid.x, row = thread_position_in_grid.y;
-            const int head = thread_position_in_grid.z, rows = profiles_shape[1];
-            const int count = keys_shape[2], extent = profiles_shape[3];
-            if (col >= count) return;
-            const int distance = count - rows + row - col;
-            const bool visible = distance >= 0 && (!WINDOW || distance < WINDOW);
-            T bias = T(0);
-            if (!visible) bias = T(-INFINITY);
-            else if (distance < extent) {
-                const size_t offset = row * profiles_strides[1] + head * profiles_strides[2];
-                bias = profiles[offset + distance * profiles_strides[3]];
-            }
-            mask[(head * rows + row) * size_t(count) + col] = bias;
-        """,
+        source=metal_source("inkling_attention_grouped_mask.metal"),
     )
 
 
@@ -67,61 +55,7 @@ def _window_panel_kernel():
     return mx.fast.metal_kernel(
         name="mlx_one_inkling_window_panel", input_names=["q", "k", "v", "p", "s"],
         output_names=["out"], ensure_row_contiguous=False, header=HEADER,
-        source="""
-            const int head = int(threadgroup_position_in_grid.x);
-            const int row = int(threadgroup_position_in_grid.y);
-            const int chain = int(simdgroup_index_in_threadgroup);
-            const int lane = int(thread_index_in_simdgroup);
-            const int rows = q_shape[2], count = k_shape[2];
-            const int end = count - rows + row + 1;
-            const int first = max(0, end - WINDOW);
-            const int kvhead = head / 3;
-            const float scale = 0.08838834764831845f;
-            const device T* qp = q + head * q_strides[1] + row * q_strides[2];
-            const device T* bias = p + row * p_strides[1] + head * p_strides[2];
-            float query[4];
-            for (int d = 0; d < 4; ++d) {
-                query[d] = scale * float(qp[(4 * lane + d) * q_strides[3]]);
-            }
-            Chain state;
-            chain_open(state);
-            if (chain == 0) {
-                state.peak = float(s[row * s_strides[1] + head * s_strides[2]]);
-                state.mass = 1.0f;
-            }
-            for (int pos = first + chain; pos < end; pos += 32) {
-                const device T* kp = k + kvhead * k_strides[1] + pos * k_strides[2];
-                const device T* vp = v + kvhead * v_strides[1] + pos * v_strides[2];
-                float keys[4], values[4];
-                for (int d = 0; d < 4; ++d) {
-                    keys[d] = float(kp[(4 * lane + d) * k_strides[3]]);
-                    values[d] = float(vp[(4 * lane + d) * v_strides[3]]);
-                }
-                const float b = float(bias[(end - 1 - pos) * p_strides[3]]);
-                if (b >= -3.3895313892515355e38f) {
-                    chain_take(state, key_logit(query, keys, b), values);
-                }
-            }
-            threadgroup float peaks[32], masses[32], transpose[32 * 32];
-            if (lane == 0) {
-                peaks[chain] = state.peak;
-                masses[chain] = state.mass;
-            }
-            threadgroup_barrier(mem_flags::mem_threadgroup);
-            const float peak = peaks[lane];
-            const float rescale = metal::fast::exp(peak - simd_max(peak));
-            const float mass = simd_sum(masses[lane] * rescale);
-            for (int d = 0; d < 4; ++d) {
-                transpose[lane * 32 + chain] = state.acc[d];
-                threadgroup_barrier(mem_flags::mem_threadgroup);
-                const float total = simd_sum(transpose[chain * 32 + lane] * rescale);
-                threadgroup_barrier(mem_flags::mem_threadgroup);
-                if (lane == 0) {
-                    out[((head * rows + row) * 128) + 4 * chain + d] =
-                        T(mass == 0 ? total : total / mass);
-                }
-            }
-        """,
+        source=metal_source("inkling_attention_window_panel.metal"),
     )
 
 
