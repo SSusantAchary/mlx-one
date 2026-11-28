@@ -13,28 +13,9 @@ from functools import lru_cache
 
 import mlx.core as mx
 
-_HEADER = r"""
-// FP4/E8M0 conversions follow the formats documented in Apple's MIT-licensed
-// mlx/backend/metal/kernels/fp4.h and fp8.h. Preserve signed zero and specials.
-inline float gptoss_fp4(uint bits) {
-    float value = float(as_type<half>(ushort((bits & 7u) << 9))) * 16384.0f;
-    return (bits & 8u) ? -value : value;
-}
-inline float gptoss_scale(uchar bits) {
-    uint value = bits == 0 ? 0x00400000u : bits == 255 ? 0x7fc00000u : uint(bits) << 23;
-    return as_type<float>(value);
-}
-template <typename T> inline T gptoss_activation(T gate, T up) {
-    T g = T(min(float(gate), 7.0f));
-    T u = T(clamp(float(up), -7.0f, 7.0f));
-    T z = T(float(g) * float(T(1.702f)));
-    auto y = 1 / (1 + metal::exp(metal::abs(z)));
-    T sigmoid = (z < 0) ? y : 1 - y;
-    T swish = T(float(g) * float(sigmoid));
-    T shifted = T(float(u) + float(T(1.0f)));
-    return T(float(shifted) * float(swish));
-}
-"""
+from mlx_one.metal_source import metal_source
+
+_HEADER = metal_source("gptoss_expert_header.metal")
 
 
 def supported(module, x, indices):
@@ -71,50 +52,7 @@ def _projection_kernel(pair=False, activate=False, words_per_lane=1):
     outputs = ["out"] if not pair or activate else ["gate_out", "up_out"]
     # Four neighboring rows/threadgroup; one SIMD group/row. A paired projection
     # shares activation reads but retains independent FP32 accumulators.
-    source = r"""
-    uint lane = thread_position_in_threadgroup.x;
-    uint row = thread_position_in_grid.y;
-    uint choice = thread_position_in_grid.z;
-    uint N = weight_shape[1];
-    uint K = x_shape[1];
-    if (row >= N) return;
-    long expert_value = long(indices[choice]);
-    if (expert_value < 0 || expert_value >= long(weight_shape[0])) {
-        if (lane == 0) {
-    INVALID_WRITE
-        }
-        return;
-    }
-    uint expert = uint(expert_value);
-    uint input_row = x_shape[0] == 1 ? 0 : choice;
-    uint base = (expert * N + row) * (K / 8);
-    uint sb = (expert * N + row) * (K / 32);
-    float acc = 0.0f;
-    PAIR_ACC
-    for (uint p0 = lane * WORDS; p0 < K / 8; p0 += 32 * WORDS) {
-        #pragma unroll
-        for (uint w = 0; w < WORDS; ++w) {
-            uint p = p0 + w;
-            if (p >= K / 8) break;
-            uint packed = weight[base + p];
-            float scale = gptoss_scale(scales[sb + p / 4]);
-            PAIR_LOAD
-            #pragma unroll
-            for (uint j = 0; j < 8; ++j) {
-                float value = float(x[input_row * K + p * 8 + j]);
-                float weight_value = gptoss_fp4((packed >> (j * 4)) & 15u) * scale;
-                acc += value * weight_value;
-                PAIR_DOT
-            }
-        }
-    }
-    T gate_value = T(simd_sum(acc));
-    gate_value = T(float(gate_value) + float(bias[expert * N + row]));
-    PAIR_REDUCE
-    if (lane == 0) {
-        RESULT_WRITE
-    }
-    """
+    source = metal_source("gptoss_expert_project.metal")
     source = source.replace("WORDS", str(words_per_lane))
     if pair:
         source = source.replace("PAIR_ACC", "float up_acc = 0.0f;")
@@ -205,10 +143,7 @@ def _activation_kernel():
         input_names=["gate", "up"],
         output_names=["out"],
         header=_HEADER,
-        source=r"""
-        uint i = thread_position_in_grid.x;
-        if (i < COUNT) out[i] = gptoss_activation(gate[i], up[i]);
-        """,
+        source=metal_source("gptoss_expert_swiglu.metal"),
     )
 
 
@@ -236,17 +171,7 @@ def _reduction_kernel():
         name="gptoss_weighted_top4",
         input_names=["values", "scores"],
         output_names=["out"],
-        source=r"""
-        uint d = thread_position_in_grid.x;
-        if (d >= D) return;
-        T value = T(0);
-        #pragma unroll
-        for (uint e = 0; e < 4; ++e) {
-            T product = T(float(values[e * D + d]) * float(scores[e]));
-            value = T(float(value) + float(product));
-        }
-        out[d] = value;
-        """,
+        source=metal_source("gptoss_expert_weighted_top4.metal"),
     )
 
 

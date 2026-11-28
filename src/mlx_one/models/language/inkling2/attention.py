@@ -7,6 +7,8 @@ from functools import lru_cache
 
 import mlx.core as mx
 
+from mlx_one.metal_source import metal_source
+
 from .attention_metal import grouped_sink_attention
 
 
@@ -16,23 +18,7 @@ def _bias_kernel():
         name="mtplx_inkling_relative_bias",
         input_names=["profiles", "sink", "geometry"],
         output_names=["bias"],
-        source="""
-            const uint i = thread_position_in_grid.x;
-            const int keys = geometry[0], first = geometry[1], window = geometry[2];
-            const int heads = profiles_shape[2], rows = profiles_shape[1];
-            const int extent = profiles_shape[3];
-            const int col = i % (keys + 1);
-            uint plane = i / (keys + 1);
-            const int row = plane % rows;
-            plane /= rows;
-            const int head = plane % heads, batch = plane / heads;
-            const uint p = (batch * rows + row) * heads + head;
-            const int distance = first + row - col;
-            if (col == keys) bias[i] = sink[p];
-            else if (distance < 0 || (window && distance >= window)) bias[i] = T(-INFINITY);
-            else if (distance >= extent) bias[i] = T(0);
-            else bias[i] = profiles[p * extent + distance];
-        """,
+        source=metal_source("inkling_attention_relative_bias.metal"),
     )
 
 

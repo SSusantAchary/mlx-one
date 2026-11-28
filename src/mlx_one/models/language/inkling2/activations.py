@@ -11,6 +11,8 @@ from functools import lru_cache
 
 import mlx.core as mx
 
+from mlx_one.metal_source import metal_source
+
 
 def _e4m3(x):
     magnitude = mx.minimum(mx.abs(x), 448.0)
@@ -42,47 +44,8 @@ def _quantizer():
         name="mtplx_inkling_expert_inputs",
         input_names=["input", "peaks"],
         output_names=["values"],
-        header="""
-            inline float inkling_e4m3(float x) {
-                float a = min(abs(x), 448.0f);
-                float unit = ldexp(1.0f, max(-9, ilogb(max(a, 0.015625f)) - 3));
-                return copysign(rint(a / unit) * unit, x);
-            }
-            inline float inkling_e2m1(float x) {
-                float a = abs(x);
-                float y = a > 5 ? 6 : a >= 3.5f ? 4 : a > 2.5f ? 3 : a >= 1.75f ? 2 :
-                          a > 1.25f ? 1.5f : a >= .75f ? 1 : a > .25f ? .5f : 0;
-                return copysign(y, x);
-            }
-        """,
-        source="""
-            uint i = thread_position_in_grid.x;
-            uint lane = thread_index_in_simdgroup;
-            float x = float(input[i]);
-            if (FP4) {
-                float peak = peaks[i / WIDTH];
-                float outer = peak / 1536.0f;
-                uint first = lane & 16u;
-                float top = abs(x);
-                for (uint d = 1; d < 16; d *= 2)
-                    top = max(top, simd_shuffle_xor(top, d));
-                float encoder = peak > 0 ? 1536.0f / peak : 0;
-                float s6 = inkling_e4m3(top * (encoder / 6.0f));
-                float s4 = inkling_e4m3(top * (encoder / 4.0f));
-                float a = s6 == 0 ? 0 : inkling_e2m1(x / (s6 * outer)) * s6;
-                float b = s4 == 0 ? 0 : inkling_e2m1(x / (s4 * outer)) * s4;
-                float ae = abs(a * outer - x), be = abs(b * outer - x);
-                for (uint d = 1; d < 16; d *= 2) {
-                    ae += simd_shuffle_xor(ae, d);
-                    be += simd_shuffle_xor(be, d);
-                }
-                values[i] = simd_shuffle(be, first) < simd_shuffle(ae, first) ? b : a;
-            } else {
-                float top = simd_max(abs(x));
-                float scale = top > 0 ? exp2(ceil(log2(top / 448.0f))) : 1.0f;
-                values[i] = inkling_e4m3(x / scale) * scale;
-            }
-        """,
+        header=metal_source("inkling_expert_quantization_helpers.metal"),
+        source=metal_source("inkling_expert_quantize.metal"),
     )
 
 
